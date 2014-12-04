@@ -37,10 +37,6 @@ namespace vorb {
             /// @return True if a component was removed
             bool remove(EntityID eID);
 
-            /// Performs an update step on the specified component
-            /// @param cID: ID of component that must be updated
-            virtual void update(ComponentID cID) = 0;
-
             /// @return Iterator to the first pair of (entity ID, component ID)
             ComponentBindingSet::iterator begin() {
                 return _components.begin();

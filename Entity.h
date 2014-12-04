@@ -15,6 +15,7 @@
 #ifndef Entity_h__
 #define Entity_h__
 
+#include "stdafx.h"
 #include <unordered_set>
 
 namespace vorb {

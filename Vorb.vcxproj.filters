@@ -72,9 +72,6 @@
     <ClCompile Include="IRenderPipeline.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
@@ -240,6 +237,7 @@
     <None Include="AwesomiumInterface.inl">
       <Filter>UI</Filter>
     </None>
+    <None Include="ThreadPool.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

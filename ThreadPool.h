@@ -34,27 +34,7 @@ enum class RenderTaskType;
 
 namespace vorb {
     namespace core {
-
-        // Worker data for a threadPool
-        class WorkerData {
-        public:
-            ~WorkerData() { 
-                delete chunkMesher;
-                delete floraGenerator;
-                delete voxelLightEngine;
-                delete caEngine;
-            }
-            volatile bool waiting;
-            volatile bool stop;
-
-            // Each thread gets its own generators
-            // TODO(Ben): Decouple this
-            ChunkMesher* chunkMesher = nullptr;
-            FloraGenerator* floraGenerator = nullptr;
-            VoxelLightEngine* voxelLightEngine = nullptr;
-            CAEngine* caEngine = nullptr;
-        };
-
+        template<typename T>
         class ThreadPool {
         public:
             ThreadPool();
@@ -72,7 +52,7 @@ namespace vorb {
 
             /// Adds a task to the task queue
             /// @param task: The task to add
-            void addTask(IThreadPoolTask* task) {
+            void addTask(IThreadPoolTask<T>* task) {
                 _tasks.enqueue(task);
                 _cond.notify_one();
             }
@@ -80,14 +60,14 @@ namespace vorb {
             /// Add an array of tasks to the task queue
             /// @param tasks: The array of tasks to add
             /// @param size: The size of the array
-            void addTasks(IThreadPoolTask* tasks[], size_t size) {
+            void addTasks(IThreadPoolTask<T>* tasks[], size_t size) {
                 _tasks.enqueue_bulk(tasks, size);
                 _cond.notify_all();
             }
 
             /// Adds a vector of tasks to the task queue
             /// @param tasks: The vector of tasks to add
-            void addTasks(std::vector<IThreadPoolTask*> tasks) {
+            void addTasks(std::vector<IThreadPoolTask<T>*> tasks) {
                 _tasks.enqueue_bulk(tasks.data(), tasks.size());
                 _cond.notify_all();
             }
@@ -96,7 +76,7 @@ namespace vorb {
             /// @param taskBuffer: Buffer to store the tasks
             /// @param maxSize: Max tasks to deque
             /// @return: The number of dequeued tasks
-            size_t getFinishedTasks(IThreadPoolTask** taskBuffer, size_t maxSize) {
+            size_t getFinishedTasks(IThreadPoolTask<T>** taskBuffer, size_t maxSize) {
                 return _finishedTasks.try_dequeue_bulk(taskBuffer, maxSize);
             }
 
@@ -105,36 +85,38 @@ namespace vorb {
             bool isFinished();
 
             /// Getters
-            const i32 getSize() const { return _workers.size(); }
-            const size_t getTasksSizeApprox() const { return _tasks.size_approx(); }
-            const size_t getFinishedTasksSizeApprox() const { return _finishedTasks.size_approx(); }
+            i32 getSize() const { return _workers.size(); }
+            size_t getTasksSizeApprox() const { return _tasks.size_approx(); }
+            size_t getFinishedTasksSizeApprox() const { return _finishedTasks.size_approx(); }
         private:
             // Typedef for func ptr
-            typedef void (ThreadPool::*workerFunc)(WorkerData*);
+            typedef void (ThreadPool<T>::*workerFunc)(T*);
 
             /// Class definition for worker thread
             class WorkerThread {
             public:
                 /// Creates the thread
                 /// @param func: The function the thread should execute
-                WorkerThread(workerFunc func, ThreadPool* threadPool) {
+                WorkerThread(workerFunc func, ThreadPool<T>* threadPool) {
                     thread = new std::thread(func, threadPool, &data);
                 }
 
-                /// Joins the worker thread
-                void join() { thread->join(); }
+                /// Blocks until the worker thread completes
+                void join() {
+                    thread->join();
+                }
 
                 std::thread* thread; ///< The thread handle
-                WorkerData data; ///< Worker specific data
+                T data; ///< Worker specific data
             };
 
             /// Thread function that processes tasks
             /// @param data: The worker specific data
-            void workerThreadFunc(WorkerData* data);
+            void workerThreadFunc(T* data);
 
             /// Lock free task queues
-            moodycamel::ConcurrentQueue<IThreadPoolTask*> _tasks; ///< Holds tasks to execute
-            moodycamel::ConcurrentQueue<IThreadPoolTask*> _finishedTasks; ///< Holds finished tasks
+            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _tasks; ///< Holds tasks to execute
+            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _finishedTasks; ///< Holds finished tasks
 
             std::mutex _condMutex; ///< Mutex for the conditional variable
             std::condition_variable _cond; ///< Conditional variable that workers block on
@@ -145,8 +127,8 @@ namespace vorb {
 
     }
 }
-
-// Namespace alias
 namespace vcore = vorb::core;
+
+#include "ThreadPool.inl"
 
 #endif // ThreadPool_h__

@@ -1,104 +1,92 @@
 #include "stdafx.h"
-#include <SDL/SDL.h>
 #include "Timing.h"
+
+#include <SDL/SDL.h>
 
 typedef std::chrono::milliseconds ms;
 
-const float MS_PER_SECOND = 1000.0f;
+const f32 MS_PER_SECOND = 1000.0f;
 
 void PreciseTimer::start() {
-    _timerRunning = true;
-    _start = std::chrono::high_resolution_clock::now();
+    m_timerRunning = true;
+    m_start = std::chrono::high_resolution_clock::now();
 }
 
-//Returns time in ms
-float PreciseTimer::stop() {
-    _timerRunning = false;
-    std::chrono::duration<float> duration = std::chrono::high_resolution_clock::now() - _start;
-    return duration.count() * MS_PER_SECOND; //return ms
+// Returns time in ms
+f32 PreciseTimer::stop() {
+    m_timerRunning = false;
+    std::chrono::duration<f32> duration = std::chrono::high_resolution_clock::now() - m_start;
+    return duration.count() * MS_PER_SECOND;
 }
 
-void MultiplePreciseTimer::start(std::string tag) {
-    if (_index >= intervals.size()) intervals.push_back(Interval(tag));
-    if (_timer.isRunning()) stop();
+void MultiplePreciseTimer::start(const nString& tag) {
+    if (m_index >= m_intervals.size()) m_intervals.push_back(Interval(tag));
+    if (m_timer.isRunning()) stop();
     
-    _timer.start();
+    m_timer.start();
      
 }
-
 void MultiplePreciseTimer::stop() {
-    intervals[_index++].time += _timer.stop();
+    m_intervals[m_index++].time += m_timer.stop();
 }
-
-//Prints all timings
-void MultiplePreciseTimer::end(bool print) {
-    if (_timer.isRunning()) _timer.stop();
-    if (intervals.empty()) return;
-    if (_samples == _desiredSamples) {
+void MultiplePreciseTimer::end(const bool& print) {
+    if (m_timer.isRunning()) m_timer.stop();
+    if (m_intervals.empty()) return;
+    if (m_samples == m_desiredSamples) {
         if (print) {
             printf("TIMINGS: \n");
-            for (size_t i = 0; i < intervals.size(); i++) {
-                printf("  %-20s: %12f ms\n", intervals[i].tag.c_str(), intervals[i].time / _samples);
+            for (size_t i = 0; i < m_intervals.size(); i++) {
+                printf("  %-20s: %12f ms\n", m_intervals[i].tag.c_str(), m_intervals[i].time / m_samples);
             }
             printf("\n");
         }
-        intervals.clear();
-        _samples = 0;
-        _index = 0;
+        m_intervals.clear();
+        m_samples = 0;
+        m_index = 0;
     } else {
-        _index = 0;
-        _samples++;
+        m_index = 0;
+        m_samples++;
     }
 }
 
-FpsCounter::FpsCounter() : _fps(0) {
-    // Empty
-}
 void FpsCounter::beginFrame() {
-    _startTicks = SDL_GetTicks();
+    m_startTicks = SDL_GetTicks();
 }
-
 float FpsCounter::endFrame() {
     calculateFPS();
-    return _fps;
+    return m_fps;
 }
-
 void FpsCounter::calculateFPS() {
     
     #define DECAY 0.9f
 
     //Calculate the number of ticks (ms) for this frame
-    f32 timeThisFrame = (f32)(SDL_GetTicks() - _startTicks);
+    f32 timeThisFrame = (f32)(SDL_GetTicks() - m_startTicks);
     // Use a simple moving average to decay the FPS
-    _frameTime = _frameTime * DECAY + timeThisFrame * (1.0f - DECAY);
+    m_frameTime = m_frameTime * DECAY + timeThisFrame * (1.0f - DECAY);
   
     //Calculate FPS
-    if (_frameTime > 0.0f) {
-        _fps = MS_PER_SECOND / _frameTime;
+    if (m_frameTime > 0.0f) {
+        m_fps = MS_PER_SECOND / m_frameTime;
     } else {
-        _fps = 60.0f;
+        m_fps = 60.0f;
     }
 }
 
-FpsLimiter::FpsLimiter() {
-    // Empty
-}
-void FpsLimiter::init(float maxFPS) {
+void FpsLimiter::init(const f32& maxFPS) {
     setMaxFPS(maxFPS);
 }
-
-void FpsLimiter::setMaxFPS(float maxFPS) {
-    _maxFPS = maxFPS;
+void FpsLimiter::setMaxFPS(const f32& maxFPS) {
+    m_maxFPS = maxFPS;
 }
-
 float FpsLimiter::endFrame() {
     calculateFPS();
 
-    f32 frameTicks = (f32)(SDL_GetTicks() - _startTicks);
+    f32 frameTicks = (f32)(SDL_GetTicks() - m_startTicks);
     //Limit the FPS to the max FPS
-    if (MS_PER_SECOND / _maxFPS > frameTicks) {
-        SDL_Delay((ui32)(MS_PER_SECOND / _maxFPS - frameTicks));
+    if (MS_PER_SECOND / m_maxFPS > frameTicks) {
+        SDL_Delay((ui32)(MS_PER_SECOND / m_maxFPS - frameTicks));
     }
 
-    return _fps;
+    return m_fps;
 }

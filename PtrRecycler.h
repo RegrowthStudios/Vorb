@@ -1,67 +1,88 @@
+///
+/// PtrRecycler.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 8 Dec 2014
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// 
+///
+
 #pragma once
 
+#ifndef PtrRecycler_h__
+#define PtrRecycler_h__
+
+/// Creates and caches larges numbers of pointers
+/// @tparam: Data type pointers are made of
 template<typename T>
 class PtrRecycler {
 public:
-    PtrRecycler() {}
     ~PtrRecycler() {
         freeAll();
     }
 
     T* create() {
         T* data;
-        if (_recycled.size() > 0) {
-            // Get A Recycled Data
-            data = _recycled[_recycled.size() - 1];
+        if (m_recycled.size() > 0) {
+            // Get a recycled data
+            data = m_recycled[m_recycled.size() - 1];
 
-            // Update Lists
-            _recycled.pop_back();
-            *(_recycledChecks[(ui32)data]) = 0;
+            // Update lists
+            m_recycled.pop_back();
+            *(m_recycledChecks[(ui32)data]) = 0;
         } else {
-            // Create A New Data Segment
+            // Create a new data segment
             PtrBind* bind = new PtrBind();
             data = &bind->data;
             bind->recycleCheck = 0;
 
             // Add The Data Checks
-            _allocated.push_back(bind);
-            _recycledChecks[(ui32)data] = &bind->recycleCheck;
+            m_allocated.push_back(bind);
+            m_recycledChecks[(ui32)data] = &bind->recycleCheck;
         }
         return data;
     }
     void recycle(T* data) {
-        i32* recycleCheck = _recycledChecks[(ui32)data];
+        i32* recycleCheck = m_recycledChecks[(ui32)data];
 
-        // Make Sure It Hasn't Already Been Recycled
+        // Make sure it hasn't already been recycled
         if (*recycleCheck == 0) {
-            _recycled.push_back(data);
+            m_recycled.push_back(data);
             *recycleCheck = 1;
         }
     }
 
     void freeAll() {
-        if (_allocated.size() > 0) {
-            // Free All Allocated Memory
-            for (i32 i = _allocated.size() - 1; i >= 0; i--) {
-                delete _allocated[i];
+        if (m_allocated.size() > 0) {
+            // Free all allocated memory
+            for (i32 i = m_allocated.size() - 1; i >= 0; i--) {
+                delete m_allocated[i];
             }
             
-            // Empty Out The Lists
-            _allocated.swap(std::vector<PtrBind*>());
-            _recycledChecks.swap(std::map<ui32, i32*>());
-            _recycled.swap(std::vector<T*>());
+            // Empty out the lists
+            m_allocated.swap(std::vector<PtrBind*>());
+            m_recycledChecks.swap(std::map<ui32, i32*>());
+            m_recycled.swap(std::vector<T*>());
         }
     }
 private:
     struct PtrBind {
     public:
-        PtrBind() : data(T()), recycleCheck(0) {}
+        PtrBind() :
+            data(T()) {
+            // Empty
+        }
 
         T data;
-        i32 recycleCheck;
+        i32 recycleCheck = 0;
     };
 
-    std::vector<PtrBind*> _allocated;
-    std::map<ui32, i32*> _recycledChecks;
-    std::vector<T*> _recycled;
+    std::vector<PtrBind*> m_allocated;
+    std::map<ui32, i32*> m_recycledChecks;
+    std::vector<T*> m_recycled;
 };
+
+#endif // PtrRecycler_h__

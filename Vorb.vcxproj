@@ -126,7 +126,6 @@
     <ClInclude Include="ECSSimpleUpdater.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Events.hpp" />
-    <ClInclude Include="FastConversion.h" />
     <ClInclude Include="FixedSizeArrayRecycler.hpp" />
     <ClInclude Include="FullQuadVBO.h" />
     <ClInclude Include="GameWindow.h" />
@@ -179,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AwesomiumInterface.inl" />
+    <None Include="BufferUtils.inl" />
+    <None Include="FastConversion.inl" />
+    <None Include="Radix.inl" />
     <None Include="ThreadPool.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

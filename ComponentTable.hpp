@@ -67,9 +67,22 @@ namespace vorb {
                 return _components[0].second;
             }
 
-            /// @return Reference to component list
-            ComponentList& getComponentList() {
-                return _components;
+            /// @return Iterator to the first pair of (entity ID, T)
+            typename ComponentList::iterator begin() {
+                // + 1 to skip the default element
+                return _components.begin();
+            }
+            /// @return Iterator to the end of component pairing list
+            typename ComponentList::iterator end() {
+                return _components.end();
+            }
+            /// @return Const iterator to the first pair of (entity ID, T)
+            typename ComponentList::const_iterator cbegin() const {
+                return _components.cbegin();
+            }
+            /// @return Const iterator to the end of component pairing list
+            typename ComponentList::const_iterator cend() const {
+                return _components.cend();
             }
 
             /// @return Reference to component list for iteration

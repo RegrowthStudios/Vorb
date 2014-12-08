@@ -16,6 +16,8 @@
 #define GPUMEMORY_H_
 
 #include <unordered_map>
+#include "GLEnums.h"
+#include "gtypes.h"
 
 class SamplerState;
 

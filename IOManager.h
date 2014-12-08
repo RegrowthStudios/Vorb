@@ -43,6 +43,9 @@ public:
 
     // Read An Entire File To A String
     // Returns false If File Can't Be Found
+    bool readFileToString(const nString& path, nString& data) {
+        return readFileToString(path.c_str(), data);
+    }
     bool readFileToString(const cString path, nString& data);
     const cString readFileToString(const cString path);
     bool readFileToData(const cString path, std::vector<ui8>& data);

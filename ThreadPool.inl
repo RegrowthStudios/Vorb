@@ -1,17 +1,17 @@
-#include "stdafx.h"
-#include "ThreadPool.h"
-
-vcore::ThreadPool::ThreadPool() {
+template<typename T>
+vcore::ThreadPool<T>::ThreadPool() {
     // Empty
 }
 
-vcore::ThreadPool::~ThreadPool() {
+template<typename T>
+vcore::ThreadPool<T>::~ThreadPool() {
     destroy();
 }
 
-void vcore::ThreadPool::clearTasks() {
+template<typename T>
+void vcore::ThreadPool<T>::clearTasks() {
     #define BATCH_SIZE 50
-    IThreadPoolTask* tasks[BATCH_SIZE];
+    IThreadPoolTask<T>* tasks[BATCH_SIZE];
     int size;
     // Grab and kill tasks in batches
     while ((size = _tasks.try_dequeue_bulk(tasks, BATCH_SIZE))) {
@@ -21,7 +21,8 @@ void vcore::ThreadPool::clearTasks() {
     }
 }
 
-void vcore::ThreadPool::init(ui32 size) {
+template<typename T>
+void vcore::ThreadPool<T>::init(ui32 size) {
     // Check if its already initialized
     if (_isInitialized) return;
     _isInitialized = true;
@@ -35,7 +36,8 @@ void vcore::ThreadPool::init(ui32 size) {
     }
 }
 
-void vcore::ThreadPool::destroy() {
+template<typename T>
+void vcore::ThreadPool<T>::destroy() {
     if (!_isInitialized) return;
     // Clear all tasks
     clearTasks();
@@ -65,7 +67,8 @@ void vcore::ThreadPool::destroy() {
     _isInitialized = false;
 }
 
-bool vcore::ThreadPool::isFinished() {
+template<typename T>
+bool vcore::ThreadPool<T>::isFinished() {
     // Lock the mutex
     std::lock_guard<std::mutex> lock(_condMutex);
     // Check that the queue is empty
@@ -79,10 +82,11 @@ bool vcore::ThreadPool::isFinished() {
     return true;
 }
 
-void vcore::ThreadPool::workerThreadFunc(WorkerData* data) {
+template<typename T>
+void vcore::ThreadPool<T>::workerThreadFunc(T* data) {
     data->waiting = false;
     data->stop = false;
-    IThreadPoolTask* task;
+    IThreadPoolTask<T>* task;
 
     std::unique_lock<std::mutex> lock(_condMutex);
     lock.unlock();

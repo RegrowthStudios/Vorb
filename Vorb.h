@@ -23,14 +23,17 @@ namespace vorb{
     namespace ui { }
 }
 
-//Namespace aliases
-namespace vcore = vorb::core;
+// Namespace aliases
+namespace vcore = vorb::core; ///< Namespace alias vorb::core
+namespace vg = vorb::core::graphics; ///< Namespace alias vorb::core::graphics
+namespace vvox = vorb::voxel; ///< Namespace alias vorb::voxel
+namespace vui = vorb::ui; ///< Namespace alias vorb::ui
+
+// Pre-declaration helpers
+#define DECL_VORB(CONTAINER, TYPE) namespace vorb { CONTAINER TYPE; }
 #define DECL_VCORE(CONTAINER, TYPE) namespace vorb { namespace core { CONTAINER TYPE; }  }
-namespace vvox = vorb::voxel;
-#define DECL_VVOX(CONTAINER, TYPE) namespace vorb { namespace voxel { CONTAINER TYPE; }  }
-namespace vg = vorb::core::graphics;
 #define DECL_VG(CONTAINER, TYPE) namespace vorb { namespace core { namespace graphics { CONTAINER TYPE; } }  }
-namespace vui = vorb::ui;
+#define DECL_VVOX(CONTAINER, TYPE) namespace vorb { namespace voxel { CONTAINER TYPE; }  }
 #define DECL_VUI(CONTAINER, TYPE) namespace vorb { namespace ui { CONTAINER TYPE; }  }
 
 #endif // VORB_H_

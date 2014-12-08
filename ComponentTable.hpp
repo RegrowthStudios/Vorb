@@ -32,21 +32,11 @@ namespace vorb {
                 // Default data goes in the first slot
                 _components.emplace_back(ID_GENERATOR_NULL_ID, defaultData);
             }
-            /// Default constructor that attempts to use Component::createDefault() as blank component data
-            ComponentTable() : ComponentTable(T::createDefault()) {
+            /// Default constructor that uses component constructor for defaults
+            ComponentTable() : ComponentTable(T()) {
                 // Empty
             }
         
-            virtual void update(ComponentID cID) override {
-                update(_components[cID].first, cID, get(cID));
-            }
-
-            /// Abstract update method for a single component
-            /// @param eID: Entity ID of updating component
-            /// @param cID: Component ID of updating component
-            /// @param component: Component reference
-            virtual void update(const EntityID& eID, const ComponentID& cID, T& component) = 0;
-
             /// Obtain a component from this table
             /// @param cID: Component ID
             /// @return Const component reference
@@ -75,6 +65,11 @@ namespace vorb {
             /// @return The blank component data
             const T& getDefaultData() const {
                 return _components[0].second;
+            }
+
+            /// @return Reference to component list
+            ComponentList& getComponentList() {
+                return _components;
             }
 
             /// @return Reference to component list for iteration

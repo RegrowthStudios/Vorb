@@ -13,10 +13,6 @@
 #include "Windows.h"
 #endif
 
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 // register keyword creates a warning and is deprecated
 #if !defined(REGISTER)
 #if defined(WIN32) || defined(WIN64)

@@ -136,15 +136,15 @@ bool IOManager::readFileToString(const cString path, nString& data) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
-        data.resize(length + 1);
+        data.resize((size_t)length + 1);
         t.read(&(data[0]), length);
         t.close();
 
-        data[length] = '\0';
+        data[(size_t)length] = '\0';
         return true;
     }
     return false;
@@ -156,15 +156,15 @@ const cString IOManager::readFileToString(const cString path) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
-        cString data = new char[length + 1];
+        cString data = new char[(size_t)length + 1];
         t.read(data, length);
         t.close();
 
-        data[length] = '\0';
+        data[(size_t)length] = '\0';
         return data;
     }
     return nullptr;
@@ -176,10 +176,10 @@ bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
 
-        data.resize(length);
+        data.resize((size_t)length);
         t.read((char*)&(data[0]), length);
         t.close();
 

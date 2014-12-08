@@ -1,11 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="colors.cpp" />
-    <ClCompile Include="lodepng.cpp" />
-    <ClCompile Include="Random.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Timing.cpp" />
     <ClCompile Include="DepthState.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
@@ -72,29 +68,30 @@
     <ClCompile Include="IRenderPipeline.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="Keg.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
+    <ClCompile Include="lodepng.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Timing.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="colors.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="colors.h" />
     <ClInclude Include="compat.h" />
-    <ClInclude Include="Events.hpp" />
-    <ClInclude Include="lodepng.h" />
-    <ClInclude Include="PtrRecycler.h" />
-    <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="types.h" />
-    <ClInclude Include="utils.h" />
     <ClInclude Include="Vorb.h" />
-    <ClInclude Include="FastConversion.h" />
-    <ClInclude Include="Timing.h" />
     <ClInclude Include="AwesomiumInterface.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -215,6 +212,27 @@
     <ClInclude Include="Keg.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Timing.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="colors.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PtrRecycler.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -235,10 +253,25 @@
     <Filter Include="IO\Keg">
       <UniqueIdentifier>{279a572d-8160-4392-a3d2-988fdb513d66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{697c6002-2f1c-4b32-9b83-d3af9d9d4056}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="AwesomiumInterface.inl">
       <Filter>UI</Filter>
+    </None>
+    <None Include="Radix.inl">
+      <Filter>Utils</Filter>
+    </None>
+    <None Include="FastConversion.inl">
+      <Filter>Utils</Filter>
+    </None>
+    <None Include="BufferUtils.inl">
+      <Filter>Utils</Filter>
+    </None>
+    <None Include="ThreadPool.inl">
+      <Filter>Core</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -37,7 +37,7 @@ void MultiplePreciseTimer::end(bool print) {
     if (_samples == _desiredSamples) {
         if (print) {
             printf("TIMINGS: \n");
-            for (int i = 0; i < intervals.size(); i++) {
+            for (size_t i = 0; i < intervals.size(); i++) {
                 printf("  %-20s: %12f ms\n", intervals[i].tag.c_str(), intervals[i].time / _samples);
             }
             printf("\n");
@@ -65,10 +65,10 @@ float FpsCounter::endFrame() {
 
 void FpsCounter::calculateFPS() {
     
-    #define DECAY 0.9
+    #define DECAY 0.9f
 
     //Calculate the number of ticks (ms) for this frame
-    float timeThisFrame = SDL_GetTicks() - _startTicks;
+    f32 timeThisFrame = (f32)(SDL_GetTicks() - _startTicks);
     // Use a simple moving average to decay the FPS
     _frameTime = _frameTime * DECAY + timeThisFrame * (1.0f - DECAY);
   
@@ -94,10 +94,10 @@ void FpsLimiter::setMaxFPS(float maxFPS) {
 float FpsLimiter::endFrame() {
     calculateFPS();
 
-    float frameTicks = SDL_GetTicks() - _startTicks;
+    f32 frameTicks = (f32)(SDL_GetTicks() - _startTicks);
     //Limit the FPS to the max FPS
     if (MS_PER_SECOND / _maxFPS > frameTicks) {
-        SDL_Delay((Uint32)(MS_PER_SECOND / _maxFPS - frameTicks));
+        SDL_Delay((ui32)(MS_PER_SECOND / _maxFPS - frameTicks));
     }
 
     return _fps;

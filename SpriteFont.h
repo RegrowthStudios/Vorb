@@ -16,8 +16,8 @@ public:
 
 class SpriteFont {
 public:
-    SpriteFont(const cString font, i32 size, char cs, char ce);
-    SpriteFont(const cString font, i32 size) :
+    SpriteFont(const cString font, ui32 size, char cs, char ce);
+    SpriteFont(const cString font, ui32 size) :
         SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) {}
     void dispose();
 
@@ -31,11 +31,11 @@ public:
 
     void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, ColorRGBA8 tint, f32 depth);
 private:
-    static std::vector<i32>* createRows(i32v4* rects, i32 rectsLength, i32 r, i32 padding, i32& w);
+    static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 
-    i32 _regStart, _regLength;
+    ui32 _regStart, _regLength;
     CharGlyph* _glyphs;
-    i32 _fontHeight;
+    ui32 _fontHeight;
 
     ui32 _texID;
 };

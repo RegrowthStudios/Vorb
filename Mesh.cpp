@@ -112,8 +112,8 @@ void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices) {
     // This should only be called when not indexed
     assert(!_isIndexed);
     // Add the newVertices onto the _vertices array
-    int i = _vertices.size();
-    int j = 0;
+    size_t i = _vertices.size();
+    size_t j = 0;
     _vertices.resize(_vertices.size() + newVertices.size());
     while (i < _vertices.size()) {
         _vertices[i++] = newVertices[j++];
@@ -124,8 +124,8 @@ void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices, const 
     // This should only be called when indexed
     assert(_isIndexed);
     // Add the newVertices onto the _vertices array
-    int i = _vertices.size();
-    int j = 0;
+    size_t i = _vertices.size();
+    size_t j = 0;
     _vertices.resize(_vertices.size() + newVertices.size());
     while (i < _vertices.size()) {
         _vertices[i++] = newVertices[j++];

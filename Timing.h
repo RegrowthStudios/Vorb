@@ -2,7 +2,6 @@
 #include "stdafx.h"
 
 #include <chrono>
-#include <vector>
 
 class PreciseTimer {
 public:
@@ -32,12 +31,12 @@ private:
     struct Interval {
         Interval(std::string Tag) : tag(Tag), time(0.0f) {};
         std::string tag;
-        float time;
-
+        f32 time;
     };
+
     int _samples;
     int _desiredSamples;
-    int _index;
+    ui32 _index;
     PreciseTimer _timer;
     std::vector<Interval> intervals;
 };

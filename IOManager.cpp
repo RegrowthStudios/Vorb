@@ -136,7 +136,7 @@ bool IOManager::readFileToString(const cString path, nString& data) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        size_t length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
@@ -156,7 +156,7 @@ const cString IOManager::readFileToString(const cString path) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        size_t length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
@@ -176,7 +176,7 @@ bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        size_t length = t.tellg();
         t.seekg(0, std::ios::beg);
 
         data.resize(length);

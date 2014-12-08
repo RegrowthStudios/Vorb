@@ -36,7 +36,7 @@ namespace YAML {
             return success;
         }
     };
-    template<typename T, typename T_Comp, i32 C>
+    template<typename T, typename T_True, typename T_Comp, i32 C>
     struct convertVec {
         static Node encode(const T& rhs) {
             Node node;
@@ -45,7 +45,7 @@ namespace YAML {
         }
         static bool decode(const Node& node, T& rhs) {
             if (!node.IsSequence() || node.size() != C) return false;
-            for (i32 i = 0; i < C; i++) rhs[i] = node[i].as<T_Comp>();
+            for (i32 i = 0; i < C; i++) rhs[i] = static_cast<T_True>(node[i].as<T_Comp>());
             return true;
         }
     };
@@ -71,7 +71,7 @@ namespace YAML {
     return out; \
     MACRO_PARAN_R
 
-#define KEG_DECL_CONV_VEC_COMP(TYPE, TC, COUNT) YAML_EMITTER_VEC(TYPE##v##COUNT, COUNT) template<> struct convert<TYPE##v##COUNT> : public convertVec<TYPE##v##COUNT, TC, COUNT> {}
+#define KEG_DECL_CONV_VEC_COMP(TYPE, TC, COUNT) YAML_EMITTER_VEC(TYPE##v##COUNT, COUNT) template<> struct convert<TYPE##v##COUNT> : public convertVec<TYPE##v##COUNT, TYPE, TC, COUNT> {}
 #define KEG_DECL_CONV_VEC(TYPE, COUNT) KEG_DECL_CONV_VEC_COMP(TYPE, TYPE, COUNT)
     KEG_DECL_CONV_VEC_COMP(i8, i16, 2);
     KEG_DECL_CONV_VEC_COMP(i8, i16, 3);

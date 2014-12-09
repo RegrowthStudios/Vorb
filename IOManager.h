@@ -18,10 +18,10 @@ public:
     const cString getSearchDirectory() const {
         return _searchDir;
     }
-    static const cString getCurrentWorkingDirectory()  {
+    static const cString getCurrentWorkingDirectory() {
         return _cwDir;
     }
-    static const cString getExecutableDirectory()  {
+    static const cString getExecutableDirectory() {
         return _execDir;
     }
 
@@ -31,41 +31,41 @@ public:
     /// Gets all the entries in a directory
     /// @param dirPath: The directory to search
     /// @param entries: The store for all the resulting paths
-    void getDirectoryEntries(nString dirPath, std::vector<boost::filesystem::path>& entries);
+    void getDirectoryEntries(nString dirPath, std::vector<boost::filesystem::path>& entries) const;
 
     // Attempt To Find An Absolute File Path (Must Be Deleted) With This Environment
     // Returns false on failure
-    bool resolveFile(const cString path, nString& resultAbsolutePath);
+    bool resolveFile(const cString path, nString& resultAbsolutePath) const;
 
     // Open A File Using STD Flags ("r", "w", "b", etc.) 
     // Returns NULL If It Can't Be Found
-    FILE* openFile(const cString path, const cString flags);
+    FILE* openFile(const cString path, const cString flags) const;
 
     // Read An Entire File To A String
     // Returns false If File Can't Be Found
-    bool readFileToString(const cString path, nString& data);
-    const cString readFileToString(const cString path);
-    bool readFileToData(const cString path, std::vector<ui8>& data);
+    bool readFileToString(const cString path, nString& data) const;
+    const cString readFileToString(const cString path) const;
+    bool readFileToData(const cString path, std::vector<ui8>& data) const;
 
     /// Writes a string to a file. Creates file if it doesn't exist
     /// @param path: The path to the file
     /// @param data: The data to write to file
     /// @return true on success
-    bool writeStringToFile(const cString path, const nString& data);
+    bool writeStringToFile(const cString path, const nString& data) const;
 
     /// Makes a directory
     /// @param path: The directory path to make
-    bool makeDirectory(const cString path);
+    bool makeDirectory(const cString path) const;
 
     /// Check if a file exists
     /// @param path: The path to the file
     /// @return true if file exists
-    bool fileExists(const cString path);
+    bool fileExists(const cString path) const;
 
     /// Check if a directory exists
-    // @param path: The path to the directory
+    /// @param path: The path to the directory
     /// @return true if directory exists
-    bool directoryExists(const cString path);
+    bool directoryExists(const cString path) const;
 private:
     // Search Order (Top-Down)
     cString _searchDir;

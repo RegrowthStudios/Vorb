@@ -517,7 +517,7 @@ void SpriteBatch::createPixelTexture() {
 
 void SpriteBatch::disposeProgram() {
     if (_program) {
-        _program->destroy();
+        _program->dispose();
         _program = nullptr;
     }
 }

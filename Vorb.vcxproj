@@ -90,8 +90,10 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
+    <ClCompile Include="GLRPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
+    <ClCompile Include="ImageIO.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImageSaver.cpp" />
     <ClCompile Include="IOManager.cpp" />
@@ -132,6 +134,7 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
+    <ClInclude Include="GLRPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />
     <ClInclude Include="GraphicsDevice.h" />
@@ -139,6 +142,7 @@
     <ClInclude Include="IAwesomiumInterface.h" />
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="IGameScreen.h" />
+    <ClInclude Include="ImageIO.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="ImageSaver.h" />
     <ClInclude Include="IOManager.h" />
@@ -163,6 +167,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="ThreadSync.h" />
     <ClInclude Include="Timing.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="utils.h" />

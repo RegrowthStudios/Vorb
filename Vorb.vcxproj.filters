@@ -86,6 +86,12 @@
     <ClCompile Include="colors.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ImageIO.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="GLRPC.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -232,6 +238,15 @@
     </ClInclude>
     <ClInclude Include="PtrRecycler.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageIO.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadSync.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GLRPC.h">
+      <Filter>Core\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

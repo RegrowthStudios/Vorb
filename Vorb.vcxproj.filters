@@ -92,6 +92,9 @@
     <ClCompile Include="RPC.cpp">
       <Filter>Core\ADT</Filter>
     </ClCompile>
+    <ClCompile Include="InputDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -248,6 +251,18 @@
     <ClInclude Include="RPC.h">
       <Filter>Core\ADT</Filter>
     </ClInclude>
+    <ClInclude Include="InputDispatcher.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseInputDispatcher.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardEventDispatcher.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEventDispatcher.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -276,6 +291,9 @@
     </Filter>
     <Filter Include="Core\ECS">
       <UniqueIdentifier>{2623b98e-6c4b-492f-ba48-960edaa783f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Input">
+      <UniqueIdentifier>{84a1a378-d9b6-49d5-bad8-286be1b6565a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

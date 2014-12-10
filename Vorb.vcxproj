@@ -90,6 +90,7 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
+    <ClCompile Include="InputDispatcher.cpp" />
     <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
@@ -134,6 +135,9 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
+    <ClInclude Include="InputDispatcher.h" />
+    <ClInclude Include="KeyboardEventDispatcher.h" />
+    <ClInclude Include="MouseInputDispatcher.h" />
     <ClInclude Include="RPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />
@@ -172,6 +176,7 @@
     <ClInclude Include="types.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vorb.h" />
+    <ClInclude Include="WindowEventDispatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />

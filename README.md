@@ -49,15 +49,6 @@ c:\
 cd c:\repos
 git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ```
-4. Create dependencies as submodules:
-```
-mkdir -p c:\repos\vorb\deps
-cd c:\repos\vorb\deps
-git clone git@github.com:spurious/SDL-mirror.git sdl
-git clone https://github.com/nigels-com/glew.git glew
-git clone git@github.com:boostorg/boost.git
-git clone git@github.com:lvandeve/lodepng.git
-```
 
 ### Building
 1. Pull latest code

@@ -90,7 +90,7 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
-    <ClCompile Include="GLRPC.cpp" />
+    <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
     <ClCompile Include="ImageIO.cpp" />
@@ -134,7 +134,7 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
-    <ClInclude Include="GLRPC.h" />
+    <ClInclude Include="RPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />
     <ClInclude Include="GraphicsDevice.h" />
@@ -156,7 +156,7 @@
     <ClInclude Include="MultiComponentTracker.hpp" />
     <ClInclude Include="MultipleComponentSet.h" />
     <ClInclude Include="OpenglSurfaceFactory.h" />
-    <ClInclude Include="PtrRecycler.h" />
+    <ClInclude Include="PtrRecycler.hpp" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RTSwapChain.hpp" />

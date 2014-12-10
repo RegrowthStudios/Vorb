@@ -7,13 +7,13 @@
 
 #include "DepthState.h"
 #include "IGameScreen.h"
+#include "InputDispatcher.h"
 #include "GraphicsDevice.h"
 #include "RasterizerState.h"
 #include "SamplerState.h"
 #include "ScreenList.h"
 #include "utils.h"
 #include "Timing.h"
-
 
 MainGame::MainGame() : _fps(0) {
     // Empty
@@ -25,6 +25,9 @@ MainGame::~MainGame() {
 bool MainGame::initSystems() {
     // Create The Window
     if (!_window.init()) return false;
+
+    // Initialize input
+    vui::InputDispatcher::init();
 
     // Get The Machine's Graphics Capabilities
     _gDevice = new GraphicsDevice(_window);
@@ -93,6 +96,7 @@ void MainGame::exitGame() {
     if (_screenList) {
         _screenList->destroy(_lastTime);
     }
+    vui::InputDispatcher::dispose();
     _window.dispose();
     _isRunning = false;
 }

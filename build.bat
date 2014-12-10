@@ -1,5 +1,16 @@
 @ECHO OFF && PUSHD "%~dp0" && SETLOCAL
 
+set interactive=1
+echo %cmdcmdline% | find /i "%~0" >nul
+if not errorlevel 1 set interactive=0
+
+if _%1_==__ (
+    echo usage: %~nx0 filename
+
+)
+
+
+
 REM ====================================================================
 REM   Build: Clean
 REM ====================================================================
@@ -29,12 +40,26 @@ cd build
 REM ====================================================================
 REM   CMake: Create build files
 REM ====================================================================
-cmake ../
+
+
+cmake ../ && (
+  echo Running cmake
+) || (
+  if _%interactive%_==_0_ pause
+)
 IF "%~1"=="rebuild" (
-    make clean
+    make clean && (
+      echo Running make clean
+    ) || (
+      if _%interactive%_==_0_ pause
+    )
     shift
 )
 REM ====================================================================
 REM   CMake: Run Make
 REM ====================================================================
-make %*
+make %*  && (
+  echo Running make %*
+) || (
+  if _%interactive%_==_0_ pause
+)

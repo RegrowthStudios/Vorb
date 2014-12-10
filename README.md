@@ -20,12 +20,13 @@ we support all three major operating systems:
 ## Windows
 
 ### Required pre-setup
-1.  Compiler: [Microsoft Visual Studio Community Edition](http://www.visualstudio.com/)
+#### Tools
+*  Compiler: [Microsoft Visual Studio Community Edition](http://www.visualstudio.com/)
 *  Software Version Control:  [Git](http://git-scm.com/downloads)
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
 *  CMake: [Cmake](http://www.cmake.org/download/)
 
-2. Dependencies Downloads
+#### Vorb Dependencies
 *  SDL v2: [Github](https://github.com/spurious/SDL-mirror.git)
 *  GLEW v1.11.0: [Github](https://github.com/nigels-com/glew.git)
 *  Boost v1.57.0: [Github](https://github.com/boostorg/boost.git)
@@ -50,8 +51,8 @@ git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ```
 4. Create dependencies as submodules:
 ```
-cd c:\repos\vorb
-mkdir deps
+mkdir -p c:\repos\vorb\deps
+cd c:\repos\vorb\deps
 git clone git@github.com:spurious/SDL-mirror.git sdl
 git clone https://github.com/nigels-com/glew.git glew
 git clone git@github.com:boostorg/boost.git

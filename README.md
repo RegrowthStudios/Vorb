@@ -25,6 +25,12 @@ we support all three major operating systems:
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
 *  CMake: [Cmake](http://www.cmake.org/download/)
 
+2. Dependencies Downloads
+*  SDL v2: [Github](git@github.com:spurious/SDL-mirror.git)
+*  GLEW v1.11.0: [Github](https://github.com/nigels-com/glew.git)
+*  Boost v1.57.0: [Github](git@github.com:boostorg/boost.git)
+*  Lodepng vN/A: [Github](git@github.com:lvandeve/lodepng.git)
+
 ### Installation
 1. Open a dos window.
 ```
@@ -36,11 +42,20 @@ cmd
 cd c:\
 mkdir -p repos
 ```
-3. Clone the Seed of Andromeda repositories
+3. Clone the Vorb repository
 ```
 c:\
 cd c:\repos
-git clone --recurse-submodules git@github.com:RegrowthStudios/SoACode.git soa
+git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
+```
+4. Create dependencies as submodules:
+```
+cd c:\repos\vorb
+mkdir deps
+git clone git@github.com:spurious/SDL-mirror.git sdl
+git clone https://github.com/nigels-com/glew.git glew
+git clone git@github.com:boostorg/boost.git
+git clone git@github.com:lvandeve/lodepng.git
 ```
 
 ### Building

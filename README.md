@@ -1,9 +1,9 @@
-# Seed of Andromeda
-This repository contains the source code for Seed of Andromeda.
+# Vorb
+This repository contains the source code for Regrowth Studios Vorb Game Engine.
 
 ## Getting Started
 This guide will walk you through setting up as a developer for
-Seed of Andromeda.  There is a basic requirement of having several
+Vorb.  There is a basic requirement of having several
 packages installed prior to being able to develop.  In addition,
 we support all three major operating systems:
 
@@ -20,7 +20,7 @@ we support all three major operating systems:
 ## Windows
 
 ### Required pre-setup
-1.  Compiler: [Microsoft Visual Studio 2013](http://www.microsoft.com/en-us/download/details.aspx?id=43729)
+1.  Compiler: [Microsoft Visual Studio Community Edition](http://www.visualstudio.com/)
 *  Software Version Control:  [Git](http://git-scm.com/downloads)
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
 

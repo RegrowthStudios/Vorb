@@ -23,6 +23,7 @@ we support all three major operating systems:
 1.  Compiler: [Microsoft Visual Studio Community Edition](http://www.visualstudio.com/)
 *  Software Version Control:  [Git](http://git-scm.com/downloads)
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
+*  CMake: [Cmake](http://www.cmake.org/download/)
 
 ### Installation
 1. Open a dos window.

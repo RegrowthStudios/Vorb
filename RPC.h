@@ -15,6 +15,8 @@
 #ifndef RPC_h__
 #define RPC_h__
 
+#include <queue>
+
 #include "Events.hpp"
 #include "ThreadSync.h"
 

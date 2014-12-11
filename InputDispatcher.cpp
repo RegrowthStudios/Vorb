@@ -3,15 +3,20 @@
 
 #include <SDL/SDL.h>
 
+#include "GameWindow.h"
+
 vui::MouseEventDispatcher vui::InputDispatcher::mouse;
 vui::KeyboardEventDispatcher vui::InputDispatcher::key;
 vui::WindowEventDispatcher vui::InputDispatcher::window;
-bool vui::InputDispatcher::m_isInit = false;
+volatile bool vui::InputDispatcher::m_isInit = false;
+GameWindow* vui::InputDispatcher::m_window = nullptr;
+Event<> vui::InputDispatcher::onQuit(nullptr);
 
-void vui::InputDispatcher::init() {
+void vui::InputDispatcher::init(GameWindow* w) {
     if (m_isInit) throw std::exception("Input dispatcher is already initialized");
     m_isInit = true;
-    SDL_AddEventWatch(InputDispatcher::onSDLEvent, nullptr);
+    m_window = w;
+    SDL_SetEventFilter(InputDispatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
     // Clear values
@@ -22,10 +27,12 @@ void vui::InputDispatcher::init() {
 void vui::InputDispatcher::dispose() {
     if (!m_isInit) return;
     m_isInit = false;
-    SDL_DelEventWatch(InputDispatcher::onSDLEvent, nullptr);
+    SDL_SetEventFilter(nullptr, nullptr);
 }
 
+/// Memory-efficient way to split through multiple event types
 typedef union {
+    vui::MouseEvent mouse;
     vui::MouseButtonEvent mouseButton;
     vui::MouseMotionEvent mouseMotion;
     vui::MouseWheelEvent mouseWheel;
@@ -35,7 +42,7 @@ typedef union {
 } InputEvent;
 
 void convert(vui::KeyModifiers& km, const ui16& sm) {
-#define MASK_BOOL(F) ((F) == 0) ? 0 : 1;
+#define MASK_BOOL(F) ((F) == 0) ? false : true;
     km.lAlt = MASK_BOOL(sm & KMOD_LALT);
     km.rAlt = MASK_BOOL(sm & KMOD_RALT);
     km.lCtrl = MASK_BOOL(sm & KMOD_LCTRL);
@@ -82,7 +89,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = true;
         key.onKeyDown(ie.key);
-        key.onEvent(ie.key);
+        key.onEvent();
         break;
     case SDL_KEYUP:
         convert(ie.key.mod, e->key.keysym.mod);
@@ -91,7 +98,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = false;
         key.onKeyDown(ie.key);
-        key.onEvent(ie.key);
+        key.onEvent();
         break;
     case SDL_MOUSEMOTION:
         ie.mouseMotion.x = e->motion.x;
@@ -132,25 +139,64 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         mouse.onEvent(ie.mouseWheel);
         break;
     case SDL_QUIT:
+        InputDispatcher::onQuit();
         break;
     case SDL_WINDOWEVENT:
         switch (e->window.event) {
+        case SDL_WINDOWEVENT_CLOSE:
+            window.onClose();
+            window.onEvent();
         case SDL_WINDOWEVENT_RESIZED:
             ie.windowResize.w = e->window.data1;
             ie.windowResize.h = e->window.data2;
             window.onResize(ie.windowResize);
-            window.onEvent(ie.windowResize);
+            window.onEvent();
+            break;
+        case SDL_WINDOWEVENT_ENTER:
+            // We must poll this one instance
+#ifdef OS_WINDOWS
+            {
+                POINT mp;
+                GetCursorPos(&mp);
+                i32v2 wp = m_window->getPosition();
+                mouse.m_lastPos.x = mp.x - wp.x;
+                mouse.m_lastPos.y = mp.y - wp.y;
+            }
+#else
+            // TODO: This is currently not working
+            SDL_GetMouseState(&mouse.m_lastPos.x, &mouse.m_lastPos.y);
+#endif
+            ie.mouse.x = mouse.m_lastPos.x;
+            ie.mouse.y = mouse.m_lastPos.y;
+            mouse.onFocusGained(ie.mouse);
+            mouse.onEvent(ie.mouse);
+            break;
+        case SDL_WINDOWEVENT_LEAVE:
+            ie.mouse.x = mouse.m_lastPos.x;
+            ie.mouse.y = mouse.m_lastPos.y;
+            mouse.onFocusLost(ie.mouse);
+            mouse.onEvent(ie.mouse);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+            key.onFocusGained();
+            key.onEvent();
+            break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+            key.onFocusLost();
+            key.onEvent();
             break;
         default:
+            // Unrecognized window event
             return 1;
         }
         break;
     case SDL_DROPFILE:
         ie.windowFile.file = e->drop.file;
         window.onFile(ie.windowFile);
-        window.onEvent(ie.windowFile);
+        window.onEvent();
         SDL_free(e->drop.file);
     default:
+        // Unrecognized event
         return 1;
     }
     return 0;

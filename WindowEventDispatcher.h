@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// Dispatches events related to the application window handle
 ///
 
 #pragma once
@@ -19,25 +19,27 @@
 
 namespace vorb {
     namespace ui {
-        struct WindowEvent {
-            // Empty
-        };
-        struct WindowResizeEvent : public WindowEvent {
+        /// Window resize event data
+        struct WindowResizeEvent {
         public:
-            ui32 w;
-            ui32 h;
-        };
-        struct WindowFileEvent : public WindowEvent {
-        public:
-            const cString file;
+            ui32 w; ///< New window width in pixels
+            ui32 h; ///< New window height in pixels
         };
 
-        class WindowEventDispatcher {
+        /// Window path drop event data
+        struct WindowFileEvent {
         public:
-            Event<const WindowEvent&> onEvent;
-            Event<const WindowEvent&> onQuit;
-            Event<const WindowResizeEvent&> onResize;
-            Event<const WindowFileEvent&> onFile;
+            const cString file; ///< Absolute path dropped into the window
+        };
+
+        /// Dispatches window events
+        class WindowEventDispatcher {
+            friend class InputDispatcher;
+        public:
+            Event<> onEvent; ///< Signaled when any window event happens
+            Event<> onClose; ///< Signaled when user requests to close the window
+            Event<const WindowResizeEvent&> onResize; ///< Signaled when window is resized
+            Event<const WindowFileEvent&> onFile; ///< Signaled when a path is dropped into the window
         };
     }
 }

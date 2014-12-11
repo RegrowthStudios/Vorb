@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL/SDL.h>
 
+#include "Events.hpp"
 #include "GameWindow.h"
 #include "GraphicsDevice.h"
 
@@ -60,4 +61,7 @@ protected:
     bool _isRunning;
     ScreenList* _screenList;
     IGameScreen* _screen;
+
+    IDelegate<>* m_fOnQuit; ///< Callback to handle when the application should quit
+    volatile bool m_signalQuit = false; ///< Tracks application's request to quit
 };

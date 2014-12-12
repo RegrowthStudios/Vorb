@@ -267,6 +267,11 @@ T lerp(T a, T b, float f) {
     return (T)(a * (1.0f - f) + b * f);
 }
 
+template <typename T>
+T lerp(T a, T b, double f) {
+    return (T)(a * (1.0f - f) + b * f);
+}
+
 inline i32 getPositionSeed(int x, int y, int z) {
     return ((x & 0x7FF) << 10) |
            ((y & 0x3FF)) |
@@ -292,6 +297,20 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     q.z = a.z;
     f64 l1 = glm::length(v1);
     f64 l2 = glm::length(v2);
+    q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
+    return glm::normalize(q);
+}
+
+/// Finds the shortest arc rotation quat from v1 to v2
+/// Make sure inputs are normalized
+inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
+    f32q q;
+    f32v3 a = glm::cross(v1, v2);
+    q.x = a.x;
+    q.y = a.y;
+    q.z = a.z;
+    f32 l1 = glm::length(v1);
+    f32 l2 = glm::length(v2);
     q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
     return glm::normalize(q);
 }

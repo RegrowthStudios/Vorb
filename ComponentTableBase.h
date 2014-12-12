@@ -39,7 +39,7 @@ namespace vorb {
 
             /// @return Iterator to the first pair of (entity ID, component ID)
             ComponentBindingSet::iterator begin() {
-                return ++_components.begin();
+                return _components.begin();
             }
             /// @return Iterator to the end of component pairing list
             ComponentBindingSet::iterator end() {
@@ -47,7 +47,7 @@ namespace vorb {
             }
             /// @return Const iterator to the first pair of (entity ID, component ID)
             ComponentBindingSet::const_iterator cbegin() const {
-                return ++_components.cbegin();
+                return _components.cbegin();
             }
             /// @return Const iterator to the end of component pairing list
             ComponentBindingSet::const_iterator cend() const {

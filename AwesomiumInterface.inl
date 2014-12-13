@@ -115,6 +115,15 @@ bool AwesomiumInterface<C>::init(const char* inputDir, const char* sessionName, 
         puts("Awesomium Error: No window object.");
     }
 
+    // Add input registration
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusGained.addFunctor([=] (void* s, const MouseEvent& e) { onMouseFocusGained(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusLost.addFunctor([=] (void* s, const MouseEvent& e) { onMouseFocusLost(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onMotion.addFunctor([=] (void* s, const MouseMotionEvent& e) { onMouseMotion(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonUp.addFunctor([=] (void* s, const MouseButtonEvent& e) { onMouseButtonUp(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonDown.addFunctor([=] (void* s, const MouseButtonEvent& e) { onMouseButtonDown(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyUp.addFunctor([=] (void* s, const KeyEvent& e) { onKeyUp(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyDown.addFunctor([=] (void* s, const KeyEvent& e) { onKeyDown(s, e); }));
+
     _isInitialized = true;
     return true;
 }
@@ -123,6 +132,18 @@ template <class C>
 void AwesomiumInterface<C>::destroy() {
     _webSession->Release();
     _webView->Destroy();
+
+    // Unregister events
+    vui::InputDispatcher::mouse.onFocusGained -= (IDelegate<const MouseEvent&>*)m_delegatePool[0];
+    vui::InputDispatcher::mouse.onFocusLost -= (IDelegate<const MouseEvent&>*)m_delegatePool[1];
+    vui::InputDispatcher::mouse.onMotion -= (IDelegate<const MouseMotionEvent&>*)m_delegatePool[2];
+    vui::InputDispatcher::mouse.onButtonUp -= (IDelegate<const MouseButtonEvent&>*)m_delegatePool[3];
+    vui::InputDispatcher::mouse.onButtonDown -= (IDelegate<const MouseButtonEvent&>*)m_delegatePool[4];
+    vui::InputDispatcher::key.onKeyUp -= (IDelegate<const KeyEvent&>*)m_delegatePool[5];
+    vui::InputDispatcher::key.onKeyDown -= (IDelegate<const KeyEvent&>*)m_delegatePool[6];
+    for (auto& p : m_delegatePool) delete p;
+    m_delegatePool.clear();
+
     delete _openglSurfaceFactory;
     delete _data_source;
     _isInitialized = false;
@@ -134,73 +155,61 @@ void AwesomiumInterface<C>::invokeFunction(const cString functionName, const Awe
 }
 
 template <class C>
-void AwesomiumInterface<C>::handleEvent(const SDL_Event& evnt) {
-    float relX, relY;
-    char* keyIdentifier;
+void AwesomiumInterface<C>::onMouseFocusGained(void* sender, const MouseEvent& e) {
+    _webView->Focus();
+}
+template <class C>
+void AwesomiumInterface<C>::onMouseFocusLost(void* sender, const MouseEvent& e) {
+    _webView->Unfocus();
+}
+template <class C>
+void AwesomiumInterface<C>::onMouseButtonUp(void* sender, const MouseButtonEvent& e) {
+    _webView->InjectMouseUp(getAwesomiumButton(e.button));
+}
+template <class C>
+void AwesomiumInterface<C>::onMouseButtonDown(void* sender, const MouseButtonEvent& e) {
+    _webView->InjectMouseDown(getAwesomiumButton(e.button));
+}
+template <class C>
+void AwesomiumInterface<C>::onMouseMotion(void* sender, const MouseMotionEvent& e) {
+    f32 relX = (e.x - _drawRect.x) / (f32)_drawRect.z;
+    f32 relY = (e.y - _drawRect.y) / (f32)_drawRect.w;
+
+    _webView->InjectMouseMove((i32)(relX * _width), (i32)(relY * _height));
+}
+template <class C>
+void AwesomiumInterface<C>::onKeyDown(void* sender, const KeyEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
-    switch (evnt.type) {
-        case SDL_MOUSEMOTION:
-            relX = (evnt.motion.x - _drawRect.x) / (f32)_drawRect.z;
-            relY = (evnt.motion.y - _drawRect.y) / (f32)_drawRect.w;
+    keyEvent.virtual_key_code = e.keyCode;
+    keyEvent.native_key_code = e.scanCode;
+    
+    keyEvent.modifiers = 0;
+    if (e.mod.alt != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModAltKey;
+    if (e.mod.ctrl != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModControlKey;
+    if (e.mod.shift != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModShiftKey;
+    if (e.mod.gui != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModMetaKey;
+    if (e.repeatCount > 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModIsAutorepeat;
 
-            _webView->Focus();
-            _webView->InjectMouseMove((int)(relX * _width), (int)(relY * _height));
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            _webView->Focus();
-            _webView->InjectMouseDown(getAwesomiumButtonFromSDL(evnt.button.button));
-            break;
-        case SDL_MOUSEBUTTONUP:
-            _webView->Focus();
-            _webView->InjectMouseUp(getAwesomiumButtonFromSDL(evnt.button.button));
-            break;
-        case SDL_MOUSEWHEEL:
-            _webView->Focus();
-            _webView->InjectMouseWheel(evnt.motion.y, evnt.motion.x);
-            break;
-        case SDL_TEXTINPUT:
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-            
-            //Have to construct a webKeyboardEvent from the SDL Event     
-            keyIdentifier = keyEvent.key_identifier;
-            keyEvent.virtual_key_code = getWebKeyFromSDLKey(evnt.key.keysym.scancode);
-            Awesomium::GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code,
-                                                          &keyIdentifier);
+    keyEvent.type = Awesomium::WebKeyboardEvent::kTypeKeyDown;
+    _webView->InjectKeyboardEvent(keyEvent);
+}
+template <class C>
+void AwesomiumInterface<C>::onKeyUp(void* sender, const KeyEvent& e) {
+    Awesomium::WebKeyboardEvent keyEvent;
 
-            // Apply modifiers
-            keyEvent.modifiers = 0;
-            if (evnt.key.keysym.mod & KMOD_LALT || evnt.key.keysym.mod & KMOD_RALT)
-                keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModAltKey;
-            if (evnt.key.keysym.mod & KMOD_LCTRL || evnt.key.keysym.mod & KMOD_RCTRL)
-                keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModControlKey;
-            if (evnt.key.keysym.mod & KMOD_LSHIFT || evnt.key.keysym.mod & KMOD_RSHIFT)
-                keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModShiftKey;
-            if (evnt.key.keysym.mod & KMOD_NUM)
-                keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModIsKeypad;
+    keyEvent.virtual_key_code = e.keyCode;
+    keyEvent.native_key_code = e.scanCode;
 
-            keyEvent.native_key_code = evnt.key.keysym.scancode;
+    keyEvent.modifiers = 0;
+    if (e.mod.alt != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModAltKey;
+    if (e.mod.ctrl != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModControlKey;
+    if (e.mod.shift != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModShiftKey;
+    if (e.mod.gui != 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModMetaKey;
+    if (e.repeatCount > 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModIsAutorepeat;
 
-            // Inject the event
-            if (evnt.type == SDL_KEYDOWN) {
-                keyEvent.type = Awesomium::WebKeyboardEvent::kTypeKeyDown;
-                _webView->InjectKeyboardEvent(keyEvent);
-            } else if (evnt.type == SDL_KEYUP) {
-                keyEvent.type = Awesomium::WebKeyboardEvent::kTypeKeyUp;
-                _webView->InjectKeyboardEvent(keyEvent);
-            } else if (evnt.type == SDL_TEXTINPUT) {
-
-                strcpy((char*)keyEvent.text, evnt.text.text);
-                strcpy((char*)keyEvent.unmodified_text, evnt.text.text);
-
-                keyEvent.type = Awesomium::WebKeyboardEvent::kTypeChar;
-                _webView->InjectKeyboardEvent(keyEvent);
-            }
-            break;
-        default:
-            break;
-    }
+    keyEvent.type = Awesomium::WebKeyboardEvent::kTypeKeyUp;
+    _webView->InjectKeyboardEvent(keyEvent);
 }
 
 template <class C>
@@ -327,16 +336,17 @@ Awesomium::JSValue CustomJSMethodHandler<C>::OnMethodCallWithReturnValue(Awesomi
 
 /// Converts SDL button to awesomium button
 template <class C>
-Awesomium::MouseButton AwesomiumInterface<C>::getAwesomiumButtonFromSDL(Uint8 SDLButton) {
-    switch (SDLButton) {
-        case SDL_BUTTON_LEFT:
-            return Awesomium::MouseButton::kMouseButton_Left;
-        case SDL_BUTTON_RIGHT:
-            return Awesomium::MouseButton::kMouseButton_Right;
-        case SDL_BUTTON_MIDDLE:
-            return Awesomium::MouseButton::kMouseButton_Middle;
+Awesomium::MouseButton AwesomiumInterface<C>::getAwesomiumButton(const vui::MouseButton& button) {
+    switch (button) {
+    case MouseButton::LEFT:
+        return Awesomium::MouseButton::kMouseButton_Left;
+    case MouseButton::RIGHT:
+        return Awesomium::MouseButton::kMouseButton_Right;
+    case MouseButton::MIDDLE:
+        return Awesomium::MouseButton::kMouseButton_Middle;
+    default:
+        return Awesomium::MouseButton::kMouseButton_Left;
     }
-    return Awesomium::MouseButton::kMouseButton_Left;
 }
 
 /// Helper Macros

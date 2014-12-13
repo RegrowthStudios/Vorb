@@ -24,10 +24,6 @@ public:
     /// @param args: the argument list
     virtual void invokeFunction(const cString functionName, const Awesomium::JSArray& args = Awesomium::JSArray()) = 0;
 
-    /// Handles an SDL event
-    /// @param evnt: the SDL event to handle
-    virtual void handleEvent(const SDL_Event& evnt) = 0;
-
     /// Updates the UI
     virtual void update() = 0;
 

@@ -24,14 +24,25 @@ namespace vorb {
         /// Bit array common key modifiers
         struct KeyModifiers {
         public:
-            bool lShift : 1;
-            bool rShift : 1;
-            bool lCtrl : 1;
-            bool rCtrl : 1;
-            bool lAlt : 1;
-            bool rAlt : 1;
-            bool lGUI : 1;
-            bool rGUI : 1;
+            union {
+                struct {
+                    bool lShift : 1; ///< Left shift pressed state
+                    bool rShift : 1; ///< Right shift pressed state
+                    bool lCtrl : 1; ///< Left control pressed state
+                    bool rCtrl : 1; ///< Right control pressed state
+                    bool lAlt : 1; ///< Left alt pressed state
+                    bool rAlt : 1; ///< Right alt pressed state
+                    bool lGUI : 1; ///< Left menu pressed state
+                    bool rGUI : 1; ///< Right menu pressed state
+                };
+                struct {
+                    ui8 shift : 2; ///< Any of the two shift keys
+                    ui8 ctrl : 2; ///< Any of the two control keys
+                    ui8 alt : 2; ///< Any of the two alt keys
+                    ui8 gui : 2; ///< Any of the two menu keys
+                };
+                ui8 state; ///< State of all the modifier keys
+            };
             bool num : 1;
             bool caps : 1;
         };
@@ -42,7 +53,7 @@ namespace vorb {
             ui8 keyCode; ///< Virtually mapped key code
             ui8 scanCode; ///< Physical key code
             KeyModifiers mod; ///< Current modifiers
-            ui32 repeatCount; ///< Number of times this event was repeated including the first key press
+            ui32 repeatCount; ///< Number of times this event was repeated
         };
 
         /// Dispatches keyboard events

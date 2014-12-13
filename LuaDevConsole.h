@@ -28,6 +28,9 @@ namespace vorb {
     namespace ui {
 #define LUA_DEV_CONSOLE_NUM_COMMANDS_STORED 16
 
+#define DEV_CONSOLE_STREAM_OUT 0
+#define DEV_CONSOLE_STREAM_ERR 1
+
         class LuaDevConsole {
         public:
             LuaDevConsole(size_t storageSize = LUA_DEV_CONSOLE_NUM_COMMANDS_STORED);
@@ -37,13 +40,7 @@ namespace vorb {
 
             const nString& getCommand(const size_t& i) const;
 
-            union {
-                Event<const cString> onStream[2];
-                struct {
-                    Event<const cString> onStreamOut;
-                    Event<const cString> onStreamErr;
-                };
-            };
+            Event<const cString> onStream[2];
         private:
             boost::circular_buffer<nString> m_storedCommands;
 

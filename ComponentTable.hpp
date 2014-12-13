@@ -89,6 +89,10 @@ namespace vorb {
             operator const ComponentList& () const {
                 return _components;
             }
+
+            /// @return size of internal component list
+            size_t getComponentListSize() const { return _components.size(); }
+
         protected:
             virtual void addComponent(ComponentID cID, EntityID eID) override {
                 T val = getDefaultData();

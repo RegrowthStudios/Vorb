@@ -77,7 +77,7 @@ namespace vorb {
                     BufferTarget target,
                     ui32 bufferSize,
                     const void* data,
-                    BufferUsageHint usage);
+                    BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
 
                 /// Changes The Total Texture Memory Usage By A Specified Amount
                 /// @param s: Amount Of Memory Change In Bytes

@@ -77,7 +77,9 @@ void vg::GpuMemory::freeTexture(ui32& textureID) {
     textureID = 0;
 }
 
-void vg::GpuMemory::uploadBufferData(ui32 bufferID, BufferTarget target, ui32 bufferSize, const void* data, BufferUsageHint usage)
+void vg::GpuMemory::uploadBufferData(ui32 bufferID, BufferTarget target, ui32 bufferSize,
+                                     const void* data,
+                                     BufferUsageHint usage /* = BufferUsageHint::STATIC_DRAW */)
 {
     // Orphan the buffer by default
     glBufferData(static_cast<GLenum>(target), bufferSize, nullptr, static_cast<GLenum>(usage));

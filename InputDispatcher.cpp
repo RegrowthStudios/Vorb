@@ -97,7 +97,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = false;
-        key.onKeyDown(ie.key);
+        key.onKeyUp(ie.key);
         key.onEvent();
         break;
     case SDL_MOUSEMOTION:

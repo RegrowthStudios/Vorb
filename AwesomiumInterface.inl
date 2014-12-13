@@ -123,6 +123,7 @@ bool AwesomiumInterface<C>::init(const char* inputDir, const char* sessionName, 
     m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonDown.addFunctor([=] (void* s, const MouseButtonEvent& e) { onMouseButtonDown(s, e); }));
     m_delegatePool.push_back(vui::InputDispatcher::key.onKeyUp.addFunctor([=] (void* s, const KeyEvent& e) { onKeyUp(s, e); }));
     m_delegatePool.push_back(vui::InputDispatcher::key.onKeyDown.addFunctor([=] (void* s, const KeyEvent& e) { onKeyDown(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onText.addFunctor([=] (void* s, const TextEvent& e) { onText(s, e); }));
 
     _isInitialized = true;
     return true;
@@ -141,6 +142,7 @@ void AwesomiumInterface<C>::destroy() {
     vui::InputDispatcher::mouse.onButtonDown -= (IDelegate<const MouseButtonEvent&>*)m_delegatePool[4];
     vui::InputDispatcher::key.onKeyUp -= (IDelegate<const KeyEvent&>*)m_delegatePool[5];
     vui::InputDispatcher::key.onKeyDown -= (IDelegate<const KeyEvent&>*)m_delegatePool[6];
+    vui::InputDispatcher::key.onText -= (IDelegate<const TextEvent&>*)m_delegatePool[7];
     for (auto& p : m_delegatePool) delete p;
     m_delegatePool.clear();
 
@@ -209,6 +211,17 @@ void AwesomiumInterface<C>::onKeyUp(void* sender, const KeyEvent& e) {
     if (e.repeatCount > 0) keyEvent.modifiers |= Awesomium::WebKeyboardEvent::kModIsAutorepeat;
 
     keyEvent.type = Awesomium::WebKeyboardEvent::kTypeKeyUp;
+    _webView->InjectKeyboardEvent(keyEvent);
+}
+template <class C>
+void AwesomiumInterface<C>::onText(void* sender, const TextEvent& e) {
+    Awesomium::WebKeyboardEvent keyEvent;
+
+    mbstowcs((wchar_t*)keyEvent.text, e.text, 4);
+    memcpy(keyEvent.unmodified_text, keyEvent.text, 4 * sizeof(wchar_t));
+
+    keyEvent.type = Awesomium::WebKeyboardEvent::kTypeChar;
+    
     _webView->InjectKeyboardEvent(keyEvent);
 }
 

@@ -22,7 +22,6 @@
 #include "IAwesomiumInterface.h"
 #include "OpenglSurfaceFactory.h"
 
-
 class IGameScreen;
 
 namespace vorb {
@@ -111,6 +110,7 @@ private:
     void onMouseMotion(void* sender, const MouseMotionEvent& e);
     void onKeyUp(void* sender, const KeyEvent& e);
     void onKeyDown(void* sender, const KeyEvent& e);
+    void onText(void* sender, const TextEvent& e);
     std::vector<void*> m_delegatePool; ///< Listeners that must be freed
 
     bool _isInitialized; ///< true when initialized

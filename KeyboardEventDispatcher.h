@@ -55,6 +55,12 @@ namespace vorb {
             KeyModifiers mod; ///< Current modifiers
             ui32 repeatCount; ///< Number of times this event was repeated
         };
+        
+        /// Text event data
+        struct TextEvent {
+        public:
+            char text[32]; ///< Provided input text
+        };
 
         /// Dispatches keyboard events
         class KeyboardEventDispatcher {
@@ -65,6 +71,7 @@ namespace vorb {
             Event<> onFocusGained; ///< Signaled when keyboard begins to provide input to application
             Event<const KeyEvent&> onKeyDown; ///< Signaled when a key is pressed
             Event<const KeyEvent&> onKeyUp; ///< Signaled when a key is released
+            Event<const TextEvent&> onText; ///< Signaled when text is provided
         private:
             bool m_state[NUM_KEY_CODES]; ///< The pressed state each virtual key
         };

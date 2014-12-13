@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PtrRecycler.h"
+#include "PtrRecycler.hpp"
 #include "Vorb.h"
 
 class DepthState;

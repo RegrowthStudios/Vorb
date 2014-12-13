@@ -10,6 +10,7 @@
 #endif
 
 #if defined(WIN32) || defined(WIN64)
+#define OS_WINDOWS
 #include "Windows.h"
 #endif
 

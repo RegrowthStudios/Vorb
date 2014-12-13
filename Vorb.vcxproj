@@ -90,8 +90,11 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
+    <ClCompile Include="InputDispatcher.cpp" />
+    <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
+    <ClCompile Include="ImageIO.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImageSaver.cpp" />
     <ClCompile Include="IOManager.cpp" />
@@ -132,6 +135,10 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
+    <ClInclude Include="InputDispatcher.h" />
+    <ClInclude Include="KeyboardEventDispatcher.h" />
+    <ClInclude Include="MouseInputDispatcher.h" />
+    <ClInclude Include="RPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />
     <ClInclude Include="GraphicsDevice.h" />
@@ -139,6 +146,7 @@
     <ClInclude Include="IAwesomiumInterface.h" />
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="IGameScreen.h" />
+    <ClInclude Include="ImageIO.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="ImageSaver.h" />
     <ClInclude Include="IOManager.h" />
@@ -152,7 +160,7 @@
     <ClInclude Include="MultiComponentTracker.hpp" />
     <ClInclude Include="MultipleComponentSet.h" />
     <ClInclude Include="OpenglSurfaceFactory.h" />
-    <ClInclude Include="PtrRecycler.h" />
+    <ClInclude Include="PtrRecycler.hpp" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RTSwapChain.hpp" />
@@ -163,10 +171,12 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="ThreadSync.h" />
     <ClInclude Include="Timing.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vorb.h" />
+    <ClInclude Include="WindowEventDispatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />

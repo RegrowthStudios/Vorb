@@ -40,8 +40,10 @@ void vorb::ui::LuaDevConsole::invokeCommand(const nString& c) {
         size_t fs = (size_t)(ftell(m_streams[i]) - fpos[i]);
         if (fs != 0) {
             // Output was modified
-            char* s = new char[fs];
+            char* s = new char[fs + 1];
+            fseek(m_streams[i], 0, SEEK_SET);
             fread(s, 1, fs, m_streams[i]);
+            s[fs] = '\0';
             onStream[i](s);
             delete[] s;
             rewind(m_streams[i]);

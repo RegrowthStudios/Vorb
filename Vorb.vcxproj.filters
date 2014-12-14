@@ -275,7 +275,7 @@
     <ClInclude Include="MemFile.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="TextInputListener.h">
+    <ClInclude Include="TextInputListener.hpp">
       <Filter>UI\Input</Filter>
     </ClInclude>
   </ItemGroup>

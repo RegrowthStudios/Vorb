@@ -217,11 +217,10 @@ template <class C>
 void AwesomiumInterface<C>::onText(void* sender, const TextEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
-    mbstowcs((wchar_t*)keyEvent.text, e.text, 4);
-    memcpy(keyEvent.unmodified_text, keyEvent.text, 4 * sizeof(wchar_t));
+    memcpy(keyEvent.text, e.wtext, 4 * sizeof(wchar_t));
+    memcpy(keyEvent.unmodified_text, e.wtext, 4 * sizeof(wchar_t));
 
     keyEvent.type = Awesomium::WebKeyboardEvent::kTypeChar;
-    
     _webView->InjectKeyboardEvent(keyEvent);
 }
 

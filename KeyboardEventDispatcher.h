@@ -60,6 +60,7 @@ namespace vorb {
         struct TextEvent {
         public:
             char text[32]; ///< Provided input text
+            wchar_t wtext[16]; ///< Text in wide format
         };
 
         /// Dispatches keyboard events

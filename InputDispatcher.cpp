@@ -195,6 +195,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         break;
     case SDL_TEXTINPUT:
         memcpy(ie.text.text, e->text.text, 32);
+        mbstowcs(ie.text.wtext, ie.text.text, 16);
         key.onText(ie.text);
         key.onEvent();
         break;

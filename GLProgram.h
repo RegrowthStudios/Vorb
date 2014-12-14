@@ -152,6 +152,8 @@ namespace vorb {
                 Event<nString> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
                 Event<nString> onProgramLinkError; ///< Event signaled during link when an error occurs
             private:
+                void shaderCompilationError(const nString& s);
+
                 VGProgram _id = 0; ///< Program
                 VGShader _idVS = 0; ///< Vertex shader
                 VGShader _idFS = 0; ///< Fragment shader

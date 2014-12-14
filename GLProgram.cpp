@@ -53,7 +53,7 @@ void vg::GLProgram::destroy() {
 bool vg::GLProgram::addShader(const ShaderSource& data) {
     // Check current state
     if (getIsLinked() || !getIsCreated()) {
-        onShaderCompilationError("Cannot add a shader to a fully created or non-existent program");
+        shaderCompilationError("Cannot add a shader to a fully created or non-existent program");
         return false;
     }
 
@@ -61,18 +61,18 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
     switch (data.stage) {
         case ShaderType::VERTEX_SHADER:
             if (_idVS != 0) {
-                onShaderCompilationError("Attempting to add another vertex shader");
+                shaderCompilationError("Attempting to add another vertex shader");
                 return false;
             }
             break;
         case ShaderType::FRAGMENT_SHADER:
             if (_idFS != 0) {
-                onShaderCompilationError("Attempting to add another fragment shader");
+                shaderCompilationError("Attempting to add another fragment shader");
                 return false;
             }
             break;
         default:
-            onShaderCompilationError("Shader stage is not supported");
+            shaderCompilationError("Shader stage is not supported");
             return false;
     }
 
@@ -103,7 +103,7 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
         glGetShaderiv(idS, GL_INFO_LOG_LENGTH, &infoLogLength);
         std::vector<char> FragmentShaderErrorMessage(infoLogLength);
         glGetShaderInfoLog(idS, infoLogLength, NULL, FragmentShaderErrorMessage.data());
-        onShaderCompilationError(&FragmentShaderErrorMessage[0]);
+        shaderCompilationError(FragmentShaderErrorMessage.data());
         glDeleteShader(idS);
         return false;
     }
@@ -281,3 +281,8 @@ void vg::GLProgram::unuse() {
 }
 
 
+
+void vorb::core::graphics::GLProgram::shaderCompilationError(const nString& s) {
+    fprintf(stderr, "%s\n", s.c_str());
+    onShaderCompilationError(s);
+}

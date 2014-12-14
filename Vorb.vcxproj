@@ -173,6 +173,7 @@
     <ClInclude Include="SpriteBatch.h" />
     <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextInputListener.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadSync.h" />

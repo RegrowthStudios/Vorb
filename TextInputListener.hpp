@@ -109,28 +109,27 @@ namespace vorb {
             void start() {
                 m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (void* sender, const vui::KeyEvent& e) {
                     switch (e.keyCode) {
-                    case SDLK_BACKSPACE:
+                    case VKEY_BACKSPACE:
                         m_text.back();
                         onTextChange((const T*)m_text);
                         break;
-                    case SDLK_DELETE:
+                    case VKEY_DELETE:
                         m_text.del();
                         onTextChange((const T*)m_text);
                         break;
-                    case SDLK_RETURN:
+                    case VKEY_RETURN:
                         if (m_text.length() > 0) {
                             onTextEntry((const T*)m_text);
                             m_text.clear();
                         }
-                    default:   
-                        switch (e.scanCode) {
-                        case SDL_SCANCODE_LEFT:
-                            m_text.move(-1);
-                            break;
-                        case SDL_SCANCODE_RIGHT:
-                            m_text.move(1);
-                            break;
-                        };
+                        break;
+                    case VKEY_LEFT:
+                        m_text.move(-1);
+                        break;
+                    case VKEY_RIGHT:
+                        m_text.move(1);
+                        break;
+                    default:
                         break;
                     }
                 });

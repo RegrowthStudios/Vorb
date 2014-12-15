@@ -40,7 +40,7 @@ public:
     }
     void dispose();
 
-    const i32& getFontHeight() const {
+    const ui32& getFontHeight() const {
         return _fontHeight;
     }
 

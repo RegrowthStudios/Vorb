@@ -59,9 +59,17 @@ namespace vorb {
                 const ui32& getID() const {
                     return _fbo;
                 }
+                /// @return OpenGL texture target
+                const ui32& getTextureTarget() const {
+                    return _textureTarget;
+                }
                 /// @return OpenGL color texture ID
                 const ui32& getTextureID() const {
                     return _texColor;
+                }
+                /// @return OpenGL depth texture ID
+                const ui32& getTextureDepthID() const {
+                    return _texDepth;
                 }
                 
                 /// @return True if this is initialized with MSAA
@@ -104,7 +112,6 @@ namespace vorb {
                 ui32 _fbo = 0; ///< Framebuffer ID
                 ui32 _texColor = 0; ///< Color texture of framebuffer
                 ui32 _texDepth = 0; ///< Depth texture of framebuffer
-                ui32 _texStencil = 0; ///< Stencil texture of framebuffer
                 ui32 _msaa = 0; ///< MSAA sample count in this framebuffer
                 VGEnum _textureTarget; ///< The kinds of textures bound to this FBO
             };

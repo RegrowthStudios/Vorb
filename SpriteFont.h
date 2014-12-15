@@ -1,7 +1,24 @@
+///
+/// SpriteFont.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 15 Dec 2014
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// Bitmap glyph font container
+///
+
 #pragma once
+
+#ifndef SpriteFont_h__
+#define SpriteFont_h__
+
 #include <TTF\SDL_ttf.h>
 
-class GLTexture;
+#include "gtypes.h"
+
 class SpriteBatch;
 
 struct CharGlyph {
@@ -15,13 +32,15 @@ public:
 #define LAST_PRINTABLE_CHAR ((char)126)
 
 class SpriteFont {
+    friend class SpriteBatch;
 public:
     SpriteFont(const cString font, ui32 size, char cs, char ce);
-    SpriteFont(const cString font, ui32 size) :
-        SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) {}
+    SpriteFont(const cString font, ui32 size) : SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) {
+        // Empty
+    }
     void dispose();
 
-    i32 getFontHeight() const {
+    const i32& getFontHeight() const {
         return _fontHeight;
     }
 
@@ -29,13 +48,16 @@ public:
 
     f32v2 measure(const cString s);
 
-    void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, ColorRGBA8 tint, f32 depth);
 private:
+    void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth);
+
     static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 
     ui32 _regStart, _regLength;
     CharGlyph* _glyphs;
     ui32 _fontHeight;
 
-    ui32 _texID;
+    VGTexture _texID;
 };
+
+#endif // SpriteFont_h__

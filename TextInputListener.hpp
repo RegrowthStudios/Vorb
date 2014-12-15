@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// Controls text input events within a string
 ///
 
 #pragma once

@@ -87,7 +87,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
     switch (e->type) {
     case SDL_KEYDOWN:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = e->key.keysym.sym;
+        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = true;

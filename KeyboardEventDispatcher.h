@@ -16,10 +16,11 @@
 #define KeyboardEventDispatcher_h__
 
 #include "Events.hpp"
+#include "Keys.inl"
 
 namespace vorb {
     namespace ui {
-#define NUM_KEY_CODES 256
+#define NUM_KEY_CODES VKEY_HIGHEST_VALUE
 
         /// Bit array common key modifiers
         struct KeyModifiers {
@@ -50,8 +51,8 @@ namespace vorb {
         /// Keyboard event data
         struct KeyEvent {
         public:
-            ui8 keyCode; ///< Virtually mapped key code
-            ui8 scanCode; ///< Physical key code
+            ui16 keyCode; ///< Virtually mapped key code
+            ui16 scanCode; ///< Physical key code
             KeyModifiers mod; ///< Current modifiers
             ui32 repeatCount; ///< Number of times this event was repeated
         };

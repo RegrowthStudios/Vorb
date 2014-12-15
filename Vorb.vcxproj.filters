@@ -330,6 +330,9 @@
     <None Include="ThreadPool.inl">
       <Filter>Core\ADT</Filter>
     </None>
+    <None Include="Keys.inl">
+      <Filter>UI\Input</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

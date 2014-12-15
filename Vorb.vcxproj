@@ -195,6 +195,7 @@
     <None Include="AwesomiumInterface.inl" />
     <None Include="BufferUtils.inl" />
     <None Include="FastConversion.inl" />
+    <None Include="Keys.inl" />
     <None Include="Radix.inl" />
     <None Include="ThreadPool.inl" />
   </ItemGroup>

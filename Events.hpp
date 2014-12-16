@@ -93,7 +93,7 @@ public:
     /// Add a function to this event
     /// @param f: A subscriber
     /// @return The delegate passed in
-    Listener add(Listener f) {
+    Listener add(const Listener f) {
         if (f == nullptr) return nullptr;
         m_funcs.push_back(f);
         return f;
@@ -117,7 +117,7 @@ public:
     
     /// Remove a function (just one) from this event
     /// @param f: A subscriber
-    void remove(Listener f) {
+    void remove(const Listener f) {
         if (f == nullptr) return;
         auto fLoc = std::find(m_funcs.begin(), m_funcs.end(), f);
         if (fLoc == m_funcs.end()) return;
@@ -126,13 +126,60 @@ public:
     /// Remove a function (just one) from this event whilst allowing chaining
     /// @param f: A subscriber
     /// @return Self
-    Event& operator -=(Listener f) {
+    Event& operator -=(const Listener f) {
         remove(f);
         return *this;
+    }
+    /// Remove a function (just one) from this event
+    /// @param f: A subscriber
+    /// @pre: f must be of the correct delegate type
+    void removeUnsafe(const void* f) {
+        remove((Listener)f);
     }
 private:
     void* m_sender; ///< Event owner
     std::vector<Listener> m_funcs; ///< List of bound functions (subscribers)
+};
+
+typedef void* UnknownDelegate; ///< The only way to access an unknown delegate type
+typedef std::vector<UnknownDelegate> UnknownDelegatePool; ///< List of unknown delegates
+
+/// Manages destruction of generated delegates
+class AutoDelegatePool {
+public:
+    typedef IDelegate<>* Deleter; ///< A deletion function prototype
+    typedef std::vector<Deleter> DeleterList; ///< A container of deleters
+
+    /// Calls dispose
+    virtual ~AutoDelegatePool() {
+        dispose();
+    }
+
+    /// Binds a callback to an event and adds it for automatic destruction
+    /// @tparam F: f's functor type
+    /// @tparam Params: f's extra invocation parameters 
+    /// @param e: Event
+    /// @param f: Callback function
+    template<typename F, typename... Params>
+    void addAutoHook(Event<Params...>* e, F f) {
+        IDelegate<Params...>* fd = e->addFunctor<F>(f);
+        IDelegate<>* d = createDelegate<>([=] (void* sender) {
+            e->remove(fd);
+            delete fd;
+        });
+        m_deletionFunctions.push_back(d);
+    }
+    
+    /// Properly disposes all delegates added to this pool
+    void dispose() {
+        for (auto& f : m_deletionFunctions) {
+            f->invoke(nullptr);
+            delete f;
+        }
+        m_deletionFunctions.swap(DeleterList());
+    }
+private:
+    DeleterList m_deletionFunctions; ///< List of delegates to be deleted
 };
 
 #endif // Events_h__

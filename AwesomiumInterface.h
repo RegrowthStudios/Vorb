@@ -16,15 +16,13 @@
 #define AWESOMIUMINTERFACE_H_
 
 #include "SDL/SDL.h"
-#include "IAwesomiumInterface.h"
-
-#include "OpenglSurfaceFactory.h"
 
 #include "GLProgram.h"
+#include "InputDispatcher.h"
+#include "IAwesomiumInterface.h"
+#include "OpenglSurfaceFactory.h"
 
 class IGameScreen;
-
-
 
 namespace vorb {
 namespace ui {
@@ -77,10 +75,6 @@ public:
     /// @param args: the argument list
     void invokeFunction(const cString functionName, const Awesomium::JSArray& args = Awesomium::JSArray()) override;
 
-    /// Handles an SDL event
-    /// @param evnt: the SDL event to handle
-    void handleEvent(const SDL_Event& evnt) override;
-
     /// Updates the UI
     void update() override;
 
@@ -100,11 +94,24 @@ private:
     /// Gets the awesomium mouse button from an SDL button
     /// @param SDLButton: the SDL button
     /// @return the awesomium mouse button
-    Awesomium::MouseButton getAwesomiumButtonFromSDL(Uint8 SDLButton);
+    Awesomium::MouseButton getAwesomiumButton(const vui::MouseButton& button);
     /// Gets a web key from an SDL_Scancode
     /// @param key: the scancode
     /// @return the web key code
     int getWebKeyFromSDLKey(SDL_Scancode key);
+
+    /************************************************************************/
+    /* Event listeners                                                      */
+    /************************************************************************/
+    void onMouseFocusGained(void* sender, const MouseEvent& e);
+    void onMouseFocusLost(void* sender, const MouseEvent& e);
+    void onMouseButtonUp(void* sender, const MouseButtonEvent& e);
+    void onMouseButtonDown(void* sender, const MouseButtonEvent& e);
+    void onMouseMotion(void* sender, const MouseMotionEvent& e);
+    void onKeyUp(void* sender, const KeyEvent& e);
+    void onKeyDown(void* sender, const KeyEvent& e);
+    void onText(void* sender, const TextEvent& e);
+    std::vector<void*> m_delegatePool; ///< Listeners that must be freed
 
     bool _isInitialized; ///< true when initialized
 

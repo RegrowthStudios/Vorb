@@ -130,6 +130,6 @@ ui32 vg::GpuMemory::getFormatSize(ui32 format) {
     case GL_RGBA8:
         return 4;
     default:
-        break;
+        return 0;
     }
 }

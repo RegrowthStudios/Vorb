@@ -16,16 +16,17 @@ i32 closestPow2(i32 i) {
     return pi;
 }
 
-SpriteFont::SpriteFont(const cString font, int size, char cs, char ce) {
+SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     TTF_Font* f = TTF_OpenFont(font, size);
     _fontHeight = TTF_FontHeight(f);
     _regStart = cs;
     _regLength = ce - cs + 1;
-    i32 padding = size / 8;
+    ui32 padding = size / 8;
 
     // First Measure All The Regions
     i32v4* glyphRects = new i32v4[_regLength];
-    i32 i = 0, advance;
+    size_t i = 0;
+    i32 advance;
     for (char c = cs; c <= ce; c++) {
         TTF_GlyphMetrics(f, c, &glyphRects[i].x, &glyphRects[i].z, &glyphRects[i].y, &glyphRects[i].w, &advance);
         glyphRects[i].z -= glyphRects[i].x;
@@ -36,8 +37,8 @@ SpriteFont::SpriteFont(const cString font, int size, char cs, char ce) {
     }
 
     // Find Best Partitioning Of Glyphs
-    i32 rows = 1, w, h, bestWidth = 0, bestHeight = 0, area = 4096 * 4096, bestRows = 0;
-    std::vector<int>* bestPartition = nullptr;
+    ui32 rows = 1, w, h, bestWidth = 0, bestHeight = 0, area = 4096 * 4096, bestRows = 0;
+    std::vector<ui32>* bestPartition = nullptr;
     while (rows <= _regLength) {
         h = rows * (padding + _fontHeight) + padding;
         auto gr = createRows(glyphRects, _regLength, rows, padding, w);
@@ -78,20 +79,20 @@ SpriteFont::SpriteFont(const cString font, int size, char cs, char ce) {
 
     // Now Draw All The Glyphs
     SDL_Color fg = { 255, 255, 255, 255 };
-    i32 ly = padding;
-    for (i32 ri = 0; ri < bestRows; ri++) {
-        i32 lx = padding;
-        for (i32 ci = 0; ci < bestPartition[ri].size(); ci++) {
-            i32 gi = bestPartition[ri][ci];
+    ui32 ly = padding;
+    for (size_t ri = 0; ri < bestRows; ri++) {
+        ui32 lx = padding;
+        for (size_t ci = 0; ci < bestPartition[ri].size(); ci++) {
+            ui32 gi = bestPartition[ri][ci];
 
             SDL_Surface* glyphSurface = TTF_RenderGlyph_Blended(f, (char)(cs + gi), fg);
 
             // Pre-multiplication Occurs Here
             ubyte* sp = (ubyte*)glyphSurface->pixels;
-            i32 cp = glyphSurface->w * glyphSurface->h * 4;
-            for (i32 i = 0; i < cp; i += 4) {
+            ui32 cp = glyphSurface->w * glyphSurface->h * 4;
+            for (size_t i = 0; i < cp; i += 4) {
                 f32 a = sp[i + 3] / 255.0f;
-                sp[i] *= a;
+                sp[i] = (ubyte)((f32)sp[i] * a);
                 sp[i + 1] = sp[i];
                 sp[i + 2] = sp[i];
             }
@@ -112,9 +113,9 @@ SpriteFont::SpriteFont(const cString font, int size, char cs, char ce) {
     }
 
     // Draw The Unsupported Glyph
-    i32 rs = padding - 1;
-    i32* pureWhiteSquare = new i32[rs * rs];
-    memset(pureWhiteSquare, 0xffffffff, rs * rs * sizeof(i32));
+    ui32 rs = padding - 1;
+    ui32* pureWhiteSquare = new ui32[rs * rs];
+    memset(pureWhiteSquare, 0xffffffffu, rs * rs * sizeof(ui32));
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, rs, rs, GL_RGBA, GL_UNSIGNED_BYTE, pureWhiteSquare);
     delete[] pureWhiteSquare;
     pureWhiteSquare = nullptr;
@@ -125,15 +126,15 @@ SpriteFont::SpriteFont(const cString font, int size, char cs, char ce) {
         _glyphs[i].character = (char)(cs + i);
         _glyphs[i].size = f32v2(glyphRects[i].z, glyphRects[i].w);
         _glyphs[i].uvRect = f32v4(
-            (float)glyphRects[i].x / (float)bestWidth,
-            (float)glyphRects[i].y / (float)bestHeight,
-            (float)glyphRects[i].z / (float)bestWidth,
-            (float)glyphRects[i].w / (float)bestHeight
+            (f32)glyphRects[i].x / (f32)bestWidth,
+            (f32)glyphRects[i].y / (f32)bestHeight,
+            (f32)glyphRects[i].z / (f32)bestWidth,
+            (f32)glyphRects[i].w / (f32)bestHeight
             );
     }
     _glyphs[_regLength].character = ' ';
     _glyphs[_regLength].size = _glyphs[0].size;
-    _glyphs[_regLength].uvRect = f32v4(0, 0, (float)rs / (float)bestWidth, (float)rs / (float)bestHeight);
+    _glyphs[_regLength].uvRect = f32v4(0.0f, 0.0f, (f32)rs / (f32)bestWidth, (f32)rs / (f32)bestHeight);
 
 #ifdef DEBUG
     // Save An Image
@@ -202,19 +203,19 @@ void SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionar
     return;
 }
 
-std::vector<i32>* SpriteFont::createRows(i32v4* rects, i32 rectsLength, i32 r, i32 padding, i32& w) {
+std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w) {
     // Blank Initialize
-    std::vector<i32>* l = new std::vector<i32>[r]();
-    i32* cw = new i32[r]();
-    for (int i = 0; i < r; i++) {
+    std::vector<ui32>* l = new std::vector<ui32>[r]();
+    ui32* cw = new ui32[r]();
+    for (size_t i = 0; i < r; i++) {
         cw[i] = padding;
     }
 
     // Loop Through All Glyphs
-    for (i32 i = 0; i < rectsLength; i++) {
+    for (size_t i = 0; i < rectsLength; i++) {
         // Find Row For Placement
-        i32 ri = 0;
-        for (i32 rii = 1; rii < r; rii++)
+        size_t ri = 0;
+        for (size_t rii = 1; rii < r; rii++)
         if (cw[rii] < cw[ri]) ri = rii;
 
         // Add Width To That Row
@@ -226,7 +227,7 @@ std::vector<i32>* SpriteFont::createRows(i32v4* rects, i32 rectsLength, i32 r, i
 
     // Find The Max Width
     w = 0;
-    for (i32 i = 0; i < r; i++) {
+    for (size_t i = 0; i < r; i++) {
         if (cw[i] > w) w = cw[i];
     }
 
@@ -245,7 +246,7 @@ f32v2 SpriteFont::measure(const cString s) {
             cw = 0;
         } else {
             // Check For Correct Glyph
-            int gi = c - _regStart;
+            size_t gi = c - _regStart;
             if (gi < 0 || gi >= _regLength)
                 gi = _regLength;
             cw += _glyphs[gi].size.x;
@@ -265,7 +266,7 @@ void SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2
             tp.x = position.x;
         } else {
             // Check For Correct Glyph
-            int gi = c - _regStart;
+            size_t gi = c - _regStart;
             if (gi < 0 || gi >= _regLength)
                 gi = _regLength;
             batch->draw(_texID, &_glyphs[gi].uvRect, tp, _glyphs[gi].size * scaling, tint, depth);

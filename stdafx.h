@@ -19,11 +19,11 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <math.h>
+#include <cmath>
 #include <queue>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <unordered_map>
 #include <vector>

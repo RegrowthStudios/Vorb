@@ -56,6 +56,21 @@ public:
     }
 
     // Access Display Settings
+    i32 getX() const {
+        i32 v;
+        SDL_GetWindowPosition(_window, &v, nullptr);
+        return v;
+    }
+    i32 getY() const {
+        i32 v;
+        SDL_GetWindowPosition(_window, nullptr, &v);
+        return v;
+    }
+    i32v2 getPosition() const {
+        i32v2 v;
+        SDL_GetWindowPosition(_window, &v.x, &v.y);
+        return v;
+    }
     const i32& getWidth() const {
         return _displayMode.screenWidth;
     }

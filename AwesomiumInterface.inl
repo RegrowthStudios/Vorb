@@ -141,11 +141,11 @@ void AwesomiumInterface<C>::handleEvent(const SDL_Event& evnt) {
 
     switch (evnt.type) {
         case SDL_MOUSEMOTION:
-            relX = (evnt.motion.x - _drawRect.x) / (float)_drawRect.z;
-            relY = (evnt.motion.y - _drawRect.y) / (float)_drawRect.w;
+            relX = (evnt.motion.x - _drawRect.x) / (f32)_drawRect.z;
+            relY = (evnt.motion.y - _drawRect.y) / (f32)_drawRect.w;
 
             _webView->Focus();
-            _webView->InjectMouseMove(relX * _width, relY * _height);
+            _webView->InjectMouseMove((int)(relX * _width), (int)(relY * _height));
             break;
         case SDL_MOUSEBUTTONDOWN:
             _webView->Focus();
@@ -230,7 +230,7 @@ void AwesomiumInterface<C>::draw(vg::GLProgram* program) const
     program->use();
     program->enableVertexAttribArrays();
 
-    glUniform2f(program->getUniform("unScreenSize"), _width, _height);
+    glUniform2f(program->getUniform("unScreenSize"), (f32)_width, (f32)_height);
     glUniform2f(program->getUniform("unScreenDisplacement"), 0.0f, 0.0f);
     glUniform1i(program->getUniform("unTexMain"), 0);
     // TODO: Will this be removed?
@@ -272,17 +272,17 @@ void AwesomiumInterface<C>::setDrawRect(const i32v4& rect) {
 
     Vertex2D vertices[4];
 
-    vertices[0].pos.x = _drawRect.x;
-    vertices[0].pos.y = _drawRect.y + _drawRect.w;
+    vertices[0].pos.x = (f32)_drawRect.x;
+    vertices[0].pos.y = (f32)(_drawRect.y + _drawRect.w);
 
-    vertices[1].pos.x = _drawRect.x;
-    vertices[1].pos.y = _drawRect.y;
+    vertices[1].pos.x = (f32)_drawRect.x;
+    vertices[1].pos.y = (f32)_drawRect.y;
 
-    vertices[2].pos.x = _drawRect.x + _drawRect.z;
-    vertices[2].pos.y = _drawRect.y;
+    vertices[2].pos.x = (f32)(_drawRect.x + _drawRect.z);
+    vertices[2].pos.y = (f32)_drawRect.y;
 
-    vertices[3].pos.x = _drawRect.x + _drawRect.z;
-    vertices[3].pos.y = _drawRect.y + _drawRect.w;
+    vertices[3].pos.x = (f32)(_drawRect.x + _drawRect.z);
+    vertices[3].pos.y = (f32)(_drawRect.y + _drawRect.w);
 
     for (int i = 0; i < 4; i++) {
         vertices[i].uv[0] = uiBoxUVs[i * 2];

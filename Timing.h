@@ -1,85 +1,102 @@
+///
+/// Timing.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 8 Dec 2014
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// Different timers
+///
+
 #pragma once
-#include "stdafx.h"
+
+#ifndef Timing_h__
+#define Timing_h__
 
 #include <chrono>
-#include <vector>
 
 class PreciseTimer {
 public:
-    PreciseTimer() : _timerRunning(false) {};
     void start();
-    float stop();
+    f32 stop();
 
-    bool isRunning() const { return _timerRunning; }
+    const bool& isRunning() const {
+        return m_timerRunning;
+    }
 private:
-    bool _timerRunning;
-    std::chrono::time_point<std::chrono::high_resolution_clock> _start;
+    bool m_timerRunning = false;
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
 };
 
 class MultiplePreciseTimer {
 public:
-    
-
-    MultiplePreciseTimer() : _samples(0), _desiredSamples(1), _index(0) {};
-
-    void start(std::string tag);
+    void start(const nString& tag);
     void stop();
-    //Prints all timings
-    void end(bool print);
-    void setDesiredSamples(int desiredSamples) { _desiredSamples = desiredSamples; }
 
+    /// Prints all timings
+    void end(const bool& print);
+    void setDesiredSamples(const i32& desiredSamples) {
+        m_desiredSamples = desiredSamples;
+    }
 private:
     struct Interval {
-        Interval(std::string Tag) : tag(Tag), time(0.0f) {};
-        std::string tag;
-        float time;
-
+        Interval(const nString& Tag) :
+            tag(Tag) {
+            // Empty
+        };
+        
+        nString tag;
+        f32 time = 0.0f;
     };
-    int _samples;
-    int _desiredSamples;
-    int _index;
-    PreciseTimer _timer;
-    std::vector<Interval> intervals;
+
+    i32 m_samples = 0;
+    i32 m_desiredSamples = 1;
+    ui32 m_index = 0;
+    PreciseTimer m_timer;
+    std::vector<Interval> m_intervals;
 };
 
 /// Calculates FPS 
 class FpsCounter {
 public:
-    FpsCounter();
-    
     /// Begins a frame timing for fps calculation
     void beginFrame();
 
-    /// ends the frame
-    /// @return The current FPS as a float
-    float endFrame();
+    /// Ends the frame
+    /// @return The current FPS
+    f32 endFrame();
 
     /// Returns the current fps as last recorded by an endFrame
-    float getCurrentFps() const { return _fps; }
+    const f32& getCurrentFps() const {
+        return m_fps;
+    }
 protected:
     // Calculates the current FPS
     void calculateFPS();
 
-    // Variables
-    float _fps;
-    float _frameTime;
-    unsigned int _startTicks;
+    f32 m_fps = 0.0f;
+    f32 m_frameTime = 0.0f;
+    ui32 m_startTicks = 0;
 };
 
-///Calculates FPS and also limits FPS
+#define DEFAULT_MAX_FPS 60.0f
+
+/// Calculates FPS and also limits FPS
 class FpsLimiter : public FpsCounter {
 public:
-    FpsLimiter();
-
-    // Initializes the FPS limiter. For now, this is
-    // analogous to setMaxFPS
-    void init(float maxFPS);
+    // Initializes the FPS limiter. For now, this is analogous to setMaxFPS
+    void init(const f32& maxFPS);
 
     // Sets the desired max FPS
-    void setMaxFPS(float maxFPS);
+    void setMaxFPS(const f32& maxFPS);
 
-    // end() will return the current FPS as a float and limit fps
-    float endFrame();
+    // Limits (blocks) the current frame to achieve the desired FPS
+    /// @return Current FPS
+    f32 endFrame();
 private:
-    float _maxFPS;
+    f32 m_maxFPS = DEFAULT_MAX_FPS;
 };
+
+#endif // Timing_h__

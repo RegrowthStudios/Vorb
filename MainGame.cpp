@@ -7,6 +7,7 @@
 
 #include "DepthState.h"
 #include "IGameScreen.h"
+#include "InputDispatcher.h"
 #include "GraphicsDevice.h"
 #include "RasterizerState.h"
 #include "SamplerState.h"
@@ -14,9 +15,10 @@
 #include "utils.h"
 #include "Timing.h"
 
-
 MainGame::MainGame() : _fps(0) {
-    // Empty
+    m_fOnQuit = createDelegate<>([=] (void* sender) {
+        m_signalQuit = true;
+    });
 }
 MainGame::~MainGame() {
     // Empty
@@ -25,6 +27,10 @@ MainGame::~MainGame() {
 bool MainGame::initSystems() {
     // Create The Window
     if (!_window.init()) return false;
+
+    // Initialize input
+    vui::InputDispatcher::init(&_window);
+    vui::InputDispatcher::onQuit += m_fOnQuit;
 
     // Get The Machine's Graphics Capabilities
     _gDevice = new GraphicsDevice(_window);
@@ -93,6 +99,9 @@ void MainGame::exitGame() {
     if (_screenList) {
         _screenList->destroy(_lastTime);
     }
+    vui::InputDispatcher::onQuit -= m_fOnQuit;
+    delete m_fOnQuit;
+    vui::InputDispatcher::dispose();
     _window.dispose();
     _isRunning = false;
 }
@@ -137,20 +146,15 @@ void MainGame::checkInput() {
     if (_screen) {
         while (SDL_PollEvent(&e) != 0) {
             _screen->onEvent(e);
-            switch (e.type) {
-            case SDL_QUIT:
-                exitGame();
-                break;
-            }
         }
     } else {
         while (SDL_PollEvent(&e) != 0) {
-            switch (e.type) {
-            case SDL_QUIT:
-                exitGame();
-                break;
-            }
+            continue;
         }
+    }
+    if (m_signalQuit) {
+        m_signalQuit = false;
+        exitGame();
     }
 }
 void MainGame::onUpdateFrame() {

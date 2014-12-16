@@ -104,7 +104,7 @@ void IOManager::getDirectory(const cString path, nString& resultPath) {
     convertWToMBString((cwString)p.c_str(), resultPath);
 }
 
-void IOManager::getDirectoryEntries(nString dirPath, std::vector<boost::filesystem::path>& entries) {
+void IOManager::getDirectoryEntries(nString dirPath, std::vector<boost::filesystem::path>& entries) const {
     boost::filesystem::directory_iterator end_iter;
     boost::filesystem::path targetDir(dirPath);
 
@@ -116,7 +116,7 @@ void IOManager::getDirectoryEntries(nString dirPath, std::vector<boost::filesyst
     }
 }
 
-FILE* IOManager::openFile(const cString path, const cString flags) {
+FILE* IOManager::openFile(const cString path, const cString flags) const {
    nString filePath;
 
     if (resolveFile(path, filePath)) {
@@ -129,57 +129,57 @@ FILE* IOManager::openFile(const cString path, const cString flags) {
     return nullptr;
 }
 
-bool IOManager::readFileToString(const cString path, nString& data) {
+bool IOManager::readFileToString(const cString path, nString& data) const {
     nString filePath;
 
     if (resolveFile(path, filePath)) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
-        data.resize(length + 1);
+        data.resize((size_t)length + 1);
         t.read(&(data[0]), length);
         t.close();
 
-        data[length] = '\0';
+        data[(size_t)length] = '\0';
         return true;
     }
     return false;
 }
-const cString IOManager::readFileToString(const cString path) {
+const cString IOManager::readFileToString(const cString path) const {
     nString filePath;
 
     if (resolveFile(path, filePath)) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
         length -= t.tellg();
 
-        cString data = new char[length + 1];
+        cString data = new char[(size_t)length + 1];
         t.read(data, length);
         t.close();
 
-        data[length] = '\0';
+        data[(size_t)length] = '\0';
         return data;
     }
     return nullptr;
 }
-bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) {
+bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) const {
     nString filePath;
 
     if (resolveFile(path, filePath)) {
         std::ifstream t(filePath, std::ios::in | std::ios::binary);
 
         t.seekg(0, std::ios::end);
-        i32 length = t.tellg();
+        std::streamoff length = t.tellg();
         t.seekg(0, std::ios::beg);
 
-        data.resize(length);
+        data.resize((size_t)length);
         t.read((char*)&(data[0]), length);
         t.close();
 
@@ -188,7 +188,7 @@ bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) {
     return false;
 }
 
-bool IOManager::resolveFile(const cString path, nString& resultAbsolutePath) {
+bool IOManager::resolveFile(const cString path, nString& resultAbsolutePath) const {
     boost::filesystem::path p(path);
     if (p.is_absolute()) {
         if (boost::filesystem::exists(p)) {
@@ -228,7 +228,7 @@ bool IOManager::resolveFile(const cString path, nString& resultAbsolutePath) {
     return false;
 }
 
-bool IOManager::writeStringToFile(const cString path, const nString& data) {
+bool IOManager::writeStringToFile(const cString path, const nString& data) const {
     FILE* file = nullptr;
     fopen_s(&file, path, "w");
     if (file) {
@@ -239,16 +239,16 @@ bool IOManager::writeStringToFile(const cString path, const nString& data) {
     return false;
 }
 
-bool IOManager::makeDirectory(const cString path) {
+bool IOManager::makeDirectory(const cString path) const {
     return boost::filesystem::create_directory(path);
 }
 
-bool IOManager::fileExists(const cString path) {
+bool IOManager::fileExists(const cString path) const {
     boost::filesystem::path p(path);
     return !boost::filesystem::is_directory(p) && boost::filesystem::exists((p));
 }
 
-bool IOManager::directoryExists(const cString path) {
+bool IOManager::directoryExists(const cString path) const {
     boost::filesystem::path p(path);
     return boost::filesystem::is_directory(p) && boost::filesystem::exists((p));
 }

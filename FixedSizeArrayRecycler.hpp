@@ -15,7 +15,6 @@
 #ifndef FixedSizeArrayRecycler_h__
 #define FixedSizeArrayRecycler_h__
 
-#include <vector>
 #include <mutex>
 
 namespace vorb {
@@ -75,7 +74,6 @@ namespace vorb {
         };
     }
 }
-// Namespace Alias
 namespace vcore = vorb::core;
 
 #endif // FixedSizeArrayRecycler_h__

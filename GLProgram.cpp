@@ -21,7 +21,8 @@ vg::GLProgram::GLProgram(bool init /*= false*/) {
 }
 
 vg::GLProgram::~GLProgram() {
-    destroy();
+    // TODO: Remove this from here
+    dispose();
 }
 
 void vg::GLProgram::init() {
@@ -29,7 +30,7 @@ void vg::GLProgram::init() {
     _isLinked = false;
     _id = glCreateProgram();
 }
-void vg::GLProgram::destroy() {
+void vg::GLProgram::dispose() {
     // Delete the shaders
     if (_idVS) {
         glDeleteShader(_idVS);

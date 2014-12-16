@@ -68,7 +68,7 @@ namespace vorb {
                 /// Create GPU resources
                 void init();
                 /// Free all resources
-                void destroy();
+                void dispose();
                 /// @return The program ID
                 const VGProgram& getID() const {
                     return _id;

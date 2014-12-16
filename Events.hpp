@@ -16,7 +16,8 @@
 #define Events_h__
 
 /// This is the main function pointer
-template<typename... Params> 
+/// @tparam Params: Additional metadata used in delegate invocation
+template<typename... Params>
 class IDelegate {
 public:
     /// Invoke this function's code
@@ -26,6 +27,8 @@ public:
 };
 
 /// Functor object to hold instances of anonymous lambdas
+/// @tparam F: Auto-generated lambda function type
+/// @tparam Params: Additional metadata used in delegate invocation
 template<typename F, typename... Params>
 class Delegate : public IDelegate<Params...> {
 public:
@@ -36,7 +39,7 @@ public:
     /// Copy constructor
     /// @param f: Lambda functor
     Delegate(F& f) :
-        _f(f) {
+        m_f(f) {
         // Empty
     }
 
@@ -44,14 +47,16 @@ public:
     /// @param sender: The sender that underlies the event
     /// @param p: Additional arguments to function
     virtual void invoke(void* sender, Params... p) override {
-        _f(sender, p...);
+        m_f(sender, p...);
     }
 private:
-    F _f; ///< Type-inferenced lambda functor
+    F m_f; ///< Type-inferenced lambda functor
 };
 
 /// Use the compiler to generate a delegate
 /// @param f: Lambda functor
+/// @tparam F: Auto-generated lambda function type
+/// @tparam Params: Additional metadata used in delegate invocation
 /// @return Pointer to delegate created on the heap (CALLER DELETE)
 template<typename... Params, typename F>
 inline IDelegate<Params...>* createDelegate(F f) {
@@ -59,6 +64,7 @@ inline IDelegate<Params...>* createDelegate(F f) {
 }
 
 /// An event that invokes methods taking certain arguments
+/// @tparam Params: Metadata sent in event invocation
 template<typename... Params>
 class Event {
 public:
@@ -67,15 +73,15 @@ public:
     /// Create an event with a sender attached to it
     /// @param sender: Owner object sent with each invokation
     Event(void* sender = nullptr) :
-        _sender(sender) {
+        m_sender(sender) {
         // Empty
     }
 
     /// Call all bound methods
     /// @param p: Arguments used in function calls
     void send(Params... p) {
-        for (auto& f : _funcs) {
-            f->invoke(_sender, p...);
+        for (auto& f : m_funcs) {
+            f->invoke(m_sender, p...);
         }
     }
     /// Call all bound methods
@@ -89,11 +95,12 @@ public:
     /// @return The delegate passed in
     Listener add(Listener f) {
         if (f == nullptr) return nullptr;
-        _funcs.push_back(f);
+        m_funcs.push_back(f);
         return f;
     }
     /// Add a function to this event
     /// @param f: A unknown-type subscriber
+    /// @tparam F: Functor type
     /// @return The newly made delegate (CALLER DELETE)
     template<typename F>
     Listener addFunctor(F f) {
@@ -112,9 +119,9 @@ public:
     /// @param f: A subscriber
     void remove(Listener f) {
         if (f == nullptr) return;
-        auto fLoc = std::find(_funcs.begin(), _funcs.end(), f);
-        if (fLoc == _funcs.end()) return;
-        _funcs.erase(fLoc);
+        auto fLoc = std::find(m_funcs.begin(), m_funcs.end(), f);
+        if (fLoc == m_funcs.end()) return;
+        m_funcs.erase(fLoc);
     }
     /// Remove a function (just one) from this event whilst allowing chaining
     /// @param f: A subscriber
@@ -124,8 +131,8 @@ public:
         return *this;
     }
 private:
-    void* _sender; ///< Event owner
-    std::vector<Listener> _funcs; ///< List of bound functions (subscribers)
+    void* m_sender; ///< Event owner
+    std::vector<Listener> m_funcs; ///< List of bound functions (subscribers)
 };
 
 #endif // Events_h__

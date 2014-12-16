@@ -18,8 +18,7 @@
 namespace vorb {
     namespace core {
 
-        class WorkerData;
-
+        template<typename T>
         class IThreadPoolTask {
         public:
             /// Constructor
@@ -33,7 +32,7 @@ namespace vorb {
             virtual ~IThreadPoolTask() { /* Empty */ }
 
             /// Executes the task
-            virtual void execute(WorkerData* workerData) = 0;
+            virtual void execute(T* workerData) = 0;
 
             /// Checks if this should be stored in a finished tasks queue
             virtual const bool& shouldAddToFinishedTasks() const { return _shouldAddToFinishedTasks; }

@@ -5,13 +5,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-namespace vorb {
-namespace core {
-namespace graphics {
-
-bool ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, bool printError /* = true */) {
-    FILE * file = fopen(imagepath, "rb");
-    ui8* fileData2;
+bool vg::ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, bool printError /* = true */) {
+    FILE* file = fopen(imagepath, "rb");
     size_t fileSize;
 
     if (!file) {
@@ -38,8 +33,4 @@ bool ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore,
         return false;
     }
     return true;
-}
-
-}
-}
 }

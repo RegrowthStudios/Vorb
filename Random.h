@@ -1,35 +1,52 @@
+///
+/// Random.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 8 Dec 2014
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// A simple random number generator
+///
+
 #pragma once
+
+#ifndef Random_h__
+#define Random_h__
 
 // Like Goldilocks, Just Right
 #define MERSENNE_ARRAY_SIZE 624
 
-// A Seeded Random Number Generator
+/// A seeded random number generator
 class Random {
 public:
-    // Create A Random Generator Using A Seed Value
-    Random(i32 s);
-    // Create A Random Generator With Seed Value Of Clock Ticks
+    /// Create a random generator using a seed value
+    /// @param s: Seed value
+    Random(const i32& s);
+    /// Create a random generator with seed value of clock ticks
     Random();
+    /// Destroys internal array used for mersenne twister
     ~Random();
 
-    // Reform The Random Generator
-    void seed(i32 s);
+    /// Reform the random generator
+    /// @param s: Seed value
+    void seed(const i32& s);
 
-    // Obtain A Random Number Between [0-1] Inclusive
-    f32 genMT(); // Mersenne Twister
-    f32 genMH(); // Murmur Hash
-
+    /// @return: A random number between [0-1] inclusive using mersenne twister
+    f32 genMT();
+    /// @return: A random number between [0-1] inclusive using murmur hash
+    f32 genMH();
 private:
-    // ... Because We Want To Keep Generating Random Stuff After MERSENNE_ARRAY_SIZE Uses
+    /// ... Because we want to keep generating random stuff after MERSENNE_ARRAY_SIZE uses
     void perturbMT();
 
-    // The Seed Value Of The Generator
-    i32 _seed;
-
-    // An Array Of Randomly Generated Numbers For The Twister To Rampage Upon
-    i32* _mtArr;
-    i32 _mtIndex;
-
-    // An Updating Key For Murmur Hash
-    i32 _mhKey;
+    i32 m_seed; ///< The seed value of the generator
+    
+    i32* m_mtArr; ///< Array of randomly generated numbers for the twister to rampage upon
+    i32 m_mtIndex; ///< Current position in the twister's array
+    
+    i32 m_mhKey; ///< An updating key for murmur hash
 };
+
+#endif // Random_h__

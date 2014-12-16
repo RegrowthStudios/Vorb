@@ -56,7 +56,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;libyaml-cppmdd.lib;awesomium.lib;fmodexL_vc.lib;zdll.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,7 +78,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;libyaml-cppmd.lib;awesomium.lib;fmodex_vc.lib;zdll.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -90,8 +90,11 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
+    <ClCompile Include="InputDispatcher.cpp" />
+    <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
+    <ClCompile Include="ImageIO.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImageSaver.cpp" />
     <ClCompile Include="IOManager.cpp" />
@@ -113,7 +116,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="Timing.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,13 +129,16 @@
     <ClInclude Include="ECSSimpleUpdater.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Events.hpp" />
-    <ClInclude Include="FastConversion.h" />
     <ClInclude Include="FixedSizeArrayRecycler.hpp" />
     <ClInclude Include="FullQuadVBO.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
+    <ClInclude Include="InputDispatcher.h" />
+    <ClInclude Include="KeyboardEventDispatcher.h" />
+    <ClInclude Include="MouseInputDispatcher.h" />
+    <ClInclude Include="RPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />
     <ClInclude Include="GraphicsDevice.h" />
@@ -141,6 +146,7 @@
     <ClInclude Include="IAwesomiumInterface.h" />
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="IGameScreen.h" />
+    <ClInclude Include="ImageIO.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="ImageSaver.h" />
     <ClInclude Include="IOManager.h" />
@@ -154,7 +160,7 @@
     <ClInclude Include="MultiComponentTracker.hpp" />
     <ClInclude Include="MultipleComponentSet.h" />
     <ClInclude Include="OpenglSurfaceFactory.h" />
-    <ClInclude Include="PtrRecycler.h" />
+    <ClInclude Include="PtrRecycler.hpp" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RTSwapChain.hpp" />
@@ -165,10 +171,12 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="ThreadSync.h" />
     <ClInclude Include="Timing.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vorb.h" />
+    <ClInclude Include="WindowEventDispatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />
@@ -180,6 +188,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AwesomiumInterface.inl" />
+    <None Include="BufferUtils.inl" />
+    <None Include="FastConversion.inl" />
+    <None Include="Radix.inl" />
+    <None Include="ThreadPool.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

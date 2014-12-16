@@ -101,6 +101,9 @@
     <ClCompile Include="MemFile.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="TextInputListener.hpp">
       <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Core\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

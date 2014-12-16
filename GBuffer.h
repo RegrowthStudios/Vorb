@@ -18,68 +18,74 @@
 #include "GLEnums.h"
 #include "gtypes.h"
 
-#define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RGBA8
+#define GBUFFER_INTERNAL_FORMAT_COLOR vg::TextureInternalFormat::RGBA16F
 #define GBUFFER_INTERNAL_FORMAT_NORMAL vg::TextureInternalFormat::RGBA16F
-#define GBUFFER_INTERNAL_FORMAT_COLOR vg::TextureInternalFormat::R32F
+#define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RG32F
 
 namespace vorb {
     namespace core {
 		namespace graphics {
+            /// 
             class GBuffer {
             public:
-                /// Name-defined textures stored in this GBuffer
+                /// Name-defined textures stored in a GBuffer
                 struct TextureIDs {
-                    ui32 depth; ///< R-32f texture
-                    ui32 normal; ///< RGB-16f normal texture
-                    ui32 color; ///< RGBA-8f colorRGB-specularAlpha texture
+                public:
+                    VGTexture depth; ///< R-32f texture
+                    VGTexture normal; ///< RGB-16f normal texture
+                    VGTexture color; ///< RGBA-8f colorRGB-specularAlpha texture
                 };
 
+                /// 
+                /// @param w: 
+                /// @param h: 
                 GBuffer(ui32 w = 0, ui32 h = 0);
+                /// 
+                /// @param s: 
                 GBuffer(ui32v2 s) : GBuffer(s.x, s.y) {
                     // Empty
                 }
 
+                /// 
+                /// @return
                 GBuffer& init();
+                /// 
+                /// @param depthFormat: 
+                /// @return 
                 GBuffer& initDepth(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH_COMPONENT32);
+                ///
                 void dispose();
 
+                /// 
                 void use();
 
                 /// @return OpenGL texture IDs
                 const GBuffer::TextureIDs& getTextureIDs() const {
-                    return _tex;
+                    return m_tex;
                 }
 
                 /// @return Size of the FBO in pixels (W,H)
                 const ui32v2& getSize() const {
-                    return _size;
+                    return m_size;
                 }
                 /// @return Width of the FBO in pixels
                 const ui32& getWidth() const {
-                    return _size.x;
+                    return m_size.x;
                 }
                 /// @return Height of the FBO in pixels
                 const ui32& getHeight() const {
-                    return _size.y;
+                    return m_size.y;
                 }
 
             private:
-                ui32v2 _size; ///< The width and height of the GBuffer
+                ui32v2 m_size; ///< The width and height of the GBuffer
 
-                //union {
-                //    struct {
-                //        ui32 depth; ///< R-32f depth target
-                //        ui32 normal; ///< RGB-16f normal target
-                //        ui32 color; ///< RGBA-8f colorRGB-specularAlpha target
-                //    } _fbo = { 0, 0, 0 };
-                //    ui32 _fbos[3]; ///< All 3 rendering targets
-                //};
-                ui32 _fbo; ///< The rendering target
+                VGFramebuffer m_fbo; ///< The rendering target
                 union {
-                    TextureIDs _tex;
-                    ui32 _textures[3]; ///< All 3 textures
+                    TextureIDs m_tex; ///< Named texture targets
+                    VGTexture m_textures[3]; ///< All 3 textures
                 };
-                ui32 _texDepth = 0; ///< Depth texture of GBuffer
+                VGTexture m_texDepth = 0; ///< Depth texture of GBuffer
             };
 		}
     }

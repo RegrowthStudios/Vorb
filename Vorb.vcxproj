@@ -88,6 +88,7 @@
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="FullQuadVBO.cpp" />
     <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="GLRenderTarget.cpp" />
     <ClCompile Include="InputDispatcher.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="FixedSizeArrayRecycler.hpp" />
     <ClInclude Include="FullQuadVBO.h" />
     <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />

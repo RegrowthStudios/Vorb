@@ -18,6 +18,7 @@ void vui::InputDispatcher::init(GameWindow* w) {
     m_window = w;
     SDL_SetEventFilter(InputDispatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+    SDL_StartTextInput();
 
     // Clear values
     memset(key.m_state, 0, sizeof(key.m_state));
@@ -27,6 +28,7 @@ void vui::InputDispatcher::init(GameWindow* w) {
 void vui::InputDispatcher::dispose() {
     if (!m_isInit) return;
     m_isInit = false;
+    SDL_StopTextInput();
     SDL_SetEventFilter(nullptr, nullptr);
 }
 
@@ -37,6 +39,7 @@ typedef union {
     vui::MouseMotionEvent mouseMotion;
     vui::MouseWheelEvent mouseWheel;
     vui::KeyEvent key;
+    vui::TextEvent text;
     vui::WindowResizeEvent windowResize;
     vui::WindowFileEvent windowFile;
 } InputEvent;
@@ -84,7 +87,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
     switch (e->type) {
     case SDL_KEYDOWN:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = e->key.keysym.sym;
+        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = true;
@@ -97,7 +100,7 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         key.m_state[ie.key.keyCode] = false;
-        key.onKeyDown(ie.key);
+        key.onKeyUp(ie.key);
         key.onEvent();
         break;
     case SDL_MOUSEMOTION:
@@ -189,6 +192,12 @@ i32 vui::InputDispatcher::onSDLEvent(void* userData, SDL_Event* e) {
             // Unrecognized window event
             return 1;
         }
+        break;
+    case SDL_TEXTINPUT:
+        memcpy(ie.text.text, e->text.text, 32);
+        mbstowcs(ie.text.wtext, ie.text.text, 16);
+        key.onText(ie.text);
+        key.onEvent();
         break;
     case SDL_DROPFILE:
         ie.windowFile.file = e->drop.file;

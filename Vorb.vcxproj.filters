@@ -95,6 +95,15 @@
     <ClCompile Include="InputDispatcher.cpp">
       <Filter>UI\Input</Filter>
     </ClCompile>
+    <ClCompile Include="LuaDevConsole.cpp">
+      <Filter>UI\REPL</Filter>
+    </ClCompile>
+    <ClCompile Include="MemFile.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -263,6 +272,18 @@
     <ClInclude Include="WindowEventDispatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
+    <ClInclude Include="LuaDevConsole.h">
+      <Filter>UI\REPL</Filter>
+    </ClInclude>
+    <ClInclude Include="MemFile.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInputListener.hpp">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -295,6 +316,9 @@
     <Filter Include="UI\Input">
       <UniqueIdentifier>{84a1a378-d9b6-49d5-bad8-286be1b6565a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\REPL">
+      <UniqueIdentifier>{cc06d404-9d09-46c7-9776-5d47af2befd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="AwesomiumInterface.inl">
@@ -311,6 +335,9 @@
     </None>
     <None Include="ThreadPool.inl">
       <Filter>Core\ADT</Filter>
+    </None>
+    <None Include="Keys.inl">
+      <Filter>UI\Input</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

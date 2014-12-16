@@ -69,6 +69,19 @@ inline void convertWToMBString(const cwString ws, nString& resultString) {
 
     resultString[l] = '\0';
 }
+inline const cwString convertMBToWString(const cString s) {
+    i32 l = strlen(s);
+    cwString resultString = new wchar_t[l + 1];
+    size_t numConverted = 0;
+#if defined(__APPLE__) || defined(__linux__)
+    wcstombs(&(resultString[0]), ws, numConverted);
+#elif defined(WIN32) || defined(WIN64)
+    mbstowcs(resultString, s, l);
+#endif   // win32
+
+    resultString[l] = '\0';
+    return resultString;
+}
 
 /************************************************************************/
 /* Interpolation Utilities                                              */

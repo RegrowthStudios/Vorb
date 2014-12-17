@@ -274,14 +274,13 @@ void vg::GLProgram::use() {
         glUseProgram(_id);
     }
 }
+
 void vg::GLProgram::unuse() {
     if (_programInUse) {
         _programInUse = nullptr;
         glUseProgram(0);
     }
 }
-
-
 
 void vorb::core::graphics::GLProgram::shaderCompilationError(const nString& s) {
     fprintf(stderr, "%s\n", s.c_str());

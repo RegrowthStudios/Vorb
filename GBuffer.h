@@ -21,6 +21,7 @@
 #define GBUFFER_INTERNAL_FORMAT_COLOR vg::TextureInternalFormat::RGBA16F
 #define GBUFFER_INTERNAL_FORMAT_NORMAL vg::TextureInternalFormat::RGBA16F
 #define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RG32F
+#define GBUFFER_INTERNAL_FORMAT_LIGHT vg::TextureInternalFormat::RGB16F
 
 namespace vorb {
     namespace core {
@@ -34,8 +35,9 @@ namespace vorb {
                 struct TextureIDs {
                 public:
                     VGTexture color; ///< RGBA-8f colorRGB-specularAlpha texture
-                    VGTexture normal; ///< RGB-16f normal texture
-                    VGTexture depth; ///< R-32f texture
+                    VGTexture normal; ///< RGBA-16f normal texture
+                    VGTexture depth; ///< RG-32f texture
+                    VGTexture light; ///< RGB-16f texture
                 };
 
                 /// 
@@ -59,7 +61,8 @@ namespace vorb {
                 void dispose();
 
                 /// 
-                void use();
+                void useGeometry();
+                void useLight();
 
                 /// @return OpenGL texture IDs
                 const GBuffer::TextureIDs& getTextureIDs() const {
@@ -82,10 +85,11 @@ namespace vorb {
             private:
                 ui32v2 m_size; ///< The width and height of the GBuffer
 
-                VGFramebuffer m_fbo; ///< The rendering target
+                VGFramebuffer m_fboGeom; ///< The rendering target for geometry
+                VGFramebuffer m_fboLight; ///< The rendering target for light
                 union {
                     TextureIDs m_tex; ///< Named texture targets
-                    VGTexture m_textures[3]; ///< All 3 textures
+                    VGTexture m_textures[4]; ///< All 3 textures
                 };
                 VGTexture m_texDepth = 0; ///< Depth texture of GBuffer
             };

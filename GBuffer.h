@@ -25,15 +25,17 @@
 namespace vorb {
     namespace core {
 		namespace graphics {
+
+
             /// 
             class GBuffer {
             public:
                 /// Name-defined textures stored in a GBuffer
                 struct TextureIDs {
                 public:
-                    VGTexture depth; ///< R-32f texture
-                    VGTexture normal; ///< RGB-16f normal texture
                     VGTexture color; ///< RGBA-8f colorRGB-specularAlpha texture
+                    VGTexture normal; ///< RGB-16f normal texture
+                    VGTexture depth; ///< R-32f texture
                 };
 
                 /// 

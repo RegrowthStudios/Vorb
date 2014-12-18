@@ -21,9 +21,9 @@ vg::GBuffer& vg::GBuffer::init() {
 
     // Create texture targets
     glGenTextures(3, m_textures);
-    initTarget(m_size, m_tex.depth, GBUFFER_INTERNAL_FORMAT_DEPTH, 0);
+    initTarget(m_size, m_tex.color, GBUFFER_INTERNAL_FORMAT_COLOR, 0);
     initTarget(m_size, m_tex.normal, GBUFFER_INTERNAL_FORMAT_NORMAL, 1);
-    initTarget(m_size, m_tex.color, GBUFFER_INTERNAL_FORMAT_COLOR, 2);
+    initTarget(m_size, m_tex.depth, GBUFFER_INTERNAL_FORMAT_DEPTH, 2);
 
     // Set the output location for pixels
     VGEnum bufs[3] = {

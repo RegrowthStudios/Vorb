@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="colors.cpp" />
     <ClCompile Include="ComponentTableBase.cpp" />
+    <ClCompile Include="DeferredShaders.cpp" />
     <ClCompile Include="DepthState.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="FullQuadVBO.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="compat.h" />
     <ClInclude Include="ComponentTable.hpp" />
     <ClInclude Include="ComponentTableBase.h" />
+    <ClInclude Include="DeferredShaders.h" />
     <ClInclude Include="DepthState.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="ECSSimpleUpdater.h" />
@@ -139,6 +141,7 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
+    <ClInclude Include="init.h" />
     <ClInclude Include="InputDispatcher.h" />
     <ClInclude Include="KeyboardEventDispatcher.h" />
     <ClInclude Include="LuaDevConsole.h" />

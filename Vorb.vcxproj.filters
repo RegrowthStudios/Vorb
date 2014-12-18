@@ -102,7 +102,10 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="GBuffer.cpp">
-      <Filter>Core\Graphics</Filter>
+      <Filter>Core\Graphics\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredShaders.cpp">
+      <Filter>Core\Graphics\Deferred</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +285,13 @@
       <Filter>UI\Input</Filter>
     </ClInclude>
     <ClInclude Include="GBuffer.h">
-      <Filter>Core\Graphics</Filter>
+      <Filter>Core\Graphics\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredShaders.h">
+      <Filter>Core\Graphics\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +327,9 @@
     </Filter>
     <Filter Include="UI\REPL">
       <UniqueIdentifier>{cc06d404-9d09-46c7-9776-5d47af2befd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Deferred">
+      <UniqueIdentifier>{d885ab76-4ae5-4152-9bd4-c5a7af213015}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

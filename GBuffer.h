@@ -57,6 +57,10 @@ namespace vorb {
                 /// @param depthFormat: 
                 /// @return 
                 GBuffer& initDepth(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH_COMPONENT32);
+                /// 
+                /// @param depthFormat: 
+                /// @return 
+                GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
                 ///
                 void dispose();
 

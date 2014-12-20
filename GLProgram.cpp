@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GLProgram.h"
 
 #include "IOManager.h"
@@ -255,6 +255,10 @@ void vg::GLProgram::initUniforms() {
             _uniforms[name] = loc;
         }
     }
+}
+
+void vg::GLProgram::bindFragDataLocation(ui32 colorNumber​, const char * name​) {
+    glBindAttribLocation(_id, colorNumber​, name​);
 }
 
 void vg::GLProgram::enableVertexAttribArrays() const {

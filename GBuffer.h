@@ -23,6 +23,19 @@
 #define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RG32F
 #define GBUFFER_INTERNAL_FORMAT_LIGHT vg::TextureInternalFormat::RGB16F
 
+/************************************************************************/
+/* GBuffer breakdown                                                    */
+/* -----------------------------------------------------------------    */
+/* | Diffuse R     | Diffuse G     | Diffuse B     | Light Model   |    */
+/* -----------------------------------------------------------------    */
+/* | Normal X      | Normal Y      | Normal Z      | Specular Pow  |    */
+/* -----------------------------------------------------------------    */
+/* | Depth                         |                               |    */
+/* -----------------------------------------------------------------    */
+/* | Light R       | Light G       | Light B       |  X X X X X X  |    */
+/* -----------------------------------------------------------------    */
+/************************************************************************/
+
 namespace vorb {
     namespace core {
 		namespace graphics {

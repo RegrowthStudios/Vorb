@@ -2,24 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="DepthState.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GLRenderTarget.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GLProgram.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="FullQuadVBO.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsDevice.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GpuMemory.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="MainGame.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -40,18 +22,6 @@
     </ClCompile>
     <ClCompile Include="OpenglSurfaceFactory.cpp">
       <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteFont.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteBatch.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SamplerState.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="RasterizerState.cpp">
-      <Filter>Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="IRenderStage.cpp">
       <Filter>Core\Graphics</Filter>
@@ -107,6 +77,39 @@
     <ClCompile Include="DeferredShaders.cpp">
       <Filter>Core\Graphics\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="ModelIO.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthState.cpp">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="GLProgram.cpp">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="GLRenderTarget.cpp">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerState.cpp">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="FullQuadVBO.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GpuMemory.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteBatch.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteFont.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -115,30 +118,6 @@
     <ClInclude Include="Vorb.h" />
     <ClInclude Include="AwesomiumInterface.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthState.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GLStates.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GLRenderTarget.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GLProgram.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GLEnums.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="FullQuadVBO.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsDevice.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GpuMemory.h">
-      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="gtypes.h">
       <Filter>Core\Graphics</Filter>
@@ -169,24 +148,6 @@
     </ClInclude>
     <ClInclude Include="OpenglSurfaceFactory.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteFont.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteBatch.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SamplerState.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="RTSwapChain.hpp">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="RasterizerState.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="IRenderStage.h">
       <Filter>Core\Graphics</Filter>
@@ -293,6 +254,54 @@
     <ClInclude Include="init.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="ModelIO.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthState.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEnums.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLProgram.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLRenderTarget.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLStates.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="FullQuadVBO.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GpuMemory.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsDevice.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteBatch.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFont.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Core\Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="RTSwapChain.hpp">
+      <Filter>Core\Graphics\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -330,6 +339,15 @@
     </Filter>
     <Filter Include="Core\Graphics\Deferred">
       <UniqueIdentifier>{d885ab76-4ae5-4152-9bd4-c5a7af213015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Wrappers">
+      <UniqueIdentifier>{624d6dc6-02a2-441c-8ff7-779b44b2ade5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Utils">
+      <UniqueIdentifier>{1ba6a05d-9cee-4082-ba47-7aa55c60d760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Extensions">
+      <UniqueIdentifier>{11aad47b-fcc4-4af4-b22c-be40b54bf6a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -183,7 +183,7 @@ template <class C>
 void AwesomiumInterface<C>::onKeyDown(void* sender, const KeyEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
-    keyEvent.virtual_key_code = e.keyCode;
+    keyEvent.virtual_key_code = (i32)SDL_GetKeyFromScancode((SDL_Scancode)e.keyCode);
     keyEvent.native_key_code = e.scanCode;
     
     keyEvent.modifiers = 0;
@@ -200,7 +200,7 @@ template <class C>
 void AwesomiumInterface<C>::onKeyUp(void* sender, const KeyEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
-    keyEvent.virtual_key_code = e.keyCode;
+    keyEvent.virtual_key_code = (i32)SDL_GetKeyFromScancode((SDL_Scancode)e.keyCode);
     keyEvent.native_key_code = e.scanCode;
 
     keyEvent.modifiers = 0;

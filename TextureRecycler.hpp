@@ -53,6 +53,9 @@ namespace vorb {
                     freeAll();
                 }
 
+                /// Get the number of cached textures
+                size_t getNumTextures() const { return m_textures.size(); }
+
                 /// Sets the max number of textures to keep in memory
                 void setMaxSize(ui32 maxSize) { m_maxSize = maxSize; }
 

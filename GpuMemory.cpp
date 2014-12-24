@@ -20,9 +20,9 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
                           ui32 width,
                           ui32 height,
                           SamplerState* samplingParameters,
-                          vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                          vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                          i32 mipmapLevels = INT_MAX) {
+                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
+                          vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                          i32 mipmapLevels /* = INT_MAX */) {
     // Determine The Maximum Number Of Mipmap Levels Available
     i32 maxMipmapLevels = 0;
     i32 size = MIN(width, height);

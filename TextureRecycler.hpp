@@ -38,11 +38,13 @@ namespace vorb {
                                 ui32 height,
                                 SamplerState* samplingParameters,
                                 i32 mipmapLevels,
+                                vg::TextureInternalFormat internalFormat,
                                 ui32 maxSize = UINT_MAX) :
                             m_width(width),
                             m_height(height),
                             m_samplingParameters(samplingParameters),
                             m_mipmapLevels(mipmapLevels),
+                            m_internalFormat(internalFormat),
                             m_maxSize(maxSize) {
                     // Empty
                 }
@@ -62,7 +64,10 @@ namespace vorb {
                         m_textures.pop_back();
                         m_recycled.erase(rv);
                     } else {
-                        rv = vg::GpuMemory::uploadTexture(nullptr, m_width, m_height, m_samplingParameters, m_mipmapLevels);
+                        rv = vg::GpuMemory::uploadTexture(nullptr, m_width, m_height,
+                                                          m_samplingParameters,
+                                                          m_internalFormat,
+                                                          m_mipmapLevels);
                     }
                     return rv;
                 }
@@ -99,6 +104,8 @@ namespace vorb {
                 std::set<VGTexture> m_recycled; ///< To check if a texture is already recycled
 
                 std::vector <VGTexture> m_textures; ///< Cached textures
+
+                vg::TextureInternalFormat m_internalFormat; ///< Internal pixel format for textures
 
                 ui32 m_maxSize; ///< Maximum number of textures to hold
             };

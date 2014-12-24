@@ -252,9 +252,6 @@
     <ClInclude Include="DeferredShaders.h">
       <Filter>Core\Graphics\Deferred</Filter>
     </ClInclude>
-    <ClInclude Include="init.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="ModelIO.h">
       <Filter>IO</Filter>
     </ClInclude>

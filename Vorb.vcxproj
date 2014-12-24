@@ -143,7 +143,6 @@
     <ClInclude Include="GLEnums.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
-    <ClInclude Include="init.h" />
     <ClInclude Include="InputDispatcher.h" />
     <ClInclude Include="KeyboardEventDispatcher.h" />
     <ClInclude Include="LuaDevConsole.h" />

@@ -39,4 +39,17 @@ namespace vio = vorb::io; ///< Namespace alias vorb::ui
 #define DECL_VUI(CONTAINER, TYPE) namespace vorb { namespace ui { CONTAINER TYPE; }  }
 #define DECL_VIO(CONTAINER, TYPE) namespace vorb { namespace io { CONTAINER TYPE; }  }
 
+namespace vorb {
+    enum class InitParam {
+        NONE = 0x00,
+        GRAPHICS = 0x01,
+        IO = 0x02,
+        SOUND = 0x04,
+        ALL = GRAPHICS | SOUND | IO
+    };
+    ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
+
+    InitParam init(const InitParam& p);
+}
+
 #endif // VORB_H_

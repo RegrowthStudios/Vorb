@@ -110,6 +110,7 @@
     <ClCompile Include="SpriteFont.cpp">
       <Filter>Core\Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Vorb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />

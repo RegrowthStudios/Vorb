@@ -1,29 +1,19 @@
 #include "stdafx.h"
 #include "ImageLoader.h"
 #include "lodepng.h"
+#include "IOManager.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
-bool vg::ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, bool printError /* = true */) {
-    FILE* file = fopen(imagepath, "rb");
-    size_t fileSize;
+bool vg::ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, IOManager* iom, bool printError /* = true */) {
+   
+    std::vector <ui8> imgData;
 
-    if (!file) {
-        if (printError) {
-            perror(imagepath);
-        }
+    if (!iom->readFileToData(imagepath, imgData)) {
+        std::cerr << "Failed to open PNG " << imagepath << std::endl;
         return false;
     }
-
-    struct stat filestatus;
-    stat(imagepath, &filestatus);
-
-    fileSize = filestatus.st_size;
-    std::vector <ui8> imgData(fileSize);
-
-    fread(&(imgData[0]), 1, fileSize, file);
-    fclose(file);
 
     unsigned error = lodepng::decode(pixelStore, rWidth, rHeight, imgData);
 

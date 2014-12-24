@@ -37,19 +37,20 @@ namespace vorb {
                 /// @param samplingParameters: The texture sampler parameters
                 /// @param mipmapLevels: The max number of mipmap levels
                 /// @return The texture ID
-                static ui32 uploadTexture(const ui8* pixels,
+                static VGTexture uploadTexture(const ui8* pixels,
                     ui32 width,
                     ui32 height,
                     SamplerState* samplingParameters,
+                    vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
                     i32 mipmapLevels = INT_MAX);
 
                 /// Frees a texture and sets its ID to 0
                 /// @param textureID: The texture to free. Will be set to 0.
-                static void freeTexture(ui32& textureID);
+                static void freeTexture(VGTexture& textureID);
 
                 /// Creates an OpenGL buffer object
                 /// @param vbo: The result buffer ID
-                static void createBuffer(ui32& bufferID) {
+                static void createBuffer(VGBuffer& bufferID) {
                     glGenBuffers(1, &bufferID);
                     _buffers[bufferID] = 0;
                 }
@@ -57,12 +58,12 @@ namespace vorb {
                 /// Frees an OpenGL buffer object and sets the
                 /// ID to 0.
                 /// @param bufferID: The ID of the buffer
-                static void freeBuffer(ui32& bufferID);
+                static void freeBuffer(VGBuffer& bufferID);
 
                 /// Binds a buffer
                 /// @param bufferID: The ID of the buffer
                 /// @param target: The desired buffer target
-                static void bindBuffer(const ui32& bufferID, BufferTarget target) {
+                static void bindBuffer(const VGBuffer& bufferID, BufferTarget target) {
                     glBindBuffer(static_cast<GLenum>(target), bufferID);
                 }
 
@@ -73,7 +74,7 @@ namespace vorb {
                 /// @param bufferSize: The size of data
                 /// @param data: Pointer to the buffer data
                 /// @usage: The desired buffer usage
-                static void uploadBufferData(ui32 bufferID,
+                static void uploadBufferData(VGBuffer bufferID,
                     BufferTarget target,
                     ui32 bufferSize,
                     const void* data,
@@ -108,9 +109,9 @@ namespace vorb {
                 static ui32 _textureVramUsage; ///< The total VRAM usage by texture objects
                 static ui32 _bufferVramUsage; ///< The total VRAM usage by buffer objects
 
-                static std::unordered_map<ui32, ui32> _textures; ///< Store of texture objects
+                static std::unordered_map<VGTexture, ui32> _textures; ///< Store of texture objects
 
-                static std::unordered_map<ui32, ui32> _buffers; ///< Store of buffer objects
+                static std::unordered_map<VGBuffer, ui32> _buffers; ///< Store of buffer objects
             };
         }
     }

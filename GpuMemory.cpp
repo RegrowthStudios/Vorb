@@ -12,13 +12,14 @@ ui32 vg::GpuMemory::_totalVramUsage = 0;
 ui32 vg::GpuMemory::_textureVramUsage = 0;
 ui32 vg::GpuMemory::_bufferVramUsage = 0;
 
-std::unordered_map<ui32, ui32> vg::GpuMemory::_textures;
-std::unordered_map<ui32, ui32> vg::GpuMemory::_buffers;
+std::unordered_map<VGTexture, ui32> vg::GpuMemory::_textures;
+std::unordered_map<VGBuffer, ui32> vg::GpuMemory::_buffers;
 
-ui32 vg::GpuMemory::uploadTexture(const ui8* pixels,
+VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
                                 ui32 width,
                                 ui32 height,
                                 SamplerState* samplingParameters,
+                                vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
                                 i32 mipmapLevels /* = INT_MAX */) {
     // Create one OpenGL texture
     GLuint textureID;
@@ -34,7 +35,7 @@ ui32 vg::GpuMemory::uploadTexture(const ui8* pixels,
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)internalFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
     // Setup Texture Sampling Parameters
     samplingParameters->set(GL_TEXTURE_2D);
@@ -61,7 +62,7 @@ ui32 vg::GpuMemory::uploadTexture(const ui8* pixels,
     return textureID;
 }
 
-void vg::GpuMemory::freeTexture(ui32& textureID) {
+void vg::GpuMemory::freeTexture(VGTexture& textureID) {
     
     // See if the texture was uploaded through GpuMemory
     auto it = _textures.find(textureID);
@@ -77,7 +78,7 @@ void vg::GpuMemory::freeTexture(ui32& textureID) {
     textureID = 0;
 }
 
-void vg::GpuMemory::uploadBufferData(ui32 bufferID, BufferTarget target, ui32 bufferSize,
+void vg::GpuMemory::uploadBufferData(VGBuffer bufferID, BufferTarget target, ui32 bufferSize,
                                      const void* data,
                                      BufferUsageHint usage /* = BufferUsageHint::STATIC_DRAW */)
 {
@@ -100,7 +101,7 @@ void vg::GpuMemory::uploadBufferData(ui32 bufferID, BufferTarget target, ui32 bu
     }
 }
 
-void vg::GpuMemory::freeBuffer(ui32& bufferID)
+void vg::GpuMemory::freeBuffer(VGBuffer& bufferID)
 {
     // Reduce our memory counters
     auto it = _buffers.find(bufferID);

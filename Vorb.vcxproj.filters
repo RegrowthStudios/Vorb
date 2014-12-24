@@ -284,6 +284,9 @@
     <ClInclude Include="GBuffer.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="TextureRecycler.hpp">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

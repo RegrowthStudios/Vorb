@@ -177,6 +177,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextInputListener.hpp" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureRecycler.hpp" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadSync.h" />
     <ClInclude Include="Timing.h" />

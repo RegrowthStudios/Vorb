@@ -221,6 +221,19 @@ public:
 };
 typedef ColorRGB8 color3; ///< Simple name for ColorRGB8
 
+/************************************************************************/
+/* Enum class ops                                                       */
+/************************************************************************/
+#define ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, OP) \
+    inline CLASS operator OP (const CLASS& a, const CLASS& b) { return (CLASS)((PROXY_TYPE)a OP (PROXY_TYPE)b); } \
+    inline CLASS& operator OP## = (CLASS& a, const CLASS& b) { a = a OP b; return a; }
+#define ENUM_CLASS_OPS_INL(CLASS, PROXY_TYPE) \
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, &) \
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, | ) \
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, ^) \
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, +) \
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, -)
+
 /// A common array type for unknown values
 class ArrayBase {
     public:

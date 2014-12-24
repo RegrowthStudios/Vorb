@@ -3,12 +3,13 @@
 
 #include <boost/filesystem.hpp>
 
+#include "ConnectedTextures.h"
 #include "IOManager.h"
-#include "SamplerState.h"
 #include "utils.h"
 
 namespace vorb {
     InitParam initGraphics() {
+        vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
     InitParam initIO() {

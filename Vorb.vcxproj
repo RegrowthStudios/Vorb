@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="colors.cpp" />
     <ClCompile Include="ComponentTableBase.cpp" />
+    <ClCompile Include="ConnectedTextures.cpp" />
     <ClCompile Include="DeferredShaders.cpp" />
     <ClCompile Include="DepthState.cpp" />
     <ClCompile Include="ECS.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="compat.h" />
     <ClInclude Include="ComponentTable.hpp" />
     <ClInclude Include="ComponentTableBase.h" />
+    <ClInclude Include="ConnectedTextures.h" />
     <ClInclude Include="DeferredShaders.h" />
     <ClInclude Include="DepthState.h" />
     <ClInclude Include="ECS.h" />

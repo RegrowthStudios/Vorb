@@ -111,6 +111,9 @@
       <Filter>Core\Graphics\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Vorb.cpp" />
+    <ClCompile Include="ConnectedTextures.cpp">
+      <Filter>Core\Graphics\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -300,6 +303,9 @@
     <ClInclude Include="MeshData.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="ConnectedTextures.h">
+      <Filter>Core\Graphics\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -346,6 +352,9 @@
     </Filter>
     <Filter Include="Core\Graphics\Extensions">
       <UniqueIdentifier>{11aad47b-fcc4-4af4-b22c-be40b54bf6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Texture">
+      <UniqueIdentifier>{2f19ac72-7d3a-4fb0-b742-b56ec2571954}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

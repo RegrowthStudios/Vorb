@@ -81,7 +81,7 @@ namespace vorb {
                 /// @param vbo: The result buffer ID
                 static void createBuffer(VGBuffer& bufferID) {
                     glGenBuffers(1, &bufferID);
-                    _buffers[bufferID] = 0;
+                    m_buffers[bufferID] = 0;
                 }
 
                 /// Frees an OpenGL buffer object and sets the
@@ -118,29 +118,47 @@ namespace vorb {
 
                 /// Gets the amount of VRAM used in bytes
                 static ui32 getTotalVramUsage() {
-                    return _totalVramUsage;
+                    return m_totalVramUsage;
                 }
 
                 /// Gets the texture VRAM used in bytes
                 static ui32 getTextureVramUsage() {
-                    return _textureVramUsage;
+                    return m_textureVramUsage;
+                }
+
+                /// Gets the texture VRAM used in bytes for one texture
+                static ui32 getTextureVramUsage(VGTexture texture) {
+                    auto it = m_textures.find(texture);
+                    if (it != m_textures.end()) {
+                        return it->second;
+                    }
+                    return 0;
                 }
 
                 /// Gets the buffer VRAM used in bytes
                 static ui32 getBufferVramUsage() {
-                    return _bufferVramUsage;
+                    return m_bufferVramUsage;
+                }
+
+                /// Gets the buffer VRAM used in bytes for one buffer
+                static ui32 getBufferVramUsage(VGBuffer buffer) {
+                    auto it = m_buffers.find(buffer);
+                    if (it != m_buffers.end()) {
+                        return it->second;
+                    }
+                    return 0;
                 }
 
                 static ui32 getFormatSize(ui32 format);
             private:
 
-                static ui32 _totalVramUsage; ///< The total VRAM usage by all objects
-                static ui32 _textureVramUsage; ///< The total VRAM usage by texture objects
-                static ui32 _bufferVramUsage; ///< The total VRAM usage by buffer objects
+                static ui32 m_totalVramUsage; ///< The total VRAM usage by all objects
+                static ui32 m_textureVramUsage; ///< The total VRAM usage by texture objects
+                static ui32 m_bufferVramUsage; ///< The total VRAM usage by buffer objects
 
-                static std::unordered_map<VGTexture, ui32> _textures; ///< Store of texture objects
+                static std::unordered_map<VGTexture, ui32> m_textures; ///< Store of texture objects
 
-                static std::unordered_map<VGBuffer, ui32> _buffers; ///< Store of buffer objects
+                static std::unordered_map<VGBuffer, ui32> m_buffers; ///< Store of buffer objects
             };
         }
     }

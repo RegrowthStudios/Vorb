@@ -33,6 +33,7 @@ namespace vorb {
                 /// @param height: Height of the textures
                 /// @param samplingParameters: Sampling parameters for the textures
                 /// @param mipmapLevels: Number of mipmap levels for the textures
+                /// @param internalFormat: Internal pixel data format
                 /// @param maxSize: Maximum number of textures to cache
                 TextureRecycler(ui32 width,
                                 ui32 height,
@@ -67,6 +68,7 @@ namespace vorb {
                         rv = vg::GpuMemory::uploadTexture(nullptr, m_width, m_height,
                                                           m_samplingParameters,
                                                           m_internalFormat,
+                                                          vg::TextureFormat::RGBA,
                                                           m_mipmapLevels);
                     }
                     return rv;

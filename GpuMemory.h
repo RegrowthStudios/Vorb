@@ -35,6 +35,8 @@ namespace vorb {
                 /// @param width: Width of the texture in pixels
                 /// @param height: Height of the texture in pixels
                 /// @param samplingParameters: The texture sampler parameters
+                /// @param internalFormat: Internal pixel data format
+                /// @param textureFormat: Format of uploaded pixels
                 /// @param mipmapLevels: The max number of mipmap levels
                 /// @return The texture ID
                 static VGTexture uploadTexture(const ui8* pixels,
@@ -42,6 +44,7 @@ namespace vorb {
                     ui32 height,
                     SamplerState* samplingParameters,
                     vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                    vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
                     i32 mipmapLevels = INT_MAX);
 
                 /// Frees a texture and sets its ID to 0

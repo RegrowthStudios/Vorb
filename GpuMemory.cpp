@@ -19,7 +19,8 @@ VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
                                 ui32 width,
                                 ui32 height,
                                 SamplerState* samplingParameters,
-                                vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
+                                vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/, ,
+                                vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
                                 i32 mipmapLevels /* = INT_MAX */) {
     // Create one OpenGL texture
     GLuint textureID;
@@ -35,7 +36,7 @@ VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)internalFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)internalFormat, width, height, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, pixels);
 
     // Setup Texture Sampling Parameters
     samplingParameters->set(GL_TEXTURE_2D);

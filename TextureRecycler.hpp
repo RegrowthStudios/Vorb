@@ -14,8 +14,8 @@
 
 #pragma once
 
-#ifndef TextureRecycler_h__
-#define TextureRecycler_h__
+#ifndef TextureRecycler_hpp__
+#define TextureRecycler_hpp__
 
 #include <set>
 
@@ -108,4 +108,4 @@ namespace vorb {
 }
 namespace vg = vorb::core::graphics;
 
-#endif // TextureRecycler_h__
+#endif // TextureRecycler_hpp__

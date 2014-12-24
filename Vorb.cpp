@@ -36,7 +36,7 @@ namespace vorb {
         IOManager::setExecutableDirectory(cwDir);
 #endif // OS_WINDOWS
 
-#ifndef DEBUG
+#ifdef DEBUG
         printf("Executable Directory:\n    %s\n", IOManager::getExecutableDirectory());
         printf("Current Working Directory:\n    %s\n\n\n", IOManager::getCurrentWorkingDirectory()
             ? IOManager::getCurrentWorkingDirectory()

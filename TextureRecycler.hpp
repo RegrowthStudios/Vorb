@@ -58,17 +58,18 @@ namespace vorb {
 
                 /// Produces a texture, either a new one or a recycled one
                 /// @return textureID.
-                VGTexture produce() {
+                VGTexture produce(const ui8* pixels = nullptr,
+                                  vg::TextureFormat format = vg::TextureFormat::RGBA) {
                     VGTexture rv;
                     if (m_recycled.size()) {
                         rv = m_textures.back();
                         m_textures.pop_back();
                         m_recycled.erase(rv);
                     } else {
-                        rv = vg::GpuMemory::uploadTexture(nullptr, m_width, m_height,
+                        rv = vg::GpuMemory::uploadTexture(pixels, m_width, m_height,
                                                           m_samplingParameters,
                                                           m_internalFormat,
-                                                          vg::TextureFormat::RGBA,
+                                                          format,
                                                           m_mipmapLevels);
                     }
                     return rv;

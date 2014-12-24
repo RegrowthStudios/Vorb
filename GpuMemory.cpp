@@ -15,17 +15,14 @@ ui32 vg::GpuMemory::_bufferVramUsage = 0;
 std::unordered_map<VGTexture, ui32> vg::GpuMemory::_textures;
 std::unordered_map<VGBuffer, ui32> vg::GpuMemory::_buffers;
 
-VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
-                                ui32 width,
-                                ui32 height,
-                                SamplerState* samplingParameters,
-                                vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/, ,
-                                vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-                                i32 mipmapLevels /* = INT_MAX */) {
-    // Create one OpenGL texture
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-
+void vg::GpuMemory::uploadTexture(VGTexture texture,
+                          const ui8* pixels,
+                          ui32 width,
+                          ui32 height,
+                          SamplerState* samplingParameters,
+                          vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                          vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                          i32 mipmapLevels = INT_MAX) {
     // Determine The Maximum Number Of Mipmap Levels Available
     i32 maxMipmapLevels = 0;
     i32 size = MIN(width, height);
@@ -35,7 +32,7 @@ VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
     }
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)internalFormat, width, height, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, pixels);
 
     // Setup Texture Sampling Parameters
@@ -56,11 +53,9 @@ VGTexture vg::GpuMemory::uploadTexture(const ui8* pixels,
     // Calculate memory usage
     ui32 vramUsage = width * height * RGBA_BYTES;
     // Store the texture and its memory usage
-    _textures[textureID] = vramUsage;
+    _textures[texture] = vramUsage;
     _totalVramUsage += vramUsage;
     _textureVramUsage += vramUsage;
-
-    return textureID;
 }
 
 void vg::GpuMemory::freeTexture(VGTexture& textureID) {

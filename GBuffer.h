@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// A special render target used for deferred rendering
 ///
 
 #pragma once
@@ -17,11 +17,6 @@
 
 #include "GLEnums.h"
 #include "gtypes.h"
-
-#define GBUFFER_INTERNAL_FORMAT_COLOR vg::TextureInternalFormat::RGBA16F
-#define GBUFFER_INTERNAL_FORMAT_NORMAL vg::TextureInternalFormat::RGBA16F
-#define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RG32F
-#define GBUFFER_INTERNAL_FORMAT_LIGHT vg::TextureInternalFormat::RGB16F
 
 /************************************************************************/
 /* GBuffer breakdown                                                    */
@@ -35,50 +30,53 @@
 /* | Light R       | Light G       | Light B       |  X X X X X X  |    */
 /* -----------------------------------------------------------------    */
 /************************************************************************/
+#define GBUFFER_INTERNAL_FORMAT_COLOR vg::TextureInternalFormat::RGBA16F
+#define GBUFFER_INTERNAL_FORMAT_NORMAL vg::TextureInternalFormat::RGBA16F
+#define GBUFFER_INTERNAL_FORMAT_DEPTH vg::TextureInternalFormat::RG32F
+#define GBUFFER_INTERNAL_FORMAT_LIGHT vg::TextureInternalFormat::RGB16F
 
 namespace vorb {
     namespace core {
 		namespace graphics {
-
-
-            /// 
+            /// Geometry and light render target for deferred rendering
             class GBuffer {
             public:
                 /// Name-defined textures stored in a GBuffer
                 struct TextureIDs {
                 public:
-                    VGTexture color; ///< RGBA-8f colorRGB-specularAlpha texture
+                    VGTexture color; ///< RGBA-16f colorRGB-specularAlpha texture
                     VGTexture normal; ///< RGBA-16f normal texture
                     VGTexture depth; ///< RG-32f texture
                     VGTexture light; ///< RGB-16f texture
                 };
 
-                /// 
-                /// @param w: 
-                /// @param h: 
+                /// Set up a GBuffer with a certain size
+                /// @param w: Width in pixels of each target
+                /// @param h: Height in pixels of each target
                 GBuffer(ui32 w = 0, ui32 h = 0);
-                /// 
-                /// @param s: 
+                /// Set up a GBuffer with a certain size
+                /// @param s: Size in pixels of each target
                 GBuffer(ui32v2 s) : GBuffer(s.x, s.y) {
                     // Empty
                 }
 
-                /// 
-                /// @return
+                /// Create the value-based render targets
+                /// @return Self
                 GBuffer& init();
-                /// 
-                /// @param depthFormat: 
-                /// @return 
+                /// Attach a depth buffer to this GBuffer
+                /// @param depthFormat: Precision used for depth buffer
+                /// @return Self
                 GBuffer& initDepth(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH_COMPONENT32);
-                /// 
-                /// @param depthFormat: 
-                /// @return 
+                /// Attack a depth and stencil buffer to this GBuffer
+                /// @param depthFormat: Precision used for depth and stencil buffer
+                /// @return Self
                 GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
-                ///
+                /// Destroy all render targets
                 void dispose();
 
-                /// 
+                /// Set up the geometry targets to be active
                 void useGeometry();
+                /// Set up the light target to be active
                 void useLight();
 
                 /// @return OpenGL texture IDs
@@ -86,15 +84,15 @@ namespace vorb {
                     return m_tex;
                 }
 
-                /// @return Size of the FBO in pixels (W,H)
+                /// @return Size of the GBuffer in pixels (W,H)
                 const ui32v2& getSize() const {
                     return m_size;
                 }
-                /// @return Width of the FBO in pixels
+                /// @return Width of the GBuffer in pixels
                 const ui32& getWidth() const {
                     return m_size.x;
                 }
-                /// @return Height of the FBO in pixels
+                /// @return Height of the GBuffer in pixels
                 const ui32& getHeight() const {
                     return m_size.y;
                 }

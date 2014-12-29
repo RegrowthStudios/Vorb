@@ -21,12 +21,12 @@ namespace vorb {
             /// Helper functions for connected textures
             class ConnectedTextureHelper {
             public:
-                /// 
-                /// @param neighbors: 
+                /// Given a set of fully surrounding neighbors, find the corresponding connected texture index
+                /// @param neighbors: 8 bits designating which sides/corners have neighbors
                 /// @return Texture offset in range [0,46]
                 static const size_t& getOffsetFull(const size_t& neighbors);
-                /// 
-                /// @param neighbors: 
+                /// Given a set of neighbors, find the corresponding connected texture index
+                /// @param neighbors: 5 bits designating which sides/corners have neighbors
                 /// @return Texture offset in range [0,8]
                 static const size_t& getOffsetSmall(const size_t& neighbors);
 

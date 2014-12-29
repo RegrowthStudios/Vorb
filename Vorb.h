@@ -6,13 +6,14 @@
 //  Copyright 2014 Regrowth Studios
 //  All Rights Reserved
 //  
+//  Summary:
 //  This is the main header for the vorb engine. It 
 //  contains the namespace declarations.
 
 #pragma once
 
-#ifndef VORB_H_
-#define VORB_H_
+#ifndef Vorb_h__
+#define Vorb_h__
 
 // Create empty namespaces for aliasing purposes
 namespace vorb{
@@ -40,6 +41,7 @@ namespace vio = vorb::io; ///< Namespace alias vorb::ui
 #define DECL_VIO(CONTAINER, TYPE) namespace vorb { namespace io { CONTAINER TYPE; }  }
 
 namespace vorb {
+    /// Defines various subsystems that Vorb initializes before using
     enum class InitParam {
         NONE = 0x00,
         GRAPHICS = 0x01,
@@ -49,7 +51,10 @@ namespace vorb {
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 
+    /// Initialize Vorb subsystems so that features from them may be used
+    /// @param p: Request of subsystems that should be initialized
+    /// @return Subsystems that successfully initialized
     InitParam init(const InitParam& p);
 }
 
-#endif // VORB_H_
+#endif // Vorb_h__

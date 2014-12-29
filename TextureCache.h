@@ -6,6 +6,7 @@
 //  Copyright 2014 Regrowth Studios
 //  All Rights Reserved
 //  
+//  Summary:
 //  This file provides an implementation of a TextureCache
 //  which handles loading and caching of textures.
 //

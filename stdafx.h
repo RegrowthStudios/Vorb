@@ -1,7 +1,19 @@
+///
+/// stdafx.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 29 Dec 2014
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// PCH for Vorb
+///
+
 #pragma once
 
-#ifndef STDAFX_H_
-#define STDAFX_H_
+#ifndef stdafx_h__Vorb
+#define stdafx_h__Vorb
 
 #include "compat.h"
 
@@ -30,8 +42,7 @@
 
 #include <GL/glew.h>
 
+#include "decorators.h"
 #include "types.h"
 
-#endif // STDAFX_H_
-
-
+#endif // stdafx_h__Vorb

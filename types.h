@@ -102,68 +102,6 @@ typedef glm::highp_mat4 f64m4;
 
 #endif
 
-/// RGBA color using 8-bit elements
-struct ColorRGBA8 {
-public:
-    /// Create a color specifying all elements
-    /// @param r: Red value
-    /// @param g: Green value 
-    /// @param b: Blue value
-    /// @param a: Alpha value
-    ColorRGBA8(ui8 r, ui8 g, ui8 b, ui8 a = 0xffu) :
-        r(r), g(g), b(b), a(a) {
-        // Empty
-    }
-    /// Create a color specifying all elements in integer values
-    /// @param r: Red value
-    /// @param g: Green value
-    /// @param b: Blue value
-    /// @param a: Alpha value
-    ColorRGBA8(i32 r, i32 g, i32 b, i32 a = 1.0f) : ColorRGBA8((ui8)r, (ui8)g, (ui8)b, (ui8)a) {
-        // Empty
-    }
-    /// Create a color specifying all elements in floating point values
-    /// @param r: Red value [0.0f, 1.0f]
-    /// @param g: Green value [0.0f, 1.0f]
-    /// @param b: Blue value [0.0f, 1.0f]
-    /// @param a: Alpha value [0.0f, 1.0f]
-    ColorRGBA8(f32 r, f32 g, f32 b, f32 a = 1.0f) : ColorRGBA8(
-        ((ui8)r * 255.0f),
-        ((ui8)g * 255.0f),
-        ((ui8)b * 255.0f),
-        ((ui8)a * 255.0f)) {
-        // Empty
-    }
-    /// Default black color
-    ColorRGBA8() : ColorRGBA8(0, 0, 0) {
-        // Empty
-    }
-
-    /// Access a color element by its index
-    /// @param i: Color index in range [0,3]
-    /// @return Reference to color element
-    const ui8& operator[] (size_t i) const {
-        return data[i];
-    }
-    /// Access a color element by its index
-    /// @param i: Color index in range [0,3]
-    /// @return Reference to color element
-    ui8& operator[] (size_t i) {
-        return data[i];
-    }
-
-    union {
-        struct {
-            ui8 r; ///< Red value
-            ui8 g; ///< Green value
-            ui8 b; ///< Blue value
-            ui8 a; ///< Alpha value
-        };
-        ui8 data[4]; ///< RGBA values stored in array
-    };
-};
-typedef ColorRGBA8 color4; ///< Simple name for ColorRGBA8
-
 /// RGB color using 8-bit elements
 struct ColorRGB8 {
 public:
@@ -221,6 +159,73 @@ public:
 };
 typedef ColorRGB8 color3; ///< Simple name for ColorRGB8
 
+/// RGBA color using 8-bit elements
+struct ColorRGBA8 {
+public:
+    /// Create a color specifying all elements
+    /// @param r: Red value
+    /// @param g: Green value 
+    /// @param b: Blue value
+    /// @param a: Alpha value
+    ColorRGBA8(ui8 r, ui8 g, ui8 b, ui8 a = 0xffu) :
+        r(r), g(g), b(b), a(a) {
+        // Empty
+    }
+    /// Create a color specifying all elements in integer values
+    /// @param r: Red value
+    /// @param g: Green value
+    /// @param b: Blue value
+    /// @param a: Alpha value
+    ColorRGBA8(i32 r, i32 g, i32 b, i32 a = 1.0f) : ColorRGBA8((ui8)r, (ui8)g, (ui8)b, (ui8)a) {
+        // Empty
+    }
+    /// Create a color specifying all elements in floating point values
+    /// @param r: Red value [0.0f, 1.0f]
+    /// @param g: Green value [0.0f, 1.0f]
+    /// @param b: Blue value [0.0f, 1.0f]
+    /// @param a: Alpha value [0.0f, 1.0f]
+    ColorRGBA8(f32 r, f32 g, f32 b, f32 a = 1.0f) : ColorRGBA8(
+        ((ui8)r * 255.0f),
+        ((ui8)g * 255.0f),
+        ((ui8)b * 255.0f),
+        ((ui8)a * 255.0f)) {
+        // Empty
+    }
+    /// Default black color
+    ColorRGBA8() : ColorRGBA8(0, 0, 0) {
+        // Empty
+    }
+
+    /// Access a color element by its index
+    /// @param i: Color index in range [0,3]
+    /// @return Reference to color element
+    const ui8& operator[] (size_t i) const {
+        return data[i];
+    }
+    /// Access a color element by its index
+    /// @param i: Color index in range [0,3]
+    /// @return Reference to color element
+    ui8& operator[] (size_t i) {
+        return data[i];
+    }
+
+    union {
+        struct {
+            ColorRGB8 rgb; ///< RGB value
+            ui8 rgb_padding; ///< RGBA remainder value from RGB padding
+        };
+        struct {
+            ui8 r; ///< Red value
+            ui8 g; ///< Green value
+            ui8 b; ///< Blue value
+            ui8 a; ///< Alpha value
+        };
+        ui8 data[4]; ///< RGBA values stored in array
+    };
+};
+typedef ColorRGBA8 color4; ///< Simple name for ColorRGBA8
+
+
 /************************************************************************/
 /* Enum class ops                                                       */
 /************************************************************************/
@@ -232,7 +237,9 @@ typedef ColorRGB8 color3; ///< Simple name for ColorRGB8
     ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, | ) \
     ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, ^) \
     ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, +) \
-    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, -)
+    ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, -) \
+    inline CLASS operator << (const CLASS& a, const size_t& b) { return (CLASS)((PROXY_TYPE)a << b); } \
+    inline CLASS operator >> (const CLASS& a, const size_t& b) { return (CLASS)((PROXY_TYPE)a >> b); }
 
 /// A common array type for unknown values
 class ArrayBase {

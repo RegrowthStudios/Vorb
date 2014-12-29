@@ -122,8 +122,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="Timing.cpp" />
     <ClCompile Include="Vorb.cpp" />
+    <ClCompile Include="VoxCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AwesomiumInterface.h" />
@@ -132,6 +134,7 @@
     <ClInclude Include="ComponentTable.hpp" />
     <ClInclude Include="ComponentTableBase.h" />
     <ClInclude Include="ConnectedTextures.h" />
+    <ClInclude Include="decorators.h" />
     <ClInclude Include="DeferredShaders.h" />
     <ClInclude Include="DepthState.h" />
     <ClInclude Include="ECS.h" />
@@ -185,12 +188,16 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextInputListener.hpp" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureCache.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadSync.h" />
     <ClInclude Include="Timing.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vorb.h" />
+    <ClInclude Include="VoxCommon.h" />
+    <ClInclude Include="VoxelMeshAlg.h" />
+    <ClInclude Include="VoxelMesherCulled.h" />
     <ClInclude Include="WindowEventDispatcher.h" />
   </ItemGroup>
   <ItemGroup>

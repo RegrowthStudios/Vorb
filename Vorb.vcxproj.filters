@@ -114,6 +114,12 @@
     <ClCompile Include="ConnectedTextures.cpp">
       <Filter>Core\Graphics\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="VoxCommon.cpp">
+      <Filter>Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureCache.cpp">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -306,6 +312,19 @@
     <ClInclude Include="ConnectedTextures.h">
       <Filter>Core\Graphics\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="VoxelMesherCulled.h">
+      <Filter>Voxel\Mesh\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelMeshAlg.h">
+      <Filter>Voxel\Mesh\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxCommon.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="decorators.h" />
+    <ClInclude Include="TextureCache.h">
+      <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -355,6 +374,12 @@
     </Filter>
     <Filter Include="Core\Graphics\Texture">
       <UniqueIdentifier>{2f19ac72-7d3a-4fb0-b742-b56ec2571954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Voxel\Mesh">
+      <UniqueIdentifier>{dff71a9e-18a2-4992-a4ad-ae49c156595a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Voxel\Mesh\Algorithms">
+      <UniqueIdentifier>{4884f9c0-beef-44fb-b408-495d0c4d6329}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

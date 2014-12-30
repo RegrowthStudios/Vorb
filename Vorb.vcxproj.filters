@@ -120,6 +120,9 @@
     <ClCompile Include="TextureCache.cpp">
       <Filter>Core\Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Path.cpp">
+      <Filter>IO\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -325,6 +328,9 @@
     <ClInclude Include="TextureCache.h">
       <Filter>Core\Graphics\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -380,6 +386,9 @@
     </Filter>
     <Filter Include="Voxel\Mesh\Algorithms">
       <UniqueIdentifier>{4884f9c0-beef-44fb-b408-495d0c4d6329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Wrappers">
+      <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

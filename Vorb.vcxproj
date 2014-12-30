@@ -97,6 +97,7 @@
     <ClCompile Include="LuaDevConsole.cpp" />
     <ClCompile Include="MemFile.cpp" />
     <ClCompile Include="ModelIO.cpp" />
+    <ClCompile Include="Path.cpp" />
     <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="ModelIO.h" />
     <ClInclude Include="MouseInputDispatcher.h" />
+    <ClInclude Include="Path.h" />
     <ClInclude Include="RPC.h" />
     <ClInclude Include="GLStates.h" />
     <ClInclude Include="GpuMemory.h" />

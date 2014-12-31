@@ -96,6 +96,7 @@
     <ClCompile Include="InputDispatcher.cpp" />
     <ClCompile Include="LuaDevConsole.cpp" />
     <ClCompile Include="MemFile.cpp" />
+    <ClCompile Include="MeshGenIcosphere.cpp" />
     <ClCompile Include="ModelIO.cpp" />
     <ClCompile Include="RPC.cpp" />
     <ClCompile Include="GpuMemory.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="LuaDevConsole.h" />
     <ClInclude Include="MemFile.h" />
     <ClInclude Include="MeshData.h" />
+    <ClInclude Include="MeshGenerators.h" />
     <ClInclude Include="ModelIO.h" />
     <ClInclude Include="MouseInputDispatcher.h" />
     <ClInclude Include="RPC.h" />

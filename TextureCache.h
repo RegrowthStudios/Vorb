@@ -8,7 +8,7 @@
 //  
 //  Summary:
 //  This file provides an implementation of a TextureCache
-//  which handles loading and caching of textures.
+//  which handles loading and cacheing of textures.
 //
 
 #pragma once
@@ -18,9 +18,15 @@
 
 #include <unordered_map>
 #include <map>
+#include <vector>
 
 #include "Texture.h"
 #include "ImageLoader.h"
+
+#include "gtypes.h"
+#include "GLEnums.h"
+
+class IOManager;
 
 namespace vorb {
     namespace core {
@@ -30,6 +36,7 @@ namespace vorb {
             class TextureCache {
             public:
                 TextureCache();
+                TextureCache(IOManager* ioManager);
                 ~TextureCache();
 
                 /// Finds a texture if it exists in the cache
@@ -46,11 +53,15 @@ namespace vorb {
                 /// an existing texture ID if it already exists in the cache
                 /// @param filePath: The file path of the texture
                 /// @param samplingParameters: The texture sampler parameters
+                /// @param internalFormat: Internal format of the pixel data
+                /// @param textureFormat: Format of uploaded pixels
                 /// @param mipmapLevels: The max number of mipmap levels
                 /// @return The texture ID or 0 if loading fails
                 Texture addTexture(const nString& filePath,
-                    SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                    i32 mipmapLevels = INT_MAX);
+                                   SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                                   vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                                   vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                   i32 mipmapLevels = INT_MAX);
 
                 /// Uploads a png texture and adds it to the cache
                 /// an existing texture ID if it already exists in the cache
@@ -59,14 +70,18 @@ namespace vorb {
                 /// @param width: The texture width in pixels
                 /// @param height: The texture height in pixels
                 /// @param samplingParameters: The texture sampler parameters
+                /// @param internalFormat : Internal format of the pixel data
+                /// @param textureFormat: Format of uploaded pixels
                 /// @param mipmapLevels: The max number of mipmap levels
                 /// @return The texture. ID will be 0 if loading fails
                 Texture addTexture(const nString& filePath,
-                    const ui8* pixels,
-                    ui32 width,
-                    ui32 height,
-                    SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                    i32 mipmapLevels = INT_MAX);
+                                   const ui8* pixels,
+                                   ui32 width,
+                                   ui32 height,
+                                   SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                                   vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                                   vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                   i32 mipmapLevels = INT_MAX);
 
                 /// Adds a texture to the cache
                 /// @param filePath: The path of the texture
@@ -89,6 +104,8 @@ namespace vorb {
                 void destroy();
 
             private:
+                bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
+                IOManager* m_ioManager = nullptr; ///< Handles the IO
 
                 /// Inserts a texture into the cache
                 void insertTexture(const nString& filePath, const Texture& texture);
@@ -97,9 +114,11 @@ namespace vorb {
                 std::unordered_map <nString, Texture> _textureStringMap; ///< Textures store here keyed on filename
                 std::map <ui32, std::unordered_map <nString, Texture>::iterator> _textureIdMap; ///< Textures are stored here keyed on ID
             };
+
         }
     }
 }
+
 namespace vg = vorb::core::graphics;
 
 #endif // TEXTURECACHE_H_

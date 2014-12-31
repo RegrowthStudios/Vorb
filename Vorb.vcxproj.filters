@@ -120,6 +120,9 @@
     <ClCompile Include="TextureCache.cpp">
       <Filter>Core\Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="MeshGenIcosphere.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -327,6 +330,9 @@
     <ClInclude Include="decorators.h" />
     <ClInclude Include="TextureCache.h">
       <Filter>Core\Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshGenerators.h">
+      <Filter>Core\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

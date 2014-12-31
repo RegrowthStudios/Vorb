@@ -107,7 +107,7 @@ namespace vorb {
         public:
             /// Begin receiving events
             void start() {
-                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (void* sender, const vui::KeyEvent& e) {
+                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender sender, const vui::KeyEvent& e) {
                     switch (e.keyCode) {
                     case VKEY_BACKSPACE:
                         m_text.back();
@@ -133,7 +133,7 @@ namespace vorb {
                         break;
                     }
                 });
-                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onText, [&] (void* sender, const vui::TextEvent& e) {
+                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onText, [&] (Sender sender, const vui::TextEvent& e) {
                     m_text.insert(e.text);
                     onTextChange((const T*)m_text);
                 });

@@ -36,7 +36,7 @@ bool vcore::ECS::deleteEntity(EntityID id) {
 }
 
 void vcore::ECS::addComponentTable(nString name, vcore::ComponentTableBase* table) {
-    std::shared_ptr<IDelegate<EntityID>> f(onEntityRemoved.addFunctor([=] (void* sender, EntityID id) {
+    std::shared_ptr<IDelegate<EntityID>> f(onEntityRemoved.addFunctor([=] (Sender sender, EntityID id) {
         table->remove(id);
     }));
     ComponentSubscriber binding(table, f);

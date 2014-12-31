@@ -15,6 +15,8 @@
 #ifndef Events_h__
 #define Events_h__
 
+typedef const void* Sender;
+
 /// This is the main function pointer
 /// @tparam Params: Additional metadata used in delegate invocation
 template<typename... Params>
@@ -23,7 +25,7 @@ public:
     /// Invoke this function's code
     /// @param sender: The sender that underlies the event
     /// @param p: Additional arguments to function
-    virtual void invoke(void* sender, Params... p) = 0;
+    virtual void invoke(Sender sender, Params... p) = 0;
 };
 
 /// Functor object to hold instances of anonymous lambdas
@@ -46,7 +48,7 @@ public:
     /// Invoke this functor's code
     /// @param sender: The sender that underlies the event
     /// @param p: Additional arguments to function
-    virtual void invoke(void* sender, Params... p) override {
+    virtual void invoke(Sender sender, Params... p) override {
         m_f(sender, p...);
     }
 private:
@@ -72,7 +74,7 @@ public:
 
     /// Create an event with a sender attached to it
     /// @param sender: Owner object sent with each invokation
-    Event(void* sender = nullptr) :
+    Event(Sender sender = nullptr) :
         m_sender(sender) {
         // Empty
     }
@@ -137,7 +139,7 @@ public:
         remove((Listener)f);
     }
 private:
-    void* m_sender; ///< Event owner
+    Sender m_sender; ///< Event owner
     std::vector<Listener> m_funcs; ///< List of bound functions (subscribers)
 };
 
@@ -163,7 +165,7 @@ public:
     template<typename F, typename... Params>
     void addAutoHook(Event<Params...>* e, F f) {
         IDelegate<Params...>* fd = e->addFunctor<F>(f);
-        IDelegate<>* d = createDelegate<>([=] (void* sender) {
+        IDelegate<>* d = createDelegate<>([=] (Sender sender) {
             e->remove(fd);
             delete fd;
         });

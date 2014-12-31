@@ -7,7 +7,7 @@ vcore::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Entity added handler
-    _fEntityAdded.reset(createDelegate<EntityID>([=] (void* sender, EntityID eID) -> void {
+    _fEntityAdded.reset(createDelegate<EntityID>([=] (Sender sender, EntityID eID) -> void {
         for (ComponentTableBase* table : this->_tables) {
             // See if a table doesn't contain the entity
             if (table == sender) continue;
@@ -18,7 +18,7 @@ vcore::MultipleComponentSet::MultipleComponentSet() :
     }));
 
     // Entity removed handler
-    _fEntityRemoved.reset(createDelegate<EntityID>([=] (void* sender, EntityID eID) -> void {
+    _fEntityRemoved.reset(createDelegate<EntityID>([=] (Sender sender, EntityID eID) -> void {
         // Always remove the entity from this list
         auto entity = this->_entities.find(eID);
         if (entity != _entities.end()) {

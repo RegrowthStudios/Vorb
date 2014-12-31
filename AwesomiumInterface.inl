@@ -116,14 +116,14 @@ bool AwesomiumInterface<C>::init(const char* inputDir, const char* sessionName, 
     }
 
     // Add input registration
-    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusGained.addFunctor([=] (void* s, const MouseEvent& e) { onMouseFocusGained(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusLost.addFunctor([=] (void* s, const MouseEvent& e) { onMouseFocusLost(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::mouse.onMotion.addFunctor([=] (void* s, const MouseMotionEvent& e) { onMouseMotion(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonUp.addFunctor([=] (void* s, const MouseButtonEvent& e) { onMouseButtonUp(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonDown.addFunctor([=] (void* s, const MouseButtonEvent& e) { onMouseButtonDown(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyUp.addFunctor([=] (void* s, const KeyEvent& e) { onKeyUp(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyDown.addFunctor([=] (void* s, const KeyEvent& e) { onKeyDown(s, e); }));
-    m_delegatePool.push_back(vui::InputDispatcher::key.onText.addFunctor([=] (void* s, const TextEvent& e) { onText(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusGained.addFunctor([=] (Sender s, const MouseEvent& e) { onMouseFocusGained(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onFocusLost.addFunctor([=] (Sender s, const MouseEvent& e) { onMouseFocusLost(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onMotion.addFunctor([=] (Sender s, const MouseMotionEvent& e) { onMouseMotion(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonUp.addFunctor([=] (Sender s, const MouseButtonEvent& e) { onMouseButtonUp(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::mouse.onButtonDown.addFunctor([=] (Sender s, const MouseButtonEvent& e) { onMouseButtonDown(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyUp.addFunctor([=] (Sender s, const KeyEvent& e) { onKeyUp(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onKeyDown.addFunctor([=] (Sender s, const KeyEvent& e) { onKeyDown(s, e); }));
+    m_delegatePool.push_back(vui::InputDispatcher::key.onText.addFunctor([=] (Sender s, const TextEvent& e) { onText(s, e); }));
 
     _isInitialized = true;
     return true;
@@ -157,30 +157,30 @@ void AwesomiumInterface<C>::invokeFunction(const cString functionName, const Awe
 }
 
 template <class C>
-void AwesomiumInterface<C>::onMouseFocusGained(void* sender, const MouseEvent& e) {
+void AwesomiumInterface<C>::onMouseFocusGained(Sender sender, const MouseEvent& e) {
     _webView->Focus();
 }
 template <class C>
-void AwesomiumInterface<C>::onMouseFocusLost(void* sender, const MouseEvent& e) {
+void AwesomiumInterface<C>::onMouseFocusLost(Sender sender, const MouseEvent& e) {
     _webView->Unfocus();
 }
 template <class C>
-void AwesomiumInterface<C>::onMouseButtonUp(void* sender, const MouseButtonEvent& e) {
+void AwesomiumInterface<C>::onMouseButtonUp(Sender sender, const MouseButtonEvent& e) {
     _webView->InjectMouseUp(getAwesomiumButton(e.button));
 }
 template <class C>
-void AwesomiumInterface<C>::onMouseButtonDown(void* sender, const MouseButtonEvent& e) {
+void AwesomiumInterface<C>::onMouseButtonDown(Sender sender, const MouseButtonEvent& e) {
     _webView->InjectMouseDown(getAwesomiumButton(e.button));
 }
 template <class C>
-void AwesomiumInterface<C>::onMouseMotion(void* sender, const MouseMotionEvent& e) {
+void AwesomiumInterface<C>::onMouseMotion(Sender sender, const MouseMotionEvent& e) {
     f32 relX = (e.x - _drawRect.x) / (f32)_drawRect.z;
     f32 relY = (e.y - _drawRect.y) / (f32)_drawRect.w;
 
     _webView->InjectMouseMove((i32)(relX * _width), (i32)(relY * _height));
 }
 template <class C>
-void AwesomiumInterface<C>::onKeyDown(void* sender, const KeyEvent& e) {
+void AwesomiumInterface<C>::onKeyDown(Sender sender, const KeyEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
     keyEvent.virtual_key_code = (i32)SDL_GetKeyFromScancode((SDL_Scancode)e.keyCode);
@@ -197,7 +197,7 @@ void AwesomiumInterface<C>::onKeyDown(void* sender, const KeyEvent& e) {
     _webView->InjectKeyboardEvent(keyEvent);
 }
 template <class C>
-void AwesomiumInterface<C>::onKeyUp(void* sender, const KeyEvent& e) {
+void AwesomiumInterface<C>::onKeyUp(Sender sender, const KeyEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
     keyEvent.virtual_key_code = (i32)SDL_GetKeyFromScancode((SDL_Scancode)e.keyCode);
@@ -214,7 +214,7 @@ void AwesomiumInterface<C>::onKeyUp(void* sender, const KeyEvent& e) {
     _webView->InjectKeyboardEvent(keyEvent);
 }
 template <class C>
-void AwesomiumInterface<C>::onText(void* sender, const TextEvent& e) {
+void AwesomiumInterface<C>::onText(Sender sender, const TextEvent& e) {
     Awesomium::WebKeyboardEvent keyEvent;
 
     memcpy(keyEvent.text, e.wtext, 4 * sizeof(wchar_t));

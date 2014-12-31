@@ -103,14 +103,14 @@ private:
     /************************************************************************/
     /* Event listeners                                                      */
     /************************************************************************/
-    void onMouseFocusGained(void* sender, const MouseEvent& e);
-    void onMouseFocusLost(void* sender, const MouseEvent& e);
-    void onMouseButtonUp(void* sender, const MouseButtonEvent& e);
-    void onMouseButtonDown(void* sender, const MouseButtonEvent& e);
-    void onMouseMotion(void* sender, const MouseMotionEvent& e);
-    void onKeyUp(void* sender, const KeyEvent& e);
-    void onKeyDown(void* sender, const KeyEvent& e);
-    void onText(void* sender, const TextEvent& e);
+    void onMouseFocusGained(Sender sender, const MouseEvent& e);
+    void onMouseFocusLost(Sender sender, const MouseEvent& e);
+    void onMouseButtonUp(Sender sender, const MouseButtonEvent& e);
+    void onMouseButtonDown(Sender sender, const MouseButtonEvent& e);
+    void onMouseMotion(Sender sender, const MouseMotionEvent& e);
+    void onKeyUp(Sender sender, const KeyEvent& e);
+    void onKeyDown(Sender sender, const KeyEvent& e);
+    void onText(Sender sender, const TextEvent& e);
     std::vector<void*> m_delegatePool; ///< Listeners that must be freed
 
     bool _isInitialized; ///< true when initialized

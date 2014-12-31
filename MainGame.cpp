@@ -16,7 +16,7 @@
 #include "Timing.h"
 
 MainGame::MainGame() : _fps(0) {
-    m_fOnQuit = createDelegate<>([=] (void* sender) {
+    m_fOnQuit = createDelegate<>([=] (Sender sender) {
         m_signalQuit = true;
     });
 }

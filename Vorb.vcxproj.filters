@@ -123,6 +123,9 @@
     <ClCompile Include="Path.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="Directory.cpp">
+      <Filter>IO\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -329,6 +332,9 @@
       <Filter>Core\Graphics\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Path.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Directory.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,6 +19,9 @@
 
 namespace vorb {
     namespace io {
+        class Directory;
+        class File;
+
         /// Wrapper path class
         class Path {
         public:
@@ -41,7 +44,7 @@ namespace vorb {
             }
 
             /// @return True if this path has an empty value
-            bool isEmpty() const;
+            bool isNull() const;
             /// @return True if this path exists
             bool isValid() const;
             /// @return True if this path exists and is a file
@@ -94,6 +97,11 @@ namespace vorb {
                 this->trimEnd();
                 return p;
             }
+
+            /// Attempt to convert this path to a directory
+            /// @param dir: Pointer to return value if a conversion was possible
+            /// @return True if this path was converted successfully
+            bool asDirectory(OUT Directory* dir) const;
         private:
             nString m_path; ///< Path value as a string
         };

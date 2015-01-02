@@ -4,10 +4,9 @@
 #include "utils.h"
 
 vio::IOManager::IOManager() :
-    m_pathSearch(nullptr) {
+    m_pathSearch("") {
     Path path;
     Path absPath;
-
 
     // Search Directory Defaults To CWD
     setSearchDirectory(m_pathCWD);
@@ -93,7 +92,7 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
     if (m_pathSearch.isValid()) {
         pSearch = m_pathSearch / path;
         if (pSearch.isValid()) {
-            resultAbsolutePath = path;
+            resultAbsolutePath = pSearch;
             return true;
         }
     }
@@ -101,7 +100,7 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
     if (m_pathCWD.isValid()) {
         pSearch = m_pathCWD / path;
         if (pSearch.isValid()) {
-            resultAbsolutePath = path;
+            resultAbsolutePath = pSearch;
             return true;
         }
     }
@@ -109,7 +108,7 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
     if (m_pathExec.isValid()) {
         pSearch = m_pathExec / path;
         if (pSearch.isValid()) {
-            resultAbsolutePath = path;
+            resultAbsolutePath = pSearch;
             return true;
         }
     }

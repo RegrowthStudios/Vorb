@@ -106,7 +106,7 @@ namespace vorb {
 
             std::shared_ptr<Handle> m_handle; ///< Ref-counted file handle
             FILE* m_fileCached = nullptr; ///< Cached file pointer
-            File m_parent;
+            File m_parent; ///< File reference
         };
     }
 }

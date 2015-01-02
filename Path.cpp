@@ -78,14 +78,14 @@ time_t vio::Path::getLastModTime() const {
 }
 
 vio::Path& vio::Path::makeAbsolute() {
-    if (isNull() && !isNice()) return *this;
+    if (isNull() || !isNice()) return *this;
     fs::path p(m_path);
     p = fs::absolute(p);
     m_path = p.string();
     return *this;
 }
 vio::Path& vio::Path::makeCanonical() {
-    if (isNull()) return *this;
+    if (isNull() || !isNice()) return *this;
     fs::path p(m_path);
     p = fs::canonical(fs::absolute(p));
     m_path = p.string();
@@ -121,10 +121,8 @@ bool vio::Path::asDirectory(OUT Directory* dir) const {
     }
     return false;
 }
-bool vorb::io::Path::asFile(OUT File* file) const {
-    if (isNiceFile()) {
-        *file = File(*this);
-        return true;
-    }
-    return false;
+bool vio::Path::asFile(OUT File* f) const {
+    if (isNull()) return false;
+    *f = File(*this);
+    return true;
 }

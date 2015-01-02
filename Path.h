@@ -156,8 +156,9 @@ namespace vorb {
             /// @return True if this path was converted successfully
             bool asDirectory(OUT Directory* dir) const;
             /// Convert this path to a file
-            /// @param file: Pointer to return value
-            bool asFile(OUT File* file) const;
+            /// @param f: File pointer return value
+            /// @return True if this path is not null
+            bool asFile(OUT File* f) const;
         private:
             nString m_path; ///< Path value as a string
         };

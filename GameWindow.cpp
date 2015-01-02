@@ -105,7 +105,7 @@ void GameWindow::setDefaultSettings(GameDisplayMode* mode) {
 }
 
 void GameWindow::readSettings() {
-    IOManager iom;
+    vio::IOManager iom;
     nString data;
     iom.readFileToString(DEFAULT_APP_CONFIG_FILE, data);
     if (data.length()) {

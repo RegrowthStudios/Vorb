@@ -3,224 +3,113 @@
 
 #include "utils.h"
 
-IOManager::IOManager() :
-    _searchDir(nullptr) {
-    boost::filesystem::path path;
-    boost::filesystem::path absPath;
+vio::IOManager::IOManager() :
+    m_pathSearch(nullptr) {
+    Path path;
+    Path absPath;
 
-    if (!_execDir) {
-        // Find The Executing Path
-        path = boost::filesystem::initial_path();
-        absPath = boost::filesystem::system_complete(path);
-        nString exeDir;
-        convertWToMBString((cwString)absPath.c_str(), exeDir);
-        setExecutableDirectory(exeDir);
-    }
-
-    if (!_cwDir) {
-        // Find The CWD
-        path = boost::filesystem::current_path();
-        absPath = boost::filesystem::system_complete(path);
-        nString cwDir;
-        convertWToMBString((cwString)absPath.c_str(), cwDir);
-        setCurrentWorkingDirectory(cwDir);
-    }
 
     // Search Directory Defaults To CWD
-    setSearchDirectory(_cwDir);
-}
-IOManager::~IOManager() {
-    if (_searchDir) {
-        free(_searchDir);
-        _searchDir = nullptr;
-    }
-    if (_cwDir) {
-        free(_cwDir);
-        _cwDir = nullptr;
-    }
-    if (_execDir) {
-        free(_execDir);
-        _execDir = nullptr;
-    }
+    setSearchDirectory(m_pathCWD);
 }
 
-void IOManager::setSearchDirectory(const cString s) {
-    // Delete The Old Search Directory
-    if (_searchDir) free(_searchDir);
-
-    if (!s) {
-        // No Search Directory Now
-        _searchDir = nullptr;
-        return;
-    } else {
-        // Copy The String
-        i32 l = strlen(s);
-        _searchDir = (cString)malloc(l + 1);
-        strcpy_s(_searchDir, l + 1, s);
-        _searchDir[l] = 0;
-    }
+void vio::IOManager::setSearchDirectory(const Path& s) {
+    m_pathSearch = s;
 }
-void IOManager::setCurrentWorkingDirectory(const nString& s) {
-    // Delete The Old CWD
-    if (_cwDir) free(_cwDir);
-
-    if (s.empty()) {
-        // No Search Directory Now
-        _cwDir = nullptr;
-        return;
-    } else {
-        // Copy The String
-        i32 l = s.length();
-        _cwDir = (cString)malloc(l + 1);
-        strcpy_s(_cwDir, l + 1, s.data());
-        _cwDir[l] = 0;
-    }
+void vio::IOManager::setCurrentWorkingDirectory(const Path& s) {
+    m_pathCWD = s;
 }
-void IOManager::setExecutableDirectory(const nString& s) {
-    // Delete The Old Executing Directory
-    if (_execDir) free(_execDir);
+void vio::IOManager::setExecutableDirectory(const Path& s) {
+    m_pathExec = s;
+}
 
-    if (s.empty()) {
-        // No Search Directory Now
-        _execDir = nullptr;
-        return;
-    } else {
-        // Copy The String
-        i32 l = s.length();
-        _execDir = (cString)malloc(l + 1);
-        strcpy_s(_execDir, l + 1, s.data());
-        _execDir[l] = 0;
+vio::Path vio::IOManager::getDirectory(const Path& path) {
+    Path pDir = --path.asAbsolute();
+    pDir--;
+    return pDir;
+}
+
+void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& entries) const {
+    Directory dir;
+    if (dirPath.asDirectory(&dir)) {
+        dir.appendEntries(entries);
     }
 }
 
-void IOManager::getDirectory(const cString path, nString& resultPath) {
-    boost::filesystem::path p(path);
-    if (!boost::filesystem::is_directory(p)) {
-        p = p.remove_filename();
-    }
-    if (!p.is_absolute()) {
-        p = boost::filesystem::system_complete(p);
-    }
-    convertWToMBString((cwString)p.c_str(), resultPath);
+vio::FileStream vio::IOManager::openFile(const Path& path, const FileOpenFlags& flags) const {
+    Path filePath;
+    if (!resolvePath(path, filePath)) return FileStream();
+
+    File f;
+    if (!filePath.asFile(&f)) return FileStream();
+
+    return f.open(flags);
 }
 
-void IOManager::getDirectoryEntries(nString dirPath, std::vector<boost::filesystem::path>& entries) const {
-    boost::filesystem::directory_iterator end_iter;
-    boost::filesystem::path targetDir(dirPath);
+bool vio::IOManager::readFileToString(const Path& path, nString& data) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
+    if (!fs.isOpened()) return false;
 
-    if (boost::filesystem::exists(targetDir)) {
-        for (boost::filesystem::directory_iterator dir_iter(targetDir); dir_iter != end_iter; ++dir_iter) {
-            // Emplace a copy of the path reference
-            entries.emplace_back(boost::filesystem::path(dir_iter->path()));
+    size_t length = (size_t)fs.getFile().length();
+    data.resize(length + 1);
+    if (length > 0) fs.read(length, 1, &(data[0]));
+    data[length] = 0;
+    return true;
+}
+cString vio::IOManager::readFileToString(const Path& path) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
+    if (!fs.isOpened()) return nullptr;
+
+    size_t length = (size_t)fs.getFile().length();
+    cString data = new char[length + 1];
+    if (length > 0) fs.read(length, 1, data);
+    data[length] = 0;
+    return data;
+}
+bool vio::IOManager::readFileToData(const Path& path, std::vector<ui8>& data) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING | FileOpenFlags::BINARY);
+    if (!fs.isOpened()) return false;
+
+    size_t length = (size_t)fs.getFile().length();
+    data.resize(length);
+    if (length > 0) fs.read(length, 1, &(data[0]));
+    return true;
+}
+
+bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) const {
+    // Special case if the path is already an absolute path
+    if (path.isAbsolute()) {
+        if (path.isValid()) {
+            resultAbsolutePath = path;
+            return true;
+        } else {
+            return false;
         }
     }
-}
 
-FILE* IOManager::openFile(const cString path, const cString flags) const {
-   nString filePath;
+    // Search in order
+    Path pSearch;
 
-    if (resolveFile(path, filePath)) {
-        FILE* f;
-        errno_t err = fopen_s(&f, filePath.data(), flags);
-        return err == 0 ? f : nullptr;
-    }
-
-    // TODO: Implement
-    return nullptr;
-}
-
-bool IOManager::readFileToString(const cString path, nString& data) const {
-    nString filePath;
-
-    if (resolveFile(path, filePath)) {
-        std::ifstream t(filePath, std::ios::in | std::ios::binary);
-
-        t.seekg(0, std::ios::end);
-        std::streamoff length = t.tellg();
-        t.seekg(0, std::ios::beg);
-        length -= t.tellg();
-
-        data.resize((size_t)length + 1);
-        t.read(&(data[0]), length);
-        t.close();
-
-        data[(size_t)length] = '\0';
-        return true;
-    }
-    return false;
-}
-const cString IOManager::readFileToString(const cString path) const {
-    nString filePath;
-
-    if (resolveFile(path, filePath)) {
-        std::ifstream t(filePath, std::ios::in | std::ios::binary);
-
-        t.seekg(0, std::ios::end);
-        std::streamoff length = t.tellg();
-        t.seekg(0, std::ios::beg);
-        length -= t.tellg();
-
-        cString data = new char[(size_t)length + 1];
-        t.read(data, length);
-        t.close();
-
-        data[(size_t)length] = '\0';
-        return data;
-    }
-    return nullptr;
-}
-bool IOManager::readFileToData(const cString path, std::vector<ui8>& data) const {
-    nString filePath;
-
-    if (resolveFile(path, filePath)) {
-        std::ifstream t(filePath, std::ios::in | std::ios::binary);
-
-        t.seekg(0, std::ios::end);
-        std::streamoff length = t.tellg();
-        t.seekg(0, std::ios::beg);
-
-        data.resize((size_t)length);
-        t.read((char*)&(data[0]), length);
-        t.close();
-
-        return true;
-    }
-    return false;
-}
-
-bool IOManager::resolveFile(const cString path, nString& resultAbsolutePath) const {
-    boost::filesystem::path p(path);
-    if (p.is_absolute()) {
-        if (boost::filesystem::exists(p)) {
-            convertWToMBString((cwString)p.c_str(), resultAbsolutePath);
+    if (m_pathSearch.isValid()) {
+        pSearch = m_pathSearch / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = path;
             return true;
         }
     }
 
-    boost::filesystem::path concatPath;
-    if (_searchDir) {
-        concatPath = boost::filesystem::path(_searchDir);
-        concatPath /= p;
-        if (boost::filesystem::exists(concatPath)) {
-            convertWToMBString((cwString)concatPath.c_str(), resultAbsolutePath);
+    if (m_pathCWD.isValid()) {
+        pSearch = m_pathCWD / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = path;
             return true;
         }
     }
 
-    if (_cwDir) {
-        concatPath = boost::filesystem::path(_cwDir);
-        concatPath /= p;
-        if (boost::filesystem::exists(concatPath)) {
-            convertWToMBString((cwString)concatPath.c_str(), resultAbsolutePath);
-            return true;
-        }
-    }
-
-    if (_execDir) {
-        concatPath = boost::filesystem::path(_execDir);
-        concatPath /= p;
-        if (boost::filesystem::exists(concatPath)) {
-            convertWToMBString((cwString)concatPath.c_str(), resultAbsolutePath);
+    if (m_pathExec.isValid()) {
+        pSearch = m_pathExec / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = path;
             return true;
         }
     }
@@ -228,30 +117,30 @@ bool IOManager::resolveFile(const cString path, nString& resultAbsolutePath) con
     return false;
 }
 
-bool IOManager::writeStringToFile(const cString path, const nString& data) const {
-    FILE* file = nullptr;
-    fopen_s(&file, path, "w");
-    if (file) {
-      fwrite(data.c_str(), 1, data.length(), file);
-      fclose(file);
-      return true;
-    }
-    return false;
+bool vio::IOManager::writeStringToFile(const Path& path, const nString& data) const {
+    Path fPath = m_pathSearch / path;
+    File f;
+    if (!fPath.asFile(&f)) return false;
+    FileStream fs = f.open(FileOpenFlags::WRITE_ONLY_APPEND);
+    if (!fs.isOpened()) return false;
+    fs.write(data.c_str());
+    return true;
 }
 
-bool IOManager::makeDirectory(const cString path) const {
-    return boost::filesystem::create_directory(path);
+bool vio::IOManager::makeDirectory(const Path& path) const {
+    return buildDirectoryTree(m_pathSearch / path, false);
 }
 
-bool IOManager::fileExists(const cString path) const {
-    boost::filesystem::path p(path);
-    return !boost::filesystem::is_directory(p) && boost::filesystem::exists((p));
+bool vio::IOManager::fileExists(const Path& path) const {
+    Path res;
+    if (!resolvePath(path, res)) return false;
+    return res.isFile();
+}
+bool vio::IOManager::directoryExists(const Path& path) const {
+    Path res;
+    if (!resolvePath(path, res)) return false;
+    return res.isDirectory();
 }
 
-bool IOManager::directoryExists(const cString path) const {
-    boost::filesystem::path p(path);
-    return boost::filesystem::is_directory(p) && boost::filesystem::exists((p));
-}
-
-cString IOManager::_execDir = nullptr;
-cString IOManager::_cwDir = nullptr;
+vio::Path vio::IOManager::m_pathExec = "";
+vio::Path vio::IOManager::m_pathCWD = "";

@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// A file wrapper
+/// A directory wrapper
 ///
 
 #pragma once

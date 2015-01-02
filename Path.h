@@ -45,6 +45,10 @@ namespace vorb {
 
             /// @return True if this path has an empty value
             bool isNull() const;
+            /// @return True if this path is well-formed
+            bool isNice() const;
+            /// @return True if this path is well-formed for a file
+            bool isNiceFile() const;
             /// @return True if this path exists
             bool isValid() const;
             /// @return True if this path exists and is a file
@@ -52,13 +56,23 @@ namespace vorb {
             /// @return True if this path exists and is a directory
             bool isDirectory() const;
 
-            /// Normalizes and places this path value on the root
+            /// Places this path value on the root
             /// @return Self
             Path& makeAbsolute();
-            /// @return A normalized and rooted path value
+            /// Normalizes laces this path value on the root
+            /// @pre The path must exist
+            /// @return Self
+            Path& makeCanonical();
+            /// @return A rooted path value
             Path asAbsolute() const {
                 Path p = *this;
                 p.makeAbsolute();
+                return p;
+            }
+            /// @return A normalized and rooted path value
+            Path asCanonical() const {
+                Path p = *this;
+                p.makeCanonical();
                 return p;
             }
 
@@ -102,6 +116,9 @@ namespace vorb {
             /// @param dir: Pointer to return value if a conversion was possible
             /// @return True if this path was converted successfully
             bool asDirectory(OUT Directory* dir) const;
+            /// Convert this path to a file
+            /// @param file: Pointer to return value
+            bool asFile(OUT File* file) const;
         private:
             nString m_path; ///< Path value as a string
         };

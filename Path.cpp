@@ -4,6 +4,7 @@
 #include <boost/filesystem.hpp>
 
 #include "Directory.h"
+#include "File.h"
 
 namespace fs = boost::filesystem;
 
@@ -22,6 +23,31 @@ m_path(p) {
 bool vio::Path::isNull() const {
     return m_path.empty() || m_path.length() == 0;
 }
+bool vorb::io::Path::isNice() const {
+    if (isNull()) return false;
+    
+    fs::path p(m_path);
+    for (auto& piece : p) {
+        if (!fs::portable_name(piece.string())) return false;
+    }
+    return true;
+}
+bool vorb::io::Path::isNiceFile() const {
+    if (isNull()) return false;
+
+    fs::path p(m_path);
+    auto iter = p.begin();
+    while (iter != p.end()) {
+        nString piece = iter->string();
+        iter++;
+        if (iter == p.end()) {
+            if (!fs::portable_file_name(piece)) return false;
+        } else {
+            if (!fs::portable_directory_name(piece)) return false;
+        }
+    }
+    return true;
+}
 bool vio::Path::isValid() const {
     if (isNull()) return false;
     return fs::exists(fs::path(m_path));
@@ -38,7 +64,14 @@ bool vio::Path::isDirectory() const {
 }
 
 vio::Path& vio::Path::makeAbsolute() {
-    if (isNull() || !isValid()) return *this;
+    if (isNull() && !isNice()) return *this;
+    fs::path p(m_path);
+    p = fs::absolute(p);
+    m_path = p.string();
+    return *this;
+}
+vio::Path& vio::Path::makeCanonical() {
+    if (isNull()) return *this;
     fs::path p(m_path);
     p = fs::canonical(fs::absolute(p));
     m_path = p.string();
@@ -46,21 +79,21 @@ vio::Path& vio::Path::makeAbsolute() {
 }
 
 vio::Path& vio::Path::append(const nString& dir) {
-    if (isNull() || !isValid()) return *this;
+    if (isNull()) return *this;
     fs::path p(m_path);
     p += dir;
     m_path = p.string();
     return *this;
 }
 vio::Path& vio::Path::concatenate(const nString& dir) {
-    if (isNull() || !isValid()) return *this;
+    if (isNull()) return *this;
     fs::path p(m_path);
     p /= dir;
     m_path = p.string();
     return *this;
 }
 vio::Path& vio::Path::trimEnd() {
-    if (isNull() || !isValid()) return *this;
+    if (isNull()) return *this;
     fs::path p(m_path);
     p = p.parent_path();
     m_path = p.string();
@@ -74,3 +107,11 @@ bool vio::Path::asDirectory(OUT Directory* dir) const {
     }
     return false;
 }
+bool vorb::io::Path::asFile(OUT File* file) const {
+    if (isNiceFile()) {
+        *file = File(*this);
+        return true;
+    }
+    return false;
+}
+

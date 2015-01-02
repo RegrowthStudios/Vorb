@@ -126,6 +126,12 @@
     <ClCompile Include="Directory.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>IO\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileOps.cpp">
+      <Filter>IO\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compat.h" />
@@ -335,6 +341,15 @@
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
     <ClInclude Include="Directory.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileStream.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileOps.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>

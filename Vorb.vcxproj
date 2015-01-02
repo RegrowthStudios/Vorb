@@ -89,6 +89,8 @@
     <ClCompile Include="DepthState.cpp" />
     <ClCompile Include="Directory.cpp" />
     <ClCompile Include="ECS.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileOps.cpp" />
     <ClCompile Include="FullQuadVBO.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GBuffer.cpp" />
@@ -144,6 +146,9 @@
     <ClInclude Include="ECSSimpleUpdater.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Events.hpp" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="FileOps.h" />
+    <ClInclude Include="FileStream.h" />
     <ClInclude Include="FixedSizeArrayRecycler.hpp" />
     <ClInclude Include="FullQuadVBO.h" />
     <ClInclude Include="GameWindow.h" />

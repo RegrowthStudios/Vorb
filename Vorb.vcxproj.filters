@@ -352,6 +352,9 @@
     <ClInclude Include="FileOps.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="IO.h">
+      <Filter>IO\Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -431,6 +434,7 @@
     <None Include="Keys.inl">
       <Filter>UI\Input</Filter>
     </None>
+    <None Include="VorbPreDecl.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

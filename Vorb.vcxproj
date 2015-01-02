@@ -157,6 +157,7 @@
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="GLRenderTarget.h" />
     <ClInclude Include="InputDispatcher.h" />
+    <ClInclude Include="IO.h" />
     <ClInclude Include="KeyboardEventDispatcher.h" />
     <ClInclude Include="LuaDevConsole.h" />
     <ClInclude Include="MemFile.h" />
@@ -224,6 +225,7 @@
     <None Include="Keys.inl" />
     <None Include="Radix.inl" />
     <None Include="ThreadPool.inl" />
+    <None Include="VorbPreDecl.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

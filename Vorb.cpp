@@ -14,33 +14,32 @@ namespace vorb {
     }
     InitParam initIO() {
         // Correctly retrieve initial path
-        boost::filesystem::path cwP = boost::filesystem::initial_path();
-
-        // Set the current working directory
-        nString cwPath, cwDir;
-        convertWToMBString((cwString)boost::filesystem::system_complete(cwP).c_str(), cwPath);
-        IOManager::getDirectory(cwPath.c_str(), cwDir);
-        IOManager::setCurrentWorkingDirectory(cwDir);
+        vpath path = boost::filesystem::initial_path().string();
 
         // Set the executable directory
 #ifdef OS_WINDOWS
         {
-            TCHAR filebuf[1024];
-            GetModuleFileName(nullptr, filebuf, 1024 * sizeof(TCHAR));
-
-            nString execDir;
-            IOManager::getDirectory(filebuf, execDir);
-            IOManager::setExecutableDirectory(execDir);
+            nString buf(new TCHAR[1024]);
+            GetModuleFileName(nullptr, &buf[0], 1024 * sizeof(TCHAR));
+            path = buf;
+            path--;
         }
 #else
         // TODO: Investigate options
-        IOManager::setExecutableDirectory(cwDir);
+
 #endif // OS_WINDOWS
+        if (!path.isValid()) path = "."; // No other option
+        vio::IOManager::setExecutableDirectory(path.asCanonical());
+
+        // Set the current working directory
+        path = boost::filesystem::current_path().string();
+        if (!path.isValid()) path = "."; // No other option
+        if (path.isValid()) vio::IOManager::setCurrentWorkingDirectory(path.asCanonical());
 
 #ifdef DEBUG
-        printf("Executable Directory:\n    %s\n", IOManager::getExecutableDirectory());
-        printf("Current Working Directory:\n    %s\n\n\n", IOManager::getCurrentWorkingDirectory()
-            ? IOManager::getCurrentWorkingDirectory()
+        printf("Executable Directory:\n    %s\n", vio::IOManager::getExecutableDirectory().getCString());
+        printf("Current Working Directory:\n    %s\n\n\n", !vio::IOManager::getCurrentWorkingDirectory().isNull()
+            ? vio::IOManager::getCurrentWorkingDirectory().getCString()
             : "None Specified");
 #endif // DEBUG
 
@@ -54,7 +53,7 @@ namespace vorb {
 vorb::InitParam vorb::init(const InitParam& p) {
 #define HAS(v, b) ((v & b) != InitParam::NONE)
 
-    vorb::InitParam succeeded;
+    vorb::InitParam succeeded = InitParam::NONE;
     if (HAS(p, InitParam::SOUND)) succeeded |= initSound();
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= initGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= initIO();

@@ -4,32 +4,25 @@
 #include <boost/filesystem/operations.hpp>
 
 #include "FileOps.h"
+#include "FileStream.h"
 
 namespace fs = boost::filesystem;
+
+// 16 x 4-wide string for fopen arguments accessed by FileOpenFlags enum
+const cString VORB_IO_FILE_OPEN_ARGS = "\0\0\0\0\0\0\0\0r\0\0\0rb\0\0r+\0\0rb+\0\0\0\0\0\0\0\0\0w\0\0\0wb\0\0w+\0\0wb+\0a\0\0\0ab\0\0a+\0\0ab+\0";
 
 vio::File::File(const Path& p) :
     m_path(p) {
     // Empty
 }
 
-ui64 vorb::io::File::getSize() const {
+ui64 vorb::io::File::length() const {
     if (m_path.isFile()) {
         fs::path path(m_path.getString());
         return fs::file_size(path);
     } else {
         return 0;
     }
-}
-
-vio::FileStream vorb::io::File::create(bool binary /*= true*/) {
-    FileStream stream;
-    if (buildDirectoryTree(m_path, true)) {
-        stream.m_handle.reset(new FileStream::Handle);
-        FILE* f = fopen(m_path.getCString(), binary ? "wb" : "w");
-        stream.m_handle->m_file = f;
-        stream.m_fileCached = f;
-    }
-    return stream;
 }
 
 bool vorb::io::File::resize(ui64 l) const {
@@ -40,23 +33,32 @@ bool vorb::io::File::resize(ui64 l) const {
     return ec.value() == 0;
 }
 
-vio::FileStream vio::File::open(bool binary /*= true*/) {
-    FileStream stream;
-    if (m_path.isFile()) {
-        stream.m_handle.reset(new FileStream::Handle);
-        FILE* f = fopen(m_path.getCString(), binary ? "ab+" : "a+");
-        stream.m_handle->m_file = f;
-        stream.m_fileCached = f;
+vio::FileStream vio::File::open(FileOpenFlags flags) const {
+    FileStream stream(*this);
+
+    // If the file must be created, check for a path to it
+    if ((flags & FileOpenFlags::CREATE) != FileOpenFlags::NONE) {
+        if (!buildDirectoryTree(m_path, true)) return FileStream();
     }
+
+    // Obtain correct creation arguments
+    ui8 location = ((ui8)flags) << 2;
+    const cString foFlags = VORB_IO_FILE_OPEN_ARGS + location;
+
+    // Try to open the file
+    stream.m_handle.reset(new FileStream::Handle);
+    FILE* f = fopen(m_path.getCString(), foFlags);
+    stream.m_handle->m_file = f;
+    stream.m_fileCached = f;
+
     return stream;
 }
-vio::FileStream vio::File::openReadOnly(bool binary /*= true*/) {
-    FileStream stream;
-    if (m_path.isFile()) {
-        stream.m_handle.reset(new FileStream::Handle);
-        FILE* f = fopen(m_path.getCString(), binary ? "rb" : "r");
-        stream.m_handle->m_file = f;
-        stream.m_fileCached = f;
-    }
-    return stream;
+vio::FileStream vio::File::open(bool binary /*= true*/) const {
+    return open(FileOpenFlags::READ_WRITE_EXISTING | (binary ? FileOpenFlags::BINARY : FileOpenFlags::NONE));
+}
+vio::FileStream vio::File::openReadOnly(bool binary /*= true*/) const {
+    return open(FileOpenFlags::READ_ONLY_EXISTING | (binary ? FileOpenFlags::BINARY : FileOpenFlags::NONE));
+}
+vio::FileStream vio::File::create(bool binary /*= true*/) const {
+    return open(FileOpenFlags::READ_WRITE_CREATE | (binary ? FileOpenFlags::BINARY : FileOpenFlags::NONE));
 }

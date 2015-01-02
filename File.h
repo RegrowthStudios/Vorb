@@ -18,10 +18,29 @@
 #include <memory>
 
 #include "Path.h"
-#include "FileStream.h"
 
 namespace vorb {
     namespace io {
+        class FileStream;
+
+        /// Different modes for opening a file
+        enum class FileOpenFlags {
+            NONE = 0x00, ///< No flags
+            BINARY = 0x01, ///< Binary file mode (no conversions)
+
+            CREATE = 0x08, ///< File has creation flags
+
+            READ_ONLY_EXISTING = 0x02, ///< Open file for reading
+            READ_WRITE_EXISTING = 0x04, ///< Open file with full permissions
+
+            WRITE_ONLY_CREATE = CREATE | 0x00, ///< Create a file for writing only
+            READ_WRITE_CREATE = CREATE | 0x02, ///< Create a file with full permissions
+            
+            WRITE_ONLY_APPEND = CREATE | 0x04, ///< Open/create a file with write permissions at the end
+            READ_WRITE_APPEND = CREATE | 0x06 ///< Open/create a file with full permissions at the end
+        };
+        ENUM_CLASS_OPS_INL(FileOpenFlags, ui8)
+
         /// Represents a file
         class File {
             friend class Path;
@@ -41,7 +60,7 @@ namespace vorb {
             }
 
             /// @return The size of the file in bytes
-            ui64 getSize() const;
+            ui64 length() const;
             
             /// Attempt to resize this file
             /// @param l: New file size
@@ -50,13 +69,16 @@ namespace vorb {
 
             /// Open the file handle
             /// @return A stream to the file
-            FileStream open(bool binary = true);
+            FileStream open(FileOpenFlags flags) const;
+            /// Open the file handle
+            /// @return A stream to the file
+            FileStream open(bool binary = true) const;
             /// Open the file handle for reading only
             /// @return A stream to the file
-            FileStream openReadOnly(bool binary = true);
+            FileStream openReadOnly(bool binary = true) const;
             /// Create the file handle
             /// @return A stream to the file
-            FileStream create(bool binary = true);
+            FileStream create(bool binary = true) const;
         private:
             /// Secret-sauce file builder
             /// @param p: Path value

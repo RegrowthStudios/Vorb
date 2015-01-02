@@ -17,15 +17,27 @@
 
 #include <memory>
 
+#include "File.h"
+
 namespace vorb {
     namespace io {
         /// Represents an opened file stream
         class FileStream {
             friend class File;
         public:
+            /// A null stream constructor
+            FileStream() : FileStream(File()) {
+                // Empty
+            }
+
             /// @return True if the file handle is still present
             bool isOpened() {
                 return m_fileCached != nullptr;
+            }
+
+            /// @return This stream's file reference
+            const File& getFile() const {
+                return m_parent;
             }
 
             /// Flushes, closes and invalidates and copies of this stream
@@ -65,6 +77,13 @@ namespace vorb {
                 fflush(m_fileCached);
             }
         private:
+            /// Create a file stream from a file
+            /// @param parent: 
+            FileStream(const File& parent) :
+                m_parent(parent) {
+                // Empty
+            }
+
             /// Proper file resource destructor
             class Handle {
                 friend class FileStream;
@@ -87,6 +106,7 @@ namespace vorb {
 
             std::shared_ptr<Handle> m_handle; ///< Ref-counted file handle
             FILE* m_fileCached = nullptr; ///< Cached file pointer
+            File m_parent;
         };
     }
 }

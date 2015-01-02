@@ -62,6 +62,20 @@ bool vio::Path::isDirectory() const {
     fs::path p(m_path);
     return fs::exists(p) && fs::is_directory(p);
 }
+bool vio::Path::isAbsolute() const {
+    if (isNull()) return false;
+    return fs::path(m_path).is_absolute();
+}
+
+nString vio::Path::getLeaf() const {
+    if (isNull()) return "";
+    return fs::path(m_path).leaf().string();
+}
+
+time_t vio::Path::getLastModTime() const {
+    if (isNull()) return 0;
+    return boost::filesystem::last_write_time(fs::path(m_path));
+}
 
 vio::Path& vio::Path::makeAbsolute() {
     if (isNull() && !isNice()) return *this;
@@ -114,4 +128,3 @@ bool vorb::io::Path::asFile(OUT File* file) const {
     }
     return false;
 }
-

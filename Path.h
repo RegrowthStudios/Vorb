@@ -55,6 +55,8 @@ namespace vorb {
             bool isFile() const;
             /// @return True if this path exists and is a directory
             bool isDirectory() const;
+            /// @return True if this path is rooted
+            bool isAbsolute() const;
 
             /// Places this path value on the root
             /// @return Self
@@ -76,6 +78,13 @@ namespace vorb {
                 return p;
             }
 
+            /// @return The last part of this path
+            nString getLeaf() const;
+            /// Access the last time the element referred to by the path was modified
+            /// @pre: This path must be valid
+            /// @return The last time this path was modified
+            time_t getLastModTime() const;
+
             /// Add a string to the end of this path's value
             /// @param s: String addition
             /// @return Self
@@ -88,6 +97,21 @@ namespace vorb {
                 p.append(s);
                 return p;
             }
+            /// Add a path to the end of this path's value
+            /// @param p: Path addition
+            /// @return Self
+            Path& append(const Path& p) {
+                return append(p.m_path);
+            }
+            Path& operator+= (const Path& p) {
+                return append(p.m_path);
+            }
+            Path operator+ (const Path& p) const {
+                Path ret = *this;
+                ret.append(p.m_path);
+                return ret;
+            }
+
             /// Add a separated path value to the end of this path's value
             /// @param dir: Additional path piece
             /// @return Self
@@ -100,6 +124,21 @@ namespace vorb {
                 p.concatenate(dir);
                 return p;
             }
+            /// Add a separated path to the end of this path's value
+            /// @param p: Additional path piece
+            /// @return Self
+            Path& concatenate(const Path& p) {
+                return concatenate(p.m_path);
+            }
+            Path& operator/= (const Path& p) {
+                return concatenate(p.m_path);
+            }
+            Path operator/ (const Path& p) const {
+                Path ret = *this;
+                ret.concatenate(p.m_path);
+                return ret;
+            }
+            
             /// Trims the last entry of this path away
             /// @return Self
             Path& trimEnd();

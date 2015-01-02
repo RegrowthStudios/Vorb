@@ -49,9 +49,9 @@ bool vio::IOManager::readFileToString(const Path& path, nString& data) const {
     FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
     if (!fs.isOpened()) return false;
 
-    size_t length = (size_t)fs.getFile().length();
+    size_t length = (size_t)fs.length();
     data.resize(length + 1);
-    if (length > 0) fs.read(length, 1, &(data[0]));
+    if (length > 0) length = fs.read(length, 1, &(data[0]));
     data[length] = 0;
     return true;
 }
@@ -59,9 +59,9 @@ cString vio::IOManager::readFileToString(const Path& path) const {
     FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
     if (!fs.isOpened()) return nullptr;
 
-    size_t length = (size_t)fs.getFile().length();
+    size_t length = (size_t)fs.length();
     cString data = new char[length + 1];
-    if (length > 0) fs.read(length, 1, data);
+    if (length > 0) length = fs.read(length, 1, data);
     data[length] = 0;
     return data;
 }
@@ -69,7 +69,7 @@ bool vio::IOManager::readFileToData(const Path& path, std::vector<ui8>& data) co
     FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING | FileOpenFlags::BINARY);
     if (!fs.isOpened()) return false;
 
-    size_t length = (size_t)fs.getFile().length();
+    size_t length = (size_t)fs.length();
     data.resize(length);
     if (length > 0) fs.read(length, 1, &(data[0]));
     return true;

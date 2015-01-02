@@ -21,6 +21,13 @@
 
 namespace vorb {
     namespace io {
+        enum FileSeekAnchor {
+            BEGINNING = SEEK_SET,
+            CURRENT = SEEK_CUR,
+            END = SEEK_END
+        };
+        typedef long FileSeekOffset;
+
         /// Represents an opened file stream
         class FileStream {
             friend class File;
@@ -53,8 +60,8 @@ namespace vorb {
             /// @param count: Number of elements
             /// @param size: Size of an element (in bytes)
             /// @param data: Pointer to data
-            void write(size_t count, size_t size, void* data) const {
-                fwrite(data, size, count, m_fileCached);
+            size_t write(size_t count, size_t size, void* data) const {
+                return fwrite(data, size, count, m_fileCached);
             }
             /// Write a formatted string
             /// @param format: String format
@@ -68,8 +75,26 @@ namespace vorb {
             /// @param count: Number of elements
             /// @param size: Size of an element (in bytes)
             /// @param data: Pointer to data buffer
-            void read(size_t count, size_t size, void* data) {
-                fread(data, size, count, m_fileCached);
+            size_t read(size_t count, size_t size, void* data) {
+                return fread(data, size, count, m_fileCached);
+            }
+
+            /// Move the read/write head to a certain place
+            /// @param off: Offset from anchor in bytes
+            /// @param anchor: Reference position in file
+            void seek(FileSeekOffset off, const FileSeekAnchor& anchor) const {
+                fseek(m_fileCached, off, (i32)anchor);
+            }
+            /// @return Current offset in the file in bytes
+            FileSeekOffset offset() const {
+                return ftell(m_fileCached);
+            }
+            /// @return Length of the file to be read in bytes
+            FileSeekOffset length() const {
+                seek(0, FileSeekAnchor::END);
+                FileSeekOffset l = offset();
+                seek(0, FileSeekAnchor::BEGINNING);
+                return l - offset();
             }
 
             /// Flush all written data to disk

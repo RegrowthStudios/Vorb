@@ -19,8 +19,8 @@ namespace vorb {
         // Set the executable directory
 #ifdef OS_WINDOWS
         {
-            nString buf(new TCHAR[1024]);
-            GetModuleFileName(nullptr, &buf[0], 1024 * sizeof(TCHAR));
+            cString buf = new TCHAR[1024];
+            GetModuleFileName(nullptr, buf, 1024 * sizeof(TCHAR));
             path = buf;
             path--;
         }

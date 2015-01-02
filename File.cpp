@@ -31,6 +31,15 @@ vio::FileStream vorb::io::File::create(bool binary /*= true*/) {
     }
     return stream;
 }
+
+bool vorb::io::File::resize(ui64 l) const {
+    if (!m_path.isFile()) return false;
+    fs::path p(m_path.getString());
+    boost::system::error_code ec;
+    fs::resize_file(p, l, ec);
+    return ec.value() == 0;
+}
+
 vio::FileStream vio::File::open(bool binary /*= true*/) {
     FileStream stream;
     if (m_path.isFile()) {

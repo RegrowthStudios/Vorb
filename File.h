@@ -42,6 +42,11 @@ namespace vorb {
 
             /// @return The size of the file in bytes
             ui64 getSize() const;
+            
+            /// Attempt to resize this file
+            /// @param l: New file size
+            /// @return True if the file was resized successfully
+            bool resize(ui64 l) const;
 
             /// Open the file handle
             /// @return A stream to the file

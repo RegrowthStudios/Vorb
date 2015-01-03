@@ -4,8 +4,6 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_IO_
 
-#include <thread>
-
 #include <include/IO.h>
 #include <include/IOManager.h>
 #include <include/Vorb.h>

@@ -222,6 +222,9 @@
     <ClInclude Include="include/VoxelMeshAlg.h" />
     <ClInclude Include="include/VoxelMesherCulled.h" />
     <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\SoundEngine.h" />
+    <ClInclude Include="include\SoundInstance.h" />
+    <ClInclude Include="include\SoundResource.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />

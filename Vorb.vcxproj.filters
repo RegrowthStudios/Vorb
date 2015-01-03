@@ -355,6 +355,15 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="include\SoundEngine.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundResource.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundInstance.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -413,6 +422,9 @@
     </Filter>
     <Filter Include="IO\Wrappers">
       <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{ebd75801-6efb-4baa-9055-dde194ce4a4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

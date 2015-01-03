@@ -143,6 +143,7 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\SoundEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/AwesomiumInterface.h" />

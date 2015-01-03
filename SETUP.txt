@@ -1,0 +1,52 @@
+/******************************************************/
+ *                                                    * 
+ * Vorb Structure                                     * 
+ *                                                    * 
+/******************************************************/
+
+Includes:
+ - Awesomium
+ - Boost
+ - FMOD
+ - OpenGL
+ - GLM
+ - JSON
+ - MoodyCamel
+ - OOLua
+ - SDL
+ - SDL TTF
+ - YAML-CPP
+ - ZLIB
+ 
+Libraries:
+ - Boost
+ - FMOD
+ - YAML-CPP
+ - JSON
+ - ZLIB
+ 
+
+/******************************************************/
+ *                                                    * 
+ * User Responsibilities                              * 
+ *                                                    * 
+/******************************************************/
+  As a user of Vorb, you are responsible for configuring the
+following:
+
+Include Paths:
+ - {Vorb}\deps\include
+ - {Vorb}\include
+
+Libraries:
+ - OpenGL
+ - GLEW
+ - SDL2
+ - SDL2 TTF
+ - FMOD
+
+DLLs:
+ - Awesomium
+ - glew
+ - FMOD
+ 

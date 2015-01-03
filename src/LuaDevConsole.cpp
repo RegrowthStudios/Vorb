@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "LuaDevConsole.h"
 
-#include <lua/oolua.h>
+#include <OOLua/oolua.h>
 extern "C" {
-    #include <lua\lua\lua.h>
+    #include <OOLua\lua\lua.h>
 }
 
 vui::LuaDevConsole::LuaDevConsole(size_t storageSize /*= LUA_DEV_CONSOLE_NUM_COMMANDS_STORED*/) :

@@ -1,0 +1,3 @@
+[submodule "deps"]
+	path = deps
+	url = git@github.com:RegrowthStudios/Vorb-Deps.git

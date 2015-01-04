@@ -20,39 +20,46 @@ namespace vorb {
 #define ID_GENERATOR_NULL_ID 0
 
         /// Generates and recycles unique IDs of a certain type
-        /// @template T: must support operator size_t() and operator++()
+        /// @tparam T: must support operator size_t() and operator++()
         template<typename T>
         class IDGenerator {
         public:
             /// Grabs an unique ID from either generation of recycling
             /// @param wasNew: Additional return value to determine if a new ID was created
             /// @return An unique ID
-            T generate(bool* wasNew = nullptr) {
+            T generate(OPT bool* wasNew = nullptr) {
                 T v;
-                if (_recycled.size() > 0) {
-                    v = _recycled.front();
-                    _recycled.pop();
+                if (m_recycled.size() > 0) {
+                    v = m_recycled.front();
+                    m_recycled.pop();
                     if (wasNew) *wasNew = false;
                 } else {
-                    _currentID++;
-                    v = _currentID;
+                    m_currentID++;
+                    v = m_currentID;
                     if (wasNew) *wasNew = true;
                 }
                 return v;
             }
             /// Returns an ID to a recycle queue
+            /// @pre: ID value is not in the recycle queue already
             /// @param v: ID to recycle
-            void recycle(T& v) {
-                _recycled.push(v);
+            void recycle(const T& v) {
+                m_recycled.push(v);
+            }
+
+            /// Reset this generator to a fresh state
+            void reset() {
+                m_currentID = ID_GENERATOR_NULL_ID;
+                m_recycled.swap(std::queue<T>());
             }
 
             /// @return Number of active IDs
             size_t getActiveCount() const {
-                return static_cast<size_t>(_currentID) - _recycled.size();
+                return static_cast<size_t>(m_currentID) - m_recycled.size();
             }
         private:
-            T _currentID = ID_GENERATOR_NULL_ID; ///< Auto-incremented ID
-            std::queue<T> _recycled; ///< List of recycled IDs
+            T m_currentID = ID_GENERATOR_NULL_ID; ///< Auto-incremented ID
+            std::queue<T> m_recycled; ///< List of recycled IDs
         };
     }
 }

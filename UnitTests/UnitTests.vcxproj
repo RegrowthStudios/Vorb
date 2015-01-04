@@ -110,6 +110,7 @@
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Types.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Vorb.cpp" />
     <ClCompile Include="VorbCoreECS.cpp" />
     <ClCompile Include="VorbIO.cpp" />
     <ClCompile Include="VorbSound.cpp" />

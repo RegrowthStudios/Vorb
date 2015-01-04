@@ -20,10 +20,10 @@ namespace vorb {
         /// A listener located in 3D "sound" space
         class Listener {
         public:
-            f32v3 position { 0, 0, 0 }; ///< Listener's position in "sound" space
-            f32v3 forward { 0, 0, -1 }; ///< Forward-facing direction
-            f32v3 up { 0, 1, 0 }; ///< Upwards vector
-            f32v3 velocity { 0, 0, 0 }; ///< Current velocity (for advanced effects)
+            UNIT_SPACE(SOUND) f32v3 position { 0, 0, 0 }; ///< Listener's position in "sound" space
+            UNIT_SPACE(SOUND) f32v3 forward { 0, 0, -1 }; ///< Forward-facing direction
+            UNIT_SPACE(SOUND) f32v3 up { 0, 1, 0 }; ///< Upwards vector
+            UNIT_SPACE(SOUND) f32v3 velocity { 0, 0, 0 }; ///< Current velocity (for advanced effects)
         };
     }
 }

@@ -132,6 +132,12 @@
     <ClCompile Include="src/FileOps.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="src\SoundEngine.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SoundInstance.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -229,9 +235,6 @@
       <Filter>Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="include/Entity.h">
-      <Filter>Core\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="include/IDGenerator.h">
       <Filter>Core\ECS</Filter>
     </ClInclude>
     <ClInclude Include="include/MultiComponentTracker.hpp">
@@ -355,6 +358,27 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="include\SoundEngine.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundResource.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundInstance.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundListener.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundImpl.hpp">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ISoundImpl.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include/IDGenerator.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -414,6 +438,9 @@
     <Filter Include="IO\Wrappers">
       <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{ebd75801-6efb-4baa-9055-dde194ce4a4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/AwesomiumInterface.inl">
@@ -435,6 +462,11 @@
       <Filter>UI\Input</Filter>
     </None>
     <None Include="include/VorbPreDecl.inl" />
+    <None Include="src\SoundImplFMOD.inl">
+      <Filter>Sound</Filter>
+    </None>
+    <None Include="include\typesColor.inl" />
+    <None Include="include\typesArray.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

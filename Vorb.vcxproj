@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -68,7 +68,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>awesomium.lib;zdll.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;fmodexL_vc.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,7 +78,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -91,7 +91,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>awesomium.lib;zdll.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;fmodex_vc.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -143,6 +143,8 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\SoundEngine.cpp" />
+    <ClCompile Include="src\SoundInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/AwesomiumInterface.h" />
@@ -222,6 +224,12 @@
     <ClInclude Include="include/VoxelMeshAlg.h" />
     <ClInclude Include="include/VoxelMesherCulled.h" />
     <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\SoundEngine.h" />
+    <ClInclude Include="include\ISoundImpl.h" />
+    <ClInclude Include="include\SoundInstance.h" />
+    <ClInclude Include="include\SoundListener.h" />
+    <ClInclude Include="include\SoundResource.h" />
+    <ClInclude Include="src\SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />
@@ -234,6 +242,9 @@
     <None Include="include/Radix.inl" />
     <None Include="include/ThreadPool.inl" />
     <None Include="include/VorbPreDecl.inl" />
+    <None Include="include\typesArray.inl" />
+    <None Include="include\typesColor.inl" />
+    <None Include="src\SoundImplFMOD.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps\src\JSON.vcxproj">

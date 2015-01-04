@@ -5,14 +5,34 @@
 
 #include "ConnectedTextures.h"
 #include "IOManager.h"
+#include "SoundEngine.h"
 #include "utils.h"
 
 namespace vorb {
+    // Current system settings
+    InitParam currentSettings = InitParam::NONE;
+    bool isSystemInitialized(const InitParam& p) {
+        return (currentSettings & p) != InitParam::NONE;
+    }
+
+    /************************************************************************/
+    /* Initializers                                                         */
+    /************************************************************************/
     InitParam initGraphics() {
+        // Check for previous initialization
+        if (isSystemInitialized(InitParam::GRAPHICS)) {
+            return InitParam::GRAPHICS;
+        }
+
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
     InitParam initIO() {
+        // Check for previous initialization
+        if (isSystemInitialized(InitParam::IO)) {
+            return InitParam::IO;
+        }
+
         // Correctly retrieve initial path
         vpath path = boost::filesystem::initial_path().string();
 
@@ -46,6 +66,43 @@ namespace vorb {
         return InitParam::IO;
     }
     InitParam initSound() {
+        // Check for previous initialization
+        if (isSystemInitialized(InitParam::SOUND)) {
+            return InitParam::SOUND;
+        }
+
+        if (!vsound::impl::initSystem()) return InitParam::NONE;
+
+        return InitParam::SOUND;
+    }
+    
+    /************************************************************************/
+    /* Disposers                                                            */
+    /************************************************************************/
+    InitParam disposeGraphics() {
+        // Check for existence
+        if (!isSystemInitialized(InitParam::GRAPHICS)) {
+            return InitParam::GRAPHICS;
+        }
+
+        return InitParam::GRAPHICS;
+    }
+    InitParam disposeIO() {
+        // Check for existence
+        if (!isSystemInitialized(InitParam::IO)) {
+            return InitParam::IO;
+        }
+
+        return InitParam::IO;
+    }
+    InitParam disposeSound() {
+        // Check for existence
+        if (!isSystemInitialized(InitParam::SOUND)) {
+            return InitParam::SOUND;
+        }
+        
+        if (!vsound::impl::disposeSystem()) return InitParam::NONE;
+
         return InitParam::SOUND;
     }
 }
@@ -57,6 +114,25 @@ vorb::InitParam vorb::init(const InitParam& p) {
     if (HAS(p, InitParam::SOUND)) succeeded |= initSound();
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= initGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= initIO();
+
+    // Add system flags
+    currentSettings |= succeeded;
+
+    return succeeded;
+
+#undef HAS
+}
+vorb::InitParam vorb::dispose(const InitParam& p) {
+#define HAS(v, b) ((v & b) != InitParam::NONE)
+
+    vorb::InitParam succeeded = InitParam::NONE;
+    if (HAS(p, InitParam::SOUND)) succeeded |= disposeSound();
+    if (HAS(p, InitParam::GRAPHICS)) succeeded |= disposeGraphics();
+    if (HAS(p, InitParam::IO)) succeeded |= disposeIO();
+
+    // Remove system flags
+    currentSettings &= (InitParam)(~(ui64)succeeded);
+
     return succeeded;
 
 #undef HAS

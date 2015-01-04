@@ -32,6 +32,10 @@ namespace vorb {
     /// @param p: Request of subsystems that should be initialized
     /// @return Subsystems that successfully initialized
     InitParam init(const InitParam& p);
+    /// Dispose Vorb subsystems
+    /// @param p: Request of subsystems that should be destroyed
+    /// @return Subsystems that were successfully disposed
+    InitParam dispose(const InitParam& p);
 }
 
 #endif // Vorb_h__

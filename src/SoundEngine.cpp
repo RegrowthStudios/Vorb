@@ -6,6 +6,7 @@
 #include "SoundListener.h"
 #include "SoundResource.h"
 
+// Include sound engine implementation details
 #include "SoundImpl.hpp"
 
 namespace vorb {
@@ -35,7 +36,7 @@ bool vsound::impl::disposeSystem() {
     return true;
 }
 
-#ifdef VORB_SOUND_IMPL_FMOD
+#if defined(VORB_IMPL_SOUND_FMOD)
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>
 
@@ -148,9 +149,7 @@ void vsound::Engine::update(const Listener& listener) {
 
     m_data->system->update();
 }
-#else
-// TODO: Separate sound API
-#endif // VORB_SOUND_IMPL_FMOD
+#endif // VORB_IMPL_SOUND
 
 void vsound::Engine::freeSound(Resource& sound) {
     // Check if this engine manages the sound

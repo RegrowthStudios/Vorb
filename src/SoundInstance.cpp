@@ -1,17 +1,18 @@
 #include "stdafx.h"
 #include "SoundInstance.h"
 
+// Include sound engine implementation details
 #include "SoundImpl.hpp"
 
 vsound::Instance::Instance() {
     // Empty
 }
-
 vsound::Instance::Instance(Engine& engine) :
     m_engine(&engine) {
     // Empty
 }
 
+#if defined(VORB_IMPL_SOUND_FMOD)
 void vsound::Instance::play() {
     m_data->channel->setPaused(false);
 }
@@ -101,3 +102,4 @@ f32 vsound::Instance::getLength() const {
     sound->getLength(&frames, FMOD_TIMEUNIT_MS);
     return (f32)frames / 1000.0f;
 }
+#endif // VORB_IMPL_SOUND

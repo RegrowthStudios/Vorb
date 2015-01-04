@@ -110,7 +110,8 @@ vsound::Resource vsound::Engine::loadSound(const vio::Path& path) {
     m_resources[id] = sound;
 
     // Create sound data
-    m_data->system->createSound(path.getCString(), FMOD_3D, nullptr, &sound.m_data->sound);
+    m_data->system->createSound(path.getCString(), FMOD_3D | FMOD_LOOP_NORMAL, nullptr, &sound.m_data->sound);
+    sound.m_data->sound->setLoopCount(1);
     return sound;
 }
 void vsound::Engine::disposeSound(Resource& sound) {

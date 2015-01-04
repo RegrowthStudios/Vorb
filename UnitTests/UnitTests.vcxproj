@@ -44,12 +44,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\UnitTests</IntDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\UnitTests\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\UnitTests</IntDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\UnitTests\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

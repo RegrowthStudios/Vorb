@@ -1,5 +1,5 @@
 ///
-/// SoundImplFMOD.h
+/// SoundImplFMOD.inl
 /// Vorb Engine
 ///
 /// Created by Cristian Zaloj on 3 Jan 2015
@@ -7,30 +7,39 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// FMOD sound data implementation
 ///
 
 #pragma once
 
-#ifndef SoundImplFMOD_h__
-#define SoundImplFMOD_h__
+#ifndef SoundImplFMOD_inl__
+#define SoundImplFMOD_inl__
 
 #include <fmod/fmod.hpp>
+
+#define VORB_SOUND_ENGINE_MAX_CHANNELS 512
 
 namespace vorb {
     namespace sound {
         namespace impl {
-            struct ResourceData {
-            public:
-                FMOD::Sound* sound = nullptr;
-            };
-
             struct InstanceData {
             public:
                 FMOD::Channel* channel = nullptr;
+            };
+
+            struct EngineData {
+            public:
+                FMOD::System* system = nullptr;
+                ui32 currentChannel = 0;
+                InstanceData channels[VORB_SOUND_ENGINE_MAX_CHANNELS];
+            };
+
+            struct ResourceData {
+            public:
+                FMOD::Sound* sound = nullptr;
             };
         }
     }
 }
 
-#endif // SoundImplFMOD_h__
+#endif // SoundImplFMOD_inl__

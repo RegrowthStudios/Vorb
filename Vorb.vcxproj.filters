@@ -243,9 +243,6 @@
     <ClInclude Include="include/Entity.h">
       <Filter>Core\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/IDGenerator.h">
-      <Filter>Core\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="include/MultiComponentTracker.hpp">
       <Filter>Core\ECS</Filter>
     </ClInclude>
@@ -379,8 +376,14 @@
     <ClInclude Include="include\SoundListener.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="include\SoundImpl.h">
+    <ClInclude Include="src\SoundImpl.hpp">
       <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ISoundImpl.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="include/IDGenerator.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +471,8 @@
     <None Include="src\SoundImplFMOD.inl">
       <Filter>Sound</Filter>
     </None>
+    <None Include="include\typesColor.inl" />
+    <None Include="include\typesArray.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

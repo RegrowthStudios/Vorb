@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// A wrapper for sound data container
 ///
 
 #pragma once
@@ -15,16 +15,20 @@
 #ifndef SoundResource_h__
 #define SoundResource_h__
 
-#include "SoundImpl.h"
+#include "IDGenerator.h"
+#include "ISoundImpl.h"
 
 namespace vorb {
     namespace sound {
+        typedef ui32 ResourceID; ///< ID type for a resource
+        typedef vcore::IDGenerator<ui32> ResourceIDGenerator; ///< ID generator for sound resources
+
+        /// Sound data used for instancing
         class Resource {
             friend class Engine;
-        public:
-
         private:
-            impl::ResourceData* m_data = nullptr;
+            ResourceID m_id = ID_GENERATOR_NULL_ID; ///< Unique ID
+            impl::ResourceData* m_data = nullptr; ///< Implementation-defined resource data
         };
     }
 }

@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+/// Positional information for a listener to a sound engine
 ///
 
 #pragma once
@@ -17,12 +17,13 @@
 
 namespace vorb {
     namespace sound {
+        /// A listener located in 3D "sound" space
         class Listener {
         public:
-            f32v3 position { 0, 0, 0 };
-            f32v3 forward { 0, 0, -1 };
-            f32v3 up { 0, 1, 0 };
-            f32v3 velocity { 0, 0, 0 };
+            f32v3 position { 0, 0, 0 }; ///< Listener's position in "sound" space
+            f32v3 forward { 0, 0, -1 }; ///< Forward-facing direction
+            f32v3 up { 0, 1, 0 }; ///< Upwards vector
+            f32v3 velocity { 0, 0, 0 }; ///< Current velocity (for advanced effects)
         };
     }
 }

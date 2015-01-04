@@ -4,12 +4,21 @@
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>
 
+#include "SoundInstance.h"
+#include "SoundListener.h"
+#include "SoundResource.h"
+
+// TODO: Use FMOD #ifdefs
+#include "SoundImplFMOD.inl"
+
 #define VORB_SOUND_SYSTEM_MAX_CHANNELS 512
 
 namespace vorb {
     namespace sound {
         namespace impl {
             FMOD::System* system = nullptr; ///< Sound system
+            ui32 currentChannel = 0;
+            impl::InstanceData channels[VORB_SOUND_SYSTEM_MAX_CHANNELS] = {};
         }
     }
 }
@@ -52,4 +61,36 @@ bool vsound::impl::disposeSystem() {
 
     system = nullptr;
     return true;
+}
+
+vsound::Resource vsound::Engine::loadSound(const vio::Path& path) {
+    Resource sound;
+    sound.m_data = new impl::ResourceData();
+    impl::system->createSound(path.getCString(), FMOD_3D, nullptr, &sound.m_data->sound);
+    return sound;
+}
+void vsound::Engine::freeSound(Resource& sound) {
+    sound.m_data->sound->release();
+    delete sound.m_data;
+    sound.m_data = nullptr;
+}
+vsound::Instance vsound::Engine::createSound(const Resource& sound) {
+    Instance inst;
+
+    impl::currentChannel++;
+    if (impl::currentChannel >= VORB_SOUND_SYSTEM_MAX_CHANNELS) impl::currentChannel = 0;
+
+    inst.m_data = &impl::channels[impl::currentChannel];
+    impl::system->playSound(FMOD_CHANNEL_FREE, sound.m_data->sound, true, &inst.m_data->channel);
+    return inst;
+}
+void vsound::Engine::update(const Listener& listener) {
+    impl::system->set3DListenerAttributes(0, // TODO: Use listener IDs 
+        (FMOD_VECTOR*)&listener.position,
+        (FMOD_VECTOR*)&listener.velocity,
+        (FMOD_VECTOR*)&listener.forward,
+        (FMOD_VECTOR*)&listener.up
+        );
+
+    impl::system->update();
 }

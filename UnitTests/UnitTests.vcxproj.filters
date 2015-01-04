@@ -53,6 +53,9 @@
     <ClCompile Include="Example.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="VorbSound.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

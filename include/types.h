@@ -125,9 +125,9 @@ public:
     /// @param g: Green value [0.0f, 1.0f]
     /// @param b: Blue value [0.0f, 1.0f]
     ColorRGB8(f32 r, f32 g, f32 b) : ColorRGB8(
-        ((ui8)r * 255.0f),
-        ((ui8)g * 255.0f),
-        ((ui8)b * 255.0f)) {
+        ((ui8)(r * 255.0f)),
+        ((ui8)(g * 255.0f)),
+        ((ui8)(b * 255.0f))) {
         // Empty
     }
     /// Default black color
@@ -138,13 +138,13 @@ public:
     /// Access a color element by its index
     /// @param i: Color index in range [0,2]
     /// @return Reference to color element
-    const ui8& operator[] (size_t i) const {
+    const ui8& operator[] (const size_t& i) const {
         return data[i];
     }
     /// Access a color element by its index
     /// @param i: Color index in range [0,2]
     /// @return Reference to color element
-    ui8& operator[] (size_t i) {
+    ui8& operator[] (const size_t& i) {
         return data[i];
     }
 
@@ -176,7 +176,7 @@ public:
     /// @param g: Green value
     /// @param b: Blue value
     /// @param a: Alpha value
-    ColorRGBA8(i32 r, i32 g, i32 b, i32 a = 1.0f) : ColorRGBA8((ui8)r, (ui8)g, (ui8)b, (ui8)a) {
+    ColorRGBA8(i32 r, i32 g, i32 b, i32 a = 255) : ColorRGBA8((ui8)r, (ui8)g, (ui8)b, (ui8)a) {
         // Empty
     }
     /// Create a color specifying all elements in floating point values
@@ -185,10 +185,10 @@ public:
     /// @param b: Blue value [0.0f, 1.0f]
     /// @param a: Alpha value [0.0f, 1.0f]
     ColorRGBA8(f32 r, f32 g, f32 b, f32 a = 1.0f) : ColorRGBA8(
-        ((ui8)r * 255.0f),
-        ((ui8)g * 255.0f),
-        ((ui8)b * 255.0f),
-        ((ui8)a * 255.0f)) {
+        ((ui8)(r * 255.0f)),
+        ((ui8)(g * 255.0f)),
+        ((ui8)(b * 255.0f)),
+        ((ui8)(a * 255.0f))) {
         // Empty
     }
     /// Default black color
@@ -199,13 +199,13 @@ public:
     /// Access a color element by its index
     /// @param i: Color index in range [0,3]
     /// @return Reference to color element
-    const ui8& operator[] (size_t i) const {
+    const ui8& operator[] (const size_t& i) const {
         return data[i];
     }
     /// Access a color element by its index
     /// @param i: Color index in range [0,3]
     /// @return Reference to color element
-    ui8& operator[] (size_t i) {
+    ui8& operator[] (const size_t& i) {
         return data[i];
     }
 

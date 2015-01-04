@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -78,7 +78,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -145,8 +145,6 @@
     <ClCompile Include="src/VoxCommon.cpp" />
     <ClCompile Include="src\SoundEngine.cpp" />
     <ClCompile Include="src\SoundInstance.cpp" />
-    <ClCompile Include="src\SoundListener.cpp" />
-    <ClCompile Include="src\SoundResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/AwesomiumInterface.h" />

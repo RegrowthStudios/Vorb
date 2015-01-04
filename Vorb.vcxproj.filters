@@ -135,13 +135,7 @@
     <ClCompile Include="src\SoundEngine.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundResource.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
     <ClCompile Include="src\SoundInstance.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SoundListener.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
   </ItemGroup>

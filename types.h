@@ -209,6 +209,17 @@ public:
         return data[i];
     }
 
+    /// Linearly interpolates between two colors
+    /// @param ca: color to interpolate from
+    /// @param cb: color to interpolate to
+    /// @param factor: Interpolation factor
+    void interpolate(const ColorRGBA8& ca, const ColorRGBA8& cb, float factor) {
+        r = ca.r * (1.0f - factor) + cb.r * factor;
+        g = ca.g * (1.0f - factor) + cb.g * factor;
+        b = ca.b * (1.0f - factor) + cb.b * factor;
+        a = ca.a * (1.0f - factor) + cb.a * factor;
+    }
+
     union {
         struct {
             ColorRGB8 rgb; ///< RGB value

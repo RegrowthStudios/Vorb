@@ -15,9 +15,10 @@
 #ifndef stdafx_h__Vorb
 #define stdafx_h__Vorb
 
+// Create cross-compatibility information
 #include "compat.h"
 
-// Make Sure We Use Correct Debug Variables
+// Correctly define all debug variables
 #if defined(DEBUG) && !defined(_DEBUG)
 #define _DEBUG
 #endif
@@ -28,20 +29,40 @@
 #define MACRO_PARAN_L {
 #define MACRO_PARAN_R }
 
-#include <fstream>
-#include <iostream>
-#include <map>
+/************************************************************************/
+/* C Libraries                                                          */
+/************************************************************************/
 #include <cmath>
-#include <queue>
-#include <sstream>
 #include <cstdio>
 #include <cstdlib>
-#include <string>
+/************************************************************************/
+/* Stream libraries                                                     */
+/************************************************************************/
+#include <fstream>
+#include <iostream>
+#include <sstream>
+/************************************************************************/
+/* STL Containers                                                       */
+/************************************************************************/
+#include <map>
+#include <queue>
+#include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
+/************************************************************************/
+/* Other                                                                */
+/************************************************************************/
+#include <mutex>
+#include <string>
+#include <thread>
 
+// TODO: Distribute OpenGL from this location
 #include <GL/glew.h>
 
+/************************************************************************/
+/* Vorb common files                                                    */
+/************************************************************************/
 #include "decorators.h"
 #include "types.h"
 

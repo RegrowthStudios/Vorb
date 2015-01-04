@@ -21,6 +21,8 @@
 #define CALLEE_DELETE /* Function called will delete this resource */
 #define CALLER_DELETE /* Function caller must manage this resource */
 
+#define VORB_INTERNAL /* Internal function not meant for an end-user */
+
 #define VORB_EXPORT extern "C" __declspec(dllexport);
 #define VORB_IMPORT extern "C" __declspec(dllimport);
 

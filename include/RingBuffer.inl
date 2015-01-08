@@ -1,5 +1,23 @@
+template<typename T, typename Arg1, typename... Args>
+void moveAll(std::vector<T>& data, const size_t& i, Arg1&& v1, Args&&... values) {
+    data[i % data.size()] = std::move<Arg1>(v1);
+    moveAll(data, i + 1, values...);
+}
 template<typename T>
-vorb::ring_buffer<T>::ring_buffer(const size_t& capacity) const {
+void moveAll(std::vector<T>& m_data, const size_t& i) {
+    // Empty
+}
+
+template<typename Arg1, typename... Args>
+size_t numArgs(Arg1&& v1, Args&&... values) {
+    return 1 + numArgs(values...);
+}
+size_t numArgs() {
+    return 0;
+}
+
+template<typename T>
+vorb::ring_buffer<T>::ring_buffer(const size_t& capacity) {
     if (capacity == 0) throw std::exception("Capacity must be non-zero");
 }
 
@@ -79,13 +97,13 @@ T& vorb::ring_buffer<T>::back() {
 }
 template<typename T>
 const T& vorb::ring_buffer<T>::at(const size_t& i) const {
-    size_t i = m_tail + (m_data.size() - 1);
-    return m_data[i % m_data.size()];
+    size_t ind = m_tail + i;
+    return m_data[ind % m_data.size()];
 }
 template<typename T>
 T& vorb::ring_buffer<T>::at(const size_t& i) {
-    size_t i = m_head + (m_data.size() - 1);
-    return m_data[i % m_data.size()];
+    size_t ind = m_tail + i;
+    return m_data[ind % m_data.size()];
 }
 
 template<typename T>
@@ -96,16 +114,19 @@ void vorb::ring_buffer<T>::pop() {
     m_tail++;
     m_tail %= m_data.size();
 }
+template<typename T>
 template<typename... Args>
-bool vorb::ring_buffer::push(Args&&... values) {
-    if (m_elements == m_data.size()) return false;
-    m_elements++;
+bool vorb::ring_buffer<T>::push(Args&&... values) {
+    size_t numElements = numArgs(values...);
+    if (m_elements + numElements > m_data.size()) return false;
+    m_elements += numElements;
 
     // Add data at head
-    m_data.emplace(m_data.at(m_head), values...);
+    moveAll<T, Args...>(m_data, m_head, values...);
 
     // Move head
-    m_head++;
+    m_head += numElements;
     m_head %= m_data.size();
     return true;
 }
+

@@ -1,5 +1,9 @@
 #pragma once
-#include <yaml-cpp/yaml.h>
+
+namespace YAML {
+    class Node;
+    class Emitter;
+}
 
 namespace Keg {
     // These Are All The Types That Can Be Parsed Directly From YAML

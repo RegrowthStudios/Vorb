@@ -224,6 +224,7 @@
     <ClInclude Include="include/VoxelMeshAlg.h" />
     <ClInclude Include="include/VoxelMesherCulled.h" />
     <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\RingBuffer.hpp" />
     <ClInclude Include="include\SoundEngine.h" />
     <ClInclude Include="include\ISoundImpl.h" />
     <ClInclude Include="include\SoundInstance.h" />
@@ -242,18 +243,19 @@
     <None Include="include/Radix.inl" />
     <None Include="include/ThreadPool.inl" />
     <None Include="include/VorbPreDecl.inl" />
+    <None Include="include\RingBuffer.inl" />
     <None Include="include\typesArray.inl" />
     <None Include="include\typesColor.inl" />
     <None Include="src\SoundImplFMOD.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="deps\src\JSON.vcxproj">
-      <Project>{66acba10-35e7-4b5f-ae8f-641278c57afd}</Project>
+    <ProjectReference Include="deps\src\BulletCollision.vcxproj">
+      <Project>{710351a5-9ee4-4a35-9c2c-37978ba08593}</Project>
       <Private>false</Private>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="deps\src\OOLua.vcxproj">
       <Project>{fb1ab70e-4d03-434e-a127-650f8d777b13}</Project>

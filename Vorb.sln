@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vorb", "Vorb.vcxproj", "{BE4855EE-E92C-4688-AE44-E44E3149EAB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSON", "deps\src\JSON.vcxproj", "{66ACBA10-35E7-4B5F-AE8F-641278C57AFD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OOLua", "deps\src\OOLua.vcxproj", "{FB1AB70E-4D03-434E-A127-650F8D777B13}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZLIB", "deps\src\ZLIB.vcxproj", "{B8B9A66A-92D7-4FAB-8159-C93804CE84FC}"
@@ -14,6 +12,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{733D769E-A94A-40EC-85AE-E4E355DCF784}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTester", "UnitTester\UnitTester.vcxproj", "{637A6350-70AB-4357-B965-03E705A89692}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearMath", "deps\src\LinearMath.vcxproj", "{2AD47527-F044-42AA-A6C4-4B719F9B03D2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletCollision", "deps\src\BulletCollision.vcxproj", "{710351A5-9EE4-4A35-9C2C-37978BA08593}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +27,6 @@ Global
 		{BE4855EE-E92C-4688-AE44-E44E3149EAB5}.Debug|Win32.Build.0 = Debug|Win32
 		{BE4855EE-E92C-4688-AE44-E44E3149EAB5}.Release|Win32.ActiveCfg = Release|Win32
 		{BE4855EE-E92C-4688-AE44-E44E3149EAB5}.Release|Win32.Build.0 = Release|Win32
-		{66ACBA10-35E7-4B5F-AE8F-641278C57AFD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{66ACBA10-35E7-4B5F-AE8F-641278C57AFD}.Debug|Win32.Build.0 = Debug|Win32
-		{66ACBA10-35E7-4B5F-AE8F-641278C57AFD}.Release|Win32.ActiveCfg = Release|Win32
-		{66ACBA10-35E7-4B5F-AE8F-641278C57AFD}.Release|Win32.Build.0 = Release|Win32
 		{FB1AB70E-4D03-434E-A127-650F8D777B13}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FB1AB70E-4D03-434E-A127-650F8D777B13}.Debug|Win32.Build.0 = Debug|Win32
 		{FB1AB70E-4D03-434E-A127-650F8D777B13}.Release|Win32.ActiveCfg = Release|Win32
@@ -45,6 +43,14 @@ Global
 		{637A6350-70AB-4357-B965-03E705A89692}.Debug|Win32.Build.0 = Debug|Win32
 		{637A6350-70AB-4357-B965-03E705A89692}.Release|Win32.ActiveCfg = Release|Win32
 		{637A6350-70AB-4357-B965-03E705A89692}.Release|Win32.Build.0 = Release|Win32
+		{2AD47527-F044-42AA-A6C4-4B719F9B03D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2AD47527-F044-42AA-A6C4-4B719F9B03D2}.Debug|Win32.Build.0 = Debug|Win32
+		{2AD47527-F044-42AA-A6C4-4B719F9B03D2}.Release|Win32.ActiveCfg = Release|Win32
+		{2AD47527-F044-42AA-A6C4-4B719F9B03D2}.Release|Win32.Build.0 = Release|Win32
+		{710351A5-9EE4-4A35-9C2C-37978BA08593}.Debug|Win32.ActiveCfg = Debug|Win32
+		{710351A5-9EE4-4A35-9C2C-37978BA08593}.Debug|Win32.Build.0 = Debug|Win32
+		{710351A5-9EE4-4A35-9C2C-37978BA08593}.Release|Win32.ActiveCfg = Release|Win32
+		{710351A5-9EE4-4A35-9C2C-37978BA08593}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,8 +32,8 @@ namespace vorb {
         T& front();
         const T& back() const;
         T& back();
-        const T& at() const;
-        T& at();
+        const T& at(const size_t& i) const;
+        T& at(const size_t& i);
 
         template<typename... Args>
         bool push(Args&&... values);

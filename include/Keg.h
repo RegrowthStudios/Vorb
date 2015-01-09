@@ -1,4 +1,19 @@
+///
+/// Keg.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 9 Jan 2015
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// Keg YAML utility
+///
+
 #pragma once
+
+#ifndef Keg_h__
+#define Keg_h__
 
 namespace YAML {
     class Node;
@@ -285,3 +300,5 @@ namespace Keg {
 /*     ... Code ...                                                     */
 /* KEG_TYPE_INIT_END                                                    */
 /************************************************************************/
+
+#endif // Keg_h__

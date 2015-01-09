@@ -138,6 +138,7 @@
     <ClCompile Include="src\SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
+    <ClCompile Include="src\MeshGenIcosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -379,6 +380,8 @@
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\MeshGenerators.h" />
+    <ClInclude Include="include\TextureRecycler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

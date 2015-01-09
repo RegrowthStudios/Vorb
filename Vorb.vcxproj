@@ -146,6 +146,7 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\MeshGenIcosphere.cpp" />
     <ClCompile Include="src\SoundEngine.cpp" />
     <ClCompile Include="src\SoundInstance.cpp" />
   </ItemGroup>
@@ -227,11 +228,13 @@
     <ClInclude Include="include/VoxelMeshAlg.h" />
     <ClInclude Include="include/VoxelMesherCulled.h" />
     <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include\SoundEngine.h" />
     <ClInclude Include="include\ISoundImpl.h" />
     <ClInclude Include="include\SoundInstance.h" />
     <ClInclude Include="include\SoundListener.h" />
     <ClInclude Include="include\SoundResource.h" />
+    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="src\SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,23 +1,24 @@
 #include "stdafx.h"
 #include "TextureCache.h"
-#include "IOManager.h"
 
 #include "GpuMemory.h"
 #include "Errors.h"
 
 #include <vector>
 
+#include "IOManager.h"
+
 namespace vorb {
     namespace core {
         namespace graphics {
 
             TextureCache::TextureCache() :
-                m_ioManager(new IOManager),
+                m_ioManager(new vio::IOManager),
                 m_ownsIoManager(true) {
 
             }
 
-            TextureCache::TextureCache(IOManager* ioManager) :
+            TextureCache::TextureCache(vio::IOManager* ioManager) :
                 m_ioManager(ioManager) {
                 // Empty
             }

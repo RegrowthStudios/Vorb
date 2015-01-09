@@ -64,6 +64,27 @@ TEST(WriteTestTxt) {
     return true;
 }
 
+TEST(CheckSum) {
+    vpath path = "data/checksums";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        vfile file;
+        if (!path.asFile(&file)) return;
+        vio::SHA256Sum sum;
+        file.computeSum(&sum);
+        printf("\nSHA256 Checksum: <%s>\n", file.getPath().getCString());
+        for (size_t i = 0; i < 8;) {
+            printf("0x%08X ", sum[i++]);
+            printf("0x%08X\n", sum[i++]);
+        }
+        printf("\n");
+    });
+
+    return true;
+}
+
 TEST(IOMDirs) {
     if (vorb::init(vorb::InitParam::IO) != vorb::InitParam::IO) return false;
 

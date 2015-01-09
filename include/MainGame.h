@@ -1,6 +1,4 @@
 #pragma once
-#include <SDL/SDL.h>
-
 #include "Events.hpp"
 #include "GameWindow.h"
 #include "GraphicsDevice.h"

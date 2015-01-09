@@ -71,7 +71,7 @@ namespace vorb {
                 return m_path.isValid();
             }
             /// @return A file checksum
-            void computeSum(SHA256Sum* sum) const;
+            void computeSum(OUT SHA256Sum* sum) const;
 
             /// @return The size of the file in bytes
             ui64 length() const;

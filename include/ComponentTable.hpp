@@ -86,6 +86,13 @@ namespace vorb {
                 _components[cID].second = getDefaultData();
             }
 
+            virtual void initComponent(ComponentID cID, EntityID eID) override {
+                // Empty
+            }
+            virtual void disposeComponent(ComponentID cID, EntityID eID) override {
+                // Empty
+            }
+
             ComponentList _components; ///< A list of (entity ID, Component)
         };
     }

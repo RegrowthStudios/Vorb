@@ -60,8 +60,8 @@ namespace vorb {
             EntityIDSet _entities; ///< List of entity IDs that meet requirements
             std::vector<ComponentTableBase*> _tables; ///< List of required component tables
         private:
-            std::shared_ptr<IDelegate<EntityID>> _fEntityAdded;
-            std::shared_ptr<IDelegate<EntityID>> _fEntityRemoved;
+            std::shared_ptr<IDelegate<ComponentID, EntityID>> _fEntityAdded;
+            std::shared_ptr<IDelegate<ComponentID, EntityID>> _fEntityRemoved;
         };
     }
 }

@@ -68,13 +68,16 @@ namespace vorb {
                 return _components.size(); // This should be equal to _genComponent.getActiveCount()
             }
 
-            Event<EntityID> onEntityAdded; ///< Called when an entity is added to this table
-            Event<EntityID> onEntityRemoved; ///< Called when an entity is removed from this table
+            Event<ComponentID, EntityID> onEntityAdded; ///< Called when an entity is added to this table
+            Event<ComponentID, EntityID> onEntityRemoved; ///< Called when an entity is removed from this table
         protected:
             virtual void addComponent(ComponentID cID, EntityID eID) = 0;
             virtual void setComponent(ComponentID cID, EntityID eID) = 0;
+
+            virtual void initComponent(ComponentID cID, EntityID eID) = 0;
+            virtual void disposeComponent(ComponentID cID, EntityID eID) = 0;
         private:
-            void onEntityRemoval(void* sender, EntityID id) {
+            void onEntityRemoval(Sender sender, EntityID id) {
                 remove(id);
             }
 

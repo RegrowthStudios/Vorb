@@ -20,7 +20,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
-    <OutDir>$(SolutionDir)bin\lib\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)bin\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -28,7 +28,7 @@
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <OutDir>$(SolutionDir)bin\lib\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)bin\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -40,23 +40,36 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(ProjectDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <TargetName>Vorb</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</IncludePath>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)src</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(ProjectDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</IntDir>
+    <TargetName>Vorb</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</IncludePath>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)src</SourcePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zdll.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -66,10 +79,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -77,147 +93,187 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)deps\lib\$(PlatformName)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zdll.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="colors.cpp" />
-    <ClCompile Include="ComponentTableBase.cpp" />
-    <ClCompile Include="ConnectedTextures.cpp" />
-    <ClCompile Include="DeferredShaders.cpp" />
-    <ClCompile Include="DepthState.cpp" />
-    <ClCompile Include="ECS.cpp" />
-    <ClCompile Include="FullQuadVBO.cpp" />
-    <ClCompile Include="GameWindow.cpp" />
-    <ClCompile Include="GBuffer.cpp" />
-    <ClCompile Include="GLProgram.cpp" />
-    <ClCompile Include="GLRenderTarget.cpp" />
-    <ClCompile Include="InputDispatcher.cpp" />
-    <ClCompile Include="LuaDevConsole.cpp" />
-    <ClCompile Include="MemFile.cpp" />
-    <ClCompile Include="MeshGenIcosphere.cpp" />
-    <ClCompile Include="ModelIO.cpp" />
-    <ClCompile Include="RPC.cpp" />
-    <ClCompile Include="GpuMemory.cpp" />
-    <ClCompile Include="GraphicsDevice.cpp" />
-    <ClCompile Include="ImageIO.cpp" />
-    <ClCompile Include="ImageLoader.cpp" />
-    <ClCompile Include="ImageSaver.cpp" />
-    <ClCompile Include="IOManager.cpp" />
-    <ClCompile Include="IRenderPipeline.cpp" />
-    <ClCompile Include="IRenderStage.cpp" />
-    <ClCompile Include="Keg.cpp" />
-    <ClCompile Include="lodepng.cpp" />
-    <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MultipleComponentSet.cpp" />
-    <ClCompile Include="OpenglSurfaceFactory.cpp" />
-    <ClCompile Include="Random.cpp" />
-    <ClCompile Include="RasterizerState.cpp" />
-    <ClCompile Include="SamplerState.cpp" />
-    <ClCompile Include="ScreenList.cpp" />
-    <ClCompile Include="SpriteBatch.cpp" />
-    <ClCompile Include="SpriteFont.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src/colors.cpp" />
+    <ClCompile Include="src/ComponentTableBase.cpp" />
+    <ClCompile Include="src/ConnectedTextures.cpp" />
+    <ClCompile Include="src/DeferredShaders.cpp" />
+    <ClCompile Include="src/DepthState.cpp" />
+    <ClCompile Include="src/Directory.cpp" />
+    <ClCompile Include="src/ECS.cpp" />
+    <ClCompile Include="src/File.cpp" />
+    <ClCompile Include="src/FileOps.cpp" />
+    <ClCompile Include="src/FullQuadVBO.cpp" />
+    <ClCompile Include="src/GameWindow.cpp" />
+    <ClCompile Include="src/GBuffer.cpp" />
+    <ClCompile Include="src/GLProgram.cpp" />
+    <ClCompile Include="src/GLRenderTarget.cpp" />
+    <ClCompile Include="src/InputDispatcher.cpp" />
+    <ClCompile Include="src/LuaDevConsole.cpp" />
+    <ClCompile Include="src/MemFile.cpp" />
+    <ClCompile Include="src/ModelIO.cpp" />
+    <ClCompile Include="src/Path.cpp" />
+    <ClCompile Include="src/RPC.cpp" />
+    <ClCompile Include="src/GpuMemory.cpp" />
+    <ClCompile Include="src/GraphicsDevice.cpp" />
+    <ClCompile Include="src/ImageIO.cpp" />
+    <ClCompile Include="src/ImageLoader.cpp" />
+    <ClCompile Include="src/ImageSaver.cpp" />
+    <ClCompile Include="src/IOManager.cpp" />
+    <ClCompile Include="src/IRenderPipeline.cpp" />
+    <ClCompile Include="src/IRenderStage.cpp" />
+    <ClCompile Include="src/Keg.cpp" />
+    <ClCompile Include="src/lodepng.cpp" />
+    <ClCompile Include="src/MainGame.cpp" />
+    <ClCompile Include="src/Mesh.cpp" />
+    <ClCompile Include="src/MultipleComponentSet.cpp" />
+    <ClCompile Include="src/OpenglSurfaceFactory.cpp" />
+    <ClCompile Include="src/Random.cpp" />
+    <ClCompile Include="src/RasterizerState.cpp" />
+    <ClCompile Include="src/SamplerState.cpp" />
+    <ClCompile Include="src/ScreenList.cpp" />
+    <ClCompile Include="src/SpriteBatch.cpp" />
+    <ClCompile Include="src/SpriteFont.cpp" />
+    <ClCompile Include="src/stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TextureCache.cpp" />
-    <ClCompile Include="Timing.cpp" />
-    <ClCompile Include="Vorb.cpp" />
-    <ClCompile Include="VoxCommon.cpp" />
+    <ClCompile Include="src/TextureCache.cpp" />
+    <ClCompile Include="src/Timing.cpp" />
+    <ClCompile Include="src/Vorb.cpp" />
+    <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\SoundEngine.cpp" />
+    <ClCompile Include="src\SoundInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AwesomiumInterface.h" />
-    <ClInclude Include="colors.h" />
-    <ClInclude Include="compat.h" />
-    <ClInclude Include="ComponentTable.hpp" />
-    <ClInclude Include="ComponentTableBase.h" />
-    <ClInclude Include="ConnectedTextures.h" />
-    <ClInclude Include="decorators.h" />
-    <ClInclude Include="DeferredShaders.h" />
-    <ClInclude Include="DepthState.h" />
-    <ClInclude Include="ECS.h" />
-    <ClInclude Include="ECSSimpleUpdater.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Events.hpp" />
-    <ClInclude Include="FixedSizeArrayRecycler.hpp" />
-    <ClInclude Include="FullQuadVBO.h" />
-    <ClInclude Include="GameWindow.h" />
-    <ClInclude Include="GBuffer.h" />
-    <ClInclude Include="GLEnums.h" />
-    <ClInclude Include="GLProgram.h" />
-    <ClInclude Include="GLRenderTarget.h" />
-    <ClInclude Include="InputDispatcher.h" />
-    <ClInclude Include="KeyboardEventDispatcher.h" />
-    <ClInclude Include="LuaDevConsole.h" />
-    <ClInclude Include="MemFile.h" />
-    <ClInclude Include="MeshData.h" />
-    <ClInclude Include="MeshGenerators.h" />
-    <ClInclude Include="ModelIO.h" />
-    <ClInclude Include="MouseInputDispatcher.h" />
-    <ClInclude Include="RPC.h" />
-    <ClInclude Include="GLStates.h" />
-    <ClInclude Include="GpuMemory.h" />
-    <ClInclude Include="GraphicsDevice.h" />
-    <ClInclude Include="gtypes.h" />
-    <ClInclude Include="IAwesomiumInterface.h" />
-    <ClInclude Include="IDGenerator.h" />
-    <ClInclude Include="IGameScreen.h" />
-    <ClInclude Include="ImageIO.h" />
-    <ClInclude Include="ImageLoader.h" />
-    <ClInclude Include="ImageSaver.h" />
-    <ClInclude Include="IOManager.h" />
-    <ClInclude Include="IRenderPipeline.h" />
-    <ClInclude Include="IRenderStage.h" />
-    <ClInclude Include="IThreadPoolTask.h" />
-    <ClInclude Include="Keg.h" />
-    <ClInclude Include="lodepng.h" />
-    <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MultiComponentTracker.hpp" />
-    <ClInclude Include="MultipleComponentSet.h" />
-    <ClInclude Include="OpenglSurfaceFactory.h" />
-    <ClInclude Include="PtrRecycler.hpp" />
-    <ClInclude Include="Random.h" />
-    <ClInclude Include="RasterizerState.h" />
-    <ClInclude Include="RTSwapChain.hpp" />
-    <ClInclude Include="SamplerState.h" />
-    <ClInclude Include="ScreenList.h" />
-    <ClInclude Include="SpriteBatch.h" />
-    <ClInclude Include="SpriteFont.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TextInputListener.hpp" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureRecycler.hpp" />
-    <ClInclude Include="TextureCache.h" />
-    <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="ThreadSync.h" />
-    <ClInclude Include="Timing.h" />
-    <ClInclude Include="types.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="Vorb.h" />
-    <ClInclude Include="VoxCommon.h" />
-    <ClInclude Include="VoxelMeshAlg.h" />
-    <ClInclude Include="VoxelMesherCulled.h" />
-    <ClInclude Include="WindowEventDispatcher.h" />
+    <ClInclude Include="include/AwesomiumInterface.h" />
+    <ClInclude Include="include/colors.h" />
+    <ClInclude Include="include/compat.h" />
+    <ClInclude Include="include/ComponentTable.hpp" />
+    <ClInclude Include="include/ComponentTableBase.h" />
+    <ClInclude Include="include/ConnectedTextures.h" />
+    <ClInclude Include="include/decorators.h" />
+    <ClInclude Include="include/DeferredShaders.h" />
+    <ClInclude Include="include/DepthState.h" />
+    <ClInclude Include="include/Directory.h" />
+    <ClInclude Include="include/ECS.h" />
+    <ClInclude Include="include/ECSSimpleUpdater.h" />
+    <ClInclude Include="include/Entity.h" />
+    <ClInclude Include="include/Events.hpp" />
+    <ClInclude Include="include/File.h" />
+    <ClInclude Include="include/FileOps.h" />
+    <ClInclude Include="include/FileStream.h" />
+    <ClInclude Include="include/FixedSizeArrayRecycler.hpp" />
+    <ClInclude Include="include/FullQuadVBO.h" />
+    <ClInclude Include="include/GameWindow.h" />
+    <ClInclude Include="include/GBuffer.h" />
+    <ClInclude Include="include/GLEnums.h" />
+    <ClInclude Include="include/GLProgram.h" />
+    <ClInclude Include="include/GLRenderTarget.h" />
+    <ClInclude Include="include/InputDispatcher.h" />
+    <ClInclude Include="include/IO.h" />
+    <ClInclude Include="include/KeyboardEventDispatcher.h" />
+    <ClInclude Include="include/LuaDevConsole.h" />
+    <ClInclude Include="include/MemFile.h" />
+    <ClInclude Include="include/MeshData.h" />
+    <ClInclude Include="include/ModelIO.h" />
+    <ClInclude Include="include/MouseInputDispatcher.h" />
+    <ClInclude Include="include/Path.h" />
+    <ClInclude Include="include/RPC.h" />
+    <ClInclude Include="include/GLStates.h" />
+    <ClInclude Include="include/GpuMemory.h" />
+    <ClInclude Include="include/GraphicsDevice.h" />
+    <ClInclude Include="include/gtypes.h" />
+    <ClInclude Include="include/IAwesomiumInterface.h" />
+    <ClInclude Include="include/IDGenerator.h" />
+    <ClInclude Include="include/IGameScreen.h" />
+    <ClInclude Include="include/ImageIO.h" />
+    <ClInclude Include="include/ImageLoader.h" />
+    <ClInclude Include="include/ImageSaver.h" />
+    <ClInclude Include="include/IOManager.h" />
+    <ClInclude Include="include/IRenderPipeline.h" />
+    <ClInclude Include="include/IRenderStage.h" />
+    <ClInclude Include="include/IThreadPoolTask.h" />
+    <ClInclude Include="include/Keg.h" />
+    <ClInclude Include="include/lodepng.h" />
+    <ClInclude Include="include/MainGame.h" />
+    <ClInclude Include="include/Mesh.h" />
+    <ClInclude Include="include/MultiComponentTracker.hpp" />
+    <ClInclude Include="include/MultipleComponentSet.h" />
+    <ClInclude Include="include/OpenglSurfaceFactory.h" />
+    <ClInclude Include="include/PtrRecycler.hpp" />
+    <ClInclude Include="include/Random.h" />
+    <ClInclude Include="include/RasterizerState.h" />
+    <ClInclude Include="include/RTSwapChain.hpp" />
+    <ClInclude Include="include/SamplerState.h" />
+    <ClInclude Include="include/ScreenList.h" />
+    <ClInclude Include="include/SpriteBatch.h" />
+    <ClInclude Include="include/SpriteFont.h" />
+    <ClInclude Include="include/stdafx.h" />
+    <ClInclude Include="include/TextInputListener.hpp" />
+    <ClInclude Include="include/Texture.h" />
+    <ClInclude Include="include/TextureCache.h" />
+    <ClInclude Include="include/ThreadPool.h" />
+    <ClInclude Include="include/ThreadSync.h" />
+    <ClInclude Include="include/Timing.h" />
+    <ClInclude Include="include/types.h" />
+    <ClInclude Include="include/utils.h" />
+    <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include/VoxCommon.h" />
+    <ClInclude Include="include/VoxelMeshAlg.h" />
+    <ClInclude Include="include/VoxelMesherCulled.h" />
+    <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\SoundEngine.h" />
+    <ClInclude Include="include\ISoundImpl.h" />
+    <ClInclude Include="include\SoundInstance.h" />
+    <ClInclude Include="include\SoundListener.h" />
+    <ClInclude Include="include\SoundResource.h" />
+    <ClInclude Include="src\SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OOLua\OOLua.vcxproj">
-      <Project>{fb1ab70e-4d03-434e-a127-650f8d777b13}</Project>
-    </ProjectReference>
+    <None Include="include/AwesomiumInterface.inl" />
+    <None Include="include/BufferUtils.inl" />
+    <None Include="include/FastConversion.inl" />
+    <None Include="include/Keys.inl" />
+    <None Include="include/Radix.inl" />
+    <None Include="include/ThreadPool.inl" />
+    <None Include="include/VorbPreDecl.inl" />
+    <None Include="include\typesArray.inl" />
+    <None Include="include\typesColor.inl" />
+    <None Include="src\SoundImplFMOD.inl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AwesomiumInterface.inl" />
-    <None Include="BufferUtils.inl" />
-    <None Include="FastConversion.inl" />
-    <None Include="Keys.inl" />
-    <None Include="Radix.inl" />
-    <None Include="ThreadPool.inl" />
+    <ProjectReference Include="deps\src\JSON.vcxproj">
+      <Project>{66acba10-35e7-4b5f-ae8f-641278c57afd}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="deps\src\OOLua.vcxproj">
+      <Project>{fb1ab70e-4d03-434e-a127-650f8d777b13}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="deps\src\ZLIB.vcxproj">
+      <Project>{b8b9a66a-92d7-4fab-8159-c93804ce84fc}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

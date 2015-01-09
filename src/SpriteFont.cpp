@@ -2,6 +2,7 @@
 #include "SpriteFont.h"
 
 #include <boost\filesystem.hpp>
+#include <TTF\SDL_ttf.h>
 
 #include "GraphicsDevice.h"
 #include "ImageSaver.h"

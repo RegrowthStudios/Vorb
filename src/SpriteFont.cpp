@@ -19,6 +19,10 @@ i32 closestPow2(i32 i) {
 
 SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     TTF_Font* f = TTF_OpenFont(font, size);
+    if (!f) {
+        std::cerr << "Failed to open font " << font << "\n";
+        throw 88;
+    }
     _fontHeight = TTF_FontHeight(f);
     _regStart = cs;
     _regLength = ce - cs + 1;

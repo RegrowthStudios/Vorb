@@ -28,7 +28,13 @@ vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
         // Recycle an old component
         setComponent(id, eID);
     }
-    onEntityAdded(eID);
+
+    // Perform initialization operation
+    initComponent(id, eID);
+
+    // Signal addition
+    onEntityAdded(id, eID);
+
     return id;
 }
 bool vcore::ComponentTableBase::remove(EntityID eID) {
@@ -36,11 +42,16 @@ bool vcore::ComponentTableBase::remove(EntityID eID) {
     auto cBind = _components.find(eID);
     if (cBind == _components.end()) return false;
 
+    // Signal removal
+    onEntityRemoved(cBind->second, eID);
+
+    // Perform disposal operations
+    disposeComponent(cBind->second, eID);
+
     // Component is cleared
     _genComponent.recycle(cBind->second);
     setComponent(cBind->second, ID_GENERATOR_NULL_ID);
     _components.erase(cBind);
-    onEntityRemoved(eID);
 
     return true;
 }

@@ -138,6 +138,9 @@
     <ClCompile Include="src\SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
+    <ClCompile Include="src\sha256sum.c">
+      <Filter>IO\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -194,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="include/utils.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include/lodepng.h">
-      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include/Timing.h">
       <Filter>Utils</Filter>
@@ -379,6 +379,15 @@
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RingBuffer.hpp">
+      <Filter>Core\ADT</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lodepng.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sha256sum.h">
+      <Filter>IO\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -401,9 +410,6 @@
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{697c6002-2f1c-4b32-9b83-d3af9d9d4056}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\ADT">
-      <UniqueIdentifier>{23934580-2774-41c1-9e4e-f68a549d1368}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\ECS">
       <UniqueIdentifier>{2623b98e-6c4b-492f-ba48-960edaa783f9}</UniqueIdentifier>
@@ -441,6 +447,12 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{ebd75801-6efb-4baa-9055-dde194ce4a4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ADT">
+      <UniqueIdentifier>{23934580-2774-41c1-9e4e-f68a549d1368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Utils">
+      <UniqueIdentifier>{be06fd08-609f-482e-9d16-856289023bb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/AwesomiumInterface.inl">
@@ -467,6 +479,9 @@
     </None>
     <None Include="include\typesColor.inl" />
     <None Include="include\typesArray.inl" />
+    <None Include="include\RingBuffer.inl">
+      <Filter>Core\ADT</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

@@ -20,6 +20,10 @@
 
 namespace vorb {
     namespace ui {
+        namespace impl {
+            VORB_INTERNAL class InputDispatcherEventCatcher;
+        }
+
 #define NUM_KEY_CODES VKEY_HIGHEST_VALUE
 
         /// Bit array common key modifiers
@@ -67,6 +71,7 @@ namespace vorb {
         /// Dispatches keyboard events
         class KeyboardEventDispatcher {
             friend class InputDispatcher;
+            friend class vorb::ui::impl::InputDispatcherEventCatcher;
         public:
             Event<> onEvent; ///< Signaled when any keyboard event happens
             Event<> onFocusLost; ///< Signaled when keyboard no longer provides input to application

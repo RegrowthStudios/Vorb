@@ -15,7 +15,6 @@
 #ifndef InputDispatcher_h__
 #define InputDispatcher_h__
 
-union SDL_Event;
 class GameWindow;
 
 #include "KeyboardEventDispatcher.h"
@@ -24,8 +23,13 @@ class GameWindow;
 
 namespace vorb {
     namespace ui {
+        namespace impl {
+            VORB_INTERNAL class InputDispatcherEventCatcher;
+        }
+
         /// Handles receiving and dispatching important events
         class InputDispatcher {
+            friend class impl::InputDispatcherEventCatcher;
         public:
             /// Adds an event listening hook
             /// @param w: The window where events will be generated
@@ -40,12 +44,6 @@ namespace vorb {
             static WindowEventDispatcher window; ///< Dispatches window events
             static Event<> onQuit; ///< Signaled when application should quit
         private:
-            /// Listener which is used to dispatch events and execute listener code
-            /// @param userData: Ignored
-            /// @param e: Event pointer
-            /// @return 1 if event is not dispatched
-            static i32 onSDLEvent(void* userData, SDL_Event* e);
-
             static GameWindow* m_window; ///< Active window
             volatile static bool m_isInit; ///< Keeps track of initialization status
         };

@@ -29,7 +29,7 @@ void vorb::ui::LuaDevConsole::invokeCommand(const nString& c) {
     *stderr = *m_streams[DEV_CONSOLE_STREAM_ERR];
 
     m_vm->run_chunk(c);
-    m_storedCommands.push_back(c);
+    m_storedCommands.push(c);
 
     // Reset standard output
     *stdout = old1;
@@ -52,5 +52,5 @@ void vorb::ui::LuaDevConsole::invokeCommand(const nString& c) {
 }
 
 const nString& vorb::ui::LuaDevConsole::getCommand(const size_t& i) const {
-    return m_storedCommands[i];
+    return m_storedCommands.at(i);
 }

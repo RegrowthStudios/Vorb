@@ -48,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(ProjectDir)obj\$(PlatformName)\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <TargetName>Vorb</TargetName>
+    <TargetName>Vorb-d</TargetName>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</IncludePath>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)src</SourcePath>
   </PropertyGroup>
@@ -146,6 +146,10 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\sha256sum.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\SoundEngine.cpp" />
     <ClCompile Include="src\SoundInstance.cpp" />
   </ItemGroup>
@@ -199,7 +203,6 @@
     <ClInclude Include="include/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/Keg.h" />
-    <ClInclude Include="include/lodepng.h" />
     <ClInclude Include="include/MainGame.h" />
     <ClInclude Include="include/Mesh.h" />
     <ClInclude Include="include/MultiComponentTracker.hpp" />
@@ -227,11 +230,14 @@
     <ClInclude Include="include/VoxelMeshAlg.h" />
     <ClInclude Include="include/VoxelMesherCulled.h" />
     <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include\RingBuffer.hpp" />
     <ClInclude Include="include\SoundEngine.h" />
     <ClInclude Include="include\ISoundImpl.h" />
     <ClInclude Include="include\SoundInstance.h" />
     <ClInclude Include="include\SoundListener.h" />
     <ClInclude Include="include\SoundResource.h" />
+    <ClInclude Include="src\lodepng.h" />
+    <ClInclude Include="src\sha256sum.h" />
     <ClInclude Include="src\SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -245,18 +251,19 @@
     <None Include="include/Radix.inl" />
     <None Include="include/ThreadPool.inl" />
     <None Include="include/VorbPreDecl.inl" />
+    <None Include="include\RingBuffer.inl" />
     <None Include="include\typesArray.inl" />
     <None Include="include\typesColor.inl" />
     <None Include="src\SoundImplFMOD.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="deps\src\JSON.vcxproj">
-      <Project>{66acba10-35e7-4b5f-ae8f-641278c57afd}</Project>
+    <ProjectReference Include="deps\src\BulletCollision.vcxproj">
+      <Project>{710351a5-9ee4-4a35-9c2c-37978ba08593}</Project>
       <Private>false</Private>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="deps\src\OOLua.vcxproj">
       <Project>{fb1ab70e-4d03-434e-a127-650f8d777b13}</Project>

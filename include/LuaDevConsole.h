@@ -15,10 +15,10 @@
 #ifndef LuaDevConsole_h__
 #define LuaDevConsole_h__
 
-#include <boost/circular_buffer.hpp>
 
 #include "Events.hpp"
 #include "MemFile.h"
+#include "RingBuffer.hpp"
 
 namespace OOLUA {
     class Script;
@@ -42,7 +42,7 @@ namespace vorb {
 
             Event<const cString> onStream[2];
         private:
-            boost::circular_buffer<nString> m_storedCommands;
+            vorb::ring_buffer<nString> m_storedCommands;
 
             OOLUA::Script* m_vm;
 

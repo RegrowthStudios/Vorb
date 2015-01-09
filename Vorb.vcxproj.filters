@@ -138,6 +138,9 @@
     <ClCompile Include="src\SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
+    <ClCompile Include="src\sha256sum.c">
+      <Filter>IO\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -382,6 +385,9 @@
     <ClInclude Include="src\lodepng.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\sha256sum.h">
+      <Filter>IO\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -443,6 +449,9 @@
     </Filter>
     <Filter Include="Core\ADT">
       <UniqueIdentifier>{23934580-2774-41c1-9e4e-f68a549d1368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Utils">
+      <UniqueIdentifier>{be06fd08-609f-482e-9d16-856289023bb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -146,6 +146,10 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src\sha256sum.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\SoundEngine.cpp" />
     <ClCompile Include="src\SoundInstance.cpp" />
   </ItemGroup>
@@ -233,6 +237,7 @@
     <ClInclude Include="include\SoundListener.h" />
     <ClInclude Include="include\SoundResource.h" />
     <ClInclude Include="src\lodepng.h" />
+    <ClInclude Include="src\sha256sum.h" />
     <ClInclude Include="src\SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>

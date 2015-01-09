@@ -19,6 +19,10 @@
 
 namespace vorb {
     namespace ui {
+        namespace impl {
+            VORB_INTERNAL class InputDispatcherEventCatcher;
+        }
+
         /// The known mouse buttons
         enum class MouseButton {
             UNKNOWN, ///< An unknown mouse button
@@ -62,6 +66,7 @@ namespace vorb {
         /// Dispatches mouse events
         class MouseEventDispatcher {
             friend class InputDispatcher;
+            friend class vorb::ui::impl::InputDispatcherEventCatcher;
         public:
             Event<const MouseEvent&> onEvent; ///< Signaled when any mouse event happens
             Event<const MouseEvent&> onFocusLost; ///< Signaled when mouse no longer provides input to application

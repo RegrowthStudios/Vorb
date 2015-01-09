@@ -17,7 +17,9 @@
 
 #include "SamplerState.h"
 
-class IOManager;
+#include <VorbPreDecl.inl>
+
+DECL_VIO(class, IOManager);
 
 namespace vorb {
 namespace core {
@@ -33,7 +35,7 @@ public:
     /// @param rHeight: Image height gets stored here
     /// @param printError: When true, will print error if file not found
     /// @return true on success, false on failure
-    static bool loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, IOManager* iom, bool printError = true);
+    static bool loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, vio::IOManager* iom, bool printError = true);
 };
 
 }

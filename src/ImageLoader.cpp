@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-bool vg::ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, IOManager* iom, bool printError /* = true */) {
+bool vg::ImageLoader::loadPng(const cString imagepath, std::vector<ui8>& pixelStore, ui32& rWidth, ui32& rHeight, vio::IOManager* iom, bool printError /* = true */) {
    
     std::vector <ui8> imgData;
 

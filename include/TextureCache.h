@@ -26,8 +26,6 @@
 #include "gtypes.h"
 #include "GLEnums.h"
 
-class IOManager;
-
 namespace vorb {
     namespace core {
         namespace graphics {
@@ -36,7 +34,7 @@ namespace vorb {
             class TextureCache {
             public:
                 TextureCache();
-                TextureCache(IOManager* ioManager);
+                TextureCache(vio::IOManager* ioManager);
                 ~TextureCache();
 
                 /// Finds a texture if it exists in the cache
@@ -105,7 +103,7 @@ namespace vorb {
 
             private:
                 bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
-                IOManager* m_ioManager = nullptr; ///< Handles the IO
+                vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
                 /// Inserts a texture into the cache
                 void insertTexture(const nString& filePath, const Texture& texture);

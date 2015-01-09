@@ -41,6 +41,18 @@ namespace vorb {
         };
         ENUM_CLASS_OPS_INL(FileOpenFlags, ui8)
 
+        // TODO: Maybe move sum elsewhere?
+        struct SHA256Sum {
+            const ui32& operator[](const size_t& i) const {
+                return m_data[i];
+            }
+            ui32& operator[](const size_t& i) {
+                return m_data[i];
+            }
+        private:
+            ui32 m_data[8];
+        };
+
         /// Represents a file
         class File {
             friend class Path;
@@ -58,6 +70,8 @@ namespace vorb {
             bool isValid() const {
                 return m_path.isValid();
             }
+            /// @return A file checksum
+            void computeSum(SHA256Sum* sum) const;
 
             /// @return The size of the file in bytes
             ui64 length() const;
@@ -65,20 +79,20 @@ namespace vorb {
             /// Attempt to resize this file
             /// @param l: New file size
             /// @return True if the file was resized successfully
-            bool resize(ui64 l) const;
+            bool resize(const ui64& l) const;
 
             /// Open the file handle
             /// @return A stream to the file
             FileStream open(FileOpenFlags flags) const;
             /// Open the file handle
             /// @return A stream to the file
-            FileStream open(bool binary = true) const;
+            FileStream open(const bool& binary = true) const;
             /// Open the file handle for reading only
             /// @return A stream to the file
-            FileStream openReadOnly(bool binary = true) const;
+            FileStream openReadOnly(const bool& binary = true) const;
             /// Create the file handle
             /// @return A stream to the file
-            FileStream create(bool binary = true) const;
+            FileStream create(const bool& binary = true) const;
         private:
             /// Secret-sauce file builder
             /// @param p: Path value

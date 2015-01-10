@@ -15,11 +15,30 @@
 #ifndef ModelIO_h__
 #define ModelIO_h__
 
+#include "MeshData.h"
+//#include "utils.h"
+
+namespace std {
+    template<> struct hash<ui32v3>;
+}
+
 namespace vorb {
     namespace io {
+
+        struct OBJMesh {
+        public:
+            std::vector<f32v3> positions;
+            std::vector<f32v2> uvs;
+            std::vector<f32v3> normals;
+
+            std::unordered_map<ui32v3, ui32, std::_Bitwise_hash<ui32v3>> vertices;
+            std::vector<ui32v3> triangles;
+        };
+
         class ModelIO {
         public:
-
+            static ui32v2 loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh);
+            static CALLER_DELETE vg::MeshDataRaw loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize);
         };
     }
 }

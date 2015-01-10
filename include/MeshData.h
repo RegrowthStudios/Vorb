@@ -19,16 +19,24 @@ namespace vorb {
     namespace core {
 		namespace graphics {
             enum class VertexAttributeUsage {
-
+                Position,
+                TextureCoordinate,
+                Normal,
+                Color,
+                Binormal,
+                Tangent,
+                Custom
             };
 
             struct VertexElement {
             public:
                 VertexAttributeUsage usage : 4;
                 ui32 usageIndex : 4;
-                ui32 componentSize;
-                ui32 componentCount;
                 size_t offset;
+                ui16 componentSize;
+                ui16 componentCount;
+                bool isFloat : 1;
+                bool isUnsigned : 1;
             };
 
 
@@ -40,7 +48,7 @@ namespace vorb {
             public:
                 V* vertices;
                 size_t vertexCount;
-                T* indices;
+                I* indices;
                 size_t indexCount;
             };
 
@@ -48,7 +56,7 @@ namespace vorb {
             struct MeshDataRaw {
             public:
                 template<typename V, typename I>
-                MeshData<V, T> as() const {
+                MeshData<V, I> as() const {
                     MeshData<V, T> m;
                     m.vertices = vertices;
                     m.vertexCount = vertexCount;

@@ -253,14 +253,6 @@
     <None Include="src\SoundImplFMOD.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="deps\src\JSON.vcxproj">
-      <Project>{66acba10-35e7-4b5f-ae8f-641278c57afd}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="deps\src\OOLua.vcxproj">
       <Project>{fb1ab70e-4d03-434e-a127-650f8d777b13}</Project>
       <Private>false</Private>

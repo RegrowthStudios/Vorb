@@ -17,7 +17,7 @@
 
 #include "SamplerState.h"
 
-#include <VorbPreDecl.inl>
+#include "VorbPreDecl.inl"
 
 DECL_VIO(class, IOManager);
 

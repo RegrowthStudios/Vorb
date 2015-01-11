@@ -1,19 +1,23 @@
-template<typename T, typename Arg1, typename... Args>
-void moveAll(std::vector<T>& data, const size_t& i, Arg1&& v1, Args&&... values) {
-    data[i % data.size()] = std::move<Arg1>(v1);
-    moveAll(data, i + 1, values...);
-}
-template<typename T, typename Arg1>
-void moveAll(std::vector<T>& data, const size_t& i, Arg1&& v1) {
-    data[i % data.size()] = std::move<Arg1>(v1);
-}
+namespace vorb {
+    namespace impl {
+        template<typename T, typename Arg1, typename... Args>
+        inline void moveAll(std::vector<T>& data, const size_t& i, Arg1&& v1, Args&&... values) {
+            data[i % data.size()] = std::move<Arg1>(v1);
+            moveAll(data, i + 1, values...);
+        }
+        template<typename T, typename Arg1>
+        inline void moveAll(std::vector<T>& data, const size_t& i, Arg1&& v1) {
+            data[i % data.size()] = std::move<Arg1>(v1);
+        }
 
-template<typename Arg1, typename... Args>
-size_t numArgs(Arg1& v1, Args&... values) {
-    return 1 + numArgs(values...);
-}
-size_t numArgs() {
-    return 0;
+        template<typename Arg1, typename... Args>
+        inline size_t numArgs(Arg1& v1, Args&... values) {
+            return 1 + numArgs(values...);
+        }
+        inline size_t numArgs() {
+            return 0;
+        }
+    }
 }
 
 template<typename T>
@@ -118,12 +122,12 @@ void vorb::ring_buffer<T>::pop() {
 template<typename T>
 template<typename... Args>
 bool vorb::ring_buffer<T>::push(Args&&... values) {
-    size_t numElements = numArgs(values...);
+    size_t numElements = vorb::impl::numArgs(values...);
     if (m_elements + numElements > m_data.capacity()) return false;
     m_elements += numElements;
 
     // Add data at head
-    moveAll(m_data, m_head, values...);
+    vorb::impl::moveAll(m_data, m_head, values...);
 
     // Move head
     m_head += numElements;

@@ -135,3 +135,22 @@ TEST(Volume) {
 
     return vorb::dispose(vorb::InitParam::SOUND) == vorb::InitParam::SOUND;
 }
+
+TEST(Music) {
+    if (vorb::init(vorb::InitParam::SOUND) != vorb::InitParam::SOUND) return false;
+
+    vsound::Engine eng;
+    eng.init();
+    vsound::Resource sound = eng.loadSound("data/Abyss.mp3", false, true);
+    vsound::Instance inst = eng.createInstance(sound);
+    eng.update(vsound::Listener());
+
+    inst.setCursor(5.0f);
+    inst.play();
+    Sleep(13000);
+
+    eng.freeSound(sound);
+    eng.dispose();
+
+    return vorb::dispose(vorb::InitParam::SOUND) == vorb::InitParam::SOUND;
+}

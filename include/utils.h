@@ -19,6 +19,7 @@
 #ifdef UTIL_SIMPLE
 #define NO_UTIL_RADIX
 #define NO_UTIL_BUFFER
+#define NO_UTIL_INTERSECTION
 #endif
 
 /************************************************************************/
@@ -30,6 +31,9 @@
 #endif
 #ifndef NO_UTIL_BUFFER
 #include "BufferUtils.inl"
+#endif
+#ifndef NO_UTIL_INTERSECTION
+#include "IntersectionUtils.inl"
 #endif
 
 // Inlined math functions

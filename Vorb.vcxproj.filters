@@ -470,6 +470,9 @@
     </None>
     <None Include="include\typesColor.inl" />
     <None Include="include\typesArray.inl" />
+    <None Include="include\IntersectionUtils.inl">
+      <Filter>Utils</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

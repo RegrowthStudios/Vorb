@@ -248,6 +248,7 @@
     <None Include="include/Radix.inl" />
     <None Include="include/ThreadPool.inl" />
     <None Include="include/VorbPreDecl.inl" />
+    <None Include="include\IntersectionUtils.inl" />
     <None Include="include\typesArray.inl" />
     <None Include="include\typesColor.inl" />
     <None Include="src\SoundImplFMOD.inl" />

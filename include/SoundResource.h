@@ -26,6 +26,10 @@ namespace vorb {
         /// Sound data used for instancing
         class Resource {
             friend class Engine;
+        public:
+            bool isNull() const {
+                return m_id == ID_GENERATOR_NULL_ID;
+            }
         private:
             ResourceID m_id = ID_GENERATOR_NULL_ID; ///< Unique ID
             impl::ResourceData* m_data = nullptr; ///< Implementation-defined resource data

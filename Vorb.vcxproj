@@ -129,7 +129,7 @@
     <ClCompile Include="src/io/Path.cpp" />
     <ClCompile Include="src/Keg.cpp" />
     <ClCompile Include="src/MainGame.cpp" />
-    <ClCompile Include="src/MemFile.cpp" />
+    <ClCompile Include="src/platform/MemFile.cpp" />
     <ClCompile Include="src/Random.cpp" />
     <ClCompile Include="src/graphics/ScreenList.cpp" />
     <ClCompile Include="src/sound/SoundEngine.cpp" />

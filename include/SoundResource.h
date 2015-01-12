@@ -27,6 +27,7 @@ namespace vorb {
         class Resource {
             friend class Engine;
         public:
+            /// @return True if this resource has no sound data
             bool isNull() const {
                 return m_id == ID_GENERATOR_NULL_ID;
             }

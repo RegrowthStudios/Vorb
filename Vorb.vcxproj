@@ -131,7 +131,7 @@
     <ClCompile Include="src/MainGame.cpp" />
     <ClCompile Include="src/MemFile.cpp" />
     <ClCompile Include="src/Random.cpp" />
-    <ClCompile Include="src/ScreenList.cpp" />
+    <ClCompile Include="src/graphics/ScreenList.cpp" />
     <ClCompile Include="src/sound/SoundEngine.cpp" />
     <ClCompile Include="src/sound/SoundInstance.cpp" />
     <ClCompile Include="src/Timing.cpp" />

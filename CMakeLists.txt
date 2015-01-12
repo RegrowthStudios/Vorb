@@ -7,9 +7,8 @@ set(name vorb)
 project(${name})
 # include available make files
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_files")
-
-include(vorb.cmake)
+include(cmake_files/vorb.cmake)
 
 add_library(${name}
-  ${LIBRARY_FILES}
+  ${VORB_LIBRARY_FILES}
   )

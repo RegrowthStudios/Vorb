@@ -87,7 +87,7 @@ typedef glm::highp_quat f64q;
 #endif
 
 // GLM floating point matrices
-#ifdef glm_core_type_mat4x4
+#ifdef glm_core_type_mat2x2
 typedef glm::mediump_mat2 f32m2;
 typedef glm::highp_mat2 f64m2;
 #endif
@@ -107,7 +107,7 @@ struct ColorRGBA8 {
 public:
     /// Create a color specifying all elements
     /// @param r: Red value
-    /// @param g: Green value 
+    /// @param g: Green value
     /// @param b: Blue value
     /// @param a: Alpha value
     ColorRGBA8(ui8 r, ui8 g, ui8 b, ui8 a = 0xffu) :
@@ -169,7 +169,7 @@ struct ColorRGB8 {
 public:
     /// Create a color specifying all elements
     /// @param r: Red value
-    /// @param g: Green value 
+    /// @param g: Green value
     /// @param b: Blue value
     ColorRGB8(ui8 r, ui8 g, ui8 b) :
         r(r), g(g), b(b) {

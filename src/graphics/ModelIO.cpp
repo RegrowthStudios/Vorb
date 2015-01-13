@@ -4,7 +4,7 @@
 namespace vorb {
     namespace io {
         namespace impl {
-            const cString traverseWhitespace(const cString s) {
+            static const cString traverseWhitespace(const cString s) {
                 while (true) {
                     switch (*s) {
                     case 0:
@@ -18,7 +18,7 @@ namespace vorb {
                     }
                 }
             }
-            const cString traverseNonWhitespace(const cString s) {
+            static const cString traverseNonWhitespace(const cString s) {
                 while (true) {
                     switch (*s) {
                     case 0:
@@ -32,7 +32,7 @@ namespace vorb {
                     }
                 }
             }
-            const cString moveToNewLine(const cString s) {
+            static const cString moveToNewLine(const cString s) {
                 bool looking = true;
                 while (looking) {
                     switch (*s) {
@@ -62,26 +62,26 @@ namespace vorb {
                     }
                 }
             }
-            f32 readF32(const cString& data) {
+            static f32 readF32(const cString& data) {
                 data = traverseWhitespace(data);
                 f32 f = (f32)atof(data);
                 data = traverseNonWhitespace(data);
                 return f;
             }
-            f32v2 readVec2(const cString& data) {
+            static f32v2 readVec2(const cString& data) {
                 f32v2 ret;
                 ret.x = readF32(data);
                 ret.y = readF32(data);
                 return ret;
             }
-            f32v3 readVec3(const cString& data) {
+            static f32v3 readVec3(const cString& data) {
                 f32v3 ret;
                 ret.x = readF32(data);
                 ret.y = readF32(data);
                 ret.z = readF32(data);
                 return ret;
             }
-            ui32 readNumeric(const cString& data) {
+            static ui32 readNumeric(const cString& data) {
                 ui32 v = 0;
                 const cString initial = data;
                 while (*data != 0) {
@@ -95,7 +95,7 @@ namespace vorb {
                 }
                 return 1;
             }
-            ui32v3 readVertexIndices(const cString& data) {
+            static ui32v3 readVertexIndices(const cString& data) {
                 ui32v3 inds(1, 1, 1);
                 data = traverseWhitespace(data);
                 inds.x = readNumeric(data);
@@ -111,8 +111,8 @@ namespace vorb {
                 data = traverseNonWhitespace(data);
                 return inds;
             }
-            ui32 indexOf(const ui32v3& vert, OBJMesh& mesh) {
-                auto& kvp = mesh.vertices.find(vert);
+            static ui32 indexOf(const ui32v3& vert, OBJMesh& mesh) {
+                const auto kvp = mesh.vertices.find(vert);
                 if (kvp == mesh.vertices.end()) {
                     ui32 index = mesh.vertices.size();
                     mesh.vertices[vert] = index;

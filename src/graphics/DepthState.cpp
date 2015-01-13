@@ -3,8 +3,8 @@
 
 DepthState::DepthState(bool read, DepthFunction depthFunction, bool write) :
 shouldRead(read),
-depthFunc(depthFunction),
-shouldWrite(write) {}
+shouldWrite(write),
+depthFunc(depthFunction) {}
 
 void DepthState::set() const {
     if (shouldRead || shouldWrite) {

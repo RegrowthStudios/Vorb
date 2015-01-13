@@ -52,12 +52,13 @@ IF(NOT GLM_FOUND)
     ExternalProject_Add(glm
         PREFIX ${VENDOR_PREFIX}
         GIT_REPOSITORY https://github.com/RegrowthStudios/glm
-        GIT_TAG 12e542250c
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        BUILD_IN_SOURCE 1
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
+        GIT_TAG 682979ddd8
+        INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/glm"
+        # UPDATE_COMMAND ""
+        # CONFIGURE_COMMAND ""
+        # BUILD_IN_SOURCE 1
+        # BUILD_COMMAND ""
+        # INSTALL_COMMAND ""
         LOG_DOWNLOAD ON
         LOG_INSTALL ON
     )

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "graphics/SpriteBatch.h"
 
-#include <tchar.h>
-
 #include "graphics/DepthState.h"
 #include "graphics/GLEnums.h"
 #include "graphics/GLProgram.h"
@@ -67,8 +65,9 @@ textureID(texID), depth(d) {}
 
 SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
     _bufUsage(isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),
-    _glyphCapacity(0),
-    _vao(0), _vbo(0) {
+    _vao(0),
+    _vbo(0),
+    _glyphCapacity(0) {
     if (doInit) init();
 }
 SpriteBatch::~SpriteBatch() {
@@ -98,13 +97,15 @@ void SpriteBatch::dispose() {
 }
 
 void SpriteBatch::begin() {
+    std::vector<SpriteGlyph*> sprite_glyph_tmp;
+    std::vector<SpriteBatchCall*> sprite_batch_call_tmp;
     if (_glyphs.size() > 0) {
         // Why Would This Ever Happen?
         for (auto glyph : _glyphs) _glyphRecycler.recycle(glyph);
-        _glyphs.swap(std::vector<SpriteGlyph*>());
+        _glyphs.swap(sprite_glyph_tmp);
     }
     for (auto batch : _batches) _batchRecycler.recycle(batch);
-    _batches.swap(std::vector<SpriteBatchCall*>());
+    _batches.swap(sprite_batch_call_tmp);
 }
 
 void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
@@ -442,7 +443,8 @@ void SpriteBatch::generateBatches() {
         verts[vi++] = glyph->vtl;
         _glyphRecycler.recycle(_glyphs[i]);
     }
-    _glyphs.swap(std::vector<SpriteGlyph*>());
+    std::vector<SpriteGlyph*> sprite_glyph_tmp;
+    _glyphs.swap(sprite_glyph_tmp);
 
     // Set The Buffer Data
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -476,7 +478,7 @@ void SpriteBatch::createProgram() {
         attributes.push_back("vUV");
         attributes.push_back("vUVRect");
         _program->setAttributes(attributes);
-        
+
         // Link the program
         _program->link();
 

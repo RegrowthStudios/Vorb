@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "GLRenderTarget.h"
+#include "graphics/GLRenderTarget.h"
 
-#include "SamplerState.h"
+#include "graphics/SamplerState.h"
 
 vg::GLRenderTarget::GLRenderTarget(ui32 w /*= 0*/, ui32 h /*= 0*/) :
 _size(w, h) {

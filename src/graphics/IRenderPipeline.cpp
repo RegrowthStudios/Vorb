@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "IRenderPipeline.h"
+#include "graphics/IRenderPipeline.h"
 
 vg::IRenderPipeline::IRenderPipeline() {
     // Empty

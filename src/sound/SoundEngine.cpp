@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "SoundEngine.h"
+#include "sound/SoundEngine.h"
 
 #include "IDGenerator.h"
-#include "SoundInstance.h"
-#include "SoundListener.h"
-#include "SoundResource.h"
+#include "sound/SoundInstance.h"
+#include "sound/SoundListener.h"
+#include "sound/SoundResource.h"
 
 // Include sound engine implementation details
-#include "SoundImpl.hpp"
+#include "sound/SoundImpl.hpp"
 
 namespace vorb {
     namespace sound {

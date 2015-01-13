@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "InputDispatcher.h"
+#include "ui/InputDispatcher.h"
 
 #include <SDL/SDL.h>
 
-#include "GameWindow.h"
+#include "ui/GameWindow.h"
 
 namespace vorb {
     namespace ui {

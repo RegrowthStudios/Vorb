@@ -43,14 +43,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)obj/$(PlatformName)/$(PlatformTarget)/$(Configuration)/</IntDir>
     <TargetName>Vorb</TargetName>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</IncludePath>
-    <SourcePath>$(VC_SourcePath);$(ProjectDir)src</SourcePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include;$(ProjectDir)src;$(ProjectDir)deps\src</IncludePath>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)src;$(ProjectDir)deps\src</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(ProjectDir)obj/$(PlatformName)/$(PlatformTarget)/$(Configuration)/</IntDir>
     <TargetName>Vorb-d</TargetName>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</IncludePath>
-    <SourcePath>$(VC_SourcePath);$(ProjectDir)src</SourcePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include;$(ProjectDir)src;$(ProjectDir)deps\src</IncludePath>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)src;$(ProjectDir)deps\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,14 +98,21 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="deps/lodepng/lodepng.cpp" />
+    <ClCompile Include="deps/src/lodepng/lodepng.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="deps/src/sha256/sha256sum.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src/colors.cpp" />
-    <ClCompile Include="src/core/ComponentTableBase.cpp" />
-    <ClCompile Include="src/core/ECS.cpp" />
-    <ClCompile Include="src/core/Mesh.cpp" />
-    <ClCompile Include="src/core/MultipleComponentSet.cpp" />
-    <ClCompile Include="src/core/RPC.cpp" />
-    <ClCompile Include="src/GameWindow.cpp" />
+    <ClCompile Include="src/ecs/ComponentTableBase.cpp" />
+    <ClCompile Include="src/ecs/ECS.cpp" />
+    <ClCompile Include="src/graphics/Mesh.cpp" />
+    <ClCompile Include="src/ecs/MultipleComponentSet.cpp" />
+    <ClCompile Include="src/RPC.cpp" />
+    <ClCompile Include="src/ui/GameWindow.cpp" />
     <ClCompile Include="src/graphics/ConnectedTextures.cpp" />
     <ClCompile Include="src/graphics/DeferredShaders.cpp" />
     <ClCompile Include="src/graphics/DepthState.cpp" />
@@ -123,129 +130,118 @@
     <ClCompile Include="src/io/Directory.cpp" />
     <ClCompile Include="src/io/File.cpp" />
     <ClCompile Include="src/io/FileOps.cpp" />
-    <ClCompile Include="src/io/ImageIO.cpp" />
+    <ClCompile Include="src/graphics/ImageIO.cpp" />
     <ClCompile Include="src/io/IOManager.cpp" />
-    <ClCompile Include="src/io/ModelIO.cpp" />
+    <ClCompile Include="src/graphics/ModelIO.cpp" />
     <ClCompile Include="src/io/Path.cpp" />
-    <ClCompile Include="src/Keg.cpp" />
-    <ClCompile Include="src/MainGame.cpp" />
-    <ClCompile Include="src/platform/MemFile.cpp" />
+    <ClCompile Include="src/io/Keg.cpp" />
+    <ClCompile Include="src/ui/MainGame.cpp" />
+    <ClCompile Include="src/io/MemFile.cpp" />
     <ClCompile Include="src/Random.cpp" />
-    <ClCompile Include="src/graphics/ScreenList.cpp" />
+    <ClCompile Include="src/ui/ScreenList.cpp" />
     <ClCompile Include="src/sound/SoundEngine.cpp" />
     <ClCompile Include="src/sound/SoundInstance.cpp" />
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/InputDispatcher.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
-    <ClCompile Include="src/ui/OpenglSurfaceFactory.cpp" />
-    <ClCompile Include="src/ui/SpriteBatch.cpp" />
-    <ClCompile Include="src/ui/SpriteFont.cpp" />
+    <ClCompile Include="src/graphics/SpriteBatch.cpp" />
+    <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
-    <ClCompile Include="src/VoxCommon.cpp" />
+    <ClCompile Include="src/voxel/VoxCommon.cpp" />
     <ClCompile Include="src/stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src/math/sha256sum.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include/AwesomiumInterface.h" />
+    <ClInclude Include="deps/src/sha256/sha256sum.h" />
     <ClInclude Include="include/colors.h" />
     <ClInclude Include="include/compat.h" />
-    <ClInclude Include="include/ComponentTable.hpp" />
-    <ClInclude Include="include/ComponentTableBase.h" />
-    <ClInclude Include="include/ConnectedTextures.h" />
+    <ClInclude Include="include/ecs/ComponentTable.hpp" />
+    <ClInclude Include="include/ecs/ComponentTableBase.h" />
+    <ClInclude Include="include/graphics/ConnectedTextures.h" />
     <ClInclude Include="include/decorators.h" />
-    <ClInclude Include="include/DeferredShaders.h" />
-    <ClInclude Include="include/DepthState.h" />
-    <ClInclude Include="include/Directory.h" />
-    <ClInclude Include="include/ECS.h" />
-    <ClInclude Include="include/ECSSimpleUpdater.h" />
-    <ClInclude Include="include/Entity.h" />
+    <ClInclude Include="include/graphics/DeferredShaders.h" />
+    <ClInclude Include="include/graphics/DepthState.h" />
+    <ClInclude Include="include/io/Directory.h" />
+    <ClInclude Include="include/ecs/ECS.h" />
+    <ClInclude Include="include/ecs/ECSSimpleUpdater.h" />
+    <ClInclude Include="include/ecs/Entity.h" />
     <ClInclude Include="include/Events.hpp" />
-    <ClInclude Include="include/File.h" />
-    <ClInclude Include="include/FileOps.h" />
-    <ClInclude Include="include/FileStream.h" />
+    <ClInclude Include="include/io/File.h" />
+    <ClInclude Include="include/io/FileOps.h" />
+    <ClInclude Include="include/io/FileStream.h" />
     <ClInclude Include="include/FixedSizeArrayRecycler.hpp" />
-    <ClInclude Include="include/FullQuadVBO.h" />
-    <ClInclude Include="include/GameWindow.h" />
-    <ClInclude Include="include/GBuffer.h" />
-    <ClInclude Include="include/GLEnums.h" />
-    <ClInclude Include="include/GLProgram.h" />
-    <ClInclude Include="include/GLRenderTarget.h" />
-    <ClInclude Include="include/InputDispatcher.h" />
+    <ClInclude Include="include/graphics/FullQuadVBO.h" />
+    <ClInclude Include="include/ui/GameWindow.h" />
+    <ClInclude Include="include/graphics/GBuffer.h" />
+    <ClInclude Include="include/graphics/GLEnums.h" />
+    <ClInclude Include="include/graphics/GLProgram.h" />
+    <ClInclude Include="include/graphics/GLRenderTarget.h" />
+    <ClInclude Include="include/ui/InputDispatcher.h" />
     <ClInclude Include="include/IO.h" />
-    <ClInclude Include="include/KeyboardEventDispatcher.h" />
-    <ClInclude Include="include/LuaDevConsole.h" />
-    <ClInclude Include="include/MemFile.h" />
-    <ClInclude Include="include/MeshData.h" />
-    <ClInclude Include="include/ModelIO.h" />
-    <ClInclude Include="include/MouseInputDispatcher.h" />
-    <ClInclude Include="include/Path.h" />
+    <ClInclude Include="include/ui/KeyboardEventDispatcher.h" />
+    <ClInclude Include="include/ui/LuaDevConsole.h" />
+    <ClInclude Include="include/io/MemFile.h" />
+    <ClInclude Include="include/graphics/MeshData.h" />
+    <ClInclude Include="include/graphics/ModelIO.h" />
+    <ClInclude Include="include/ui/MouseInputDispatcher.h" />
+    <ClInclude Include="include/io/Path.h" />
     <ClInclude Include="include/RPC.h" />
-    <ClInclude Include="include/GLStates.h" />
-    <ClInclude Include="include/GpuMemory.h" />
-    <ClInclude Include="include/GraphicsDevice.h" />
-    <ClInclude Include="include/gtypes.h" />
-    <ClInclude Include="include/IAwesomiumInterface.h" />
+    <ClInclude Include="include/graphics/GLStates.h" />
+    <ClInclude Include="include/graphics/GpuMemory.h" />
+    <ClInclude Include="include/graphics/GraphicsDevice.h" />
+    <ClInclude Include="include/graphics/gtypes.h" />
     <ClInclude Include="include/IDGenerator.h" />
-    <ClInclude Include="include/IGameScreen.h" />
-    <ClInclude Include="include/ImageIO.h" />
-    <ClInclude Include="include/ImageLoader.h" />
-    <ClInclude Include="include/ImageSaver.h" />
-    <ClInclude Include="include/IOManager.h" />
-    <ClInclude Include="include/IRenderPipeline.h" />
-    <ClInclude Include="include/IRenderStage.h" />
+    <ClInclude Include="include/ui/IGameScreen.h" />
+    <ClInclude Include="include/graphics/ImageIO.h" />
+    <ClInclude Include="include/io/IOManager.h" />
+    <ClInclude Include="include/graphics/IRenderPipeline.h" />
+    <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
-    <ClInclude Include="include/Keg.h" />
-    <ClInclude Include="include/MainGame.h" />
-    <ClInclude Include="include/Mesh.h" />
-    <ClInclude Include="include/MultiComponentTracker.hpp" />
-    <ClInclude Include="include/MultipleComponentSet.h" />
-    <ClInclude Include="include/OpenglSurfaceFactory.h" />
+    <ClInclude Include="include/io/Keg.h" />
+    <ClInclude Include="include/ui/MainGame.h" />
+    <ClInclude Include="include/graphics/Mesh.h" />
+    <ClInclude Include="include/ecs/MultiComponentTracker.hpp" />
+    <ClInclude Include="include/ecs/MultipleComponentSet.h" />
     <ClInclude Include="include/PtrRecycler.hpp" />
     <ClInclude Include="include/Random.h" />
-    <ClInclude Include="include/RasterizerState.h" />
-    <ClInclude Include="include/RTSwapChain.hpp" />
-    <ClInclude Include="include/SamplerState.h" />
-    <ClInclude Include="include/ScreenList.h" />
-    <ClInclude Include="include/SpriteBatch.h" />
-    <ClInclude Include="include/SpriteFont.h" />
+    <ClInclude Include="include/graphics/RasterizerState.h" />
+    <ClInclude Include="include/graphics/RTSwapChain.hpp" />
+    <ClInclude Include="include/graphics/SamplerState.h" />
+    <ClInclude Include="include/ui/ScreenList.h" />
+    <ClInclude Include="include/graphics/SpriteBatch.h" />
+    <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />
-    <ClInclude Include="include/TextInputListener.hpp" />
-    <ClInclude Include="include/Texture.h" />
-    <ClInclude Include="include/TextureCache.h" />
+    <ClInclude Include="include/ui/TextInputListener.hpp" />
+    <ClInclude Include="include/graphics/Texture.h" />
+    <ClInclude Include="include/graphics/TextureCache.h" />
     <ClInclude Include="include/ThreadPool.h" />
     <ClInclude Include="include/ThreadSync.h" />
     <ClInclude Include="include/Timing.h" />
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
-    <ClInclude Include="include/VoxCommon.h" />
-    <ClInclude Include="include/VoxelMeshAlg.h" />
-    <ClInclude Include="include/VoxelMesherCulled.h" />
-    <ClInclude Include="include/WindowEventDispatcher.h" />
+    <ClInclude Include="include/voxel/VoxCommon.h" />
+    <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
+    <ClInclude Include="include/voxel/VoxelMesherCulled.h" />
+    <ClInclude Include="include/ui/WindowEventDispatcher.h" />
     <ClInclude Include="include/RingBuffer.hpp" />
-    <ClInclude Include="include/SoundEngine.h" />
-    <ClInclude Include="include/ISoundImpl.h" />
-    <ClInclude Include="include/SoundInstance.h" />
-    <ClInclude Include="include/SoundListener.h" />
-    <ClInclude Include="include/SoundResource.h" />
-    <ClInclude Include="deps/lodepng/lodepng.h" />
-    <ClInclude Include="src/math/sha256sum.h" />
+    <ClInclude Include="include/sound/SoundEngine.h" />
+    <ClInclude Include="include/sound/ISoundImpl.h" />
+    <ClInclude Include="include/sound/SoundInstance.h" />
+    <ClInclude Include="include/sound/SoundListener.h" />
+    <ClInclude Include="include/sound/SoundResource.h" />
+    <ClInclude Include="deps/src/lodepng/lodepng.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include/AwesomiumInterface.inl" />
     <None Include="include/BufferUtils.inl" />
     <None Include="include/FastConversion.inl" />
-    <None Include="include/Keys.inl" />
+    <None Include="include/ui/Keys.inl" />
     <None Include="include/Radix.inl" />
     <None Include="include/ThreadPool.inl" />
     <None Include="include/VorbPreDecl.inl" />

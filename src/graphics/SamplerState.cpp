@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SamplerState.h"
+#include "graphics/SamplerState.h"
 
 SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter,
     TextureWrapMode texWrapS, TextureWrapMode texWrapT, TextureWrapMode texWrapR) :

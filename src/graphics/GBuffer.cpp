@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "GBuffer.h"
+#include "graphics/GBuffer.h"
 
-#include "SamplerState.h"
+#include "graphics/SamplerState.h"
 
 vg::GBuffer::GBuffer(ui32 w /*= 0*/, ui32 h /*= 0*/) :
 m_size(w, h) {

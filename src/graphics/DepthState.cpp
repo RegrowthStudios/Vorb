@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DepthState.h"
+#include "graphics/DepthState.h"
 
 DepthState::DepthState(bool read, DepthFunction depthFunction, bool write) :
 shouldRead(read),

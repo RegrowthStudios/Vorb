@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Path.h"
+#include "io/Path.h"
 
 #include <boost/filesystem.hpp>
 
-#include "Directory.h"
-#include "File.h"
+#include "io/Directory.h"
+#include "io/File.h"
 
 namespace fs = boost::filesystem;
 

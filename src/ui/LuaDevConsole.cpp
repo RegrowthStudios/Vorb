@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LuaDevConsole.h"
+#include "ui/LuaDevConsole.h"
 
 #include <OOLua/oolua.h>
 extern "C" {

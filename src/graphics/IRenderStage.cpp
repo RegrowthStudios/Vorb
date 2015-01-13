@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "IRenderStage.h"
+#include "graphics/IRenderStage.h"
 
 
 vg::IRenderStage::IRenderStage(const Camera* camera /* = nullptr */) :

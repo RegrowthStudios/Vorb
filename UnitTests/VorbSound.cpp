@@ -4,10 +4,10 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Sound_
 
-#include <include/SoundEngine.h>
-#include <include/SoundInstance.h>
-#include <include/SoundListener.h>
-#include <include/SoundResource.h>
+#include <include/sound/SoundEngine.h>
+#include <include/sound/SoundInstance.h>
+#include <include/sound/SoundListener.h>
+#include <include/sound/SoundResource.h>
 #include <include/Vorb.h>
 
 TEST(Doppler) {

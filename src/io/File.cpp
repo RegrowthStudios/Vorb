@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "File.h"
+#include "io/File.h"
 
 #include <boost/filesystem/operations.hpp>
-#include "sha256sum.h"
+#include <sha256/sha256sum.h>
 
-#include "FileOps.h"
-#include "FileStream.h"
+#include "io/FileOps.h"
+#include "io/FileStream.h"
 
 namespace fs = boost::filesystem;
 

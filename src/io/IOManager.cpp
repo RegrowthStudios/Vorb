@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "IOManager.h"
+#include "io/IOManager.h"
 
+#include "io/FileOps.h"
 #include "utils.h"
 
 vio::IOManager::IOManager() :

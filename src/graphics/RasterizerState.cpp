@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "RasterizerState.h"
+#include "graphics/RasterizerState.h"
 
 RasterizerState::RasterizerState(bool use, CullFaceMode cullFaceMode, FrontFaceDirection frontFaceDirection) :
 useCulling(use),

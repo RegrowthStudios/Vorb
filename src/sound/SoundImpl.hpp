@@ -16,7 +16,7 @@
 #define SoundImpl_hpp__
 
 #if defined(VORB_IMPL_SOUND_FMOD)
-#include "SoundImplFMOD.inl"
+#include "sound/SoundImplFMOD.inl"
 #else
 #error Missing sound implementation
 #endif // VORB_IMPL_SOUND

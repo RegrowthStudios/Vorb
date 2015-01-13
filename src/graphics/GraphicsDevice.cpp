@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GraphicsDevice.h"
+#include "graphics/GraphicsDevice.h"
 
 #include <SDL/SDL.h>
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "TextureCache.h"
+#include "graphics/TextureCache.h"
 
-#include "GpuMemory.h"
+#include "graphics/GpuMemory.h"
 
 vg::TextureCache::TextureCache() {
     // Empty
@@ -41,7 +41,8 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     std::vector <ui8> pixelStore;
 
     // Load the pixel data
-    if (!ImageLoader::loadPng(filePath.c_str(), pixelStore, texture.width, texture.height, true)) {
+    vio::ImageIO loader;
+    if (!loader.loadPng(filePath, pixelStore, texture.width, texture.height)) {
         return Texture();
     }
 

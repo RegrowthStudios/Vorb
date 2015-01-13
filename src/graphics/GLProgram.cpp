@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "GLProgram.h"
+#include "graphics/GLProgram.h"
 
-#include "IOManager.h"
+#include "io/IOManager.h"
 
 // Used for querying attribute and uniforms variables within a program
 #define PROGRAM_VARIABLE_IGNORED_PREFIX "gl_"

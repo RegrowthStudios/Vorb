@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "GpuMemory.h"
-
-#include "ImageLoader.h"
-#include "utils.h"
+#include "graphics/GpuMemory.h"
 
 #include <GL/glew.h>
+
+#include "graphics/ImageIO.h"
+#include "graphics/SamplerState.h"
+#include "utils.h"
 
 #define RGBA_BYTES 4
 

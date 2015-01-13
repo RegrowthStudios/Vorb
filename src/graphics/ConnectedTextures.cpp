@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ConnectedTextures.h"
+#include "graphics/ConnectedTextures.h"
 
 
 const size_t& vg::ConnectedTextureHelper::getOffsetFull(const size_t& neighbors) {

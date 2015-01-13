@@ -5,8 +5,8 @@
 #define UNIT_TEST_BATCH Vorb_IO_
 
 #include <include/IO.h>
-#include <include/IOManager.h>
 #include <include/ModelIO.h>
+#include <include/io/IOManager.h>
 #include <include/Vorb.h>
 #include <include/Timing.h>
 
@@ -126,8 +126,6 @@ TEST(ModelIO) {
         printf("Inds: %d\n", mesh.triangles.size() * 3);
         printf("Load Time (MS): %f\n", ms);
     });
-
-    return true;
 
     return true;
 }

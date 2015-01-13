@@ -15,10 +15,10 @@
 #ifndef IO_h__
 #define IO_h__
 
-#include "Directory.h"
-#include "File.h"
-#include "FileOps.h"
-#include "FileStream.h"
-#include "Path.h"
+#include "io/Directory.h"
+#include "io/File.h"
+#include "io/FileOps.h"
+#include "io/FileStream.h"
+#include "io/Path.h"
 
 #endif // IO_h__

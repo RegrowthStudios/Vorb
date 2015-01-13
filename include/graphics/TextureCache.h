@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "gtypes.h"
 #include "GLEnums.h"
+#include "../VorbPreDecl.inl"
 
 DECL_VIO(class, IOManager)
 

@@ -87,7 +87,7 @@ typedef glm::highp_quat f64q;
 #endif
 
 // GLM floating point matrices
-#ifdef glm_core_type_mat4x4
+#ifdef glm_core_type_mat2x2
 typedef glm::mediump_mat2 f32m2;
 typedef glm::highp_mat2 f64m2;
 #endif

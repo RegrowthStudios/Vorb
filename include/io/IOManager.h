@@ -27,6 +27,7 @@ namespace vorb {
         public:
             // Create An IO Manager With Default Program Directories
             IOManager();
+            IOManager(const Path& path);
 
             /// Set up IO environment
             void setSearchDirectory(const Path& s);

@@ -186,5 +186,27 @@ struct std::hash<i32v2> {
         return ((h(k.x) ^ (h(k.y) << 1)) >> 1);
     }
 };
+template <>
+struct std::hash<ui32v3> {
+    size_t operator()(const ui32v3& k) const {
+        std::hash<ui32> h;
+
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+        return ((h(k.x) ^ (h(k.y) << 1)) >> 1) ^ (h(k.z) << 1);
+    }
+};
+template <>
+struct std::hash<ui32v2> {
+    size_t operator()(const ui32v2& k) const {
+        std::hash<ui32> h;
+
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+        return ((h(k.x) ^ (h(k.y) << 1)) >> 1);
+    }
+};
 
 #endif // utils_h__

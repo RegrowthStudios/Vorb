@@ -47,8 +47,10 @@ namespace vorb {
 
             /// Load a sound resource into this engine
             /// @param path: Path of sound
+            /// @param is3D: True if resource is used as a 3D sound
+            /// @param isStream: True if resource should be streamed from disk
             /// @return Loaded sound resource (Null if could not load)
-            Resource loadSound(const vio::Path& path);
+            Resource loadSound(const vio::Path& path, bool is3D = true, bool isStream = false);
             /// Destroy a sound resource loaded from this engine
             /// @param sound: Sound resource
             void freeSound(Resource& sound);

@@ -96,7 +96,7 @@ bool vsound::Engine::dispose() {
     return true;
 }
 
-vsound::Resource vsound::Engine::loadSound(const vio::Path& path) {
+vsound::Resource vsound::Engine::loadSound(const vio::Path& path, bool is3D /*= true*/, bool isStream /*= false*/) {
     Resource sound;
     ResourceID id;
 
@@ -111,6 +111,9 @@ vsound::Resource vsound::Engine::loadSound(const vio::Path& path) {
     m_resources[id] = sound;
 
     // Create sound data
+    FMOD_MODE mode = FMOD_LOOP_NORMAL;
+    mode |= is3D ? FMOD_3D : FMOD_2D;
+    mode |= isStream ? FMOD_CREATESTREAM : FMOD_CREATESAMPLE;
     m_data->system->createSound(path.getCString(), FMOD_3D | FMOD_LOOP_NORMAL, nullptr, &sound.m_data->sound);
     sound.m_data->sound->setLoopCount(1);
     return sound;

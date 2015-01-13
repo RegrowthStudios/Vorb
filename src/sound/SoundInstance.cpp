@@ -20,7 +20,7 @@ void vsound::Instance::pause() {
     m_data->channel->setPaused(true);
 }
 void vsound::Instance::setLooped(const bool& loop) {
-    m_data->channel->setLoopCount(loop ? -1 : 1);
+    m_data->channel->setLoopCount(loop ? -1 : 0);
 }
 void vsound::Instance::setCursor(const f32& seconds) {
     ui32 frames;

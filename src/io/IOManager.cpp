@@ -6,11 +6,12 @@
 
 vio::IOManager::IOManager() :
     m_pathSearch("") {
-    Path path;
-    Path absPath;
-
     // Search Directory Defaults To CWD
     setSearchDirectory(m_pathCWD);
+}
+vio::IOManager::IOManager(const Path& path) :
+m_pathSearch(path) {
+    // Empty
 }
 
 void vio::IOManager::setSearchDirectory(const Path& s) {

@@ -82,8 +82,8 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
         vertexLookup[glm::normalize(ICOSOHEDRON_VERTICES[i])] = i;
     }
 
-    for (int i = 0; i < lod; i++) {
-        for (int j = 0; j < indices.size(); j += 3) {
+    for (ui32 i = 0; i < (ui32)lod; i++) {
+        for (ui32 j = 0; j < indices.size(); j += 3) {
             /*
             j
             mp12   mp13

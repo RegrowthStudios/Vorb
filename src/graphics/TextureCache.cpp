@@ -7,6 +7,10 @@
 vg::TextureCache::TextureCache() {
     // Empty
 }
+vg::TextureCache::TextureCache(vio::IOManager* ioManager) :
+m_ioManager(ioManager) {
+    // Empty
+}
 
 
 vg::TextureCache::~TextureCache() {
@@ -44,7 +48,8 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     std::vector <ui8> pixelStore;
 
     // Load the pixel data
-    vpath texPath; m_ioManager->resolvePath(filePath, texPath);
+    vpath texPath = filePath; 
+    if(m_ioManager) m_ioManager->resolvePath(filePath, texPath);
     if (!vio::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
         return Texture();
     }
@@ -133,4 +138,10 @@ void vg::TextureCache::destroy() {
     for (auto tex : _textureStringMap) {
         GpuMemory::freeTexture(tex.second.id);
     }
+}
+
+void vg::TextureCache::insertTexture(const nString& filePath, const Texture& texture) {
+    // We store an iterator to the map node in the _textureIdMap
+    // so that we can quickly remove textures from the cache
+    _textureIdMap[texture.id] = _textureStringMap.insert(std::make_pair(filePath, texture)).first;
 }

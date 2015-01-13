@@ -120,7 +120,6 @@
     <ClCompile Include="src/sound/SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="src\MeshGenIcosphere.cpp" />
     <ClCompile Include="deps/src/lodepng/lodepng.cpp">
       <Filter>Deps</Filter>
     </ClCompile>
@@ -133,6 +132,7 @@
     <ClCompile Include="src/graphics/ModelIO.cpp">
       <Filter>Graphics\IO</Filter>
     </ClCompile>
+    <ClCompile Include="src/MeshGenIcosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -348,7 +348,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="include\MeshGenerators.h" />
-    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
     </ClInclude>
@@ -367,6 +366,7 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureRecycler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

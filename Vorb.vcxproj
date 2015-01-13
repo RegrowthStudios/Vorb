@@ -235,6 +235,7 @@
     <ClInclude Include="include/sound/SoundListener.h" />
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="deps/src/lodepng/lodepng.h" />
+    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>

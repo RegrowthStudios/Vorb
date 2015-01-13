@@ -17,10 +17,8 @@
 #ifndef TextureRecycler_hpp__
 #define TextureRecycler_hpp__
 
-#include <set>
-
-#include "gtypes.h"
-#include "GpuMemory.h"
+#include "graphics/gtypes.h"
+#include "graphics/GpuMemory.h"
 
 namespace vorb {
     namespace core {

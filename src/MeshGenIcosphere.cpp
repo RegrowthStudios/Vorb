@@ -1,9 +1,8 @@
 // Written by Frank McCoy
 #include "stdafx.h"
-
 #include "MeshGenerators.h"
 
-#include "GpuMemory.h"
+#include "graphics/GpuMemory.h"
 
 const static float GOLDEN_RATIO = 1.61803398875f;
 

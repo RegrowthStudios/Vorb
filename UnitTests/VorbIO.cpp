@@ -5,7 +5,7 @@
 #define UNIT_TEST_BATCH Vorb_IO_
 
 #include <include/IO.h>
-#include <include/ModelIO.h>
+#include <include/graphics/ModelIO.h>
 #include <include/io/IOManager.h>
 #include <include/Vorb.h>
 #include <include/Timing.h>

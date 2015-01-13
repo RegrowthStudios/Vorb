@@ -15,7 +15,7 @@
 #ifndef SpriteFont_h__
 #define SpriteFont_h__
 
-#include "graphics/gtypes.h"
+#include "gtypes.h"
 
 class SpriteBatch;
 

@@ -120,12 +120,12 @@ void vorb::ring_buffer<T>::pop() {
 template<typename T>
 template<typename... Args>
 bool vorb::ring_buffer<T>::push(Args&&... values) {
-    size_t numElements = vorb::impl::numArgs(values...);
+    size_t numElements = impl::numArgs(values...);
     if (m_elements + numElements > m_data.capacity()) return false;
     m_elements += numElements;
 
     // Add data at head
-    vorb::impl::moveAll(m_data, m_head, values...);
+    impl::moveAll(m_data, m_head, values...);
 
     // Move head
     m_head += numElements;

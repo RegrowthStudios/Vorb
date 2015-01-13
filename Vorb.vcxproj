@@ -251,6 +251,7 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
+    <None Include="include/IntersectionUtils.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps/src/BulletCollision.vcxproj">

@@ -460,6 +460,8 @@
     <None Include="include/typesColor.inl" />
     <None Include="include/RingBuffer.inl">
       <Filter>Core\ADT</Filter>
+    <None Include="include/IntersectionUtils.inl">
+      <Filter>Utils</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

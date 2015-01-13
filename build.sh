@@ -13,5 +13,5 @@ if [ "$1" == "clean" ] ; then
     make clean
     shift
 fi
-make doc
-make $@
+# make doc
+make VERBOSE=1 $@

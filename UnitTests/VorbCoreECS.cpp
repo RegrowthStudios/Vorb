@@ -4,8 +4,8 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Core_ECS_
 
-#include <include/ECS.h>
-#include <include/ComponentTable.hpp>
+#include <include/ecs/ECS.h>
+#include <include/ecs/ComponentTable.hpp>
 
 TEST(Creation) {
     vcore::ECS ecs;

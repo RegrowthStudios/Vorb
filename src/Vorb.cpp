@@ -3,9 +3,9 @@
 
 #include <boost/filesystem.hpp>
 
-#include "ConnectedTextures.h"
-#include "IOManager.h"
-#include "SoundEngine.h"
+#include "graphics/ConnectedTextures.h"
+#include "io/IOManager.h"
+#include "sound/SoundEngine.h"
 #include "utils.h"
 
 namespace vorb {

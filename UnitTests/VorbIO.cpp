@@ -5,7 +5,7 @@
 #define UNIT_TEST_BATCH Vorb_IO_
 
 #include <include/IO.h>
-#include <include/IOManager.h>
+#include <include/io/IOManager.h>
 #include <include/Vorb.h>
 
 TEST(Path) {

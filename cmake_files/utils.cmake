@@ -22,9 +22,10 @@ macro(initialize_for_platform)
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       set(warnings "-Wall"
                    "-Wextra"
-                   "-Wformat=2"
-                   "-Wno-format-nonliteral"
+                   # "-Wformat=2"
+                   # "-Wno-format-nonliteral"
                    # "-Wshadow"
+                   # "-Wshorten-64-to-32"
                    # "-Wpointer-arith"
                    # "-Wcast-qual"
                    # "-Wmissing-prototypes"
@@ -33,6 +34,10 @@ macro(initialize_for_platform)
                    )
       ADD_DEFINITIONS(
           -std=c++11
+          -fPIC
+          -fexpensive-optimizations
+          -funroll-loops
+          -O2
           # -std=c++0x
           # Other flags
           ${warnings}

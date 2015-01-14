@@ -82,7 +82,7 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
 
     // Version information
     char bufVersion[32];
-    sprintf(bufVersion, "#version %d%d%d\n\0", data.version.major, data.version.minor, data.version.revision);
+    sprintf(bufVersion, "#version %d%d%d\n", data.version.major, data.version.minor, data.version.revision);
     sources[0] = bufVersion;
 
     // Append rest of shader code
@@ -116,6 +116,8 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
             break;
         case ShaderType::FRAGMENT_SHADER:
             _idFS = idS;
+            break;
+        default:
             break;
     }
     return true;

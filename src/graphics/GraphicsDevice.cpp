@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "graphics/GraphicsDevice.h"
 
+#if defined(WIN32) || defined(WIN64)
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 
 GraphicsDevice::GraphicsDevice(SDL_Window* w) :
 _props({}) {
@@ -32,7 +36,7 @@ void GraphicsDevice::refreshInformation() {
     // Get MSAA Information
     glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &_props.maxColorSamples);
     glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &_props.maxDepthSamples);
-    
+
     // Get Texture Unit Information
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &_props.maxTextureUnits);
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_props.maxTextureSize);
@@ -71,7 +75,7 @@ void GraphicsDevice::initResolutions(SDL_Window* w) {
         if (r1.x == r2.x) return r1.y > r2.y;
         else return r1.x > r2.x;
     });
-    auto& iter = std::unique(_props.resolutionOptions.begin(), _props.resolutionOptions.end());
+    auto iter = std::unique(_props.resolutionOptions.begin(), _props.resolutionOptions.end());
     _props.resolutionOptions.resize(iter - _props.resolutionOptions.begin());
 }
 

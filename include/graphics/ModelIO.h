@@ -16,7 +16,7 @@
 #define ModelIO_h__
 
 #include "MeshData.h"
-//#include "utils.h"
+#include "../utils.h"
 
 namespace std {
     template<> struct hash<ui32v3>;
@@ -31,7 +31,7 @@ namespace vorb {
             std::vector<f32v2> uvs;
             std::vector<f32v3> normals;
 
-            std::unordered_map<ui32v3, ui32, std::_Bitwise_hash<ui32v3>> vertices;
+            std::unordered_map<ui32v3, ui32, std::hash<ui32v3>> vertices;
             std::vector<ui32v3> triangles;
         };
 

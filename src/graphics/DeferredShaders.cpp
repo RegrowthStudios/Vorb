@@ -12,8 +12,8 @@ void vg::DeferredShaders::dispose() {
     composition.dispose();
 
     for (auto& it : geometry) it.second.dispose();
-    geometry.swap(std::unordered_map<nString, GLProgram>());
+    std::unordered_map<nString, GLProgram>().swap(geometry);
 
     for (auto& it : light) it.second.dispose();
-    light.swap(std::unordered_map<nString, GLProgram>());
+    std::unordered_map<nString, GLProgram>().swap(light);
 }

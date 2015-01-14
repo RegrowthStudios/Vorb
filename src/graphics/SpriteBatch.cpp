@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "graphics/SpriteBatch.h"
 
-#include <tchar.h>
-
 #include "graphics/DepthState.h"
 #include "graphics/GLEnums.h"
 #include "graphics/GLProgram.h"

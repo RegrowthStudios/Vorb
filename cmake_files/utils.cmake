@@ -13,13 +13,27 @@ macro(verify_folder_structure)
 endmacro(verify_folder_structure)
 
 macro(initialize_for_platform)
+  IF(UNIX)
+    set(CC /usr/local/Cellar/gcc/4.9.2/bin/gcc-4.9)
+    set(CXX /usr/local/Cellar/gcc/4.9.2/bin/c++-4.9)
+  ENDIF(UNIX)
   # setup compilers
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(warnings "-Wall -Wextra -Werror")
+      set(warnings "-Wall"
+                   "-Wextra"
+                   "-Wformat=2"
+                   "-Wno-format-nonliteral"
+                   # "-Wshadow"
+                   # "-Wpointer-arith"
+                   # "-Wcast-qual"
+                   # "-Wmissing-prototypes"
+                   # "-Wno-missing-braces"
+                   "-Wno-unknown-pragmas"
+                   )
       ADD_DEFINITIONS(
           -std=c++11
-          -std=c++0x
+          # -std=c++0x
           # Other flags
           ${warnings}
       )

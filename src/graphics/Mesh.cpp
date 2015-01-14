@@ -51,11 +51,11 @@ vcore::Mesh::Mesh() :
     _vbo(0),
     _vao(0),
     _ibo(0),
-    _isUploaded(0),
     _isIndexed(0),
+    _isUploaded(0),
+    _primitiveType(vg::PrimitiveType::TRIANGLES),
     _numVertices(0),
-    _numIndices(0),
-    _primitiveType(vg::PrimitiveType::TRIANGLES)
+    _numIndices(0)
 {
 };
 

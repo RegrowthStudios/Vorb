@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+///
 ///
 
 #pragma once
@@ -17,7 +17,7 @@
 
 namespace vorb {
     namespace core {
-		namespace graphics {
+        namespace graphics {
             enum class VertexAttributeUsage {
                 Position,
                 TextureCoordinate,
@@ -57,7 +57,7 @@ namespace vorb {
             public:
                 template<typename V, typename I>
                 MeshData<V, I> as() const {
-                    MeshData<V, T> m;
+                    MeshData<V, I> m;
                     m.vertices = vertices;
                     m.vertexCount = vertexCount;
                     m.indices = indices;
@@ -70,7 +70,7 @@ namespace vorb {
                 void* indices;
                 size_t indexCount;
             };
-		}
+        }
     }
 }
 namespace vg = vorb::core::graphics;

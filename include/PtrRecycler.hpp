@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// 
+///
 ///
 
 #pragma once
@@ -32,7 +32,7 @@ public:
 
             // Update lists
             m_recycled.pop_back();
-            *(m_recycledChecks[(ui32)data]) = 0;
+            *(m_recycledChecks[*(ui32 *)data]) = 0;
         } else {
             // Create a new data segment
             PtrBind* bind = new PtrBind();
@@ -41,12 +41,12 @@ public:
 
             // Add The Data Checks
             m_allocated.push_back(bind);
-            m_recycledChecks[(ui32)data] = &bind->recycleCheck;
+            m_recycledChecks[*(ui32 *)data] = &bind->recycleCheck;
         }
         return data;
     }
     void recycle(T* data) {
-        i32* recycleCheck = m_recycledChecks[(ui32)data];
+        i32* recycleCheck = m_recycledChecks[*(ui32 *)data];
 
         // Make sure it hasn't already been recycled
         if (*recycleCheck == 0) {
@@ -61,11 +61,11 @@ public:
             for (i32 i = m_allocated.size() - 1; i >= 0; i--) {
                 delete m_allocated[i];
             }
-            
+
             // Empty out the lists
-            m_allocated.swap(std::vector<PtrBind*>());
-            m_recycledChecks.swap(std::map<ui32, i32*>());
-            m_recycled.swap(std::vector<T*>());
+            std::vector<PtrBind*>().swap(m_allocated);
+            std::map<ui32, i32*>().swap(m_recycledChecks);
+            std::vector<T*>().swap(m_recycled);
         }
     }
 private:

@@ -75,7 +75,7 @@ void GraphicsDevice::initResolutions(SDL_Window* w) {
         if (r1.x == r2.x) return r1.y > r2.y;
         else return r1.x > r2.x;
     });
-    const auto iter = std::unique(_props.resolutionOptions.begin(), _props.resolutionOptions.end());
+    auto iter = std::unique(_props.resolutionOptions.begin(), _props.resolutionOptions.end());
     _props.resolutionOptions.resize(iter - _props.resolutionOptions.begin());
 }
 

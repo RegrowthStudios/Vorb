@@ -3,7 +3,7 @@
 
 #include "ecs/ComponentTableBase.h"
 
-vcore::ECS::ECS() : 
+vcore::ECS::ECS() :
     onEntityAdded(this),
     onEntityRemoved(this),
     onComponentAdded(this) {
@@ -24,7 +24,7 @@ vcore::EntityID vcore::ECS::addEntity() {
 bool vcore::ECS::deleteEntity(EntityID id) {
     // Check for a correct ID
     if (id >= _entities.size()) return false;
-    
+
     // Recycle the ID
     _entities.erase(id);
     _genEntity.recycle(id);
@@ -36,7 +36,7 @@ bool vcore::ECS::deleteEntity(EntityID id) {
 }
 
 void vcore::ECS::addComponentTable(nString name, vcore::ComponentTableBase* table) {
-    std::shared_ptr<IDelegate<EntityID>> f(onEntityRemoved.addFunctor([=] (Sender sender, EntityID id) {
+    std::shared_ptr<IDelegate<EntityID>> f(onEntityRemoved.addFunctor([=] (Sender, EntityID id) {
         table->remove(id);
     }));
     ComponentSubscriber binding(table, f);

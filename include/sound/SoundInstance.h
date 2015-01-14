@@ -18,6 +18,7 @@
 #define SoundInstance_h__
 
 #include "ISoundImpl.h"
+#include "SoundEngine.h"
 
 namespace vorb {
     namespace sound {

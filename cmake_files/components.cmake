@@ -79,6 +79,7 @@ macro(setup_platform)
 endmacro(setup_platform)
 
 macro(setup_sound)
+    add_definitions(-DVORB_IMPL_SOUND_FMOD)
     file(GLOB sound_source ${CMAKE_CURRENT_LIST_DIR}/src/sound/*.cpp)
     file(GLOB sound_inline ${CMAKE_CURRENT_LIST_DIR}/src/sound/*.inl)
     file(GLOB sound_header ${CMAKE_CURRENT_LIST_DIR}/src/sound/*.hpp)

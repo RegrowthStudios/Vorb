@@ -121,9 +121,7 @@ void vorb::ring_buffer<T>::pop() {
 template<typename T>
 template<typename... Args>
 bool vorb::ring_buffer<T>::push(Args&&... values) {
-    // TODO:  Fix numArgs
     size_t numElements = impl::numArgs(values...);
-    // size_t numElements = 1;
     if (m_elements + numElements > m_data.capacity()) return false;
     m_elements += numElements;
 

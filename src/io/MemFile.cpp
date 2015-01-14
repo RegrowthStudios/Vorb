@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "io/MemFile.h"
+#include <stdio.h>
 
 MemFile::MemFile() {
     m_file = tmpfile();
-    m_fileDescriptor = _fileno(m_file);
 
 #ifdef OS_WINDOWS
+    m_fileDescriptor = _fileno(m_file);
     HANDLE fm;
     HANDLE h = (HANDLE)_get_osfhandle(m_fileDescriptor);
 
@@ -14,7 +15,12 @@ MemFile::MemFile() {
         m_buffer = (cString)MapViewOfFile(fm, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     }
 #else
-    m_buffer = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE, fd, 0);
+    m_fileDescriptor = fileno(m_file);
+    m_buffer = static_cast<char *>(mmap(nullptr,
+                                        4096,
+                                        PROT_READ | PROT_WRITE, MAP_FILE | MAP_PRIVATE,
+                                        m_fileDescriptor,
+                                        0));
     if (m_buffer == MAP_FAILED) {
         m_buffer = nullptr;
     }

@@ -112,7 +112,7 @@ namespace vorb {
                 return inds;
             }
             static ui32 indexOf(const ui32v3& vert, OBJMesh& mesh) {
-                const auto kvp = mesh.vertices.find(vert);
+                auto kvp = mesh.vertices.find(vert);
                 if (kvp == mesh.vertices.end()) {
                     ui32 index = mesh.vertices.size();
                     mesh.vertices[vert] = index;

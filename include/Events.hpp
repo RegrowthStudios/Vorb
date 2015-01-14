@@ -179,8 +179,7 @@ public:
             // TODO:  Cannot delete abstract (llvm/clang)
             // delete f;
         }
-        DeleterList tmp;
-        m_deletionFunctions.swap(tmp);
+        DeleterList().swap(m_deletionFunctions);
     }
 private:
     DeleterList m_deletionFunctions; ///< List of delegates to be deleted

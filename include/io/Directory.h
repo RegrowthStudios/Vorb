@@ -53,6 +53,7 @@ namespace vorb {
             void forEachEntry(F f) const {
                 DirectoryEntryCallback* fDel = createDelegate<const Path&>(f);
                 forEachEntry(fDel);
+                // TODO:  Cannot delete abstract (llvm/clang)
                 // delete fDel;
             }
 

@@ -63,13 +63,9 @@ public:
             }
 
             // Empty out the lists
-            std::vector<PtrBind*> ptr_tmp;
-            std::map<ui32, i32*> map_tmp;
-            std::vector<T*> vector_tmp;
-
-            m_allocated.swap(ptr_tmp);
-            m_recycledChecks.swap(map_tmp);
-            m_recycled.swap(vector_tmp);
+            std::vector<PtrBind*>().swap(m_allocated);
+            std::map<ui32, i32*>().swap(m_recycledChecks);
+            std::vector<T*>().swap(m_recycled);
         }
     }
 private:

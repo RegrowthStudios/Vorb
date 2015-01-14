@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "graphics/GraphicsDevice.h"
 
+#if defined(WIN32) || defined(WIN64)
+#include <SDL/SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 
 GraphicsDevice::GraphicsDevice(SDL_Window* w) :
 _props({}) {

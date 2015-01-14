@@ -97,15 +97,13 @@ void SpriteBatch::dispose() {
 }
 
 void SpriteBatch::begin() {
-    std::vector<SpriteGlyph*> sprite_glyph_tmp;
-    std::vector<SpriteBatchCall*> sprite_batch_call_tmp;
     if (_glyphs.size() > 0) {
         // Why Would This Ever Happen?
         for (auto glyph : _glyphs) _glyphRecycler.recycle(glyph);
-        _glyphs.swap(sprite_glyph_tmp);
+        std::vector<SpriteGlyph*>().swap(_glyphs);
     }
     for (auto batch : _batches) _batchRecycler.recycle(batch);
-    _batches.swap(sprite_batch_call_tmp);
+    std::vector<SpriteBatchCall*>().swap(_batches);
 }
 
 void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
@@ -443,8 +441,7 @@ void SpriteBatch::generateBatches() {
         verts[vi++] = glyph->vtl;
         _glyphRecycler.recycle(_glyphs[i]);
     }
-    std::vector<SpriteGlyph*> sprite_glyph_tmp;
-    _glyphs.swap(sprite_glyph_tmp);
+    std::vector<SpriteGlyph*>().swap(_glyphs);
 
     // Set The Buffer Data
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);

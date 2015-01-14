@@ -176,6 +176,7 @@ public:
     void dispose() {
         for (auto& f : m_deletionFunctions) {
             f->invoke(nullptr);
+            // TODO:  Cannot delete abstract (llvm/clang)
             // delete f;
         }
         DeleterList tmp;

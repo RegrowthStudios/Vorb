@@ -77,7 +77,7 @@ namespace vorb {
             virtual void initComponent(ComponentID cID, EntityID eID) = 0;
             virtual void disposeComponent(ComponentID cID, EntityID eID) = 0;
         private:
-            void onEntityRemoval(Sender sender, EntityID id) {
+            void onEntityRemoval(Sender, EntityID id) {
                 remove(id);
             }
 

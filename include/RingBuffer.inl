@@ -9,9 +9,10 @@ namespace impl {
         data[i % data.size()] = std::move<Arg1>(v1);
     }
 
-    template<typename Arg1, typename... Args>
-    inline size_t numArgs(Arg1& v1, Args&... values) {
-        return 1 + numArgs(values...);
+    template<typename... T>
+    inline size_t numArgs(T... ) {
+        const int n = sizeof...(T);
+        return n;
     }
     inline size_t numArgs() {
         return 0;
@@ -19,9 +20,9 @@ namespace impl {
 }
 
 template<typename T>
-vorb::ring_buffer<T>::ring_buffer(const size_t& capacity) : 
+vorb::ring_buffer<T>::ring_buffer(const size_t& capacity) :
     m_data(capacity) {
-    if (capacity == 0) throw std::exception("Capacity must be non-zero");
+    if (capacity == 0) throw std::runtime_error("Capacity must be non-zero");
 }
 
 template<typename T>
@@ -35,7 +36,7 @@ size_t vorb::ring_buffer<T>::capacity() const {
 
 template<typename T>
 void vorb::ring_buffer<T>::resize(const size_t& s) {
-    if (s == 0) throw std::exception("Capacity must be non-zero");
+    if (s == 0) throw std::runtime_error("Capacity must be non-zero");
 
     // Don't need to resize
     if (s == m_data.size()) return;

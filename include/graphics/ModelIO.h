@@ -16,7 +16,7 @@
 #define ModelIO_h__
 
 #include "MeshData.h"
-#include "utils.h"
+#include "../utils.h"
 
 namespace std {
     template<> struct hash<ui32v3>;

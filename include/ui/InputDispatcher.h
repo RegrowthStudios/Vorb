@@ -34,7 +34,7 @@ namespace vorb {
             /// Adds an event listening hook
             /// @param w: The window where events will be generated
             /// @pre: SDL is initialized
-            /// @throws std::exception: When this is already initialized
+            /// @throws std::runtime_error: When this is already initialized
             static void init(GameWindow* w);
             /// Removes the event listener from SDL
             static void dispose();

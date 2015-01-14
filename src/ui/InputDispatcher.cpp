@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
+#if defined(WIN32) || defined(WIN64)
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 
 #include "ui/GameWindow.h"
 
@@ -25,7 +29,7 @@ Event<> vui::InputDispatcher::onQuit(nullptr);
 
 
 void vui::InputDispatcher::init(GameWindow* w) {
-    if (m_isInit) throw std::exception("Input dispatcher is already initialized");
+    if (m_isInit) throw std::runtime_error("Input dispatcher is already initialized");
     m_isInit = true;
     m_window = w;
     SDL_SetEventFilter(impl::InputDispatcherEventCatcher::onSDLEvent, nullptr);
@@ -93,7 +97,7 @@ void convert(vui::MouseButton& mb, const ui8& sb) {
     }
 }
 
-i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void* userData, SDL_Event* e) {
+i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     InputEvent ie;
 
     switch (e->type) {

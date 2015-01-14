@@ -30,7 +30,7 @@ namespace vorb {
             /// Registers a component for this entity
             /// @param eID: Entity ID
             /// @return Registered component ID
-            /// @throws std::exception: When an entity already has a registered component
+            /// @throws std::runtime_error: When an entity already has a registered component
             ComponentID add(EntityID eID);
             /// Removes an entity's component
             /// @param eID: Entity ID

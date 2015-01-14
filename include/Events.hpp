@@ -22,6 +22,9 @@ typedef const void* Sender;
 template<typename... Params>
 class IDelegate {
 public:
+    virtual ~IDelegate() {
+        // Empty
+    }
     /// Invoke this function's code
     /// @param sender: The sender that underlies the event
     /// @param p: Additional arguments to function
@@ -176,8 +179,7 @@ public:
     void dispose() {
         for (auto& f : m_deletionFunctions) {
             f->invoke(nullptr);
-            // TODO:  Cannot delete abstract (llvm/clang)
-            // delete f;
+            delete f;
         }
         DeleterList().swap(m_deletionFunctions);
     }

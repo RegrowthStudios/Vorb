@@ -4,8 +4,7 @@ macro(setup_components)
 
     # Core and root source always will be built
     setup_root()
-    setup_core()
-    SET(PROJECT_LIBRARY_FILES ${VORB_ROOT_FILES} ${VORB_CORE_FILES})
+    SET(PROJECT_LIBRARY_FILES ${VORB_ROOT_FILES})
 
     # Setup Other Components
     IF (VORB_BUILD_ECS)
@@ -37,14 +36,6 @@ macro(setup_components)
         LIST(APPEND PROJECT_LIBRARY_FILES ${VORB_VOXELS_FILES})
     ENDIF (VORB_BUILD_VOXELS)
 endmacro(setup_components)
-
-macro(setup_core)
-    file(GLOB core_source ${CMAKE_CURRENT_LIST_DIR}/src/core/*.cpp)
-    file(GLOB core_inline ${CMAKE_CURRENT_LIST_DIR}/src/core/*.inl)
-    file(GLOB core_header ${CMAKE_CURRENT_LIST_DIR}/src/core/*.hpp)
-    set(VORB_CORE_FILES ${core_source} ${core_inline} ${core_header})
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/core)
-endmacro(setup_core)
 
 macro(setup_ecs)
     file(GLOB ecs_source ${CMAKE_CURRENT_LIST_DIR}/src/ecs/*.cpp)
@@ -108,7 +99,7 @@ macro(setup_root)
     file(GLOB root_source ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
     file(GLOB root_inline ${CMAKE_CURRENT_LIST_DIR}/src/*.inl)
     file(GLOB root_header ${CMAKE_CURRENT_LIST_DIR}/src/*.hpp)
-    set(VORB_ROOT_FILES ${ui_source} ${ui_inline} ${ui_header})
+    set(VORB_ROOT_FILES ${root_source} ${root_inline} ${root_header})
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 endmacro(setup_root)
 

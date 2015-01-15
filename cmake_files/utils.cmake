@@ -13,10 +13,11 @@ macro(verify_folder_structure)
 endmacro(verify_folder_structure)
 
 macro(initialize_for_platform)
-  IF(UNIX)
-    set(CC /usr/local/Cellar/gcc/4.9.2/bin/gcc-4.9)
-    set(CXX /usr/local/Cellar/gcc/4.9.2/bin/c++-4.9)
-  ENDIF(UNIX)
+# if(APPLE)
+#   LIST(APPEND LDFLAGS "-L/usr/local/opt/llvm/lib")
+#   set(CMAKE_C_COMPILER "/usr/local/opt/llvm/bin/clang")
+#   set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
+# endif(APPLE)
   # setup compilers
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -34,11 +35,7 @@ macro(initialize_for_platform)
                    )
       ADD_DEFINITIONS(
           -std=c++11
-          -fPIC
-          -fexpensive-optimizations
-          -funroll-loops
-          -O2
-          # -std=c++0x
+          -stdlib=libc++
           # Other flags
           ${warnings}
       )
@@ -51,7 +48,10 @@ macro(initialize_for_platform)
     # for policy CMP0042
     SET(CMAKE_SKIP_BUILD_RPATH  TRUE)
 
+    # for moody camel thread_local issues
+    REMOVE_DEFINITIONS(-DMOODYCAMEL_CPP11_THREAD_LOCAL_SUPPORTED)
     INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
+    INCLUDE_DIRECTORIES ( /usr/local/opt/llvm/include )
     FIND_LIBRARY(COCOA_LIBRARY Cocoa)
     FIND_LIBRARY(GLUT_LIBRARY GLUT )
     FIND_LIBRARY(OpenGL_LIBRARY OpenGL )

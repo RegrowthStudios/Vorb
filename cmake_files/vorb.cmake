@@ -1,6 +1,6 @@
-include(cmake_files/utils.cmake)
-include(cmake_files/deps.cmake)
-include(cmake_files/components.cmake)
+include(utils)
+include(deps)
+include(components)
 
 macro(setup_project)
     verify_folder_structure()
@@ -17,3 +17,7 @@ macro(create_project_library)
       ${PROJECT_LIBRARY_FILES}
       )
 endmacro(create_project_library)
+
+macro(run_project_testing)
+   add_subdirectory(tests)
+endmacro(run_project_testing)

@@ -15,7 +15,6 @@
 #ifndef GBuffer_h__
 #define GBuffer_h__
 
-#include "types.h"
 #include "GLEnums.h"
 #include "gtypes.h"
 

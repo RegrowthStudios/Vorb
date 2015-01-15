@@ -1,8 +1,10 @@
 #pragma once
-#include <SDL/SDL.h>
 
 #if defined(WIN32) || defined(WIN64)
+#include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
+#else
+#include <SDL2/SDL.h>
 #endif
 
 #include "../io/Keg.h"

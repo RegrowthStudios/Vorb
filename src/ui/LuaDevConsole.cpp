@@ -3,7 +3,7 @@
 
 #include <OOLua/oolua.h>
 extern "C" {
-    #include <OOLua\lua\lua.h>
+    #include <OOLua/lua/lua.h>
 }
 
 vui::LuaDevConsole::LuaDevConsole(size_t storageSize /*= LUA_DEV_CONSOLE_NUM_COMMANDS_STORED*/) :
@@ -21,7 +21,7 @@ void vorb::ui::LuaDevConsole::invokeCommand(const nString& c) {
         ftell(m_streams[0]),
         ftell(m_streams[1])
     };
-    
+
     // Redirect standard output
     FILE old1 = *stdout;
     FILE old2 = *stderr;

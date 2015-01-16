@@ -19,6 +19,7 @@ namespace vorb {
     namespace core {
         typedef ui32 EntityID; ///< Numeric ID type for entities
         typedef ui32 ComponentID; ///< Numeric ID type for components
+        typedef ui32 TableID; ///< Numeric ID type for component tables
         typedef std::pair<EntityID, ComponentID> ComponentBinding;  ///< Pairing of entities and components
         typedef std::unordered_map<EntityID, ComponentID> ComponentBindingSet; ///< Set of entity-component pairings
 

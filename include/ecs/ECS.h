@@ -16,6 +16,7 @@
 #define ECS_h__
 
 #include "Entity.h"
+#include "BitTable.hpp"
 #include "../Events.hpp"
 #include "../IDGenerator.h"
 
@@ -24,7 +25,8 @@ namespace vorb {
         class ComponentTableBase;
         
         typedef std::pair<nString, ComponentTableBase*> NamedComponent; ///< A component table paired with its name
-        typedef std::unordered_map<nString, ComponentTableBase*> ComponentSet; ///< Dictionary of NamedComponents
+        typedef std::unordered_map<nString, TableID> ComponentSet; ///< Mapping of names to component table IDs
+        typedef std::vector<ComponentTableBase*> ComponentList;
 
         /// Entity Component System
         class ECS {
@@ -68,15 +70,33 @@ namespace vorb {
             /// @param id: Component owner entity
             /// @return True if a component was deleted
             bool deleteComponent(nString name, EntityID id);
+            /// Check if an entity has a component
+            /// @param tableID: ID of the component table
+            /// @param id: Entity
+            /// @return True if the entity holds that component
+            bool hasComponent(const TableID& tableID, const EntityID& id) const;
+            /// Check if an entity has a component
+            /// @param name: Friendly name of the component
+            /// @param id: Entity
+            /// @return True if the entity holds that component
+            bool hasComponent(const nString& name, const EntityID& id) const;
 
             /// Add a component table to be referenced by a special name
-            /// @param name: Friendly name of component
+            /// @param name: Friendly name of component table
             /// @param table: Component table
-            void addComponentTable(nString name, ComponentTableBase* table);
+            TableID addComponentTable(nString name, ComponentTableBase* table);
+            /// 
+            /// @param name: Friendly name
+            /// @return ID of the table, or 0 if none
+            TableID getComponentTableID(const nString& name) const;
             /// Obtain a component table by its name
-            /// @param name: Friendly name of component
+            /// @param name: Friendly name
             /// @return The component table
-            ComponentTableBase* getComponentTable(nString name);
+            ComponentTableBase* getComponentTable(nString name) const;
+            /// Obtain a component table by its name
+            /// @param id: Component table's ID
+            /// @return The component table
+            ComponentTableBase* getComponentTable(TableID id) const;
 
             Event<EntityID> onEntityAdded; ///< Called when an entity is added to this system
             Event<EntityID> onEntityRemoved; ///< Called when an entity is removed from this system
@@ -86,10 +106,12 @@ namespace vorb {
             typedef std::unordered_map<nString, ComponentSubscriber> ComponentSubscriberSet;
 
             EntitySet _entities; ///< List of entities
+            EntityID m_eidHighest = 0; ///< Highest generated entity ID
+            vecs::BitTable m_entityComponents; ///< Truth table for components that an entity holds
+
             IDGenerator<EntityID> _genEntity; ///< Unique ID generator for entities
             ComponentSet _components; ///< List of component tables
-
-            ComponentSubscriberSet _componentTableBinds; ///< List of function hooks
+            ComponentList m_componentList; ///< Component tables organized by their id
         };
     }
 }

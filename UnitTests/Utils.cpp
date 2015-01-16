@@ -5,10 +5,12 @@
 #define UNIT_TEST_BATCH Utils_
 
 #include <random>
+#include <thread>
 
 #include <include/Random.h>
 #include <include/RingBuffer.hpp>
 #include <include/Timing.h>
+#include <include/ScopedTiming.hpp>
 
 TEST(MersenneTwister) {
     f32 v1 = 0.0f, v2 = 0.0f;
@@ -51,6 +53,37 @@ TEST(LifeTime) {
     delete a;
     std::cout << "Lifetime: " << A::lifeTimes.getAccumulatedSeconds() << std::endl; // Prints 2
     return true;
+}
+
+TEST(MTSampling) {
+    vorb::MTDetailedSamplerContext context;
+
+    auto f = [&] () {
+        VORB_SAMPLE_SCOPE(context);
+        VORB_SAMPLE_SCOPE(context);
+        Sleep(1000);
+    };
+
+    {
+        std::thread t1(f);
+        std::thread t2(f);
+        std::thread t3(f);
+        std::thread t4(f);
+        std::thread t5(f);
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        t5.join();
+    }
+
+    std::cout << "Accum. Time: " << context.getAccumulatedSeconds() << std::endl;
+    std::cout << "Entries:     " << context.getEntryCount() << std::endl;
+    std::cout << "Avg. Time:   " << context.getAverageSeconds() << std::endl;
+    std::cout << "Min Time:    " << context.getMinElapsedMicroseconds() << std::endl;
+    std::cout << "Max Time:    " << context.getMaxElapsedMicroseconds() << std::endl;
+    return context.getEntryCount() == 10;
 }
 
 TEST(RingBuffer) {

@@ -367,6 +367,9 @@
     <ClInclude Include="include\ecs\BitTable.hpp">
       <Filter>ECS</Filter>
     </ClInclude>
+    <ClInclude Include="include\Constants.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -11,29 +11,45 @@
 #include <include/Timing.h>
 
 TEST(MersenneTwister) {
-    f32 t1, t2;
     f32 v1 = 0.0f, v2 = 0.0f;
 
     ::Random zr(20);
     std::mt19937 mt(20);
 
-    PreciseTimer timer;
 
-    timer.start();
-    for (size_t i = 0; i < 100000; i++) {
-        v1 += mt() / (f32)0xffffffffu;
+    vorb::AveragedSamplerContext sc1;
+    { vorb::ScopedAveragedSampler vorb_scopedtime(sc1);
+        for (size_t i = 0; i < 1000000; i++) {
+            v1 += mt() / (f32)0xffffffffu;
+        }
     }
-    t1 = timer.stop();
 
-    timer.start();
-    for (size_t i = 0; i < 100000; i++) {
+    vorb::AveragedSamplerContext sc2;
+    { vorb::ScopedAveragedSampler vorb_scopedtime(sc2);
+    for (size_t i = 0; i < 1000000; i++) {
         v2 += zr.genMT();
     }
-    t2 = timer.stop();
+    }
 
-    std::cout << t1 << " : " << v1 / 100000.0f << std::endl;
-    std::cout << t2 << " : " << v2 / 100000.0f << std::endl;
+    std::cout << sc1.getAccumulatedTicks() << " : " << v1 / 100000.0f << std::endl;
+    std::cout << sc2.getAccumulatedTicks() << " : " << v2 / 100000.0f << std::endl;
 
+    return true;
+}
+
+class A {
+public:
+    static vorb::DetailedSamplerContext lifeTimes;
+private:
+    vorb::ScopedDetailedSampler lifeMeasure { lifeTimes };
+};
+vorb::DetailedSamplerContext A::lifeTimes;
+
+TEST(LifeTime) {
+    A* a = new A;
+    Sleep(1000);
+    delete a;
+    std::cout << "Lifetime: " << A::lifeTimes.getAccumulatedSeconds() << std::endl; // Prints 2
     return true;
 }
 

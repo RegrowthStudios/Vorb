@@ -338,6 +338,7 @@
     <ClInclude Include="deps/src/lodepng/lodepng.h" />
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
+    <ClInclude Include="include\ScopedTiming.hpp" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
   </ItemGroup>
   <ItemGroup>

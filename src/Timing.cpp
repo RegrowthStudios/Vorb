@@ -20,8 +20,12 @@ f32 PreciseTimer::stop() {
 }
 
 void MultiplePreciseTimer::start(const nString& tag) {
-    if (m_index >= m_intervals.size()) m_intervals.push_back(Interval(tag));
     if (m_timer.isRunning()) stop();
+    if (m_index >= m_intervals.size()) {
+        m_intervals.push_back(Interval(tag));
+    } else {
+        m_intervals[m_index].tag = tag;
+    }
     
     m_timer.start();
      

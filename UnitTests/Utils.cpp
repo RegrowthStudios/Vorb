@@ -31,8 +31,8 @@ TEST(MersenneTwister) {
     }
     }
 
-    std::cout << sc1.getAccumulatedTicks() << " : " << v1 / 100000.0f << std::endl;
-    std::cout << sc2.getAccumulatedTicks() << " : " << v2 / 100000.0f << std::endl;
+    std::cout << sc1.getAccumulatedMicroseconds() << " : " << v1 / 100000.0f << std::endl;
+    std::cout << sc2.getAccumulatedMicroseconds() << " : " << v2 / 100000.0f << std::endl;
 
     return true;
 }

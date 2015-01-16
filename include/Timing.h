@@ -102,33 +102,44 @@ private:
 };
 
 namespace vorb {
+    /// A timer that samples a time period via its lifetime
+    /// @tparam T Context type that stores sample information (must overload T& operator+= (ui64 microSeconds))
     template<typename T = ui64>
     class ScopedSampler {
     public:
-        ScopedSampler(T& context) :
+        /// Hook the timer up to an output and take the starting time
+        /// @param context: Destination for time data
+        ScopedSampler(OUT T& context) :
             m_context(context) {
             m_time = std::chrono::high_resolution_clock::now();
         }
-        ScopedSampler(T* context) : ScopedSampler(*context) {
+        /// Hook the timer up to an output and take the starting time
+        /// @param context: Destination for time data
+        ScopedSampler(OUT T* context) : ScopedSampler(*context) {
             // Empty
         }
+        /// Finish keeping track of time (add time sample to context)
         ~ScopedSampler() {
             auto difference = std::chrono::high_resolution_clock::now() - m_time;
             m_context += std::chrono::duration_cast<std::chrono::microseconds>(difference).count();
         }
     private:
-        T& m_context;
-        std::chrono::system_clock::time_point m_time {};
+        T& m_context; ///< Timing information destination
+        std::chrono::system_clock::time_point m_time {}; ///< Start time
     };
 
+    /// Accumulates time slices
     class AccumulationSamplerContext {
     public:
-        AccumulationSamplerContext& operator+=(const ui64& elapsedTicks) {
-            m_ticks += elapsedTicks;
+        /// Add elapsed milliseconds to this context
+        /// @param dt: Elapsed time
+        /// @return Self
+        AccumulationSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
+            m_ticks += dt;
             return *this;
         }
 
-        const ui64& getAccumulatedTicks() const {
+        const ui64& getAccumulatedMicroseconds() const {
             return m_ticks;
         }
         const f64 getAccumulatedMilliSeconds() const {
@@ -138,19 +149,23 @@ namespace vorb {
             return (f64)m_ticks / MICROSECONDS_PER_SECOND_F64;
         }
     protected:
-        ui64 m_ticks = 0;
+        UNIT_SPACE(MICROSECONDS) ui64 m_ticks = 0; ///< Accumulated time
     };
     typedef ScopedSampler<AccumulationSamplerContext> ScopedAccumulationSampler;
 
+    /// Accumulates time slices and number of time slices taken
     class AveragedSamplerContext {
     public:
-        AveragedSamplerContext& operator+=(const ui64& elapsedTicks) {
-            m_ticks += elapsedTicks;
+        /// Add elapsed milliseconds to this context and increment number of slices
+        /// @param dt: Elapsed time
+        /// @return Self
+        AveragedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
+            m_ticks += dt;
             m_entries++;
             return *this;
         }
 
-        const ui64& getAccumulatedTicks() const {
+        const ui64& getAccumulatedMicroseconds() const {
             return m_ticks;
         }
         const f64 getAccumulatedMilliSeconds() const {
@@ -163,7 +178,7 @@ namespace vorb {
         const ui64& getEntryCount() const {
             return m_ticks;
         }
-        const ui64 getAverageTicks() const {
+        const ui64 getAverageMicroseconds() const {
             ui64 rounded = m_ticks + (m_entries >> 1);
             return rounded / m_entries;
         }
@@ -174,22 +189,26 @@ namespace vorb {
             return getAccumulatedSeconds() / (f64)m_entries;
         }
     protected:
-        ui64 m_ticks = 0;
-        ui64 m_entries = 0;
+        UNIT_SPACE(MICROSECONDS) ui64 m_ticks = 0; ///< Accumulated time
+        ui64 m_entries = 0; ///< Count of times context was incremented
     };
     typedef ScopedSampler<AveragedSamplerContext> ScopedAveragedSampler;
 
+    /// Accumulates time slices, number of time slices taken, and min/max time slices
     class DetailedSamplerContext {
     public:
-        DetailedSamplerContext& operator+=(const ui64& elapsedTicks) {
-            m_ticks += elapsedTicks;
+        /// Add elapsed milliseconds to this context, increment slices, and check bounds
+        /// @param dt: Elapsed time
+        /// @return Self
+        DetailedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
+            m_ticks += dt;
             m_entries++;
-            if (elapsedTicks < m_bounds.x) m_bounds.x = elapsedTicks;
-            if (elapsedTicks > m_bounds.y) m_bounds.y = elapsedTicks;
+            if (dt < m_bounds.x) m_bounds.x = dt;
+            if (dt > m_bounds.y) m_bounds.y = dt;
             return *this;
         }
 
-        const ui64& getAccumulatedTicks() const {
+        const ui64& getAccumulatedMicroseconds() const {
             return m_ticks;
         }
         const f64 getAccumulatedMilliSeconds() const {
@@ -202,7 +221,7 @@ namespace vorb {
         const ui64& getEntryCount() const {
             return m_ticks;
         }
-        const ui64 getAverageTicks() const {
+        const ui64 getAverageMicroseconds() const {
             ui64 rounded = m_ticks + (m_entries >> 1);
             return rounded / m_entries;
         }
@@ -213,16 +232,16 @@ namespace vorb {
             return getAccumulatedSeconds() / (f64)m_entries;
         }
 
-        const ui64& getMinTicks() const {
+        const ui64& getMinElapsedMicroseconds() const {
             return m_bounds.x;
         }
-        const ui64& getMaxTicks() const {
+        const ui64& getMaxElapsedMicroseconds() const {
             return m_bounds.y;
         }
     protected:
-        ui64 m_ticks = 0;
-        ui64 m_entries = 0;
-        ui64v2 m_bounds { 0ui64 - 1 , 0 };
+        UNIT_SPACE(MICROSECONDS) ui64 m_ticks = 0; ///< Accumulated time
+        ui64 m_entries = 0; ///< Count of times context was incremented
+        ui64v2 m_bounds { ~0ui64 , 0 }; ///< Min/max delta times
     };
     typedef ScopedSampler<DetailedSamplerContext> ScopedDetailedSampler;
 }

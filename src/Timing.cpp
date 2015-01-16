@@ -20,6 +20,7 @@ f32 PreciseTimer::stop() {
 }
 
 void AccumulationTimer::start(const nString& tag) {
+    if (m_timerRunning) stop();
     m_timerRunning = true;
     m_start = std::chrono::high_resolution_clock::now();
     m_it = m_accum.find(tag);
@@ -41,9 +42,15 @@ void AccumulationTimer::clear() {
     m_timerRunning = false;
 }
 
-void AccumulationTimer::printAll() {
-    for (auto& it : m_accum) {
-        printf("  %-20s: %12f ms\n", it.first.c_str(), (it.second.time / (float)it.second.numSamples));
+void AccumulationTimer::printAll(bool averages) {
+    if (averages) {
+        for (auto& it : m_accum) {
+            printf("  %-20s: %12f ms\n", it.first.c_str(), (it.second.time / (float)it.second.numSamples));
+        }
+    } else {
+        for (auto& it : m_accum) {
+            printf("  %-20s: %12f ms\n", it.first.c_str(), it.second.time);
+        }
     }
 }
 

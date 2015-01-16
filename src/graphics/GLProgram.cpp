@@ -257,8 +257,8 @@ void vg::GLProgram::initUniforms() {
     }
 }
 
-void vg::GLProgram::bindFragDataLocation(ui32 colorNumber​, const char * name​) {
-    glBindAttribLocation(_id, colorNumber​, name​);
+void vg::GLProgram::bindFragDataLocation(ui32 colorNumber, const char* name) {
+    glBindAttribLocation(_id, colorNumber, name);
 }
 
 void vg::GLProgram::enableVertexAttribArrays() const {
@@ -266,6 +266,7 @@ void vg::GLProgram::enableVertexAttribArrays() const {
         glEnableVertexAttribArray(attrBind.second);
     }
 }
+
 void vg::GLProgram::disableVertexAttribArrays() const {
     for (auto& attrBind : _attributes) {
         glDisableVertexAttribArray(attrBind.second);

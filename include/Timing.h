@@ -36,7 +36,7 @@ public:
     f32 stop();
 
     void clear();
-    void printAll();
+    void printAll(bool averages);
 private:
     class AccumNode {
     public:

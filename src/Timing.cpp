@@ -19,6 +19,34 @@ f32 PreciseTimer::stop() {
     return duration.count() * MS_PER_SECOND;
 }
 
+void AccumulationTimer::start(const nString& tag) {
+    m_timerRunning = true;
+    m_start = std::chrono::high_resolution_clock::now();
+    m_it = m_accum.find(tag);
+    if (m_it == m_accum.end()) {
+        m_it = m_accum.insert(std::make_pair(tag, AccumNode())).first;
+    }
+}
+
+f32 AccumulationTimer::stop() {
+    m_timerRunning = false;
+    std::chrono::duration<f32> duration = std::chrono::high_resolution_clock::now() - m_start;
+    f32 time = duration.count() * MS_PER_SECOND;
+    m_it->second.addSample(time);
+    return time;
+}
+
+void AccumulationTimer::clear() {
+    m_accum.clear();
+    m_timerRunning = false;
+}
+
+void AccumulationTimer::printAll() {
+    for (auto& it : m_accum) {
+        printf("  %-20s: %12f ms\n", it.first.c_str(), (it.second.time / (float)it.second.numSamples));
+    }
+}
+
 void MultiplePreciseTimer::start(const nString& tag) {
     if (m_timer.isRunning()) stop();
     if (m_index >= m_intervals.size()) {

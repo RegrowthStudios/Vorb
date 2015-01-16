@@ -30,6 +30,30 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
 };
 
+class AccumulationTimer {
+public:
+    void start(const nString& tag);
+    f32 stop();
+
+    void clear();
+    void printAll();
+private:
+    class AccumNode {
+    public:
+        void addSample(f32 sample) {
+            numSamples++;
+            time += sample;
+        }
+        i32 numSamples = 0;
+        f32 time = 0.0f;
+    };
+
+    bool m_timerRunning = false;
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+    std::map<nString, AccumNode> m_accum;
+    std::map<nString, AccumNode>::iterator m_it;
+};
+
 class MultiplePreciseTimer {
 public:
     void start(const nString& tag);

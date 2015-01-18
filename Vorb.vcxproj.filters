@@ -2,41 +2,29 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src/stdafx.cpp" />
-    <ClCompile Include="src/MainGame.cpp">
+    <ClCompile Include="src/ui/MainGame.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src/ScreenList.cpp">
+    <ClCompile Include="src/ui/ScreenList.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src/ImageSaver.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src/ImageLoader.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src/GameWindow.cpp">
+    <ClCompile Include="src/ui/GameWindow.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src/Mesh.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="src/graphics/Mesh.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src/OpenglSurfaceFactory.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="src/graphics/IRenderStage.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src/IRenderStage.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="src/graphics/IRenderPipeline.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src/IRenderPipeline.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src/IOManager.cpp">
+    <ClCompile Include="src/io/IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="src/Keg.cpp">
+    <ClCompile Include="src/io/Keg.cpp">
       <Filter>IO\Keg</Filter>
-    </ClCompile>
-    <ClCompile Include="src/lodepng.cpp">
-      <Filter>Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src/Timing.cpp">
       <Filter>Utils</Filter>
@@ -47,99 +35,102 @@
     <ClCompile Include="src/colors.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/ImageIO.cpp">
-      <Filter>IO</Filter>
+    <ClCompile Include="src/ecs/ComponentTableBase.cpp">
+      <Filter>ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src/ComponentTableBase.cpp">
-      <Filter>Core\ECS</Filter>
+    <ClCompile Include="src/ecs/ECS.cpp">
+      <Filter>ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src/ECS.cpp">
-      <Filter>Core\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src/MultipleComponentSet.cpp">
-      <Filter>Core\ECS</Filter>
+    <ClCompile Include="src/ecs/MultipleComponentSet.cpp">
+      <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="src/RPC.cpp">
       <Filter>Core\ADT</Filter>
     </ClCompile>
-    <ClCompile Include="src/InputDispatcher.cpp">
+    <ClCompile Include="src/ui/InputDispatcher.cpp">
       <Filter>UI\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src/LuaDevConsole.cpp">
+    <ClCompile Include="src/ui/LuaDevConsole.cpp">
       <Filter>UI\REPL</Filter>
     </ClCompile>
-    <ClCompile Include="src/MemFile.cpp">
+    <ClCompile Include="src/io/MemFile.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/GBuffer.cpp">
-      <Filter>Core\Graphics\Deferred</Filter>
+    <ClCompile Include="src/graphics/GBuffer.cpp">
+      <Filter>Graphics\Deferred</Filter>
     </ClCompile>
-    <ClCompile Include="src/DeferredShaders.cpp">
-      <Filter>Core\Graphics\Deferred</Filter>
+    <ClCompile Include="src/graphics/DeferredShaders.cpp">
+      <Filter>Graphics\Deferred</Filter>
     </ClCompile>
-    <ClCompile Include="src/ModelIO.cpp">
-      <Filter>IO</Filter>
+    <ClCompile Include="src/graphics/DepthState.cpp">
+      <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/DepthState.cpp">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClCompile Include="src/graphics/GLProgram.cpp">
+      <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/GLProgram.cpp">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClCompile Include="src/graphics/GLRenderTarget.cpp">
+      <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/GLRenderTarget.cpp">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClCompile Include="src/graphics/RasterizerState.cpp">
+      <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/RasterizerState.cpp">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClCompile Include="src/graphics/SamplerState.cpp">
+      <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/SamplerState.cpp">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClCompile Include="src/graphics/FullQuadVBO.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/FullQuadVBO.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClCompile Include="src/graphics/GpuMemory.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/GpuMemory.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClCompile Include="src/graphics/GraphicsDevice.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/GraphicsDevice.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClCompile Include="src/graphics/SpriteBatch.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/SpriteBatch.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src/SpriteFont.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClCompile Include="src/graphics/SpriteFont.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src/Vorb.cpp" />
-    <ClCompile Include="src/ConnectedTextures.cpp">
-      <Filter>Core\Graphics\Texture</Filter>
+    <ClCompile Include="src/graphics/ConnectedTextures.cpp">
+      <Filter>Graphics\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src/VoxCommon.cpp">
+    <ClCompile Include="src/voxel/VoxCommon.cpp">
       <Filter>Voxel</Filter>
     </ClCompile>
-    <ClCompile Include="src/TextureCache.cpp">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClCompile Include="src/graphics/TextureCache.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/Path.cpp">
+    <ClCompile Include="src/io/Path.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/Directory.cpp">
+    <ClCompile Include="src/io/Directory.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/File.cpp">
+    <ClCompile Include="src/io/File.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src/FileOps.cpp">
+    <ClCompile Include="src/io/FileOps.cpp">
       <Filter>IO\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundEngine.cpp">
+    <ClCompile Include="src/sound/SoundEngine.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundInstance.cpp">
+    <ClCompile Include="src/sound/SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="src\sha256sum.c">
-      <Filter>IO\Utils</Filter>
+    <ClCompile Include="deps/src/lodepng/lodepng.cpp">
+      <Filter>Deps</Filter>
+    </ClCompile>
+    <ClCompile Include="deps/src/sha256/sha256sum.c">
+      <Filter>Deps</Filter>
+    </ClCompile>
+    <ClCompile Include="src/graphics/ImageIO.cpp">
+      <Filter>Graphics\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src/graphics/ModelIO.cpp">
+      <Filter>Graphics\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,52 +138,37 @@
     <ClInclude Include="include/stdafx.h" />
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/Vorb.h" />
-    <ClInclude Include="include/AwesomiumInterface.h">
+    <ClInclude Include="include/graphics/gtypes.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include/ui/IGameScreen.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="include/gtypes.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include/IGameScreen.h">
+    <ClInclude Include="include/ui/MainGame.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="include/MainGame.h">
+    <ClInclude Include="include/ui/ScreenList.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="include/ScreenList.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="include/ImageSaver.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include/ImageLoader.h">
-      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include/FixedSizeArrayRecycler.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="include/GameWindow.h">
+    <ClInclude Include="include/ui/GameWindow.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="include/Mesh.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="include/graphics/Mesh.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include/OpenglSurfaceFactory.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="include/graphics/IRenderStage.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include/IRenderStage.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="include/graphics/IRenderPipeline.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include/IRenderPipeline.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include/IAwesomiumInterface.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="include/IOManager.h">
+    <ClInclude Include="include/io/IOManager.h">
       <Filter>IO</Filter>
     </ClInclude>
-    <ClInclude Include="include/Keg.h">
+    <ClInclude Include="include/io/Keg.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
     <ClInclude Include="include/utils.h">
@@ -210,9 +186,6 @@
     <ClInclude Include="include/colors.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/ImageIO.h">
-      <Filter>IO</Filter>
-    </ClInclude>
     <ClInclude Include="include/ThreadSync.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -222,26 +195,26 @@
     <ClInclude Include="include/ThreadPool.h">
       <Filter>Core\ADT</Filter>
     </ClInclude>
-    <ClInclude Include="include/ComponentTable.hpp">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/ComponentTable.hpp">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/ComponentTableBase.h">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/ComponentTableBase.h">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/ECS.h">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/ECS.h">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/ECSSimpleUpdater.h">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/ECSSimpleUpdater.h">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/Entity.h">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/Entity.h">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/MultiComponentTracker.hpp">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/MultiComponentTracker.hpp">
+      <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/MultipleComponentSet.h">
-      <Filter>Core\ECS</Filter>
+    <ClInclude Include="include/ecs/MultipleComponentSet.h">
+      <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="include/PtrRecycler.hpp">
       <Filter>Core</Filter>
@@ -249,152 +222,155 @@
     <ClInclude Include="include/RPC.h">
       <Filter>Core\ADT</Filter>
     </ClInclude>
-    <ClInclude Include="include/InputDispatcher.h">
+    <ClInclude Include="include/ui/InputDispatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include/MouseInputDispatcher.h">
+    <ClInclude Include="include/ui/MouseInputDispatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include/KeyboardEventDispatcher.h">
+    <ClInclude Include="include/ui/KeyboardEventDispatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include/WindowEventDispatcher.h">
+    <ClInclude Include="include/ui/WindowEventDispatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include/LuaDevConsole.h">
+    <ClInclude Include="include/ui/LuaDevConsole.h">
       <Filter>UI\REPL</Filter>
     </ClInclude>
-    <ClInclude Include="include/MemFile.h">
+    <ClInclude Include="include/io/MemFile.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/TextInputListener.hpp">
+    <ClInclude Include="include/ui/TextInputListener.hpp">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include/GBuffer.h">
-      <Filter>Core\Graphics\Deferred</Filter>
+    <ClInclude Include="include/graphics/GBuffer.h">
+      <Filter>Graphics\Deferred</Filter>
     </ClInclude>
-    <ClInclude Include="include/DeferredShaders.h">
-      <Filter>Core\Graphics\Deferred</Filter>
+    <ClInclude Include="include/graphics/DeferredShaders.h">
+      <Filter>Graphics\Deferred</Filter>
     </ClInclude>
-    <ClInclude Include="include/ModelIO.h">
-      <Filter>IO</Filter>
+    <ClInclude Include="include/graphics/DepthState.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/DepthState.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/GLEnums.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/GLEnums.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/GLProgram.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/GLProgram.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/GLRenderTarget.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/GLRenderTarget.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/GLStates.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/GLStates.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/RasterizerState.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/RasterizerState.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/SamplerState.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/SamplerState.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/FullQuadVBO.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/FullQuadVBO.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/GpuMemory.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/GpuMemory.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/GraphicsDevice.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/GraphicsDevice.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/SpriteBatch.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/SpriteBatch.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/SpriteFont.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/SpriteFont.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/Texture.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/Texture.h">
-      <Filter>Core\Graphics\Wrappers</Filter>
+    <ClInclude Include="include/graphics/RTSwapChain.hpp">
+      <Filter>Graphics\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="include/RTSwapChain.hpp">
-      <Filter>Core\Graphics\Extensions</Filter>
+    <ClInclude Include="include/graphics/MeshData.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include/MeshData.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="include/graphics/ConnectedTextures.h">
+      <Filter>Graphics\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include/ConnectedTextures.h">
-      <Filter>Core\Graphics\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include/VoxelMesherCulled.h">
+    <ClInclude Include="include/voxel/VoxelMesherCulled.h">
       <Filter>Voxel\Mesh\Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="include/VoxelMeshAlg.h">
+    <ClInclude Include="include/voxel/VoxelMeshAlg.h">
       <Filter>Voxel\Mesh\Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="include/VoxCommon.h">
+    <ClInclude Include="include/voxel/VoxCommon.h">
       <Filter>Voxel</Filter>
     </ClInclude>
     <ClInclude Include="include/decorators.h" />
-    <ClInclude Include="include/TextureCache.h">
-      <Filter>Core\Graphics\Utils</Filter>
+    <ClInclude Include="include/graphics/TextureCache.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/Path.h">
+    <ClInclude Include="include/io/Path.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/Directory.h">
+    <ClInclude Include="include/io/Directory.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/File.h">
+    <ClInclude Include="include/io/File.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/FileStream.h">
+    <ClInclude Include="include/io/FileStream.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/FileOps.h">
+    <ClInclude Include="include/io/FileOps.h">
       <Filter>IO\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="include/IO.h">
-      <Filter>IO\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SoundEngine.h">
+    <ClInclude Include="include/sound/SoundEngine.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="include\SoundResource.h">
+    <ClInclude Include="include/sound/SoundResource.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="include\SoundInstance.h">
+    <ClInclude Include="include/sound/SoundInstance.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="include\SoundListener.h">
+    <ClInclude Include="include/sound/SoundListener.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="src\SoundImpl.hpp">
+    <ClInclude Include="src/sound/SoundImpl.hpp">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="include\ISoundImpl.h">
+    <ClInclude Include="include/sound/ISoundImpl.h">
       <Filter>Sound</Filter>
     </ClInclude>
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\RingBuffer.hpp">
+    <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
     </ClInclude>
-    <ClInclude Include="src\lodepng.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="deps/src/lodepng/lodepng.h">
+      <Filter>Deps</Filter>
     </ClInclude>
-    <ClInclude Include="src\sha256sum.h">
-      <Filter>IO\Utils</Filter>
+    <ClInclude Include="deps/src/sha256/sha256sum.h">
+      <Filter>Deps</Filter>
+    </ClInclude>
+    <ClInclude Include="include/graphics/ImageIO.h">
+      <Filter>Graphics\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="include/graphics/ModelIO.h">
+      <Filter>Graphics\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="include/IO.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ecs\BitTable.hpp">
+      <Filter>ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{47c671d5-c6af-4c7a-8afa-eaec9e3f31cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics">
-      <UniqueIdentifier>{06e6f9cb-eca8-461c-94ac-9705e422f46a}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{77f93b98-ec01-4628-bed2-7efb90da8d7e}</UniqueIdentifier>
@@ -411,29 +387,11 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{697c6002-2f1c-4b32-9b83-d3af9d9d4056}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\ECS">
-      <UniqueIdentifier>{2623b98e-6c4b-492f-ba48-960edaa783f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Input">
       <UniqueIdentifier>{84a1a378-d9b6-49d5-bad8-286be1b6565a}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\REPL">
       <UniqueIdentifier>{cc06d404-9d09-46c7-9776-5d47af2befd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Deferred">
-      <UniqueIdentifier>{d885ab76-4ae5-4152-9bd4-c5a7af213015}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Wrappers">
-      <UniqueIdentifier>{624d6dc6-02a2-441c-8ff7-779b44b2ade5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Utils">
-      <UniqueIdentifier>{1ba6a05d-9cee-4082-ba47-7aa55c60d760}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Extensions">
-      <UniqueIdentifier>{11aad47b-fcc4-4af4-b22c-be40b54bf6a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Texture">
-      <UniqueIdentifier>{2f19ac72-7d3a-4fb0-b742-b56ec2571954}</UniqueIdentifier>
     </Filter>
     <Filter Include="Voxel\Mesh">
       <UniqueIdentifier>{dff71a9e-18a2-4992-a4ad-ae49c156595a}</UniqueIdentifier>
@@ -450,14 +408,35 @@
     <Filter Include="Core\ADT">
       <UniqueIdentifier>{23934580-2774-41c1-9e4e-f68a549d1368}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IO\Utils">
-      <UniqueIdentifier>{be06fd08-609f-482e-9d16-856289023bb1}</UniqueIdentifier>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{06e6f9cb-eca8-461c-94ac-9705e422f46a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Deferred">
+      <UniqueIdentifier>{d885ab76-4ae5-4152-9bd4-c5a7af213015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Wrappers">
+      <UniqueIdentifier>{624d6dc6-02a2-441c-8ff7-779b44b2ade5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Utils">
+      <UniqueIdentifier>{1ba6a05d-9cee-4082-ba47-7aa55c60d760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Extensions">
+      <UniqueIdentifier>{11aad47b-fcc4-4af4-b22c-be40b54bf6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Texture">
+      <UniqueIdentifier>{2f19ac72-7d3a-4fb0-b742-b56ec2571954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deps">
+      <UniqueIdentifier>{34bb000b-8ee6-44a1-9ccb-d5d567552044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{2623b98e-6c4b-492f-ba48-960edaa783f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\IO">
+      <UniqueIdentifier>{b9ab0e0b-8d58-4d9f-a735-2c317be88687}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include/AwesomiumInterface.inl">
-      <Filter>UI</Filter>
-    </None>
     <None Include="include/Radix.inl">
       <Filter>Utils</Filter>
     </None>
@@ -470,16 +449,16 @@
     <None Include="include/ThreadPool.inl">
       <Filter>Core\ADT</Filter>
     </None>
-    <None Include="include/Keys.inl">
+    <None Include="include/ui/Keys.inl">
       <Filter>UI\Input</Filter>
     </None>
     <None Include="include/VorbPreDecl.inl" />
-    <None Include="src\SoundImplFMOD.inl">
+    <None Include="src/sound/SoundImplFMOD.inl">
       <Filter>Sound</Filter>
     </None>
-    <None Include="include\typesColor.inl" />
-    <None Include="include\typesArray.inl" />
-    <None Include="include\RingBuffer.inl">
+    <None Include="include/typesArray.inl" />
+    <None Include="include/typesColor.inl" />
+    <None Include="include/RingBuffer.inl">
       <Filter>Core\ADT</Filter>
     </None>
   </ItemGroup>

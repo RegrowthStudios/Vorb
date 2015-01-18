@@ -5,8 +5,10 @@
 #define UNIT_TEST_BATCH Vorb_IO_
 
 #include <include/IO.h>
-#include <include/IOManager.h>
+#include <include/graphics/ModelIO.h>
+#include <include/io/IOManager.h>
 #include <include/Vorb.h>
+#include <include/Timing.h>
 
 TEST(Path) {
     vpath path = ".";
@@ -90,6 +92,40 @@ TEST(IOMDirs) {
 
     printf("Exec Dir: %s\n", vio::IOManager::getExecutableDirectory().getCString());
     printf("CWD Dir:  %s\n", vio::IOManager::getCurrentWorkingDirectory().getCString());
+
+    return true;
+}
+
+TEST(ModelIO) {
+    vpath path = "data/models/WaveOBJ";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(false);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l];
+        l = (size_t)fs.read(l, 1, data);
+        data[l] = 0;
+        fs.close();
+
+        vio::OBJMesh mesh;
+        timer.start();
+        vio::ModelIO::loadOBJ(data, mesh);
+        f32 ms = timer.stop();
+        delete[] data;
+
+        printf("Model: %s\n", file.getPath().getCString());
+        printf("Verts: %d\n", mesh.vertices.size());
+        printf("Inds: %d\n", mesh.triangles.size() * 3);
+        printf("Load Time (MS): %f\n", ms);
+    });
 
     return true;
 }

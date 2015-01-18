@@ -74,7 +74,7 @@ inline const cwString convertMBToWString(const cString s) {
     cwString resultString = new wchar_t[l + 1];
     size_t numConverted = 0;
 #if defined(__APPLE__) || defined(__linux__)
-    wcstombs(&(resultString[0]), ws, numConverted);
+    wcstombs((char *)&(resultString[0]), (const wchar_t *)s, numConverted);
 #elif defined(WIN32) || defined(WIN64)
     mbstowcs(resultString, s, l);
 #endif   // win32
@@ -179,6 +179,28 @@ template <>
 struct std::hash<i32v2> {
     size_t operator()(const i32v2& k) const {
         std::hash<i32> h;
+
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+        return ((h(k.x) ^ (h(k.y) << 1)) >> 1);
+    }
+};
+template <>
+struct std::hash<ui32v3> {
+    size_t operator()(const ui32v3& k) const {
+        std::hash<ui32> h;
+
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+        return ((h(k.x) ^ (h(k.y) << 1)) >> 1) ^ (h(k.z) << 1);
+    }
+};
+template <>
+struct std::hash<ui32v2> {
+    size_t operator()(const ui32v2& k) const {
+        std::hash<ui32> h;
 
         // Compute individual hash values for first,
         // second and third and combine them using XOR

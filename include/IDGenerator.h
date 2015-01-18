@@ -50,7 +50,7 @@ namespace vorb {
             /// Reset this generator to a fresh state
             void reset() {
                 m_currentID = ID_GENERATOR_NULL_ID;
-                m_recycled.swap(std::queue<T>());
+                std::queue<T>().swap(m_recycled);
             }
 
             /// @return Number of active IDs

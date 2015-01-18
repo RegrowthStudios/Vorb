@@ -22,6 +22,9 @@ typedef const void* Sender;
 template<typename... Params>
 class IDelegate {
 public:
+    virtual ~IDelegate() {
+        // Empty
+    }
     /// Invoke this function's code
     /// @param sender: The sender that underlies the event
     /// @param p: Additional arguments to function
@@ -116,7 +119,7 @@ public:
         add(f);
         return *this;
     }
-    
+
     /// Remove a function (just one) from this event
     /// @param f: A subscriber
     void remove(const Listener f) {
@@ -159,26 +162,26 @@ public:
 
     /// Binds a callback to an event and adds it for automatic destruction
     /// @tparam F: f's functor type
-    /// @tparam Params: f's extra invocation parameters 
+    /// @tparam Params: f's extra invocation parameters
     /// @param e: Event
     /// @param f: Callback function
     template<typename F, typename... Params>
     void addAutoHook(Event<Params...>* e, F f) {
-        IDelegate<Params...>* fd = e->addFunctor<F>(f);
-        IDelegate<>* d = createDelegate<>([=] (Sender sender) {
+        IDelegate<Params...>* fd = e->template addFunctor<F>(f);
+        IDelegate<>* d = createDelegate<>([=] (Sender) {
             e->remove(fd);
             delete fd;
         });
         m_deletionFunctions.push_back(d);
     }
-    
+
     /// Properly disposes all delegates added to this pool
     void dispose() {
         for (auto& f : m_deletionFunctions) {
             f->invoke(nullptr);
             delete f;
         }
-        m_deletionFunctions.swap(DeleterList());
+        DeleterList().swap(m_deletionFunctions);
     }
 private:
     DeleterList m_deletionFunctions; ///< List of delegates to be deleted

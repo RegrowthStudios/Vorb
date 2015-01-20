@@ -29,6 +29,8 @@ namespace vorb {
     }
     namespace sound {
     }
+    namespace net {
+    }
 }
 
 // Namespace aliases
@@ -38,6 +40,7 @@ namespace vvox = vorb::voxel; ///< Namespace alias vorb::voxel
 namespace vui = vorb::ui; ///< Namespace alias vorb::ui
 namespace vio = vorb::io; ///< Namespace alias vorb::ui
 namespace vsound = vorb::sound; ///< Namespace alias vorb::sound
+namespace vnet = vorb::net; ///< Namespace alias vorb::net
 
 #define DECL_VORB(CONTAINER, TYPE) namespace vorb { CONTAINER TYPE; }
 #define DECL_VCORE(CONTAINER, TYPE) namespace vorb { namespace core { CONTAINER TYPE; }  }
@@ -46,5 +49,6 @@ namespace vsound = vorb::sound; ///< Namespace alias vorb::sound
 #define DECL_VUI(CONTAINER, TYPE) namespace vorb { namespace ui { CONTAINER TYPE; }  }
 #define DECL_VIO(CONTAINER, TYPE) namespace vorb { namespace io { CONTAINER TYPE; }  }
 #define DECL_VSOUND(CONTAINER, TYPE) namespace vorb { namespace sound { CONTAINER TYPE; }  }
+#define DECL_VNET(CONTAINER, TYPE) namespace vorb { namespace net { CONTAINER TYPE; }  }
 
 #endif // VorbPreDecl_inl__

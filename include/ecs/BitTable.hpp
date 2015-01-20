@@ -33,28 +33,28 @@ namespace vorb {
             /// @return True if bit is non-zero
             bool valueOf(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
-                return ((val >> (i & 0x08)) & 0x01) == 1;
+                return ((val >> (i & 0x07)) & 0x01) == 1;
             }
 
             /// Set a bit true
             /// @param i: Index of value
             void setTrue(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
-                ui8 field = 0x01 << (i & 0x08);
+                ui8 field = 0x01 << (i & 0x07);
                 val |= field;
             }
             /// Set a bit false
             /// @param i: Index of value
             void setFalse(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
-                ui8 field = 0x01 << (i & 0x08);
+                ui8 field = 0x01 << (i & 0x07);
                 val &= ~field;
             }
             /// Toggle a bit's value
             /// @param i: Index of value
             void toggleValue(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
-                ui8 field = 0x01 << (i & 0x08);
+                ui8 field = 0x01 << (i & 0x07);
                 val ^= field;
             }
         private:
@@ -94,7 +94,7 @@ namespace vorb {
             bool valueOf(const ui32& r, const ui32& c) const {
                 const ui8* bits = &m_bits[r * m_columns];
                 bits += c >> 3;
-                return ((*bits >> (c & 0x08)) & 0x01) == 1;
+                return ((*bits >> (c & 0x07)) & 0x01) == 1;
             }
 
             /// Set a bit true
@@ -103,7 +103,7 @@ namespace vorb {
             void setTrue(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
-                ui8 field = 0x01 << (c & 0x08);
+                ui8 field = 0x01 << (c & 0x07);
                 *val |= field;
             }
             /// Set a bit false
@@ -112,7 +112,7 @@ namespace vorb {
             void setFalse(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
-                ui8 field = 0x01 << (c & 0x08);
+                ui8 field = 0x01 << (c & 0x07);
                 *val &= ~field;
             }
             /// Toggle a bit's value
@@ -121,7 +121,7 @@ namespace vorb {
             void toggleValue(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
-                ui8 field = 0x01 << (c & 0x08);
+                ui8 field = 0x01 << (c & 0x07);
                 *val ^= field;
             }
             /// Clear out an entire row

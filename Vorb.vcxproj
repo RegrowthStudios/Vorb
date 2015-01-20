@@ -110,7 +110,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OOLua-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;OOLua-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -133,7 +133,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OOLua-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;OOLua-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -161,7 +161,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OOLua.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;OOLua.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -188,7 +188,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OOLua.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;OOLua.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

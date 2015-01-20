@@ -462,6 +462,9 @@
     <Filter Include="Blister\Widgets">
       <UniqueIdentifier>{0c718b86-a7e8-48a3-88ba-9d7d863be1d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{08ae98f0-3d08-453a-9236-e213da5e47e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">

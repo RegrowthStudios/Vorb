@@ -245,7 +245,8 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/InputDispatcher.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
-    <ClCompile Include="src/graphics/SpriteBatch.cpp" />
+    <ClCompile Include="src\graphics\SpriteBatch.cpp" />
+    <ClCompile Include="src\graphics\SpriteBatchOld.cpp" />
     <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
     <ClCompile Include="src/voxel/VoxCommon.cpp" />
@@ -255,6 +256,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\io\YAML.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -313,7 +315,8 @@
     <ClInclude Include="include/graphics/RTSwapChain.hpp" />
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
-    <ClInclude Include="include/graphics/SpriteBatch.h" />
+    <ClInclude Include="include\graphics\SpriteBatch.h" />
+    <ClInclude Include="include\graphics\SpriteBatchOld.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />
     <ClInclude Include="include/ui/TextInputListener.hpp" />
@@ -338,6 +341,7 @@
     <ClInclude Include="deps/src/lodepng/lodepng.h" />
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
+    <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
   </ItemGroup>
@@ -355,6 +359,8 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
+    <None Include="src\graphics\SpriteBatchShader.inl" />
+    <None Include="src\io\YAMLInternal.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps/src/BulletCollision.vcxproj">

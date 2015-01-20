@@ -15,10 +15,7 @@
 #ifndef Keg_h__
 #define Keg_h__
 
-namespace YAML {
-    class Node;
-    class Emitter;
-}
+#include "YAML.h"
 
 namespace Keg {
     // These Are All The Types That Can Be Parsed Directly From YAML
@@ -243,13 +240,13 @@ namespace Keg {
     Error parse(void* dest, const cString data, const nString& typeName, Environment* env = nullptr);
     // Parse String Of Data Into A Destination Given A Type ID And Optionally A Separate Environment
     Error parse(void* dest, const cString data, const ui32& typeID, Environment* env = nullptr);
-    Error parse(ui8* dest, YAML::Node& data, Environment* env, Type* type);
-    void evalData(ui8* dest, const Value* decl, YAML::Node& node, Environment* env);
+    Error parse(ui8* dest, keg::Node& data, keg::NodeDocument& doc, Environment* env, Type* type);
+    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::NodeDocument& doc, Environment* env);
 
     nString write(const void* src, Type* type, Environment* env = nullptr);
     nString write(const void* src, const nString& typeName, Environment* env = nullptr);
     nString write(const void* src, const ui32& typeID, Environment* env = nullptr);
-    bool write(const ui8* src, YAML::Emitter& e, Environment* env, Type* type);
+    bool write(const ui8* src, keg::Writer& e, Environment* env, Type* type);
 
 
     // Get The Global Environment Of Custom Types

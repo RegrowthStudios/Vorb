@@ -255,6 +255,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src/MeshGenIcosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
     <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
     <ClInclude Include="include/voxel/VoxelMesherCulled.h" />
@@ -336,6 +338,7 @@
     <ClInclude Include="include/sound/SoundListener.h" />
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="deps/src/lodepng/lodepng.h" />
+    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
   </ItemGroup>
@@ -353,6 +356,7 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
+    <None Include="include/IntersectionUtils.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps/src/BulletCollision.vcxproj">

@@ -49,7 +49,7 @@ void AccumulationTimer::printAll(bool averages) {
         }
     } else {
         for (auto& it : m_accum) {
-            printf("  %-20s: %12f ms\n", it.first.c_str(), it.second.time);
+            printf("  %-20s: %12f ms\n", it.first.c_str(), it.second.time / 10.0f);
         }
     }
 }

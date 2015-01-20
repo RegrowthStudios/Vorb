@@ -155,6 +155,7 @@ void MainGame::checkInput() {
         exitGame();
     }
 }
+
 void MainGame::onUpdateFrame() {
     if (_screen != nullptr) {
         switch (_screen->getState()) {
@@ -186,6 +187,7 @@ void MainGame::onUpdateFrame() {
         return;
     }
 }
+
 void MainGame::onRenderFrame() {
     // TODO: Investigate Removing This
     glViewport(0, 0, _window.getWidth(), _window.getHeight());

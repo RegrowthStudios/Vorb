@@ -257,6 +257,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\io\YAML.cpp" />
+    <ClCompile Include="src/MeshGenIcosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -328,6 +329,7 @@
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
     <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
     <ClInclude Include="include/voxel/VoxelMesherCulled.h" />
@@ -340,6 +342,7 @@
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="deps/src/lodepng/lodepng.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
@@ -361,6 +364,7 @@
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\SpriteBatchShader.inl" />
     <None Include="src\io\YAMLInternal.inl" />
+    <None Include="include/IntersectionUtils.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps/src/BulletCollision.vcxproj">

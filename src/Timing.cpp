@@ -23,10 +23,48 @@ f32 PreciseTimer::stop() {
     return duration.count() * MS_PER_SECOND;
 }
 
-void MultiplePreciseTimer::start(const nString& tag) {
-    if (m_index >= m_intervals.size()) m_intervals.push_back(Interval(tag));
-    if (m_timer.isRunning()) stop();
+void AccumulationTimer::start(const nString& tag) {
+    if (m_timerRunning) stop();
+    m_timerRunning = true;
+    m_start = std::chrono::high_resolution_clock::now();
+    m_it = m_accum.find(tag);
+    if (m_it == m_accum.end()) {
+        m_it = m_accum.insert(std::make_pair(tag, AccumNode())).first;
+    }
+}
 
+f32 AccumulationTimer::stop() {
+    m_timerRunning = false;
+    std::chrono::duration<f32> duration = std::chrono::high_resolution_clock::now() - m_start;
+    f32 time = duration.count() * MS_PER_SECOND;
+    m_it->second.addSample(time);
+    return time;
+}
+
+void AccumulationTimer::clear() {
+    m_accum.clear();
+    m_timerRunning = false;
+}
+
+void AccumulationTimer::printAll(bool averages) {
+    if (averages) {
+        for (auto& it : m_accum) {
+            printf("  %-20s: %12f ms\n", it.first.c_str(), (it.second.time / (float)it.second.numSamples));
+        }
+    } else {
+        for (auto& it : m_accum) {
+            printf("  %-20s: %12f ms\n", it.first.c_str(), it.second.time / 10.0f);
+        }
+    }
+}
+
+void MultiplePreciseTimer::start(const nString& tag) {
+    if (m_timer.isRunning()) stop();
+    if (m_index >= m_intervals.size()) {
+        m_intervals.push_back(Interval(tag));
+    } else {
+        m_intervals[m_index].tag = tag;
+    }
     m_timer.start();
 
 }

@@ -68,7 +68,7 @@ namespace vorb {
             /// @param args: Format arguments
             template<typename... Args>
             void write(const cString format, Args... args) const {
-                fprintf(m_fileCached, "%s", format, args...);
+                fprintf(m_fileCached, format, args...);
             }
 
             /// Read data to a buffer

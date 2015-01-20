@@ -138,30 +138,31 @@ namespace vorb {
             void addColumn() {
                 m_columnsBits++;
                 ui32 col = (m_columnsBits + 7) >> 3;
-                if (col != m_columns && m_rows > 0) {
-                    m_bits.resize(col * m_rows);
-                    ui32 diff = col - m_columns;
+                if (col != m_columns) {
+                    if (m_rows > 0) {
+                        m_bits.resize(col * m_rows);
+                        ui32 diff = col - m_columns;
 
-                    ui8* oldData = &m_bits[m_rows * m_columns];
-                    oldData--;
-                    ui8* newData = &m_bits[m_rows * col];
-                    newData--;
+                        ui8* oldData = &m_bits[m_rows * m_columns];
+                        oldData--;
+                        ui8* newData = &m_bits[m_rows * col];
+                        newData--;
 
-                    // Translate the data
-                    // TODO: Can this be made faster?
-                    for (ui32 r = m_rows; r > 0;) {
-                        r--;
-                        for (ui32 c = 0; c < diff; c++) {
-                            *newData = 0;
-                            newData--;
-                        }
-                        for (ui32 c = 0; c < m_columns; c++) {
-                            *newData = *oldData;
-                            newData--;
-                            oldData--;
+                        // Translate the data
+                        // TODO: Can this be made faster?
+                        for (ui32 r = m_rows; r > 0;) {
+                            r--;
+                            for (ui32 c = 0; c < diff; c++) {
+                                *newData = 0;
+                                newData--;
+                            }
+                            for (ui32 c = 0; c < m_columns; c++) {
+                                *newData = *oldData;
+                                newData--;
+                                oldData--;
+                            }
                         }
                     }
-
                     m_columns = col;
                 }
             }

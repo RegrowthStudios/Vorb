@@ -7,7 +7,7 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// An opened file stream for I/O operations 
+/// An opened file stream for I/O operations
 ///
 
 #pragma once
@@ -68,7 +68,7 @@ namespace vorb {
             /// @param args: Format arguments
             template<typename... Args>
             void write(const cString format, Args... args) const {
-                fprintf(m_fileCached, format, args...);
+                fprintf(m_fileCached, "%s", format, args...);
             }
 
             /// Read data to a buffer
@@ -103,7 +103,7 @@ namespace vorb {
             }
         private:
             /// Create a file stream from a file
-            /// @param parent: 
+            /// @param parent:
             FileStream(const File& parent) :
                 m_parent(parent) {
                 // Empty

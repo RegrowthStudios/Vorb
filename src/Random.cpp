@@ -63,7 +63,6 @@ f32 Random::genMH() {
 
         hash ^= k;
         hash = ((hash << 13) | (hash >> (32 - 13))) * 5 + MURMUR_GEN_PRIME3;
-        ui32 k1 = 0;
         hash ^= 4;
         hash ^= (hash >> 16);
         hash *= MURMUR_GEN_PRIME4;

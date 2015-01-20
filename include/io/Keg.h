@@ -267,15 +267,15 @@ namespace Keg {
 #define KEG_ENUM_DECL(TYPENAME) extern Keg::Enum KEG_GLOBAL_ENUM(TYPENAME); extern bool KEG_GLOBAL_ENUM_INIT(TYPENAME)
 
 // For Use In Source Files:
-#define KEG_TYPE_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool kt_init_##TYPENAME##(); \
+#define KEG_TYPE_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool kt_init_##TYPENAME(); \
     Keg::Type KEG_GLOBAL_TYPE(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
-    bool KEG_GLOBAL_TYPE_INIT(TYPENAME) = kt_init_##TYPENAME##(); \
-    bool kt_init_##TYPENAME##() MACRO_PARAN_L \
+    bool KEG_GLOBAL_TYPE_INIT(TYPENAME) = kt_init_##TYPENAME(); \
+    bool kt_init_##TYPENAME() MACRO_PARAN_L \
     Keg::Type* VAR_NAME = &KEG_GLOBAL_TYPE(TYPENAME);
-#define KEG_ENUM_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool ke_init_##TYPENAME##(); \
+#define KEG_ENUM_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool ke_init_##TYPENAME(); \
     Keg::Enum KEG_GLOBAL_ENUM(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
-    bool KEG_GLOBAL_ENUM_INIT(TYPENAME) = ke_init_##TYPENAME##(); \
-    bool ke_init_##TYPENAME##() MACRO_PARAN_L \
+    bool KEG_GLOBAL_ENUM_INIT(TYPENAME) = ke_init_##TYPENAME(); \
+    bool ke_init_##TYPENAME() MACRO_PARAN_L \
     Keg::Enum* VAR_NAME = &KEG_GLOBAL_ENUM(TYPENAME);
 
 // For Less Verbose Type Initializations

@@ -367,6 +367,9 @@
       <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="include\TextureRecycler.hpp" />
+    <ClInclude Include="include\ecs\BitTable.hpp">
+      <Filter>ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

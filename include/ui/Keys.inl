@@ -1,4 +1,8 @@
+#if defined(WIN32) || defined(WIN64)
 #include <SDL/SDL_scancode.h>
+#else
+#include <SDL2/SDL_scancode.h>
+#endif
 
 /// An enum for defining all the virtual keys
 enum VirtualKey : ui16 {

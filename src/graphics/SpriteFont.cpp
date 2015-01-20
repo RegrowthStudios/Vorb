@@ -2,7 +2,12 @@
 #include "graphics/SpriteFont.h"
 
 #include <boost/filesystem.hpp>
-#include <TTF\SDL_ttf.h>
+
+#if defined(WIN32) || defined(WIN64)
+#include <TTF/SDL_ttf.h>
+#else
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
 
 #include "graphics/GraphicsDevice.h"
 #include "graphics/ImageIO.h"
@@ -254,7 +259,7 @@ f32v2 SpriteFont::measure(const cString s) {
         } else {
             // Check For Correct Glyph
             size_t gi = c - _regStart;
-            if (gi < 0 || gi >= _regLength)
+            if (gi >= _regLength)
                 gi = _regLength;
             cw += _glyphs[gi].size.x;
         }
@@ -274,7 +279,7 @@ void SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2
         } else {
             // Check For Correct Glyph
             size_t gi = c - _regStart;
-            if (gi < 0 || gi >= _regLength)
+            if (gi >= _regLength)
                 gi = _regLength;
             batch->draw(_texID, &_glyphs[gi].uvRect, tp, _glyphs[gi].size * scaling, tint, depth);
             tp.x += _glyphs[gi].size.x * scaling.x;

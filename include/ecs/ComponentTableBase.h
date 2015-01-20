@@ -27,15 +27,10 @@ namespace vorb {
             /// Default constructor which sets up events
             ComponentTableBase();
 
-            /// Registers a component for this entity
-            /// @param eID: Entity ID
-            /// @return Registered component ID
-            /// @throws std::exception: When an entity already has a registered component
-            ComponentID add(EntityID eID);
-            /// Removes an entity's component
-            /// @param eID: Entity ID
-            /// @return True if a component was removed
-            bool remove(EntityID eID);
+            /// @return This table's ID within an ECS
+            const TableID& getID() const {
+                return m_id;
+            }
 
             /// @return Iterator to the first pair of (entity ID, component ID)
             ComponentBindingSet::iterator begin() {
@@ -57,9 +52,9 @@ namespace vorb {
             /// Obtain the component ID for this entity
             /// @param eID: ID of entity to search
             /// @return Component ID if it exists, else ID_GENERATOR_NULL_ID
-            const ComponentID& getComponentID(EntityID eID) const {
+            ComponentID getComponentID(EntityID eID) const {
                 auto comp = _components.find(eID);
-                if (comp == _components.end()) return BAD_ID;
+                if (comp == _components.end()) return ID_GENERATOR_NULL_ID;
                 return comp->second;
             }
 
@@ -77,12 +72,17 @@ namespace vorb {
             virtual void initComponent(ComponentID cID, EntityID eID) = 0;
             virtual void disposeComponent(ComponentID cID, EntityID eID) = 0;
         private:
-            void onEntityRemoval(Sender sender, EntityID id) {
-                remove(id);
-            }
+            /// Registers a component for this entity
+            /// @param eID: Entity ID
+            /// @return Registered component ID
+            /// @throws std::runtime_error: When an entity already has a registered component
+            ComponentID add(EntityID eID);
+            /// Removes an entity's component
+            /// @param eID: Entity ID
+            /// @return True if a component was removed
+            bool remove(EntityID eID);
 
-            static const ComponentID BAD_ID = ID_GENERATOR_NULL_ID; ///< Global ID for a bad component
-
+            TableID m_id; ///< ID within a system
             ComponentBindingSet _components; ///< List of (entity ID, component ID) pairings
             IDGenerator<ComponentID> _genComponent; ///< Unique ID generator
         };

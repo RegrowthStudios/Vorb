@@ -3,7 +3,11 @@
 
 #include <thread>
 
-#include <TTF\SDL_ttf.h>
+#if defined(WIN32) || defined(WIN64)
+#include <TTF/SDL_ttf.h>
+#else
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
 
 #include "graphics/GLStates.h"
 #include "ui/IGameScreen.h"
@@ -14,7 +18,7 @@
 #include "Timing.h"
 
 MainGame::MainGame() : _fps(0) {
-    m_fOnQuit = createDelegate<>([=] (Sender sender) {
+    m_fOnQuit = createDelegate<>([=] (Sender) {
         m_signalQuit = true;
     });
 }
@@ -57,7 +61,7 @@ bool MainGame::initSystems() {
 }
 
 void MainGame::run() {
-  
+
     // Initialize everything except SDL audio and SDL haptic feedback.
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK);
 
@@ -180,6 +184,8 @@ void MainGame::onUpdateFrame() {
             break;
         case ScreenState::EXIT_APPLICATION:
             exitGame();
+            return;
+        default:
             return;
         }
     } else {

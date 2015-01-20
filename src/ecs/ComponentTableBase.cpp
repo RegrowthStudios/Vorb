@@ -2,7 +2,7 @@
 #include "ecs/ComponentTableBase.h"
 
 vcore::ComponentTableBase::ComponentTableBase() :
-    onEntityAdded(this), 
+    onEntityAdded(this),
     onEntityRemoved(this) {
     // Empty
 }
@@ -12,8 +12,11 @@ vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
     auto cBind = _components.find(eID);
     if (cBind != _components.end()) {
         char buf[256];
-        sprintf(buf, "Entity <0x%08lX> already contains component <0x%08lX>", eID, cBind->second);
-        throw std::exception(buf);
+        sprintf(buf,
+                "Entity <0x%08lX> already contains component <0x%08lX>",
+                static_cast<unsigned long>(eID),
+                static_cast<unsigned long>(cBind->second));
+        throw std::runtime_error(buf);
     }
 
     // Generate a new component

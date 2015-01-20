@@ -166,10 +166,14 @@ namespace Keg {
         return ptr(off, Value::basic(t, 0));
     }
 
-    Type::Type() : _values(), _sizeInBytes(0) {}
+    Type::Type() :
+        _sizeInBytes(0),
+        _values() {
+        // Empty
+    }
     Type::Type(size_t sizeInBytes, const nString& name, Environment* env) :
-        _values(),
-        _sizeInBytes(sizeInBytes) {
+        _sizeInBytes(sizeInBytes),
+        _values() {
         if (env) env->addType(name, this);
         getGlobalEnvironment()->addType(name, this);
     }
@@ -523,7 +527,6 @@ namespace Keg {
             return Error::TYPE_NOT_FOUND;
         }
         *dest = ArrayBase(type->getSizeInBytes());
-        i32 len = nArray.size();
         if (nArray.size() > 0) {
             dest->setData(nArray.size());
             ui8* newDest = &dest->at<ui8>(0);
@@ -689,7 +692,7 @@ namespace Keg {
         }
         return true;
     }
-    bool writeArray(ArrayBase src, YAML::Emitter& e, Environment* env, Type* type) {
+    bool writeArray(ArrayBase, YAML::Emitter& e, Environment*, Type*) {
         e << YAML::BeginSeq;
 
         e << YAML::EndSeq;

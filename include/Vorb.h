@@ -1,20 +1,20 @@
-// 
+//
 //  Vorb.h
 //  Vorb Engine
 //
 //  Created by Ben Arnold on 2/10/2014
 //  Copyright 2014 Regrowth Studios
 //  All Rights Reserved
-//  
+//
 //  Summary:
-//  This is the main header for the vorb engine. It 
+//  This is the main header for the vorb engine. It
 //  contains the namespace declarations.
 
 #pragma once
 
 #ifndef Vorb_h__
 #define Vorb_h__
-
+#include "stdafx.h"
 #include "VorbPreDecl.inl"
 
 namespace vorb {

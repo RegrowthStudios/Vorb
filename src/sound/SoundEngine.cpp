@@ -23,7 +23,7 @@ namespace vorb {
 }
 bool vsound::impl::initSystem() {
     idGenResources.reset();
-    engines.swap(std::vector<vsound::Engine>());
+    std::vector<vsound::Engine>().swap(engines);
     return true;
 }
 bool vsound::impl::disposeSystem() {
@@ -32,7 +32,7 @@ bool vsound::impl::disposeSystem() {
         if (engine.isDisposed()) continue;
         engine.dispose();
     }
-    engines.swap(std::vector<vsound::Engine>());
+    std::vector<vsound::Engine>().swap(engines);
     return true;
 }
 
@@ -64,7 +64,7 @@ bool vsound::Engine::init() {
         delete m_data;
         return false;
     }
-    
+
     // Update liveliness
     m_alive.reset(new bool(true));
     impl::engines.push_back(*this);
@@ -138,12 +138,16 @@ vsound::Instance vsound::Engine::createInstance(const Resource& sound) {
     if (m_data->currentChannel >= VORB_SOUND_ENGINE_MAX_CHANNELS) m_data->currentChannel = 0;
 
     inst.m_data = &m_data->channels[m_data->currentChannel];
+    #if defined(OS_WINDOWS)
     m_data->system->playSound(FMOD_CHANNEL_FREE, sound.m_data->sound, true, &inst.m_data->channel);
+    #else
+    m_data->system->playSound(sound.m_data->sound, nullptr, true, &inst.m_data->channel);
+    #endif
     return inst;
 }
 
 void vsound::Engine::update(const Listener& listener) {
-    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs 
+    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs
         (FMOD_VECTOR*)&listener.position,
         (FMOD_VECTOR*)&listener.velocity,
         (FMOD_VECTOR*)&listener.forward,

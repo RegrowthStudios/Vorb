@@ -37,7 +37,7 @@
 
 namespace vorb {
     namespace core {
-		namespace graphics {
+        namespace graphics {
             /// Geometry and light render target for deferred rendering
             class GBuffer {
             public:
@@ -71,6 +71,8 @@ namespace vorb {
                 /// @param depthFormat: Precision used for depth and stencil buffer
                 /// @return Self
                 GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
+
+                void initTarget(const ui32v2& _size, const ui32& texID, const vg::TextureInternalFormat& format, const ui32& attachment);
                 /// Destroy all render targets
                 void dispose();
 
@@ -108,7 +110,7 @@ namespace vorb {
                 };
                 VGTexture m_texDepth = 0; ///< Depth texture of GBuffer
             };
-		}
+        }
     }
 }
 namespace vg = vorb::core::graphics;

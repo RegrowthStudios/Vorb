@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "Timing.h"
 
+#if defined(WIN32) || defined(WIN64)
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 
 typedef std::chrono::milliseconds ms;
 
@@ -61,9 +65,8 @@ void MultiplePreciseTimer::start(const nString& tag) {
     } else {
         m_intervals[m_index].tag = tag;
     }
-    
     m_timer.start();
-     
+
 }
 void MultiplePreciseTimer::stop() {
     m_intervals[m_index++].time += m_timer.stop();
@@ -96,14 +99,14 @@ float FpsCounter::endFrame() {
     return m_fps;
 }
 void FpsCounter::calculateFPS() {
-    
+
     #define DECAY 0.9f
 
     //Calculate the number of ticks (ms) for this frame
     f32 timeThisFrame = (f32)(SDL_GetTicks() - m_startTicks);
     // Use a simple moving average to decay the FPS
     m_frameTime = m_frameTime * DECAY + timeThisFrame * (1.0f - DECAY);
-  
+
     //Calculate FPS
     if (m_frameTime > 0.0f) {
         m_fps = MS_PER_SECOND / m_frameTime;

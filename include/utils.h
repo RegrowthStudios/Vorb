@@ -78,7 +78,7 @@ inline const cwString convertMBToWString(const cString s) {
     cwString resultString = new wchar_t[l + 1];
     size_t numConverted = 0;
 #if defined(__APPLE__) || defined(__linux__)
-    wcstombs(&(resultString[0]), ws, numConverted);
+    wcstombs((char *)&(resultString[0]), (const wchar_t *)s, numConverted);
 #elif defined(WIN32) || defined(WIN64)
     mbstowcs(resultString, s, l);
 #endif   // win32

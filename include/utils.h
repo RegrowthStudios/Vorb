@@ -19,6 +19,7 @@
 #ifdef UTIL_SIMPLE
 #define NO_UTIL_RADIX
 #define NO_UTIL_BUFFER
+#define NO_UTIL_INTERSECTION
 #endif
 
 /************************************************************************/
@@ -30,6 +31,9 @@
 #endif
 #ifndef NO_UTIL_BUFFER
 #include "BufferUtils.inl"
+#endif
+#ifndef NO_UTIL_INTERSECTION
+#include "IntersectionUtils.inl"
 #endif
 
 // Inlined math functions
@@ -143,6 +147,10 @@ inline T upSampleArray(size_t i1, size_t i2, size_t i3, T (&data)[N1][N2][N3]) {
         );
 }
 
+/// Simple hermite interpolater for smoothing the range 0-1
+inline float hermite(float f) { return 3.0f * (f * f) - 2.0f * (f * f * f); }
+inline double hermite(double f) { return 3.0 * (f * f) - 2.0 * (f * f * f); }
+
 /************************************************************************/
 /* Quaternion Utilities                                                 */
 /************************************************************************/
@@ -160,6 +168,23 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     q.w = 1.0 + glm::dot(v1, v2);
     return glm::normalize(q);
 }
+/// Finds the shortest arc rotation quat between two directions
+/// @param v1: Starting direction
+/// @param v2: End direction
+/// @pre: v1 and v2 are normalized
+/// @pre: v1 != -v2
+inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
+    f32q q;
+    f32v3 a = glm::cross(v1, v2);
+    q.x = a.x;
+    q.y = a.y;
+    q.z = a.z;
+    f32 l1 = glm::length(v1);
+    f32 l2 = glm::length(v2);
+    q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
+    return glm::normalize(q);
+}
+
 
 /************************************************************************/
 /* Hash functions                                                       */

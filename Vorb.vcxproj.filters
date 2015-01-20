@@ -132,6 +132,7 @@
     <ClCompile Include="src/graphics/ModelIO.cpp">
       <Filter>Graphics\IO</Filter>
     </ClCompile>
+    <ClCompile Include="src/MeshGenIcosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -346,6 +347,7 @@
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
     </ClInclude>
@@ -364,6 +366,7 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -460,6 +463,9 @@
     <None Include="include/typesColor.inl" />
     <None Include="include/RingBuffer.inl">
       <Filter>Core\ADT</Filter>
+    </None>
+    <None Include="include/IntersectionUtils.inl">
+      <Filter>Utils</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

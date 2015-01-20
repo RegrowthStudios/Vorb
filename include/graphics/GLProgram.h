@@ -1,4 +1,4 @@
-// 
+﻿// 
 //  GLProgram.h
 //  Vorb Engine
 //
@@ -120,6 +120,10 @@ namespace vorb {
                 /// Creates mappings for uniforms
                 void initUniforms();
 
+                /// Binds fragment shader outputs to color numbers.
+                /// @pre program is not yet linked.
+                void bindFragDataLocation(ui32 colorNumber​, const char * name​);
+
                 /// Gets an attribute index
                 /// @param name: The attribute's name
                 /// @return Attribute location
@@ -152,6 +156,8 @@ namespace vorb {
                 Event<nString> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
                 Event<nString> onProgramLinkError; ///< Event signaled during link when an error occurs
             private:
+                void shaderCompilationError(const nString& s);
+
                 VGProgram _id = 0; ///< Program
                 VGShader _idVS = 0; ///< Vertex shader
                 VGShader _idFS = 0; ///< Fragment shader

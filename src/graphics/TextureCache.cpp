@@ -1,9 +1,14 @@
 #include "stdafx.h"
 #include "graphics/TextureCache.h"
 
+#include "io/IOManager.h"
 #include "graphics/GpuMemory.h"
 
 vg::TextureCache::TextureCache() {
+    // Empty
+}
+vg::TextureCache::TextureCache(vio::IOManager* ioManager) :
+m_ioManager(ioManager) {
     // Empty
 }
 
@@ -30,8 +35,10 @@ nString vg::TextureCache::getTexturePath(ui32 textureID) {
 }
 
 vg::Texture vg::TextureCache::addTexture(const nString& filePath,
-                                SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
-                                i32 mipmapLevels /* = INT_MAX */) {
+    SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+    vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+    vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+    i32 mipmapLevels /* = INT_MAX */) {
 
     // Check if its already cached
     Texture texture = findTexture(filePath);
@@ -41,13 +48,18 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     std::vector <ui8> pixelStore;
 
     // Load the pixel data
-    vio::ImageIO loader;
-    if (!loader.loadPng(filePath, pixelStore, texture.width, texture.height)) {
+    vpath texPath = filePath; 
+    if(m_ioManager) m_ioManager->resolvePath(filePath, texPath);
+    if (!vio::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
         return Texture();
     }
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(pixelStore.data(), texture.width, texture.height, samplingParameters, mipmapLevels);
+    texture.id = GpuMemory::uploadTexture(pixelStore.data(), texture.width, texture.height,
+        samplingParameters,
+        internalFormat,
+        textureFormat,
+        mipmapLevels);
 
     // Store the texture in the cache
     insertTexture(filePath, texture);
@@ -55,17 +67,23 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
 }
 
 vg::Texture vg::TextureCache::addTexture(const nString& filePath,
-                              const ui8* pixels,
-                              ui32 width,
-                              ui32 height,
-                              SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
-                              i32 mipmapLevels /* = INT_MAX */) {
+    const ui8* pixels,
+    ui32 width,
+    ui32 height,
+    SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+    vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+    vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+    i32 mipmapLevels /* = INT_MAX */) {
     // Check if its already cached
     Texture texture = findTexture(filePath);
     if (texture.id) return texture;
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(pixels, width, height, samplingParameters, mipmapLevels);
+    texture.id = GpuMemory::uploadTexture(pixels, width, height,
+        samplingParameters,
+        internalFormat,
+        textureFormat,
+        mipmapLevels);
     texture.width = width;
     texture.height = height;
 
@@ -120,8 +138,6 @@ void vg::TextureCache::destroy() {
     for (auto tex : _textureStringMap) {
         GpuMemory::freeTexture(tex.second.id);
     }
-    std::unordered_map <nString, Texture>().swap(_textureStringMap); ///< Textures store here keyed on filename
-    std::map <ui32, std::unordered_map <nString, Texture>::iterator>().swap(_textureIdMap);
 }
 
 void vg::TextureCache::insertTexture(const nString& filePath, const Texture& texture) {

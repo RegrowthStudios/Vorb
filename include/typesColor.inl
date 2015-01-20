@@ -44,6 +44,17 @@ public:
         return data[i];
     }
 
+    /// Linear RGB interpolation of colors
+    /// @param ca: Starting color
+    /// @param cb: Ending color
+    /// @param ratio: Mix value - [0,1] preferable
+    void lerp(const ColorRGB8& ca, const ColorRGB8& cb, f32 ratio) {
+        f32 invRatio = 1.0f - ratio;
+        r = (ui8)(invRatio * ca.r + ratio * cb.r);
+        g = (ui8)(invRatio * ca.g + ratio * cb.g);
+        b = (ui8)(invRatio * ca.b + ratio * cb.b);
+    }
+
     union {
         struct {
             ui8 r; ///< Red value
@@ -103,6 +114,18 @@ public:
     /// @return Reference to color element
     ui8& operator[] (const size_t& i) {
         return data[i];
+    }
+
+    /// Linear RGBA interpolation of colors
+    /// @param ca: Starting color
+    /// @param cb: Ending color
+    /// @param ratio: Mix value - [0,1] preferable
+    void lerp(const ColorRGBA8& ca, const ColorRGBA8& cb, f32 ratio) {
+        f32 invRatio = 1.0f - ratio;
+        r = (ui8)(invRatio * ca.r + ratio * cb.r);
+        g = (ui8)(invRatio * ca.g + ratio * cb.g);
+        b = (ui8)(invRatio * ca.b + ratio * cb.b);
+        a = (ui8)(invRatio * ca.r + ratio * cb.a);
     }
 
     union {

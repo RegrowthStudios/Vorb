@@ -59,6 +59,9 @@
     <ClCompile Include="Vorb.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Keg.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

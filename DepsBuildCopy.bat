@@ -1,0 +1,13 @@
+@ECHO OFF
+COPY  /Y "deps\src\bin\Win32\Release\YAML\libyaml-cppmd.lib " "deps\lib\Win32\libyaml-cppmd.lib"
+COPY  /Y "deps\src\bin\Win32\Debug\YAML\libyaml-cppmdd.lib "   "deps\lib\Win32\libyaml-cppmdd.lib"
+COPY  /Y "deps\src\bin\x64\Release\YAML\libyaml-cppmd.lib "   "deps\lib\x64\libyaml-cppmd.lib"
+COPY  /Y "deps\src\bin\x64\Debug\YAML\libyaml-cppmdd.lib "     "deps\lib\x64\libyaml-cppmdd.lib"
+COPY  /Y "deps\src\bin\Win32\Release\OOLua\OOLua.lib " "deps\lib\Win32\OOLua.lib"
+COPY  /Y "deps\src\bin\Win32\Debug\OOLua\OOLua-d.lib "   "deps\lib\Win32\OOLua-d.lib"
+COPY  /Y "deps\src\bin\x64\Release\OOLua\OOLua.lib "   "deps\lib\x64\OOLua.lib"
+COPY  /Y "deps\src\bin\x64\Debug\OOLua\OOLua-d.lib "     "deps\lib\x64\OOLua-d.lib"
+COPY  /Y "deps\src\bin\Win32\Release\ZLIB\ZLIB.lib " "deps\lib\Win32\ZLIB.lib"
+COPY  /Y "deps\src\bin\Win32\Debug\ZLIB\ZLIB-d.lib "   "deps\lib\Win32\ZLIB-d.lib"
+COPY  /Y "deps\src\bin\x64\Release\ZLIB\ZLIB.lib "   "deps\lib\x64\ZLIB.lib"
+COPY  /Y "deps\src\bin\x64\Debug\ZLIB\ZLIB-d.lib "     "deps\lib\x64\ZLIB-d.lib"

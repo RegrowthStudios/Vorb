@@ -11,7 +11,7 @@
 
 #include "graphics/GraphicsDevice.h"
 #include "graphics/ImageIO.h"
-#include "graphics/SpriteBatch.h"
+#include "graphics/SpriteBatchOld.h"
 
 i32 closestPow2(i32 i) {
     i--;

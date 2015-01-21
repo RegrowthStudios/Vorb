@@ -242,7 +242,7 @@ namespace Keg {
         return _uuid;
     }
 
-    Error parse(ui8* dest, keg::Node& data, keg::NodeDocument& doc, Environment* env, Type* type);
+    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type);
     Error parse(void* dest, const cString data, Type* type, Environment* env /*= nullptr*/) {
         // Test Arguments
         if (env == nullptr) env = getGlobalEnvironment();
@@ -251,7 +251,7 @@ namespace Keg {
         }
 
         // Parse YAML
-        keg::NodeDocument doc;
+        keg::YAMLReader doc;
         doc.init(data);
         keg::Node baseNode = doc.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
@@ -273,7 +273,7 @@ namespace Keg {
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
         // Parse YAML
-        keg::NodeDocument doc;
+        keg::YAMLReader doc;
         doc.init(data);
         keg::Node baseNode = doc.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
@@ -295,7 +295,7 @@ namespace Keg {
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
         // Parse YAML
-        keg::NodeDocument doc;
+        keg::YAMLReader doc;
         doc.init(data);
         keg::Node baseNode = doc.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
@@ -306,7 +306,7 @@ namespace Keg {
         return err;
     }
 
-    bool write(const ui8* src, keg::Writer& e, Environment* env, Type* type);
+    bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type);
     nString write(const void* src, Type* type, Environment* env /*= nullptr*/) {
         // Test Arguments
         if (env == nullptr) env = getGlobalEnvironment();
@@ -314,7 +314,7 @@ namespace Keg {
             return nullptr;
         }
 
-        keg::Writer e;
+        keg::YAMLWriter e;
         e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
@@ -333,7 +333,7 @@ namespace Keg {
         Type* type = env->getType(typeName);
         if (type == nullptr) return nullptr;
 
-        keg::Writer e;
+        keg::YAMLWriter e;
         e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
@@ -352,7 +352,7 @@ namespace Keg {
         Type* type = env->getType(typeID);
         if (type == nullptr) return nullptr;
 
-        keg::Writer e;
+        keg::YAMLWriter e;
         e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
@@ -361,9 +361,9 @@ namespace Keg {
         return nString(e.c_str());
     }
 
-    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::NodeDocument& doc, Environment* env);
+    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::YAMLReader& doc, Environment* env);
 
-    inline Error evalValueCustom(ui8* dest, keg::Node& value, const Value* decl, keg::NodeDocument& doc, Environment* env) {
+    inline Error evalValueCustom(ui8* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // Test Arguments
         if (decl->typeName.empty()) return Error::TYPE_NOT_FOUND;
 
@@ -373,7 +373,7 @@ namespace Keg {
 
         return parse(dest, value, doc, env, type);
     }
-    inline Error evalValueEnum(ui8* dest, keg::Node& value, const Value* decl, keg::NodeDocument& doc, Environment* env) {
+    inline Error evalValueEnum(ui8* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // Test Arguments
         if (decl->typeName.empty()) return Error::TYPE_NOT_FOUND;
 
@@ -383,7 +383,7 @@ namespace Keg {
         type->setValue(dest, keg::convert<nString>(value));
         return Error::NONE;
     }
-    inline Error evalValuePtr(void** dest, keg::Node& value, const Value* decl, keg::NodeDocument& doc, Environment* env) {
+    inline Error evalValuePtr(void** dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // The Type We Will Be Allocating
         nString typeName = decl->typeName;
         if (typeName.empty()) {
@@ -410,7 +410,7 @@ namespace Keg {
 
         return parse((ui8*)*dest, value, doc, env, type);
     }
-    inline Error evalValueArray(ArrayBase* dest, keg::Node& value, const Value* decl, keg::NodeDocument& doc, Environment* env) {
+    inline Error evalValueArray(ArrayBase* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         nString typeName = decl->typeName;
         if (typeName.empty()) {
             auto kvp = basicTypes.find(decl->interiorValue->type);
@@ -457,7 +457,7 @@ namespace Keg {
         return Error::TYPE_NOT_FOUND;
     }
 
-    void evalData(ui8* dest, const Value* decl, keg::Node &node, keg::NodeDocument& doc, Environment* env) {
+    void evalData(ui8* dest, const Value* decl, keg::Node &node, keg::YAMLReader& doc, Environment* env) {
 #define KEG_EVAL_CASE_NUM(ENUM, TYPE) \
         case BasicType::ENUM: *((TYPE*)dest) = keg::convert<TYPE>(node); break; \
         case BasicType::ENUM##_V2: *((TYPE##v2*)dest) = keg::convert<TYPE##v2>(node); break; \
@@ -510,7 +510,7 @@ namespace Keg {
         }
     }
 
-    Error parse(ui8* dest, keg::Node& data, keg::NodeDocument& doc, Environment* env, Type* type) {
+    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type) {
         if (keg::getType(data) != keg::NodeType::MAP) return Error::BAD_VALUE;
 
         // Attempt To Redefine Type
@@ -535,7 +535,7 @@ namespace Keg {
         delete f;
         return Error::NONE;
     }
-    bool write(const ui8* src, keg::Writer& e, Environment* env, Type* type) {
+    bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type) {
         // TODO: Add Ptr And Array Support
 
         Type* interiorType = nullptr;
@@ -620,7 +620,7 @@ namespace Keg {
         }
         return true;
     }
-    bool writeArray(ArrayBase, keg::Writer& e, Environment*, Type*) {
+    bool writeArray(ArrayBase, keg::YAMLWriter& e, Environment*, Type*) {
         // TODO: This is not done yet
         e.push(keg::WriterParam::BEGIN_SEQUENCE);
 

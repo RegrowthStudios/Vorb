@@ -258,6 +258,7 @@
     </ClCompile>
     <ClCompile Include="src\io\YAML.cpp" />
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
+    <ClCompile Include="src\io\YAMLConverters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -329,6 +330,10 @@
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include\io\YAMLConverters.h" />
+    <ClInclude Include="include\io\YAMLNode.h" />
+    <ClInclude Include="include\io\YAMLReader.h" />
+    <ClInclude Include="include\io\YAMLWriter.h" />
     <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
     <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
@@ -347,6 +352,7 @@
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
+    <ClInclude Include="src\io\YAMLImpl.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt" />

@@ -139,6 +139,9 @@
       <Filter>IO\Keg</Filter>
     </ClCompile>
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
+    <ClCompile Include="src\io\YAMLConverters.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -386,6 +389,21 @@
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\io\YAML.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLNode.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLConverters.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\YAMLImpl.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLReader.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLWriter.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
   </ItemGroup>

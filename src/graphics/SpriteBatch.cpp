@@ -321,57 +321,6 @@ void SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tin
     _glyphs.push_back(g);
 }
 
-CALLEE_DELETE SpriteGlyph* SpriteBatch::draw(VGTexture tex, OPT f32v4* uvRect, OPT f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, const f32& rotation, const color4& tint, f32 depth /*= 0.0f*/) {
-    f32v4 uvr = uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1);
-    f32v2 uvt = uvTiling != nullptr ? *uvTiling : f32v2(1, 1);
-    SpriteGlyph* g = _glyphRecycler.create();
-    g->textureID = tex == 0 ? _texPixel : tex;
-    g->depth = depth;
-
-    f32 rxx = (f32)cos(-rotation);
-    f32 rxy = (f32)sin(-rotation);
-    f32 cl = size.x * (-offset.x);
-    f32 cr = size.x * (1 - offset.x);
-    f32 ct = size.y * (-offset.y);
-    f32 cb = size.y * (1 - offset.y);
-
-    g->vtl.position.x = (cl * rxx) + (ct * rxy) + position.x;
-    g->vtl.position.y = (cl * -rxy) + (ct * rxx) + position.y;
-    g->vtl.position.z = depth;
-    g->vtl.uv.x = 0;
-    g->vtl.uv.y = 0;
-    g->vtl.uvRect = uvr;
-    g->vtl.color = tint;
-
-    g->vtr.position.x = (cr * rxx) + (ct * rxy) + position.x;
-    g->vtr.position.y = (cr * -rxy) + (ct * rxx) + position.y;
-    g->vtr.position.z = depth;
-    g->vtr.uv.x = uvt.x;
-    g->vtr.uv.y = 0;
-    g->vtr.uvRect = uvr;
-    g->vtr.color = tint;
-
-    g->vbl.position.x = (cl * rxx) + (cb * rxy) + position.x;
-    g->vbl.position.y = (cl * -rxy) + (cb * rxx) + position.y;
-    g->vbl.position.z = depth;
-    g->vbl.uv.x = 0;
-    g->vbl.uv.y = uvt.y;
-    g->vbl.uvRect = uvr;
-    g->vbl.color = tint;
-
-    g->vbr.position.x = (cr * rxx) + (cb * rxy) + position.x;
-    g->vbr.position.y = (cr * -rxy) + (cb * rxx) + position.y;
-    g->vbr.position.z = depth;
-    g->vbr.uv.x = uvt.x;
-    g->vbr.uv.y = uvt.y;
-    g->vbr.uvRect = uvr;
-    g->vbr.color = tint;
-
-    _glyphs.push_back(g);
-
-    return g;
-}
-
 void SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     font->draw(this, s, position, scaling, tint, depth);

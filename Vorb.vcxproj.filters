@@ -129,18 +129,18 @@
     <ClCompile Include="src/graphics/ModelIO.cpp">
       <Filter>Graphics\IO</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\SpriteBatchOld.cpp">
-      <Filter>Graphics\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\SpriteBatch.cpp">
-      <Filter>Graphics\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\io\YAML.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp">
       <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\SpriteBatchNew.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\SpriteBatch.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -382,12 +382,6 @@
     <ClInclude Include="include\ScopedTiming.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\SpriteBatchOld.h">
-      <Filter>Graphics\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\graphics\SpriteBatch.h">
-      <Filter>Graphics\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\io\YAML.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
@@ -405,6 +399,12 @@
     </ClInclude>
     <ClInclude Include="include\io\YAMLWriter.h">
       <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\SpriteBatchNew.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\SpriteBatch.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

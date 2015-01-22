@@ -20,7 +20,7 @@
 #include "../IDGenerator.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         class ComponentTableBase {
             friend class ECS;
         public:
@@ -84,11 +84,11 @@ namespace vorb {
 
             TableID m_id; ///< ID within a system
             ComponentBindingSet _components; ///< List of (entity ID, component ID) pairings
-            IDGenerator<ComponentID> _genComponent; ///< Unique ID generator
+            vcore::IDGenerator<ComponentID> _genComponent; ///< Unique ID generator
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
 #endif // ComponentTableBase_h__
 

@@ -19,7 +19,7 @@
 #include "ECS.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         /// The simplest component updater implementation
         class ECSSimpleUpdater {
         public:
@@ -37,6 +37,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
 #endif // ECSSimpleUpdater_h__

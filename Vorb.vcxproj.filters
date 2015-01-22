@@ -86,9 +86,6 @@
     <ClCompile Include="src/graphics/GraphicsDevice.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src/graphics/SpriteBatch.cpp">
-      <Filter>Graphics\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src/graphics/SpriteFont.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
@@ -132,7 +129,19 @@
     <ClCompile Include="src/graphics/ModelIO.cpp">
       <Filter>Graphics\IO</Filter>
     </ClCompile>
+    <ClCompile Include="src\io\YAML.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
+    <ClCompile Include="src\io\YAMLConverters.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\SpriteBatchNew.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\SpriteBatch.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -280,9 +289,6 @@
     <ClInclude Include="include/graphics/GraphicsDevice.h">
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include/graphics/SpriteBatch.h">
-      <Filter>Graphics\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include/graphics/SpriteFont.h">
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
@@ -370,6 +376,36 @@
     <ClInclude Include="include\ecs\BitTable.hpp">
       <Filter>ECS</Filter>
     </ClInclude>
+    <ClInclude Include="include\Constants.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ScopedTiming.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAML.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLNode.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLConverters.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\YAMLImpl.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLReader.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLWriter.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\SpriteBatchNew.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\SpriteBatch.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -438,6 +474,15 @@
     <Filter Include="Graphics\IO">
       <UniqueIdentifier>{b9ab0e0b-8d58-4d9f-a735-2c317be88687}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Blister">
+      <UniqueIdentifier>{44c48ac6-5ba2-41a5-b328-798aa182701f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blister\Widgets">
+      <UniqueIdentifier>{0c718b86-a7e8-48a3-88ba-9d7d863be1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{08ae98f0-3d08-453a-9236-e213da5e47e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">
@@ -463,6 +508,12 @@
     <None Include="include/typesColor.inl" />
     <None Include="include/RingBuffer.inl">
       <Filter>Core\ADT</Filter>
+    </None>
+    <None Include="src\graphics\SpriteBatchShader.inl">
+      <Filter>Graphics\Utils</Filter>
+    </None>
+    <None Include="src\io\YAMLInternal.inl">
+      <Filter>IO\Keg</Filter>
     </None>
     <None Include="include/IntersectionUtils.inl">
       <Filter>Utils</Filter>

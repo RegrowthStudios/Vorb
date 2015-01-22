@@ -1,111 +1,10 @@
 #include "stdafx.h"
 #include "io/Keg.h"
 
-#include <yaml-cpp/yaml.h>
+#include "io/YAML.h"
 
-#pragma region YAML Conversion Functions For GLM Types And cStrings
-namespace YAML {
-    template<>
-    struct convert<cString> {
-        static Node encode(const cString& rhs) {
-            Node node;
-            node.push_back(nString(rhs));
-            return node;
-        }
-        static bool decode(const Node& node, cString& rhs) {
-            nString s;
-            bool success = convert<nString>::decode(node, s);
-            if (success) {
-                size_t len = s.length();
-                rhs = new char[len + 1];
-                memcpy(rhs, &s[0], len + 1);
-            }
-            return success;
-        }
-    };
-    template<>
-    struct convert<i8> {
-        static Node encode(const i8& rhs) {
-            Node node;
-            node.push_back(rhs);
-            return node;
-        }
-        static bool decode(const Node& node, i8& rhs) {
-            ui16 v;
-            bool success = convert<ui16>::decode(node, v);
-            if (success) rhs = static_cast<i8>(v);
-            return success;
-        }
-    };
-    template<typename T, typename T_True, typename T_Comp, i32 C>
-    struct convertVec {
-        static Node encode(const T& rhs) {
-            Node node;
-            for (i32 i = 0; i < C; i++) node.push_back(rhs[i]);
-            return node;
-        }
-        static bool decode(const Node& node, T& rhs) {
-            if (!node.IsSequence() || node.size() != C) return false;
-            for (i32 i = 0; i < C; i++) rhs[i] = static_cast<T_True>(node[i].as<T_Comp>());
-            return true;
-        }
-    };
-    template<typename T, typename T_Comp, i32 C>
-    struct convertVecI8 {
-        static Node encode(const T& rhs) {
-            Node node;
-            for (i32 i = 0; i < C; i++) node.push_back(rhs[i]);
-            return node;
-        }
-        static bool decode(const Node& node, T& rhs) {
-            if (!node.IsSequence() || node.size() != C) return false;
-            for (i32 i = 0; i < C; i++) rhs[i] = node[i].as<T_Comp>();
-            return true;
-        }
-    };
-#define YAML_EMITTER_VEC(T, C) \
-    YAML::Emitter& operator << (YAML::Emitter& out, const T& v) MACRO_PARAN_L \
-    out << YAML::Flow; \
-    out << YAML::BeginSeq; \
-    for (i32 i = 0; i < C; i++) out << v[i]; \
-    out << YAML::EndSeq; \
-    return out; \
-    MACRO_PARAN_R
-
-#define KEG_DECL_CONV_VEC_COMP(TYPE, TC, COUNT) YAML_EMITTER_VEC(TYPE##v##COUNT, COUNT) template<> struct convert<TYPE##v##COUNT> : public convertVec<TYPE##v##COUNT, TYPE, TC, COUNT> {}
-#define KEG_DECL_CONV_VEC(TYPE, COUNT) KEG_DECL_CONV_VEC_COMP(TYPE, TYPE, COUNT)
-    KEG_DECL_CONV_VEC_COMP(i8, i16, 2);
-    KEG_DECL_CONV_VEC_COMP(i8, i16, 3);
-    KEG_DECL_CONV_VEC_COMP(i8, i16, 4);
-    KEG_DECL_CONV_VEC(i16, 2);
-    KEG_DECL_CONV_VEC(i16, 3);
-    KEG_DECL_CONV_VEC(i16, 4);
-    KEG_DECL_CONV_VEC(i32, 2);
-    KEG_DECL_CONV_VEC(i32, 3);
-    KEG_DECL_CONV_VEC(i32, 4);
-    KEG_DECL_CONV_VEC(i64, 2);
-    KEG_DECL_CONV_VEC(i64, 3);
-    KEG_DECL_CONV_VEC(i64, 4);
-    KEG_DECL_CONV_VEC_COMP(ui8, ui16, 2);
-    KEG_DECL_CONV_VEC_COMP(ui8, ui16, 3);
-    KEG_DECL_CONV_VEC_COMP(ui8, ui16, 4);
-    KEG_DECL_CONV_VEC(ui16, 2);
-    KEG_DECL_CONV_VEC(ui16, 3);
-    KEG_DECL_CONV_VEC(ui16, 4);
-    KEG_DECL_CONV_VEC(ui32, 2);
-    KEG_DECL_CONV_VEC(ui32, 3);
-    KEG_DECL_CONV_VEC(ui32, 4);
-    KEG_DECL_CONV_VEC(ui64, 2);
-    KEG_DECL_CONV_VEC(ui64, 3);
-    KEG_DECL_CONV_VEC(ui64, 4);
-    KEG_DECL_CONV_VEC(f32, 2);
-    KEG_DECL_CONV_VEC(f32, 3);
-    KEG_DECL_CONV_VEC(f32, 4);
-    KEG_DECL_CONV_VEC(f64, 2);
-    KEG_DECL_CONV_VEC(f64, 3);
-    KEG_DECL_CONV_VEC(f64, 4);
-}
-#pragma endregion
+#define KEG_DOC_TYPE_ID "__TYPE__"
+#define KEG_DOC_DATA_ID "__DATA__"
 
 namespace Keg {
 #define KEG_BASIC_NUM_MAP(TYPE) \
@@ -343,7 +242,7 @@ namespace Keg {
         return _uuid;
     }
 
-    Error parse(ui8* dest, YAML::Node& data, Environment* env, Type* type);
+    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type);
     Error parse(void* dest, const cString data, Type* type, Environment* env /*= nullptr*/) {
         // Test Arguments
         if (env == nullptr) env = getGlobalEnvironment();
@@ -352,11 +251,15 @@ namespace Keg {
         }
 
         // Parse YAML
-        YAML::Node baseNode = YAML::Load(data);
-        if (baseNode.IsNull()) return Error::EARLY_EOF;
+        keg::YAMLReader doc;
+        doc.init(data);
+        keg::Node baseNode = doc.getFirst();
+        if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
 
         // Parse
-        return parse((ui8*)dest, baseNode, env, type);
+        Error err = parse((ui8*)dest, baseNode, doc, env, type);
+        doc.dispose();
+        return err;
     }
     Error parse(void* dest, const cString data, const nString& typeName, Environment* env /*= nullptr*/) {
         // Test Arguments
@@ -370,11 +273,15 @@ namespace Keg {
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
         // Parse YAML
-        YAML::Node baseNode = YAML::Load(data);
-        if (baseNode.IsNull()) return Error::EARLY_EOF;
+        keg::YAMLReader doc;
+        doc.init(data);
+        keg::Node baseNode = doc.getFirst();
+        if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
 
         // Parse
-        return parse((ui8*)dest, baseNode, env, type);
+        Error err = parse((ui8*)dest, baseNode, doc, env, type);
+        doc.dispose();
+        return err;
     }
     Error parse(void* dest, const cString data, const ui32& typeID, Environment* env /*= nullptr*/) {
         // Test Arguments
@@ -388,14 +295,18 @@ namespace Keg {
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
         // Parse YAML
-        YAML::Node baseNode = YAML::Load(data);
-        if (baseNode.IsNull()) return Error::EARLY_EOF;
+        keg::YAMLReader doc;
+        doc.init(data);
+        keg::Node baseNode = doc.getFirst();
+        if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
 
         // Parse
-        return parse((ui8*)dest, baseNode, env, type);
+        Error err = parse((ui8*)dest, baseNode, doc, env, type);
+        doc.dispose();
+        return err;
     }
 
-    bool write(const ui8* src, YAML::Emitter& e, Environment* env, Type* type);
+    bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type);
     nString write(const void* src, Type* type, Environment* env /*= nullptr*/) {
         // Test Arguments
         if (env == nullptr) env = getGlobalEnvironment();
@@ -403,12 +314,12 @@ namespace Keg {
             return nullptr;
         }
 
-        YAML::Emitter e;
-        e << YAML::BeginMap;
+        keg::YAMLWriter e;
+        e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
         }
-        e << YAML::EndMap;
+        e.push(keg::WriterParam::END_MAP);
         return nString(e.c_str());
     }
     nString write(const void* src, const nString& typeName, Environment* env /*= nullptr*/) {
@@ -422,12 +333,12 @@ namespace Keg {
         Type* type = env->getType(typeName);
         if (type == nullptr) return nullptr;
 
-        YAML::Emitter e;
-        e << YAML::BeginMap;
+        keg::YAMLWriter e;
+        e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
         }
-        e << YAML::EndMap;
+        e.push(keg::WriterParam::END_MAP);
         return nString(e.c_str());
     }
     nString write(const void* src, const ui32& typeID, Environment* env /*= nullptr*/) {
@@ -441,18 +352,18 @@ namespace Keg {
         Type* type = env->getType(typeID);
         if (type == nullptr) return nullptr;
 
-        YAML::Emitter e;
-        e << YAML::BeginMap;
+        keg::YAMLWriter e;
+        e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
             return nullptr;
         }
-        e << YAML::EndMap;
+        e.push(keg::WriterParam::END_MAP);
         return nString(e.c_str());
     }
 
-    void evalData(ui8* dest, const Value* decl, YAML::Node& node, Environment* env);
+    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::YAMLReader& doc, Environment* env);
 
-    inline Error evalValueCustom(ui8* dest, YAML::Node& value, const Value* decl, Environment* env) {
+    inline Error evalValueCustom(ui8* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // Test Arguments
         if (decl->typeName.empty()) return Error::TYPE_NOT_FOUND;
 
@@ -460,19 +371,19 @@ namespace Keg {
         Type* type = env->getType(decl->typeName);
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
-        return parse(dest, value, env, type);
+        return parse(dest, value, doc, env, type);
     }
-    inline Error evalValueEnum(ui8* dest, YAML::Node& value, const Value* decl, Environment* env) {
+    inline Error evalValueEnum(ui8* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // Test Arguments
         if (decl->typeName.empty()) return Error::TYPE_NOT_FOUND;
 
         // Attempt To Find The Type
         Enum* type = env->getEnum(decl->typeName);
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
-        type->setValue(dest, value.as<nString>());
+        type->setValue(dest, keg::convert<nString>(value));
         return Error::NONE;
     }
-    inline Error evalValuePtr(void** dest, YAML::Node& value, const Value* decl, Environment* env) {
+    inline Error evalValuePtr(void** dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         // The Type We Will Be Allocating
         nString typeName = decl->typeName;
         if (typeName.empty()) {
@@ -481,8 +392,10 @@ namespace Keg {
             else typeName = decl->interiorValue->typeName;
         }
 
-        if (value["__TYPE__"]) {
-            typeName = value["__TYPE__"].as<nString>();
+        if (keg::hasInterior(value, KEG_DOC_TYPE_ID)) {
+            keg::Node typeNode = doc.getInterior(value, KEG_DOC_TYPE_ID);
+            typeName = keg::convert<nString>(typeNode);
+            doc.free(typeNode);
         }
 
         // Test Arguments
@@ -495,9 +408,9 @@ namespace Keg {
         // Undefined Behavior Time :)
         *dest = new ui8[type->getSizeInBytes()]();
 
-        return parse((ui8*)*dest, value, env, type);
+        return parse((ui8*)*dest, value, doc, env, type);
     }
-    inline Error evalValueArray(ArrayBase* dest, YAML::Node& value, const Value* decl, Environment* env) {
+    inline Error evalValueArray(ArrayBase* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
         nString typeName = decl->typeName;
         if (typeName.empty()) {
             auto kvp = basicTypes.find(decl->interiorValue->type);
@@ -505,15 +418,17 @@ namespace Keg {
             else typeName = decl->interiorValue->typeName;
         }
 
-        YAML::Node nArray;
-        if (value.IsSequence()) {
+        keg::Node nArray = nullptr;
+        if (keg::getType(value) == keg::NodeType::SEQUENCE) {
             nArray = value;
         } else {
-            if (value["__DATA__"]) {
-                nArray = value["__DATA__"];
-                if (!nArray.IsSequence()) return Error::BAD_VALUE;
-                if (value["__TYPE__"]) {
-                    typeName = value["__TYPE__"].as<nString>();
+            if (keg::hasInterior(value, KEG_DOC_DATA_ID)) {
+                nArray = doc.getInterior(value, KEG_DOC_DATA_ID);
+                if (keg::getType(nArray) != keg::NodeType::SEQUENCE) return Error::BAD_VALUE;
+                if (keg::hasInterior(value, KEG_DOC_TYPE_ID)) {
+                    keg::Node typeNode = doc.getInterior(value, KEG_DOC_TYPE_ID);
+                    typeName = keg::convert<nString>(typeNode);
+                    doc.free(typeNode);
                 }
             }
         }
@@ -527,87 +442,100 @@ namespace Keg {
             return Error::TYPE_NOT_FOUND;
         }
         *dest = ArrayBase(type->getSizeInBytes());
-        if (nArray.size() > 0) {
-            dest->setData(nArray.size());
+        if (keg::getSequenceSize(nArray) > 0) {
+            dest->setData(keg::getSequenceSize(nArray));
             ui8* newDest = &dest->at<ui8>(0);
-            for (size_t i = 0; i < dest->getLength(); i++) {
-                YAML::Node tmp = nArray[i];
-                evalData(newDest, decl->interiorValue, tmp, env);
+
+            auto f = createDelegate<size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
+                evalData(newDest, decl->interiorValue, node, doc, env);
+                doc.free(node);
                 newDest += type->getSizeInBytes();
-            }
+            });
+            doc.forAllInSequence(nArray, f);
+            delete f;
         }
         return Error::TYPE_NOT_FOUND;
     }
 
-    void evalData(ui8* dest, const Value* decl, YAML::Node &node, Environment* env) {
+    void evalData(ui8* dest, const Value* decl, keg::Node &node, keg::YAMLReader& doc, Environment* env) {
 #define KEG_EVAL_CASE_NUM(ENUM, TYPE) \
-        case BasicType::ENUM: *((TYPE*)dest) = node.as<TYPE>(); break; \
-        case BasicType::ENUM##_V2: *((TYPE##v2*)dest) = node.as<TYPE##v2>(); break; \
-        case BasicType::ENUM##_V3: *((TYPE##v3*)dest) = node.as<TYPE##v3>(); break; \
-        case BasicType::ENUM##_V4: *((TYPE##v4*)dest) = node.as<TYPE##v4>(); break
+        case BasicType::ENUM: *((TYPE*)dest) = keg::convert<TYPE>(node); break; \
+        case BasicType::ENUM##_V2: *((TYPE##v2*)dest) = keg::convert<TYPE##v2>(node); break; \
+        case BasicType::ENUM##_V3: *((TYPE##v3*)dest) = keg::convert<TYPE##v3>(node); break; \
+        case BasicType::ENUM##_V4: *((TYPE##v4*)dest) = keg::convert<TYPE##v4>(node); break
         switch (decl->type) {
             KEG_EVAL_CASE_NUM(I8, i8);
             KEG_EVAL_CASE_NUM(I16, i16);
             KEG_EVAL_CASE_NUM(I32, i32);
             KEG_EVAL_CASE_NUM(I64, i64);
-            KEG_EVAL_CASE_NUM(UI8, ui8);
+            //KEG_EVAL_CASE_NUM(UI8, ui8);
+        case BasicType::UI8: *((ui8*)dest) = (ui8)keg::convert<ui16>(node); break;
+        case BasicType::UI8_V2: *((ui8v2*)dest) = keg::convert<ui8v2>(node); break;
+        case BasicType::UI8_V3: *((ui8v3*)dest) = keg::convert<ui8v3>(node); break;
+        case BasicType::UI8_V4: *((ui8v4*)dest) = keg::convert<ui8v4>(node); break;
             KEG_EVAL_CASE_NUM(UI16, ui16);
             KEG_EVAL_CASE_NUM(UI32, ui32);
             KEG_EVAL_CASE_NUM(UI64, ui64);
             KEG_EVAL_CASE_NUM(F32, f32);
             KEG_EVAL_CASE_NUM(F64, f64);
         case BasicType::BOOL:
-            *((bool*)dest) = node.as<bool>();
+            *((bool*)dest) = keg::convert<bool>(node);
             break;
         case BasicType::ARRAY:
-            evalValueArray((ArrayBase*)dest, node, decl, env);
+            evalValueArray((ArrayBase*)dest, node, decl, doc, env);
             break;
         case BasicType::C_STRING:
-            *((cString*)dest) = node.as<cString>();
+        {
+                                    nString data = keg::convert<nString>(node);
+                                    cString dataCopy =  new char[data.length() + 1];
+                                    memcpy(dataCopy, data.c_str(), data.length());
+                                    dataCopy[data.length()] = 0;
+                                    *((cString*)dest) = dataCopy;
+        }
             break;
         case BasicType::STRING:
-            *((nString*)dest) = node.as<nString>();
+            *((nString*)dest) = keg::convert<nString>(node); 
             break;
         case BasicType::PTR:
-            evalValuePtr((void**)dest, node, decl, env);
+            evalValuePtr((void**)dest, node, decl, doc, env);
             break;
         case BasicType::ENUM:
-            evalValueEnum((ui8*)dest, node, decl, env);
+            evalValueEnum((ui8*)dest, node, decl, doc, env);
             break;
         case BasicType::CUSTOM:
-            evalValueCustom((ui8*)dest, node, decl, env);
+            evalValueCustom((ui8*)dest, node, decl, doc, env);
             break;
         default:
             break;
         }
     }
 
-    Error parse(ui8* dest, YAML::Node& data, Environment* env, Type* type) {
-        if (data.Type() != YAML::NodeType::Map) return Error::BAD_VALUE;
+    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type) {
+        if (keg::getType(data) != keg::NodeType::MAP) return Error::BAD_VALUE;
 
         // Attempt To Redefine Type
-        if (data["__TYPE__"]) {
-            YAML::Node nodeType = data["__TYPE__"];
-            if (nodeType.IsScalar()) {
-                Type* nType = env->getType(nodeType.as<nString>());
-                if (nType) {
-                    type = nullptr;
-                }
+        if (keg::hasInterior(data, KEG_DOC_TYPE_ID)) {
+            keg::Node nodeType = doc.getInterior(data, KEG_DOC_TYPE_ID);
+            if (keg::getType(nodeType) == keg::NodeType::VALUE) {
+                Type* nType = env->getType(keg::convert<nString>(nodeType));
+                if (!nType) type = nullptr;
             }
+            doc.free(nodeType);
         }
 
         // We Need A Type
         if (!type) return Error::TYPE_NOT_FOUND;
 
         // Iterate Values
-        for (auto nv : data) {
-            nString valName = nv.first.as<nString>();
+        auto f = createDelegate<const nString&, keg::Node>([&] (Sender, const nString& valName, keg::Node node) {
             const Value* v = type->getValue(valName);
-            if (v) evalData(dest + v->offset, v, nv.second, env);
-        }
+            if (v) evalData(dest + v->offset, v, node, doc, env);
+        });
+        doc.forAllInMap(data, f);
+        delete f;
         return Error::NONE;
     }
-    bool write(const ui8* src, YAML::Emitter& e, Environment* env, Type* type) {
+    bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type) {
         // TODO: Add Ptr And Array Support
 
         Type* interiorType = nullptr;
@@ -616,8 +544,8 @@ namespace Keg {
         auto iter = type->getIter();
         while (iter != type->getIterEnd()) {
             // Write The Key
-            e << YAML::Key << iter->first;
-            e << YAML::Value;
+            e.push(keg::WriterParam::KEY) << iter->first;
+            e.push(keg::WriterParam::VALUE);
 
             // Write The Value
             Value v = iter->second;
@@ -639,9 +567,9 @@ namespace Keg {
                     return false;
                 }
                 // Write To Interior Node
-                e << YAML::BeginMap;
+                e.push(keg::WriterParam::BEGIN_MAP);
                 write(data, e, env, interiorType);
-                e << YAML::EndMap;
+                e.push(keg::WriterParam::END_MAP);
                 break;
             case BasicType::PTR:
                 break;
@@ -650,7 +578,7 @@ namespace Keg {
                 interiorType = env->getType(v.interiorValue->typeName);
                 if (interiorType == nullptr) return false;
 
-                // Write To Interior Array
+                // TODO: Write To Interior Array
                 //writeArray(*(ArrayBase*)data, e, env, interiorType);
                 break;
             case BasicType::BOOL:
@@ -660,7 +588,7 @@ namespace Keg {
                 e << *(cString*)data;
                 break;
             case BasicType::STRING:
-                e << (*(nString*)data).c_str();
+                e << (*(nString*)data);
                 break;
 
                 // For when we want to cast TYPE to C_TYPE
@@ -692,10 +620,11 @@ namespace Keg {
         }
         return true;
     }
-    bool writeArray(ArrayBase, YAML::Emitter& e, Environment*, Type*) {
-        e << YAML::BeginSeq;
+    bool writeArray(ArrayBase, keg::YAMLWriter& e, Environment*, Type*) {
+        // TODO: This is not done yet
+        e.push(keg::WriterParam::BEGIN_SEQUENCE);
 
-        e << YAML::EndSeq;
+        e.push(keg::WriterParam::END_SEQUENCE);
         return true;
     }
 

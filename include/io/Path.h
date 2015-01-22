@@ -172,9 +172,9 @@ typedef vio::Path vpath; ///< Path shorthand
 
 namespace std {
     template<>
-    struct hash<vio::Path> : private hash < nString >{
+    struct hash<vio::Path> : private hash<nString>{
     public:
-        size_t operator()(const vio::Path& path) const;
+        size_t operator() (const vio::Path& path) const;
     };
 }
 

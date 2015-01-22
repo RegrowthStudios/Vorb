@@ -24,7 +24,8 @@ namespace vorb {
         GRAPHICS = 0x01,
         IO = 0x02,
         SOUND = 0x04,
-        ALL = GRAPHICS | SOUND | IO
+        NET = 0x08,
+        ALL = GRAPHICS | SOUND | IO | NET
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 

@@ -320,6 +320,7 @@ void SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tin
 
     _glyphs.push_back(g);
 }
+
 void SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     font->draw(this, s, position, scaling, tint, depth);

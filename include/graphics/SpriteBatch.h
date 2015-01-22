@@ -1,7 +1,23 @@
+///
+/// SpriteBatch.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 17 Jan 2015
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// 
+///
+
 #pragma once
+
+#ifndef SpriteBatch_h__
+#define SpriteBatch_h__
 
 #include "../PtrRecycler.hpp"
 #include "../Vorb.h"
+#include "gtypes.h"
 
 class DepthState;
 class RasterizerState;
@@ -12,12 +28,12 @@ DECL_VG(class GLProgram)
 struct VertexSpriteBatch {
 public:
     VertexSpriteBatch();
-    VertexSpriteBatch(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const ColorRGBA8& color);
+    VertexSpriteBatch(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const color4& color);
 
     f32v3 position;
     f32v2 uv;
     f32v4 uvRect;
-    ColorRGBA8 color;
+    color4 color;
 };
 
 enum class SpriteSortMode {
@@ -30,9 +46,9 @@ enum class SpriteSortMode {
 class SpriteGlyph {
 public:
     SpriteGlyph();
-    SpriteGlyph(ui32 texID, f32 d);
+    SpriteGlyph(VGTexture texID, f32 d);
 
-    ui32 textureID;
+    VGTexture textureID;
     f32 depth;
 
     VertexSpriteBatch vtl;
@@ -51,13 +67,15 @@ public:
 
     void begin();
 
-    void draw(ui32 tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void draw(ui32 tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void draw(ui32 tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void draw(ui32 tex, f32v4* uvRect, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void draw(ui32 tex, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth = 0.0f);
-    void drawString(SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, f32 depth = 0.0f);
+    void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const color4& tint, f32 depth = 0.0f);
+    void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint, f32 depth = 0.0f);
+    void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+    void draw(VGTexture tex, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+    void draw(VGTexture tex, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+    
+    void drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const color4& tint, f32 depth = 0.0f);
+    void drawString(SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const color4& tint, f32 depth = 0.0f);
+    
     void end(SpriteSortMode ssm = SpriteSortMode::TEXTURE);
 
     void renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
@@ -112,3 +130,5 @@ private:
 
     static const i32 _INITIAL_GLYPH_CAPACITY = 32;
 };
+
+#endif // SpriteBatch_h__

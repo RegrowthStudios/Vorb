@@ -7,7 +7,7 @@ class DepthState;
 class RasterizerState;
 class SamplerState;
 class SpriteFont;
-DECL_VG(class, GLProgram)
+DECL_VG(class GLProgram)
 
 struct VertexSpriteBatch {
 public:

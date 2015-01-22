@@ -24,7 +24,7 @@
 #include "../io/Path.h"
 #include "../VorbPreDecl.inl"
 
-DECL_VIO(class, IOManager)
+DECL_VIO(class IOManager)
 
 namespace vorb {
     namespace core {

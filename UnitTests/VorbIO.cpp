@@ -115,9 +115,9 @@ TEST(ModelIO) {
         data[l] = 0;
         fs.close();
 
-        vio::OBJMesh mesh;
+        vg::OBJMesh mesh;
         timer.start();
-        vio::ModelIO::loadOBJ(data, mesh);
+        vg::ModelIO::loadOBJ(data, mesh);
         f32 ms = timer.stop();
         delete[] data;
 

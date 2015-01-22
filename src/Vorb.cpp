@@ -35,7 +35,7 @@ namespace vorb {
         }
 
         // Correctly retrieve initial path
-        vpath path = boost::filesystem::initial_path().string();
+        vio::Path path = boost::filesystem::initial_path().string();
 
         // Set the executable directory
 #ifdef OS_WINDOWS

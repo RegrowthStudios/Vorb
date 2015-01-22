@@ -138,6 +138,9 @@ namespace vorb {
                 ret.concatenate(p.m_path);
                 return ret;
             }
+            bool operator==(const Path& other) const {
+                return getString() == other.getString();
+            }
             
             /// Trims the last entry of this path away
             /// @return Self
@@ -166,5 +169,13 @@ namespace vorb {
 }
 namespace vio = vorb::io;
 typedef vio::Path vpath; ///< Path shorthand
+
+namespace std {
+    template<>
+    struct hash<vio::Path> : private hash<nString>{
+    public:
+        size_t operator() (const vio::Path& path) const;
+    };
+}
 
 #endif // Path_h__

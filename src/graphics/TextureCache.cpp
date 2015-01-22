@@ -12,12 +12,11 @@ m_ioManager(ioManager) {
     // Empty
 }
 
-
 vg::TextureCache::~TextureCache() {
     destroy();
 }
 
-vg::Texture vg::TextureCache::findTexture(const nString& filePath) {
+vg::Texture vg::TextureCache::findTexture(const vpath& filePath) {
     auto it = _textureStringMap.find(filePath);
     if (it != _textureStringMap.end()) {
         return it->second;
@@ -26,7 +25,7 @@ vg::Texture vg::TextureCache::findTexture(const nString& filePath) {
     return Texture();
 }
 
-nString vg::TextureCache::getTexturePath(ui32 textureID) {
+vpath vg::TextureCache::getTexturePath(ui32 textureID) {
     auto it = _textureIdMap.find(textureID);
     if (it != _textureIdMap.end()) {
         return it->second->first;
@@ -34,22 +33,24 @@ nString vg::TextureCache::getTexturePath(ui32 textureID) {
     return "";
 }
 
-vg::Texture vg::TextureCache::addTexture(const nString& filePath,
+vg::Texture vg::TextureCache::addTexture(const vpath& filePath,
     SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
     vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
     vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
     i32 mipmapLevels /* = INT_MAX */) {
 
+    // Get absolute path
+    vpath texPath; 
+    resolvePath(filePath, texPath);
+
     // Check if its already cached
-    Texture texture = findTexture(filePath);
+    Texture texture = findTexture(texPath);
     if (texture.id) return texture;
 
     // Buffer for the pixels
     std::vector <ui8> pixelStore;
 
     // Load the pixel data
-    vpath texPath = filePath; 
-    if(m_ioManager) m_ioManager->resolvePath(filePath, texPath);
     if (!vio::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
         return Texture();
     }
@@ -62,11 +63,11 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
         mipmapLevels);
 
     // Store the texture in the cache
-    insertTexture(filePath, texture);
+    insertTexture(texPath, texture);
     return texture;
 }
 
-vg::Texture vg::TextureCache::addTexture(const nString& filePath,
+vg::Texture vg::TextureCache::addTexture(const vpath& filePath,
     const ui8* pixels,
     ui32 width,
     ui32 height,
@@ -74,8 +75,13 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
     vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
     i32 mipmapLevels /* = INT_MAX */) {
+
+    // Get absolute path
+    vpath texPath;
+    resolvePath(filePath, texPath);
+
     // Check if its already cached
-    Texture texture = findTexture(filePath);
+    Texture texture = findTexture(texPath);
     if (texture.id) return texture;
 
     // Upload the texture through GpuMemory
@@ -88,17 +94,21 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     texture.height = height;
 
     // Store the texture in the cache
-    insertTexture(filePath, texture);
+    insertTexture(texPath, texture);
     return texture;
 }
 
-void vg::TextureCache::addTexture(const nString& filePath, const Texture& texture) {
+void vg::TextureCache::addTexture(const vpath& filePath, const Texture& texture) {
     insertTexture(filePath, texture);
 }
 
-void vg::TextureCache::freeTexture(const nString& filePath) {
+void vg::TextureCache::freeTexture(const vpath& filePath) {
+    // Get absolute path
+    vpath texPath;
+    resolvePath(filePath, texPath);
+   
     // Check the cache for the texture
-    auto it = _textureStringMap.find(filePath);
+    auto it = _textureStringMap.find(texPath);
     if (it != _textureStringMap.end()) {
         // Erase from the set ( must be done before freeTexture )
         _textureIdMap.erase(it->second.id);
@@ -140,8 +150,16 @@ void vg::TextureCache::destroy() {
     }
 }
 
-void vg::TextureCache::insertTexture(const nString& filePath, const Texture& texture) {
+void vg::TextureCache::insertTexture(const vpath& filePath, const Texture& texture) {
     // We store an iterator to the map node in the _textureIdMap
     // so that we can quickly remove textures from the cache
     _textureIdMap[texture.id] = _textureStringMap.insert(std::make_pair(filePath, texture)).first;
+}
+
+void vorb::core::graphics::TextureCache::resolvePath(const vpath& path, OUT vpath& fullPath) {
+    if (m_ioManager) {
+        m_ioManager->resolvePath(path, fullPath);
+    } else {
+        fullPath = path;
+    }
 }

@@ -138,6 +138,9 @@ namespace vorb {
                 ret.concatenate(p.m_path);
                 return ret;
             }
+            bool operator==(const Path& other) const {
+                return getString() == other.getString();
+            }
             
             /// Trims the last entry of this path away
             /// @return Self

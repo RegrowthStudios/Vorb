@@ -167,4 +167,12 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::Path vpath; ///< Path shorthand
 
+namespace std {
+    template<>
+    struct hash<vpath> : private hash < nString >{
+    public:
+        size_t operator()(const vpath& path) const;
+    };
+}
+
 #endif // Path_h__

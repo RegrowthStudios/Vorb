@@ -45,14 +45,14 @@ namespace vsound = vorb::sound; ///< Namespace alias vorb::sound
 namespace vecs = vorb::ecs; ///< Namespace alias vorb::ecs
 namespace vnet = vorb::net; ///< Namespace alias vorb::net
 
-#define DECL_VORB(DECL) namespace vorb { DECL; }
-#define DECL_VCORE(DECL) namespace vorb { namespace core { DECL; }  }
-#define DECL_VG(DECL) namespace vorb { namespace graphics { DECL; }  }
-#define DECL_VVOX(DECL) namespace vorb { namespace voxel { DECL; }  }
-#define DECL_VUI(DECL) namespace vorb { namespace ui { DECL; }  }
-#define DECL_VIO(DECL) namespace vorb { namespace io { DECL; }  }
-#define DECL_VSOUND(DECL) namespace vorb { namespace sound { DECL; }  }
-#define DECL_VECS(DECL) namespace vorb { namespace ecs { DECL; }  }
-#define DECL_VNET(DECL) namespace vorb { namespace net { DECL; }  }
+#define DECL_VORB(...) namespace vorb { __VA_ARGS__; }
+#define DECL_VCORE(...) namespace vorb { namespace core { __VA_ARGS__; }  }
+#define DECL_VG(...) namespace vorb { namespace graphics { __VA_ARGS__; }  }
+#define DECL_VVOX(...) namespace vorb { namespace voxel { __VA_ARGS__; }  }
+#define DECL_VUI(...) namespace vorb { namespace ui { __VA_ARGS__; }  }
+#define DECL_VIO(...) namespace vorb { namespace io { __VA_ARGS__; }  }
+#define DECL_VSOUND(...) namespace vorb { namespace sound { __VA_ARGS__; }  }
+#define DECL_VECS(...) namespace vorb { namespace ecs { __VA_ARGS__; }  }
+#define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 
 #endif // VorbPreDecl_inl__

@@ -3,26 +3,26 @@
 
 #include "ui/IGameScreen.h"
 
-ScreenList::ScreenList(MainGame* g) {
+vui::ScreenList::ScreenList(MainGame* g) {
     _game = g;
     _current = SCREEN_INDEX_NO_START_SELECTED;
 }
 
-IGameScreen* ScreenList::moveNext() {
+vui::IGameScreen* vui::ScreenList::moveNext() {
     const IGameScreen* cur = getCurrent();
     _current = cur == 0 ? SCREEN_INDEX_NO_SCREEN : cur->getNextScreen();
     return getCurrent();
 }
-IGameScreen* ScreenList::movePrevious() {
+vui::IGameScreen* vui::ScreenList::movePrevious() {
     const IGameScreen* cur = getCurrent();
     _current = cur == 0 ? SCREEN_INDEX_NO_SCREEN : cur->getPreviousScreen();
     return getCurrent();
 }
 
-void ScreenList::setScreen(i32 s) {
+void vui::ScreenList::setScreen(i32 s) {
     _current = s;
 }
-ScreenList* ScreenList::addScreens(IGameScreen** s, i32 c /*= 0*/) {
+vui::ScreenList* vui::ScreenList::addScreens(IGameScreen** s, i32 c /*= 0*/) {
     // Check For Arguments
     if (s == 0 || c < 1) return this;
 
@@ -42,7 +42,7 @@ ScreenList* ScreenList::addScreens(IGameScreen** s, i32 c /*= 0*/) {
 
     return this;
 }
-ScreenList* ScreenList::addScreen(IGameScreen* s) {
+vui::ScreenList* vui::ScreenList::addScreen(IGameScreen* s) {
     _screens.push_back(s);
     if (s != 0) {
         s->setParentGame(_game, _screens.size() - 1);
@@ -51,7 +51,7 @@ ScreenList* ScreenList::addScreen(IGameScreen* s) {
     return this;
 }
 
-void ScreenList::destroy(GameTime gameTime) {
+void vui::ScreenList::destroy(GameTime gameTime) {
     int s = _screens.size();
     if (s < 1) return;
     for (int i = 0; i < s; i++) {

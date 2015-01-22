@@ -6,7 +6,7 @@
 #define KEG_DOC_TYPE_ID "__TYPE__"
 #define KEG_DOC_DATA_ID "__DATA__"
 
-namespace Keg {
+namespace keg {
 #define KEG_BASIC_NUM_MAP(TYPE) \
     { BasicType::TYPE, #TYPE }, \
     {BasicType::TYPE##_V2, #TYPE "_V2"}, \

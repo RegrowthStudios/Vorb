@@ -17,16 +17,16 @@
 #include "utils.h"
 #include "Timing.h"
 
-MainGame::MainGame() : _fps(0) {
+vui::MainGame::MainGame() : _fps(0) {
     m_fOnQuit = createDelegate<>([=] (Sender) {
         m_signalQuit = true;
     });
 }
-MainGame::~MainGame() {
+vui::MainGame::~MainGame() {
     // Empty
 }
 
-bool MainGame::initSystems() {
+bool vui::MainGame::initSystems() {
     // Create The Window
     if (!_window.init()) return false;
 
@@ -60,7 +60,7 @@ bool MainGame::initSystems() {
     return true;
 }
 
-void MainGame::run() {
+void vui::MainGame::run() {
 
     // Initialize everything except SDL audio and SDL haptic feedback.
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK);
@@ -94,7 +94,7 @@ void MainGame::run() {
 
     SDL_Quit();
 }
-void MainGame::exitGame() {
+void vui::MainGame::exitGame() {
     if (_screen) {
         _screen->onExit(_lastTime);
     }
@@ -108,7 +108,7 @@ void MainGame::exitGame() {
     _isRunning = false;
 }
 
-bool MainGame::init() {
+bool vui::MainGame::init() {
     // This Is Vital
     if (!initSystems()) return false;
     _window.setTitle(nullptr);
@@ -134,7 +134,7 @@ bool MainGame::init() {
 
     return true;
 }
-void MainGame::refreshElapsedTime() {
+void vui::MainGame::refreshElapsedTime() {
     ui32 ct = SDL_GetTicks();
     f64 et = (ct - _lastMS) / 1000.0;
     _lastMS = ct;
@@ -143,7 +143,7 @@ void MainGame::refreshElapsedTime() {
     _curTime.elapsed = et;
     _curTime.total += et;
 }
-void MainGame::checkInput() {
+void vui::MainGame::checkInput() {
     SDL_Event e;
     if (_screen) {
         while (SDL_PollEvent(&e) != 0) {
@@ -160,7 +160,7 @@ void MainGame::checkInput() {
     }
 }
 
-void MainGame::onUpdateFrame() {
+void vui::MainGame::onUpdateFrame() {
     if (_screen != nullptr) {
         switch (_screen->getState()) {
         case ScreenState::RUNNING:
@@ -194,7 +194,7 @@ void MainGame::onUpdateFrame() {
     }
 }
 
-void MainGame::onRenderFrame() {
+void vui::MainGame::onRenderFrame() {
     // TODO: Investigate Removing This
     glViewport(0, 0, _window.getWidth(), _window.getHeight());
     if (_screen != nullptr && _screen->getState() == ScreenState::RUNNING) {

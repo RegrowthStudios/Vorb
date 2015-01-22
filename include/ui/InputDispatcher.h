@@ -15,7 +15,6 @@
 #ifndef InputDispatcher_h__
 #define InputDispatcher_h__
 
-class GameWindow;
 
 #include "KeyboardEventDispatcher.h"
 #include "MouseInputDispatcher.h"
@@ -23,6 +22,8 @@ class GameWindow;
 
 namespace vorb {
     namespace ui {
+        class GameWindow;
+     
         namespace impl {
             VORB_INTERNAL class InputDispatcherEventCatcher;
         }

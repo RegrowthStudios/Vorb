@@ -24,7 +24,7 @@ vui::MouseEventDispatcher vui::InputDispatcher::mouse;
 vui::KeyboardEventDispatcher vui::InputDispatcher::key;
 vui::WindowEventDispatcher vui::InputDispatcher::window;
 volatile bool vui::InputDispatcher::m_isInit = false;
-GameWindow* vui::InputDispatcher::m_window = nullptr;
+vui::GameWindow* vui::InputDispatcher::m_window = nullptr;
 Event<> vui::InputDispatcher::onQuit(nullptr);
 
 

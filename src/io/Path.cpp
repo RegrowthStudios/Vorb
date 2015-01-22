@@ -128,5 +128,5 @@ bool vio::Path::asFile(OUT File* f) const {
 }
 
 size_t std::hash<vpath>::operator()(const vpath& path) const {
-    return this->operator()(path.getString());
+    return std::hash<nString>::operator()(path.getString());
 }

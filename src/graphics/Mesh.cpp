@@ -8,7 +8,7 @@
 #pragma region Default Shader
 
 // Default shader source
-const cString vcore::Mesh::defaultVertexShaderSource = R"(
+const cString vg::Mesh::defaultVertexShaderSource = R"(
 uniform mat4 MVP;
 
 in vec3 vPosition;
@@ -24,7 +24,7 @@ void main() {
     gl_Position = MVP * vec4(vPosition, 1.0);
 }
 )";
-const cString vcore::Mesh::defaultFragmentShaderSource = R"(
+const cString vg::Mesh::defaultFragmentShaderSource = R"(
 uniform sampler2D tex;
 
 in vec2 fUV;
@@ -38,7 +38,7 @@ void main() {
 )";
 
 // Default shader attributes
-const std::vector<vg::GLProgram::AttributeBinding> vcore::Mesh::defaultShaderAttributes = {
+const std::vector<vg::GLProgram::AttributeBinding> vg::Mesh::defaultShaderAttributes = {
     vg::GLProgram::AttributeBinding("vPosition", 0),
     vg::GLProgram::AttributeBinding("vTint", 1),
     vg::GLProgram::AttributeBinding("vUV", 2)
@@ -46,7 +46,7 @@ const std::vector<vg::GLProgram::AttributeBinding> vcore::Mesh::defaultShaderAtt
 
 #pragma endregion
 
-vcore::Mesh::Mesh() :
+vg::Mesh::Mesh() :
     _modelMatrix(1.0f),
     _vbo(0),
     _vao(0),
@@ -59,11 +59,11 @@ vcore::Mesh::Mesh() :
 {
 };
 
-vcore::Mesh::~Mesh() {
+vg::Mesh::~Mesh() {
     destroy();
 }
 
-void vcore::Mesh::destroy() {
+void vg::Mesh::destroy() {
     if (_vao != 0) {
         glDeleteVertexArrays(1, &_vao);
         _vao = 0;
@@ -81,18 +81,18 @@ void vcore::Mesh::destroy() {
     _isUploaded = false;
 }
 
-void vcore::Mesh::init(vg::PrimitiveType primitiveType, bool isIndexed) {
+void vg::Mesh::init(vg::PrimitiveType primitiveType, bool isIndexed) {
     _primitiveType = primitiveType;
     _isIndexed = isIndexed;
     createVertexArray();
 }
 
-void vcore::Mesh::reserve(int numVertices, int numIndices) {
+void vg::Mesh::reserve(int numVertices, int numIndices) {
     _vertices.reserve(numVertices);
     _indices.reserve(numIndices);
 }
 
-void vcore::Mesh::draw() {
+void vg::Mesh::draw() {
     // Need to have uploaded our data
     assert(_isUploaded);
     // A shader needs to be bound
@@ -109,7 +109,7 @@ void vcore::Mesh::draw() {
     glBindVertexArray(0);
 }
 
-void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices) {
+void vg::Mesh::addVertices(const std::vector<MeshVertex>& newVertices) {
     // This should only be called when not indexed
     assert(!_isIndexed);
     // Add the newVertices onto the _vertices array
@@ -121,7 +121,7 @@ void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices) {
     }
 }
 
-void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices, const std::vector<ui32>& newIndices) {
+void vg::Mesh::addVertices(const std::vector<MeshVertex>& newVertices, const std::vector<ui32>& newIndices) {
     // This should only be called when indexed
     assert(_isIndexed);
     // Add the newVertices onto the _vertices array
@@ -140,17 +140,17 @@ void vcore::Mesh::addVertices(const std::vector<MeshVertex>& newVertices, const 
     }
 }
 
-void vcore::Mesh::uploadAndClearLocal(vg::BufferUsageHint usage) {
+void vg::Mesh::uploadAndClearLocal(vg::BufferUsageHint usage) {
     upload(usage);
     std::vector<MeshVertex>().swap(_vertices);
     std::vector<ui32>().swap(_indices);
 }
 
-void vcore::Mesh::uploadAndKeepLocal(vg::BufferUsageHint usage) {
+void vg::Mesh::uploadAndKeepLocal(vg::BufferUsageHint usage) {
     upload(usage);
 }
 
-void vcore::Mesh::upload(vg::BufferUsageHint usage) {
+void vg::Mesh::upload(vg::BufferUsageHint usage) {
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(MeshVertex)* _vertices.size(), nullptr, static_cast<GLenum>(usage));
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(MeshVertex)* _vertices.size(), _vertices.data());
@@ -168,7 +168,7 @@ void vcore::Mesh::upload(vg::BufferUsageHint usage) {
     _isUploaded = true;
 }
 
-i32 vcore::Mesh::getNumPrimitives() const {
+i32 vg::Mesh::getNumPrimitives() const {
     // If indexed, we use indices. Otherwise verts
     int n;
     if (!_isUploaded) {
@@ -198,7 +198,7 @@ i32 vcore::Mesh::getNumPrimitives() const {
     }
 }
 
-void vcore::Mesh::createVertexArray() {
+void vg::Mesh::createVertexArray() {
     // Generate and bind VAO
     glGenVertexArrays(1, &_vao);
     glBindVertexArray(_vao);

@@ -289,7 +289,7 @@ void vg::GLProgram::unuse() {
     }
 }
 
-void vorb::core::graphics::GLProgram::shaderCompilationError(const nString& s) {
+void vg::GLProgram::shaderCompilationError(const nString& s) {
     fprintf(stderr, "%s\n", s.c_str());
     onShaderCompilationError(s);
 }

@@ -23,7 +23,7 @@ i32 closestPow2(i32 i) {
     return pi;
 }
 
-SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
+vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     TTF_Font* f = TTF_OpenFont(font, size);
     if (!f) {
         std::cerr << "Failed to open font " << font << "\n";
@@ -155,7 +155,7 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
     char buffer[512];
     sprintf(buffer, "SFont_%s_%s_%d.png", TTF_FontFaceFamilyName(f), TTF_FontFaceStyleName(f), size);
-    vio::ImageIO().savePng(pixels, buffer, bestWidth, bestHeight);
+    vg::ImageIO().savePng(pixels, buffer, bestWidth, bestHeight);
 #endif // DEBUG
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -164,7 +164,7 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     TTF_CloseFont(f);
 }
 
-void SpriteFont::dispose() {
+void vg::SpriteFont::dispose() {
     if (_texID != 0) {
         glDeleteTextures(1, &_texID);
         _texID = 0;
@@ -175,7 +175,7 @@ void SpriteFont::dispose() {
     }
 }
 
-void SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionary) {
+void vg::SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionary) {
 #ifdef DEBUG
     ui32 startTime = SDL_GetTicks(), searchCount = 0;
 #endif // DEBUG
@@ -215,7 +215,7 @@ void SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionar
     return;
 }
 
-std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w) {
+std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w) {
     // Blank Initialize
     std::vector<ui32>* l = new std::vector<ui32>[r]();
     ui32* cw = new ui32[r]();
@@ -246,7 +246,7 @@ std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r
     return l;
 }
 
-f32v2 SpriteFont::measure(const cString s) {
+f32v2 vg::SpriteFont::measure(const cString s) {
     f32v2 size(0, _fontHeight);
     float cw = 0;
     for (int si = 0; s[si] != 0; si++) {
@@ -269,7 +269,7 @@ f32v2 SpriteFont::measure(const cString s) {
     return size;
 }
 
-void SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) {
+void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) {
     f32v2 tp = position;
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];

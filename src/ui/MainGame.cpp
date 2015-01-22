@@ -35,7 +35,7 @@ bool MainGame::initSystems() {
     vui::InputDispatcher::onQuit += m_fOnQuit;
 
     // Get The Machine's Graphics Capabilities
-    _gDevice = new GraphicsDevice(_window);
+    _gDevice = new vg::GraphicsDevice(_window);
     _gDevice->refreshInformation();
 
     // Set A Default OpenGL State
@@ -44,9 +44,9 @@ bool MainGame::initSystems() {
     // TODO: Replace With BlendState
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    DepthState::FULL.set();
-    RasterizerState::CULL_CLOCKWISE.set();
-    SamplerState::initPredefined();
+    vg::DepthState::FULL.set();
+    vg::RasterizerState::CULL_CLOCKWISE.set();
+    vg::SamplerState::initPredefined();
 
     // Initialize Frame Buffer
     glViewport(0, 0, _window.getWidth(), _window.getHeight());

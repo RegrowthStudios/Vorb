@@ -50,7 +50,7 @@ vg::Texture vg::TextureCache::addTexture(const nString& filePath,
     // Load the pixel data
     vpath texPath = filePath; 
     if(m_ioManager) m_ioManager->resolvePath(filePath, texPath);
-    if (!vio::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
+    if (!vg::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
         return Texture();
     }
 

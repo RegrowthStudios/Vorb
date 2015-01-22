@@ -136,9 +136,6 @@
     <ClCompile Include="src\io\YAMLConverters.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\SpriteBatchNew.cpp">
-      <Filter>Graphics\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\SpriteBatch.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
@@ -399,9 +396,6 @@
     </ClInclude>
     <ClInclude Include="include\io\YAMLWriter.h">
       <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="include\graphics\SpriteBatchNew.h">
-      <Filter>Graphics\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\SpriteBatch.h">
       <Filter>Graphics\Utils</Filter>

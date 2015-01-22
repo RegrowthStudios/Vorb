@@ -23,7 +23,7 @@ namespace std {
 }
 
 namespace vorb {
-    namespace io {
+    namespace graphics {
 
         struct OBJMesh {
         public:
@@ -42,6 +42,6 @@ namespace vorb {
         };
     }
 }
-namespace vio = vorb::io;
+namespace vg = vorb::graphics;
 
 #endif // ModelIO_h__

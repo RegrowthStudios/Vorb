@@ -7,80 +7,44 @@
 #include "graphics/RasterizerState.h"
 #include "graphics/SamplerState.h"
 #include "graphics/SpriteFont.h"
+#include "SpriteBatchShader.inl"
 
-#pragma region Shader Source
-const cString VS_SRC = R"(
-uniform mat4 World;
-uniform mat4 VP;
-
-in vec4 vPosition;
-in vec2 vUV;
-in vec4 vUVRect;
-in vec4 vTint;
-
-out vec2 fUV;
-flat out vec4 fUVRect;
-out vec4 fTint;
-
-void main() {
-    fTint = vTint;
-    fUV = vUV;
-    fUVRect = vUVRect;
-    vec4 worldPos = World * vPosition;
-    gl_Position = VP * worldPos;
-}
-)";
-const cString FS_SRC = R"(
-uniform sampler2D SBTex;
-
-in vec2 fUV;
-flat in vec4 fUVRect;
-in vec4 fTint;
-
-out vec4 fColor;
-
-void main() {
-    fColor = texture(SBTex, fract(fUV.xy) * fUVRect.zw + fUVRect.xy) * fTint;
-}
-)";
-#pragma endregion
-
-VertexSpriteBatch::VertexSpriteBatch(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const ColorRGBA8& color) :
+vg::VertexSpriteBatch::VertexSpriteBatch(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const ColorRGBA8& color) :
 position(pos),
 uv(uv),
 uvRect(uvr),
 color(color) {
 
 }
-VertexSpriteBatch::VertexSpriteBatch() :
+vg::VertexSpriteBatch::VertexSpriteBatch() :
 position(0, 0, 0),
 uv(0, 0),
 uvRect(0, 0, 0, 0),
 color(0, 0, 0, 0) {}
 
-SpriteGlyph::SpriteGlyph() :
+vg::SpriteGlyph::SpriteGlyph() :
 SpriteGlyph(0, 0) {}
-SpriteGlyph::SpriteGlyph(ui32 texID, f32 d) :
+vg::SpriteGlyph::SpriteGlyph(ui32 texID, f32 d) :
 textureID(texID), depth(d) {}
 
-SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
+vg::SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
     _bufUsage(isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),
     _vao(0),
     _vbo(0),
     _glyphCapacity(0) {
     if (doInit) init();
 }
-SpriteBatch::~SpriteBatch() {
+vg::SpriteBatch::~SpriteBatch() {
     _batchRecycler.freeAll();
     _glyphRecycler.freeAll();
 }
 
-void SpriteBatch::init() {
+void vg::SpriteBatch::init() {
     createProgram();
     createVertexArray();
     createPixelTexture();
 }
-void SpriteBatch::dispose() {
+void vg::SpriteBatch::dispose() {
     if (_vbo != 0) {
         glDeleteBuffers(1, &_vbo);
         _vbo = 0;
@@ -96,7 +60,7 @@ void SpriteBatch::dispose() {
     }
 }
 
-void SpriteBatch::begin() {
+void vg::SpriteBatch::begin() {
     if (_glyphs.size() > 0) {
         // Why Would This Ever Happen?
         for (auto glyph : _glyphs) _glyphRecycler.recycle(glyph);
@@ -106,7 +70,7 @@ void SpriteBatch::begin() {
     std::vector<SpriteBatchCall*>().swap(_batches);
 }
 
-void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     f32v4 uvr = uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1);
     f32v2 uvt = uvTiling != nullptr ? *uvTiling : f32v2(1, 1);
     SpriteGlyph* g = _glyphRecycler.create();
@@ -154,7 +118,7 @@ void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f
 
     _glyphs.push_back(g);
 }
-void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     f32v4 uvr = uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1);
     f32v2 uvt = uvTiling != nullptr ? *uvTiling : f32v2(1, 1);
     SpriteGlyph* g = _glyphRecycler.create();
@@ -200,7 +164,7 @@ void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f
 
     _glyphs.push_back(g);
 }
-void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     f32v4 uvr = uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1);
     f32v2 uvt = uvTiling != nullptr ? *uvTiling : f32v2(1, 1);
     SpriteGlyph* g = _glyphRecycler.create();
@@ -241,7 +205,7 @@ void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f
 
     _glyphs.push_back(g);
 }
-void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     f32v4 uvr = uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1);
     SpriteGlyph* g = _glyphRecycler.create();
     g->textureID = t == 0 ? _texPixel : t;
@@ -281,7 +245,7 @@ void SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, const 
 
     _glyphs.push_back(g);
 }
-void SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     SpriteGlyph* g = _glyphRecycler.create();
     g->textureID = t == 0 ? _texPixel : t;
     g->depth = depth;
@@ -321,23 +285,23 @@ void SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tin
     _glyphs.push_back(g);
 }
 
-void SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     font->draw(this, s, position, scaling, tint, depth);
 }
-void SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     f32v2 scaling(desiredHeight / (f32)font->getFontHeight());
     scaling.x *= scaleX;
     font->draw(this, s, position, scaling, tint, depth);
 }
 
-void SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) {
+void vg::SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) {
     sortGlyphs(ssm);
     generateBatches();
 }
 
-void SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     //if (bs == nullptr) bs = BlendState::PremultipliedAlphaBlend;
     if (ds == nullptr) ds = &DepthState::NONE;
     if (rs == nullptr) rs = &RasterizerState::CULL_NONE;
@@ -374,7 +338,7 @@ void SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* b
 
     shader->unuse();
 }
-void SpriteBatch::renderBatch(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::renderBatch(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     f32m4 mCamera(
         2.0f / screenSize.x, 0, 0, 0,
         0, -2.0f / screenSize.y, 0, 0,
@@ -383,7 +347,7 @@ void SpriteBatch::renderBatch(f32m4 mWorld, const f32v2& screenSize, /*const Ble
         );
     renderBatch(mWorld, mCamera, /*bs, */ ss, ds, rs, shader);
 }
-void SpriteBatch::renderBatch(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::renderBatch(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     f32m4 mIdentity(
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -393,7 +357,7 @@ void SpriteBatch::renderBatch(const f32v2& screenSize, /*const BlendState* bs = 
     renderBatch(mIdentity, screenSize, /*bs, */ ss, ds, rs, shader);
 }
 
-void SpriteBatch::sortGlyphs(SpriteSortMode ssm) {
+void vg::SpriteBatch::sortGlyphs(SpriteSortMode ssm) {
     if (_glyphs.size() < 1) return;
 
     switch (ssm) {
@@ -410,7 +374,7 @@ void SpriteBatch::sortGlyphs(SpriteSortMode ssm) {
         break;
     }
 }
-void SpriteBatch::generateBatches() {
+void vg::SpriteBatch::generateBatches() {
     if (_glyphs.size() < 1) return;
 
     // Create Arrays
@@ -456,7 +420,7 @@ void SpriteBatch::generateBatches() {
     delete[] verts;
 }
 
-void SpriteBatch::createProgram() {
+void vg::SpriteBatch::createProgram() {
     // Only need to create it if it isn't cached
     if (!_program) {
 
@@ -464,10 +428,10 @@ void SpriteBatch::createProgram() {
         _program = new vg::GLProgram(true);
 
         // Create the vertex shader
-        _program->addShader(vg::ShaderType::VERTEX_SHADER, VS_SRC);
+        _program->addShader(vg::ShaderType::VERTEX_SHADER, impl::SPRITEBATCH_VS_SRC);
 
         // Create the fragment shader
-        _program->addShader(vg::ShaderType::FRAGMENT_SHADER, FS_SRC);
+        _program->addShader(vg::ShaderType::FRAGMENT_SHADER, impl::SPRITEBATCH_FS_SRC);
 
         // Set the attributes
         std::vector <nString> attributes;
@@ -488,7 +452,7 @@ void SpriteBatch::createProgram() {
     }
 }
 
-void SpriteBatch::createVertexArray() {
+void vg::SpriteBatch::createVertexArray() {
     glGenVertexArrays(1, &_vao);
     glBindVertexArray(_vao);
 
@@ -507,7 +471,7 @@ void SpriteBatch::createVertexArray() {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-void SpriteBatch::createPixelTexture() {
+void vg::SpriteBatch::createPixelTexture() {
     glGenTextures(1, &_texPixel);
     glBindTexture(GL_TEXTURE_2D, _texPixel);
     ui32 pix = 0xffffffffu;
@@ -515,22 +479,22 @@ void SpriteBatch::createPixelTexture() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void SpriteBatch::disposeProgram() {
+void vg::SpriteBatch::disposeProgram() {
     if (_program) {
         _program->dispose();
         _program = nullptr;
     }
 }
 
-vg::GLProgram* SpriteBatch::_program = nullptr;
+vg::GLProgram* vg::SpriteBatch::_program = nullptr;
 
-void SpriteBatch::SpriteBatchCall::set(i32 iOff, ui32 texID, std::vector<SpriteBatchCall*>& calls) {
+void vg::SpriteBatch::SpriteBatchCall::set(i32 iOff, ui32 texID, std::vector<SpriteBatchCall*>& calls) {
     textureID = texID;
     indices = 6;
     indexOffset = iOff;
     calls.push_back(this);
 }
-SpriteBatch::SpriteBatchCall* SpriteBatch::SpriteBatchCall::append(SpriteGlyph* g, std::vector<SpriteBatchCall*>& calls, PtrRecycler<SpriteBatchCall>* recycler) {
+vg::SpriteBatch::SpriteBatchCall* vg::SpriteBatch::SpriteBatchCall::append(SpriteGlyph* g, std::vector<SpriteBatchCall*>& calls, PtrRecycler<SpriteBatchCall>* recycler) {
     if (g->textureID != textureID) {
         SpriteBatchCall* sbc = recycler->create();
         sbc->set(indexOffset + indices, g->textureID, calls);

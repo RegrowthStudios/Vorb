@@ -1,8 +1,7 @@
 namespace vorb {
-    namespace core {
-        namespace graphics {
-            namespace impl {
-                const cString SPRITEBATCH_VS_SRC = R"(
+    namespace graphics {
+        namespace impl {
+            const cString SPRITEBATCH_VS_SRC = R"(
 uniform mat4 World;
 uniform mat4 VP;
 
@@ -23,7 +22,7 @@ void main() {
     gl_Position = VP * worldPos;
 }
 )";
-                const cString SPRITEBATCH_FS_SRC = R"(
+            const cString SPRITEBATCH_FS_SRC = R"(
 uniform sampler2D SBTex;
 
 in vec2 fUV;
@@ -36,7 +35,6 @@ void main() {
     fColor = texture(SBTex, fract(fUV.xy) * fUVRect.zw + fUVRect.xy) * fTint;
 }
 )";
-            }
         }
     }
 }

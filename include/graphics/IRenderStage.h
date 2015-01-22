@@ -15,38 +15,40 @@
 #ifndef IRenderStage_h_
 #define IRenderStage_h_
 
-class Camera;
+class Camera; // TODO: We need to implement one
 
 namespace vorb {
-    namespace core {
-        namespace graphics {
+    namespace graphics {
 
-            class IRenderStage
-            {
-            public:
-                IRenderStage(const Camera* camera = nullptr);
-                virtual ~IRenderStage();
+        class IRenderStage {
+        public:
+            IRenderStage(const Camera* camera = nullptr);
+            virtual ~IRenderStage();
 
-                /// Renders the stage
-                virtual void draw() = 0;
+            /// Renders the stage
+            virtual void draw() = 0;
 
-                /// Check if the stage is visible
-                virtual bool isVisible() const { return _isVisible; }
+            /// Check if the stage is visible
+            virtual bool isVisible() const {
+                return _isVisible;
+            }
 
-                /// Sets the visibility of the stage
-                virtual void setIsVisible(bool isVisible) { _isVisible = isVisible; }
+            /// Sets the visibility of the stage
+            virtual void setIsVisible(bool isVisible) {
+                _isVisible = isVisible;
+            }
 
-                /// Sets the camera
-                virtual void setCamera(const Camera* camera) { _camera = camera; }
-            protected:
-                const Camera* _camera; ///< Optional Camera, not needed for post processing stages
-                bool _isVisible; ///< Determines if the stage should be rendered
-            };
+            /// Sets the camera
+            virtual void setCamera(const Camera* camera) {
+                _camera = camera;
+            }
+        protected:
+            const Camera* _camera; ///< Optional Camera, not needed for post processing stages
+            bool _isVisible; ///< Determines if the stage should be rendered
+        };
 
-        }
     }
 }
-
-namespace vg = vorb::core::graphics;
+namespace vg = vorb::graphics;
 
 #endif // IRenderStage_h_

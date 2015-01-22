@@ -20,7 +20,7 @@
 #include "gtypes.h"
 
 namespace vorb {
-    namespace core {
+    namespace graphics {
         struct MeshVertex {
         public:
             f32v3 position;
@@ -47,7 +47,7 @@ namespace vorb {
             /// @param primitiveType: type of primitive for this mesh
             /// @param isIndexed: true when using glDrawElements, false for
             /// glDrawArrays
-            void init(vg::PrimitiveType primitiveType, bool isIndexed);
+            void init(PrimitiveType primitiveType, bool isIndexed);
 
             /// Reserves a specific number of vertices and indices
             /// @param numVertices: the number of vertices to reserve
@@ -67,9 +67,9 @@ namespace vorb {
             void addVertices(const std::vector<MeshVertex>& vertices, const std::vector<ui32>& indices);
 
             /// Uploads all data to the GPU and clears the local buffers
-            void uploadAndClearLocal(vg::BufferUsageHint usage = vg::BufferUsageHint::STATIC_DRAW);
+            void uploadAndClearLocal(BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
             /// Uploads all data to the GPU and keeps the local buffers
-            void uploadAndKeepLocal(vg::BufferUsageHint usage = vg::BufferUsageHint::STATIC_DRAW);
+            void uploadAndKeepLocal(BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
 
             /************************************************************************/
             /* Setters                                                              */
@@ -87,14 +87,14 @@ namespace vorb {
             i32 getNumVertices() const {
                 return _vertices.size();
             }
-            int getNumPrimitives() const;
+            i32 getNumPrimitives() const;
 
             static const cString defaultVertexShaderSource; ///< Default vertex shader code
             static const cString defaultFragmentShaderSource; ///< Default fragment shader code
-            static const std::vector<vg::GLProgram::AttributeBinding> defaultShaderAttributes; ///< Default attribute locations
+            static const std::vector<GLProgram::AttributeBinding> defaultShaderAttributes; ///< Default attribute locations
 
         private:
-            void upload(vg::BufferUsageHint usage);
+            void upload(BufferUsageHint usage);
             void createVertexArray();
 
             f32m4 _modelMatrix;
@@ -106,7 +106,7 @@ namespace vorb {
             bool _isIndexed;
             bool _isUploaded;
 
-            vg::PrimitiveType _primitiveType;
+            PrimitiveType _primitiveType;
 
             i32 _numVertices;
             i32 _numIndices;
@@ -116,6 +116,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vg = vorb::graphics;
 
 #endif //MESH_H_

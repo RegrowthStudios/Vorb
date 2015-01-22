@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "graphics/RasterizerState.h"
 
-RasterizerState::RasterizerState(bool use, CullFaceMode cullFaceMode, FrontFaceDirection frontFaceDirection) :
+vg::RasterizerState::RasterizerState(bool use, CullFaceMode cullFaceMode, FrontFaceDirection frontFaceDirection) :
 useCulling(use),
 cullMode(cullFaceMode),
 faceOrientation(frontFaceDirection) {}
 
-void RasterizerState::set() const {
+void vg::RasterizerState::set() const {
     if (useCulling) {
         glEnable(GL_CULL_FACE);
         glFrontFace(static_cast<GLenum>(faceOrientation));
@@ -16,6 +16,6 @@ void RasterizerState::set() const {
     }
 }
 
-const RasterizerState RasterizerState::CULL_NONE(false, CullFaceMode::BACK, FrontFaceDirection::CCW);
-const RasterizerState RasterizerState::CULL_CLOCKWISE(true, CullFaceMode::BACK, FrontFaceDirection::CCW);
-const RasterizerState RasterizerState::CULL_COUNTER_CLOCKWISE(true, CullFaceMode::BACK, FrontFaceDirection::CW);
+const vg::RasterizerState vg::RasterizerState::CULL_NONE(false, vg::CullFaceMode::BACK, vg::FrontFaceDirection::CCW);
+const vg::RasterizerState vg::RasterizerState::CULL_CLOCKWISE(true, vg::CullFaceMode::BACK, vg::FrontFaceDirection::CCW);
+const vg::RasterizerState vg::RasterizerState::CULL_COUNTER_CLOCKWISE(true, vg::CullFaceMode::BACK, vg::FrontFaceDirection::CW);

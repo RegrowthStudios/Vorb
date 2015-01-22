@@ -26,97 +26,91 @@
 DECL_VIO(class, IOManager)
 
 namespace vorb {
-    namespace core {
-        namespace graphics {
+    namespace graphics {
+        class TextureCache {
+        public:
+            TextureCache();
+            TextureCache(vio::IOManager* ioManager);
+            ~TextureCache();
 
+            /// Finds a texture if it exists in the cache
+            /// @param filePath: The path of the texture
+            /// @return the texture ID or 0 if it doesn't exist
+            Texture findTexture(const nString& filePath);
 
-            class TextureCache {
-            public:
-                TextureCache();
-                TextureCache(vio::IOManager* ioManager);
-                ~TextureCache();
+            /// Returns the file path associated with the texture
+            /// @param textureID: The ID of the texture
+            /// @return The filepath or empty string if it doesn't exist
+            nString getTexturePath(ui32 textureID);
 
-                /// Finds a texture if it exists in the cache
-                /// @param filePath: The path of the texture
-                /// @return the texture ID or 0 if it doesn't exist
-                Texture findTexture(const nString& filePath);
+            /// Loads and uploads a png texture and adds it to the cache or returns
+            /// an existing texture ID if it already exists in the cache
+            /// @param filePath: The file path of the texture
+            /// @param samplingParameters: The texture sampler parameters
+            /// @param internalFormat: Internal format of the pixel data
+            /// @param textureFormat: Format of uploaded pixels
+            /// @param mipmapLevels: The max number of mipmap levels
+            /// @return The texture ID or 0 if loading fails
+            Texture addTexture(const nString& filePath,
+                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                i32 mipmapLevels = INT_MAX);
 
-                /// Returns the file path associated with the texture
-                /// @param textureID: The ID of the texture
-                /// @return The filepath or empty string if it doesn't exist
-                nString getTexturePath(ui32 textureID);
+            /// Uploads a png texture and adds it to the cache
+            /// an existing texture ID if it already exists in the cache
+            /// @param filePath: The path of the texture
+            /// @param pixels: The pixel data
+            /// @param width: The texture width in pixels
+            /// @param height: The texture height in pixels
+            /// @param samplingParameters: The texture sampler parameters
+            /// @param internalFormat : Internal format of the pixel data
+            /// @param textureFormat: Format of uploaded pixels
+            /// @param mipmapLevels: The max number of mipmap levels
+            /// @return The texture. ID will be 0 if loading fails
+            Texture addTexture(const nString& filePath,
+                const ui8* pixels,
+                ui32 width,
+                ui32 height,
+                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                i32 mipmapLevels = INT_MAX);
 
-                /// Loads and uploads a png texture and adds it to the cache or returns
-                /// an existing texture ID if it already exists in the cache
-                /// @param filePath: The file path of the texture
-                /// @param samplingParameters: The texture sampler parameters
-                /// @param internalFormat: Internal format of the pixel data
-                /// @param textureFormat: Format of uploaded pixels
-                /// @param mipmapLevels: The max number of mipmap levels
-                /// @return The texture ID or 0 if loading fails
-                Texture addTexture(const nString& filePath,
-                                   SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                                   vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                                   vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                                   i32 mipmapLevels = INT_MAX);
+            /// Adds a texture to the cache
+            /// @param filePath: The path of the texture
+            /// @param textureID: The opengGL texture ID
+            void addTexture(const nString& filePath, const Texture& texture);
 
-                /// Uploads a png texture and adds it to the cache
-                /// an existing texture ID if it already exists in the cache
-                /// @param filePath: The path of the texture
-                /// @param pixels: The pixel data
-                /// @param width: The texture width in pixels
-                /// @param height: The texture height in pixels
-                /// @param samplingParameters: The texture sampler parameters
-                /// @param internalFormat : Internal format of the pixel data
-                /// @param textureFormat: Format of uploaded pixels
-                /// @param mipmapLevels: The max number of mipmap levels
-                /// @return The texture. ID will be 0 if loading fails
-                Texture addTexture(const nString& filePath,
-                                   const ui8* pixels,
-                                   ui32 width,
-                                   ui32 height,
-                                   SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                                   vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                                   vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                                   i32 mipmapLevels = INT_MAX);
+            /// Frees a texture from the cache
+            /// @param filePath: The path of the texture to free
+            void freeTexture(const nString& filePath);
 
-                /// Adds a texture to the cache
-                /// @param filePath: The path of the texture
-                /// @param textureID: The opengGL texture ID
-                void addTexture(const nString& filePath, const Texture& texture);
+            /// Frees a texture from the cache
+            /// @param textureID: The ID of the texture to free. It will be set to 0
+            void freeTexture(ui32& textureID);
 
-                /// Frees a texture from the cache
-                /// @param filePath: The path of the texture to free
-                void freeTexture(const nString& filePath);
+            /// Frees a texture from the cache
+            /// @param textureID: The texture to free. texture.ID will be set to 0
+            void freeTexture(Texture& textureID);
 
-                /// Frees a texture from the cache
-                /// @param textureID: The ID of the texture to free. It will be set to 0
-                void freeTexture(ui32& textureID);
+            /// Frees all textures
+            void destroy();
 
-                /// Frees a texture from the cache
-                /// @param textureID: The texture to free. texture.ID will be set to 0
-                void freeTexture(Texture& textureID);
+        private:
+            bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
+            vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
-                /// Frees all textures
-                void destroy();
+            /// Inserts a texture into the cache
+            void insertTexture(const nString& filePath, const Texture& texture);
 
-            private:
-                bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
-                vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
-
-                /// Inserts a texture into the cache
-                void insertTexture(const nString& filePath, const Texture& texture);
-
-                /// We store two maps here so that users can free textures using either the ID or filePath
-                std::unordered_map <nString, Texture> _textureStringMap; ///< Textures store here keyed on filename
-                std::map <ui32, std::unordered_map <nString, Texture>::iterator> _textureIdMap; ///< Textures are stored here keyed on ID
-            };
-
-        }
+            /// We store two maps here so that users can free textures using either the ID or filePath
+            std::unordered_map <nString, Texture> _textureStringMap; ///< Textures store here keyed on filename
+            std::map <ui32, std::unordered_map <nString, Texture>::iterator> _textureIdMap; ///< Textures are stored here keyed on ID
+        };
     }
 }
-
-namespace vg = vorb::core::graphics;
+namespace vg = vorb::graphics;
 
 #endif // TEXTURECACHE_H_
 

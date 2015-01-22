@@ -49,7 +49,7 @@ protected:
     void onUpdateFrame();
     void onRenderFrame();
 
-    GraphicsDevice* _gDevice;
+    vg::GraphicsDevice* _gDevice;
     GameWindow _window;
 
     float _fps;

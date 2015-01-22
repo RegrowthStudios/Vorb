@@ -16,25 +16,23 @@
 #include "gtypes.h"
 
 namespace vorb {
-    namespace core {
-        namespace graphics {
-            /// Wrapper struct for a texture
-            class Texture {
-            public:
-                Texture(VGTexture id = 0, ui32 w = 0, ui32 h = 0) :
-                    id(id),
-                    width(w),
-                    height(h) {
-                    // Empty
-                }
+    namespace graphics {
+        /// Wrapper struct for a texture
+        class Texture {
+        public:
+            Texture(VGTexture id = 0, ui32 w = 0, ui32 h = 0) :
+                id(id),
+                width(w),
+                height(h) {
+                // Empty
+            }
 
-                VGTexture id = 0; ///< OpenGL texture ID
-                ui32 width = 0; ///< Texture width in pixels
-                ui32 height = 0; ///< Texture height in pixels
-            };
-        }
+            VGTexture id = 0; ///< OpenGL texture ID
+            ui32 width = 0; ///< Texture width in pixels
+            ui32 height = 0; ///< Texture height in pixels
+        };
     }
 }
-namespace vg = vorb::core::graphics;
+namespace vg = vorb::graphics;
 
 #endif // TEXTURE_H_

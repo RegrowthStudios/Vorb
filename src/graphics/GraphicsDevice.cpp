@@ -7,12 +7,12 @@
 #include <SDL2/SDL.h>
 #endif
 
-GraphicsDevice::GraphicsDevice(SDL_Window* w) :
+vg::GraphicsDevice::GraphicsDevice(SDL_Window* w) :
 _props({}) {
     initResolutions(w);
 }
 
-void GraphicsDevice::refreshInformation() {
+void vg::GraphicsDevice::refreshInformation() {
     // Whenever Information Is Refreshed, The Current Device Is Refreshed
     _current = this;
 
@@ -63,7 +63,7 @@ void GraphicsDevice::refreshInformation() {
 #endif // DEBUG
 }
 
-void GraphicsDevice::initResolutions(SDL_Window* w) {
+void vg::GraphicsDevice::initResolutions(SDL_Window* w) {
     i32 dispIndex = SDL_GetWindowDisplayIndex(w);
     i32 dispCount = SDL_GetNumDisplayModes(dispIndex);
     SDL_DisplayMode dMode;
@@ -79,4 +79,4 @@ void GraphicsDevice::initResolutions(SDL_Window* w) {
     _props.resolutionOptions.resize(iter - _props.resolutionOptions.begin());
 }
 
-GraphicsDevice* GraphicsDevice::_current = nullptr;
+vg::GraphicsDevice* vg::GraphicsDevice::_current = nullptr;

@@ -15,8 +15,6 @@
 #ifndef GraphicsDevice_h__
 #define GraphicsDevice_h__
 
-struct SDL_Window;
-
 namespace vorb {
     namespace graphics {
         struct GraphicsDeviceProperties {
@@ -45,7 +43,7 @@ namespace vorb {
 
         class GraphicsDevice {
         public:
-            GraphicsDevice(SDL_Window* w);
+            GraphicsDevice(void* w);
 
             static GraphicsDevice* getCurrent() {
                 return _current;
@@ -57,7 +55,7 @@ namespace vorb {
                 return _props;
             }
         private:
-            void initResolutions(SDL_Window* w);
+            void initResolutions(void* w);
 
             GraphicsDeviceProperties _props;
 

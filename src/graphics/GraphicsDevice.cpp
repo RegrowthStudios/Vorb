@@ -78,7 +78,7 @@ void vg::GraphicsDevice::refreshInformation() {
 
 void vg::GraphicsDevice::initResolutions(void* w) {
 #if defined(VORB_IMPL_UI_SDL)
-    i32 dispIndex = SDL_GetWindowDisplayIndex(w);
+    i32 dispIndex = SDL_GetWindowDisplayIndex((SDL_Window*)w);
     i32 dispCount = SDL_GetNumDisplayModes(dispIndex);
     SDL_DisplayMode dMode;
     for (i32 dmi = 0; dmi < dispCount; dmi++) {

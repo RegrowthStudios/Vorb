@@ -3,27 +3,29 @@
 
 #include "io/IOManager.h"
 
-KEG_ENUM_INIT_BEGIN(GameSwapInterval, GameSwapInterval, etype)
-using namespace Keg;
-etype->addValue("Unlimited", GameSwapInterval::UNLIMITED_FPS);
-etype->addValue("VSync", GameSwapInterval::V_SYNC);
-etype->addValue("LowSync", GameSwapInterval::LOW_SYNC);
-etype->addValue("PowerSaver", GameSwapInterval::POWER_SAVER);
-etype->addValue("ValueCap", GameSwapInterval::USE_VALUE_CAP);
+#define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
+
+KEG_ENUM_INIT_BEGIN(GameSwapInterval, vui::GameSwapInterval, etype)
+using namespace keg;
+etype->addValue("Unlimited", vui::GameSwapInterval::UNLIMITED_FPS);
+etype->addValue("VSync", vui::GameSwapInterval::V_SYNC);
+etype->addValue("LowSync", vui::GameSwapInterval::LOW_SYNC);
+etype->addValue("PowerSaver", vui::GameSwapInterval::POWER_SAVER);
+etype->addValue("ValueCap", vui::GameSwapInterval::USE_VALUE_CAP);
 KEG_ENUM_INIT_END
 
-KEG_TYPE_INIT_BEGIN(GameDisplayMode, GameDisplayMode, type)
-using namespace Keg;
-type->addValue("ScreenWidth", Value::basic(BasicType::I32, offsetof(GameDisplayMode, screenWidth)));
-type->addValue("ScreenHeight", Value::basic(BasicType::I32, offsetof(GameDisplayMode, screenHeight)));
-type->addValue("IsFullscreen", Value::basic(BasicType::BOOL, offsetof(GameDisplayMode, isFullscreen)));
-type->addValue("IsBorderless", Value::basic(BasicType::BOOL, offsetof(GameDisplayMode, isBorderless)));
-type->addValue("SwapInterval", Value::custom("GameSwapInterval", offsetof(GameDisplayMode, swapInterval), true));
-type->addValue("MaxFPS", Value::basic(BasicType::F32, offsetof(GameDisplayMode, maxFPS)));
+KEG_TYPE_INIT_BEGIN(GameDisplayMode, vui::GameDisplayMode, type)
+using namespace keg;
+type->addValue("ScreenWidth", Value::basic(BasicType::I32, offsetof(vui::GameDisplayMode, screenWidth)));
+type->addValue("ScreenHeight", Value::basic(BasicType::I32, offsetof(vui::GameDisplayMode, screenHeight)));
+type->addValue("IsFullscreen", Value::basic(BasicType::BOOL, offsetof(vui::GameDisplayMode, isFullscreen)));
+type->addValue("IsBorderless", Value::basic(BasicType::BOOL, offsetof(vui::GameDisplayMode, isBorderless)));
+type->addValue("SwapInterval", Value::custom("GameSwapInterval", offsetof(vui::GameDisplayMode, swapInterval), true));
+type->addValue("MaxFPS", Value::basic(BasicType::F32, offsetof(vui::GameDisplayMode, maxFPS)));
 KEG_TYPE_INIT_END
 
 // For Comparing Display Modes When Saving Data
-static bool operator==(const GameDisplayMode& m1, const GameDisplayMode& m2) {
+static bool operator==(const vui::GameDisplayMode& m1, const vui::GameDisplayMode& m2) {
     return
         m1.screenWidth == m2.screenWidth &&
         m1.screenHeight == m2.screenHeight &&
@@ -33,22 +35,25 @@ static bool operator==(const GameDisplayMode& m1, const GameDisplayMode& m2) {
         m1.maxFPS == m2.maxFPS
         ;
 }
-static bool operator!=(const GameDisplayMode& m1, const GameDisplayMode& m2) {
+static bool operator!=(const vui::GameDisplayMode& m1, const vui::GameDisplayMode& m2) {
     return !(m1 == m2);
 }
 
-GameWindow::GameWindow() :
+vui::GameWindow::GameWindow() :
 _window(nullptr),
 _glc(nullptr) {
     setDefaultSettings(&_displayMode);
 }
 
-bool GameWindow::init() {
+bool vui::GameWindow::init() {
     // Attempt To Read Custom Settings
     readSettings();
+    SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
+    if (_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
+    if (_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
 
     // Create The Window
-    _window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _displayMode.screenWidth, _displayMode.screenHeight, DEFAULT_WINDOW_FLAGS);
+    _window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _displayMode.screenWidth, _displayMode.screenHeight, flags);
     if (_window == nullptr) {
         printf("Window Creation Failed\r\n");
         return false;
@@ -73,8 +78,6 @@ bool GameWindow::init() {
     }
 
     // Set More Display Settings
-    setFullscreen(_displayMode.isFullscreen, true);
-    setBorderless(_displayMode.isBorderless, true);
     setSwapInterval(_displayMode.swapInterval, true);
 
     // Make sure default clear depth is 1.0f
@@ -82,7 +85,7 @@ bool GameWindow::init() {
 
     return true;
 }
-void GameWindow::dispose() {
+void vui::GameWindow::dispose() {
     saveSettings();
 
     if (_glc) {
@@ -95,7 +98,7 @@ void GameWindow::dispose() {
     }
 }
 
-void GameWindow::setDefaultSettings(GameDisplayMode* mode) {
+void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->screenWidth = DEFAULT_WINDOW_WIDTH;
     mode->screenHeight = DEFAULT_WINDOW_HEIGHT;
     mode->isBorderless = true;
@@ -104,24 +107,24 @@ void GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
 }
 
-void GameWindow::readSettings() {
+void vui::GameWindow::readSettings() {
     vio::IOManager iom;
     nString data;
     iom.readFileToString(DEFAULT_APP_CONFIG_FILE, data);
     if (data.length()) {
-        Keg::parse(&_displayMode, data.c_str(), "GameDisplayMode");
+        keg::parse(&_displayMode, data.c_str(), "GameDisplayMode");
     } else {
         // If there is no app.config, save a default one.
         saveSettings();
     }
 }
 
-void GameWindow::saveSettings() const {
+void vui::GameWindow::saveSettings() const {
     GameDisplayMode modeBasis = {};
     setDefaultSettings(&modeBasis);
 
     if (_displayMode != modeBasis) {
-        nString data = Keg::write(&_displayMode, "GameDisplayMode", nullptr);
+        nString data = keg::write(&_displayMode, "GameDisplayMode", nullptr);
         std::ofstream file(DEFAULT_APP_CONFIG_FILE);
         file << data << std::endl;
         file.flush();
@@ -129,7 +132,7 @@ void GameWindow::saveSettings() const {
     }
 }
 
-void GameWindow::setScreenSize(const i32& w, const i32& h, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setScreenSize(const i32& w, const i32& h, const bool& overrideCheck /*= false*/) {
     // Apply A Minimal State Change
     if (overrideCheck || _displayMode.screenWidth != w || _displayMode.screenHeight != h) {
         _displayMode.screenWidth = w;
@@ -137,19 +140,19 @@ void GameWindow::setScreenSize(const i32& w, const i32& h, const bool& overrideC
         SDL_SetWindowSize(_window, _displayMode.screenWidth, _displayMode.screenHeight);
     }
 }
-void GameWindow::setFullscreen(const bool& useFullscreen, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setFullscreen(const bool& useFullscreen, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.isFullscreen != useFullscreen) {
         _displayMode.isFullscreen = useFullscreen;
         SDL_SetWindowFullscreen(_window, _displayMode.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
     }
 }
-void GameWindow::setBorderless(const bool& useBorderless, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setBorderless(const bool& useBorderless, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.isBorderless != useBorderless) {
         _displayMode.isBorderless = useBorderless;
         SDL_SetWindowBordered(_window, _displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);
     }
 }
-void GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.swapInterval != mode) {
         _displayMode.swapInterval = mode;
         switch (_displayMode.swapInterval) {
@@ -163,15 +166,15 @@ void GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& overr
         }
     }
 }
-void GameWindow::setMaxFPS(const f32& fpsLimit) {
+void vui::GameWindow::setMaxFPS(const f32& fpsLimit) {
     _displayMode.maxFPS = fpsLimit;
 }
-void GameWindow::setTitle(const cString title) const {
+void vui::GameWindow::setTitle(const cString title) const {
     if (title) SDL_SetWindowTitle(_window, title);
     else SDL_SetWindowTitle(_window, DEFAULT_TITLE);
 }
 
-void GameWindow::sync(ui32 frameTime) {
+void vui::GameWindow::sync(ui32 frameTime) {
     SDL_GL_SwapWindow(_window);
 
     // Limit FPS

@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "ecs/ComponentTableBase.h"
 
-vcore::ComponentTableBase::ComponentTableBase() :
+vecs::ComponentTableBase::ComponentTableBase() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Empty
 }
 
-vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
+vecs::ComponentID vecs::ComponentTableBase::add(EntityID eID) {
     // Check that this entity does not exist
     auto cBind = _components.find(eID);
     if (cBind != _components.end()) {
@@ -40,7 +40,7 @@ vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
 
     return id;
 }
-bool vcore::ComponentTableBase::remove(EntityID eID) {
+bool vecs::ComponentTableBase::remove(EntityID eID) {
     // Find the entity
     auto cBind = _components.find(eID);
     if (cBind == _components.end()) return false;

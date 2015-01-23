@@ -23,7 +23,7 @@ public:
 KEG_TYPE_DECL(KT1);
 
 KEG_TYPE_INIT_BEGIN(KT1, KT1, kt)
-using namespace Keg;
+using namespace keg;
 kt->addValue("x", Value::basic(BasicType::I32, offsetof(KT1, x)));
 kt->addValue("y", Value::basic(BasicType::STRING, offsetof(KT1, y)));
 kt->addValue("other", Value::basic(BasicType::C_STRING, offsetof(KT1, other)));
@@ -32,6 +32,6 @@ KEG_TYPE_INIT_END
 
 TEST(Parse) {
     KT1 data;
-    Keg::parse(&data, TestKeg1, "KT1");
+    keg::parse(&data, TestKeg1, "KT1");
     return true;
 }

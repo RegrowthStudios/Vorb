@@ -245,7 +245,6 @@
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/InputDispatcher.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
-    <ClCompile Include="src\graphics\SpriteBatchNew.cpp" />
     <ClCompile Include="src\graphics\SpriteBatch.cpp" />
     <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
@@ -317,7 +316,6 @@
     <ClInclude Include="include/graphics/RTSwapChain.hpp" />
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
-    <ClInclude Include="include\graphics\SpriteBatchNew.h" />
     <ClInclude Include="include\graphics\SpriteBatch.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />

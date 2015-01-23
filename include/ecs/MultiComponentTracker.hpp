@@ -18,7 +18,7 @@
 #include "MultipleComponentSet.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         /// Tracks entities in specified component sets as well as their component IDs
         template<size_t N> 
         class MultiComponentTracker : public MultipleComponentSet {
@@ -78,6 +78,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
 #endif // MultiComponentTracker_h__

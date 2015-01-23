@@ -51,7 +51,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     std::vector <ui8> pixelStore;
 
     // Load the pixel data
-    if (!vio::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
+    if (!vg::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
         return Texture();
     }
 
@@ -156,7 +156,7 @@ void vg::TextureCache::insertTexture(const vio::Path& filePath, const Texture& t
     _textureIdMap[texture.id] = _textureStringMap.insert(std::make_pair(filePath, texture)).first;
 }
 
-void vorb::core::graphics::TextureCache::resolvePath(const vio::Path& path, OUT vio::Path& fullPath) {
+void vg::TextureCache::resolvePath(const vio::Path& path, OUT vio::Path& fullPath) {
     if (m_ioManager) {
         m_ioManager->resolvePath(path, fullPath);
     } else {

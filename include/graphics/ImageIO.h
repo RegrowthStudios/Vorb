@@ -18,7 +18,7 @@
 #include "../Events.hpp"
 
 namespace vorb {
-    namespace io {
+    namespace graphics {
         class ImageIO {
         public:
             bool loadPng(const std::vector<ui8>& inData, std::vector<ui8>& outData, ui32& w, ui32& h);
@@ -30,6 +30,6 @@ namespace vorb {
         };
     }
 }
-namespace vio = vorb::io;
+namespace vg = vorb::graphics;
 
 #endif // ImageIO_h__

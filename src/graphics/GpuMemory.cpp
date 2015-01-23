@@ -20,7 +20,7 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
                           const ui8* pixels,
                           ui32 width,
                           ui32 height,
-                          SamplerState* samplingParameters,
+                          vg::SamplerState* samplingParameters,
                           vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
                           vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
                           i32 mipmapLevels /* = INT_MAX */) {

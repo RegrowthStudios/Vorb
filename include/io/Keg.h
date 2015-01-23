@@ -17,7 +17,7 @@
 
 #include "YAML.h"
 
-namespace Keg {
+namespace keg {
     // These Are All The Types That Can Be Parsed Directly From YAML
     enum class BasicType {
 #define KEG_BASIC_NUM_VEC(TYPE) TYPE, TYPE##_V2, TYPE##_V3, TYPE##_V4
@@ -70,10 +70,10 @@ namespace Keg {
         static Value custom(nString t, i32 off, bool isEnum = false);
         // Set This As An Array Of Values
         static Value array(i32 off, const Value& interior);
-        static Value array(i32 off, const Keg::BasicType& t);
+        static Value array(i32 off, const keg::BasicType& t);
         // Set This As A Value That Is Accessed Via Pointer
         static Value ptr(i32 off, const Value& interior);
-        static Value ptr(i32 off, const Keg::BasicType& t);
+        static Value ptr(i32 off, const keg::BasicType& t);
 
         // Type Used To Determine Parsing Method
         BasicType type;
@@ -260,26 +260,26 @@ namespace Keg {
 #define KEG_GLOBAL_ENUM(TYPENAME) kes_##TYPENAME
 
 // For Use In Header Files:
-#define KEG_TYPE_DECL(TYPENAME) extern Keg::Type KEG_GLOBAL_TYPE(TYPENAME); extern bool KEG_GLOBAL_TYPE_INIT(TYPENAME)
-#define KEG_ENUM_DECL(TYPENAME) extern Keg::Enum KEG_GLOBAL_ENUM(TYPENAME); extern bool KEG_GLOBAL_ENUM_INIT(TYPENAME)
+#define KEG_TYPE_DECL(TYPENAME) extern keg::Type KEG_GLOBAL_TYPE(TYPENAME); extern bool KEG_GLOBAL_TYPE_INIT(TYPENAME)
+#define KEG_ENUM_DECL(TYPENAME) extern keg::Enum KEG_GLOBAL_ENUM(TYPENAME); extern bool KEG_GLOBAL_ENUM_INIT(TYPENAME)
 
 // For Use In Source Files:
 #define KEG_TYPE_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool kt_init_##TYPENAME(); \
-    Keg::Type KEG_GLOBAL_TYPE(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
+    keg::Type KEG_GLOBAL_TYPE(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
     bool KEG_GLOBAL_TYPE_INIT(TYPENAME) = kt_init_##TYPENAME(); \
     bool kt_init_##TYPENAME() MACRO_PARAN_L \
-    Keg::Type* VAR_NAME = &KEG_GLOBAL_TYPE(TYPENAME);
+    keg::Type* VAR_NAME = &KEG_GLOBAL_TYPE(TYPENAME);
 #define KEG_ENUM_INIT_BEGIN(TYPENAME, STRUCT_TYPE, VAR_NAME) bool ke_init_##TYPENAME(); \
-    Keg::Enum KEG_GLOBAL_ENUM(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
+    keg::Enum KEG_GLOBAL_ENUM(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
     bool KEG_GLOBAL_ENUM_INIT(TYPENAME) = ke_init_##TYPENAME(); \
     bool ke_init_##TYPENAME() MACRO_PARAN_L \
-    Keg::Enum* VAR_NAME = &KEG_GLOBAL_ENUM(TYPENAME);
+    keg::Enum* VAR_NAME = &KEG_GLOBAL_ENUM(TYPENAME);
 
 // For Less Verbose Type Initializations
 #define KEG_TYPE_INIT_DEF_VAR_NAME __keg_t
 #define KEG_TYPE_INIT_BEGIN_DEF_VAR(STRUCT_TYPE) KEG_TYPE_INIT_BEGIN(STRUCT_TYPE, STRUCT_TYPE, KEG_TYPE_INIT_DEF_VAR_NAME)
 #define KEG_TYPE_INIT_BEGIN_DEF_VAR2(TYPENAME, STRUCT_TYPE) KEG_TYPE_INIT_BEGIN(TYPENAME, STRUCT_TYPE, KEG_TYPE_INIT_DEF_VAR_NAME)
-#define KEG_TYPE_INIT_ADD_MEMBER(TYPENAME, TYPE_ENUM, MEMBER) KEG_TYPE_INIT_DEF_VAR_NAME->addValue(#MEMBER, Keg::Value::basic(Keg::BasicType::TYPE_ENUM, offsetof(TYPENAME, MEMBER)))
+#define KEG_TYPE_INIT_ADD_MEMBER(TYPENAME, TYPE_ENUM, MEMBER) KEG_TYPE_INIT_DEF_VAR_NAME->addValue(#MEMBER, keg::Value::basic(keg::BasicType::TYPE_ENUM, offsetof(TYPENAME, MEMBER)))
 
 #define KEG_TYPE_INIT_END \
     return true; \

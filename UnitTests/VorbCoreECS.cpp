@@ -8,13 +8,13 @@
 #include <include/ecs/ComponentTable.hpp>
 
 TEST(Creation) {
-    vcore::ECS ecs;
+    vecs::ECS ecs;
     return true;
 }
 
 TEST(MakeEntity) {
-    vcore::ECS ecs;
-    vcore::EntityID e = ecs.addEntity();
+    vecs::ECS ecs;
+    vecs::EntityID e = ecs.addEntity();
     assert(e == 1);
     return true;
 }
@@ -23,14 +23,14 @@ struct Component {
 public:
     int x = 10;
 };
-class CTTest : public vcore::ComponentTable<Component> {
-    virtual void update(const vcore::EntityID& eID, const vcore::ComponentID& cID, Component& component) {
+class CTTest : public vecs::ComponentTable<Component> {
+    virtual void update(const vecs::EntityID& eID, const vecs::ComponentID& cID, Component& component) {
         component.x = eID;
     }
 };
 
 TEST(MakeComponent) {
-    vcore::ECS ecs;
+    vecs::ECS ecs;
     
     CTTest ct;
     assert(ct.getDefaultData().x == 10);

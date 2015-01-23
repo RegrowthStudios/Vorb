@@ -18,8 +18,8 @@
 // Create empty namespaces for aliasing purposes
 namespace vorb {
     namespace core {
-        namespace graphics {
-        }
+    }
+    namespace graphics {
     }
     namespace voxel {
     }
@@ -29,22 +29,25 @@ namespace vorb {
     }
     namespace sound {
     }
+    namespace ecs {
+    }
     namespace net {
     }
 }
 
 // Namespace aliases
 namespace vcore = vorb::core; ///< Namespace alias vorb::core
-namespace vg = vorb::core::graphics; ///< Namespace alias vorb::core::graphics
+namespace vg = vorb::graphics; ///< Namespace alias vorb::graphics
 namespace vvox = vorb::voxel; ///< Namespace alias vorb::voxel
 namespace vui = vorb::ui; ///< Namespace alias vorb::ui
-namespace vio = vorb::io; ///< Namespace alias vorb::ui
+namespace vio = vorb::io; ///< Namespace alias vorb::io
 namespace vsound = vorb::sound; ///< Namespace alias vorb::sound
+namespace vecs = vorb::ecs; ///< Namespace alias vorb::ecs
 namespace vnet = vorb::net; ///< Namespace alias vorb::net
 
 #define DECL_VORB(...) namespace vorb { __VA_ARGS__; }
 #define DECL_VCORE(...) namespace vorb { namespace core { __VA_ARGS__; }  }
-#define DECL_VG(...) namespace vorb { namespace core { namespace graphics { __VA_ARGS__; }  }  }
+#define DECL_VG(...) namespace vorb { namespace graphics { __VA_ARGS__; }  }
 #define DECL_VVOX(...) namespace vorb { namespace voxel { __VA_ARGS__; }  }
 #define DECL_VUI(...) namespace vorb { namespace ui { __VA_ARGS__; }  }
 #define DECL_VIO(...) namespace vorb { namespace io { __VA_ARGS__; }  }

@@ -3,7 +3,7 @@
 
 #include "ecs/ComponentTableBase.h"
 
-vcore::MultipleComponentSet::MultipleComponentSet() :
+vecs::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Entity added handler
@@ -27,7 +27,7 @@ vcore::MultipleComponentSet::MultipleComponentSet() :
         }
     }));
 }
-vcore::MultipleComponentSet::~MultipleComponentSet() {
+vecs::MultipleComponentSet::~MultipleComponentSet() {
     // Remove event hooks for last copy of set
     if (_fEntityAdded.unique()) {
         for (ComponentTableBase* table : _tables) {
@@ -37,7 +37,7 @@ vcore::MultipleComponentSet::~MultipleComponentSet() {
     }
 }
 
-void vcore::MultipleComponentSet::addRequirement(ComponentTableBase* component) {
+void vecs::MultipleComponentSet::addRequirement(ComponentTableBase* component) {
     // Check for existing requirement
     auto c = std::find(_tables.begin(), _tables.end(), component);
     if (c != _tables.end()) return;

@@ -2,7 +2,7 @@
 #include "graphics/ModelIO.h"
 
 namespace vorb {
-    namespace io {
+    namespace graphics {
         namespace impl {
             static const cString traverseWhitespace(const cString s) {
                 while (true) {
@@ -131,7 +131,7 @@ namespace vorb {
     }
 }
 
-ui32v2 vio::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh) {
+ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh) {
     ui32v3 baseDataOffsets(
         mesh.positions.size(),
         mesh.uvs.size(),
@@ -188,7 +188,7 @@ ui32v2 vio::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh
     return ui32v2(mesh.vertices.size() - vertexCountInitial, indicesAdded);
 }
 
-CALLER_DELETE vg::MeshDataRaw vio::ModelIO::loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize) {
+CALLER_DELETE vg::MeshDataRaw vg::ModelIO::loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize) {
     const ui8* bytes = (const ui8*)data;
 
     // Read vertex elements

@@ -18,7 +18,7 @@
 #include "ComponentTableBase.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         /// Component table that stores a specific component type
         template<typename T>
         class ComponentTable : public ComponentTableBase {
@@ -114,6 +114,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
 #endif // ComponentTable_h__

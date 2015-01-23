@@ -6,38 +6,34 @@
 ///  Copyright 2014 Regrowth Studios
 ///  All Rights Reserved
 ///  
+///  Summary:
 ///  This file provides an interface for a render pipeline.
 ///
 
 #pragma once
 
-#ifndef IRenderPipeline_h_
-#define IRenderPipeline_h_
+#ifndef IRenderPipeline_h__
+#define IRenderPipeline_h__
 
 namespace vorb {
-    namespace core {
-        namespace graphics {
+    namespace graphics {
 
-            class IRenderStage;
+        class IRenderStage;
 
-            /// This abstract class is an interface for a rendering pipeline
-            class IRenderPipeline
-            {
-            public:
-                IRenderPipeline();
-                virtual ~IRenderPipeline();
+        /// This abstract class is an interface for a rendering pipeline
+        class IRenderPipeline {
+        public:
+            IRenderPipeline();
+            virtual ~IRenderPipeline();
 
-                /// Renders the pipeline
-                virtual void render() = 0;
+            /// Renders the pipeline
+            virtual void render() = 0;
 
-                /// Frees all resources
-                virtual void destroy() = 0;
-            };
-
-        }
+            /// Frees all resources
+            virtual void destroy() = 0;
+        };
     }
 }
+namespace vg = vorb::graphics;
 
-namespace vg = vorb::core::graphics;
-
-#endif // IRenderPipeline_h_
+#endif // IRenderPipeline_h__

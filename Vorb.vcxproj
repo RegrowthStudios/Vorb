@@ -121,7 +121,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_IMPL_UI_GLFW;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;_CRT_SECURE_NO_WARNINGS;TYPES_GLM;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>

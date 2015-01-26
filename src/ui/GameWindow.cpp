@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "ui/GameWindow.h"
 
+#if defined(VORB_IMPL_UI_SDL)
+#if defined(OS_WINDOWS)
+#include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
+#else
+#include <GLFW/glfw3.h>
+#endif
+
 #include "io/IOManager.h"
 
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
@@ -39,37 +49,51 @@ static bool operator!=(const vui::GameDisplayMode& m1, const vui::GameDisplayMod
     return !(m1 == m2);
 }
 
-vui::GameWindow::GameWindow() :
-_window(nullptr),
-_glc(nullptr) {
+vui::GameWindow::GameWindow() {
     setDefaultSettings(&_displayMode);
 }
 
 bool vui::GameWindow::init() {
     // Attempt To Read Custom Settings
     readSettings();
+
+#if defined(VORB_IMPL_UI_SDL)
     SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
     if (_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
     if (_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
+    _window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _displayMode.screenWidth, _displayMode.screenHeight, flags);
+#else
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_RESIZABLE, 0);
+    if (_displayMode.isBorderless) glfwWindowHint(GLFW_DECORATED, 0);
+
+    GLFWmonitor* monitor = _displayMode.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
+    _window = glfwCreateWindow(_displayMode.screenWidth, _displayMode.screenHeight, DEFAULT_TITLE, monitor, nullptr);
+#endif
 
     // Create The Window
-    _window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _displayMode.screenWidth, _displayMode.screenHeight, flags);
     if (_window == nullptr) {
         printf("Window Creation Failed\r\n");
         return false;
     }
 
-    // Initialize OpenGL
+#if defined(VORB_IMPL_UI_SDL)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 #ifdef GL_CORE
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
-    _glc = SDL_GL_CreateContext(_window);
+    _glc = SDL_GL_CreateContext((SDL_Window*)_window);
+    SDL_GL_MakeCurrent((SDL_Window*)_window, (SDL_GLContext)_glc);
+#else
+    // Initialize OpenGL
+    glfwMakeContextCurrent((GLFWwindow*)_window);
+    _glc = _window;
+#endif
+
     if (_glc == nullptr) {
         printf("Could Not Create OpenGL Context");
         return false;
     }
-    SDL_GL_MakeCurrent(_window, _glc);
 
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
@@ -87,21 +111,27 @@ bool vui::GameWindow::init() {
 }
 void vui::GameWindow::dispose() {
     saveSettings();
-
+#if defined(VORB_IMPL_UI_SDL)
     if (_glc) {
-        SDL_GL_DeleteContext(_glc);
+        SDL_GL_DeleteContext((SDL_GLContext)_glc);
         _glc = nullptr;
     }
     if (_window) {
-        SDL_DestroyWindow(_window);
+        SDL_DestroyWindow((SDL_Window*)_window);
         _window = nullptr;
     }
+#else
+    if (_window) {
+        glfwDestroyWindow((GLFWwindow*)_window);
+        _window = nullptr;
+    }
+#endif
 }
 
 void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->screenWidth = DEFAULT_WINDOW_WIDTH;
     mode->screenHeight = DEFAULT_WINDOW_HEIGHT;
-    mode->isBorderless = true;
+    mode->isBorderless = false;
     mode->isFullscreen = false;
     mode->maxFPS = DEFAULT_MAX_FPS;
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
@@ -137,24 +167,37 @@ void vui::GameWindow::setScreenSize(const i32& w, const i32& h, const bool& over
     if (overrideCheck || _displayMode.screenWidth != w || _displayMode.screenHeight != h) {
         _displayMode.screenWidth = w;
         _displayMode.screenHeight = h;
-        SDL_SetWindowSize(_window, _displayMode.screenWidth, _displayMode.screenHeight);
+#if defined(VORB_IMPL_UI_SDL)
+        SDL_SetWindowSize((SDL_Window*)_window, _displayMode.screenWidth, _displayMode.screenHeight);
+#else
+        glfwSetWindowSize((GLFWwindow*)_window, _displayMode.screenWidth, _displayMode.screenHeight);
+#endif
     }
 }
 void vui::GameWindow::setFullscreen(const bool& useFullscreen, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.isFullscreen != useFullscreen) {
         _displayMode.isFullscreen = useFullscreen;
-        SDL_SetWindowFullscreen(_window, _displayMode.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+#if defined(VORB_IMPL_UI_SDL)
+        SDL_SetWindowFullscreen((SDL_Window*)_window, _displayMode.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+#else
+        // TODO: GLFW Impl
+#endif
     }
 }
 void vui::GameWindow::setBorderless(const bool& useBorderless, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.isBorderless != useBorderless) {
         _displayMode.isBorderless = useBorderless;
-        SDL_SetWindowBordered(_window, _displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);
+#if defined(VORB_IMPL_UI_SDL)
+        SDL_SetWindowBordered((SDL_Window*)_window, _displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);
+#else
+        // TODO: GLFW Impl
+#endif
     }
 }
 void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& overrideCheck /*= false*/) {
     if (overrideCheck || _displayMode.swapInterval != mode) {
         _displayMode.swapInterval = mode;
+#if defined(VORB_IMPL_UI_SDL)
         switch (_displayMode.swapInterval) {
         case GameSwapInterval::UNLIMITED_FPS:
         case GameSwapInterval::USE_VALUE_CAP:
@@ -164,23 +207,64 @@ void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& 
             SDL_GL_SetSwapInterval(static_cast<i32>(DEFAULT_SWAP_INTERVAL));
             break;
         }
+#else
+        // TODO: GLFW Impl
+#endif
+
     }
 }
 void vui::GameWindow::setMaxFPS(const f32& fpsLimit) {
     _displayMode.maxFPS = fpsLimit;
 }
 void vui::GameWindow::setTitle(const cString title) const {
-    if (title) SDL_SetWindowTitle(_window, title);
-    else SDL_SetWindowTitle(_window, DEFAULT_TITLE);
+    if (!title) title = DEFAULT_TITLE;
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_SetWindowTitle((SDL_Window*)_window, title);
+#else
+    glfwSetWindowTitle((GLFWwindow*)_window, title);
+#endif
 }
 
 void vui::GameWindow::sync(ui32 frameTime) {
-    SDL_GL_SwapWindow(_window);
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_GL_SwapWindow((SDL_Window*)_window);
+#else
+    glfwSwapBuffers((GLFWwindow*)_window);
+    glfwPollEvents();
+#endif
 
     // Limit FPS
     if (_displayMode.swapInterval == GameSwapInterval::USE_VALUE_CAP) {
         f32 desiredFPS = 1000.0f / (f32)_displayMode.maxFPS;
         ui32 sleepTime = (ui32)(desiredFPS - frameTime);
-        if (desiredFPS > frameTime && sleepTime > 0) SDL_Delay(sleepTime);
+        if (desiredFPS > frameTime && sleepTime > 0) Sleep(sleepTime);
     }
+}
+
+i32 vorb::ui::GameWindow::getX() const {
+    i32 v;
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_GetWindowPosition((SDL_Window*)_window, &v, nullptr);
+#else
+    glfwGetWindowPos((GLFWwindow*)_window, &v, nullptr);
+#endif
+    return v;
+}
+i32 vorb::ui::GameWindow::getY() const {
+    i32 v;
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_GetWindowPosition((SDL_Window*)_window, nullptr, &v);
+#else
+    glfwGetWindowPos((GLFWwindow*)_window, nullptr, &v);
+#endif
+    return v;
+}
+i32v2 vorb::ui::GameWindow::getPosition() const {
+    i32v2 v;
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_GetWindowPosition((SDL_Window*)_window, &v.x, &v.y);
+#else
+    glfwGetWindowPos((GLFWwindow*)_window, &v.x, &v.y);
+#endif
+    return v;
 }

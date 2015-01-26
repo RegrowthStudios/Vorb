@@ -32,7 +32,13 @@
     <ClCompile Include="Tests.cpp">
       <Filter>Required Files</Filter>
     </ClCompile>
-    <ClCompile Include="Types.cpp">
+    <ClCompile Include="VorbUI.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Example.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Keg.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Lua.cpp">
@@ -41,7 +47,13 @@
     <ClCompile Include="OS.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Types.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="Utils.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Vorb.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="VorbCoreECS.cpp">
@@ -50,16 +62,7 @@
     <ClCompile Include="VorbIO.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Example.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="VorbSound.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Vorb.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Keg.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

@@ -65,6 +65,9 @@
     <ClCompile Include="VorbSound.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="VorbGraphics.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

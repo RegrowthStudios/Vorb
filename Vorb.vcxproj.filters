@@ -512,6 +512,9 @@
     <None Include="include/IntersectionUtils.inl">
       <Filter>Utils</Filter>
     </None>
+    <None Include="src\graphics\ImageIOConv.inl">
+      <Filter>Graphics\IO</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

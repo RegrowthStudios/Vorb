@@ -627,6 +627,30 @@ namespace vorb {
                 convertRGBAFToRGBF<f32, f64>,
                 convertRGBAFToRGBAF<f32, f64>
             };
+
+            template<typename T>
+            void placeRGB(T* dst, T* src, const ui32& w, const ui32& h) {
+                size_t end = w * h * 3;
+                size_t si = 0, di = 0;
+                while (si < end) {
+                    dst[di++] = src[si + R_OFFSET];
+                    dst[di++] = src[si + G_OFFSET];
+                    dst[di++] = src[si + B_OFFSET];
+                    si += 3;
+                }
+            }
+            template<typename T>
+            void placeRGBA(T* dst, T* src, const ui32& w, const ui32& h) {
+                size_t end = w * h * 4;
+                size_t si = 0, di = 0;
+                while (si < end) {
+                    dst[di++] = src[si + R_OFFSET];
+                    dst[di++] = src[si + G_OFFSET];
+                    dst[di++] = src[si + B_OFFSET];
+                    dst[di++] = src[si + A_OFFSET];
+                    si += 4;
+                }
+            }
         }
     }
 }

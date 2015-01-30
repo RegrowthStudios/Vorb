@@ -9,72 +9,6 @@
 namespace vorb {
     namespace graphics {
         namespace impl {
-            struct ImageBitFormat {
-            public:
-                ui32 bitsPerPixel;
-                ui32 maskShift;
-            };
-
-            ImageBitFormat formats[] = {
-                {},
-                { 24, 8 },
-                { 32, 8 },
-                { 48, 16 },
-                { 64, 16 }
-            };
-            template<typename T>
-            struct RGBMask {
-            public:
-                union {
-                    T bits[3];
-                    ui32 data;
-                };
-            };
-            template<typename T>
-            struct RGBAMask {
-            public:
-                union {
-                    T bits[4];
-                    ui32 data;
-                };
-            };
-            template<typename T>
-            ui32 redMask() {
-                RGBMask<T> mask = {};
-                mask.bits[0] = (T)(~0u);
-                return mask.data;
-            }
-            template<typename T>
-            ui32 greenMask() {
-                RGBMask<T> mask = {};
-                mask.bits[1] = (T)(~0u);
-                return mask.data;
-            }
-            template<typename T>
-            ui32 blueMask() {
-                RGBMask<T> mask = {};
-                mask.bits[2] = (T)(~0u);
-                return mask.data;
-            }
-            template<typename T>
-            ui32 redMaskA() {
-                RGBAMask<T> mask = {};
-                mask.bits[2] = (T)(~0u);
-                return mask.data;
-            }
-            template<typename T>
-            ui32 greenMaskA() {
-                RGBAMask<T> mask = {};
-                mask.bits[1] = (T)(~0u);
-                return mask.data;
-            }
-            template<typename T>
-            ui32 blueMaskA() {
-                RGBAMask<T> mask = {};
-                mask.bits[0] = (T)(~0u);
-                return mask.data;
-            }
-
             FIBITMAP* makeRGB(FIBITMAP* bmp) {
                 FIBITMAP* tmp = bmp;
                 bmp = FreeImage_ConvertTo24Bits(bmp);
@@ -90,8 +24,6 @@ namespace vorb {
         }
     }
 }
-
-
 
 bool vg::ImageIO::loadPng(const std::vector<ui8>& inData, std::vector<ui8>& outData, ui32& w, ui32& h) {
     auto error = lodepng::decode(outData, w, h, inData);
@@ -282,6 +214,41 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
     return res;
 }
 bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w, const ui32& h, const ImageIOFormat& format) {
+    FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(path.getCString());
+    if (fif == FIF_UNKNOWN) {
+        onError("File type not recognized");
+        return false;
+    }
+
+    ui32 bytes = 0;
+    switch (format) {
+    case ImageIOFormat::RGB_UI8: bytes = 3 * sizeof(ui8); break;
+    case ImageIOFormat::RGBA_UI8: bytes = 4 * sizeof(ui8); break;
+    case ImageIOFormat::RGB_UI16: bytes = 3 * sizeof(ui16); break;
+    case ImageIOFormat::RGBA_UI16: bytes = 4 * sizeof(ui16); break;
+    case ImageIOFormat::RGB_F32: bytes = 3 * sizeof(f32); break;
+    case ImageIOFormat::RGBA_F32: bytes = 4 * sizeof(f32); break;
+    case ImageIOFormat::RGB_F64: bytes = 3 * sizeof(f64); break;
+    case ImageIOFormat::RGBA_F64: bytes = 4 * sizeof(f64); break;
+    default:
+        return false;
+    }
+    FIBITMAP* bmp = FreeImage_Allocate(w, h, bytes << 3);
+    switch (format) {
+    case ImageIOFormat::RGB_UI8: impl::placeRGB<ui8>((ui8*)FreeImage_GetBits(bmp), (ui8*)inData, w, h); break;
+    case ImageIOFormat::RGBA_UI8: impl::placeRGBA<ui8>((ui8*)FreeImage_GetBits(bmp), (ui8*)inData, w, h); break;
+    case ImageIOFormat::RGB_UI16: impl::placeRGB<ui16>((ui16*)FreeImage_GetBits(bmp), (ui16*)inData, w, h); break;
+    case ImageIOFormat::RGBA_UI16: impl::placeRGBA<ui16>((ui16*)FreeImage_GetBits(bmp), (ui16*)inData, w, h); break;
+    case ImageIOFormat::RGB_F32: impl::placeRGB<f32>((f32*)FreeImage_GetBits(bmp), (f32*)inData, w, h); break;
+    case ImageIOFormat::RGBA_F32: impl::placeRGBA<f32>((f32*)FreeImage_GetBits(bmp), (f32*)inData, w, h); break;
+    case ImageIOFormat::RGB_F64: impl::placeRGB<f64>((f64*)FreeImage_GetBits(bmp), (f64*)inData, w, h); break;
+    case ImageIOFormat::RGBA_F64: impl::placeRGBA<f64>((f64*)FreeImage_GetBits(bmp), (f64*)inData, w, h); break;
+    default:
+        return false;
+    }
+    FreeImage_Save(fif, bmp, path.getCString());
+    FreeImage_Unload(bmp);
+
     return true;
 }
 

@@ -117,9 +117,6 @@
     <ClCompile Include="src/sound/SoundInstance.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="deps/src/lodepng/lodepng.cpp">
-      <Filter>Deps</Filter>
-    </ClCompile>
     <ClCompile Include="deps/src/sha256/sha256sum.c">
       <Filter>Deps</Filter>
     </ClCompile>
@@ -353,9 +350,6 @@
     <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
-    </ClInclude>
-    <ClInclude Include="deps/src/lodepng/lodepng.h">
-      <Filter>Deps</Filter>
     </ClInclude>
     <ClInclude Include="deps/src/sha256/sha256sum.h">
       <Filter>Deps</Filter>

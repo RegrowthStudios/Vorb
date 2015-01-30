@@ -6,6 +6,29 @@
 
 #include "ImageIOConv.inl"
 
+// Add FreeImage libraries
+#ifdef DEBUG
+#pragma comment(lib, "image/FreeImage-d.lib")
+#pragma comment(lib, "image/libJPEG-d.lib")
+#pragma comment(lib, "image/libJXR-d.lib")
+#pragma comment(lib, "image/libPNG-d.lib")
+#pragma comment(lib, "image/libRAW-d.lib")
+#pragma comment(lib, "image/libTIFF-d.lib")
+#pragma comment(lib, "image/libWebP-d.lib")
+#pragma comment(lib, "image/OpenEXR-d.lib")
+#pragma comment(lib, "image/OpenJPEG-d.lib")
+#else
+#pragma comment(lib, "image/FreeImage.lib")
+#pragma comment(lib, "image/libJPEG.lib")
+#pragma comment(lib, "image/libJXR.lib")
+#pragma comment(lib, "image/libPNG.lib")
+#pragma comment(lib, "image/libRAW.lib")
+#pragma comment(lib, "image/libTIFF.lib")
+#pragma comment(lib, "image/libWebP.lib")
+#pragma comment(lib, "image/OpenEXR.lib")
+#pragma comment(lib, "image/OpenJPEG.lib")
+#endif // DEBUG
+
 namespace vorb {
     namespace graphics {
         namespace impl {
@@ -23,39 +46,6 @@ namespace vorb {
             }
         }
     }
-}
-
-bool vg::ImageIO::loadPng(const std::vector<ui8>& inData, std::vector<ui8>& outData, ui32& w, ui32& h) {
-    auto error = lodepng::decode(outData, w, h, inData);
-    if (error) {
-        onError(lodepng_error_text(error));
-        return false;
-    }
-    return true;
-}
-bool vg::ImageIO::loadPng(const nString& path, std::vector<ui8>& outData, ui32& w, ui32& h) {
-    auto error = lodepng::decode(outData, w, h, path);
-    if (error) {
-        onError(lodepng_error_text(error));
-        return false;
-    }
-    return true;
-}
-bool vg::ImageIO::savePng(const std::vector<ui8>& inData, std::vector<ui8>& outData, const ui32& w, const ui32& h) {
-    auto error = lodepng::encode(outData, inData, w, h);
-    if (error) {
-        onError(lodepng_error_text(error));
-        return false;
-    }
-    return true;
-}
-bool vg::ImageIO::savePng(const std::vector<ui8>& inData, const nString& path, const ui32& w, const ui32& h) {
-    auto error = lodepng::encode(path, inData, w, h);
-    if (error) {
-        onError(lodepng_error_text(error));
-        return false;
-    }
-    return true;
 }
 
 vg::BitmapResource vg::ImageIO::alloc(const ui32& w, const ui32& h, const ImageIOFormat& format) {

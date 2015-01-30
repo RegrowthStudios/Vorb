@@ -47,16 +47,14 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     Texture texture = findTexture(texPath);
     if (texture.id) return texture;
 
-    // Buffer for the pixels
-    std::vector <ui8> pixelStore;
-
     // Load the pixel data
-    if (!vg::ImageIO().loadPng(texPath.getString(), pixelStore, texture.width, texture.height)) {
-        return Texture();
-    }
+    vg::BitmapResource bmp = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
+    if (!bmp.data) return Texture();
+    texture.width = bmp.width;
+    texture.height = bmp.height;
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(pixelStore.data(), texture.width, texture.height,
+    texture.id = GpuMemory::uploadTexture(bmp.bytesUI8, texture.width, texture.height,
         samplingParameters,
         internalFormat,
         textureFormat,

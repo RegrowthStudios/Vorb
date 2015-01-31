@@ -1,32 +1,31 @@
 #include "stdafx.h"
 #include "graphics/ImageIO.h"
 
-#include <lodepng/lodepng.h>
 #include <FreeImage.h>
 
 #include "ImageIOConv.inl"
 
 // Add FreeImage libraries
 #ifdef DEBUG
-#pragma comment(lib, "image/FreeImage-d.lib")
-#pragma comment(lib, "image/libJPEG-d.lib")
-#pragma comment(lib, "image/libJXR-d.lib")
-#pragma comment(lib, "image/libPNG-d.lib")
-#pragma comment(lib, "image/libRAW-d.lib")
-#pragma comment(lib, "image/libTIFF-d.lib")
-#pragma comment(lib, "image/libWebP-d.lib")
-#pragma comment(lib, "image/OpenEXR-d.lib")
-#pragma comment(lib, "image/OpenJPEG-d.lib")
+#pragma comment(lib, "FreeImage-d.lib")
+#pragma comment(lib, "libJPEG-d.lib")
+#pragma comment(lib, "libJXR-d.lib")
+#pragma comment(lib, "libPNG-d.lib")
+#pragma comment(lib, "libRAW-d.lib")
+#pragma comment(lib, "libTIFF-d.lib")
+#pragma comment(lib, "libWebP-d.lib")
+#pragma comment(lib, "OpenEXR-d.lib")
+#pragma comment(lib, "OpenJPEG-d.lib")
 #else
-#pragma comment(lib, "image/FreeImage.lib")
-#pragma comment(lib, "image/libJPEG.lib")
-#pragma comment(lib, "image/libJXR.lib")
-#pragma comment(lib, "image/libPNG.lib")
-#pragma comment(lib, "image/libRAW.lib")
-#pragma comment(lib, "image/libTIFF.lib")
-#pragma comment(lib, "image/libWebP.lib")
-#pragma comment(lib, "image/OpenEXR.lib")
-#pragma comment(lib, "image/OpenJPEG.lib")
+#pragma comment(lib, "FreeImage.lib")
+#pragma comment(lib, "libJPEG.lib")
+#pragma comment(lib, "libJXR.lib")
+#pragma comment(lib, "libPNG.lib")
+#pragma comment(lib, "libRAW.lib")
+#pragma comment(lib, "libTIFF.lib")
+#pragma comment(lib, "libWebP.lib")
+#pragma comment(lib, "OpenEXR.lib")
+#pragma comment(lib, "OpenJPEG.lib")
 #endif // DEBUG
 
 namespace vorb {

@@ -111,7 +111,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet.lib;ZLIB-d.lib;LinearMath_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;enet-d.lib;ZLIB-d.lib;LinearMath-d.lib;BulletCollision-d.lib;BulletDynamics-d.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>
@@ -135,7 +135,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet.lib;ZLIB-d.lib;LinearMath_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;enet-d.lib;ZLIB-d.lib;LinearMath-d.lib;BulletCollision-d.lib;BulletDynamics-d.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>

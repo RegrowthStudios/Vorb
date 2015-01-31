@@ -80,7 +80,6 @@ namespace vorb {
             virtual void onExit(const GameTime& gameTime) = 0;
         
             // Called In The Main Update Loop
-            virtual void onEvent(const SDL_Event& e) = 0;
             virtual void update(const GameTime& gameTime) = 0;
             virtual void draw(const GameTime& gameTime) = 0;
         protected:

@@ -15,17 +15,13 @@
 #ifndef GameWindow_h__
 #define GameWindow_h__
 
-#if defined(OS_WINDOWS)
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
-#else
-#include <SDL2/SDL.h>
-#endif
-
 #include "../io/Keg.h"
 
 namespace vorb {
     namespace ui {
+        typedef void* WindowHandle;
+        typedef void* GraphicsContext;
+
         #define DEFAULT_TITLE "Vorb Application Management Peer Interface Redist Environment (V.A.M.P.I.R.E.)"
         #define DEFAULT_WINDOW_WIDTH 800
         #define DEFAULT_WINDOW_HEIGHT 600
@@ -67,26 +63,10 @@ namespace vorb {
             // Saves Application Settings (If Changed) And Destroys The Window And OpenGL Context
             void dispose();
         
-            operator SDL_Window*() const {
-                return _window;
-            }
-        
             // Access Display Settings
-            i32 getX() const {
-                i32 v;
-                SDL_GetWindowPosition(_window, &v, nullptr);
-                return v;
-            }
-            i32 getY() const {
-                i32 v;
-                SDL_GetWindowPosition(_window, nullptr, &v);
-                return v;
-            }
-            i32v2 getPosition() const {
-                i32v2 v;
-                SDL_GetWindowPosition(_window, &v.x, &v.y);
-                return v;
-            }
+            i32 getX() const;
+            i32 getY() const;
+            i32v2 getPosition() const;
             const i32& getWidth() const {
                 return _displayMode.screenWidth;
             }
@@ -96,7 +76,7 @@ namespace vorb {
             ui32v2 getViewportDims() const {
                 return ui32v2(_displayMode.screenWidth, _displayMode.screenHeight);
             }
-            float getAspectRatio() const {
+            f32 getAspectRatio() const {
                 return (float)_displayMode.screenWidth / (float)_displayMode.screenHeight;
             }
             const bool& isFullscreen() const {
@@ -111,10 +91,9 @@ namespace vorb {
             const f32& getMaxFPS() const {
                 return _displayMode.maxFPS;
             }
-            const SDL_GLContext& getGLContext() const {
-                return _glc;
+            WindowHandle getHandle() const {
+                return _window;
             }
-        
         
             // Change Display Settings
             void setScreenSize(const i32& w, const i32& h, const bool& overrideCheck = false);
@@ -132,14 +111,11 @@ namespace vorb {
             void saveSettings() const;
         
             // Window Handle
-            SDL_Window* _window;
-        
-            // OpenGL Context
-            SDL_GLContext _glc;
+            WindowHandle _window = nullptr;
+            GraphicsContext _glc = nullptr;
         
             // Display Settings
             GameDisplayMode _displayMode;
-        
         };
     }
 }

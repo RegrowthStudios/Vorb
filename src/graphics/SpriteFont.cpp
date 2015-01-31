@@ -155,7 +155,7 @@ vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
     char buffer[512];
     sprintf(buffer, "SFont_%s_%s_%d.png", TTF_FontFaceFamilyName(f), TTF_FontFaceStyleName(f), size);
-    vg::ImageIO().savePng(pixels, buffer, bestWidth, bestHeight);
+    vg::ImageIO().save(buffer, pixels.data(), bestWidth, bestHeight, vg::ImageIOFormat::RGBA_UI8);
 #endif // DEBUG
 
     glBindTexture(GL_TEXTURE_2D, 0);

@@ -1,24 +1,53 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(VORB_IMPL_UI_SDL)
+#if defined(OS_WINDOWS)
 #include <SDL/SDL.h>
 #else
 #include <SDL2/SDL.h>
 #endif
+#else
+#include <GLFW/glfw3.h>
+#endif
 
 #include "ui/GameWindow.h"
+#include "ui/KeyboardEventDispatcher.h"
 
 namespace vorb {
     namespace ui {
         namespace impl {
             class InputDispatcherEventCatcher {
             public:
+#if defined(VORB_IMPL_UI_SDL)
                 static i32 onSDLEvent(void* userData, SDL_Event* e);
+#else
+                static void onMonitorEvent(GLFWmonitor*, int);
+                static void onFileDropEvent(GLFWwindow*, int, const cString*);
+                static void onKeyFocusEvent(GLFWwindow*, int);
+                static void onKeyEvent(GLFWwindow*, int, int, int, int);
+                static void onCharEvent(GLFWwindow*, unsigned int);
+                static void onMouseFocusEvent(GLFWwindow*, int);
+                static void onMousePosEvent(GLFWwindow*, f64, f64);
+                static void onMouseButtonEvent(GLFWwindow*, int, int, int);
+                static void onMouseScrollEvent(GLFWwindow*, f64, f64);
+                static void onWindowCloseEvent(GLFWwindow*);
+                static void onWindowPosEvent(GLFWwindow*, int, int);
+                static void onWindowSizeEvent(GLFWwindow*, int, int);
+                static void onFramebufferSizeEvent(GLFWwindow*, int, int);
+                static void onIconifyEvent(GLFWwindow*, int);
+                static vui::KeyModifiers mods;
+#endif
             };
         }
     }
 }
+
+#if defined(VORB_IMPL_UI_SDL)
+// Empty
+#else
+vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
+#endif
 
 vui::MouseEventDispatcher vui::InputDispatcher::mouse;
 vui::KeyboardEventDispatcher vui::InputDispatcher::key;
@@ -27,14 +56,32 @@ volatile bool vui::InputDispatcher::m_isInit = false;
 vui::GameWindow* vui::InputDispatcher::m_window = nullptr;
 Event<> vui::InputDispatcher::onQuit(nullptr);
 
-
 void vui::InputDispatcher::init(GameWindow* w) {
     if (m_isInit) throw std::runtime_error("Input dispatcher is already initialized");
     m_isInit = true;
     m_window = w;
+
+#if defined(VORB_IMPL_UI_SDL)
     SDL_SetEventFilter(impl::InputDispatcherEventCatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
     SDL_StartTextInput();
+#else
+    GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
+    glfwSetCharCallback(window, impl::InputDispatcherEventCatcher::onCharEvent);
+    glfwSetCursorEnterCallback(window, impl::InputDispatcherEventCatcher::onMouseFocusEvent);
+    glfwSetCursorPosCallback(window, impl::InputDispatcherEventCatcher::onMousePosEvent);
+    glfwSetDropCallback(window, impl::InputDispatcherEventCatcher::onFileDropEvent);
+    glfwSetFramebufferSizeCallback(window, impl::InputDispatcherEventCatcher::onFramebufferSizeEvent);
+    glfwSetKeyCallback(window, impl::InputDispatcherEventCatcher::onKeyEvent);
+    glfwSetMonitorCallback(impl::InputDispatcherEventCatcher::onMonitorEvent);
+    glfwSetMouseButtonCallback(window, impl::InputDispatcherEventCatcher::onMouseButtonEvent);
+    glfwSetScrollCallback(window, impl::InputDispatcherEventCatcher::onMouseScrollEvent);
+    glfwSetWindowCloseCallback(window, impl::InputDispatcherEventCatcher::onWindowCloseEvent);
+    glfwSetWindowFocusCallback(window, impl::InputDispatcherEventCatcher::onKeyFocusEvent);
+    glfwSetWindowIconifyCallback(window, impl::InputDispatcherEventCatcher::onIconifyEvent);
+    glfwSetWindowPosCallback(window, impl::InputDispatcherEventCatcher::onWindowPosEvent);
+    glfwSetWindowSizeCallback(window, impl::InputDispatcherEventCatcher::onWindowSizeEvent);
+#endif
 
     // Clear values
     memset(key.m_state, 0, sizeof(key.m_state));
@@ -44,10 +91,30 @@ void vui::InputDispatcher::init(GameWindow* w) {
 void vui::InputDispatcher::dispose() {
     if (!m_isInit) return;
     m_isInit = false;
+#if defined(VORB_IMPL_UI_SDL)
     SDL_StopTextInput();
     SDL_SetEventFilter(nullptr, nullptr);
+#else
+    GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
+    glfwSetCharCallback(window, nullptr);
+    glfwSetCursorEnterCallback(window, nullptr);
+    glfwSetCursorPosCallback(window, nullptr);
+    glfwSetDropCallback(window, nullptr);
+    glfwSetFramebufferSizeCallback(window, nullptr);
+    glfwSetKeyCallback(window, nullptr);
+    glfwSetMonitorCallback(nullptr);
+    glfwSetMouseButtonCallback(window, nullptr);
+    glfwSetScrollCallback(window, nullptr);
+    glfwSetWindowCloseCallback(window, nullptr);
+    glfwSetWindowFocusCallback(window, nullptr);
+    glfwSetWindowIconifyCallback(window, nullptr);
+    glfwSetWindowPosCallback(window, nullptr);
+    glfwSetWindowSizeCallback(window, nullptr);
+#endif
+    m_window = nullptr;
 }
 
+#if defined(VORB_IMPL_UI_SDL)
 /// Memory-efficient way to split through multiple event types
 typedef union {
     vui::MouseEvent mouse;
@@ -165,6 +232,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         case SDL_WINDOWEVENT_CLOSE:
             vui::InputDispatcher::window.onClose();
             vui::InputDispatcher::window.onEvent();
+            break;
         case SDL_WINDOWEVENT_RESIZED:
             ie.windowResize.w = e->window.data1;
             ie.windowResize.h = e->window.data2;
@@ -226,3 +294,193 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     }
     return 0;
 }
+#else
+void vui::impl::InputDispatcherEventCatcher::onMonitorEvent(GLFWmonitor* monitor, int) {
+    // Empty
+    // TODO: Add support?
+}
+void vui::impl::InputDispatcherEventCatcher::onFileDropEvent(GLFWwindow*, int count, const cString* files) {
+    vui::WindowFileEvent e;
+    for (i32 i = 0; i < count; i++) {
+        e.file = files[i];
+        vui::InputDispatcher::window.onFile(e);
+        vui::InputDispatcher::window.onEvent();
+    }
+}
+void vui::impl::InputDispatcherEventCatcher::onKeyFocusEvent(GLFWwindow*, int value) {
+    if (value != 0) {
+        vui::InputDispatcher::key.onFocusGained();
+    } else {
+        vui::InputDispatcher::key.onFocusLost();
+    }
+    vui::InputDispatcher::key.onEvent();
+}
+void vui::impl::InputDispatcherEventCatcher::onKeyEvent(GLFWwindow*, int key, int scan, int action, int mod) {
+    // We don't want repeat events here
+    if (action == GLFW_REPEAT) return;
+
+    KeyEvent e;
+    e.keyCode = key;
+    e.scanCode = scan;
+    switch (key) {
+    case GLFW_KEY_LEFT_ALT:
+        impl::InputDispatcherEventCatcher::mods.lAlt = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_RIGHT_ALT:
+        impl::InputDispatcherEventCatcher::mods.rAlt = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_LEFT_CONTROL:
+        impl::InputDispatcherEventCatcher::mods.lCtrl = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_RIGHT_CONTROL:
+        impl::InputDispatcherEventCatcher::mods.rCtrl = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_LEFT_SUPER:
+        impl::InputDispatcherEventCatcher::mods.lGUI = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_RIGHT_SUPER:
+        impl::InputDispatcherEventCatcher::mods.rGUI = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_LEFT_SHIFT:
+        impl::InputDispatcherEventCatcher::mods.lShift = action == GLFW_PRESS;
+        break;
+    case GLFW_KEY_RIGHT_SHIFT:
+        impl::InputDispatcherEventCatcher::mods.rShift = action == GLFW_PRESS;
+        break;
+    default:
+        break;
+    }
+    e.mod = mods;
+    if (action == GLFW_PRESS) {
+        vui::InputDispatcher::key.onKeyDown(e);
+    } else {
+        vui::InputDispatcher::key.onKeyUp(e);
+    }
+    vui::InputDispatcher::key.onEvent();
+}
+void vui::impl::InputDispatcherEventCatcher::onCharEvent(GLFWwindow*, unsigned int unicode) {
+    TextEvent e;
+    memcpy(e.text, &unicode, sizeof(unsigned int));
+    e.text[sizeof(unsigned int)] = 0;
+    vui::InputDispatcher::key.onText(e);
+    vui::InputDispatcher::key.onEvent();
+}
+void vui::impl::InputDispatcherEventCatcher::onMouseFocusEvent(GLFWwindow* window, int value) {
+#ifdef OS_WINDOWS
+    {
+        POINT mp;
+        GetCursorPos(&mp);
+        int wx, wy;
+        glfwGetWindowPos(window, &wx, &wy);
+        vui::InputDispatcher::mouse.m_lastPos.x = mp.x - wx;
+        vui::InputDispatcher::mouse.m_lastPos.y = mp.y - wy;
+    }
+#else
+    // TODO: Does this work?
+    {
+        f64v2 mp;
+        glfwGetCursorPos(window, &mp.x, &mp.y);
+        vui::InputDispatcher::mouse.m_lastPos.x = (i32)mp.x;
+        vui::InputDispatcher::mouse.m_lastPos.y = (i32)mp.y;
+    }
+#endif
+    MouseEvent e;
+    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
+    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
+    if (value != 0) {
+        vui::InputDispatcher::mouse.onFocusGained(e);
+    } else {
+        vui::InputDispatcher::mouse.onFocusLost(e);
+    }
+    vui::InputDispatcher::mouse.onEvent(e);
+}
+void vui::impl::InputDispatcherEventCatcher::onMousePosEvent(GLFWwindow*, f64 x, f64 y) {
+    MouseMotionEvent e;
+    e.x = (i32)x;
+    e.y = (i32)y;
+    e.dx = e.x - vui::InputDispatcher::mouse.m_lastPos.x;
+    e.dy = e.y - vui::InputDispatcher::mouse.m_lastPos.y;
+    if (e.dx == 0 && e.dy == 0) return;
+    vui::InputDispatcher::mouse.m_lastPos.x = e.x;
+    vui::InputDispatcher::mouse.m_lastPos.y = e.y;
+    vui::InputDispatcher::mouse.onMotion(e);
+    vui::InputDispatcher::mouse.onEvent(e);
+}
+void vui::impl::InputDispatcherEventCatcher::onMouseButtonEvent(GLFWwindow*, int button, int action, int) {
+    MouseButtonEvent e;
+    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
+    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
+    switch (button) {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        e.button = MouseButton::LEFT;
+        break;
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        e.button = MouseButton::RIGHT;
+        break;
+    case GLFW_MOUSE_BUTTON_MIDDLE:
+        e.button = MouseButton::MIDDLE;
+        break;
+    case GLFW_MOUSE_BUTTON_4:
+        e.button = MouseButton::X1;
+        break;
+    case GLFW_MOUSE_BUTTON_5:
+        e.button = MouseButton::X2;
+        break;
+    default:
+        e.button = MouseButton::UNKNOWN;
+        break;
+    }
+    e.clicks = 1;
+
+    if (action == GLFW_PRESS) {
+        vui::InputDispatcher::mouse.onButtonDown(e);
+    } else {
+        vui::InputDispatcher::mouse.onButtonUp(e);
+    }
+    vui::InputDispatcher::mouse.onEvent(e);
+}
+void vui::impl::InputDispatcherEventCatcher::onMouseScrollEvent(GLFWwindow*, f64 x, f64 y) {
+    MouseWheelEvent e;
+    e.dx = (i32)x;
+    e.dy = (i32)y;
+    if (e.dx == 0 && e.dy == 0) return;
+    vui::InputDispatcher::mouse.m_fullScroll.x += e.dx;
+    vui::InputDispatcher::mouse.m_fullScroll.y += e.dy;
+
+    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
+    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
+    e.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
+    e.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+
+    vui::InputDispatcher::mouse.onWheel(e);
+    vui::InputDispatcher::mouse.onEvent(e);
+}
+void vui::impl::InputDispatcherEventCatcher::onWindowCloseEvent(GLFWwindow*) {
+    vui::InputDispatcher::window.onClose();
+    vui::InputDispatcher::window.onEvent();
+    vui::InputDispatcher::onQuit();
+}
+void vui::impl::InputDispatcherEventCatcher::onWindowPosEvent(GLFWwindow*, int x, int y) {
+    // Empty
+    // TODO: Add support?
+}
+void vui::impl::InputDispatcherEventCatcher::onWindowSizeEvent(GLFWwindow*, int w, int h) {
+    WindowResizeEvent e;
+    e.w = (ui32)w;
+    e.h = (ui32)h;
+    vui::InputDispatcher::window.onResize(e);
+    vui::InputDispatcher::window.onEvent();
+}
+void vui::impl::InputDispatcherEventCatcher::onFramebufferSizeEvent(GLFWwindow*, int w, int h) {
+    // TODO: Check difference with above
+    WindowResizeEvent e;
+    e.w = (ui32)w;
+    e.h = (ui32)h;
+    vui::InputDispatcher::window.onResize(e);
+    vui::InputDispatcher::window.onEvent();
+}
+void vui::impl::InputDispatcherEventCatcher::onIconifyEvent(GLFWwindow*, int value) {
+    // Empty
+    // TODO: Add support?
+}
+#endif

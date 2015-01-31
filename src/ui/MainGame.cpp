@@ -3,10 +3,18 @@
 
 #include <thread>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(VORB_IMPL_UI_SDL)
+#if defined(OS_WINDOWS)
+#include <SDL/SDL.h>
 #include <TTF/SDL_ttf.h>
 #else
+#include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#endif
+#define MS_TIME (SDL_GetTicks())
+#else
+#include <GLFW/glfw3.h>
+#define MS_TIME ((ui32)(glfwGetTime() * 1000.0))
 #endif
 
 #include "graphics/GLStates.h"
@@ -35,7 +43,7 @@ bool vui::MainGame::initSystems() {
     vui::InputDispatcher::onQuit += m_fOnQuit;
 
     // Get The Machine's Graphics Capabilities
-    _gDevice = new vg::GraphicsDevice(_window);
+    _gDevice = new vg::GraphicsDevice(_window.getHandle());
     _gDevice->refreshInformation();
 
     // Set A Default OpenGL State
@@ -52,21 +60,27 @@ bool vui::MainGame::initSystems() {
     glViewport(0, 0, _window.getWidth(), _window.getHeight());
 
     // Initialize Fonts Library
+#if defined(VORB_IMPL_UI_SDL) && defined(VORB_IMPL_FONT_SDL)
     if (TTF_Init() == -1) {
         printf("TTF_Init Error: %s\n", TTF_GetError());
         return false;
     }
-
+#else
+    // TODO: FreeType library
+#endif
     return true;
 }
 
 void vui::MainGame::run() {
-
+#if defined(VORB_IMPL_UI_SDL)
     // Initialize everything except SDL audio and SDL haptic feedback.
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK);
 
     // Make sure we are using hardware acceleration
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+#else
+    glfwInit();
+#endif
 
     // For counting the fps
     FpsCounter fpsCounter;
@@ -86,13 +100,20 @@ void vui::MainGame::run() {
             onUpdateFrame();
             onRenderFrame();
 
-            _window.sync(SDL_GetTicks() - _lastMS);
+            // Swap buffers
+            ui32 curMS = MS_TIME;
+            _window.sync(curMS - _lastMS);
+
             // Get the FPS
             _fps = fpsCounter.endFrame();
         }
     }
 
+#if defined(VORB_IMPL_UI_SDL)
     SDL_Quit();
+#else
+    glfwTerminate();
+#endif
 }
 void vui::MainGame::exitGame() {
     if (_screen) {
@@ -130,12 +151,12 @@ bool vui::MainGame::init() {
     _lastTime = {};
     _curTime = {};
     _screen->onEntry(_lastTime);
-    _lastMS = SDL_GetTicks();
+    _lastMS = MS_TIME;
 
     return true;
 }
 void vui::MainGame::refreshElapsedTime() {
-    ui32 ct = SDL_GetTicks();
+    ui32 ct = MS_TIME;
     f64 et = (ct - _lastMS) / 1000.0;
     _lastMS = ct;
 
@@ -144,16 +165,11 @@ void vui::MainGame::refreshElapsedTime() {
     _curTime.total += et;
 }
 void vui::MainGame::checkInput() {
+#if defined(VORB_IMPL_UI_SDL)
     SDL_Event e;
-    if (_screen) {
-        while (SDL_PollEvent(&e) != 0) {
-            _screen->onEvent(e);
-        }
-    } else {
-        while (SDL_PollEvent(&e) != 0) {
-            continue;
-        }
-    }
+    while (SDL_PollEvent(&e) != 0) continue;
+#endif
+
     if (m_signalQuit) {
         m_signalQuit = false;
         exitGame();

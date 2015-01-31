@@ -3,6 +3,7 @@
 
 #include <boost/filesystem.hpp>
 #include <enet/enet.h>
+#include <FreeImage.h>
 
 #include "graphics/ConnectedTextures.h"
 #include "io/IOManager.h"
@@ -25,6 +26,7 @@ namespace vorb {
             return InitParam::GRAPHICS;
         }
 
+        FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
@@ -95,6 +97,8 @@ namespace vorb {
         if (!isSystemInitialized(InitParam::GRAPHICS)) {
             return InitParam::GRAPHICS;
         }
+
+        FreeImage_DeInitialise();
 
         return InitParam::GRAPHICS;
     }

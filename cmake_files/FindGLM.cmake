@@ -44,21 +44,31 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(GLM DEFAULT_MSG
 
 IF(NOT GLM_FOUND)
     # add external here
-    set(GLM_INCLUDEDIR "${VENDOR_PREFIX}/src/glm" CACHE PATH "" FORCE)
-    # set(GLM_INCLUDEDIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/glm")
+    # set(GLM_INCLUDEDIR "${VENDOR_PREFIX}/src/glm" CACHE PATH "" FORCE)
+    set(GLM_INCLUDEDIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/glm" CACHE PATH "" FORCE)
     list(APPEND vendor_args
         "-DGLM_INCLUDEDIR:PATH=${GLM_INCLUDEDIR}")
     INCLUDE(ExternalProject)
-    ExternalProject_Add(glm
-        PREFIX ${VENDOR_PREFIX}
-        GIT_REPOSITORY https://github.com/RegrowthStudios/glm
-        GIT_TAG 682979ddd8
-        INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/glm"
+#    ExternalProject_Add(glm
+#        GIT_REPOSITORY https://github.com/RegrowthStudios/glm
+#        GIT_TAG 682979ddd8
+#        INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/glm"
         # UPDATE_COMMAND ""
         # CONFIGURE_COMMAND ""
         # BUILD_IN_SOURCE 1
         # BUILD_COMMAND ""
         # INSTALL_COMMAND ""
+#        LOG_DOWNLOAD ON
+#        LOG_INSTALL ON
+#    )
+    ExternalProject_Add(
+        glm
+        PREFIX ${CMAKE_BINARY_DIR}/glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        <SOURCE_DIR>/glm ${CMAKE_CURRENT_SOURCE_DIR}/deps/glm
         LOG_DOWNLOAD ON
         LOG_INSTALL ON
     )

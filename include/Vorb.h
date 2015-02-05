@@ -1,14 +1,14 @@
-//
-//  Vorb.h
-//  Vorb Engine
-//
-//  Created by Ben Arnold on 2/10/2014
-//  Copyright 2014 Regrowth Studios
-//  All Rights Reserved
-//
-//  Summary:
-//  This is the main header for the vorb engine. It
-//  contains the namespace declarations.
+///
+///  Vorb.h
+///  Vorb Engine
+///
+///  Created by Ben Arnold on 2/10/2014
+///  Copyright 2014 Regrowth Studios
+///  All Rights Reserved
+///
+///  Summary:
+///  This is the main header for the vorb engine. It
+///  contains the namespace declarations.
 
 #pragma once
 
@@ -19,7 +19,12 @@
 #include "VorbLibs.h"
 
 namespace vorb {
-    /// Defines various subsystems that Vorb initializes before using
+    /** @brief Defines various subsystems that Vorb must initialize before usage
+     * 
+     * With the exception of NONE and ALL, each value is a single unique bit
+     * that acts as a flag. Thus combinations such as (GRAPHICS | IO) can be
+     * created and used.
+     */
     enum class InitParam {
         NONE = 0x00,
         GRAPHICS = 0x01,
@@ -30,13 +35,23 @@ namespace vorb {
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 
-    /// Initialize Vorb subsystems so that features from them may be used
-    /// @param p: Request of subsystems that should be initialized
-    /// @return Subsystems that successfully initialized
+    /** @brief Initialize a set of Vorb subsystems
+     * 
+     * If a subsystem is already initialized, then this has no effect on that subsystem
+     * and it returns as a success.
+     * 
+     * @param p: Request of subsystems that should be initialized
+     * @return Subsystems that successfully initialized
+     */
     InitParam init(const InitParam& p);
-    /// Dispose Vorb subsystems
-    /// @param p: Request of subsystems that should be destroyed
-    /// @return Subsystems that were successfully disposed
+    /** @brief Dispose a set of Vorb subsystems
+     * 
+     * If a subsystem is not initialized, then this has no effect on that subsystem
+     * and it returns as a success.
+     * 
+     * @param p: Request of subsystems that should be destroyed
+     * @return Subsystems that were successfully disposed
+     */
     InitParam dispose(const InitParam& p);
 }
 

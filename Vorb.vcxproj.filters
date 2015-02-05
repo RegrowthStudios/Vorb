@@ -394,6 +394,7 @@
     <ClInclude Include="include\graphics\SpriteBatch.h">
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\VorbLibs.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

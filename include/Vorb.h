@@ -16,6 +16,7 @@
 #define Vorb_h__
 #include "stdafx.h"
 #include "VorbPreDecl.inl"
+#include "VorbLibs.h"
 
 namespace vorb {
     /// Defines various subsystems that Vorb initializes before using

@@ -15,6 +15,11 @@
 #ifndef colors_h__
 #define colors_h__
 
+/** @brief Collection of named colors.
+ * 
+ * Provides the definition of 141 named
+ * colors. Values taken from XNA.
+ */
 namespace color {
     extern const color4 Transparent;
     extern const color4 AliceBlue;

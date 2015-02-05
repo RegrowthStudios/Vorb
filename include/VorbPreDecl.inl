@@ -15,22 +15,56 @@
 #ifndef VorbPreDecl_inl__
 #define VorbPreDecl_inl__
 
-// Create empty namespaces for aliasing purposes
+/** @brief The root namespace for most Vorb classes.
+ * 
+ * This holds core submodules as well as various
+ * extensions. ADT's, utilities, and common
+ * engine functionality is implemented here.
+ */
 namespace vorb {
     namespace core {
     }
+    /** @brief Vorb's graphics submodule.
+     * 
+     * Utilities for modifying context state as well as imaging, mesh,
+     * and debugging renderers can be found here.
+     */
     namespace graphics {
     }
     namespace voxel {
     }
+    /** @brief Vorb's UI submodule.
+     * 
+     * It provides an abstraction over the underlying OS to be able to provide
+     * a window, graphics context, and input handling. It also contains
+     * controller code for a screen system.
+     */
     namespace ui {
     }
+    /** @brief Vorb's IO submodule.
+     * 
+     * It simplifies tasks that relate to the filesystem, such as directory
+     * enumeration, file reading and writing, and path operations.
+     */
     namespace io {
     }
+    /** @brief Vorb's sound submodule.
+     * 
+     * It builds and maintains the audio context necessary to produce sound as
+     * well as an engine that controls how resources are loaded and instanced.
+     */
     namespace sound {
     }
+    /** @brief Vorb's Entity Component System extension.
+     * 
+     * This provides an implementation template for structuring an ECS system.
+     */
     namespace ecs {
     }
+    /** @brief Vorb's network module.
+     * 
+     * It currently initializes and destroys enet.
+     */
     namespace net {
     }
 }

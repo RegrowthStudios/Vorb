@@ -17,6 +17,11 @@
 
 #include "YAML.h"
 
+/** @brief Vorb extension for YAML parsing.
+ * 
+ * Provides utility classes for parsing YAML files as well
+ * as basic user-defined reflection capabilities.
+ */
 namespace keg {
     // These Are All The Types That Can Be Parsed Directly From YAML
     enum class BasicType {

@@ -15,8 +15,6 @@
 #ifndef Path_h__
 #define Path_h__
 
-/// TODO: Add caller-checked preconditions for speedups?
-
 namespace vorb {
     namespace io {
         class Directory;

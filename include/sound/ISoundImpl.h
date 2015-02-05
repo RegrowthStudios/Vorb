@@ -17,7 +17,6 @@
 
 namespace vorb {
     namespace sound {
-        /// Sound engine generalized pre-declarations
         namespace impl {
             struct EngineData;
             struct InstanceData;

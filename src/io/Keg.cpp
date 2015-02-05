@@ -405,7 +405,7 @@ namespace keg {
         Type* type = env->getType(typeName);
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
-        // Undefined Behavior Time :)
+        // TODO: Undefined Behavior Time :)
         *dest = new ui8[type->getSizeInBytes()]();
 
         return parse((ui8*)*dest, value, doc, env, type);
@@ -445,6 +445,7 @@ namespace keg {
         if (keg::getSequenceSize(nArray) > 0) {
             dest->setData(keg::getSequenceSize(nArray));
             ui8* newDest = &dest->at<ui8>(0);
+            memset(newDest, 0, dest->getLength() * type->getSizeInBytes());
 
             auto f = createDelegate<size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
                 evalData(newDest, decl->interiorValue, node, doc, env);

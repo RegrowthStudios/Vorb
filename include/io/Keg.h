@@ -304,3 +304,13 @@ namespace keg {
 /************************************************************************/
 
 #endif // Keg_h__
+
+/** \example "Keg Usage"
+ * 
+ * In the header file, you should declare that you want a type/enum to be part of
+ * the keg environment.
+ * \include VorbKeg.h
+ * 
+ * Define the values of all declared keg types/enums in compilation units.
+ * \include VorbKeg.cpp
+ */

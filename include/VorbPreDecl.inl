@@ -90,3 +90,10 @@ namespace vnet = vorb::net; ///< Namespace alias vorb::net
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 
 #endif // VorbPreDecl_inl__
+
+/** \example VorbInit.cpp
+ * 
+ * When using Vorb, you must initialize and dispose the submodules that you wish to use
+ * at the top level. You can specify any combinations as well as initialize and dispose at
+ * any time.
+ */

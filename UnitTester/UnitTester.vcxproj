@@ -96,6 +96,7 @@
     </Link>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
+robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -122,6 +123,7 @@ EXIT 0</Command>
     </Link>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
+robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -152,6 +154,7 @@ EXIT 0</Command>
     </Link>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
+robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -182,6 +185,7 @@ EXIT 0</Command>
     </Link>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
+robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>

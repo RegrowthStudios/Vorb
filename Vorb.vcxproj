@@ -111,7 +111,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet-d.lib;ZLIB-d.lib;LinearMath-d.lib;BulletCollision-d.lib;BulletDynamics-d.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>
@@ -135,7 +135,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet-d.lib;ZLIB-d.lib;LinearMath-d.lib;BulletCollision-d.lib;BulletDynamics-d.lib;OOLua-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet-d.lib;ZLIB-d.lib;libboost_system-vc120-mt-gd-1_55.lib;libboost_filesystem-vc120-mt-gd-1_55.lib;libyaml-cppmdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>
@@ -165,7 +165,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet.lib;ZLIB.lib;LinearMath.lib;BulletCollision.lib;BulletDynamics.lib;OOLua.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>
@@ -194,7 +194,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)deps/lib/$(PlatformName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;enet.lib;ZLIB.lib;LinearMath.lib;BulletCollision.lib;BulletDynamics.lib;OOLua.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>enet.lib;ZLIB.lib;libboost_system-vc120-mt-1_55.lib;libboost_filesystem-vc120-mt-1_55.lib;libyaml-cppmd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <ProjectReference>
@@ -207,6 +207,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbInit.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbKeg.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src/colors.cpp" />
     <ClCompile Include="src/ecs/ComponentTableBase.cpp" />
@@ -317,6 +329,7 @@
     <ClInclude Include="include/graphics/RTSwapChain.hpp" />
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
+    <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\graphics\SpriteBatch.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />

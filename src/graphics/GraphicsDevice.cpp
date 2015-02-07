@@ -7,8 +7,10 @@
 #else
 #include <SDL2/SDL.h>
 #endif
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>
+#elif defined(VORB_IMPL_UI_SFML)
+#include <SFML/Window/VideoMode.hpp>
 #endif
 
 
@@ -28,12 +30,17 @@ void vg::GraphicsDevice::refreshInformation() {
     _props.nativeScreenWidth = displayMode.w;
     _props.nativeScreenHeight = displayMode.h;
     _props.nativeRefreshRate = displayMode.refresh_rate;
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     auto& displayMode = *glfwGetVideoMode(monitor);
     _props.nativeScreenWidth = displayMode.width;
     _props.nativeScreenHeight = displayMode.height;
     _props.nativeRefreshRate = displayMode.refreshRate;
+#elif defined(VORB_IMPL_UI_SFML)
+    auto displayMode = sf::VideoMode::getDesktopMode();
+    _props.nativeScreenWidth = displayMode.width;
+    _props.nativeScreenHeight = displayMode.height;
+    _props.nativeRefreshRate = 60; // This is what Laurent says about monitors, so it must be true...
 #endif
 
     // Get The OpenGL Implementation Information
@@ -85,7 +92,7 @@ void vg::GraphicsDevice::initResolutions(void* w) {
         SDL_GetDisplayMode(dispIndex, dmi, &dMode);
         _props.resolutionOptions.push_back(ui32v2(dMode.w, dMode.h));
     }
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     int dispCount;
     GLFWmonitor* monitor = glfwGetWindowMonitor((GLFWwindow*)w);
     if (!monitor) monitor = glfwGetPrimaryMonitor();
@@ -93,6 +100,9 @@ void vg::GraphicsDevice::initResolutions(void* w) {
     for (i32 dmi = 0; dmi < dispCount; dmi++) {
         _props.resolutionOptions.push_back(ui32v2(dmodes[dmi].width, dmodes[dmi].height));
     }
+#elif defined(VORB_IMPL_UI_SFML)
+    auto modes = sf::VideoMode::getFullscreenModes();
+    for (auto& mode : modes) _props.resolutionOptions.push_back(ui32v2(mode.width, mode.height));
 #endif
 
     // Sort display modes

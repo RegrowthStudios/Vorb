@@ -1,51 +1,10 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
-#if defined(VORB_IMPL_UI_SDL)
-#if defined(OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif
-#else
-#include <GLFW/glfw3.h>
-#endif
-
+#include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
-#include "ui/KeyboardEventDispatcher.h"
 
-namespace vorb {
-    namespace ui {
-        namespace impl {
-            class InputDispatcherEventCatcher {
-            public:
-#if defined(VORB_IMPL_UI_SDL)
-                static i32 onSDLEvent(void* userData, SDL_Event* e);
-#else
-                static void onMonitorEvent(GLFWmonitor*, int);
-                static void onFileDropEvent(GLFWwindow*, int, const cString*);
-                static void onKeyFocusEvent(GLFWwindow*, int);
-                static void onKeyEvent(GLFWwindow*, int, int, int, int);
-                static void onCharEvent(GLFWwindow*, unsigned int);
-                static void onMouseFocusEvent(GLFWwindow*, int);
-                static void onMousePosEvent(GLFWwindow*, f64, f64);
-                static void onMouseButtonEvent(GLFWwindow*, int, int, int);
-                static void onMouseScrollEvent(GLFWwindow*, f64, f64);
-                static void onWindowCloseEvent(GLFWwindow*);
-                static void onWindowPosEvent(GLFWwindow*, int, int);
-                static void onWindowSizeEvent(GLFWwindow*, int, int);
-                static void onFramebufferSizeEvent(GLFWwindow*, int, int);
-                static void onIconifyEvent(GLFWwindow*, int);
-                static vui::KeyModifiers mods;
-#endif
-            };
-        }
-    }
-}
-
-#if defined(VORB_IMPL_UI_SDL)
-// Empty
-#else
+#if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
 #endif
 
@@ -65,7 +24,7 @@ void vui::InputDispatcher::init(GameWindow* w) {
     SDL_SetEventFilter(impl::InputDispatcherEventCatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
     SDL_StartTextInput();
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
     glfwSetCharCallback(window, impl::InputDispatcherEventCatcher::onCharEvent);
     glfwSetCursorEnterCallback(window, impl::InputDispatcherEventCatcher::onMouseFocusEvent);
@@ -94,7 +53,7 @@ void vui::InputDispatcher::dispose() {
 #if defined(VORB_IMPL_UI_SDL)
     SDL_StopTextInput();
     SDL_SetEventFilter(nullptr, nullptr);
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
     glfwSetCharCallback(window, nullptr);
     glfwSetCursorEnterCallback(window, nullptr);
@@ -114,7 +73,7 @@ void vui::InputDispatcher::dispose() {
     m_window = nullptr;
 }
 
-#if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_UI_SDL) || defined(VORB_IMPL_UI_SFML)
 /// Memory-efficient way to split through multiple event types
 typedef union {
     vui::MouseEvent mouse;
@@ -126,7 +85,9 @@ typedef union {
     vui::WindowResizeEvent windowResize;
     vui::WindowFileEvent windowFile;
 } InputEvent;
+#endif
 
+#if defined(VORB_IMPL_UI_SDL)
 void convert(vui::KeyModifiers& km, const ui16& sm) {
 #define MASK_BOOL(F) ((F) == 0) ? false : true;
     km.lAlt = MASK_BOOL(sm & KMOD_LALT);
@@ -294,7 +255,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     }
     return 0;
 }
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
 void vui::impl::InputDispatcherEventCatcher::onMonitorEvent(GLFWmonitor* monitor, int) {
     // Empty
     // TODO: Add support?
@@ -317,10 +278,11 @@ void vui::impl::InputDispatcherEventCatcher::onKeyFocusEvent(GLFWwindow*, int va
 }
 void vui::impl::InputDispatcherEventCatcher::onKeyEvent(GLFWwindow*, int key, int scan, int action, int mod) {
     // We don't want repeat events here
-    if (action == GLFW_REPEAT) return;
+    // TODO: Actually, we do... we can correctly calculate counts, duh
+    if (action == GLFW_REPEAT) return; 
 
     KeyEvent e;
-    e.keyCode = key;
+    e.keyCode = key; // TODO: Make sure these line up
     e.scanCode = scan;
     switch (key) {
     case GLFW_KEY_LEFT_ALT:
@@ -482,5 +444,89 @@ void vui::impl::InputDispatcherEventCatcher::onFramebufferSizeEvent(GLFWwindow*,
 void vui::impl::InputDispatcherEventCatcher::onIconifyEvent(GLFWwindow*, int value) {
     // Empty
     // TODO: Add support?
+}
+#elif defined(VORB_IMPL_UI_SFML)
+static void checkMods(sf::Keyboard::Key code, bool action) {
+    switch (code) {
+    case sf::Keyboard::Key::LAlt:
+        vui::impl::InputDispatcherEventCatcher::mods.lAlt = action;
+        break;
+    case sf::Keyboard::Key::RAlt:
+        vui::impl::InputDispatcherEventCatcher::mods.rAlt = action;
+        break;
+    case sf::Keyboard::Key::LControl:
+        vui::impl::InputDispatcherEventCatcher::mods.lCtrl = action;
+        break;
+    case sf::Keyboard::Key::RControl:
+        vui::impl::InputDispatcherEventCatcher::mods.rCtrl = action;
+        break;
+    case sf::Keyboard::Key::LSystem:
+        vui::impl::InputDispatcherEventCatcher::mods.lGUI = action;
+        break;
+    case sf::Keyboard::Key::RSystem:
+        vui::impl::InputDispatcherEventCatcher::mods.rGUI = action;
+        break;
+    case sf::Keyboard::Key::LShift:
+        vui::impl::InputDispatcherEventCatcher::mods.lShift = action;
+        break;
+    case sf::Keyboard::Key::RShift:
+        vui::impl::InputDispatcherEventCatcher::mods.rShift = action;
+        break;
+    default:
+        break;
+    }
+}
+void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userData, sf::Event& e) {
+    InputEvent ie;
+
+    switch (e.type) {
+    case sf::Event::Closed:
+        vui::InputDispatcher::window.onClose();
+        vui::InputDispatcher::window.onEvent();
+        vui::InputDispatcher::onQuit();
+        break;
+    case sf::Event::GainedFocus:
+        break;
+    case sf::Event::LostFocus:
+        break;
+    case sf::Event::KeyPressed:
+        checkMods(e.key.code, true);
+        ie.key.mod = mods;
+        ie.key.keyCode = e.key.code; // TODO: Make sure these line up
+        ie.key.scanCode = e.key.code; // TODO: Fuck...
+        ie.key.repeatCount = 1;
+        vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
+        vui::InputDispatcher::key.onKeyDown(ie.key);
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::KeyReleased:
+        checkMods(e.key.code, false);
+        ie.key.mod = mods;
+        ie.key.keyCode = e.key.code; // TODO: Make sure these line up
+        ie.key.scanCode = e.key.code; // TODO: Fuck...
+        ie.key.repeatCount = 1;
+        vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
+        vui::InputDispatcher::key.onKeyDown(ie.key);
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::MouseButtonPressed:
+        break;
+    case sf::Event::MouseButtonReleased:
+        break;
+    case sf::Event::MouseEntered:
+        break;
+    case sf::Event::MouseLeft:
+        break;
+    case sf::Event::MouseMoved:
+        break;
+    case sf::Event::MouseWheelMoved:
+        break;
+    case sf::Event::Resized:
+        break;
+    case sf::Event::TextEntered:
+        break;
+    default:
+        break;
+    }
 }
 #endif

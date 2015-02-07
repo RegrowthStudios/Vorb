@@ -12,9 +12,20 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #endif
 #define MS_TIME (SDL_GetTicks())
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>
 #define MS_TIME ((ui32)(glfwGetTime() * 1000.0))
+#elif defined(VORB_IMPL_UI_SFML)
+#include <SFML/System/Clock.hpp>
+// TODO: This is pretty effing hacky...
+static ui32 getCurrentTime() {
+    static sf::Clock clock;
+    static ui32 lastMS = 0;
+
+    lastMS += (ui32)clock.getElapsedTime().asMilliseconds();
+    return lastMS;
+}
+#define MS_TIME getCurrentTime()
 #endif
 
 #include "graphics/GLStates.h"
@@ -24,6 +35,7 @@
 #include "ui/ScreenList.h"
 #include "utils.h"
 #include "Timing.h"
+#include "InputDispatcherEventCatcher.h"
 
 vui::MainGame::MainGame() : _fps(0) {
     m_fOnQuit = createDelegate<>([=] (Sender) {
@@ -78,8 +90,10 @@ void vui::MainGame::run() {
 
     // Make sure we are using hardware acceleration
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     glfwInit();
+#elif defined(VORB_IMPL_UI_SFML)
+    // Nothing to do...
 #endif
 
     // For counting the fps
@@ -111,8 +125,10 @@ void vui::MainGame::run() {
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_Quit();
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     glfwTerminate();
+#elif defined(VORB_IMPL_UI_SFML)
+    // Don't have to do anything
 #endif
 }
 void vui::MainGame::exitGame() {
@@ -168,6 +184,12 @@ void vui::MainGame::checkInput() {
 #if defined(VORB_IMPL_UI_SDL)
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) continue;
+#elif defined(VORB_IMPL_UI_SFML)
+    sf::Event e;
+    sf::RenderWindow* window = (sf::RenderWindow*)_window.getHandle();
+    while (window->pollEvent(e)) {
+        vorb::ui::impl::InputDispatcherEventCatcher::onSFMLEvent(window, e);
+    }
 #endif
 
     if (m_signalQuit) {

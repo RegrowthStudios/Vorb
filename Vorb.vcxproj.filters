@@ -47,9 +47,6 @@
     <ClCompile Include="src/RPC.cpp">
       <Filter>Core\ADT</Filter>
     </ClCompile>
-    <ClCompile Include="src/ui/InputDispatcher.cpp">
-      <Filter>UI\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src/ui/LuaDevConsole.cpp">
       <Filter>UI\REPL</Filter>
     </ClCompile>
@@ -141,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="include\examples\VorbKeg.cpp">
       <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\InputDispatcher.cpp">
+      <Filter>UI\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +403,9 @@
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="include\examples\VorbKeg.h">
       <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\InputDispatcherEventCatcher.h">
+      <Filter>UI\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

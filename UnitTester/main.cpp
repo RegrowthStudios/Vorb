@@ -7,19 +7,24 @@ namespace UnitTests {
 
 int main(int argc, char** argv) {
     using namespace UnitTests;
-    for (auto it = Tests::begin(); it != Tests::end(); it++) {
-        try {
-            puts("===============================");
-            printf("Running %s\n", it->first.c_str());
-            bool res = Tests::runTest(it->first);
-            puts("=  =  =  =  =  =  =  =  =  =  =");
-            puts(res ? "Result: PASS" : "Result: FAIL");
-            puts("===============================");
-        } catch (...) {
-            puts("Exception(al) Failure");
+    nString test;
+    while (true) {
+        std::cout << "Enter Test: ";
+        std::cin >> test;
+        if (test != "q") {
+            try {
+                puts("===============================");
+                printf("Running %s\n", test.c_str());
+                bool res = Tests::runTest(test);
+                puts("=  =  =  =  =  =  =  =  =  =  =");
+                puts(res ? "Result: PASS" : "Result: FAIL");
+                puts("===============================");
+            } catch (...) {
+                puts("Exception(al) Failure");
+            }
+        } else {
+            break;
         }
     }
-    std::cin.clear();
-    std::cout << std::cin.get();
     return 0;
 }

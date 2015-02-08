@@ -7,6 +7,7 @@
 #include <include/Vorb.h>
 #include <include/graphics/ImageIO.h>
 #include <include/graphics/SpriteBatch.h>
+#include <include/graphics/SpriteFont.h>
 #include <include/graphics/Texture.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
@@ -166,22 +167,80 @@ ImageTestFormats ImageViewer::m_testFormats[6] = {
     }
 };
 
+class FontViewer : public vui::IGameScreen {
+public:
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+
+    virtual void build() {
+        // Empty
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+        // Empty
+    }
+
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        batch.init();
+        font.init("Data/chintzy.ttf", 32);
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        batch.dispose();
+        font.dispose();
+    }
+
+    virtual void update(const vui::GameTime& gameTime) {
+        // Empty
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        batch.begin();
+        batch.drawString(&font, "Hello World", f32v2(10, 10), 80.0f, 1.0f, color4(1.0f, 1.0f, 1.0f));
+        batch.end();
+        batch.renderBatch(f32v2(800, 600));
+    }
+
+    vg::SpriteFont font;
+    vg::SpriteBatch batch;
+};
+
 class VGTestApp : public vui::MainGame {
 public:
+    VGTestApp(vui::IGameScreen* s) :
+        screen(s) {
+        // Empty
+    }
+
     virtual void onInit() {
     }
     virtual void addScreens() {
-        _screenList->addScreen(new ImageViewer);
+        _screenList->addScreen(screen);
         _screenList->setScreen(0);
     }
     virtual void onExit() {
+        delete screen;
+        screen = nullptr;
     }
+
+    vui::IGameScreen* screen = nullptr;
 };
 
 
-TEST(ImageViewer) {
+TEST(FontViewer) {
     vorb::init(vorb::InitParam::ALL);
-    { VGTestApp().run(); }
+    { VGTestApp(new FontViewer).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
+
+TEST(ImageViewer) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new ImageViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+

@@ -26,6 +26,7 @@
 #elif defined(VORB_IMPL_UI_SFML)
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 #endif
 
 #include "ui/KeyboardEventDispatcher.h"

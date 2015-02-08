@@ -476,9 +476,25 @@ static void checkMods(sf::Keyboard::Key code, bool action) {
         break;
     }
 }
+static vui::MouseButton convert(sf::Mouse::Button b) {
+    switch (b) {
+    case sf::Mouse::Left:
+        return vui::MouseButton::LEFT;
+    case sf::Mouse::Right:
+        return vui::MouseButton::RIGHT;
+    case sf::Mouse::Middle:
+        return vui::MouseButton::MIDDLE;
+    case sf::Mouse::XButton1:
+        return vui::MouseButton::X1;
+    case sf::Mouse::XButton2:
+        return vui::MouseButton::X2;
+    default:
+        return vui::MouseButton::UNKNOWN;
+    }
+}
 void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userData, sf::Event& e) {
-    InputEvent ie;
-
+    InputEvent ie = {};
+    sf::Vector2i sfv;
     switch (e.type) {
     case sf::Event::Closed:
         vui::InputDispatcher::window.onClose();
@@ -486,15 +502,19 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         vui::InputDispatcher::onQuit();
         break;
     case sf::Event::GainedFocus:
+        vui::InputDispatcher::key.onFocusGained();
+        vui::InputDispatcher::key.onEvent();
         break;
     case sf::Event::LostFocus:
+        vui::InputDispatcher::key.onFocusLost();
+        vui::InputDispatcher::key.onEvent();
         break;
     case sf::Event::KeyPressed:
         checkMods(e.key.code, true);
         ie.key.mod = mods;
         ie.key.keyCode = e.key.code; // TODO: Make sure these line up
         ie.key.scanCode = e.key.code; // TODO: Fuck...
-        ie.key.repeatCount = 1;
+        ie.key.repeatCount = 1; // TODO: Fuck me with a pickle
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
         vui::InputDispatcher::key.onKeyDown(ie.key);
         vui::InputDispatcher::key.onEvent();
@@ -502,28 +522,78 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
     case sf::Event::KeyReleased:
         checkMods(e.key.code, false);
         ie.key.mod = mods;
-        ie.key.keyCode = e.key.code; // TODO: Make sure these line up
-        ie.key.scanCode = e.key.code; // TODO: Fuck...
+        ie.key.keyCode = e.key.code;
+        ie.key.scanCode = e.key.code;
         ie.key.repeatCount = 1;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
-        vui::InputDispatcher::key.onKeyDown(ie.key);
+        vui::InputDispatcher::key.onKeyUp(ie.key);
         vui::InputDispatcher::key.onEvent();
         break;
     case sf::Event::MouseButtonPressed:
+        ie.mouseButton.x = e.mouseButton.x;
+        ie.mouseButton.y = e.mouseButton.y;
+        ie.mouseButton.button = convert(e.mouseButton.button);
+        ie.mouseButton.clicks = 1; // Ugh....
+        vui::InputDispatcher::mouse.onButtonDown(ie.mouseButton);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseButton);
         break;
     case sf::Event::MouseButtonReleased:
+        ie.mouseButton.x = e.mouseButton.x;
+        ie.mouseButton.y = e.mouseButton.y;
+        ie.mouseButton.button = convert(e.mouseButton.button);
+        ie.mouseButton.clicks = 1;
+        vui::InputDispatcher::mouse.onButtonUp(ie.mouseButton);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseButton);
         break;
     case sf::Event::MouseEntered:
+        sfv = sf::Mouse::getPosition(*userData);
+        ie.mouse.x = sfv.x;
+        ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
+        vui::InputDispatcher::mouse.onEvent(ie.mouse);
         break;
     case sf::Event::MouseLeft:
+        sfv = sf::Mouse::getPosition(*userData);
+        ie.mouse.x = sfv.x;
+        ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
+        vui::InputDispatcher::mouse.onEvent(ie.mouse);
         break;
     case sf::Event::MouseMoved:
+        ie.mouseMotion.x = e.mouseMove.x;
+        ie.mouseMotion.y = e.mouseMove.y;
+        ie.mouseMotion.dx = ie.mouseMotion.x - vui::InputDispatcher::mouse.m_lastPos.x;
+        ie.mouseMotion.dy = ie.mouseMotion.y - vui::InputDispatcher::mouse.m_lastPos.y;
+        if (ie.mouseMotion.dx == 0 && ie.mouseMotion.dy == 0) return;
+        vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
+        vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
+        vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
         break;
     case sf::Event::MouseWheelMoved:
+        ie.mouseWheel.dx = 0;
+        ie.mouseWheel.dy = e.mouseWheel.delta;
+        if (ie.mouseWheel.dx == 0 && ie.mouseWheel.dy == 0) return;
+        vui::InputDispatcher::mouse.m_fullScroll.x += ie.mouseWheel.dx;
+        vui::InputDispatcher::mouse.m_fullScroll.y += ie.mouseWheel.dy;
+        ie.mouseWheel.x = e.mouseWheel.x;
+        ie.mouseWheel.y = e.mouseWheel.y;
+        ie.mouseWheel.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
+        ie.mouseWheel.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+        vui::InputDispatcher::mouse.onWheel(ie.mouseWheel);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseWheel);
         break;
     case sf::Event::Resized:
+        ie.windowResize.w = e.size.width;
+        ie.windowResize.h = e.size.height;
+        vui::InputDispatcher::window.onResize(ie.windowResize);
+        vui::InputDispatcher::window.onEvent();
         break;
     case sf::Event::TextEntered:
+        memcpy(ie.text.text, &e.text.unicode, sizeof(Uint32));
+        ie.text.text[sizeof(Uint32)] = 0;
+        vui::InputDispatcher::key.onText(ie.text);
+        vui::InputDispatcher::key.onEvent();
         break;
     default:
         break;

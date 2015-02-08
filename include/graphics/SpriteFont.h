@@ -34,9 +34,9 @@ namespace vorb {
         class SpriteFont {
             friend class SpriteBatch;
         public:
-            SpriteFont(const cString font, ui32 size, char cs, char ce);
-            SpriteFont(const cString font, ui32 size) : SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) {
-                // Empty
+            void init(const cString font, ui32 size, char cs, char ce);
+            void init(const cString font, ui32 size) {
+                init(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR);
             }
             void dispose();
 
@@ -53,11 +53,12 @@ namespace vorb {
 
             static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 
-            ui32 _regStart, _regLength;
-            CharGlyph* _glyphs;
-            ui32 _fontHeight;
+            ui32 _regStart = FIRST_PRINTABLE_CHAR;
+            ui32 _regLength = (LAST_PRINTABLE_CHAR - FIRST_PRINTABLE_CHAR + 1);
+            CharGlyph* _glyphs = nullptr;
+            ui32 _fontHeight = 0;
 
-            VGTexture _texID;
+            VGTexture _texID = 0;
         };
     }
 }

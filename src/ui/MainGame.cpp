@@ -6,10 +6,8 @@
 #if defined(VORB_IMPL_UI_SDL)
 #if defined(OS_WINDOWS)
 #include <SDL/SDL.h>
-#include <TTF/SDL_ttf.h>
 #else
 #include <SDL2/SDL.h>
-#include <SDL2_ttf/SDL_ttf.h>
 #endif
 #define MS_TIME (SDL_GetTicks())
 #elif defined(VORB_IMPL_UI_GLFW)
@@ -26,6 +24,16 @@ static ui32 getCurrentTime() {
     return lastMS;
 }
 #define MS_TIME getCurrentTime()
+#endif
+
+#if defined(VORB_IMPL_FONT_SDL)
+#if defined(OS_WINDOWS)
+#include <TTF/SDL_ttf.h>
+#else
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
+#else
+// TODO: FreeType?
 #endif
 
 #include "graphics/GLStates.h"
@@ -72,7 +80,7 @@ bool vui::MainGame::initSystems() {
     glViewport(0, 0, _window.getWidth(), _window.getHeight());
 
     // Initialize Fonts Library
-#if defined(VORB_IMPL_UI_SDL) && defined(VORB_IMPL_FONT_SDL)
+#if defined(VORB_IMPL_FONT_SDL)
     if (TTF_Init() == -1) {
         printf("TTF_Init Error: %s\n", TTF_GetError());
         return false;
@@ -122,6 +130,12 @@ void vui::MainGame::run() {
             _fps = fpsCounter.endFrame();
         }
     }
+
+#if defined(VORB_IMPL_FONT_SDL)
+    TTF_Quit();
+#else
+    // TODO: FreeType
+#endif
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_Quit();

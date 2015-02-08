@@ -305,7 +305,7 @@ namespace keg {
 
 #endif // Keg_h__
 
-/** \example "Keg Usage"
+/*! \example "Keg Usage"
  * 
  * In the header file, you should declare that you want a type/enum to be part of
  * the keg environment.

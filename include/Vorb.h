@@ -14,8 +14,7 @@
 
 #ifndef Vorb_h__
 #define Vorb_h__
-#include "stdafx.h"
-#include "VorbPreDecl.inl"
+
 #include "VorbLibs.h"
 
 namespace vorb {
@@ -35,7 +34,7 @@ namespace vorb {
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 
-    /** @brief Initialize a set of Vorb subsystems
+    /*! @brief Initialize a set of Vorb subsystems
      * 
      * If a subsystem is already initialized, then this has no effect on that subsystem
      * and it returns as a success.
@@ -44,7 +43,7 @@ namespace vorb {
      * @return Subsystems that successfully initialized
      */
     InitParam init(const InitParam& p);
-    /** @brief Dispose a set of Vorb subsystems
+    /*! @brief Dispose a set of Vorb subsystems
      * 
      * If a subsystem is not initialized, then this has no effect on that subsystem
      * and it returns as a success.

@@ -16,7 +16,7 @@
 #define SpriteBatch_h__
 
 #include "../PtrRecycler.hpp"
-#include "../Vorb.h"
+#include "../VorbPreDecl.inl"
 #include "gtypes.h"
 
 namespace vorb {

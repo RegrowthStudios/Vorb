@@ -15,8 +15,6 @@
 #ifndef Vorb_h__
 #define Vorb_h__
 
-#include "VorbLibs.h"
-
 namespace vorb {
     /** @brief Defines various subsystems that Vorb must initialize before usage
      * 

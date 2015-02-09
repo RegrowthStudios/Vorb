@@ -15,6 +15,8 @@
 #ifndef VorbLibs_h__
 #define VorbLibs_h__
 
+#include "compat.h"
+
 /************************************************************************/
 /* Common                                                               */
 /************************************************************************/
@@ -202,3 +204,22 @@
 #endif
 
 #endif // VorbLibs_h__
+
+/*! \example "Vorb Library Linkage"
+ * 
+ * When linking against Vorb, a utility file "VorbLibs.h"
+ * is provided to accurately specify which libraries must be
+ * linked depending on your submodule implementations.
+ * 
+ * It is recommended that you only include this file once in one
+ * of your compilation units - either in your entry point, or in a
+ * unique compilation unit. Above your inclusion of the VorbLibs.h
+ * header, you should define the implementations of the subsystems.
+ * Implentations can be of the following:
+ *  - VORB_IMPL_UI_GLFW
+ *  - VORB_IMPL_UI_SDL
+ *  - VORB_IMPL_UI_SFML
+ *  - VORB_IMPL_SOUND_FMOD
+ *  - VORB_IMPL_FONT_SDL
+ * \include "VorbLibs.cpp"
+ */

@@ -9,6 +9,7 @@
 #include "io/IOManager.h"
 #include "sound/SoundEngine.h"
 #include "utils.h"
+#include "VorbLibs.h"
 
 namespace vorb {
     // Current system settings

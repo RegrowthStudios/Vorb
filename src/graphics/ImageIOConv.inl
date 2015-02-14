@@ -15,14 +15,18 @@ namespace vorb {
 #error Please research and test wtf is FreeImage doing?
 #endif
 
-            typedef void(*BMPConvFunc)(FIBITMAP*, vg::BitmapResource&);
+            int scanY(int y, ui32 h, bool flip) {
+                return flip ? y : h - 1 - y;
+            }
+
+            typedef void(*BMPConvFunc)(FIBITMAP*, vg::BitmapResource&, bool);
 
             template<typename FROM, typename TO>
-            void convertToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x];
                         data[i + R_OFFSET] = v;
@@ -33,11 +37,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 SHIFT>
-            void convertToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x] << SHIFT;
                         data[i + R_OFFSET] = v;
@@ -48,11 +52,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 SHIFT>
-            void convertToRGBRShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBRShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)(bits[x] >> SHIFT);
                         data[i + R_OFFSET] = v;
@@ -63,11 +67,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO>
-            void convertToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x];
                         data[i + R_OFFSET] = v;
@@ -79,11 +83,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 SHIFT>
-            void convertToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x] << SHIFT;
                         data[i + R_OFFSET] = v;
@@ -95,11 +99,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 SHIFT>
-            void convertToRGBARShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBARShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)(bits[x] >> SHIFT);
                         data[i + R_OFFSET] = v;
@@ -112,11 +116,11 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, FROM DIV>
-            void convertToRGBF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x] / (TO)DIV;
                         data[i + R_OFFSET] = v;
@@ -127,11 +131,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, FROM DIV>
-            void convertToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)bits[x] / (TO)DIV;
                         data[i + R_OFFSET] = v;
@@ -144,11 +148,11 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, TO MUL>
-            void convertFToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertFToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)(bits[x] * (FROM)MUL);
                         data[i + R_OFFSET] = v;
@@ -159,11 +163,11 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, TO MUL>
-            void convertFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < res.width; x++) {
                         TO v = (TO)(bits[x] * (FROM)MUL);
                         data[i + R_OFFSET] = v;
@@ -176,12 +180,12 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, ui32 RSHIFT>
-            void convertRGBToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] >> RSHIFT);
                         data[i + G_OFFSET] = (TO)(bits[x++] >> RSHIFT);
@@ -191,12 +195,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 RSHIFT>
-            void convertRGBToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] >> RSHIFT);
                         data[i + G_OFFSET] = (TO)(bits[x++] >> RSHIFT);
@@ -207,12 +211,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 RSHIFT>
-            void convertRGBAToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] >> RSHIFT);
                         data[i + G_OFFSET] = (TO)(bits[x++] >> RSHIFT);
@@ -223,12 +227,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 RSHIFT>
-            void convertRGBAToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] >> RSHIFT);
                         data[i + G_OFFSET] = (TO)(bits[x++] >> RSHIFT);
@@ -240,12 +244,12 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, ui32 LSHIFT>
-            void convertRGBToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] << LSHIFT;
                         data[i + G_OFFSET] = (TO)bits[x++] << LSHIFT;
@@ -255,12 +259,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 LSHIFT>
-            void convertRGBToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] << LSHIFT;
                         data[i + G_OFFSET] = (TO)bits[x++] << LSHIFT;
@@ -271,12 +275,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 LSHIFT>
-            void convertRGBAToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGBLShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] << LSHIFT;
                         data[i + G_OFFSET] = (TO)bits[x++] << LSHIFT;
@@ -287,12 +291,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, ui32 LSHIFT>
-            void convertRGBAToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGBALShift(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] << LSHIFT;
                         data[i + G_OFFSET] = (TO)bits[x++] << LSHIFT;
@@ -304,12 +308,12 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, FROM DIV>
-            void convertRGBToRGBF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGBF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] / (TO)DIV;
                         data[i + G_OFFSET] = (TO)bits[x++] / (TO)DIV;
@@ -319,12 +323,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, FROM DIV>
-            void convertRGBToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] / (TO)DIV;
                         data[i + G_OFFSET] = (TO)bits[x++] / (TO)DIV;
@@ -335,12 +339,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, FROM DIV>
-            void convertRGBAToRGBF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGBF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] / (TO)DIV;
                         data[i + G_OFFSET] = (TO)bits[x++] / (TO)DIV;
@@ -351,12 +355,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, FROM DIV>
-            void convertRGBAToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++] / (TO)DIV;
                         data[i + G_OFFSET] = (TO)bits[x++] / (TO)DIV;
@@ -368,12 +372,12 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO>
-            void convertRGBFToRGBF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBFToRGBF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++];
                         data[i + G_OFFSET] = (TO)bits[x++];
@@ -383,12 +387,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO>
-            void convertRGBFToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBFToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++];
                         data[i + G_OFFSET] = (TO)bits[x++];
@@ -399,12 +403,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO>
-            void convertRGBAFToRGBF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAFToRGBF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++];
                         data[i + G_OFFSET] = (TO)bits[x++];
@@ -415,12 +419,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO>
-            void convertRGBAFToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAFToRGBAF(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)bits[x++];
                         data[i + G_OFFSET] = (TO)bits[x++];
@@ -432,12 +436,12 @@ namespace vorb {
             }
 
             template<typename FROM, typename TO, TO MUL>
-            void convertRGBFToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBFToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
                         data[i + G_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
@@ -447,12 +451,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, TO MUL>
-            void convertRGBFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 3;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
                         data[i + B_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
@@ -463,12 +467,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, TO MUL>
-            void convertRGBAFToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAFToRGB(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
                         data[i + G_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
@@ -479,12 +483,12 @@ namespace vorb {
                 }
             }
             template<typename FROM, typename TO, TO MUL>
-            void convertRGBAFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res) {
+            void convertRGBAFToRGBA(FIBITMAP* bmp, vg::BitmapResource& res, bool flipV) {
                 size_t i = 0;
                 TO* data = (TO*)res.data;
                 ui32 endX = res.width * 4;
                 for (ui32 y = 0; y < res.height; y++) {
-                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, y);
+                    FROM* bits = (FROM*)FreeImage_GetScanLine(bmp, scanY(y, res.height, flipV));
                     for (ui32 x = 0; x < endX;) {
                         data[i + R_OFFSET] = (TO)(bits[x++] * (FROM)MUL);
                         data[i + G_OFFSET] = (TO)(bits[x++] * (FROM)MUL);

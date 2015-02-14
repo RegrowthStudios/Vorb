@@ -65,7 +65,7 @@ void vg::ImageIO::free(const BitmapResource& res) {
     delete[] res.bytesUI8;
 }
 
-vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat& format) {
+vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat& format, bool flipV /*= false*/) {
     BitmapResource res = {};
     res.data = nullptr;
 
@@ -107,7 +107,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         case ImageIOFormat::RGB_F64:
             bmp = impl::makeRGB(bmp);
             f = impl::convRGB8[(size_t)format];
-            f(bmp, res);
+            f(bmp, res, flipV);
             break;
         case ImageIOFormat::RGBA_UI8:
         case ImageIOFormat::RGBA_UI16:
@@ -115,7 +115,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         case ImageIOFormat::RGBA_F64:
             bmp = impl::makeRGBA(bmp);
             f = impl::convRGBA8[(size_t)format];
-            f(bmp, res);
+            f(bmp, res, flipV);
             break;
         default:
             onError("Unknown format specified");
@@ -125,43 +125,43 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         break;
     case FIT_UINT16:
         f = impl::convUI16[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_INT16:
         f = impl::convI16[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_UINT32:
         f = impl::convUI32[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_INT32:
         f = impl::convI32[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_FLOAT:
         f = impl::convF32[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_DOUBLE:
         f = impl::convF64[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_RGB16:
         f = impl::convRGB16[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_RGBA16:
         f = impl::convRGBA16[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_RGBF:
         f = impl::convRGBF[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_RGBAF:
         f = impl::convRGBAF[(size_t)format];
-        f(bmp, res);
+        f(bmp, res, flipV);
         break;
     case FIT_COMPLEX:
         onError("Cannot load imaginary files: please come back to the real world");
@@ -217,4 +217,3 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
 
     return true;
 }
-

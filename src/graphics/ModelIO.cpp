@@ -25,6 +25,8 @@ namespace vorb {
                         return nullptr;
                     case ' ':
                     case '\t':
+                    case '\r':
+                    case '\n':
                         return s;
                     default:
                         s++;
@@ -154,9 +156,11 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
                 cs = nullptr;
                 break;
             case 't':
+                cs++;
                 mesh.uvs.emplace_back(impl::readVec2(cs));
                 break;
             case 'n':
+                cs++;
                 mesh.normals.emplace_back(impl::readVec3(cs));
                 break;
             default:
@@ -165,6 +169,7 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
             }
             break;
         case 'f': {
+                      cs++;
                       ui32v3 face;
                       ui32v3 v1 = impl::readVertexIndices(cs) + baseDataOffsets;
                       face.x = impl::indexOf(v1, mesh);
@@ -182,7 +187,7 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
         default:
             break;
         }
-        cs = impl::moveToNewLine(cs);
+        if (cs) cs = impl::moveToNewLine(cs);
     }
 
     return ui32v2(mesh.vertices.size() - vertexCountInitial, indicesAdded);

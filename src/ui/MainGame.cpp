@@ -20,7 +20,7 @@ static ui32 getCurrentTime() {
     static sf::Clock clock;
     static ui32 lastMS = 0;
 
-    lastMS += (ui32)clock.getElapsedTime().asMilliseconds();
+    lastMS = (ui32)clock.getElapsedTime().asMilliseconds();
     return lastMS;
 }
 #define MS_TIME getCurrentTime()

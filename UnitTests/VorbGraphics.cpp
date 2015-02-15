@@ -316,8 +316,7 @@ void main() {
         yaw += (f32)(gameTime.elapsed * yawInput);
         pitch += (f32)(gameTime.elapsed * pitchInput);
         yaw = fmod(yaw + 6.28f, 6.28f);
-        if (pitch > 3.14159f) pitch = 3.14159f;
-        else if (pitch < -3.14159f) pitch = -3.14159f;
+        pitch = fmod(pitch + 6.28f, 6.28f);
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -348,8 +347,8 @@ void main() {
         spriteBatch.draw(texture, f32v2(700.0f, 0.0f), f32v2(100.0f), color::White);
         // Draw location
         f32v2 pointSize(8.0f);
-        spriteBatch.draw(texture, f32v2(700.0f + (100.0f - (yaw / PI_2) * 100.0f),
-            ((pitch + 3.14159f) / PI_2) * 100.0f) - pointSize.y / 2.0f, pointSize, color::Red);
+        spriteBatch.draw(texture, f32v2(700.0f + ((yaw / PI_2) * 100.0f),
+            (100.0f - (pitch / PI_2) * 100.0f)) - pointSize.y / 2.0f, pointSize, color::Red);
         spriteBatch.end();
         spriteBatch.renderBatch(f32v2(800.0f, 600.0f));
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);

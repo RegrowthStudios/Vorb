@@ -261,6 +261,7 @@ void main() {
 )");
         program.addShader(vg::ShaderType::FRAGMENT_SHADER, R"(
 uniform vec2 unShift;
+uniform sampler2D unTexture;
 in vec3 fPosition;
 out vec4 pColor;
 void main() {
@@ -269,7 +270,7 @@ void main() {
     float v = (asin(n.y) / 1.57) * 0.25 + 0.5;
     vec2 coords = vec2(u, v) + unShift;
     coords = mod(coords, 1.0);
-    pColor = vec4(coords.x, coords.y, 0.0, 1.0);
+    pColor = texture(unTexture, coords);
 }
 )");
         program.link();
@@ -290,12 +291,19 @@ void main() {
         indsCount = iData.size();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, iData.size() * sizeof(ui32), iData.data(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        auto bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::ImageIO::free(bmp);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         glDeleteBuffers(1, &verts);
         glDeleteBuffers(1, &inds);
         glDeleteVertexArrays(1, &vdecl);
+        glDeleteTextures(1, &texture);
         program.dispose();
     }
 
@@ -317,8 +325,12 @@ void main() {
         f32m4 wvp = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
 
         program.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform1i(program.getUniform("unTexture"), 0);
         glUniformMatrix4fv(program.getUniform("unWVP"), 1, false, &wvp[0][0]);
-        glUniform2f(program.getUniform("unShift"), (yaw / (3.14159f * 2)), pitch);
+#define PI_2 (3.14159f * 2)
+        glUniform2f(program.getUniform("unShift"), (yaw / PI_2), (pitch / PI_2));
         glBindVertexArray(vdecl);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
         glDrawElements(GL_TRIANGLES, indsCount, GL_UNSIGNED_INT, nullptr);
@@ -334,6 +346,7 @@ void main() {
     VGVertexBuffer verts;
     VGVertexArray vdecl;
     VGIndexBuffer inds;
+    VGTexture texture;
     ui32 indsCount;
 
     f32 yaw = 0;

@@ -12,8 +12,12 @@
 
 #pragma once
 
-#ifndef Vorb_h__
-#define Vorb_h__
+#ifndef Vorb_Vorb_h__
+#define Vorb_Vorb_h__
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     /** @brief Defines various subsystems that Vorb must initialize before usage
@@ -23,12 +27,12 @@ namespace vorb {
      * created and used.
      */
     enum class InitParam {
-        NONE = 0x00,
-        GRAPHICS = 0x01,
-        IO = 0x02,
-        SOUND = 0x04,
-        NET = 0x08,
-        ALL = GRAPHICS | SOUND | IO | NET
+        NONE = 0x00, ///< No submodules selected
+        GRAPHICS = 0x01, ///< The graphics submodule
+        IO = 0x02, ///< The IO submodule
+        SOUND = 0x04, ///< The sound submodule
+        NET = 0x08, ///< The network submodule
+        ALL = GRAPHICS | SOUND | IO | NET ///< All submodules are selected
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 
@@ -52,4 +56,4 @@ namespace vorb {
     InitParam dispose(const InitParam& p);
 }
 
-#endif // Vorb_h__
+#endif // Vorb_Vorb_h__

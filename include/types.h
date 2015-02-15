@@ -1,20 +1,33 @@
+///
+/// types.h
+/// Vorb Engine
+///
+/// Created by Cristian Zaloj on 14 Feb 2015
+/// Copyright 2014 Regrowth Studios
+/// All Rights Reserved
+///
+/// Summary:
+/// 
+///
+
 #pragma once
 
-#ifndef types_h__
-#define types_h__
+#ifndef Vorb_types_h__
+#define Vorb_types_h__
 
 #include <cstdint>
 #include <memory>
 #include <string>
 
-#ifdef TYPES_GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-#if defined(WIN32) || defined(WIN64)
+
+#include "compat.h"
+
+#if defined(OS_WINDOWS)
 namespace glm_d = glm::detail;
 #else
 namespace glm_d = glm;
-#endif
 #endif
 
 /************************************************************************/
@@ -37,12 +50,9 @@ typedef uint64_t ui64;
 typedef float f32;
 typedef double f64;
 
-#ifdef TYPES_GLM
-
 /************************************************************************/
 /* GLM types                                                            */
 /************************************************************************/
-#ifdef glm_core_type_gentype2
 // GLM Vec2 integer values
 typedef glm_d::tvec2<i8> i8v2;
 typedef glm::lowp_ivec2 i16v2;
@@ -55,8 +65,6 @@ typedef glm::highp_uvec2 ui64v2;
 // GLM Vec2 floating point values
 typedef glm::mediump_vec2 f32v2;
 typedef glm::highp_vec2 f64v2;
-#endif
-#ifdef glm_core_type_gentype3
 // GLM Vec3 integer values
 typedef glm_d::tvec3<i8> i8v3;
 typedef glm::lowp_ivec3 i16v3;
@@ -69,8 +77,6 @@ typedef glm::highp_uvec3 ui64v3;
 // GLM Vec3 floating point values
 typedef glm::mediump_vec3 f32v3;
 typedef glm::highp_vec3 f64v3;
-#endif
-#ifdef glm_core_type_gentype4
 // GLM Vec4 integer values
 typedef glm_d::tvec4<i8> i8v4;
 typedef glm::lowp_ivec4 i16v4;
@@ -83,29 +89,18 @@ typedef glm::highp_uvec4 ui64v4;
 // GLM Vec4 floating point values
 typedef glm::mediump_vec4 f32v4;
 typedef glm::highp_vec4 f64v4;
-#endif
 
-#ifdef GLM_GTC_quaternion
 // GLM floating point quaternions
 typedef glm::mediump_quat f32q;
 typedef glm::highp_quat f64q;
-#endif
 
 // GLM floating point matrices
-#ifdef glm_core_type_mat2x2
 typedef glm::mediump_mat2 f32m2;
 typedef glm::highp_mat2 f64m2;
-#endif
-#ifdef glm_core_type_mat3x3
 typedef glm::mediump_mat3 f32m3;
 typedef glm::highp_mat3 f64m3;
-#endif
-#ifdef glm_core_type_mat4x4
 typedef glm::mediump_mat4 f32m4;
 typedef glm::highp_mat4 f64m4;
-#endif
-
-#endif
 
 // Colors
 #include "typesColor.inl"
@@ -136,4 +131,4 @@ typedef glm::highp_mat4 f64m4;
 /// Pointer offset
 #define offsetptr(s, m) ((void*)offsetof(s, m))
 
-#endif // types_h__
+#endif // Vorb_types_h__

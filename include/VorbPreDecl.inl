@@ -12,8 +12,8 @@
 
 #pragma once
 
-#ifndef VorbPreDecl_inl__
-#define VorbPreDecl_inl__
+#ifndef Vorb_VorbPreDecl_inl__
+#define Vorb_VorbPreDecl_inl__
 
 /** @brief The root namespace for most Vorb classes.
  * 
@@ -31,6 +31,11 @@ namespace vorb {
      */
     namespace graphics {
     }
+    /** @brief Vorb's voxel extension.
+     * 
+     * The voxel extension provides a suite of utilities for voxel
+     * code that wishes to adhere a set of interfaces.
+     */
     namespace voxel {
     }
     /** @brief Vorb's UI submodule.
@@ -61,7 +66,7 @@ namespace vorb {
      */
     namespace ecs {
     }
-    /** @brief Vorb's network module.
+    /** @brief Vorb's networking submodule.
      * 
      * It currently initializes and destroys enet.
      */
@@ -89,7 +94,7 @@ namespace vnet = vorb::net; ///< Namespace alias vorb::net
 #define DECL_VECS(...) namespace vorb { namespace ecs { __VA_ARGS__; }  }
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 
-#endif // VorbPreDecl_inl__
+#endif // Vorb_VorbPreDecl_inl__
 
 /** \example "Vorb Module Initialization"
  * 

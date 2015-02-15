@@ -7,13 +7,13 @@
 /// All Rights Reserved
 ///
 /// Summary:
-/// Control library linkage
+/// Controls library linkage
 ///
 
 #pragma once
 
-#ifndef VorbLibs_h__
-#define VorbLibs_h__
+#ifndef Vorb_VorbLibs_h__
+#define Vorb_VorbLibs_h__
 
 #include "compat.h"
 
@@ -203,7 +203,7 @@
 #error A sound implementation must be specified
 #endif
 
-#endif // VorbLibs_h__
+#endif // Vorb_VorbLibs_h__
 
 /*! \example "Vorb Library Linkage"
  * 

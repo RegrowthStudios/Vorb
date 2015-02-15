@@ -224,6 +224,7 @@ public:
         pitchInput = 0;
         yawInput = 0;
         pool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+            if (e.repeatCount > 0) return;
             switch (e.keyCode) {
             case VKEY_W: pitchInput += 1; break;
             case VKEY_S: pitchInput -= 1; break;

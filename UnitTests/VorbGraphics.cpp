@@ -4,17 +4,20 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
+#include <glm/gtx/transform.hpp>
 #include <include/Vorb.h>
 #include <include/graphics/ImageIO.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
 #include <include/graphics/Texture.h>
+#include <include/graphics/GLProgram.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
 #include <include/ui/IGameScreen.h>
 #include <include/graphics/GLStates.h>
 #include <include/colors.h>
 #include <include/ui/ScreenList.h>
+#include <include/MeshGenerators.h>
 
 struct ImageTestFormats {
 public:
@@ -208,6 +211,134 @@ public:
     vg::SpriteBatch batch;
 };
 
+class TorusViewer : public vui::IGameScreen {
+public:
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+
+    virtual void build() {
+        pitchInput = 0;
+        yawInput = 0;
+        pool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+            switch (e.keyCode) {
+            case VKEY_W: pitchInput += 1; break;
+            case VKEY_S: pitchInput -= 1; break;
+            case VKEY_A: yawInput -= 1; break;
+            case VKEY_D: yawInput += 1; break;
+            }
+        });
+        pool.addAutoHook(&vui::InputDispatcher::key.onKeyUp, [&] (Sender, const vui::KeyEvent& e) {
+            switch (e.keyCode) {
+            case VKEY_W: pitchInput -= 1; break;
+            case VKEY_S: pitchInput += 1; break;
+            case VKEY_A: yawInput += 1; break;
+            case VKEY_D: yawInput -= 1; break;
+            }
+        });
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+        pool.dispose();
+    }
+
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        glGenBuffers(1, &verts);
+        glGenBuffers(1, &inds);
+        glGenVertexArrays(1, &vdecl);
+        program.init();
+        program.addShader(vg::ShaderType::VERTEX_SHADER, R"(
+uniform mat4 unWVP;
+in vec4 vPosition;
+out vec3 fPosition;
+void main() {
+    fPosition = vPosition.xyz;
+    gl_Position = unWVP * vPosition;
+}
+)");
+        program.addShader(vg::ShaderType::FRAGMENT_SHADER, R"(
+uniform vec2 unShift;
+in vec3 fPosition;
+out vec4 pColor;
+void main() {
+    vec3 n = normalize(fPosition);
+    float u = atan(n.z, n.x) / 6.28;
+    float v = (asin(n.y) / 1.57) * 0.25 + 0.5;
+    vec2 coords = vec2(u, v) + unShift;
+    coords = mod(coords, 1.0);
+    pColor = vec4(coords.x, coords.y, 0.0, 1.0);
+}
+)");
+        program.link();
+        program.initAttributes();
+        program.initUniforms();
+
+        std::vector<ui32> iData;
+        std::vector<f32v3> vData;
+        vcore::mesh::generateIcosphereMesh(4, iData, vData);
+        glBindBuffer(GL_ARRAY_BUFFER, verts);
+        glBufferData(GL_ARRAY_BUFFER, vData.size() * sizeof(f32v3), vData.data(), GL_STATIC_DRAW);
+        glBindVertexArray(vdecl);
+        glEnableVertexAttribArray(program.getAttribute("vPosition"));
+        glVertexAttribPointer(program.getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(f32v3), nullptr);
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
+        indsCount = iData.size();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, iData.size() * sizeof(ui32), iData.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        glDeleteBuffers(1, &verts);
+        glDeleteBuffers(1, &inds);
+        glDeleteVertexArrays(1, &vdecl);
+        program.dispose();
+    }
+
+    virtual void update(const vui::GameTime& gameTime) {
+        yaw += (f32)(gameTime.elapsed * yawInput);
+        pitch += (f32)(gameTime.elapsed * pitchInput);
+        yaw = fmod(yaw + 6.28f, 6.28f);
+        if (pitch > 1.5f) pitch = 1.5f;
+        else if (pitch < -1.5f) pitch = -1.5f;
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        f32v3 eye;
+        eye.x = (f32)(cos(yaw) * cos(pitch));
+        eye.z = (f32)(sin(yaw) * cos(pitch));
+        eye.y = (f32)(sin(pitch));
+        eye *= 3.0f;
+        f32m4 wvp = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
+
+        program.use();
+        glUniformMatrix4fv(program.getUniform("unWVP"), 1, false, &wvp[0][0]);
+        glUniform2f(program.getUniform("unShift"), (yaw / (3.14159f * 2)), pitch);
+        glBindVertexArray(vdecl);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
+        glDrawElements(GL_TRIANGLES, indsCount, GL_UNSIGNED_INT, nullptr);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    i32 yawInput;
+    i32 pitchInput;
+    AutoDelegatePool pool;
+
+    vg::GLProgram program;
+    VGVertexBuffer verts;
+    VGVertexArray vdecl;
+    VGIndexBuffer inds;
+    ui32 indsCount;
+
+    f32 yaw = 0;
+    f32 pitch = 0;
+};
+
 class VGTestApp : public vui::MainGame {
 public:
     VGTestApp(vui::IGameScreen* s) :
@@ -240,6 +371,13 @@ TEST(FontViewer) {
 TEST(ImageViewer) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new ImageViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(TorusWorld) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new TorusViewer).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

@@ -385,6 +385,7 @@
     <None Include="src\graphics\SpriteBatchShader.inl" />
     <None Include="src\io\YAMLInternal.inl" />
     <None Include="include/IntersectionUtils.inl" />
+    <None Include="src\ui\KeyMappings.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)/Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

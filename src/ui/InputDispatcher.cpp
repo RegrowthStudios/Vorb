@@ -3,6 +3,7 @@
 
 #include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
+#include "KeyMappings.inl"
 
 #if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
@@ -510,10 +511,12 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         vui::InputDispatcher::key.onEvent();
         break;
     case sf::Event::KeyPressed:
+        ie.key.keyCode = vui::impl::mapping[e.key.code + 1];
+        if (vui::InputDispatcher::key.m_state[ie.key.keyCode]) break;
+
         checkMods(e.key.code, true);
         ie.key.mod = mods;
-        ie.key.keyCode = e.key.code; // TODO: Make sure these line up
-        ie.key.scanCode = e.key.code; // TODO: Fuck...
+        ie.key.scanCode = ie.key.keyCode; // TODO: Fuck...
         ie.key.repeatCount = 1; // TODO: Fuck me with a pickle
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
         vui::InputDispatcher::key.onKeyDown(ie.key);
@@ -522,8 +525,8 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
     case sf::Event::KeyReleased:
         checkMods(e.key.code, false);
         ie.key.mod = mods;
-        ie.key.keyCode = e.key.code;
-        ie.key.scanCode = e.key.code;
+        ie.key.keyCode = vui::impl::mapping[e.key.code + 1];
+        ie.key.scanCode = ie.key.keyCode;
         ie.key.repeatCount = 1;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
         vui::InputDispatcher::key.onKeyUp(ie.key);

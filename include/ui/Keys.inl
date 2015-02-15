@@ -1,4 +1,4 @@
-#if defined(WIN32) || defined(WIN64)
+#if defined(OS_WINDOWS)
 #include <SDL/SDL_scancode.h>
 #else
 #include <SDL2/SDL_scancode.h>

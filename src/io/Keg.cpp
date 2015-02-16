@@ -445,7 +445,7 @@ namespace keg {
         if (keg::getSequenceSize(nArray) > 0) {
             dest->setData(keg::getSequenceSize(nArray));
             ui8* newDest = &dest->at<ui8>(0);
-            memset(newDest, 0, dest->getLength() * type->getSizeInBytes());
+            memset(newDest, 0, dest->size() * type->getSizeInBytes());
 
             auto f = createDelegate<size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
                 evalData(newDest, decl->interiorValue, node, doc, env);

@@ -270,7 +270,7 @@ void main() {
     float v = (asin(n.y) / 1.57) * 0.25 + 0.5;
     vec2 coords = vec2(u, v) + unShift;
     coords = mod(coords, 1.0);
-    pColor = texture(unTexture, coords);
+    pColor = vec4(texture(unTexture, coords).rgb, 1.0);
 }
 )");
         program.link();
@@ -294,10 +294,15 @@ void main() {
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         auto bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/TW.jpg\n";
+        }
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
         vg::ImageIO::free(bmp);
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        spriteBatch.init();
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         glDeleteBuffers(1, &verts);
@@ -311,8 +316,7 @@ void main() {
         yaw += (f32)(gameTime.elapsed * yawInput);
         pitch += (f32)(gameTime.elapsed * pitchInput);
         yaw = fmod(yaw + 6.28f, 6.28f);
-        if (pitch > 1.5f) pitch = 1.5f;
-        else if (pitch < -1.5f) pitch = -1.5f;
+        pitch = fmod(pitch + 6.28f, 6.28f);
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -336,6 +340,19 @@ void main() {
         glDrawElements(GL_TRIANGLES, indsCount, GL_UNSIGNED_INT, nullptr);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+
+        // Render the minimap
+        spriteBatch.begin();
+        // Draw minimap
+        spriteBatch.draw(texture, f32v2(700.0f, 0.0f), f32v2(100.0f), color::White);
+        // Draw location
+        f32v2 pointSize(8.0f);
+        spriteBatch.draw(texture, f32v2(700.0f + ((yaw / PI_2) * 100.0f),
+            (100.0f - (pitch / PI_2) * 100.0f)) - pointSize.y / 2.0f, pointSize, color::Red);
+        spriteBatch.end();
+        spriteBatch.renderBatch(f32v2(800.0f, 600.0f));
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        vg::DepthState::FULL.set();
     }
 
     i32 yawInput;
@@ -348,6 +365,7 @@ void main() {
     VGIndexBuffer inds;
     VGTexture texture;
     ui32 indsCount;
+    vg::SpriteBatch spriteBatch;
 
     f32 yaw = 0;
     f32 pitch = 0;

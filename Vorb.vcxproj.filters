@@ -145,6 +145,12 @@
     <ClCompile Include="include\examples\VorbEnumOps.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="include\examples\VorbArray.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbArrayKeg.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -442,9 +448,6 @@
     <Filter Include="Voxel\Mesh\Algorithms">
       <UniqueIdentifier>{4884f9c0-beef-44fb-b408-495d0c4d6329}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IO\Wrappers">
-      <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sound">
       <UniqueIdentifier>{ebd75801-6efb-4baa-9055-dde194ce4a4a}</UniqueIdentifier>
     </Filter>
@@ -489,6 +492,9 @@
     </Filter>
     <Filter Include="Examples">
       <UniqueIdentifier>{1d9ddeed-414e-4f29-ad35-68b795bdad96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Wrappers">
+      <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

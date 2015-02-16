@@ -227,3 +227,13 @@ public:
         return ((T*)m_data)[i];
     }
 };
+
+/*! \example "Vorb Array Usage"
+ * 
+ * Due to the lack of an array type in C++, an Array(Base) class has been implemented for simple use cases.
+ * \include VorbArray.cpp
+ *
+ * By far, the most useful case of an array is the ability to use it with Keg (it was developed for this
+ * purpose). Keg's parseable array value uses Array(Base) to house its data.
+ * \include VorbArrayKeg.cpp
+ */

@@ -1,19 +1,22 @@
-///
-/// VorbPreDecl.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 2 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Pre-declaration helpers
-///
+//
+// VorbPreDecl.inl
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 16 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file VorbPreDecl.inl
+ * @brief Pre-declaration helpers for classes in Vorb namespaces
+ */
 
 #pragma once
 
 #ifndef Vorb_VorbPreDecl_inl__
+//! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_VorbPreDecl_inl__
+//! @endcond
 
 /** @brief The root namespace for most Vorb classes.
  * 
@@ -94,7 +97,7 @@ namespace vnet = vorb::net; ///< Namespace alias vorb::net
 #define DECL_VECS(...) namespace vorb { namespace ecs { __VA_ARGS__; }  }
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 
-#endif // Vorb_VorbPreDecl_inl__
+#endif // !Vorb_VorbPreDecl_inl__
 
 /** \example "Vorb Module Initialization"
  * 

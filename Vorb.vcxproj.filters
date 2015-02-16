@@ -142,6 +142,9 @@
     <ClCompile Include="src\ui\InputDispatcher.cpp">
       <Filter>UI\Input</Filter>
     </ClCompile>
+    <ClCompile Include="include\examples\VorbEnumOps.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />

@@ -107,3 +107,27 @@ TEST(RingBuffer) {
 
     return true;
 }
+
+enum class MyBoolean {
+    BFALSE = 0x00,
+    BTRUE = 0x01
+};
+ENUM_CLASS_OPS_INL(MyBoolean, bool)
+
+
+TEST(EnumOps) {
+    MyBoolean b1 = MyBoolean::BFALSE ^ (MyBoolean::BFALSE & MyBoolean::BTRUE);
+    if (b1 != MyBoolean::BFALSE) return false;
+
+    b1 += MyBoolean::BTRUE;
+    if (b1 != MyBoolean::BTRUE) return false;
+
+    b1 += MyBoolean::BTRUE;
+    if (b1 != MyBoolean::BTRUE) return false;
+
+    b1 -= MyBoolean::BFALSE;
+    if (b1 != MyBoolean::BTRUE) return false;
+
+    b1 -= MyBoolean::BTRUE;
+    return b1 == MyBoolean::BFALSE && (MyBoolean::BTRUE + MyBoolean::BTRUE + MyBoolean::BTRUE == MyBoolean::BTRUE);
+}

@@ -575,7 +575,7 @@ typedef glm::highp_mat4 f64m4;
  * @param OP: The operator that will be defined for this enum: (&, |, ^, +, -, *, /)
  */
 #define ENUM_CLASS_OP_INL(CLASS, PROXY_TYPE, OP) \
-    inline CLASS operator OP (const CLASS& a, const CLASS& b) { return (CLASS)((PROXY_TYPE)a OP (PROXY_TYPE)b); } \
+    inline CLASS operator OP (const CLASS& a, const CLASS& b) { return (CLASS)static_cast<PROXY_TYPE>((PROXY_TYPE)a OP(PROXY_TYPE)b); } \
     inline CLASS& operator OP## = (CLASS& a, const CLASS& b) { a = a OP b; return a; }
 /*! @brief Implements a binary operators (&, |, ^, +, -) and the shift operators for an enum class.
  * 
@@ -592,6 +592,15 @@ typedef glm::highp_mat4 f64m4;
     inline CLASS& operator <<= (CLASS& a, const size_t& b) { a = a << b; return a; } \
     inline CLASS operator >> (const CLASS& a, const size_t& b) { return (CLASS)((PROXY_TYPE)a >> b); } \
     inline CLASS& operator >>= (CLASS& a, const size_t& b) { a = a >> b; return a; }
+/*! \example "Enum Class Proxy Operators"
+ * 
+ * When using enum classes, it may be useful to
+ * allow operators to take effect on them. By default,
+ * enum classes have no defined operators, but with a useful
+ * macro and a proxy type that has the desired operators defined,
+ * creating operator definitions for enum classes is a cinch:
+ * \include VorbEnumOps.cpp
+ */
 
 // Array
 #include "typesArray.inl"

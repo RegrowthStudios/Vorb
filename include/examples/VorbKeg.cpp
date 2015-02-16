@@ -9,7 +9,7 @@ using namespace keg;
 ke->addValue("Red", Color::RED);
 ke->addValue("Orange", Color::ORANGE);
 ke->addValue("DoubleRainbow", Color::DOUBLE_RAINBOW);
-KEG_TYPE_INIT_END
+KEG_ENUM_INIT_END
 
 KEG_TYPE_INIT_BEGIN(Range, Range, kt)
 using namespace keg;

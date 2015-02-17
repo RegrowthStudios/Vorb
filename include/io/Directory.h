@@ -44,7 +44,7 @@ namespace vorb {
             /// Iterate the directory, placing entries into a list
             /// @param l: List where entries will be placed
             /// @return Number of added entries
-            ui32 appendEntries(OUT DirectoryEntries& l) const;
+            size_t appendEntries(OUT DirectoryEntries& l) const;
             /// Iterate a directory, invoking a function on each entry
             /// @pre: f may not be null
             /// @param f: Invokable function

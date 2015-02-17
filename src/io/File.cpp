@@ -42,14 +42,14 @@ void vorb::io::File::computeSum(vio::SHA256Sum* sum) const {
         vio::FileStream s = openReadOnly(true);
         l = s.length();
         data = new ui8[l];
-        l = s.read(l, 1, data);
+        l = (vio::FileSeekOffset)s.read(l, 1, data);
         s.close();
     }
 
     { // Compute sum
         _SHA256Context context;
         SHA256Init(&context);
-        SHA256Update(&context, data, l);
+        SHA256Update(&context, data, (ui32)l);
         SHA256Final(&context, nullptr);
         memcpy(sum, context.hash, 32);
     }

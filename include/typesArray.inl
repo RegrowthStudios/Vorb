@@ -15,7 +15,7 @@ public:
      * 
      * @param elemSize: Size of an element in bytes
      */
-    ArrayBase(ui32 elemSize) :
+    ArrayBase(size_t elemSize) :
         m_elementSize(elemSize) {
         // Empty
     }
@@ -28,7 +28,7 @@ public:
      * @param d: Pointer to a block of element data (garbage if nullptr)
      * @param l: Number of elements found in the data
      */
-    ArrayBase(ui32 elemSize, void* d, size_t l) : ArrayBase(elemSize) {
+    ArrayBase(size_t elemSize, void* d, size_t l) : ArrayBase(elemSize) {
         setData(d, l);
     }
 
@@ -134,7 +134,7 @@ public:
 protected:
     std::shared_ptr<ui8> m_sharedData; ///< Shared data pointer to allow for automatic memory management
     void* m_data = nullptr; ///< Cached pointer from the shared data
-    ui32 m_elementSize = 0; ///< The size of the elements in bytes
+    size_t m_elementSize = 0; ///< The size of the elements in bytes
     size_t m_length = 0; ///< The length of the array in elements
 };
 

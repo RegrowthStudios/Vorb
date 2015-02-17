@@ -36,7 +36,7 @@ namespace vorb {
             IGameScreen* movePrevious();
         
             void setScreen(i32 s);
-            ScreenList* addScreens(IGameScreen** s, i32 c = 0);
+            ScreenList* addScreens(IGameScreen** s, size_t c = 0);
             ScreenList* addScreen(IGameScreen* s);
         
             void destroy(GameTime gameTime);

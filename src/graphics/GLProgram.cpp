@@ -92,7 +92,7 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
 
     // Compile shader
     VGShader idS = glCreateShader((VGEnum)data.stage);
-    glShaderSource(idS, data.sources.size() + 1, sources, 0);
+    glShaderSource(idS, (GLsizei)data.sources.size() + 1, sources, 0);
     glCompileShader(idS);
     delete[] sources;
 

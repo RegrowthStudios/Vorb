@@ -321,8 +321,8 @@ void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendStat
     glBindVertexArray(_vao);
 
     // Draw All The Batches
-    i32 bc = _batches.size();
-    for (int i = 0; i < bc; i++) {
+    size_t bc = _batches.size();
+    for (size_t i = 0; i < bc; i++) {
         SpriteBatchCall* batch = _batches[i];
 
         glActiveTexture(GL_TEXTURE0);
@@ -394,8 +394,8 @@ void vg::SpriteBatch::generateBatches() {
     verts[vi++] = _glyphs[0]->vtl;
     _glyphRecycler.recycle(_glyphs[0]);
 
-    int gc = _glyphs.size();
-    for (int i = 1; i < gc; i++) {
+    size_t gc = _glyphs.size();
+    for (size_t i = 1; i < gc; i++) {
         SpriteGlyph* glyph = _glyphs[i];
         call = call->append(glyph, _batches, &_batchRecycler);
         verts[vi++] = glyph->vtl;

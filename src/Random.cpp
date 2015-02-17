@@ -27,7 +27,7 @@ void Random::seed(const i32& s) {
     *m_mtArr = m_seed;
     i32 prev = m_seed;
     for (size_t i = 1; i < MERSENNE_ARRAY_SIZE; i++) {
-        prev = MERSENNE_SEED_PRIME * (prev ^ ((prev >> 30))) + i;
+        prev = MERSENNE_SEED_PRIME * (prev ^ ((prev >> 30))) + (i32)i;
         m_mtArr[i] = prev;
     }
 

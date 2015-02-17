@@ -116,7 +116,7 @@ namespace vorb {
             static ui32 indexOf(const ui32v3& vert, OBJMesh& mesh) {
                 auto kvp = mesh.vertices.find(vert);
                 if (kvp == mesh.vertices.end()) {
-                    ui32 index = mesh.vertices.size();
+                    ui32 index = (ui32)mesh.vertices.size();
                     mesh.vertices[vert] = index;
                     return index;
                 } else {
@@ -139,7 +139,7 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
         mesh.uvs.size(),
         mesh.normals.size()
         );
-    ui32 vertexCountInitial = mesh.vertices.size();
+    ui32 vertexCountInitial = (ui32)mesh.vertices.size();
     ui32 indicesAdded = 0;
 
     const cString cs = data;

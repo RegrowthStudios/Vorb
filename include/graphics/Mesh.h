@@ -84,10 +84,10 @@ namespace vorb {
             f32m4 getModelMatrix() const {
                 return _modelMatrix;
             }
-            i32 getNumVertices() const {
+            size_t getNumVertices() const {
                 return _vertices.size();
             }
-            i32 getNumPrimitives() const;
+            size_t getNumPrimitives() const;
 
             static const cString defaultVertexShaderSource; ///< Default vertex shader code
             static const cString defaultFragmentShaderSource; ///< Default fragment shader code
@@ -108,8 +108,8 @@ namespace vorb {
 
             PrimitiveType _primitiveType;
 
-            i32 _numVertices;
-            i32 _numIndices;
+            size_t _numVertices;
+            size_t _numIndices;
 
             std::vector<MeshVertex> _vertices;
             std::vector<ui32> _indices;

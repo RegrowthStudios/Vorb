@@ -236,7 +236,7 @@ std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui
     }
 
     // Loop Through All Glyphs
-    for (size_t i = 0; i < rectsLength; i++) {
+    for (ui32 i = 0; i < rectsLength; i++) {
         // Find Row For Placement
         size_t ri = 0;
         for (size_t rii = 1; rii < r; rii++)

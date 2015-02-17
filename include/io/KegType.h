@@ -29,7 +29,7 @@
 
 namespace keg {
     class Environment;
-    class Value;
+    struct Value;
 
     // A Custom Data Type (Map Container Of Values)
     class Type {

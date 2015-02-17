@@ -126,7 +126,6 @@
     <ClCompile Include="src\io\YAML.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
-    <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
@@ -150,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="include\examples\VorbArrayKeg.cpp">
       <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src/MeshGenIcosphere.cpp">
+      <Filter>Graphics\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -362,7 +364,6 @@
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
     </ClInclude>
@@ -378,7 +379,6 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO</Filter>
     </ClInclude>
-    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -415,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h">
       <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MeshGenerators.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextureRecycler.hpp">
+      <Filter>Graphics\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

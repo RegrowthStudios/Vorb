@@ -1,19 +1,22 @@
-///
-///  Vorb.h
-///  Vorb Engine
-///
-///  Created by Ben Arnold on 2/10/2014
-///  Copyright 2014 Regrowth Studios
-///  All Rights Reserved
-///
-///  Summary:
-///  This is the main header for the vorb engine. It
-///  contains the namespace declarations.
+//
+// Vorb.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 16 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Vorb.h
+ * @brief Vorb module initialization and disposal functions are declared here.
+ */
 
 #pragma once
 
 #ifndef Vorb_Vorb_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_Vorb_h__
+//! @endcond
 
 #ifndef VORB_USING_PCH
 #include "types.h"
@@ -56,4 +59,12 @@ namespace vorb {
     InitParam dispose(const InitParam& p);
 }
 
-#endif // Vorb_Vorb_h__
+#endif // !Vorb_Vorb_h__
+
+/** \example "Vorb Module Initialization"
+*
+* When using Vorb, you must initialize and dispose the submodules that you wish to use
+* at the top level. You can specify any combinations as well as initialize and dispose at
+* any time.
+* \include VorbInit.cpp
+*/

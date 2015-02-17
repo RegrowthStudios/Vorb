@@ -1,4 +1,8 @@
-#include <include/stdafx.h>
+#include <cstdio>
+#include <iostream>
+#include <map>
+#include <include\types.h>
+
 #include <UnitTests/Tests.h>
 #include <sstream>
 

@@ -78,14 +78,14 @@ namespace vorb {
 }
 
 // Namespace aliases
-namespace vcore = vorb::core; ///< Namespace alias vorb::core
-namespace vg = vorb::graphics; ///< Namespace alias vorb::graphics
-namespace vvox = vorb::voxel; ///< Namespace alias vorb::voxel
-namespace vui = vorb::ui; ///< Namespace alias vorb::ui
-namespace vio = vorb::io; ///< Namespace alias vorb::io
-namespace vsound = vorb::sound; ///< Namespace alias vorb::sound
-namespace vecs = vorb::ecs; ///< Namespace alias vorb::ecs
-namespace vnet = vorb::net; ///< Namespace alias vorb::net
+namespace vcore = vorb::core;
+namespace vg = vorb::graphics;
+namespace vvox = vorb::voxel;
+namespace vui = vorb::ui;
+namespace vio = vorb::io;
+namespace vsound = vorb::sound;
+namespace vecs = vorb::ecs;
+namespace vnet = vorb::net;
 
 #define DECL_VORB(...) namespace vorb { __VA_ARGS__; }
 #define DECL_VCORE(...) namespace vorb { namespace core { __VA_ARGS__; }  }
@@ -98,11 +98,3 @@ namespace vnet = vorb::net; ///< Namespace alias vorb::net
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 
 #endif // !Vorb_VorbPreDecl_inl__
-
-/** \example "Vorb Module Initialization"
- * 
- * When using Vorb, you must initialize and dispose the submodules that you wish to use
- * at the top level. You can specify any combinations as well as initialize and dispose at
- * any time.
- * \include VorbInit.cpp
- */

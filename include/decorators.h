@@ -1,28 +1,31 @@
-///
-/// decorators.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Useful function decorators
-///
+//
+// decorators.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 16 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file decorators.h
+ * @brief Function decorators for clarity.
+ */
 
 #pragma once
 
-#ifndef decorators_h__
-#define decorators_h__
+#ifndef Vorb_decorators_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_decorators_h__
+//! @endcond
 
-#define OUT /* This pointer/reference will be modified as an extra return value */
-#define OPT /* This pointer is optional (may be null) */
+#define OUT /*!< This pointer/reference will be modified as an extra return value */
+#define OPT /*!< This pointer is optional (may be null) */
 
-#define CALLEE_DELETE /* Function called will delete this resource */
-#define CALLER_DELETE /* Function caller must manage this resource */
+#define CALLEE_DELETE /*!< Function called will delete this resource */
+#define CALLER_DELETE /*!< Function caller must manage this resource */
 
-#define VORB_INTERNAL /* Internal function not meant for an end-user */
+#define VORB_INTERNAL /*!< Internal function not meant for an end-user */
 
-#define UNIT_SPACE(SPACE_TYPE) /* The value is found in SPACE_TYPE space */
+#define UNIT_SPACE(SPACE_TYPE) /*!< The decorated value is found in <SPACE_TYPE> space */
 
-#endif // decorators_h__
+#endif // !Vorb_decorators_h__

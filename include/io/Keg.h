@@ -59,7 +59,6 @@ namespace keg {
     // Get The Global Environment Of Custom Types
     Environment* getGlobalEnvironment();
   
-    typedef bool(*InitFunc)();
     VORB_INTERNAL Type& getType(bool& initialized, Type& type, bool (*fInit)());
     VORB_INTERNAL Enum& getEnum(bool& initialized, Enum& type, bool (*fInit)());
 }

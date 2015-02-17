@@ -360,6 +360,11 @@
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include\io\KegBasic.h" />
+    <ClInclude Include="include\io\KegEnum.h" />
+    <ClInclude Include="include\io\KegEnvironment.h" />
+    <ClInclude Include="include\io\KegType.h" />
+    <ClInclude Include="include\io\KegValue.h" />
     <ClInclude Include="include\io\YAMLConverters.h" />
     <ClInclude Include="include\io\YAMLNode.h" />
     <ClInclude Include="include\io\YAMLReader.h" />

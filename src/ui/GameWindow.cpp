@@ -21,24 +21,24 @@
 
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
 
-KEG_ENUM_INIT_BEGIN(GameSwapInterval, vui::GameSwapInterval, etype)
-using namespace keg;
-etype->addValue("Unlimited", vui::GameSwapInterval::UNLIMITED_FPS);
-etype->addValue("VSync", vui::GameSwapInterval::V_SYNC);
-etype->addValue("LowSync", vui::GameSwapInterval::LOW_SYNC);
-etype->addValue("PowerSaver", vui::GameSwapInterval::POWER_SAVER);
-etype->addValue("ValueCap", vui::GameSwapInterval::USE_VALUE_CAP);
-KEG_ENUM_INIT_END
+KEG_ENUM_DEF(GameSwapInterval, vui::GameSwapInterval, ke) {
+    using namespace keg;
+    ke.addValue("Unlimited", vui::GameSwapInterval::UNLIMITED_FPS);
+    ke.addValue("VSync", vui::GameSwapInterval::V_SYNC);
+    ke.addValue("LowSync", vui::GameSwapInterval::LOW_SYNC);
+    ke.addValue("PowerSaver", vui::GameSwapInterval::POWER_SAVER);
+    ke.addValue("ValueCap", vui::GameSwapInterval::USE_VALUE_CAP);
+}
 
-KEG_TYPE_INIT_BEGIN(GameDisplayMode, vui::GameDisplayMode, type)
-using namespace keg;
-type->addValue("ScreenWidth", Value::basic(BasicType::I32, offsetof(vui::GameDisplayMode, screenWidth)));
-type->addValue("ScreenHeight", Value::basic(BasicType::I32, offsetof(vui::GameDisplayMode, screenHeight)));
-type->addValue("IsFullscreen", Value::basic(BasicType::BOOL, offsetof(vui::GameDisplayMode, isFullscreen)));
-type->addValue("IsBorderless", Value::basic(BasicType::BOOL, offsetof(vui::GameDisplayMode, isBorderless)));
-type->addValue("SwapInterval", Value::custom("GameSwapInterval", offsetof(vui::GameDisplayMode, swapInterval), true));
-type->addValue("MaxFPS", Value::basic(BasicType::F32, offsetof(vui::GameDisplayMode, maxFPS)));
-KEG_TYPE_INIT_END
+KEG_TYPE_DEF(GameDisplayMode, vui::GameDisplayMode, kt) {
+    using namespace keg;
+    kt.addValue("ScreenWidth", Value::basic(offsetof(vui::GameDisplayMode, screenWidth), BasicType::I32));
+    kt.addValue("ScreenHeight", Value::basic(offsetof(vui::GameDisplayMode, screenHeight), BasicType::I32));
+    kt.addValue("IsFullscreen", Value::basic(offsetof(vui::GameDisplayMode, isFullscreen), BasicType::BOOL));
+    kt.addValue("IsBorderless", Value::basic(offsetof(vui::GameDisplayMode, isBorderless), BasicType::BOOL));
+    kt.addValue("SwapInterval", Value::custom(offsetof(vui::GameDisplayMode, swapInterval), "GameSwapInterval", true));
+    kt.addValue("MaxFPS", Value::basic(offsetof(vui::GameDisplayMode, maxFPS), BasicType::F32));
+}
 
 // For Comparing Display Modes When Saving Data
 static bool operator==(const vui::GameDisplayMode& m1, const vui::GameDisplayMode& m2) {

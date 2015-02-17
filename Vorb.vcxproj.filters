@@ -422,6 +422,21 @@
     <ClInclude Include="include\TextureRecycler.hpp">
       <Filter>Graphics\Extensions</Filter>
     </ClInclude>
+    <ClInclude Include="include\io\KegType.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegValue.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegBasic.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegEnum.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegEnvironment.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

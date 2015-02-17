@@ -27,16 +27,16 @@ vui::ScreenList* vui::ScreenList::addScreens(IGameScreen** s, i32 c /*= 0*/) {
     if (s == 0 || c < 1) return this;
 
     // Copy Over The Screens
-    int cs = _screens.size(), ds = cs + c;
+    size_t cs = _screens.size(), ds = cs + c;
     _screens.resize(ds);
-    for (int i = 0; i < c; i++) {
+    for (size_t i = 0; i < c; i++) {
         _screens[cs + i] = s[i];
     }
 
     // Build The Added Screens
-    for (int i = cs; i < ds; i++) {
+    for (size_t i = cs; i < ds; i++) {
         if (_screens[i] == 0) continue;
-        _screens[i]->setParentGame(_game, i);
+        _screens[i]->setParentGame(_game, (i32)i);
         _screens[i]->build();
     }
 

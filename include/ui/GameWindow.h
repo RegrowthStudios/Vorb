@@ -68,31 +68,31 @@ namespace vorb {
             i32 getY() const;
             i32v2 getPosition() const;
             const i32& getWidth() const {
-                return _displayMode.screenWidth;
+                return m_displayMode.screenWidth;
             }
             const i32& getHeight() const {
-                return _displayMode.screenHeight;
+                return m_displayMode.screenHeight;
             }
             ui32v2 getViewportDims() const {
-                return ui32v2(_displayMode.screenWidth, _displayMode.screenHeight);
+                return ui32v2(m_displayMode.screenWidth, m_displayMode.screenHeight);
             }
             f32 getAspectRatio() const {
-                return (float)_displayMode.screenWidth / (float)_displayMode.screenHeight;
+                return (float)m_displayMode.screenWidth / (float)m_displayMode.screenHeight;
             }
             const bool& isFullscreen() const {
-                return _displayMode.isFullscreen;
+                return m_displayMode.isFullscreen;
             }
             const bool& isBorderless() const {
-                return _displayMode.isFullscreen;
+                return m_displayMode.isFullscreen;
             }
             const GameSwapInterval& getSwapInterval() const {
-                return _displayMode.swapInterval;
+                return m_displayMode.swapInterval;
             }
             const f32& getMaxFPS() const {
-                return _displayMode.maxFPS;
+                return m_displayMode.maxFPS;
             }
             WindowHandle getHandle() const {
-                return _window;
+                return m_window;
             }
         
             // Change Display Settings
@@ -113,11 +113,11 @@ namespace vorb {
             void saveSettings() const;
         
             // Window Handle
-            WindowHandle _window = nullptr;
-            GraphicsContext _glc = nullptr;
+            WindowHandle m_window = nullptr;
+            GraphicsContext m_glc = nullptr;
         
             // Display Settings
-            GameDisplayMode _displayMode;
+            GameDisplayMode m_displayMode;
         };
     }
 }

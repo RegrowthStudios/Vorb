@@ -59,7 +59,6 @@ bool vui::MainGame::initSystems() {
     if (!_window.init()) return false;
 
     // Initialize input
-    vui::InputDispatcher::init(&_window);
     vui::InputDispatcher::onQuit += m_fOnQuit;
 
     // Get The Machine's Graphics Capabilities
@@ -154,7 +153,6 @@ void vui::MainGame::exitGame() {
     }
     vui::InputDispatcher::onQuit -= m_fOnQuit;
     delete m_fOnQuit;
-    vui::InputDispatcher::dispose();
     _window.dispose();
     _isRunning = false;
 }
@@ -195,17 +193,6 @@ void vui::MainGame::refreshElapsedTime() {
     _curTime.total += et;
 }
 void vui::MainGame::checkInput() {
-#if defined(VORB_IMPL_UI_SDL)
-    SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) continue;
-#elif defined(VORB_IMPL_UI_SFML)
-    sf::Event e;
-    sf::RenderWindow* window = (sf::RenderWindow*)_window.getHandle();
-    while (window->pollEvent(e)) {
-        vorb::ui::impl::InputDispatcherEventCatcher::onSFMLEvent(window, e);
-    }
-#endif
-
     if (m_signalQuit) {
         m_signalQuit = false;
         exitGame();

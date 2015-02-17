@@ -17,6 +17,7 @@
 #endif
 
 #include "io/IOManager.h"
+#include "ui/InputDispatcher.h"
 
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
 
@@ -121,10 +122,15 @@ bool vui::GameWindow::init() {
     // Make sure default clear depth is 1.0f
     glClearDepth(1.0f);
 
+    // Push input from this window
+    vui::InputDispatcher::init(this);
+
     return true;
 }
 void vui::GameWindow::dispose() {
+    vui::InputDispatcher::dispose();
     saveSettings();
+
 #if defined(VORB_IMPL_UI_SDL)
     if (_glc) {
         SDL_GL_DeleteContext((SDL_GLContext)_glc);
@@ -271,6 +277,8 @@ void vui::GameWindow::setTitle(const cString title) const {
 }
 
 void vui::GameWindow::sync(ui32 frameTime) {
+    pollInput();
+
 #if defined(VORB_IMPL_UI_SDL)
     SDL_GL_SwapWindow((SDL_Window*)_window);
 #elif defined(VORB_IMPL_UI_GLFW)
@@ -288,7 +296,7 @@ void vui::GameWindow::sync(ui32 frameTime) {
     }
 }
 
-i32 vorb::ui::GameWindow::getX() const {
+i32 vui::GameWindow::getX() const {
     i32 v;
 #if defined(VORB_IMPL_UI_SDL)
     SDL_GetWindowPosition((SDL_Window*)_window, &v, nullptr);
@@ -299,7 +307,7 @@ i32 vorb::ui::GameWindow::getX() const {
 #endif
     return v;
 }
-i32 vorb::ui::GameWindow::getY() const {
+i32 vui::GameWindow::getY() const {
     i32 v;
 #if defined(VORB_IMPL_UI_SDL)
     SDL_GetWindowPosition((SDL_Window*)_window, nullptr, &v);
@@ -310,7 +318,7 @@ i32 vorb::ui::GameWindow::getY() const {
 #endif
     return v;
 }
-i32v2 vorb::ui::GameWindow::getPosition() const {
+i32v2 vui::GameWindow::getPosition() const {
     i32v2 v;
 #if defined(VORB_IMPL_UI_SDL)
     SDL_GetWindowPosition((SDL_Window*)_window, &v.x, &v.y);
@@ -322,4 +330,17 @@ i32v2 vorb::ui::GameWindow::getPosition() const {
    v.y = sfv.y;
 #endif
    return v;
+}
+
+void vui::GameWindow::pollInput() {
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) continue;
+#elif defined(VORB_IMPL_UI_SFML)
+    sf::Event e;
+    sf::RenderWindow* window = (sf::RenderWindow*)_window.getHandle();
+    while (window->pollEvent(e)) {
+        vorb::ui::impl::InputDispatcherEventCatcher::onSFMLEvent(window, e);
+    }
+#endif
 }

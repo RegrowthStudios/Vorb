@@ -105,6 +105,8 @@ namespace vorb {
         
             void sync(ui32 frameTime);
         private:
+            void pollInput();
+
             // Application Setting Management
             static void setDefaultSettings(GameDisplayMode* mode);
             void readSettings();

@@ -9,6 +9,7 @@
 #include <include/ui/ScreenList.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
+#include <include/Timing.h>
 
 class TestScreen : public vui::IGameScreen {
 public:
@@ -112,3 +113,37 @@ TEST(InputFuncs) {
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
+
+TEST(SoloWindow) {
+    vorb::init(vorb::InitParam::GRAPHICS);
+
+    vui::GameWindow window;
+    window.init();
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+    bool running = true;
+    auto f = vui::InputDispatcher::onQuit.addFunctor([&] (Sender) { 
+        running = false;
+    });
+    
+    PreciseTimer timer;
+    timer.start();
+    while (running) {
+        // Do something here
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Synchronize frame-step
+        ui32 ms = (ui32)timer.stop();
+        timer.start();
+
+        // Update the window
+        window.sync(ms);
+    }
+    window.dispose();
+
+    vui::InputDispatcher::onQuit -= f;
+    delete f;
+    vorb::dispose(vorb::InitParam::GRAPHICS);
+    return true;
+}
+

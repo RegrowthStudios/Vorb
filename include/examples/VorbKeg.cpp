@@ -4,30 +4,30 @@
 /************************************************************************/
 #include <Vorb/stdafx.h>
 
-KEG_ENUM_INIT_BEGIN(Color, Color, ke)
-using namespace keg;
-ke->addValue("Red", Color::RED);
-ke->addValue("Orange", Color::ORANGE);
-ke->addValue("DoubleRainbow", Color::DOUBLE_RAINBOW);
-KEG_ENUM_INIT_END
+KEG_ENUM_DEF(Color, Color, ke) {
+    using namespace keg;
+    ke.addValue("Red", Color::RED);
+    ke.addValue("Orange", Color::ORANGE);
+    ke.addValue("DoubleRainbow", Color::DOUBLE_RAINBOW);
+}
 
-KEG_TYPE_INIT_BEGIN(Range, Range, kt)
-using namespace keg;
-kt->addValue("Min", Value::basic(BasicType::I32, offsetof(Range, min));
-kt->addValue("Max", Value::basic(BasicType::I32, offsetof(Range, max));
-KEG_TYPE_INIT_END
+KEG_TYPE_DEF(Range, Range, kt) {
+    using namespace keg;
+    kt.addValue("Min", Value::basic(offsetof(Range, min), BasicType::I32);
+    kt.addValue("Max", Value::basic(offsetof(Range, max), BasicType::I32);
+}
 
-KEG_TYPE_INIT_BEGIN(LifetimeRange, Range, kt)
-using namespace keg;
-kt->addValue("Birth", Value::basic(BasicType::I32, offsetof(Range, min));
-kt->addValue("Death", Value::basic(BasicType::I32, offsetof(Range, max));
-KEG_TYPE_INIT_END
+KEG_TYPE_DEF(LifetimeRange, Range, kt) {
+    using namespace keg;
+    kt.addValue("Birth", Value::basic(offsetof(Range, min), BasicType::I32);
+    kt.addValue("Death", Value::basic(offsetof(Range, max), BasicType::I32);
+}
 
-KEG_TYPE_INIT_BEGIN(Person, Person, kt)
-using namespace keg;
-kt->addValue("Name", Value::basic(BasicType::STRING, offsetof(Person, name));
-kt->addValue("IsMan", Value::basic(BasicType::BOOL, offsetof(Person, isMan));
-kt->addValue("FavoriteColor", Value::custom("Color", offsetof(Person, favoriteColor), true));
-kt->addValue("Lifetime", Value::custom("LifetimeRange", offsetof(Person, lifetime)));
-kt->addValue("MySecret", Value::ptr(offsetof(Person, secret), BasicType::CUSTOM));
-KEG_TYPE_INIT_END
+KEG_TYPE_DEF(Person, Person, kt) {
+    using namespace keg;
+    kt.addValue("Name", Value::basic(offsetof(Person, name), BasicType::STRING);
+    kt.addValue("IsMan", Value::basic(offsetof(Person, isMan), BasicType::BOOL);
+    kt.addValue("FavoriteColor", Value::custom(offsetof(Person, favoriteColor), "Color", true));
+    kt.addValue("Lifetime", Value::custom(offsetof(Person, lifetime), "LifetimeRange"));
+    kt.addValue("MySecret", Value::ptr(offsetof(Person, secret), BasicType::CUSTOM));
+}

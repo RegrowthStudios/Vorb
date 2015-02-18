@@ -13,6 +13,8 @@
 #define VUI_WINDOW_HANDLE(WINDOW_VAR) ( (GLFWwindow*) WINDOW_VAR )
 #elif defined(VORB_IMPL_UI_SFML)
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+#include "InputDispatcherEventCatcher.h"
 #define VUI_WINDOW_HANDLE(WINDOW_VAR) ( (sf::RenderWindow*) WINDOW_VAR )
 #endif
 
@@ -80,7 +82,7 @@ bool vui::GameWindow::init() {
     if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
     if (m_displayMode.isFullscreen) flags |= sf::Style::Fullscreen;
     m_window = new sf::RenderWindow(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags);
-    VUI_WINDOW_HANDLE(_window)->setFramerateLimit(0);
+    VUI_WINDOW_HANDLE(m_window)->setFramerateLimit(0);
 #endif
 
     // Create The Window
@@ -228,7 +230,7 @@ void vui::GameWindow::setBorderless(const bool& useBorderless, const bool& overr
         ui32 flags = sf::Style::None;
         if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
         if (m_displayMode.isFullscreen) flags |= sf::Style::Fullscreen;
-        VUI_WINDOW_HANDLE(_window)->create(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags);
+        VUI_WINDOW_HANDLE(m_window)->create(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags);
 #endif
     }
 }
@@ -272,7 +274,7 @@ void vui::GameWindow::setTitle(const cString title) const {
 #elif defined(VORB_IMPL_UI_GLFW)
     glfwSetWindowTitle((GLFWwindow*)m_window, title);
 #elif defined(VORB_IMPL_UI_SFML)
-    VUI_WINDOW_HANDLE(_window)->setTitle(title);
+    VUI_WINDOW_HANDLE(m_window)->setTitle(title);
 #endif
 }
 
@@ -339,7 +341,7 @@ void vui::GameWindow::pollInput() {
 #elif defined(VORB_IMPL_UI_SFML)
     sf::Event e;
     while (VUI_WINDOW_HANDLE(m_window)->pollEvent(e)) {
-        vorb::ui::impl::InputDispatcherEventCatcher::onSFMLEvent(m_window, e);
+        vorb::ui::impl::InputDispatcherEventCatcher::onSFMLEvent(VUI_WINDOW_HANDLE(m_window), e);
     }
 #endif
 }

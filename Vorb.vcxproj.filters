@@ -558,6 +558,9 @@
     <None Include="src\ui\KeyMappings.inl">
       <Filter>UI\Input</Filter>
     </None>
+    <None Include="src\graphics\ImageIOConvF.inl">
+      <Filter>Graphics\IO</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

@@ -106,16 +106,16 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         case ImageIOFormat::RGB_F32:
         case ImageIOFormat::RGB_F64:
             bmp = impl::makeRGB(bmp);
-            f = impl::convRGB8[(size_t)format];
-            f(bmp, res, flipV);
+            f = flipV ? impl::flip::convRGB8[(size_t)format] : impl::noflip::convRGB8[(size_t)format];
+            f(bmp, res);
             break;
         case ImageIOFormat::RGBA_UI8:
         case ImageIOFormat::RGBA_UI16:
         case ImageIOFormat::RGBA_F32:
         case ImageIOFormat::RGBA_F64:
             bmp = impl::makeRGBA(bmp);
-            f = impl::convRGBA8[(size_t)format];
-            f(bmp, res, flipV);
+            f = flipV ? impl::flip::convRGBA8[(size_t)format] : impl::noflip::convRGBA8[(size_t)format];
+            f(bmp, res);
             break;
         default:
             onError("Unknown format specified");
@@ -124,44 +124,44 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         }
         break;
     case FIT_UINT16:
-        f = impl::convUI16[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convUI16[(size_t)format] : impl::noflip::convUI16[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_INT16:
-        f = impl::convI16[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convI16[(size_t)format] : impl::noflip::convI16[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_UINT32:
-        f = impl::convUI32[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convUI32[(size_t)format] : impl::noflip::convUI32[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_INT32:
-        f = impl::convI32[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convI32[(size_t)format] : impl::noflip::convI32[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_FLOAT:
-        f = impl::convF32[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convF32[(size_t)format] : impl::noflip::convF32[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_DOUBLE:
-        f = impl::convF64[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convF64[(size_t)format] : impl::noflip::convF64[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_RGB16:
-        f = impl::convRGB16[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convRGB16[(size_t)format] : impl::noflip::convRGB16[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_RGBA16:
-        f = impl::convRGBA16[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convRGBA16[(size_t)format] : impl::noflip::convRGBA16[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_RGBF:
-        f = impl::convRGBF[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convRGBF[(size_t)format] : impl::noflip::convRGBF[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_RGBAF:
-        f = impl::convRGBAF[(size_t)format];
-        f(bmp, res, flipV);
+        f = flipV ? impl::flip::convRGBAF[(size_t)format] : impl::noflip::convRGBAF[(size_t)format];
+        f(bmp, res);
         break;
     case FIT_COMPLEX:
         onError("Cannot load imaginary files: please come back to the real world");

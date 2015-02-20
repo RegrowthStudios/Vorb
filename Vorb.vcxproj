@@ -405,6 +405,7 @@
     <None Include="include/typesColor.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />
+    <None Include="src\graphics\ImageIOConvF.inl" />
     <None Include="src\graphics\SpriteBatchShader.inl" />
     <None Include="src\io\YAMLInternal.inl" />
     <None Include="include/IntersectionUtils.inl" />

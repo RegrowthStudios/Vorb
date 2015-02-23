@@ -73,7 +73,6 @@ bool vui::MainGame::initSystems() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     vg::DepthState::FULL.set();
     vg::RasterizerState::CULL_CLOCKWISE.set();
-    vg::SamplerState::initPredefined();
 
     // Initialize Frame Buffer
     glViewport(0, 0, _window.getWidth(), _window.getHeight());

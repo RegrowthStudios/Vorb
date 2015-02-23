@@ -153,6 +153,12 @@
     <ClCompile Include="src/MeshGenIcosphere.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\script\Environment.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\Script.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -437,6 +443,15 @@
     <ClInclude Include="include\io\KegEnvironment.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
+    <ClInclude Include="include\script\Environment.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\Script.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\Function.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -516,6 +531,9 @@
     </Filter>
     <Filter Include="IO\Wrappers">
       <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{71198462-646c-4056-be32-d4bd63e5ad85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

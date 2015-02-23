@@ -20,11 +20,6 @@ vg::GLProgram::GLProgram(bool init /*= false*/) {
     if (init) this->init();
 }
 
-vg::GLProgram::~GLProgram() {
-    // TODO: Remove this from here
-    dispose();
-}
-
 void vg::GLProgram::init() {
     if (getIsCreated()) return;
     _isLinked = false;

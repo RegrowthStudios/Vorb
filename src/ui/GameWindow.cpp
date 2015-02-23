@@ -40,6 +40,9 @@ KEG_TYPE_DEF(GameDisplayMode, vui::GameDisplayMode, kt) {
     kt.addValue("IsBorderless", Value::basic(offsetof(vui::GameDisplayMode, isBorderless), BasicType::BOOL));
     kt.addValue("SwapInterval", Value::custom(offsetof(vui::GameDisplayMode, swapInterval), "GameSwapInterval", true));
     kt.addValue("MaxFPS", Value::basic(offsetof(vui::GameDisplayMode, maxFPS), BasicType::F32));
+    kt.addValue("GraphicsMajor", Value::basic(offsetof(vui::GameDisplayMode, major), BasicType::UI32));
+    kt.addValue("GraphicsMinor", Value::basic(offsetof(vui::GameDisplayMode, minor), BasicType::UI32));
+    kt.addValue("GraphicsCore", Value::basic(offsetof(vui::GameDisplayMode, core), BasicType::BOOL));
 }
 
 // For Comparing Display Modes When Saving Data
@@ -78,10 +81,17 @@ bool vui::GameWindow::init() {
     GLFWmonitor* monitor = m_displayMode.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
     m_window = glfwCreateWindow(m_displayMode.screenWidth, m_displayMode.screenHeight, DEFAULT_TITLE, monitor, nullptr);
 #elif defined(VORB_IMPL_UI_SFML)
+    sf::ContextSettings context;
+    context.depthBits = 24;
+    context.stencilBits = 8;
+    context.majorVersion = 3;
+    context.minorVersion = 2;
+    context.antialiasingLevel = 0;
+
     ui32 flags = sf::Style::None;
     if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
     if (m_displayMode.isFullscreen) flags |= sf::Style::Fullscreen;
-    m_window = new sf::RenderWindow(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags);
+    m_window = new sf::RenderWindow(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags, context);
     VUI_WINDOW_HANDLE(m_window)->setFramerateLimit(0);
 #endif
 
@@ -93,9 +103,13 @@ bool vui::GameWindow::init() {
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-#ifdef GL_CORE
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, (int)m_displayMode.major);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, (int)m_displayMode.minor);
+    if (m_displayMode.core) {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    } else {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    }
     m_glc = SDL_GL_CreateContext(VUI_WINDOW_HANDLE(m_window));
     SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
 #elif defined(VORB_IMPL_UI_GLFW)
@@ -163,6 +177,9 @@ void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->isFullscreen = false;
     mode->maxFPS = DEFAULT_MAX_FPS;
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
+    mode->major = 3;
+    mode->minor = 2;
+    mode->core = false;
 }
 
 void vui::GameWindow::readSettings() {

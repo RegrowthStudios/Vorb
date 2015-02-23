@@ -52,6 +52,11 @@ namespace vorb {
             // Frame Rate Options
             GameSwapInterval swapInterval;
             f32 maxFPS;
+
+            // Graphics Context
+            ui32 major;
+            ui32 minor;
+            bool core;
         };
         
         class GameWindow {

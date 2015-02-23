@@ -28,4 +28,10 @@
 
 #define UNIT_SPACE(SPACE_TYPE) /*!< The decorated value is found in <SPACE_TYPE> space */
 
+/*! @brief This class may not be copied, so all copy and assignment constructors are hidden
+ */
+#define VORB_NON_COPYABLE(CLASS) \
+    CLASS(const CLASS& o) = delete; \
+    CLASS& operator=(const CLASS& o) = delete
+
 #endif // !Vorb_decorators_h__

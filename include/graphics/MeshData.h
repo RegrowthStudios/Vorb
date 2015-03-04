@@ -107,9 +107,9 @@ namespace vorb {
             }
 
             void* vertices;
-            size_t vertexCount;
+            ui32 vertexCount;
             void* indices;
-            size_t indexCount;
+            ui32 indexCount;
         };
     }
 }

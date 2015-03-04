@@ -193,7 +193,7 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
     return ui32v2(mesh.vertices.size() - vertexCountInitial, indicesAdded);
 }
 
-CALLER_DELETE vg::MeshDataRaw vg::ModelIO::loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize) {
+CALLER_DELETE vg::MeshDataRaw vg::ModelIO::loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT ui32& indexSize) {
     vg::MeshDataRaw mesh = {};
     const ui8* bytes = (const ui8*)data;
 

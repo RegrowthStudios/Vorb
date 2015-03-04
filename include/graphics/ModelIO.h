@@ -39,7 +39,7 @@ namespace vorb {
         class ModelIO {
         public:
             static ui32v2 loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh);
-            static CALLER_DELETE vg::MeshDataRaw loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize);
+            static CALLER_DELETE vg::MeshDataRaw loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT ui32& indexSize);
 
             static CALLER_DELETE vg::Skeleton loadAnim(CALLER_DELETE const void* data);
         };

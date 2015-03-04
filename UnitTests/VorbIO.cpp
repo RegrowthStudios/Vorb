@@ -110,7 +110,7 @@ TEST(ModelIO) {
 
         vfstream fs = file.openReadOnly(false);
         vio::FileSeekOffset l = fs.length();
-        cString data = new char[l];
+        cString data = new char[l + 1];
         l = (size_t)fs.read(l, 1, data);
         data[l] = 0;
         fs.close();
@@ -124,6 +124,78 @@ TEST(ModelIO) {
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", mesh.vertices.size());
         printf("Inds: %d\n", mesh.triangles.size() * 3);
+        printf("Load Time (MS): %f\n", ms);
+    });
+
+    return true;
+}
+
+TEST(VRAW) {
+    vpath path = "data/models/VRAW";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(true);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l + 1];
+        l = (size_t)fs.read(l, 1, data);
+        fs.close();
+
+        vg::MeshDataRaw mesh;
+        timer.start();
+        for (size_t i = 0; i < 100; i++) {
+            vg::VertexDeclaration vdecl;
+            size_t indexSize;
+            mesh = vg::ModelIO::loadRAW(data, vdecl, indexSize);
+            delete[] mesh.vertices;
+            delete[] mesh.indices;
+        }
+        f32 ms = timer.stop();
+        delete[] data;
+
+        printf("Model: %s\n", file.getPath().getCString());
+        printf("Verts: %d\n", mesh.vertexCount);
+        printf("Inds: %d\n", mesh.indexCount);
+        printf("Load Time (MS): %f\n", ms);
+    });
+
+    return true;
+}
+
+TEST(Animation) {
+    vpath path = "data/animation/";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(true);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l];
+        l = (size_t)fs.read(l, 1, data);
+        fs.close();
+
+        vg::Skeleton skeleton;
+        timer.start();
+        skeleton = vg::ModelIO::loadAnim(data);
+        f32 ms = timer.stop();
+        delete[] data;
+
+        printf("Animation: %s\n", file.getPath().getCString());
+        printf("Bones:  %d\n", skeleton.numBones);
+        printf("Frames: %d\n", skeleton.numFrames);
         printf("Load Time (MS): %f\n", ms);
     });
 

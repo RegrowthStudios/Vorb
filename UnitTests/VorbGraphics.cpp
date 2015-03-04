@@ -18,6 +18,8 @@
 #include <include/colors.h>
 #include <include/ui/ScreenList.h>
 #include <include/MeshGenerators.h>
+#include <include/graphics/ModelIO.h>
+#include <include/io/IOManager.h>
 
 struct ImageTestFormats {
 public:
@@ -371,6 +373,233 @@ void main() {
     f32 pitch = 0;
 };
 
+class AnimViewer : public vui::IGameScreen {
+public:
+    void rest(vg::Bone& bone, const f32m4& parent) {
+        printf("Rest Bone %d\n", bone.index);
+        
+        // Add inverse of rest pose
+        f32m4 mRest = glm::mat4_cast(bone.rest.rotation);
+        mRest = glm::translate(bone.rest.translation) * mRest;
+        mRest = parent * mRest;
+
+        // Loop children
+        for (size_t i = 0; i < bone.numChildren; i++) {
+            rest(*bone.children[i], parent);
+        }
+
+        mRestInv[bone.index] = glm::inverse(mRest);
+    }
+    void walk(vg::Bone& bone, const f32m4& parent) {
+        // Compute world transform
+        f32m4 local = glm::mat4_cast(bone.rest.rotation);
+        local = glm::translate(bone.rest.translation) * local;
+        mWorld[bone.index] = parent * local;
+
+        // Loop children
+        for (size_t i = 0; i < bone.numChildren; i++) {
+            walk(*bone.children[i], parent);
+        }
+
+        // Add inverse of rest pose
+        mWorld[bone.index] = mWorld[bone.index] * mRestInv[bone.index];
+    }
+
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+
+    virtual void build() {
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+    }
+
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        std::unordered_map<ui8, VGAttribute> attrmap;
+        vg::VertexAttributeIndexed vai;
+        vai.type = vg::VertexAttributeUsage::Position;
+        vai.index = 0;
+        attrmap[vai.value] = 0;
+        vai.type = vg::VertexAttributeUsage::Normal;
+        vai.index = 0;
+        attrmap[vai.value] = 1;
+        vai.type = vg::VertexAttributeUsage::TextureCoordinate;
+        vai.index = 0;
+        attrmap[vai.value] = 2;
+        vai.type = vg::VertexAttributeUsage::TextureCoordinate;
+        vai.index = 1;
+        attrmap[vai.value] = 3;
+        vai.type = vg::VertexAttributeUsage::BoneWeights;
+        vai.index = 0;
+        attrmap[vai.value] = 4;
+        vai.type = vg::VertexAttributeUsage::BoneIndices;
+        vai.index = 0;
+        attrmap[vai.value] = 5;
+
+        program.init();
+        program.addShader(vg::ShaderType::VERTEX_SHADER, R"(
+uniform mat4 unWorld[27];
+uniform mat4 unVP;
+
+in vec4 vPosition;
+in vec3 vNormal;
+in vec2 vUV;
+in vec2 vUVLight;
+in vec4 vBoneWeights;
+in lowp uvec4 vBoneIndices;
+
+out vec4 fUV;
+
+void main() {
+    vec4 vertex = vec4(vPosition.xyz, 1);
+    vec4 worldPos = (unWorld[vBoneIndices.x] * vertex) * vBoneWeights.x;
+    worldPos += (unWorld[vBoneIndices.y] * vertex) * vBoneWeights.y;
+    worldPos += (unWorld[vBoneIndices.z] * vertex) * vBoneWeights.z;
+    worldPos += (unWorld[vBoneIndices.w] * vertex) * vBoneWeights.w;
+    gl_Position = unVP * worldPos;
+
+    fUV = vec4((vBoneIndices.x / 26.0), 0, 0, 1);
+}
+)"
+            );
+        program.addShader(vg::ShaderType::FRAGMENT_SHADER, R"(
+in vec4 fUV;
+
+out vec4 pColor;
+
+void main() {
+    pColor = fUV;
+}
+)"
+            );
+        program.setAttribute("vPosition", 0);
+        program.setAttribute("vNormal", 1);
+        program.setAttribute("vUV", 2);
+        program.setAttribute("vUVLight", 3);
+        program.setAttribute("vBoneWeights", 4);
+        program.setAttribute("vBoneIndices", 5);
+        program.link();
+        program.initAttributes();
+        program.initUniforms();
+
+        vg::VertexDeclaration decl;
+        size_t indSize;
+        vio::IOManager iom;
+        const cString data = iom.readFileToString("data/models/VRAW/Heavy.vraw");
+        vg::MeshDataRaw mesh = vg::ModelIO::loadRAW(data, decl, indSize);
+        delete[] data;
+        
+        glGenBuffers(1, &inds);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indSize * mesh.indexCount, mesh.indices, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        indexCount = mesh.indexCount;
+        delete[] mesh.indices;
+
+        vertexSize = 0;
+        for (size_t vi = 0; vi < decl.size(); vi++) {
+            vertexSize += decl[vi].componentCount * decl[vi].componentSize;
+        }
+        glGenBuffers(1, &verts);
+        glBindBuffer(GL_ARRAY_BUFFER, verts);
+        ui8* vdata1 = (ui8*)mesh.vertices + 40;
+        ui8* vdata2 = (ui8*)mesh.vertices + 56;
+        for (size_t i = 0; i < mesh.vertexCount; i++) {
+            f32v4* w = (f32v4*)vdata1;
+            *w /= (w->r + w->g + w->b + w->a);
+            ui16v4* ind = (ui16v4*)vdata2;
+            vdata1 += vertexSize;
+            vdata2 += vertexSize;
+            //printf("W: (%d,%f),(%d,%f),(%d,%f),(%d,%f)\n", ind->r, w->r, ind->g, w->g, ind->b, w->b, ind->a, w->a);
+        }
+        glBufferData(GL_ARRAY_BUFFER, vertexSize * mesh.vertexCount, mesh.vertices, GL_STATIC_DRAW);
+        delete[] mesh.vertices;
+
+        glGenVertexArrays(1, &vdecl);
+        glBindVertexArray(vdecl);
+        for (size_t vi = 0; vi < decl.size(); vi++) {
+            vg::VertexElement& ve = decl[vi];
+            VGAttribute attr = attrmap[ve.usage.value];
+            bool norm = (ve.flags & vg::VertexElementFlags::NORMALIZED) == vg::VertexElementFlags::NORMALIZED;
+            vg::VertexAttribPointerType vt = vg::getComponentType(ve.flags, ve.componentSize);
+
+            glEnableVertexAttribArray(attr);
+            if ((ve.flags & vg::VertexElementFlags::FLOAT) != vg::VertexElementFlags::FLOAT) {
+                glVertexAttribIPointer(attr, ve.componentCount, (GLenum)vt, vertexSize, (void*)ve.offset);
+            } else {
+                glVertexAttribPointer(attr, ve.componentCount, (GLenum)vt, norm, vertexSize, (void*)ve.offset);
+            }
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        data = iom.readFileToString("data/animation/Heavy.anim");
+        skeleton = vg::ModelIO::loadAnim(data);
+        delete[] data;
+
+        mWorld = new f32m4[skeleton.numBones];
+        mRestInv = new f32m4[skeleton.numBones];
+        for (size_t i = 0; i < skeleton.numBones; i++) {
+            mWorld[i] = f32m4(1.0f);
+            mRestInv[i] = f32m4(1.0f);
+        }
+        for (size_t i = 0; i < skeleton.numBones; i++) {
+            if (!skeleton.bones[i].parent) {
+                rest(skeleton.bones[i], f32m4(1.0f));
+                walk(skeleton.bones[i], f32m4(1.0f));
+            }
+        }
+
+        mVP = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
+            glm::lookAt(f32v3(0, 3, 0), f32v3(0, 0, 0), f32v3(0, 0, 1));
+
+        glClearColor(1, 1, 1, 1);
+        glClearDepth(1.0);
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        delete[] skeleton.bones;
+        delete[] skeleton.frames;
+        delete[] skeleton.childrenArray;
+        delete[] mWorld;
+        delete[] mRestInv;
+    }
+
+    virtual void update(const vui::GameTime& gameTime) {
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        vg::DepthState::FULL.set();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        program.use();
+        glUniformMatrix4fv(program.getUniform("unVP"), 1, false, &mVP[0][0]);
+        glUniformMatrix4fv(program.getUniform("unWorld"), skeleton.numBones, false, &mWorld[0][0][0]);
+        //glUniform4fv(program.getUniform("unWorld"), skeleton.numBones * 4, &mWorld[0][0][0]);
+
+        glBindVertexArray(vdecl);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
+        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+        glBindVertexArray(0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+
+
+    VGVertexArray vdecl;
+    VGVertexBuffer verts;
+    VGIndexBuffer inds;
+    i32 indexCount;
+    ui32 vertexSize;
+    vg::GLProgram program;
+    vg::Skeleton skeleton;
+
+    f32m4 mVP;
+    f32m4* mWorld;
+    f32m4* mRestInv;
+};
+
 class VGTestApp : public vui::MainGame {
 public:
     VGTestApp(vui::IGameScreen* s) :
@@ -410,6 +639,13 @@ TEST(ImageViewer) {
 TEST(TorusWorld) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new TorusViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(AnimViewer) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new AnimViewer).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

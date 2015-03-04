@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Tests.h"
 
-#define VORB_IMPL_UI_SDL
+#define VORB_IMPL_UI_SFML
 #define VORB_IMPL_SOUND_FMOD
 #define VORB_IMPL_FONT_SDL
 #include <include/VorbLibs.h>

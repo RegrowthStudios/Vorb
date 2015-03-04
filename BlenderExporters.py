@@ -115,7 +115,7 @@ def insertWeighting(l, w):
             return l[:i] + [w] + l[i:3]
     return l
     
-def getAllUniqueVertexIndices(mesh, ne, settings):
+def getAllUniqueVertexIndices(context, mesh, ne, settings):
     def vec2key(v):
         return (round(v[0], 4), round(v[1], 4))
 
@@ -178,11 +178,20 @@ def getAllUniqueVertexIndices(mesh, ne, settings):
 
     # Compute bone weight information here
     if settings.exportBoneWeights:
+        object = context.object
+        armature = [obj for obj in context.selected_objects if obj != object][0]
         for vertex in mesh.vertices:
             for group in vertex.groups:
                 if group.weight > 0:
-                    animL[vertex.index] = insertWeighting(animL[vertex.index], (group.group, group.weight))
-    
+                    weight = object.vertex_groups[group.group].weight(vertex.index) * group.weight
+                    boneIndex = [i for i, bone in enumerate(armature.data.bones) if bone.name == object.vertex_groups[group.group].name][0]
+                    print('%s - %d' % (object.vertex_groups[group.group].name, boneIndex))
+                    animL[vertex.index] = insertWeighting(animL[vertex.index], (boneIndex, weight))
+            # Normalize weights
+            normFactor = animL[vertex.index][0][1] + animL[vertex.index][1][1] + animL[vertex.index][2][1] + animL[vertex.index][3][1]
+            for i in [0,1,2,3]:
+                animL[vertex.index][i] = (animL[vertex.index][i][0], animL[vertex.index][i][1] / normFactor)
+            
     # Convert to list form
     vl = [None] * len(vd)
     uvl = [[None] * len(uvd) for uvd in uvDicts]
@@ -203,7 +212,7 @@ def writeMesh(context, filepath, settings):
     numElements = len(vertexElements)
     
     # Get mesh data
-    vList, uvLists, animL, tris = getAllUniqueVertexIndices(mesh, len(vertexElements), settings)
+    vList, uvLists, animL, tris = getAllUniqueVertexIndices(context, mesh, len(vertexElements), settings)
     
     if settings.exportBinary:
         # Open the file in binary mode

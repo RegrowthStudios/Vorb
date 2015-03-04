@@ -22,10 +22,14 @@ uv(0, 0),
 uvRect(0, 0, 0, 0),
 color(0, 0, 0, 0) {}
 
-vg::SpriteGlyph::SpriteGlyph() :
-SpriteGlyph(0, 0) {}
+vg::SpriteGlyph::SpriteGlyph() : SpriteGlyph(0, 0) {
+    // Empty
+}
 vg::SpriteGlyph::SpriteGlyph(ui32 texID, f32 d) :
-textureID(texID), depth(d) {}
+    textureID(texID),
+    depth(d) {
+    // Empty
+}
 
 vg::SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
     _bufUsage(isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),

@@ -375,36 +375,34 @@ void main() {
 
 class AnimViewer : public vui::IGameScreen {
 public:
-    //! spherical linear interpolation
-    static f32q slerp(const f32q& q1, const f32q& q2, f32 t) {
-        //f32q q3;
-        //f32 dot = glm::dot(q1, q2);
+    static f32m4 fromQuat(const f32q& q) {
+        return glm::mat4_cast(q);
+    }
 
-        ///*	dot = cos(theta)
-        //if (dot < 0), q1 and q2 are more than 90 degrees apart,
-        //so we can invert one to reduce spinning	*/
-        //if (dot < 0) {
-        //    dot = -dot;
-        //    q3 = -q2;
-        //} else q3 = q2;
+    static f32q slerp(const f32q& q1, const f32q& q2, f32 t) { // TODO: I didn't write this
+        f32q q3;
+        f32 dot = glm::dot(q1, q2);
+        if (dot < 0) {
+            dot = -dot;
+            q3 = -q2;
+        } else q3 = q2;
 
-        //if (dot < 0.95f) {
-        //    float angle = acosf(dot);
-        //    return (q1*sinf(angle*(1 - t)) + q3*sinf(angle*t)) / sinf(angle);
-        //} else {
-            f32q q3 = q2;
+        if (dot < 0.95f) {
+            float angle = acosf(dot);
+            return (q1*sinf(angle*(1 - t)) + q3*sinf(angle*t)) / sinf(angle);
+        } else {
             f32v4* v1 = (f32v4*)&q1;
             f32v4* v2 = (f32v4*)&q3;
             f32v4 nv = lerp(*v1, *v2, t);
             *v2 = nv;
             return q3;
-        //}
+        }
     }
     void rest(vg::Bone& bone, const f32m4& parent) {
         printf("Rest Bone %d\n", bone.index);
         
         // Add inverse of rest pose
-        f32m4 mRest = glm::translate(bone.rest.translation) * glm::mat4_cast(bone.rest.rotation);
+        f32m4 mRest = glm::translate(bone.rest.translation) * fromQuat(bone.rest.rotation);
         mRest = parent * mRest;
 
         // Loop children
@@ -423,7 +421,7 @@ public:
 
         if (nfi == pfi) {
             // Compute world transform
-            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation) * glm::mat4_cast(bone.keyframes[pfi].transform.rotation);
+            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation) * fromQuat(bone.keyframes[pfi].transform.rotation);
             mWorld[bone.index] = parent * local;
         } else {
             // Lerp
@@ -433,7 +431,7 @@ public:
             f32v3 translation = lerp(bone.keyframes[pfi].transform.translation, bone.keyframes[nfi].transform.translation, r);
 
             // Compute world transforms
-            f32m4 local = glm::translate(translation) * glm::mat4_cast(rotation);
+            f32m4 local = glm::translate(translation) * fromQuat(rotation);
             mWorld[bone.index] = parent * local;
         }
 
@@ -503,7 +501,7 @@ void main() {
     worldPos += (unWorld[vBoneIndices.w] * vertex) * vBoneWeights.w;
     gl_Position = unVP * worldPos;
 
-    fUV = vec4((vBoneIndices.x / 26.0), 0, 0, 1);
+    fUV = vec4(abs(vertex.x), abs(vertex.z), (vBoneIndices.x / 26.0), 1);
 }
 )"
             );
@@ -530,7 +528,7 @@ void main() {
         vg::VertexDeclaration decl;
         size_t indSize;
         vio::IOManager iom;
-        const cString data = iom.readFileToString("data/models/VRAW/Heavy.vraw");
+        const cString data = iom.readFileToString("data/models/VRAW/Cube.vraw");
         vg::MeshDataRaw mesh = vg::ModelIO::loadRAW(data, decl, indSize);
         delete[] data;
         
@@ -568,7 +566,7 @@ void main() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        data = iom.readFileToString("data/animation/Heavy.anim");
+        data = iom.readFileToString("data/animation/Cube.anim");
         skeleton = vg::ModelIO::loadAnim(data);
         delete[] data;
 
@@ -581,12 +579,12 @@ void main() {
         for (size_t i = 0; i < skeleton.numBones; i++) {
             if (!skeleton.bones[i].parent) {
                 rest(skeleton.bones[i], f32m4(1.0f));
-                walk(skeleton.bones[i], f32m4(1.0f), 172);
+                //walk(skeleton.bones[i], f32m4(1.0f), 172);
             }
         }
 
-        mVP = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
-            glm::lookAt(f32v3(0, 3, 0), f32v3(0, 0, 0), f32v3(0, 0, 1));
+        mVP = glm::perspectiveFov(70.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
+            glm::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
         frame = 0;
 
         glClearColor(1, 1, 1, 1);
@@ -604,6 +602,7 @@ void main() {
     }
     virtual void draw(const vui::GameTime& gameTime) {
         vg::DepthState::FULL.set();
+        vg::RasterizerState::CULL_NONE.set();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         frame++;

@@ -494,14 +494,13 @@ in lowp uvec4 vBoneIndices;
 out vec4 fUV;
 
 void main() {
-    vec4 vertex = vec4(vPosition.xyz, 1);
-    vec4 worldPos = (unWorld[vBoneIndices.x] * vertex) * vBoneWeights.x;
-    worldPos += (unWorld[vBoneIndices.y] * vertex) * vBoneWeights.y;
-    worldPos += (unWorld[vBoneIndices.z] * vertex) * vBoneWeights.z;
-    worldPos += (unWorld[vBoneIndices.w] * vertex) * vBoneWeights.w;
+    vec4 worldPos = (unWorld[vBoneIndices.x] * vPosition) * vBoneWeights.x;
+    worldPos += (unWorld[vBoneIndices.y] * vPosition) * vBoneWeights.y;
+    worldPos += (unWorld[vBoneIndices.z] * vPosition) * vBoneWeights.z;
+    worldPos += (unWorld[vBoneIndices.w] * vPosition) * vBoneWeights.w;
     gl_Position = unVP * worldPos;
 
-    fUV = vec4(abs(vertex.x), abs(vertex.z), (vBoneIndices.x / 26.0), 1);
+    fUV = vec4(abs(vPosition.x), abs(vPosition.z), (vBoneIndices.x / 2.0), 1);
 }
 )"
             );
@@ -528,7 +527,7 @@ void main() {
         vg::VertexDeclaration decl;
         size_t indSize;
         vio::IOManager iom;
-        const cString data = iom.readFileToString("data/models/VRAW/Cube.vraw");
+        const cString data = iom.readFileToString("data/models/VRAW/Heavy.vraw");
         vg::MeshDataRaw mesh = vg::ModelIO::loadRAW(data, decl, indSize);
         delete[] data;
         
@@ -566,7 +565,7 @@ void main() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        data = iom.readFileToString("data/animation/Cube.anim");
+        data = iom.readFileToString("data/animation/Heavy.anim");
         skeleton = vg::ModelIO::loadAnim(data);
         delete[] data;
 
@@ -579,7 +578,7 @@ void main() {
         for (size_t i = 0; i < skeleton.numBones; i++) {
             if (!skeleton.bones[i].parent) {
                 rest(skeleton.bones[i], f32m4(1.0f));
-                //walk(skeleton.bones[i], f32m4(1.0f), 172);
+                walk(skeleton.bones[i], f32m4(1.0f), 102);
             }
         }
 

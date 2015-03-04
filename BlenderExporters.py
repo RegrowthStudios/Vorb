@@ -362,7 +362,7 @@ def writeSkeleton(context, filepath, exportBinary):
             # Write bone rest pose
             object.data.pose_position = 'REST'
             context.scene.update()
-            rotation = bone.rotation_quaternion
+            rotation = bone.matrix.to_quaternion()
             f.write(struct.pack('<ffff', rotation[1], rotation[2], rotation[3], rotation[0]))
             matrix = bone.matrix
             f.write(struct.pack('<fff', matrix[0][3], matrix[1][3], matrix[2][3]))
@@ -378,7 +378,7 @@ def writeSkeleton(context, filepath, exportBinary):
                 
                 # Write frame and pose matrix
                 f.write(struct.pack('<i', frame))
-                rotation = bone.rotation_quaternion
+                rotation = bone.matrix.to_quaternion()
                 f.write(struct.pack('<ffff', rotation[1], rotation[2], rotation[3], rotation[0])) # WXYZ
                 matrix = bone.matrix
                 f.write(struct.pack('<fff', matrix[0][3], matrix[1][3], matrix[2][3]))
@@ -400,7 +400,7 @@ def writeSkeleton(context, filepath, exportBinary):
             object.data.pose_position = 'REST'
             context.scene.update()
             f.write("    Rest:\n")
-            rotation = bone.rotation_quaternion
+            rotation = bone.matrix.to_quaternion()
             f.write("      Rotation:    [%f, %f, %f, %f]\n" % (rotation[1], rotation[2], rotation[3], rotation[0]))
             matrix = bone.matrix
             f.write("      Translation: [%f, %f, %f]\n" % (matrix[0][3], matrix[1][3], matrix[2][3]))
@@ -416,7 +416,7 @@ def writeSkeleton(context, filepath, exportBinary):
                 
                 # Write frame and pose matrix
                 f.write("      - Frame:       %d\n" % (frame))
-                rotation = bone.rotation_quaternion
+                rotation = bone.matrix.to_quaternion()
                 f.write("        Rotation:    [%f, %f, %f, %f]\n" % (rotation[1], rotation[2], rotation[3], rotation[0]))
                 matrix = bone.matrix
                 f.write("        Translation: [%f, %f, %f]\n" % (matrix[0][3], matrix[1][3], matrix[2][3]))

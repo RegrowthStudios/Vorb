@@ -152,7 +152,7 @@ TEST(VRAW) {
         timer.start();
         for (size_t i = 0; i < 100; i++) {
             vg::VertexDeclaration vdecl;
-            size_t indexSize;
+            ui32 indexSize;
             mesh = vg::ModelIO::loadRAW(data, vdecl, indexSize);
             delete[] mesh.vertices;
             delete[] mesh.indices;

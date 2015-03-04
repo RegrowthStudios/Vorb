@@ -481,7 +481,7 @@ public:
 
         program.init();
         program.addShader(vg::ShaderType::VERTEX_SHADER, R"(
-uniform mat4 unWorld[27];
+uniform mat4 unWorld[32];
 uniform mat4 unVP;
 
 in vec4 vPosition;
@@ -489,7 +489,7 @@ in vec3 vNormal;
 in vec2 vUV;
 in vec2 vUVLight;
 in vec4 vBoneWeights;
-in lowp uvec4 vBoneIndices;
+in uvec4 vBoneIndices;
 
 out vec4 fUV;
 
@@ -525,11 +525,12 @@ void main() {
         program.initUniforms();
 
         vg::VertexDeclaration decl;
-        size_t indSize;
+        ui32 indSize;
         vio::IOManager iom;
-        const cString data = iom.readFileToString("data/models/VRAW/Heavy.vraw");
-        vg::MeshDataRaw mesh = vg::ModelIO::loadRAW(data, decl, indSize);
-        delete[] data;
+        std::vector<ui8> data;
+        iom.readFileToData("data/models/VRAW/Heavy.vraw", data);
+        vg::MeshDataRaw mesh = vg::ModelIO::loadRAW(data.data(), decl, indSize);
+        data.clear();
         
         glGenBuffers(1, &inds);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
@@ -565,9 +566,8 @@ void main() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        data = iom.readFileToString("data/animation/Heavy.anim");
-        skeleton = vg::ModelIO::loadAnim(data);
-        delete[] data;
+        iom.readFileToData("data/animation/Heavy.anim", data);
+        skeleton = vg::ModelIO::loadAnim(data.data());
 
         mWorld = new f32m4[skeleton.numBones];
         mRestInv = new f32m4[skeleton.numBones];
@@ -582,7 +582,7 @@ void main() {
             }
         }
 
-        mVP = glm::perspectiveFov(70.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
+        mVP = glm::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
             glm::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
         frame = 0;
 

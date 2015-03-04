@@ -1,19 +1,28 @@
-///
-/// PtrRecycler.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-///
-///
+//
+// PtrRecycler.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 4 Mar 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file PtrRecycler.hpp
+ * @brief Templated free-list implementation.
+ */
 
 #pragma once
 
-#ifndef PtrRecycler_h__
-#define PtrRecycler_h__
+#ifndef Vorb_PtrRecycler_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_PtrRecycler_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 /*! @brief Creates and caches larges numbers of pointers.
  * 
@@ -25,9 +34,9 @@
 template<typename T>
 class PtrRecycler {
 public:
-    PtrRecycler() {
-        // Empty
-    }
+    /*! @brief Default constructor.
+     */
+    PtrRecycler() = default;
     /*! @brief Frees all constructed objects.
      * 
      * The destructor calls freeAll().
@@ -35,7 +44,6 @@ public:
     ~PtrRecycler() {
         freeAll();
     }
-
 
     /*! @brief Obtain a new object.
      * 
@@ -58,7 +66,7 @@ public:
             *getCounter(data) = 0;
         } else {
             // Create a new data segment
-            PtrBind* bind = (PtrBind*)malloc(sizeof(PtrBind));
+            PtrBind* bind = (PtrBind*)operator new(sizeof(PtrBind));
             bind->recycleCheck = 0;
             data = &bind->data;
 
@@ -76,6 +84,8 @@ public:
      * The object's destructor will be called, and it
      * should not be used after this point.
      * 
+     * @pre: The object pointer must have been constructed from this pool
+     * 
      * @param data: Object to be destroyed
      */
     void recycle(T* data) {
@@ -90,11 +100,7 @@ public:
         }
     }
 
-    /*! @brief 
-     * 
-     * 
-     * 
-     * @return 
+    /*! @brief Free all allocated objects.
      */
     void freeAll() {
         if (m_allocated.size() > 0) {
@@ -108,7 +114,7 @@ public:
                 }
 
                 // Free the data
-                free(m_allocated[i]);
+                operator delete(m_allocated[i]);
             }
 
             // Empty out the lists
@@ -120,49 +126,34 @@ private:
     // The recycler may not be copied to avoid ownership issues
     VORB_NON_COPYABLE(PtrRecycler);
 
+    /*! @brief Value tracking struct to limit destructor calls.
+     */
     struct PtrBind {
     public:
         T data; ///< Object value
         i32 recycleCheck = 0; ///< Counter that tracks recycling calls
     };
 
+    /*! @brief Obtain recycling counter for an object.
+     * 
+     * @pre: The object pointer must have been constructed from this pool
+     *
+     * @param data: Object
+     * @return Pointer to recycling counter
+     */
     i32* getCounter(T* data) {
         auto ptr = (typename PtrRecycler<T>::PtrBind*)data;
         return &(ptr->recycleCheck);
     }
 
-    std::vector<PtrBind*> m_allocated;
-    std::vector<T*> m_recycled;
+    std::vector<PtrBind*> m_allocated; ///< All the allocated object blocks
+    std::vector<T*> m_recycled; ///< Stack of recycled objects
 };
 
-namespace {
-    template<typename T>
-    class Wrapper {
-    public:
-        Wrapper(T v) :
-            value(v) {
-            // Empty
-        }
-        operator T() const {
-            return value;
-        }
-        T value;
-    };
-}
+#endif // !Vorb_PtrRecycler_hpp__
 
-#define VORB_PTR_RECYCLER_WRAP_PRIMITIVE(TYPE) \
-template<> class PtrRecycler<TYPE> : private PtrRecycler<Wrapper<TYPE>> { \
-public: \
-    template<typename... Args> \
-    TYPE* create(Args... args) { \
-        return (TYPE*)PtrRecycler<Wrapper<TYPE>>::create(args...); \
-    } \
-    void recycle(TYPE* data) { \
-        PtrRecycler<Wrapper<TYPE>>::recycle((Wrapper<TYPE>*)data); \
-    } \
-    void freeAll() { \
-        PtrRecycler<Wrapper<TYPE>>::freeAll(); \
-    } \
-}
-
-#endif // PtrRecycler_h__
+/*! \example "Free-lists in Vorb"
+ * 
+ * Here is a simple usage scenario for how a free list may be used.
+ * \include VorbPtrRecycler.cpp
+ */

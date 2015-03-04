@@ -375,12 +375,36 @@ void main() {
 
 class AnimViewer : public vui::IGameScreen {
 public:
+    //! spherical linear interpolation
+    static f32q slerp(const f32q& q1, const f32q& q2, f32 t) {
+        //f32q q3;
+        //f32 dot = glm::dot(q1, q2);
+
+        ///*	dot = cos(theta)
+        //if (dot < 0), q1 and q2 are more than 90 degrees apart,
+        //so we can invert one to reduce spinning	*/
+        //if (dot < 0) {
+        //    dot = -dot;
+        //    q3 = -q2;
+        //} else q3 = q2;
+
+        //if (dot < 0.95f) {
+        //    float angle = acosf(dot);
+        //    return (q1*sinf(angle*(1 - t)) + q3*sinf(angle*t)) / sinf(angle);
+        //} else {
+            f32q q3 = q2;
+            f32v4* v1 = (f32v4*)&q1;
+            f32v4* v2 = (f32v4*)&q3;
+            f32v4 nv = lerp(*v1, *v2, t);
+            *v2 = nv;
+            return q3;
+        //}
+    }
     void rest(vg::Bone& bone, const f32m4& parent) {
         printf("Rest Bone %d\n", bone.index);
         
         // Add inverse of rest pose
-        f32m4 mRest = glm::mat4_cast(bone.rest.rotation);
-        mRest = glm::translate(bone.rest.translation) * mRest;
+        f32m4 mRest = glm::translate(bone.rest.translation) * glm::mat4_cast(bone.rest.rotation);
         mRest = parent * mRest;
 
         // Loop children
@@ -390,15 +414,33 @@ public:
 
         mRestInv[bone.index] = glm::inverse(mRest);
     }
-    void walk(vg::Bone& bone, const f32m4& parent) {
-        // Compute world transform
-        f32m4 local = glm::mat4_cast(bone.rest.rotation);
-        local = glm::translate(bone.rest.translation) * local;
-        mWorld[bone.index] = parent * local;
+    void walk(vg::Bone& bone, const f32m4& parent, i32 frame) {
+        i32 pfi = 0, nfi = 0;
+        while (nfi < bone.numFrames && bone.keyframes[nfi].frame <= frame) nfi++;
+        pfi = nfi - 1;
+        if (pfi < 0) pfi = 0;
+        if (nfi >= bone.numFrames) nfi = bone.numFrames - 1;
+
+        if (nfi == pfi) {
+            // Compute world transform
+            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation) * glm::mat4_cast(bone.keyframes[pfi].transform.rotation);
+            mWorld[bone.index] = parent * local;
+        } else {
+            // Lerp
+            i32 fl = bone.keyframes[nfi].frame - bone.keyframes[pfi].frame;
+            f32 r = (f32)(frame - bone.keyframes[pfi].frame) / (f32)fl;
+            f32q rotation = slerp(bone.keyframes[pfi].transform.rotation, bone.keyframes[nfi].transform.rotation, r);
+            f32v3 translation = lerp(bone.keyframes[pfi].transform.translation, bone.keyframes[nfi].transform.translation, r);
+
+            // Compute world transforms
+            f32m4 local = glm::translate(translation) * glm::mat4_cast(rotation);
+            mWorld[bone.index] = parent * local;
+        }
+
 
         // Loop children
         for (size_t i = 0; i < bone.numChildren; i++) {
-            walk(*bone.children[i], parent);
+            walk(*bone.children[i], parent, frame);
         }
 
         // Add inverse of rest pose
@@ -505,16 +547,6 @@ void main() {
         }
         glGenBuffers(1, &verts);
         glBindBuffer(GL_ARRAY_BUFFER, verts);
-        ui8* vdata1 = (ui8*)mesh.vertices + 40;
-        ui8* vdata2 = (ui8*)mesh.vertices + 56;
-        for (size_t i = 0; i < mesh.vertexCount; i++) {
-            f32v4* w = (f32v4*)vdata1;
-            *w /= (w->r + w->g + w->b + w->a);
-            ui16v4* ind = (ui16v4*)vdata2;
-            vdata1 += vertexSize;
-            vdata2 += vertexSize;
-            //printf("W: (%d,%f),(%d,%f),(%d,%f),(%d,%f)\n", ind->r, w->r, ind->g, w->g, ind->b, w->b, ind->a, w->a);
-        }
         glBufferData(GL_ARRAY_BUFFER, vertexSize * mesh.vertexCount, mesh.vertices, GL_STATIC_DRAW);
         delete[] mesh.vertices;
 
@@ -549,12 +581,13 @@ void main() {
         for (size_t i = 0; i < skeleton.numBones; i++) {
             if (!skeleton.bones[i].parent) {
                 rest(skeleton.bones[i], f32m4(1.0f));
-                walk(skeleton.bones[i], f32m4(1.0f));
+                walk(skeleton.bones[i], f32m4(1.0f), 172);
             }
         }
 
         mVP = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
             glm::lookAt(f32v3(0, 3, 0), f32v3(0, 0, 0), f32v3(0, 0, 1));
+        frame = 0;
 
         glClearColor(1, 1, 1, 1);
         glClearDepth(1.0);
@@ -573,10 +606,18 @@ void main() {
         vg::DepthState::FULL.set();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        frame++;
+        frame = (frame - 1) % 260;
+        frame++;
+        for (size_t i = 0; i < skeleton.numBones; i++) {
+            if (!skeleton.bones[i].parent) {
+                walk(skeleton.bones[i], f32m4(1.0f), frame);
+            }
+        }
+
         program.use();
         glUniformMatrix4fv(program.getUniform("unVP"), 1, false, &mVP[0][0]);
         glUniformMatrix4fv(program.getUniform("unWorld"), skeleton.numBones, false, &mWorld[0][0][0]);
-        //glUniform4fv(program.getUniform("unWorld"), skeleton.numBones * 4, &mWorld[0][0][0]);
 
         glBindVertexArray(vdecl);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, inds);
@@ -595,6 +636,7 @@ void main() {
     vg::GLProgram program;
     vg::Skeleton skeleton;
 
+    i32 frame;
     f32m4 mVP;
     f32m4* mWorld;
     f32m4* mRestInv;

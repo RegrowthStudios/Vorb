@@ -15,6 +15,9 @@
 #ifndef KeyboardEventDispatcher_h__
 #define KeyboardEventDispatcher_h__
 
+#include <array>
+#include <atomic>
+
 #include "../Events.hpp"
 #include "Keys.inl"
 
@@ -73,6 +76,11 @@ namespace vorb {
             friend class InputDispatcher;
             friend class vorb::ui::impl::InputDispatcherEventCatcher;
         public:
+            KeyboardEventDispatcher();
+
+            i32 getNumPresses(VirtualKey k) const;
+            bool hasFocus() const;
+
             Event<> onEvent; ///< Signaled when any keyboard event happens
             Event<> onFocusLost; ///< Signaled when keyboard no longer provides input to application
             Event<> onFocusGained; ///< Signaled when keyboard begins to provide input to application
@@ -80,7 +88,13 @@ namespace vorb {
             Event<const KeyEvent&> onKeyUp; ///< Signaled when a key is released
             Event<const TextEvent&> onText; ///< Signaled when text is provided
         private:
+            void addPress(VirtualKey k);
+            void release(VirtualKey k);
+
             bool m_state[NUM_KEY_CODES]; ///< The pressed state each virtual key
+
+            std::array<std::atomic<i32>, NUM_KEY_CODES> m_presses;
+            std::atomic<i32> m_focus = ATOMIC_VAR_INIT(0);
         };
     }
 }

@@ -132,7 +132,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     switch (e->type) {
     case SDL_KEYDOWN:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
+        ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
@@ -141,7 +141,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         break;
     case SDL_KEYUP:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
+        ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
@@ -280,11 +280,12 @@ void vui::impl::InputDispatcherEventCatcher::onKeyFocusEvent(GLFWwindow*, int va
 void vui::impl::InputDispatcherEventCatcher::onKeyEvent(GLFWwindow*, int key, int scan, int action, int mod) {
     // We don't want repeat events here
     // TODO: Actually, we do... we can correctly calculate counts, duh
-    if (action == GLFW_REPEAT) return; 
+    if (action == GLFW_REPEAT) return;
 
     KeyEvent e;
-    e.keyCode = key; // TODO: Make sure these line up
+    e.keyCode = vui::impl::mapping[key + 1];
     e.scanCode = scan;
+    e.repeatCount = 0;
     switch (key) {
     case GLFW_KEY_LEFT_ALT:
         impl::InputDispatcherEventCatcher::mods.lAlt = action == GLFW_PRESS;
@@ -517,7 +518,7 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         checkMods(e.key.code, true);
         ie.key.mod = mods;
         ie.key.scanCode = ie.key.keyCode; // TODO: Fuck...
-        ie.key.repeatCount = 1; // TODO: Fuck me with a pickle
+        ie.key.repeatCount = 0; // TODO: Fuck me with a pickle
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
         vui::InputDispatcher::key.onKeyDown(ie.key);
         vui::InputDispatcher::key.onEvent();
@@ -527,7 +528,7 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         ie.key.mod = mods;
         ie.key.keyCode = vui::impl::mapping[e.key.code + 1];
         ie.key.scanCode = ie.key.keyCode;
-        ie.key.repeatCount = 1;
+        ie.key.repeatCount = 0;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
         vui::InputDispatcher::key.onKeyUp(ie.key);
         vui::InputDispatcher::key.onEvent();
@@ -552,6 +553,8 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         sfv = sf::Mouse::getPosition(*userData);
         ie.mouse.x = sfv.x;
         ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setFocus(true);
         vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
         vui::InputDispatcher::mouse.onEvent(ie.mouse);
         break;
@@ -559,6 +562,8 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         sfv = sf::Mouse::getPosition(*userData);
         ie.mouse.x = sfv.x;
         ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setFocus(false);
         vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
         vui::InputDispatcher::mouse.onEvent(ie.mouse);
         break;
@@ -570,6 +575,7 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         if (ie.mouseMotion.dx == 0 && ie.mouseMotion.dy == 0) return;
         vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
         vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouseMotion.x, ie.mouseMotion.y);
         vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
         vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
         break;
@@ -593,8 +599,8 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         vui::InputDispatcher::window.onEvent();
         break;
     case sf::Event::TextEntered:
-        memcpy(ie.text.text, &e.text.unicode, sizeof(Uint32));
-        ie.text.text[sizeof(Uint32)] = 0;
+        memcpy(ie.text.text, &e.text.unicode, sizeof(sf::Uint32));
+        ie.text.text[sizeof(sf::Uint32)] = 0;
         vui::InputDispatcher::key.onText(ie.text);
         vui::InputDispatcher::key.onEvent();
         break;

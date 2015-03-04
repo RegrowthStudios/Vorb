@@ -159,6 +159,12 @@
     <ClCompile Include="src\script\Script.cpp">
       <Filter>Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\MouseInputDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -451,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="include\script\Function.h">
       <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\AnimationData.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

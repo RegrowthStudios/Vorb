@@ -315,8 +315,8 @@ void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendStat
 
     shader->use();
 
-    glUniformMatrix4fv(shader->getUniform("World"), 1, false, (f32*)&mWorld);
-    glUniformMatrix4fv(shader->getUniform("VP"), 1, false, (f32*)&mCamera);
+    glUniformMatrix4fv(shader->getUniform("World"), 1, false, &mWorld[0][0]);
+    glUniformMatrix4fv(shader->getUniform("VP"), 1, false, &mCamera[0][0]);
 
     glBindVertexArray(_vao);
 
@@ -328,13 +328,16 @@ void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendStat
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(shader->getUniform("SBTex"), 0);
         glBindTexture(GL_TEXTURE_2D, batch->textureID);
-        ss->setObject(0);
+        ss->set(GL_TEXTURE_2D);
 
         glDrawArrays(GL_TRIANGLES, batch->indexOffset, batch->indices);
     }
 
     glBindVertexArray(0);
-    glBindSampler(0, 0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
 
     shader->unuse();
 }
@@ -462,11 +465,14 @@ void vg::SpriteBatch::createVertexArray() {
     glBufferData(GL_ARRAY_BUFFER, _glyphCapacity * 6 * sizeof(VertexSpriteBatch), nullptr, _bufUsage);
 
     _program->enableVertexAttribArrays();
-
-    glVertexAttribPointer(_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, position));
-    glVertexAttribPointer(_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, color));
-    glVertexAttribPointer(_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uv));
-    glVertexAttribPointer(_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uvRect));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, position));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, true, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, color));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uv));
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uvRect));
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -476,12 +482,13 @@ void vg::SpriteBatch::createPixelTexture() {
     glBindTexture(GL_TEXTURE_2D, _texPixel);
     ui32 pix = 0xffffffffu;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pix);
+    vg::SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-
 void vg::SpriteBatch::disposeProgram() {
     if (_program) {
         _program->dispose();
+        delete _program;
         _program = nullptr;
     }
 }

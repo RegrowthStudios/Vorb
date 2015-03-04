@@ -60,7 +60,7 @@ namespace vorb {
             /// @param count: Number of elements
             /// @param size: Size of an element (in bytes)
             /// @param data: Pointer to data
-            size_t write(size_t count, size_t size, void* data) const {
+            size_t write(size_t count, size_t size, const void* data) const {
                 return fwrite(data, size, count, m_fileCached);
             }
             /// Write a formatted string

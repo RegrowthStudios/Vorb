@@ -28,6 +28,7 @@
 #include "../decorators.h"
 #endif // !VORB_USING_PCH
 
+#include "../IDGenerator.h"
 #include "../io/Path.h"
 #include "Function.h"
 
@@ -56,6 +57,7 @@ namespace vorb {
 
             std::unordered_map<nString, Function> m_functions;
             EnvironmentHandle m_state;
+            vcore::IDGenerator<i32> m_idGen;
         };
     }
 }

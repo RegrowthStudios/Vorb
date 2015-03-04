@@ -10,10 +10,19 @@ extern "C" {
 #include "io/File.h"
 #include "io/FileStream.h"
 
+#define VORB_SCRIPT_ENVIRONMENT_TABLE "VORB_VALUE_TABLE"
+#define VORB_SCRIPT_ENVIRONMENT_VALUE_FORMAT "VORB_VALUE_%d"
+
 vscript::Environment::Environment() {
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
     lua_register(m_state, "register", vscript::Environment::registration);
+
+    // Create our special function table
+    lua_pushglobaltable(m_state);
+    lua_newtable(m_state);
+    lua_setfield(m_state, -2, VORB_SCRIPT_ENVIRONMENT_TABLE);
+    lua_pop(m_state, 1);
 }
 vscript::Environment::~Environment() {
     lua_close(m_state);
@@ -43,6 +52,7 @@ bool vscript::Environment::load(const vio::Path& file) {
     if (!success) return false;
 
     lua_getglobal(m_state, "registerFuncs");
+    
     if (lua_isfunction(m_state, -1)) {
         // Register functions
         lua_pushlightuserdata(m_state, this);
@@ -74,6 +84,12 @@ int vscript::Environment::registration(lua_State* L) {
     
     vscript::Environment* e = (vscript::Environment*)lua_touserdata(L, 1);
     nString name(lua_tostring(L, 2));
+
+    {
+        char buf[255];
+        sprintf(buf, VORB_SCRIPT_ENVIRONMENT_VALUE_FORMAT, e->m_idGen.generate());
+    }
+
     nString nameLua(lua_tostring(L, 3));
     e->m_functions[name] = nameLua;
 

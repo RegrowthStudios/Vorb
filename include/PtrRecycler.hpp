@@ -24,7 +24,8 @@ public:
         freeAll();
     }
 
-    T* create() {
+    template<typename... Args>
+    CALLER_DELETE T* create(Args... args) {
         T* data;
         if (m_recycled.size() > 0) {
             // Get a recycled data
@@ -35,7 +36,7 @@ public:
             *(m_recycledChecks[(ptrdiff_t)data]) = 0;
         } else {
             // Create a new data segment
-            PtrBind* bind = new PtrBind();
+            PtrBind* bind = new PtrBind(args...);
             data = &bind->data;
             bind->recycleCheck = 0;
 
@@ -45,6 +46,7 @@ public:
         }
         return data;
     }
+
     void recycle(T* data) {
         i32* recycleCheck = m_recycledChecks[(ptrdiff_t)data];
 
@@ -72,8 +74,9 @@ public:
 private:
     struct PtrBind {
     public:
-        PtrBind() :
-            data(T()) {
+        template<typename... Args>
+        PtrBind(Args... args) :
+            data(args...) {
             // Empty
         }
 

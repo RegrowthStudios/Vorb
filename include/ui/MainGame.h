@@ -67,6 +67,8 @@ namespace vorb {
             void checkInput();
             void onUpdateFrame();
             void onRenderFrame();
+
+            void onQuit(Sender);
         
             vg::GraphicsDevice* _gDevice;
             GameWindow _window;
@@ -79,7 +81,6 @@ namespace vorb {
             ScreenList* _screenList;
             IGameScreen* _screen;
         
-            IDelegate<>* m_fOnQuit; ///< Callback to handle when the application should quit
             volatile bool m_signalQuit = false; ///< Tracks application's request to quit
         };
     }

@@ -23,7 +23,7 @@ void keg::YAMLReader::free(Node& node) {
     node = nullptr;
 }
 
-void keg::YAMLReader::forAllInMap(Node node, IDelegate<const nString&, Node>* f) {
+void keg::YAMLReader::forAllInMap(Node node, Delegate<Sender, const nString&, Node>* f) {
     for (auto iter : node->data) {
         Node value = new YAMLNode;
         m_allocated.insert(value);
@@ -32,7 +32,7 @@ void keg::YAMLReader::forAllInMap(Node node, IDelegate<const nString&, Node>* f)
         f->invoke(this, iter.first.as<nString>(), value);
     }
 }
-void keg::YAMLReader::forAllInSequence(Node node, IDelegate<size_t, Node>* f) {
+void keg::YAMLReader::forAllInSequence(Node node, Delegate<Sender, size_t, Node>* f) {
     size_t l = node->data.size();
     for (size_t i = 0; i < l; i++) {
         Node value = new YAMLNode;

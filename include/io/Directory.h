@@ -21,7 +21,7 @@
 namespace vorb {
     namespace io {
         typedef std::vector<Path> DirectoryEntries; ///< A list of directory entries
-        typedef IDelegate<const Path&> DirectoryEntryCallback; ///< Type for a callback function
+        typedef Delegate<Sender, const Path&> DirectoryEntryCallback; ///< Type for a callback function
 
         /// Represents a directory that houses paths
         class Directory {
@@ -51,7 +51,7 @@ namespace vorb {
             void forEachEntry(DirectoryEntryCallback* f) const;
             template<typename F>
             void forEachEntry(F f) const {
-                DirectoryEntryCallback* fDel = createDelegate<const Path&>(f);
+                DirectoryEntryCallback* fDel = makeFunctor<Sender, const Path&>(f);
                 forEachEntry(fDel);
                 delete fDel;
             }

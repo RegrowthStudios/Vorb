@@ -22,13 +22,13 @@ public:
 };
 KEG_TYPE_DECL(KT1);
 
-KEG_TYPE_INIT_BEGIN(KT1, KT1, kt)
-using namespace keg;
-kt->addValue("x", Value::basic(BasicType::I32, offsetof(KT1, x)));
-kt->addValue("y", Value::basic(BasicType::STRING, offsetof(KT1, y)));
-kt->addValue("other", Value::basic(BasicType::C_STRING, offsetof(KT1, other)));
-kt->addValue("z", Value::basic(BasicType::UI8, offsetof(KT1, z)));
-KEG_TYPE_INIT_END
+KEG_TYPE_DEF(KT1, KT1, kt) {
+    using namespace keg;
+    kt.addValue("x",     Value::basic(offsetof(KT1, x),     BasicType::I32));
+    kt.addValue("y",     Value::basic(offsetof(KT1, y),     BasicType::STRING));
+    kt.addValue("other", Value::basic(offsetof(KT1, other), BasicType::C_STRING));
+    kt.addValue("z",     Value::basic(offsetof(KT1, z),     BasicType::UI8));
+}
 
 TEST(Parse) {
     KT1 data;

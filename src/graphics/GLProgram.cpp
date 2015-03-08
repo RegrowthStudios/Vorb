@@ -20,11 +20,6 @@ vg::GLProgram::GLProgram(bool init /*= false*/) {
     if (init) this->init();
 }
 
-vg::GLProgram::~GLProgram() {
-    // TODO: Remove this from here
-    dispose();
-}
-
 void vg::GLProgram::init() {
     if (getIsCreated()) return;
     _isLinked = false;
@@ -92,7 +87,7 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
 
     // Compile shader
     VGShader idS = glCreateShader((VGEnum)data.stage);
-    glShaderSource(idS, data.sources.size() + 1, sources, 0);
+    glShaderSource(idS, (GLsizei)data.sources.size() + 1, sources, 0);
     glCompileShader(idS);
     delete[] sources;
 

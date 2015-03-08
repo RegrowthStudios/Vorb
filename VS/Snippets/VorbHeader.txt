@@ -1,0 +1,29 @@
+//
+// $FILE_BASE$.$FILE_EXT$
+// Vorb Engine
+//
+// Created by Cristian Zaloj on $DAY$ $MONTHNAME$ $YEAR$
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file $FILE_BASE$.$FILE_EXT$
+ * @brief $end$
+ * 
+ * 
+ */
+
+#pragma once
+
+#ifndef Vorb_$FILE_BASE$_$FILE_EXT$__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_$FILE_BASE$_$FILE_EXT$__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
+
+$selected$
+
+#endif // !Vorb_$FILE_BASE$_$FILE_EXT$__

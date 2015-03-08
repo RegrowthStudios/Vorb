@@ -102,9 +102,9 @@ void vg::Mesh::draw() {
     glBindVertexArray(_vao);
     // Perform draw call
     if (_isIndexed) {
-        glDrawElements(static_cast<VGEnum>(_primitiveType), _numIndices, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(static_cast<VGEnum>(_primitiveType), (GLsizei)_numIndices, GL_UNSIGNED_INT, nullptr);
     } else {
-        glDrawArrays(static_cast<VGEnum>(_primitiveType), 0, _numVertices);
+        glDrawArrays(static_cast<VGEnum>(_primitiveType), 0, (GLsizei)_numVertices);
     }
     glBindVertexArray(0);
 }
@@ -168,9 +168,9 @@ void vg::Mesh::upload(vg::BufferUsageHint usage) {
     _isUploaded = true;
 }
 
-i32 vg::Mesh::getNumPrimitives() const {
+size_t vg::Mesh::getNumPrimitives() const {
     // If indexed, we use indices. Otherwise verts
-    int n;
+    size_t n;
     if (!_isUploaded) {
         if (_isIndexed) {
             n = _indices.size();

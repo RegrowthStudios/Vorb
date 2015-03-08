@@ -106,7 +106,7 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
             if (iter != vertexLookup.end()) { //It is in the map
                 mp12Index = iter->second;
             } else { //Not in the map
-                mp12Index = positions.size();
+                mp12Index = (ui32)positions.size();
                 positions.push_back(midPoint12);
                 vertexLookup[midPoint12] = mp12Index;
             }
@@ -115,7 +115,7 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
             if (iter != vertexLookup.end()) { //It is in the map
                 mp23Index = iter->second;
             } else { //Not in the map
-                mp23Index = positions.size();
+                mp23Index = (ui32)positions.size();
                 positions.push_back(midPoint23);
                 vertexLookup[midPoint23] = mp23Index;
             }
@@ -124,7 +124,7 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
             if (iter != vertexLookup.end()) { //It is in the map
                 mp13Index = iter->second;
             } else { //Not in the map
-                mp13Index = positions.size();
+                mp13Index = (ui32)positions.size();
                 positions.push_back(midPoint13);
                 vertexLookup[midPoint13] = mp13Index;
             }

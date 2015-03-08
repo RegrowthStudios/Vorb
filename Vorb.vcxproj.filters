@@ -47,9 +47,6 @@
     <ClCompile Include="src/RPC.cpp">
       <Filter>Core\ADT</Filter>
     </ClCompile>
-    <ClCompile Include="src/ui/InputDispatcher.cpp">
-      <Filter>UI\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src/ui/LuaDevConsole.cpp">
       <Filter>UI\REPL</Filter>
     </ClCompile>
@@ -129,12 +126,47 @@
     <ClCompile Include="src\io\YAML.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
-    <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\SpriteBatch.cpp">
       <Filter>Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbInit.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbKeg.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\InputDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbEnumOps.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbArray.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbArrayKeg.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src/MeshGenIcosphere.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\Environment.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\Script.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\MouseInputDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
+      <Filter>Examples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,7 +379,6 @@
     <ClInclude Include="include/IDGenerator.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/RingBuffer.hpp">
       <Filter>Core\ADT</Filter>
     </ClInclude>
@@ -363,7 +394,6 @@
     <ClInclude Include="include/IO.h">
       <Filter>IO</Filter>
     </ClInclude>
-    <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -393,6 +423,46 @@
     </ClInclude>
     <ClInclude Include="include\graphics\SpriteBatch.h">
       <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VorbLibs.h" />
+    <ClInclude Include="include\examples\VorbKeg.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\InputDispatcherEventCatcher.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MeshGenerators.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextureRecycler.hpp">
+      <Filter>Graphics\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegType.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegValue.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegBasic.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegEnum.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegEnvironment.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\Environment.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\Script.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\Function.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\AnimationData.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +495,6 @@
     </Filter>
     <Filter Include="Voxel\Mesh\Algorithms">
       <UniqueIdentifier>{4884f9c0-beef-44fb-b408-495d0c4d6329}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Wrappers">
-      <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sound">
       <UniqueIdentifier>{ebd75801-6efb-4baa-9055-dde194ce4a4a}</UniqueIdentifier>
@@ -471,6 +538,15 @@
     <Filter Include="Net">
       <UniqueIdentifier>{08ae98f0-3d08-453a-9236-e213da5e47e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Examples">
+      <UniqueIdentifier>{1d9ddeed-414e-4f29-ad35-68b795bdad96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Wrappers">
+      <UniqueIdentifier>{8bff44af-cc74-45d7-b763-5853fa3ab415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{71198462-646c-4056-be32-d4bd63e5ad85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">
@@ -507,6 +583,12 @@
       <Filter>Utils</Filter>
     </None>
     <None Include="src\graphics\ImageIOConv.inl">
+      <Filter>Graphics\IO</Filter>
+    </None>
+    <None Include="src\ui\KeyMappings.inl">
+      <Filter>UI\Input</Filter>
+    </None>
+    <None Include="src\graphics\ImageIOConvF.inl">
       <Filter>Graphics\IO</Filter>
     </None>
   </ItemGroup>

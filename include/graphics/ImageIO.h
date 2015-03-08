@@ -52,7 +52,7 @@ namespace vorb {
             static BitmapResource alloc(const ui32& w, const ui32& h, const ImageIOFormat& format);
             static void free(const BitmapResource& res);
 
-            BitmapResource load(const vio::Path& path, const ImageIOFormat& format);
+            BitmapResource load(const vio::Path& path, const ImageIOFormat& format, bool flipV = false);
             bool save(const vio::Path& path, const void* inData, const ui32& w, const ui32& h, const ImageIOFormat& format);
 
             Event<nString> onError;

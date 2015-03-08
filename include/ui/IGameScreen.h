@@ -73,15 +73,15 @@ namespace vorb {
         
             // Called At The Beginning And End Of The Application
             virtual void build() = 0;
-            virtual void destroy(const GameTime& gameTime) = 0;
+            virtual void destroy(const vui::GameTime& gameTime) = 0;
         
             // Called When A Screen Enters And Exits Focus
-            virtual void onEntry(const GameTime& gameTime) = 0;
-            virtual void onExit(const GameTime& gameTime) = 0;
+            virtual void onEntry(const vui::GameTime& gameTime) = 0;
+            virtual void onExit(const vui::GameTime& gameTime) = 0;
         
             // Called In The Main Update Loop
-            virtual void update(const GameTime& gameTime) = 0;
-            virtual void draw(const GameTime& gameTime) = 0;
+            virtual void update(const vui::GameTime& gameTime) = 0;
+            virtual void draw(const vui::GameTime& gameTime) = 0;
         protected:
             ScreenState _state;
             MainGame* _game;

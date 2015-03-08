@@ -5,29 +5,6 @@
 
 #include "ImageIOConv.inl"
 
-// Add FreeImage libraries
-#ifdef DEBUG
-#pragma comment(lib, "FreeImage-d.lib")
-#pragma comment(lib, "libJPEG-d.lib")
-#pragma comment(lib, "libJXR-d.lib")
-#pragma comment(lib, "libPNG-d.lib")
-#pragma comment(lib, "libRAW-d.lib")
-#pragma comment(lib, "libTIFF-d.lib")
-#pragma comment(lib, "libWebP-d.lib")
-#pragma comment(lib, "OpenEXR-d.lib")
-#pragma comment(lib, "OpenJPEG-d.lib")
-#else
-#pragma comment(lib, "FreeImage.lib")
-#pragma comment(lib, "libJPEG.lib")
-#pragma comment(lib, "libJXR.lib")
-#pragma comment(lib, "libPNG.lib")
-#pragma comment(lib, "libRAW.lib")
-#pragma comment(lib, "libTIFF.lib")
-#pragma comment(lib, "libWebP.lib")
-#pragma comment(lib, "OpenEXR.lib")
-#pragma comment(lib, "OpenJPEG.lib")
-#endif // DEBUG
-
 namespace vorb {
     namespace graphics {
         namespace impl {
@@ -88,7 +65,7 @@ void vg::ImageIO::free(const BitmapResource& res) {
     delete[] res.bytesUI8;
 }
 
-vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat& format) {
+vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat& format, bool flipV /*= false*/) {
     BitmapResource res = {};
     res.data = nullptr;
 
@@ -129,7 +106,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         case ImageIOFormat::RGB_F32:
         case ImageIOFormat::RGB_F64:
             bmp = impl::makeRGB(bmp);
-            f = impl::convRGB8[(size_t)format];
+            f = flipV ? impl::flip::convRGB8[(size_t)format] : impl::noflip::convRGB8[(size_t)format];
             f(bmp, res);
             break;
         case ImageIOFormat::RGBA_UI8:
@@ -137,7 +114,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         case ImageIOFormat::RGBA_F32:
         case ImageIOFormat::RGBA_F64:
             bmp = impl::makeRGBA(bmp);
-            f = impl::convRGBA8[(size_t)format];
+            f = flipV ? impl::flip::convRGBA8[(size_t)format] : impl::noflip::convRGBA8[(size_t)format];
             f(bmp, res);
             break;
         default:
@@ -147,43 +124,43 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat&
         }
         break;
     case FIT_UINT16:
-        f = impl::convUI16[(size_t)format];
+        f = flipV ? impl::flip::convUI16[(size_t)format] : impl::noflip::convUI16[(size_t)format];
         f(bmp, res);
         break;
     case FIT_INT16:
-        f = impl::convI16[(size_t)format];
+        f = flipV ? impl::flip::convI16[(size_t)format] : impl::noflip::convI16[(size_t)format];
         f(bmp, res);
         break;
     case FIT_UINT32:
-        f = impl::convUI32[(size_t)format];
+        f = flipV ? impl::flip::convUI32[(size_t)format] : impl::noflip::convUI32[(size_t)format];
         f(bmp, res);
         break;
     case FIT_INT32:
-        f = impl::convI32[(size_t)format];
+        f = flipV ? impl::flip::convI32[(size_t)format] : impl::noflip::convI32[(size_t)format];
         f(bmp, res);
         break;
     case FIT_FLOAT:
-        f = impl::convF32[(size_t)format];
+        f = flipV ? impl::flip::convF32[(size_t)format] : impl::noflip::convF32[(size_t)format];
         f(bmp, res);
         break;
     case FIT_DOUBLE:
-        f = impl::convF64[(size_t)format];
+        f = flipV ? impl::flip::convF64[(size_t)format] : impl::noflip::convF64[(size_t)format];
         f(bmp, res);
         break;
     case FIT_RGB16:
-        f = impl::convRGB16[(size_t)format];
+        f = flipV ? impl::flip::convRGB16[(size_t)format] : impl::noflip::convRGB16[(size_t)format];
         f(bmp, res);
         break;
     case FIT_RGBA16:
-        f = impl::convRGBA16[(size_t)format];
+        f = flipV ? impl::flip::convRGBA16[(size_t)format] : impl::noflip::convRGBA16[(size_t)format];
         f(bmp, res);
         break;
     case FIT_RGBF:
-        f = impl::convRGBF[(size_t)format];
+        f = flipV ? impl::flip::convRGBF[(size_t)format] : impl::noflip::convRGBF[(size_t)format];
         f(bmp, res);
         break;
     case FIT_RGBAF:
-        f = impl::convRGBAF[(size_t)format];
+        f = flipV ? impl::flip::convRGBAF[(size_t)format] : impl::noflip::convRGBAF[(size_t)format];
         f(bmp, res);
         break;
     case FIT_COMPLEX:
@@ -240,4 +217,3 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
 
     return true;
 }
-

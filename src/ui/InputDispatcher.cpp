@@ -1,51 +1,11 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
-#if defined(VORB_IMPL_UI_SDL)
-#if defined(OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif
-#else
-#include <GLFW/glfw3.h>
-#endif
-
+#include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
-#include "ui/KeyboardEventDispatcher.h"
+#include "KeyMappings.inl"
 
-namespace vorb {
-    namespace ui {
-        namespace impl {
-            class InputDispatcherEventCatcher {
-            public:
-#if defined(VORB_IMPL_UI_SDL)
-                static i32 onSDLEvent(void* userData, SDL_Event* e);
-#else
-                static void onMonitorEvent(GLFWmonitor*, int);
-                static void onFileDropEvent(GLFWwindow*, int, const cString*);
-                static void onKeyFocusEvent(GLFWwindow*, int);
-                static void onKeyEvent(GLFWwindow*, int, int, int, int);
-                static void onCharEvent(GLFWwindow*, unsigned int);
-                static void onMouseFocusEvent(GLFWwindow*, int);
-                static void onMousePosEvent(GLFWwindow*, f64, f64);
-                static void onMouseButtonEvent(GLFWwindow*, int, int, int);
-                static void onMouseScrollEvent(GLFWwindow*, f64, f64);
-                static void onWindowCloseEvent(GLFWwindow*);
-                static void onWindowPosEvent(GLFWwindow*, int, int);
-                static void onWindowSizeEvent(GLFWwindow*, int, int);
-                static void onFramebufferSizeEvent(GLFWwindow*, int, int);
-                static void onIconifyEvent(GLFWwindow*, int);
-                static vui::KeyModifiers mods;
-#endif
-            };
-        }
-    }
-}
-
-#if defined(VORB_IMPL_UI_SDL)
-// Empty
-#else
+#if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
 #endif
 
@@ -65,7 +25,7 @@ void vui::InputDispatcher::init(GameWindow* w) {
     SDL_SetEventFilter(impl::InputDispatcherEventCatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
     SDL_StartTextInput();
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
     glfwSetCharCallback(window, impl::InputDispatcherEventCatcher::onCharEvent);
     glfwSetCursorEnterCallback(window, impl::InputDispatcherEventCatcher::onMouseFocusEvent);
@@ -94,7 +54,7 @@ void vui::InputDispatcher::dispose() {
 #if defined(VORB_IMPL_UI_SDL)
     SDL_StopTextInput();
     SDL_SetEventFilter(nullptr, nullptr);
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
     GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
     glfwSetCharCallback(window, nullptr);
     glfwSetCursorEnterCallback(window, nullptr);
@@ -114,7 +74,7 @@ void vui::InputDispatcher::dispose() {
     m_window = nullptr;
 }
 
-#if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_UI_SDL) || defined(VORB_IMPL_UI_SFML)
 /// Memory-efficient way to split through multiple event types
 typedef union {
     vui::MouseEvent mouse;
@@ -126,7 +86,9 @@ typedef union {
     vui::WindowResizeEvent windowResize;
     vui::WindowFileEvent windowFile;
 } InputEvent;
+#endif
 
+#if defined(VORB_IMPL_UI_SDL)
 void convert(vui::KeyModifiers& km, const ui16& sm) {
 #define MASK_BOOL(F) ((F) == 0) ? false : true;
     km.lAlt = MASK_BOOL(sm & KMOD_LALT);
@@ -170,7 +132,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     switch (e->type) {
     case SDL_KEYDOWN:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
+        ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
@@ -179,7 +141,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         break;
     case SDL_KEYUP:
         convert(ie.key.mod, e->key.keysym.mod);
-        ie.key.keyCode = SDL_GetScancodeFromKey(e->key.keysym.sym);
+        ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
         vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
@@ -294,7 +256,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     }
     return 0;
 }
-#else
+#elif defined(VORB_IMPL_UI_GLFW)
 void vui::impl::InputDispatcherEventCatcher::onMonitorEvent(GLFWmonitor* monitor, int) {
     // Empty
     // TODO: Add support?
@@ -317,11 +279,13 @@ void vui::impl::InputDispatcherEventCatcher::onKeyFocusEvent(GLFWwindow*, int va
 }
 void vui::impl::InputDispatcherEventCatcher::onKeyEvent(GLFWwindow*, int key, int scan, int action, int mod) {
     // We don't want repeat events here
+    // TODO: Actually, we do... we can correctly calculate counts, duh
     if (action == GLFW_REPEAT) return;
 
     KeyEvent e;
-    e.keyCode = key;
+    e.keyCode = vui::impl::mapping[key + 1];
     e.scanCode = scan;
+    e.repeatCount = 0;
     switch (key) {
     case GLFW_KEY_LEFT_ALT:
         impl::InputDispatcherEventCatcher::mods.lAlt = action == GLFW_PRESS;
@@ -482,5 +446,166 @@ void vui::impl::InputDispatcherEventCatcher::onFramebufferSizeEvent(GLFWwindow*,
 void vui::impl::InputDispatcherEventCatcher::onIconifyEvent(GLFWwindow*, int value) {
     // Empty
     // TODO: Add support?
+}
+#elif defined(VORB_IMPL_UI_SFML)
+static void checkMods(sf::Keyboard::Key code, bool action) {
+    switch (code) {
+    case sf::Keyboard::Key::LAlt:
+        vui::impl::InputDispatcherEventCatcher::mods.lAlt = action;
+        break;
+    case sf::Keyboard::Key::RAlt:
+        vui::impl::InputDispatcherEventCatcher::mods.rAlt = action;
+        break;
+    case sf::Keyboard::Key::LControl:
+        vui::impl::InputDispatcherEventCatcher::mods.lCtrl = action;
+        break;
+    case sf::Keyboard::Key::RControl:
+        vui::impl::InputDispatcherEventCatcher::mods.rCtrl = action;
+        break;
+    case sf::Keyboard::Key::LSystem:
+        vui::impl::InputDispatcherEventCatcher::mods.lGUI = action;
+        break;
+    case sf::Keyboard::Key::RSystem:
+        vui::impl::InputDispatcherEventCatcher::mods.rGUI = action;
+        break;
+    case sf::Keyboard::Key::LShift:
+        vui::impl::InputDispatcherEventCatcher::mods.lShift = action;
+        break;
+    case sf::Keyboard::Key::RShift:
+        vui::impl::InputDispatcherEventCatcher::mods.rShift = action;
+        break;
+    default:
+        break;
+    }
+}
+static vui::MouseButton convert(sf::Mouse::Button b) {
+    switch (b) {
+    case sf::Mouse::Left:
+        return vui::MouseButton::LEFT;
+    case sf::Mouse::Right:
+        return vui::MouseButton::RIGHT;
+    case sf::Mouse::Middle:
+        return vui::MouseButton::MIDDLE;
+    case sf::Mouse::XButton1:
+        return vui::MouseButton::X1;
+    case sf::Mouse::XButton2:
+        return vui::MouseButton::X2;
+    default:
+        return vui::MouseButton::UNKNOWN;
+    }
+}
+void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userData, sf::Event& e) {
+    InputEvent ie = {};
+    sf::Vector2i sfv;
+    switch (e.type) {
+    case sf::Event::Closed:
+        vui::InputDispatcher::window.onClose();
+        vui::InputDispatcher::window.onEvent();
+        vui::InputDispatcher::onQuit();
+        break;
+    case sf::Event::GainedFocus:
+        vui::InputDispatcher::key.onFocusGained();
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::LostFocus:
+        vui::InputDispatcher::key.onFocusLost();
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::KeyPressed:
+        ie.key.keyCode = vui::impl::mapping[e.key.code + 1];
+        if (vui::InputDispatcher::key.m_state[ie.key.keyCode]) break;
+
+        checkMods(e.key.code, true);
+        ie.key.mod = mods;
+        ie.key.scanCode = ie.key.keyCode; // TODO: Fuck...
+        ie.key.repeatCount = 0; // TODO: Fuck me with a pickle
+        vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
+        vui::InputDispatcher::key.onKeyDown(ie.key);
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::KeyReleased:
+        checkMods(e.key.code, false);
+        ie.key.mod = mods;
+        ie.key.keyCode = vui::impl::mapping[e.key.code + 1];
+        ie.key.scanCode = ie.key.keyCode;
+        ie.key.repeatCount = 0;
+        vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
+        vui::InputDispatcher::key.onKeyUp(ie.key);
+        vui::InputDispatcher::key.onEvent();
+        break;
+    case sf::Event::MouseButtonPressed:
+        ie.mouseButton.x = e.mouseButton.x;
+        ie.mouseButton.y = e.mouseButton.y;
+        ie.mouseButton.button = convert(e.mouseButton.button);
+        ie.mouseButton.clicks = 1; // Ugh....
+        vui::InputDispatcher::mouse.onButtonDown(ie.mouseButton);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseButton);
+        break;
+    case sf::Event::MouseButtonReleased:
+        ie.mouseButton.x = e.mouseButton.x;
+        ie.mouseButton.y = e.mouseButton.y;
+        ie.mouseButton.button = convert(e.mouseButton.button);
+        ie.mouseButton.clicks = 1;
+        vui::InputDispatcher::mouse.onButtonUp(ie.mouseButton);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseButton);
+        break;
+    case sf::Event::MouseEntered:
+        sfv = sf::Mouse::getPosition(*userData);
+        ie.mouse.x = sfv.x;
+        ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setFocus(true);
+        vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
+        vui::InputDispatcher::mouse.onEvent(ie.mouse);
+        break;
+    case sf::Event::MouseLeft:
+        sfv = sf::Mouse::getPosition(*userData);
+        ie.mouse.x = sfv.x;
+        ie.mouse.y = sfv.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setFocus(false);
+        vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
+        vui::InputDispatcher::mouse.onEvent(ie.mouse);
+        break;
+    case sf::Event::MouseMoved:
+        ie.mouseMotion.x = e.mouseMove.x;
+        ie.mouseMotion.y = e.mouseMove.y;
+        ie.mouseMotion.dx = ie.mouseMotion.x - vui::InputDispatcher::mouse.m_lastPos.x;
+        ie.mouseMotion.dy = ie.mouseMotion.y - vui::InputDispatcher::mouse.m_lastPos.y;
+        if (ie.mouseMotion.dx == 0 && ie.mouseMotion.dy == 0) return;
+        vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
+        vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
+        vui::InputDispatcher::mouse.setPos(ie.mouseMotion.x, ie.mouseMotion.y);
+        vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
+        break;
+    case sf::Event::MouseWheelMoved:
+        ie.mouseWheel.dx = 0;
+        ie.mouseWheel.dy = e.mouseWheel.delta;
+        if (ie.mouseWheel.dx == 0 && ie.mouseWheel.dy == 0) return;
+        vui::InputDispatcher::mouse.m_fullScroll.x += ie.mouseWheel.dx;
+        vui::InputDispatcher::mouse.m_fullScroll.y += ie.mouseWheel.dy;
+        ie.mouseWheel.x = e.mouseWheel.x;
+        ie.mouseWheel.y = e.mouseWheel.y;
+        ie.mouseWheel.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
+        ie.mouseWheel.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+        vui::InputDispatcher::mouse.onWheel(ie.mouseWheel);
+        vui::InputDispatcher::mouse.onEvent(ie.mouseWheel);
+        break;
+    case sf::Event::Resized:
+        ie.windowResize.w = e.size.width;
+        ie.windowResize.h = e.size.height;
+        vui::InputDispatcher::window.onResize(ie.windowResize);
+        vui::InputDispatcher::window.onEvent();
+        break;
+    case sf::Event::TextEntered:
+        memcpy(ie.text.text, &e.text.unicode, sizeof(sf::Uint32));
+        ie.text.text[sizeof(sf::Uint32)] = 0;
+        vui::InputDispatcher::key.onText(ie.text);
+        vui::InputDispatcher::key.onEvent();
+        break;
+    default:
+        break;
+    }
 }
 #endif

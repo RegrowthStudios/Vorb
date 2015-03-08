@@ -62,7 +62,7 @@ RANGE_STRUCT(F64, f64);
 /* String Utilites                                                      */
 /************************************************************************/
 inline void convertWToMBString(const cwString ws, nString& resultString) {
-    i32 l = wcslen(ws);
+    size_t l = wcslen(ws);
     resultString.resize(l + 1);
     size_t numConverted = 0;
     #if defined(__APPLE__) || defined(__linux__)
@@ -74,7 +74,7 @@ inline void convertWToMBString(const cwString ws, nString& resultString) {
     resultString[l] = '\0';
 }
 inline const cwString convertMBToWString(const cString s) {
-    i32 l = strlen(s);
+    size_t l = strlen(s);
     cwString resultString = new wchar_t[l + 1];
     size_t numConverted = 0;
 #if defined(__APPLE__) || defined(__linux__)

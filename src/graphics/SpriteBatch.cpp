@@ -22,10 +22,14 @@ uv(0, 0),
 uvRect(0, 0, 0, 0),
 color(0, 0, 0, 0) {}
 
-vg::SpriteGlyph::SpriteGlyph() :
-SpriteGlyph(0, 0) {}
+vg::SpriteGlyph::SpriteGlyph() : SpriteGlyph(0, 0) {
+    // Empty
+}
 vg::SpriteGlyph::SpriteGlyph(ui32 texID, f32 d) :
-textureID(texID), depth(d) {}
+    textureID(texID),
+    depth(d) {
+    // Empty
+}
 
 vg::SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
     _bufUsage(isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),
@@ -315,26 +319,29 @@ void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendStat
 
     shader->use();
 
-    glUniformMatrix4fv(shader->getUniform("World"), 1, false, (f32*)&mWorld);
-    glUniformMatrix4fv(shader->getUniform("VP"), 1, false, (f32*)&mCamera);
+    glUniformMatrix4fv(shader->getUniform("World"), 1, false, &mWorld[0][0]);
+    glUniformMatrix4fv(shader->getUniform("VP"), 1, false, &mCamera[0][0]);
 
     glBindVertexArray(_vao);
 
     // Draw All The Batches
-    i32 bc = _batches.size();
-    for (int i = 0; i < bc; i++) {
+    size_t bc = _batches.size();
+    for (size_t i = 0; i < bc; i++) {
         SpriteBatchCall* batch = _batches[i];
 
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(shader->getUniform("SBTex"), 0);
         glBindTexture(GL_TEXTURE_2D, batch->textureID);
-        ss->setObject(0);
+        ss->set(GL_TEXTURE_2D);
 
         glDrawArrays(GL_TRIANGLES, batch->indexOffset, batch->indices);
     }
 
     glBindVertexArray(0);
-    glBindSampler(0, 0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
 
     shader->unuse();
 }
@@ -394,8 +401,8 @@ void vg::SpriteBatch::generateBatches() {
     verts[vi++] = _glyphs[0]->vtl;
     _glyphRecycler.recycle(_glyphs[0]);
 
-    int gc = _glyphs.size();
-    for (int i = 1; i < gc; i++) {
+    size_t gc = _glyphs.size();
+    for (size_t i = 1; i < gc; i++) {
         SpriteGlyph* glyph = _glyphs[i];
         call = call->append(glyph, _batches, &_batchRecycler);
         verts[vi++] = glyph->vtl;
@@ -462,11 +469,14 @@ void vg::SpriteBatch::createVertexArray() {
     glBufferData(GL_ARRAY_BUFFER, _glyphCapacity * 6 * sizeof(VertexSpriteBatch), nullptr, _bufUsage);
 
     _program->enableVertexAttribArrays();
-
-    glVertexAttribPointer(_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, position));
-    glVertexAttribPointer(_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, color));
-    glVertexAttribPointer(_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uv));
-    glVertexAttribPointer(_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uvRect));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, position));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, true, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, color));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uv));
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, false, sizeof(VertexSpriteBatch), (void*)offsetof(VertexSpriteBatch, uvRect));
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -476,12 +486,13 @@ void vg::SpriteBatch::createPixelTexture() {
     glBindTexture(GL_TEXTURE_2D, _texPixel);
     ui32 pix = 0xffffffffu;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pix);
+    vg::SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-
 void vg::SpriteBatch::disposeProgram() {
     if (_program) {
         _program->dispose();
+        delete _program;
         _program = nullptr;
     }
 }

@@ -28,41 +28,41 @@ namespace keg {
         { BasicType::C_STRING, "CString" }
     };
 
-    Value Value::basic(BasicType t, i32 off) {
+    Value Value::basic(size_t off, BasicType t) {
         Value kv = {};
         kv.type = t;
         kv.offset = off;
         kv.typeName.clear();
-        return kv;
+        return std::move(kv);
     }
-    Value Value::custom(nString t, i32 off, bool isEnum /*= false*/) {
+    Value Value::custom(size_t off, const nString& t, bool isEnum /*= false*/) {
         Value kv = {};
         kv.type = isEnum ? BasicType::ENUM : BasicType::CUSTOM;
         kv.offset = off;
         kv.typeName = t;
-        return kv;
+        return std::move(kv);
     }
-    Value Value::array(i32 off, const Value& interior) {
+    Value Value::array(size_t off, const Value& interior) {
         Value kv = {};
         kv.type = BasicType::ARRAY;
         kv.offset = off;
         kv.typeName.clear();
-        kv.interiorValue = new Value(interior);
-        return kv;
+        kv.interiorValue.reset(new Value(interior));
+        return std::move(kv);
     }
-    Value Value::array(i32 off, const BasicType& t) {
-        return array(off, Value::basic(t, 0));
+    Value Value::array(size_t off, const BasicType& t) {
+        return array(off, Value::basic(0, t));
     }
-    Value Value::ptr(i32 off, const Value& interior) {
+    Value Value::ptr(size_t off, const Value& interior) {
         Value kv = {};
         kv.type = BasicType::PTR;
         kv.offset = off;
         kv.typeName.clear();
-        kv.interiorValue = new Value(interior);
-        return kv;
+        kv.interiorValue.reset(new Value(interior));
+        return std::move(kv);
     }
-    Value Value::ptr(i32 off, const BasicType& t) {
-        return ptr(off, Value::basic(t, 0));
+    Value Value::ptr(size_t off, const BasicType& t) {
+        return ptr(off, Value::basic(0, t));
     }
 
     Type::Type() :
@@ -147,7 +147,7 @@ namespace keg {
 
 #define NUM_TYPE(TYPE, C_TYPE, NUM) \
     _internalTypes[(i32)BasicType::TYPE]._sizeInBytes = sizeof(C_TYPE); \
-    kv = Value::basic(BasicType::TYPE, sizeof(C_TYPE)* 0); \
+    kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE].addValue("value0", kv); \
     _internalTypes[(i32)BasicType::TYPE].addValue("x", kv); \
     _internalTypes[(i32)BasicType::TYPE].addValue("r", kv); \
@@ -156,7 +156,7 @@ namespace keg {
     addType(#TYPE, &_internalTypes[(i32)BasicType::TYPE]); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addSuper(&_internalTypes[(i32)BasicType::TYPE]); \
     _internalTypes[(i32)BasicType::TYPE##_V2]._sizeInBytes = sizeof(C_TYPE)* 2; \
-    kv = Value::basic(BasicType::TYPE, sizeof(C_TYPE)* 1); \
+    kv = Value::basic(sizeof(C_TYPE)* 1, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("value1", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("y", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("g", kv); \
@@ -165,7 +165,7 @@ namespace keg {
     addType(#TYPE"_V2", &_internalTypes[(i32)BasicType::TYPE##_V2]); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V2]); \
     _internalTypes[(i32)BasicType::TYPE##_V3]._sizeInBytes = sizeof(C_TYPE)* 3; \
-    kv = Value::basic(BasicType::TYPE, sizeof(C_TYPE)* 2); \
+    kv = Value::basic(sizeof(C_TYPE)* 2, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("value2", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("z", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("b", kv); \
@@ -174,20 +174,20 @@ namespace keg {
     addType(#TYPE"_V3", &_internalTypes[(i32)BasicType::TYPE##_V3]); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V3]); \
     _internalTypes[(i32)BasicType::TYPE##_V4]._sizeInBytes = sizeof(C_TYPE)* 4; \
-    kv = Value::basic(BasicType::TYPE, sizeof(C_TYPE)* 3); \
+    kv = Value::basic(sizeof(C_TYPE)* 3, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("value3", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("w", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("a", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("q", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("3", kv); \
     addType(#TYPE"_V4", &_internalTypes[(i32)BasicType::TYPE##_V4]); \
-    kv = Value::basic(BasicType::TYPE, sizeof(C_TYPE)* 0); \
+    kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE].addValue("value", kv); \
-    kv = Value::basic(BasicType::TYPE##_V2, sizeof(C_TYPE)* 0); \
+    kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE##_V2); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("value", kv); \
-    kv = Value::basic(BasicType::TYPE##_V3, sizeof(C_TYPE)* 0); \
+    kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE##_V3); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("value", kv); \
-    kv = Value::basic(BasicType::TYPE##_V4, sizeof(C_TYPE)* 0); \
+    kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE##_V4); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("value", kv) \
 
         NUM_TYPE(I8, i8, 0);
@@ -202,25 +202,25 @@ namespace keg {
         NUM_TYPE(F64, f64, 36);
 
         _internalTypes[(i32)BasicType::C_STRING]._sizeInBytes = sizeof(cString);
-        kv = Value::basic(BasicType::C_STRING, 0);
+        kv = Value::basic(0, BasicType::C_STRING);
         _internalTypes[(i32)BasicType::C_STRING].addValue("value", kv);
         _internalTypes[(i32)BasicType::C_STRING].addValue("string", kv);
         addType("CString", &_internalTypes[(i32)BasicType::C_STRING]);
 
         _internalTypes[(i32)BasicType::STRING]._sizeInBytes = sizeof(nString);
-        kv = Value::basic(BasicType::STRING, 0);
+        kv = Value::basic(0, BasicType::STRING);
         _internalTypes[(i32)BasicType::STRING].addValue("value", kv);
         _internalTypes[(i32)BasicType::STRING].addValue("string", kv);
         addType("String", &_internalTypes[(i32)BasicType::STRING]);
 
         _internalTypes[(i32)BasicType::BOOL]._sizeInBytes = sizeof(bool);
-        kv = Value::basic(BasicType::BOOL, 0);
+        kv = Value::basic(0, BasicType::BOOL);
         _internalTypes[(i32)BasicType::BOOL].addValue("value", kv);
         _internalTypes[(i32)BasicType::BOOL].addValue("bool", kv);
         addType("Bool", &_internalTypes[(i32)BasicType::BOOL]);
 
         _internalTypes[(i32)BasicType::ARRAY]._sizeInBytes = sizeof(ArrayBase);
-        kv = Value::array(0, Value::custom("", 0, 0));
+        kv = Value::array(0, Value::custom(0, "", 0));
         _internalTypes[(i32)BasicType::ARRAY].addValue("value", kv);
         _internalTypes[(i32)BasicType::ARRAY].addValue("array", kv);
         _internalTypes[(i32)BasicType::ARRAY].addValue("set", kv);
@@ -405,7 +405,7 @@ namespace keg {
         Type* type = env->getType(typeName);
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
-        // Undefined Behavior Time :)
+        // TODO: Undefined Behavior Time :)
         *dest = new ui8[type->getSizeInBytes()]();
 
         return parse((ui8*)*dest, value, doc, env, type);
@@ -445,9 +445,10 @@ namespace keg {
         if (keg::getSequenceSize(nArray) > 0) {
             dest->setData(keg::getSequenceSize(nArray));
             ui8* newDest = &dest->at<ui8>(0);
+            memset(newDest, 0, dest->size() * type->getSizeInBytes());
 
             auto f = createDelegate<size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
-                evalData(newDest, decl->interiorValue, node, doc, env);
+                evalData(newDest, decl->interiorValue.get(), node, doc, env);
                 doc.free(node);
                 newDest += type->getSizeInBytes();
             });
@@ -633,5 +634,16 @@ namespace keg {
     Environment* getGlobalEnvironment() {
         if (!kegGE) kegGE = new Environment;
         return kegGE;
+    }
+
+    Type& getType(bool& initialized, Type& type, bool (*fInit)()) {
+        if (initialized) return type;
+        initialized = fInit();
+        return type;
+    }
+    Enum& getEnum(bool& initialized, Enum& type, bool (*fInit)()) {
+        if (initialized) return type;
+        initialized = fInit();
+        return type;
     }
 }

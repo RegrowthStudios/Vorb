@@ -63,7 +63,6 @@ namespace vorb {
             /// Create and possibly initialize program
             /// @param init: True to call init()
             GLProgram(bool init = false);
-            ~GLProgram();
 
             /// Create GPU resources
             void init();

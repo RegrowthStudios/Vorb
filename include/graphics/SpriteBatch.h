@@ -16,7 +16,7 @@
 #define SpriteBatch_h__
 
 #include "../PtrRecycler.hpp"
-#include "../Vorb.h"
+#include "../VorbPreDecl.inl"
 #include "gtypes.h"
 
 namespace vorb {
@@ -120,7 +120,7 @@ namespace vorb {
             // Render Batches
             ui32 _bufUsage;
             ui32 _vao, _vbo;
-            i32 _glyphCapacity;
+            size_t _glyphCapacity;
             std::vector<SpriteBatchCall*> _batches;
             PtrRecycler<SpriteBatchCall> _batchRecycler;
 

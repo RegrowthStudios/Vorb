@@ -3,10 +3,12 @@
 
 #include <boost/filesystem.hpp>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(VORB_IMPL_FONT_SDL)
+#if defined(OS_WINDOWS)
 #include <TTF/SDL_ttf.h>
 #else
 #include <SDL2_ttf/SDL_ttf.h>
+#endif
 #endif
 
 #include "graphics/GraphicsDevice.h"
@@ -23,13 +25,17 @@ i32 closestPow2(i32 i) {
     return pi;
 }
 
-vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
+void vg::SpriteFont::init(const cString font, ui32 size, char cs, char ce) {
+#if defined(VORB_IMPL_FONT_SDL)
     TTF_Font* f = TTF_OpenFont(font, size);
     if (!f) {
         std::cerr << "Failed to open font " << font << "\n";
-        throw 88;
+        std::cerr << "Error: " << TTF_GetError() << std::endl;
+        return;
     }
     _fontHeight = TTF_FontHeight(f);
+    SDL_Color fg = { 255, 255, 255, 255 };
+#endif
     _regStart = cs;
     _regLength = ce - cs + 1;
     ui32 padding = size / 8;
@@ -39,7 +45,9 @@ vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     size_t i = 0;
     i32 advance;
     for (char c = cs; c <= ce; c++) {
+#if defined(VORB_IMPL_FONT_SDL)
         TTF_GlyphMetrics(f, c, &glyphRects[i].x, &glyphRects[i].z, &glyphRects[i].y, &glyphRects[i].w, &advance);
+#endif
         glyphRects[i].z -= glyphRects[i].x;
         glyphRects[i].x = 0;
         glyphRects[i].w -= glyphRects[i].y;
@@ -90,15 +98,14 @@ vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bestWidth, bestHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Now Draw All The Glyphs
-    SDL_Color fg = { 255, 255, 255, 255 };
     ui32 ly = padding;
     for (size_t ri = 0; ri < bestRows; ri++) {
         ui32 lx = padding;
         for (size_t ci = 0; ci < bestPartition[ri].size(); ci++) {
             ui32 gi = bestPartition[ri][ci];
 
+#if defined(VORB_IMPL_FONT_SDL)
             SDL_Surface* glyphSurface = TTF_RenderGlyph_Blended(f, (char)(cs + gi), fg);
-
             // Pre-multiplication Occurs Here
             ubyte* sp = (ubyte*)glyphSurface->pixels;
             ui32 cp = glyphSurface->w * glyphSurface->h * 4;
@@ -118,6 +125,7 @@ vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
 
             SDL_FreeSurface(glyphSurface);
             glyphSurface = nullptr;
+#endif
 
             lx += glyphRects[gi].z + padding;
         }
@@ -161,7 +169,10 @@ vg::SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     glBindTexture(GL_TEXTURE_2D, 0);
     delete[] glyphRects;
     delete[] bestPartition;
+
+#if defined(VORB_IMPL_FONT_SDL)
     TTF_CloseFont(f);
+#endif
 }
 
 void vg::SpriteFont::dispose() {
@@ -179,6 +190,7 @@ void vg::SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDicti
 #ifdef DEBUG
     ui32 startTime = SDL_GetTicks(), searchCount = 0;
 #endif // DEBUG
+
     boost::filesystem::path fontDirectory(getenv("SystemRoot"));
     fontDirectory /= "Fonts";
     boost::filesystem::directory_iterator dirIter(fontDirectory);
@@ -224,7 +236,7 @@ std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui
     }
 
     // Loop Through All Glyphs
-    for (size_t i = 0; i < rectsLength; i++) {
+    for (ui32 i = 0; i < rectsLength; i++) {
         // Find Row For Placement
         size_t ri = 0;
         for (size_t rii = 1; rii < r; rii++)

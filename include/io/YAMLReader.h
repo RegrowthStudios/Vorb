@@ -54,11 +54,11 @@ namespace keg {
         /// Performs an operation on each node in a mapped node
         /// @param node: Node map
         /// @param f: Function to be invoked on each element - (key, value) -> void
-        void forAllInMap(Node node, IDelegate<const nString&, Node>* f);
+        void forAllInMap(Node node, Delegate<Sender, const nString&, Node>* f);
         /// Performs an operation on each node in a node array
         /// @param node: Node array
         /// @param f: Function to be invoked on each element - (index, value) -> void
-        void forAllInSequence(Node node, IDelegate<size_t, Node>* f);
+        void forAllInSequence(Node node, Delegate<Sender, size_t, Node>* f);
     private:
         Node m_first; ///< The root node in the data
         std::unordered_set<Node> m_allocated; ///< List of allocated nodes

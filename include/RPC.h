@@ -22,7 +22,7 @@
 
 namespace vorb {
     namespace core {
-        typedef IDelegate<void*> RPCFunction; ///< Supported RPC function prototype
+        typedef Delegate<Sender, void*> RPCFunction; ///< Supported RPC function prototype
 
         struct RPCData {
             RPCFunction* f = nullptr; ///< Function to invoke on separate thread

@@ -447,7 +447,7 @@ namespace keg {
             ui8* newDest = &dest->at<ui8>(0);
             memset(newDest, 0, dest->size() * type->getSizeInBytes());
 
-            auto f = createDelegate<size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
+            auto f = makeFunctor<Sender, size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
                 evalData(newDest, decl->interiorValue.get(), node, doc, env);
                 doc.free(node);
                 newDest += type->getSizeInBytes();
@@ -528,7 +528,7 @@ namespace keg {
         if (!type) return Error::TYPE_NOT_FOUND;
 
         // Iterate Values
-        auto f = createDelegate<const nString&, keg::Node>([&] (Sender, const nString& valName, keg::Node node) {
+        auto f = makeFunctor<Sender, const nString&, keg::Node>([&] (Sender, const nString& valName, keg::Node node) {
             const Value* v = type->getValue(valName);
             if (v) evalData(dest + v->offset, v, node, doc, env);
         });

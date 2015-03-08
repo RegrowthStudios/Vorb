@@ -46,9 +46,6 @@ static ui32 getCurrentTime() {
 #include "InputDispatcherEventCatcher.h"
 
 vui::MainGame::MainGame() : _fps(0) {
-    m_fOnQuit = createDelegate<>([=] (Sender) {
-        m_signalQuit = true;
-    });
 }
 vui::MainGame::~MainGame() {
     // Empty
@@ -59,7 +56,7 @@ bool vui::MainGame::initSystems() {
     if (!_window.init()) return false;
 
     // Initialize input
-    vui::InputDispatcher::onQuit += m_fOnQuit;
+    vui::InputDispatcher::onQuit += makeDelegate(*this, &MainGame::onQuit);
 
     // Get The Machine's Graphics Capabilities
     _gDevice = new vg::GraphicsDevice(_window.getHandle());
@@ -150,8 +147,7 @@ void vui::MainGame::exitGame() {
     if (_screenList) {
         _screenList->destroy(_lastTime);
     }
-    vui::InputDispatcher::onQuit -= m_fOnQuit;
-    delete m_fOnQuit;
+    vui::InputDispatcher::onQuit -= makeDelegate(*this, &MainGame::onQuit);
     _window.dispose();
     _isRunning = false;
 }
@@ -238,4 +234,8 @@ void vui::MainGame::onRenderFrame() {
     if (_screen != nullptr && _screen->getState() == ScreenState::RUNNING) {
         _screen->draw(_curTime);
     }
+}
+
+void vui::MainGame::onQuit(Sender) {
+    m_signalQuit = true;
 }

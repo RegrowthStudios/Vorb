@@ -45,11 +45,11 @@ public:
 
     virtual void onEntry(const vui::GameTime& gameTime) {
         m_imageFormat = m_testFormats[0];
-        m_hooks.addAutoHook(&vui::InputDispatcher::window.onFile, [&] (Sender, const vui::WindowFileEvent& e) {
+        m_hooks.addAutoHook(vui::InputDispatcher::window.onFile, [&] (Sender, const vui::WindowFileEvent& e) {
             auto bmp = vg::ImageIO().load(e.file, m_imageFormat.format);
             this->m_bmp = bmp;
         });
-        m_hooks.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+        m_hooks.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
             switch (e.keyCode) {
             case VKEY_1:
             case VKEY_2:
@@ -225,7 +225,7 @@ public:
     virtual void build() {
         pitchInput = 0;
         yawInput = 0;
-        pool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+        pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
             if (e.repeatCount > 0) return;
             switch (e.keyCode) {
             case VKEY_W: pitchInput += 1; break;
@@ -234,7 +234,7 @@ public:
             case VKEY_D: yawInput += 1; break;
             }
         });
-        pool.addAutoHook(&vui::InputDispatcher::key.onKeyUp, [&] (Sender, const vui::KeyEvent& e) {
+        pool.addAutoHook(vui::InputDispatcher::key.onKeyUp, [&] (Sender, const vui::KeyEvent& e) {
             switch (e.keyCode) {
             case VKEY_W: pitchInput -= 1; break;
             case VKEY_S: pitchInput += 1; break;

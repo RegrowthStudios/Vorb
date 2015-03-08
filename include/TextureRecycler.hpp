@@ -24,6 +24,8 @@ namespace vorb {
     namespace core {
         namespace graphics {
 
+            class SamplerState;
+
             class TextureRecycler {
             public:
                 /// Constructor

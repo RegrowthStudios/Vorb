@@ -53,6 +53,8 @@ public:
         if (m_length > 0) {
             // Create a new internal array
             m_sharedData.reset(new ui8[m_elementSize * m_length], [] (ui8* p) { delete[] p; });
+            // Zero the memory
+            memset(m_sharedData.get(), 0, m_elementSize * m_length);
             m_data = m_sharedData.get();
 
             // Copy data

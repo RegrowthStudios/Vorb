@@ -15,57 +15,216 @@
 #ifndef Events_h__
 #define Events_h__
 
-typedef const void* Sender;
+typedef const void* Sender; ///< A pointer to an object that sent the event
+template<typename... Params> class Event;
 
-/// This is the main function pointer
-/// @tparam Params: Additional metadata used in delegate invocation
-template<typename... Params>
-class IDelegate {
+template<typename Ret, typename... Args>
+class RDelegate {
+    template<typename... Params> friend class Event;
 public:
-    virtual ~IDelegate() {
-        // Empty
-    }
-    /// Invoke this function's code
-    /// @param sender: The sender that underlies the event
-    /// @param p: Additional arguments to function
-    virtual void invoke(Sender sender, Params... p) = 0;
-};
+    typedef void* Caller;
+    typedef void* Function;
+    typedef Ret(*CallStub)(Caller, Function, Args...); ///< Function type for a stub
+    typedef void(*Deleter)(Caller);
 
-/// Functor object to hold instances of anonymous lambdas
-/// @tparam F: Auto-generated lambda function type
-/// @tparam Params: Additional metadata used in delegate invocation
-template<typename F, typename... Params>
-class Delegate : public IDelegate<Params...> {
-public:
-    /// Empty constructor
-    Delegate() {
+    RDelegate(Caller c, Function f, CallStub s, Deleter d) :
+        m_caller(c),
+        m_func(f),
+        m_stub(s),
+        m_deletion(d) {
         // Empty
     }
-    /// Copy constructor
-    /// @param f: Lambda functor
-    Delegate(F& f) :
-        m_f(f) {
+    RDelegate() :
+        m_stub(simpleCall),
+        m_deletion(doNothing) {
         // Empty
+    }
+    ~RDelegate() {
+        m_deletion(m_caller);
     }
 
-    /// Invoke this functor's code
-    /// @param sender: The sender that underlies the event
-    /// @param p: Additional arguments to function
-    virtual void invoke(Sender sender, Params... p) override {
-        m_f(sender, p...);
+    template<typename T>
+    static RDelegate create(const T* o, Ret(T::*f)(Args...) const) {
+        return RDelegate(const_cast<T*>(o), *(Function*)&f, objectCall<T>, doNothing);
     }
+    template<typename T>
+    static RDelegate* createCopy(const T* o, Ret(T::*f)(Args...) const) {
+        T* no = (T*)operator new(sizeof(T));
+        new (no)T(*o);
+        return new RDelegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+    }
+    template<typename T>
+    static RDelegate create(T* o, Ret(T::*f)(Args...)) {
+        return RDelegate(o, *(Function*)&f, objectCall<T>, doNothing);
+    }
+    template<typename T>
+    static RDelegate* createCopy(T* o, Ret(T::*f)(Args...)) {
+        T* no = (T*)operator new(sizeof(T));
+        new (no) T(*o);
+        return new RDelegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+    }
+    static RDelegate create(Ret(*f)(Args...)) {
+        return RDelegate(nullptr, f, simpleCall, doNothing);
+    }
+
+    Ret invoke(Args... args) const {
+        return m_stub(m_caller, m_func, args...);
+    }
+    Ret operator()(Args... args) const {
+        return m_stub(m_caller, m_func, args...);
+    }
+
+    bool operator==(const RDelegate& other) const {
+        return m_func == other.m_func && m_caller == other.m_caller;
+    }
+    bool operator!=(const RDelegate& other) const {
+        return m_func != other.m_func || m_caller != other.m_caller;
+    }
+protected:
+    template<typename T>
+    static Ret objectCall(Caller obj, Function func, Args... args) {
+        typedef Ret(T::*fType)(Args...);
+        
+        // Properly cast internal values
+        auto p = static_cast<T*>(obj);
+        fType f = *(fType*)&func;
+
+        // Call function using object
+        return (p->*f)(args...);
+    }
+    static Ret simpleCall(Caller obj, Function func, Args... args) {
+        typedef Ret(*fType)(Args...);
+
+        // Call function
+        return ((fType)func)(args...);
+    }
+
+    static void doNothing(Caller c) {
+        // Empty
+    }
+    template<typename T>
+    static void freeObject(Caller c) {
+        T* obj = (T*)c;
+        obj->~T();
+        operator delete(c);
+    }
+
+    void neuter() {
+        m_deletion = doNothing;
+    }
+    template<typename T>
+    void engorge() {
+        m_deletion = freeObject<T>;
+    }
+
+    Caller m_caller;
+    Function m_func;
 private:
-    F m_f; ///< Type-inferenced lambda functor
+    Deleter m_deletion;
+    CallStub m_stub;
 };
 
-/// Use the compiler to generate a delegate
-/// @param f: Lambda functor
-/// @tparam F: Auto-generated lambda function type
-/// @tparam Params: Additional metadata used in delegate invocation
-/// @return Pointer to delegate created on the heap (CALLER DELETE)
-template<typename... Params, typename F>
-inline IDelegate<Params...>* createDelegate(F f) {
-    return new Delegate<F, Params...>(f);
+template<typename... Args>
+class Delegate : public RDelegate<void, Args...> {
+public:
+    Delegate(Caller c, Function f, CallStub s, Deleter d) : RDelegate<void, Args...>(c, f, s, d) {
+        // Empty
+    }
+    Delegate() : RDelegate<void, Args...>() {
+        // Empty
+    }
+
+    template<typename T>
+    static Delegate create(const T* o, void(T::*f)(Args...) const) {
+        return Delegate(const_cast<T*>(o), *(Function*)&f, objectCall<T>, doNothing);
+    }
+    template<typename T>
+    static Delegate* createCopy(const T* o, void(T::*f)(Args...) const) {
+        T* no = (T*)operator new(sizeof(T));
+        new (no)T(*o);
+        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+    }
+    template<typename T>
+    static Delegate create(T* o, void(T::*f)(Args...)) {
+        return Delegate(o, *(Function*)&f, objectCall<T>, doNothing);
+    }
+    template<typename T>
+    static Delegate* createCopy(T* o, void(T::*f)(Args...)) {
+        T* no = (T*)operator new(sizeof(T));
+        new (no)T(*o);
+        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+    }
+    static Delegate create(void(*f)(Args...)) {
+        return Delegate(nullptr, f, simpleCall, doNothing);
+    }
+};
+
+template<typename Ret, typename... Args>
+RDelegate<Ret, Args...> makeRDelegate(Ret(*f)(Args...)) {
+    return RDelegate<Ret, Args...>::create(f);
+}
+template<typename T, typename Ret, typename... Args>
+RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)const) {
+    return RDelegate<Ret, Args...>::create<T>(&obj, f);
+}
+template<typename T, typename Ret, typename... Args>
+RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)) {
+    return RDelegate<Ret, Args...>::create<T>(&obj, f);
+}
+template<typename Ret, typename... Args, typename F>
+RDelegate<Ret, Args...> makeRDelegate(F& obj) {
+    typedef Ret(F::*fType)(Args...) const;
+    fType f = &F::operator();
+    return RDelegate<Ret, Args...>::create<F>(&obj, f);
+}
+
+template<typename Ret, typename... Args, typename F>
+RDelegate<Ret, Args...>* makeRFunctor(F& obj) {
+    typedef Ret(F::*fType)(Args...) const;
+    fType f = &F::operator();
+    return RDelegate<Ret, Args...>::createCopy<F>(&obj, f);
+}
+template<typename T, typename Ret, typename... Args>
+RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)const) {
+    return RDelegate<Ret, Args...>::createCopy<T>(&obj, f);
+}
+template<typename T, typename Ret, typename... Args>
+RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)) {
+    return RDelegate<Ret, Args...>::createCopy<T>(&obj, f);
+}
+
+template<typename... Args>
+Delegate<Args...> makeDelegate(void(*f)(Args...)) {
+    return Delegate<Args...>::create(f);
+}
+template<typename T, typename... Args>
+Delegate<Args...> makeDelegate(T& obj, void(T::*f)(Args...)const) {
+    return Delegate<Args...>::create<T>(&obj, f);
+}
+template<typename T, typename... Args>
+Delegate<Args...> makeDelegate(T& obj, void(T::*f)(Args...)) {
+    return Delegate<Args...>::create<T>(&obj, f);
+}
+template<typename... Args, typename F>
+Delegate<Args...> makeDelegate(F& obj) {
+    typedef void(F::*fType)(Args...) const;
+    fType f = &F::operator();
+    return Delegate<Args...>::create<F>(&obj, f);
+}
+
+template<typename... Args, typename F>
+Delegate<Args...>* makeFunctor(F& obj) {
+    typedef void(F::*fType)(Args...) const;
+    fType f = &F::operator();
+    return Delegate<Args...>::createCopy<F>(&obj, f);
+}
+template<typename T, typename... Args>
+Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)const) {
+    return Delegate<Args...>::createCopy<T>(&obj, f);
+}
+template<typename T, typename... Args>
+Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)) {
+    return Delegate<Args...>::createCopy<T>(&obj, f);
 }
 
 /// An event that invokes methods taking certain arguments
@@ -73,7 +232,7 @@ inline IDelegate<Params...>* createDelegate(F f) {
 template<typename... Params>
 class Event {
 public:
-    typedef IDelegate<Params...>* Listener; ///< Callback delegate type
+    typedef RDelegate<void, Sender, Params...> Listener; ///< Callback delegate type
 
     /// Create an event with a sender attached to it
     /// @param sender: Owner object sent with each invokation
@@ -86,7 +245,7 @@ public:
     /// @param p: Arguments used in function calls
     void send(Params... p) {
         for (auto& f : m_funcs) {
-            f->invoke(m_sender, p...);
+            f(m_sender, p...);
         }
     }
     /// Call all bound methods
@@ -98,61 +257,51 @@ public:
     /// Add a function to this event
     /// @param f: A subscriber
     /// @return The delegate passed in
-    Listener add(const Listener f) {
-        if (f == nullptr) return nullptr;
+    Event& add(Listener f) {
+        f.neuter();
         m_funcs.push_back(f);
-        return f;
+        return *this;
     }
     /// Add a function to this event
     /// @param f: A unknown-type subscriber
     /// @tparam F: Functor type
     /// @return The newly made delegate (CALLER DELETE)
     template<typename F>
-    Listener addFunctor(F f) {
-        Listener d = new Delegate<F, Params...>(f);
-        return this->add(d);
+    Listener* addFunctor(F f) {
+        Listener* functor = makeRFunctor<void, Sender, Params...>(f);
+        this->add(*functor);
+        return functor;
     }
     /// Add a function to this event whilst allowing chaining
     /// @param f: A subscriber
     /// @return Self
-    Event& operator +=(Listener f) {
-        add(f);
-        return *this;
+    Event& operator +=(const Listener& f) {
+        return add(f);
     }
 
     /// Remove a function (just one) from this event
     /// @param f: A subscriber
-    void remove(const Listener f) {
-        if (f == nullptr) return;
+    Event& remove(const Listener& f) {
         auto fLoc = std::find(m_funcs.begin(), m_funcs.end(), f);
-        if (fLoc == m_funcs.end()) return;
+        if (fLoc == m_funcs.end()) return *this;
         m_funcs.erase(fLoc);
+        return *this;
     }
     /// Remove a function (just one) from this event whilst allowing chaining
     /// @param f: A subscriber
     /// @return Self
-    Event& operator -=(const Listener f) {
-        remove(f);
-        return *this;
-    }
-    /// Remove a function (just one) from this event
-    /// @param f: A subscriber
-    /// @pre: f must be of the correct delegate type
-    void removeUnsafe(const void* f) {
-        remove((Listener)f);
+    Event& operator -=(const Listener& f) {
+        return remove(f);
     }
 private:
     Sender m_sender; ///< Event owner
     std::vector<Listener> m_funcs; ///< List of bound functions (subscribers)
 };
 
-typedef void* UnknownDelegate; ///< The only way to access an unknown delegate type
-typedef std::vector<UnknownDelegate> UnknownDelegatePool; ///< List of unknown delegates
-
 /// Manages destruction of generated delegates
 class AutoDelegatePool {
 public:
-    typedef IDelegate<>* Deleter; ///< A deletion function prototype
+    typedef Delegate<>* Deleter; ///< A deletion function prototype
     typedef std::vector<Deleter> DeleterList; ///< A container of deleters
 
     /// Calls dispose
@@ -166,10 +315,11 @@ public:
     /// @param e: Event
     /// @param f: Callback function
     template<typename F, typename... Params>
-    void addAutoHook(Event<Params...>* e, F f) {
-        IDelegate<Params...>* fd = e->template addFunctor<F>(f);
-        IDelegate<>* d = createDelegate<>([=] (Sender) {
-            e->remove(fd);
+    void addAutoHook(Event<Params...>& e, F f) {
+        auto fd = e.addFunctor<F>(f);
+
+        Deleter d = makeFunctor<>([fd, &e] () {
+            e -= *fd;
             delete fd;
         });
         m_deletionFunctions.push_back(d);
@@ -177,8 +327,8 @@ public:
 
     /// Properly disposes all delegates added to this pool
     void dispose() {
-        for (auto& f : m_deletionFunctions) {
-            f->invoke(nullptr);
+        for (auto f : m_deletionFunctions) {
+            f->invoke();
             delete f;
         }
         DeleterList().swap(m_deletionFunctions);

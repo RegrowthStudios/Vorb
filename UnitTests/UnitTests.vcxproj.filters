@@ -71,6 +71,9 @@
     <ClCompile Include="VorbScript.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="QD.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

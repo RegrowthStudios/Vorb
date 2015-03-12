@@ -65,7 +65,9 @@ void vg::ImageIO::free(const BitmapResource& res) {
     delete[] res.bytesUI8;
 }
 
-vg::BitmapResource vg::ImageIO::load(const vio::Path& path, const ImageIOFormat& format, bool flipV /*= false*/) {
+vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
+                                     const ImageIOFormat& format /* = ImageIOFormat::RGBA_UI8 */,
+                                     bool flipV /*= false*/) {
     BitmapResource res = {};
     res.data = nullptr;
 

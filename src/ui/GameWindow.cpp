@@ -120,9 +120,11 @@ bool vui::GameWindow::init() {
     SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     m_glc = new D3DContext;
+
+    // Make COM object for D3D initialization
     VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
 
-    {
+    { // Create D3D device context
         D3DPRESENT_PARAMETERS pp = {};
         pp.hDeviceWindow = GetActiveWindow();
         pp.Windowed = TRUE;
@@ -154,22 +156,30 @@ bool vui::GameWindow::init() {
     m_glc = m_window;
 #endif
 
+    // Check for a valid context
     if (m_glc == nullptr) {
         printf("Could Not Create OpenGL Context");
         return false;
     }
 
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         printf("Glew failed to initialize. Your graphics card is probably WAY too old. Or you forgot to extract the .zip. It might be time for an upgrade :)");
         return false;
     }
 
+    // Create default clear values
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearDepth(1.0f);
+
+    // Initialize Frame Buffer
+    glViewport(0, 0, _window.getWidth(), _window.getHeight());
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+
+#endif
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
-
-    // Make sure default clear depth is 1.0f
-    glClearDepth(1.0f);
 
     // Push input from this window
     vui::InputDispatcher::init(this);

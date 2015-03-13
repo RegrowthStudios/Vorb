@@ -64,17 +64,17 @@ bool vui::MainGame::initSystems() {
     _gDevice = new vg::GraphicsDevice(_window.getHandle());
     _gDevice->refreshInformation();
 
-    // Set A Default OpenGL State
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClearDepth(1.0);
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // TODO: Replace With BlendState
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Set A Default OpenGL State
     vg::DepthState::FULL.set();
     vg::RasterizerState::CULL_CLOCKWISE.set();
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
 
-    // Initialize Frame Buffer
-    glViewport(0, 0, _window.getWidth(), _window.getHeight());
+#endif
 
     // Initialize Fonts Library
 #if defined(VORB_IMPL_FONT_SDL)

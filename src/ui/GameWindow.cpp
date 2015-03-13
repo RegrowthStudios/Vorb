@@ -181,10 +181,17 @@ void vui::GameWindow::dispose() {
     saveSettings();
 
 #if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     if (m_glc) {
         SDL_GL_DeleteContext((SDL_GLContext)m_glc);
         m_glc = nullptr;
     }
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    if (m_glc) {
+        VUI_CONTEXT(m_glc)->Release();
+        VUI_COM(m_glc)->Release();
+    }
+#endif
     if (m_window) {
         SDL_DestroyWindow(VUI_WINDOW_HANDLE(m_window));
         m_window = nullptr;

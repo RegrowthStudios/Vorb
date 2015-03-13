@@ -464,6 +464,7 @@
     <ClInclude Include="include\graphics\AnimationData.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -591,6 +592,7 @@
     <None Include="src\graphics\ImageIOConvF.inl">
       <Filter>Graphics\IO</Filter>
     </None>
+    <None Include="src\ImplGraphicsH.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

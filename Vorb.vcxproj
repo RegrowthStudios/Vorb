@@ -358,6 +358,7 @@
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
     <ClInclude Include="include\examples\VorbKeg.h" />
+    <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
     <ClInclude Include="include\graphics\SpriteBatch.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
@@ -421,6 +422,7 @@
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />
     <None Include="src\graphics\SpriteBatchShader.inl" />
+    <None Include="src\ImplGraphicsH.inl" />
     <None Include="src\io\YAMLInternal.inl" />
     <None Include="include/IntersectionUtils.inl" />
     <None Include="src\ui\KeyMappings.inl" />

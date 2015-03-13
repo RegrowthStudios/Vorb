@@ -36,6 +36,8 @@ static ui32 getCurrentTime() {
 // TODO: FreeType?
 #endif
 
+#include "../ImplGraphicsH.inl"
+
 #include "graphics/GLStates.h"
 #include "ui/IGameScreen.h"
 #include "ui/InputDispatcher.h"
@@ -92,7 +94,12 @@ void vui::MainGame::run() {
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK);
 
     // Make sure we are using hardware acceleration
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    // Empty
+#endif
+
 #elif defined(VORB_IMPL_UI_GLFW)
     glfwInit();
 #elif defined(VORB_IMPL_UI_SFML)
@@ -115,8 +122,13 @@ void vui::MainGame::run() {
             checkInput();
             if (!_isRunning) break;
             onUpdateFrame();
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
             onRenderFrame();
-
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+            VG_DX_DEVICE(_window.getContext())->BeginScene();
+            onRenderFrame();
+            VG_DX_DEVICE(_window.getContext())->EndScene();
+#endif
             // Swap buffers
             ui32 curMS = MS_TIME;
             _window.sync(curMS - _lastMS);
@@ -129,7 +141,7 @@ void vui::MainGame::run() {
 #if defined(VORB_IMPL_FONT_SDL)
     TTF_Quit();
 #else
-    // TODO: FreeType
+    // TODO(Cristian): FreeType
 #endif
 
 #if defined(VORB_IMPL_UI_SDL)
@@ -229,8 +241,23 @@ void vui::MainGame::onUpdateFrame() {
 }
 
 void vui::MainGame::onRenderFrame() {
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // TODO: Investigate Removing This
     glViewport(0, 0, _window.getWidth(), _window.getHeight());
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    {
+#if defined(VORB_DX_9)
+        D3DVIEWPORT9 vp;
+        vp.X = 0;
+        vp.Y = 0;
+        vp.Width = _window.getWidth();
+        vp.Height = _window.getHeight();
+        vp.MinZ = 0.0f;
+        vp.MaxZ = 1.0f;
+        VG_DX_DEVICE(_window.getContext())->SetViewport(&vp);
+#endif
+    }
+#endif
     if (_screen != nullptr && _screen->getState() == ScreenState::RUNNING) {
         _screen->draw(_curTime);
     }

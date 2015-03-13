@@ -72,9 +72,9 @@
 #error Please define VORB_IMPL_GRAPHICS (OPENGL | D3D)
 #endif
 #if defined(VORB_IMPL_GRAPHICS_D3D)
-#if !defined(VORB_DX_9) && \
-    !defined(VORB_DX_11)
+#if !defined(VORB_DX_9) && !defined(VORB_DX_11)
 #define VORB_DX_9
+#endif
 #endif
 
 #endif // !Vorb_stdafx_h__

@@ -174,10 +174,11 @@ bool vui::GameWindow::init() {
     glClearDepth(1.0f);
 
     // Initialize Frame Buffer
-    glViewport(0, 0, _window.getWidth(), _window.getHeight());
+    glViewport(0, 0, getWidth(), getHeight());
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
-
+    // TODO(Cristian): Place some defaults?
 #endif
+
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
 

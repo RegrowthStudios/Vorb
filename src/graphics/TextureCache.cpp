@@ -67,6 +67,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                    OUT vg::BitmapResource& rvBitmap,
+                   vg::ImageIOFormat rvFormat,
                    SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
                    vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
                    vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
@@ -80,7 +81,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Load the pixel data
-    rvBitmap = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
+    rvBitmap = vg::ImageIO().load(texPath.getString(), rvFormat);
     if (!rvBitmap.data) return Texture();
     texture.width = rvBitmap.width;
     texture.height = rvBitmap.height;

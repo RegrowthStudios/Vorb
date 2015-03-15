@@ -38,7 +38,6 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
     vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
     i32 mipmapLevels /* = INT_MAX */) {
-
     // Get absolute path
     vio::Path texPath; 
     resolvePath(filePath, texPath);
@@ -59,6 +58,39 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
         internalFormat,
         textureFormat,
         mipmapLevels);
+    vg::ImageIO().free(bmp);
+
+    // Store the texture in the cache
+    insertTexture(texPath, texture);
+    return texture;
+}
+
+vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
+                   OUT vg::BitmapResource& rvBitmap,
+                   SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+                   vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+                   vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                   i32 mipmapLevels /* = INT_MAX */) {
+    // Get absolute path
+    vio::Path texPath;
+    resolvePath(filePath, texPath);
+
+    // Check if its already cached
+    Texture texture = findTexture(texPath);
+    if (texture.id) return texture;
+
+    // Load the pixel data
+    rvBitmap = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
+    if (!rvBitmap.data) return Texture();
+    texture.width = rvBitmap.width;
+    texture.height = rvBitmap.height;
+
+    // Upload the texture through GpuMemory
+    texture.id = GpuMemory::uploadTexture(rvBitmap.bytesUI8, texture.width, texture.height,
+                                          samplingParameters,
+                                          internalFormat,
+                                          textureFormat,
+                                          mipmapLevels);
 
     // Store the texture in the cache
     insertTexture(texPath, texture);

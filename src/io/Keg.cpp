@@ -441,7 +441,7 @@ namespace keg {
         if (type == nullptr) {
             return Error::TYPE_NOT_FOUND;
         }
-        *dest = ArrayBase(type->getSizeInBytes());
+        new (dest) ArrayBase(type->getSizeInBytes());
         if (keg::getSequenceSize(nArray) > 0) {
             dest->setData(keg::getSequenceSize(nArray));
             ui8* newDest = &dest->at<ui8>(0);

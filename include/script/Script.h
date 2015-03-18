@@ -22,6 +22,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "ScriptValueSenders.h"
 #include "Environment.h"
 
 namespace vorb {
@@ -29,23 +30,11 @@ namespace vorb {
         class Environment;
         class Function;
 
-        template<typename T> struct ScriptValueSender;
-
-#define SCRIPT_SENDER(TYPE)
-        template<typename TYPE> \
-        struct ScriptValueSender { \
-        public: \
-                static void push(EnvironmentHandle h, TYPE v); \
-                static TYPE pop(EnvironmentHandle h); \
-        }
-        SCRIPT_SENDER(i32);
-        SCRIPT_SENDER(ui32);
-        SCRIPT_SENDER(i64);
-        SCRIPT_SENDER(ui64);
-
         namespace impl {
             void pushToTop(EnvironmentHandle h, const Function& f);
             void call(EnvironmentHandle h, size_t n, size_t r);
+            void popStack(EnvironmentHandle h);
+            void* popUpvalueObject(EnvironmentHandle h);
 
             template<typename Arg>
             void pushArgs(EnvironmentHandle h, Arg a) {
@@ -59,7 +48,32 @@ namespace vorb {
 
             template<typename Arg>
             Arg popValue(EnvironmentHandle h) {
-                return ScriptValueSender<Arg>::pop(h);
+                Arg a = ScriptValueSender<Arg>::pop(h);
+                popStack(h);
+                return a;
+            }
+
+            template<typename F, typename... Args>
+            void cCall(EnvironmentHandle h, F func) {
+                func(popValue<Args>(h)...);
+            }
+            template<typename... Args>
+            void fCall(EnvironmentHandle h, void* del) {
+                typedef Delegate<Args...>* FunctionPtr;
+                FunctionPtr f = (FunctionPtr)del;
+                f->invoke(popValue<Args>(h)...);
+            }
+
+            template<typename F, F f, typename... Args>
+            int luaCall(lua_State* s) {
+                cCall<F, Args...>(s, f);
+                return 0;
+            }
+            template<typename... Args>
+            int luaDCall(lua_State* s) {
+                void* del = popUpvalueObject(s);
+                fCall<Args...>(s, del);
+                return 0;
             }
         }
 
@@ -83,6 +97,17 @@ namespace vorb {
             impl::call(hnd, sizeof...(Args), 1);
             *retValue = impl::popValue<Ret>(hnd);
             return true;
+        }
+
+        typedef int(*ScriptFunc)(EnvironmentHandle s);
+        template<typename F, F f, typename... Args>
+        ScriptFunc fromFunction() {
+            return impl::luaCall<F, f, Args...>;
+        }
+        typedef int(*ScriptFunc)(EnvironmentHandle s);
+        template<typename... Args>
+        ScriptFunc fromDelegate() {
+            return impl::luaDCall<Args...>;
         }
     }
 }

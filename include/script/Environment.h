@@ -63,7 +63,11 @@ namespace vorb {
                 ScriptValueSender<void*>::push(m_state, del);
                 addCClosure(name, f);
             }
-            void addValue(nString name, void* value);
+            template<typename T>
+            void addValue(const nString& name, T value) {
+                ScriptValueSender<T>::push(value);
+                setValueName(name);
+            }
 
             Function& operator[] (const nString& name);
             const Function& operator[] (const nString& name) const;
@@ -72,6 +76,7 @@ namespace vorb {
             static int registration(lua_State* L);
 
             void addCClosure(const nString& name, int(*f)(EnvironmentHandle));
+            void setValueName(const nString& name);
 
             std::unordered_map<nString, Function> m_functions;
             EnvironmentHandle m_state;

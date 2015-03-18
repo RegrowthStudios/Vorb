@@ -103,7 +103,6 @@ void vorb::script::Environment::addCClosure(const nString& name, int(*f)(Environ
     lua_pushcclosure(m_state, f, 1);
     lua_setglobal(m_state, name.c_str());
 }
-void vorb::script::Environment::addValue(nString name, void* value) {
-    lua_pushlightuserdata(m_state, value);
+void vorb::script::Environment::setValueName(const nString& name) {
     lua_setglobal(m_state, name.c_str());
 }

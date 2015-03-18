@@ -399,6 +399,7 @@
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
     <ClInclude Include="include\script\Script.h" />
+    <ClInclude Include="include\script\ScriptValueSenders.h" />
     <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />

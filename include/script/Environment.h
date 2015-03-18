@@ -31,6 +31,8 @@
 #include "../IDGenerator.h"
 #include "../io/Path.h"
 #include "Function.h"
+#include "ScriptValueSenders.h"
+#include "Script.h"
 
 struct lua_State;
 
@@ -48,12 +50,22 @@ namespace vorb {
             }
 
             bool load(const vio::Path& file);
+            void addCFunction(const nString& name, int(*f)(EnvironmentHandle));
+            template<typename... Args>
+            void addCDelegate(const nString& name, RDelegate<void, Args...>* del) {
+                ScriptFunc f = fromDelegate<Args...>();
+                ScriptValueSender<void*>::push(m_state, del);
+                addCClosure(name, f);
+            }
+            void addValue(nString name, void* value);
 
             Function& operator[] (const nString& name);
             const Function& operator[] (const nString& name) const;
         private:
             VORB_NON_COPYABLE(Environment);
             static int registration(lua_State* L);
+
+            void addCClosure(const nString& name, int(*f)(EnvironmentHandle));
 
             std::unordered_map<nString, Function> m_functions;
             EnvironmentHandle m_state;

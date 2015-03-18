@@ -474,6 +474,9 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include\Graphics.h" />
+    <ClInclude Include="include\script\ScriptValueSenders.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

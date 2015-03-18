@@ -95,3 +95,15 @@ int vscript::Environment::registration(lua_State* L) {
 
     return 0;
 }
+
+void vorb::script::Environment::addCFunction(const nString& name, int(*f)(EnvironmentHandle)) {
+    lua_register(m_state, name.c_str(), f);
+}
+void vorb::script::Environment::addCClosure(const nString& name, int(*f)(EnvironmentHandle)) {
+    lua_pushcclosure(m_state, f, 1);
+    lua_setglobal(m_state, name.c_str());
+}
+void vorb::script::Environment::addValue(nString name, void* value) {
+    lua_pushlightuserdata(m_state, value);
+    lua_setglobal(m_state, name.c_str());
+}

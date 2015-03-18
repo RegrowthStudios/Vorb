@@ -74,6 +74,19 @@ public:
         setData(nullptr, len);
     }
 
+    /*! @brief Make this array the owner of a set of data
+     * 
+     * @pre: All previous ownership of data is now invalidated
+     * @tparam T: Array object type
+     * @param data: Pointer to a block of element data
+     * @param len: Number of elements found in the data
+     */
+    void ownData(CALLEE_DELETE void* data, size_t len, void(*fDealloc)(void*)) {
+        m_length = len;
+        m_sharedData.reset((ui8*)data, [=] (ui8* p) { fDealloc(p); });
+        m_data = m_sharedData.get();
+    }
+
     /*! @brief Obtain a reference to an element in the array.
      * 
      * There is no bounds checking performed on the input. If

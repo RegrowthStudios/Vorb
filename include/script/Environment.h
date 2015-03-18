@@ -57,6 +57,12 @@ namespace vorb {
                 ScriptValueSender<void*>::push(m_state, del);
                 addCClosure(name, f);
             }
+            template<typename Ret, typename... Args>
+            void addCRDelegate(const nString& name, RDelegate<Ret, Args...>* del) {
+                ScriptFunc f = fromRDelegate<Ret, Args...>();
+                ScriptValueSender<void*>::push(m_state, del);
+                addCClosure(name, f);
+            }
             void addValue(nString name, void* value);
 
             Function& operator[] (const nString& name);

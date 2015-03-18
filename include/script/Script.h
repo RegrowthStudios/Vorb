@@ -59,9 +59,16 @@ namespace vorb {
             }
             template<typename... Args>
             void fCall(EnvironmentHandle h, void* del) {
-                typedef Delegate<Args...>* FunctionPtr;
+                typedef RDelegate<void, Args...>* FunctionPtr;
                 FunctionPtr f = (FunctionPtr)del;
                 f->invoke(popValue<Args>(h)...);
+            }
+            template<typename Ret, typename... Args>
+            void fRCall(EnvironmentHandle h, void* del) {
+                typedef RDelegate<Ret, Args...>* FunctionPtr;
+                FunctionPtr f = (FunctionPtr)del;
+                Ret retValue = f->invoke(popValue<Args>(h)...);
+                ScriptValueSender<Ret>::push(h, retValue);
             }
 
             template<typename F, F f, typename... Args>
@@ -74,6 +81,12 @@ namespace vorb {
                 void* del = popUpvalueObject(s);
                 fCall<Args...>(s, del);
                 return 0;
+            }
+            template<typename Ret, typename... Args>
+            int luaDRCall(lua_State* s) {
+                void* del = popUpvalueObject(s);
+                fRCall<Ret, Args...>(s, del);
+                return 1;
             }
         }
 
@@ -108,6 +121,10 @@ namespace vorb {
         template<typename... Args>
         ScriptFunc fromDelegate() {
             return impl::luaDCall<Args...>;
+        }
+        template<typename Ret, typename... Args>
+        ScriptFunc fromRDelegate() {
+            return impl::luaDRCall<Ret, Args...>;
         }
     }
 }

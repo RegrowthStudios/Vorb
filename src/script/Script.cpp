@@ -11,12 +11,10 @@ extern "C" {
 /* Integer casts                                                        */
 /************************************************************************/
 #define CAST_INTEGER(TYPE) \
-    template<> \
-    void vscript::ScriptValueSender<TYPE>::push(EnvironmentHandle h, TYPE v) { \
+    void vscript::ScriptValueSender<TYPE, void>::push(EnvironmentHandle h, TYPE v) { \
         lua_pushinteger(h, static_cast<lua_Integer>(v)); \
     } \
-    template<> \
-    TYPE vscript::ScriptValueSender<TYPE>::pop(EnvironmentHandle h) { \
+    TYPE vscript::ScriptValueSender<TYPE, void>::pop(EnvironmentHandle h) { \
         return static_cast<TYPE>(lua_tointeger(h, -1)); \
     }
 CAST_INTEGER(i8)
@@ -24,12 +22,10 @@ CAST_INTEGER(i16)
 CAST_INTEGER(i32)
 CAST_INTEGER(i64)
 #define CAST_UNSIGNED(TYPE) \
-    template<> \
-    void vscript::ScriptValueSender<TYPE>::push(EnvironmentHandle h, TYPE v) { \
+    void vscript::ScriptValueSender<TYPE, void>::push(EnvironmentHandle h, TYPE v) { \
         lua_pushunsigned(h, static_cast<lua_Unsigned>(v)); \
     } \
-    template<> \
-    TYPE vscript::ScriptValueSender<TYPE>::pop(EnvironmentHandle h) { \
+    TYPE vscript::ScriptValueSender<TYPE, void>::pop(EnvironmentHandle h) { \
         return static_cast<TYPE>(lua_tounsigned(h, -1)); \
     }
 CAST_UNSIGNED(ui8)
@@ -41,12 +37,10 @@ CAST_UNSIGNED(ui64)
 /* Number casts                                                         */
 /************************************************************************/
 #define CAST_NUMBER(TYPE) \
-    template<> \
-    void vscript::ScriptValueSender<TYPE>::push(EnvironmentHandle h, TYPE v) { \
+    void vscript::ScriptValueSender<TYPE, void>::push(EnvironmentHandle h, TYPE v) { \
         lua_pushnumber(h, static_cast<lua_Number>(v)); \
     } \
-    template<> \
-    TYPE vscript::ScriptValueSender<TYPE>::pop(EnvironmentHandle h) { \
+    TYPE vscript::ScriptValueSender<TYPE, void>::pop(EnvironmentHandle h) { \
         return static_cast<TYPE>(lua_tonumber(h, -1)); \
     }
 CAST_NUMBER(f32);
@@ -55,43 +49,35 @@ CAST_NUMBER(f64);
 /************************************************************************/
 /* Boolean cast                                                         */
 /************************************************************************/
-template<>
-void vscript::ScriptValueSender<bool>::push(EnvironmentHandle h, bool v) {
+void vscript::ScriptValueSender<bool, void>::push(EnvironmentHandle h, bool v) {
     lua_pushboolean(h, v);
 }
-template<>
-bool vscript::ScriptValueSender<bool>::pop(EnvironmentHandle h) {
+bool vscript::ScriptValueSender<bool, void>::pop(EnvironmentHandle h) {
     return lua_toboolean(h, -1);
 }
 
 /************************************************************************/
 /* String casts                                                         */
 /************************************************************************/
-template<>
-void vscript::ScriptValueSender<nString>::push(EnvironmentHandle h, nString v) {
+void vscript::ScriptValueSender<nString, void>::push(EnvironmentHandle h, nString v) {
     lua_pushstring(h, v.c_str());
 }
-template<>
-nString vscript::ScriptValueSender<nString>::pop(EnvironmentHandle h) {
+nString vscript::ScriptValueSender<nString, void>::pop(EnvironmentHandle h) {
     return nString(lua_tostring(h, -1));
 }
-template<>
-void vscript::ScriptValueSender<const cString>::push(EnvironmentHandle h, const cString v) {
+void vscript::ScriptValueSender<const cString, void>::push(EnvironmentHandle h, const cString v) {
     lua_pushstring(h, v);
 }
-template<>
-const cString vscript::ScriptValueSender<const cString>::pop(EnvironmentHandle h) {
+const cString vscript::ScriptValueSender<const cString, void>::pop(EnvironmentHandle h) {
     return lua_tostring(h, -1);
 }
 /************************************************************************/
 /* User data cast                                                      */
 /************************************************************************/
-template<>
-void vscript::ScriptValueSender<void*>::push(EnvironmentHandle h, void* v) {
+void vscript::ScriptValueSender<void*, void>::push(EnvironmentHandle h, void* v) {
     lua_pushlightuserdata(h, v);
 }
-template<>
-void* vscript::ScriptValueSender<void*>::pop(EnvironmentHandle h) {
+void* vscript::ScriptValueSender<void*, void>::pop(EnvironmentHandle h) {
     return lua_touserdata(h, -1);
 }
 

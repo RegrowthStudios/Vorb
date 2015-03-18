@@ -20,13 +20,13 @@
 /************************************************************************/
 /* Common                                                               */
 /************************************************************************/
-//#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #pragma message("VORB LIB: Linking GRAPHICS=OPENGL")
 #pragma message("Linking against <opengl32.lib>")
 #pragma comment(lib, "opengl32.lib")
 #pragma message("Linking against <glew32.lib>")
 #pragma comment(lib, "glew32.lib")
-//#elif defined(VORB_IMPL_GRAPHICS_D3D)
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
 #ifndef OS_WINDOWS
 #error DirectX is Windows-only
 #endif // !OS_WINDOWS
@@ -37,9 +37,9 @@
 #elif defined(VORB_DX_11)
 // TODO(Cristian): Link moar
 #endif
-//#else
-//#error A graphics implementation must be specified
-//#endif
+#else
+#error A graphics implementation must be specified
+#endif
 
 #ifdef DEBUG
 #pragma message("VORB LIB: Linking Common")

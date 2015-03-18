@@ -168,6 +168,15 @@
     <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\io\KegEnum.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegType.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegValue.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />

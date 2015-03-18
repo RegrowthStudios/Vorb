@@ -56,9 +56,6 @@ namespace keg {
     nString write(const void* src, const ui32& typeID, Environment* env = nullptr);
     bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type);
 
-    // Get The Global Environment Of Custom Types
-    Environment* getGlobalEnvironment();
-  
     VORB_INTERNAL Type& getType(bool& initialized, Type& type, bool (*fInit)());
     VORB_INTERNAL Enum& getEnum(bool& initialized, Enum& type, bool (*fInit)());
 }
@@ -73,10 +70,11 @@ namespace keg {
 #define KEG_GLOBAL_ENUM_INIT_FUNC(TYPENAME) ke_init_##TYPENAME
 #define KEG_GLOBAL_ENUM_BUILD_FUNC(TYPENAME) ke_build_##TYPENAME
 #ifdef DEBUG
-#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)() { \
         if (KEG_GLOBAL_TYPE_INIT(TYPENAME)) return true; \
         puts("Initializing Keg Type: "#TYPENAME); \
+        KEG_GLOBAL_TYPE(TYPENAME).setStructType<STRUCT_TYPE>(); \
         KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(KEG_GLOBAL_TYPE(TYPENAME)); \
         return true; \
     }
@@ -88,9 +86,10 @@ namespace keg {
         return true; \
     }
 #else
-#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)() { \
         if (KEG_GLOBAL_TYPE_INIT(TYPENAME)) return true; \
+        KEG_GLOBAL_TYPE(TYPENAME).setStructType<STRUCT_TYPE>(); \
         KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(KEG_GLOBAL_TYPE(TYPENAME)); \
         return true; \
     }
@@ -110,9 +109,9 @@ namespace keg {
 #define KEG_TYPE_DEF(TYPENAME, STRUCT_TYPE, VAR_NAME) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)(); \
     void KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(keg::Type&); \
-    keg::Type KEG_GLOBAL_TYPE(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
+    keg::Type KEG_GLOBAL_TYPE(TYPENAME)(#TYPENAME, nullptr); \
     bool KEG_GLOBAL_TYPE_INIT(TYPENAME) = KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)(); \
-    KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+    KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     void KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(keg::Type& VAR_NAME)
 #define KEG_ENUM_DEF(TYPENAME, STRUCT_TYPE, VAR_NAME) \
     bool KEG_GLOBAL_ENUM_INIT_FUNC(TYPENAME)(); \

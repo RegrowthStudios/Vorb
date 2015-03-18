@@ -26,17 +26,26 @@
 #endif // !VORB_USING_PCH
 
 #include "KegValue.h"
+#include "../Events.hpp"
 
 namespace keg {
     class Environment;
     struct Value;
 
-    // A Custom Data Type (Map Container Of Values)
+    typedef void(*ConstructorFunction)(void*);
+    typedef void* (*AllocatorFunction)();
+    typedef void* (*AllocatorArrayFunction)(size_t s);
+    typedef void (*DeallocatorFunction)(void* p);
+
+
+    /*! @brief Custom YAML-mapped data type
+     */
     class Type {
         friend class Environment;
     public:
         // Create A Type With The Specified Size, Name, And Linked To An Optional Extra Environment
-        Type(size_t sizeInBytes, const nString& name, Environment* env = nullptr);
+        Type();
+        Type(const nString& name, Environment* env = nullptr);
 
         // Add A Value With A Key Attached To It (Values May Have More Than One Key)
         void addValue(const nString& name, const Value& type);
@@ -59,15 +68,48 @@ namespace keg {
             return _values.cend();
         }
 
+        void construct(void* data);
+        void* alloc();
+        void* allocArray(size_t s);
+        DeallocatorFunction getDeallocator() const;
+
         // Set-Once Accessor
         size_t getSizeInBytes() const {
             return _sizeInBytes;
         }
-        Type();
+        template<typename T>
+        void setStructType() {
+            _sizeInBytes = sizeof(T);
+            m_ctor = simpleCTOR<T>;
+            m_alloc = simpleNew<T>;
+            m_allocArray = simpleNewArray<T>;
+            m_deallocArray = simpleDeleteArray<T>;
+        }
 
+        template<typename T>
+        static void simpleCTOR(void* data) {
+            new (data) T();
+        }
+        template<typename T>
+        static void* simpleNew() {
+            return new T();
+        }
+        template<typename T>
+        static void* simpleNewArray(size_t s) {
+            return new T[s]();
+        }
+        template<typename T>
+        static void simpleDeleteArray(void* p) {
+            T* ref = (T*)p;
+            delete[] ref;
+        }
     private:
         size_t _sizeInBytes;
         std::map<nString, Value> _values;
+        ConstructorFunction m_ctor; ///< Constructor function
+        AllocatorFunction m_alloc;
+        AllocatorArrayFunction m_allocArray;
+        DeallocatorFunction m_deallocArray;
     };
 }
 

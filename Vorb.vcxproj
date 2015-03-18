@@ -291,6 +291,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\io\KegEnum.cpp" />
+    <ClCompile Include="src\io\KegType.cpp" />
+    <ClCompile Include="src\io\KegValue.cpp" />
     <ClCompile Include="src\io\YAML.cpp" />
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp" />

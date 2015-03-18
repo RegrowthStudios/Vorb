@@ -28,117 +28,6 @@ namespace keg {
         { BasicType::C_STRING, "CString" }
     };
 
-    Value Value::basic(size_t off, BasicType t) {
-        Value kv = {};
-        kv.type = t;
-        kv.offset = off;
-        kv.typeName.clear();
-        return std::move(kv);
-    }
-    Value Value::custom(size_t off, const nString& t, bool isEnum /*= false*/) {
-        Value kv = {};
-        kv.type = isEnum ? BasicType::ENUM : BasicType::CUSTOM;
-        kv.offset = off;
-        kv.typeName = t;
-        return std::move(kv);
-    }
-    Value Value::array(size_t off, const Value& interior) {
-        Value kv = {};
-        kv.type = BasicType::ARRAY;
-        kv.offset = off;
-        kv.typeName.clear();
-        kv.interiorValue.reset(new Value(interior));
-        return std::move(kv);
-    }
-    Value Value::array(size_t off, const BasicType& t) {
-        return array(off, Value::basic(0, t));
-    }
-    Value Value::ptr(size_t off, const Value& interior) {
-        Value kv = {};
-        kv.type = BasicType::PTR;
-        kv.offset = off;
-        kv.typeName.clear();
-        kv.interiorValue.reset(new Value(interior));
-        return std::move(kv);
-    }
-    Value Value::ptr(size_t off, const BasicType& t) {
-        return ptr(off, Value::basic(0, t));
-    }
-
-    Type::Type() :
-        _sizeInBytes(0),
-        _values() {
-        // Empty
-    }
-    Type::Type(size_t sizeInBytes, const nString& name, Environment* env) :
-        _sizeInBytes(sizeInBytes),
-        _values() {
-        if (env) env->addType(name, this);
-        getGlobalEnvironment()->addType(name, this);
-    }
-
-    void Type::addValue(const nString& name, const Value& type) {
-        _values[name] = type;
-    }
-    void Type::addSuper(const Type* type, size_t offset /*= 0*/) {
-        for (auto kvPair : type->_values) {
-            kvPair.second.offset += offset;
-            _values[kvPair.first] = kvPair.second;
-        }
-    }
-
-    Enum::Enum(size_t sizeInBytes, const nString& name, Environment* env) :
-        _sizeInBytes(sizeInBytes) {
-        switch (_sizeInBytes) {
-        case 1: _fSetter = setValue8; _fGetter = getValue8; break;
-        case 2: _fSetter = setValue16; _fGetter = getValue16; break;
-        case 4: _fSetter = setValue32; _fGetter = getValue32; break;
-        default: _fSetter = setValue64; _fGetter = getValue64; break;
-        }
-        if (env) env->addEnum(name, this);
-        getGlobalEnvironment()->addEnum(name, this);
-    }
-
-    void Enum::setValue64(void* data, const nString& s, Enum* e) {
-        auto kv = e->_values.find(s);
-        if (kv != e->_values.end()) *((ui64*)data) = (ui64)kv->second;
-    }
-    void Enum::setValue32(void* data, const nString& s, Enum* e) {
-        auto kv = e->_values.find(s);
-        if (kv != e->_values.end()) *((ui32*)data) = (ui32)kv->second;
-    }
-    void Enum::setValue16(void* data, const nString& s, Enum* e) {
-        auto kv = e->_values.find(s);
-        if (kv != e->_values.end()) *((ui16*)data) = (ui16)kv->second;
-    }
-    void Enum::setValue8(void* data, const nString& s, Enum* e) {
-        auto kv = e->_values.find(s);
-        if (kv != e->_values.end()) *((ui8*)data) = (ui8)kv->second;
-    }
-    nString Enum::getValue64(const void* data, Enum* e) {
-        ui64 key = *((ui64*)data);
-        auto kv = e->_valuesRev.find(key);
-        if (kv != e->_valuesRev.end()) return kv->second;
-        return "";
-    }
-    nString Enum::getValue32(const void* data, Enum* e) {
-        ui32 key = *((ui32*)data);
-        auto kv = e->_valuesRev.find(key);
-        if (kv != e->_valuesRev.end()) return kv->second;
-        return "";
-    }
-    nString Enum::getValue16(const void* data, Enum* e) {
-        ui16 key = *((ui16*)data);
-        auto kv = e->_valuesRev.find(key);
-        if (kv != e->_valuesRev.end()) return kv->second;
-        return "";
-    }
-    nString Enum::getValue8(const void* data, Enum* e) {
-        ui8 key = *((ui8*)data);
-        auto kv = e->_valuesRev.find(key);
-        if (kv != e->_valuesRev.end()) return kv->second;
-        return "";
-    }
 
     Environment::Environment() :
         _uuid(KEG_BAD_TYPE_ID) {
@@ -405,9 +294,7 @@ namespace keg {
         Type* type = env->getType(typeName);
         if (type == nullptr) return Error::TYPE_NOT_FOUND;
 
-        // TODO: Undefined Behavior Time :)
-        *dest = new ui8[type->getSizeInBytes()]();
-
+        *dest = type->alloc();
         return parse((ui8*)*dest, value, doc, env, type);
     }
     inline Error evalValueArray(ArrayBase* dest, keg::Node& value, const Value* decl, keg::YAMLReader& doc, Environment* env) {
@@ -442,10 +329,10 @@ namespace keg {
             return Error::TYPE_NOT_FOUND;
         }
         new (dest) ArrayBase(type->getSizeInBytes());
-        if (keg::getSequenceSize(nArray) > 0) {
-            dest->setData(keg::getSequenceSize(nArray));
+        size_t seqLen = keg::getSequenceSize(nArray);
+        if (seqLen > 0) {
+            dest->ownData(type->allocArray(seqLen), seqLen, type->getDeallocator());
             ui8* newDest = &dest->at<ui8>(0);
-            memset(newDest, 0, dest->size() * type->getSizeInBytes());
 
             auto f = makeFunctor<Sender, size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
                 evalData(newDest, decl->interiorValue.get(), node, doc, env);

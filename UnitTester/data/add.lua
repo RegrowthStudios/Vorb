@@ -1,5 +1,5 @@
 function add (x, y)
-  cSum(myData, x, y)
+  TestObject_increment()
   print("Adding X+Y\n");
   return x + y
 end

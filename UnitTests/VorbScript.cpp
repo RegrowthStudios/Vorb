@@ -20,10 +20,24 @@ void sum(void* ret, int a, int b) {
     *r = a + b + b;
 }
 
+enum class MyEnum {
+    RED,
+    DOG
+};
+void valEnum(MyEnum e) {
+    puts("Called enum func");
+}
+void valPtr(int* i) {
+    puts("Called pointer func");
+}
+void valRef(int& i) {
+    puts("Called ref func");
+}
+
 class TestObject {
 public:
-    void increment() {
-        x++;
+    int increment() {
+        return ++x;
     }
 
     int x = 0;
@@ -34,11 +48,13 @@ TEST(LoadScript) {
     auto c = vscript::fromFunction<void(*)(void*, int, int), sum, void*, int, int>();
 
     TestObject to;
-    auto df = makeDelegate(to, &TestObject::increment);
-    env.addCDelegate("TestObject_increment", &df);
+    auto df = makeRDelegate(to, &TestObject::increment);
+    env.addCRDelegate("TestObject_increment", &df);
 
-    i32 ov = 0;
-    env.addValue("myData", &ov);
+
+    env.addCFunction("valEnum", vscript::fromFunction<void(*)(MyEnum), valEnum, MyEnum>());
+    env.addCFunction("valPtr", vscript::fromFunction<void(*)(int*), valPtr, int*>());
+    env.addCFunction("valRef", vscript::fromFunction<void(*)(int&), valRef, int&>());
 
     if (!env.load("data/add.lua")) return false;
 
@@ -47,5 +63,5 @@ TEST(LoadScript) {
     vscript::callReturn(env, "add", &value, 1, 6);
     vscript::callReturn(env, "add", &value, 1, 7);
     vscript::callReturn(env, "add", &value, 1, 8);
-    return value == 9 && to.x == 4;
+    return value == 13 && to.x == 4;
 }

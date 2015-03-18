@@ -1,7 +1,11 @@
 function add (x, y)
-  TestObject_increment()
-  print("Adding X+Y\n");
-  return x + y
+  toValue = TestObject_increment()
+  print(toValue)
+  valEnum(1)
+  valPtr(nil)
+  valRef(nil)
+  print("Adding X+Y+TO.value\n")
+  return x + y + toValue
 end
 
 function registerFuncs (env)

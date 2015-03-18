@@ -11,6 +11,9 @@
  */
 class ArrayBase {
 public:
+    /*! @brief Default array constructor with no data
+     */
+    ArrayBase() = default;
     /*! @brief Construct an array with element information.
      * 
      * @param elemSize: Size of an element in bytes

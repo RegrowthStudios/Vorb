@@ -35,7 +35,7 @@ namespace keg {
         Type kt;
 
 #define NUM_TYPE(TYPE, C_TYPE, NUM) \
-    _internalTypes[(i32)BasicType::TYPE]._sizeInBytes = sizeof(C_TYPE); \
+    _internalTypes[(i32)BasicType::TYPE].setStructType<C_TYPE>(); \
     kv = Value::basic(sizeof(C_TYPE)* 0, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE].addValue("value0", kv); \
     _internalTypes[(i32)BasicType::TYPE].addValue("x", kv); \
@@ -44,7 +44,7 @@ namespace keg {
     _internalTypes[(i32)BasicType::TYPE].addValue("0", kv); \
     addType(#TYPE, &_internalTypes[(i32)BasicType::TYPE]); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addSuper(&_internalTypes[(i32)BasicType::TYPE]); \
-    _internalTypes[(i32)BasicType::TYPE##_V2]._sizeInBytes = sizeof(C_TYPE)* 2; \
+    _internalTypes[(i32)BasicType::TYPE##_V2].setStructType<C_TYPE##v2>(); \
     kv = Value::basic(sizeof(C_TYPE)* 1, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("value1", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("y", kv); \
@@ -53,7 +53,7 @@ namespace keg {
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("1", kv); \
     addType(#TYPE"_V2", &_internalTypes[(i32)BasicType::TYPE##_V2]); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V2]); \
-    _internalTypes[(i32)BasicType::TYPE##_V3]._sizeInBytes = sizeof(C_TYPE)* 3; \
+    _internalTypes[(i32)BasicType::TYPE##_V3].setStructType<C_TYPE##v3>(); \
     kv = Value::basic(sizeof(C_TYPE)* 2, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("value2", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("z", kv); \
@@ -62,7 +62,7 @@ namespace keg {
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("2", kv); \
     addType(#TYPE"_V3", &_internalTypes[(i32)BasicType::TYPE##_V3]); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V3]); \
-    _internalTypes[(i32)BasicType::TYPE##_V4]._sizeInBytes = sizeof(C_TYPE)* 4; \
+    _internalTypes[(i32)BasicType::TYPE##_V4].setStructType<C_TYPE##v4>(); \
     kv = Value::basic(sizeof(C_TYPE)* 3, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("value3", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("w", kv); \
@@ -90,25 +90,25 @@ namespace keg {
         NUM_TYPE(F32, f32, 32);
         NUM_TYPE(F64, f64, 36);
 
-        _internalTypes[(i32)BasicType::C_STRING]._sizeInBytes = sizeof(cString);
+        _internalTypes[(i32)BasicType::C_STRING].setStructType<cString>();
         kv = Value::basic(0, BasicType::C_STRING);
         _internalTypes[(i32)BasicType::C_STRING].addValue("value", kv);
         _internalTypes[(i32)BasicType::C_STRING].addValue("string", kv);
         addType("CString", &_internalTypes[(i32)BasicType::C_STRING]);
 
-        _internalTypes[(i32)BasicType::STRING]._sizeInBytes = sizeof(nString);
+        _internalTypes[(i32)BasicType::STRING].setStructType<nString>();
         kv = Value::basic(0, BasicType::STRING);
         _internalTypes[(i32)BasicType::STRING].addValue("value", kv);
         _internalTypes[(i32)BasicType::STRING].addValue("string", kv);
         addType("String", &_internalTypes[(i32)BasicType::STRING]);
 
-        _internalTypes[(i32)BasicType::BOOL]._sizeInBytes = sizeof(bool);
+        _internalTypes[(i32)BasicType::BOOL].setStructType<bool>();
         kv = Value::basic(0, BasicType::BOOL);
         _internalTypes[(i32)BasicType::BOOL].addValue("value", kv);
         _internalTypes[(i32)BasicType::BOOL].addValue("bool", kv);
         addType("Bool", &_internalTypes[(i32)BasicType::BOOL]);
 
-        _internalTypes[(i32)BasicType::ARRAY]._sizeInBytes = sizeof(ArrayBase);
+        _internalTypes[(i32)BasicType::ARRAY].setStructType<ArrayBase>();
         kv = Value::array(0, Value::custom(0, "", 0));
         _internalTypes[(i32)BasicType::ARRAY].addValue("value", kv);
         _internalTypes[(i32)BasicType::ARRAY].addValue("array", kv);

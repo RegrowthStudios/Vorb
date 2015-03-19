@@ -292,6 +292,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\io\KegEnum.cpp" />
+    <ClCompile Include="src\io\KegEnvironment.cpp" />
     <ClCompile Include="src\io\KegType.cpp" />
     <ClCompile Include="src\io\KegValue.cpp" />
     <ClCompile Include="src\io\YAML.cpp" />
@@ -299,6 +300,7 @@
     <ClCompile Include="src\io\YAMLConverters.cpp" />
     <ClCompile Include="src\script\Environment.cpp" />
     <ClCompile Include="src\script\Script.cpp" />
+    <ClCompile Include="src\script\ScriptValueSenders.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />

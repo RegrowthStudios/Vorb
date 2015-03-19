@@ -29,15 +29,14 @@ struct lua_State;
 namespace vorb {
     namespace script {
         typedef lua_State* EnvironmentHandle;
-
         template<typename T, typename = void> struct ScriptValueSender;
 
 #define SCRIPT_SENDER(TYPE) \
         template<> \
         struct ScriptValueSender<TYPE, void> { \
         public: \
-                static void push(EnvironmentHandle h, TYPE v); \
-                static TYPE pop(EnvironmentHandle h); \
+            static void push(EnvironmentHandle h, TYPE v); \
+            static TYPE pop(EnvironmentHandle h); \
         }
         SCRIPT_SENDER(i8);
         SCRIPT_SENDER(i16);
@@ -90,5 +89,6 @@ namespace vorb {
         };
     }
 }
+namespace vscript = vorb::script;
 
 #endif // !Vorb_ScriptValueSenders_h__

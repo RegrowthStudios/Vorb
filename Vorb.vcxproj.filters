@@ -177,6 +177,12 @@
     <ClCompile Include="src\io\KegValue.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
+    <ClCompile Include="src\script\ScriptValueSenders.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegEnvironment.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />

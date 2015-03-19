@@ -25,15 +25,21 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include <typeindex>
+
 #include "KegFuncs.h"
 
 namespace keg {
     enum class BasicType;
 
-
     // A Value Type Bound To An Offset In A Struct Of Data
     struct Value {
     public:
+        template<typename T1, typename T2, typename... TOther>
+        static void empty_assert() {
+            static_assert(std::is_same<T1, T2>::value, "Invalid type chain");
+        }
+
         template<typename T, typename M>
         static Value value(M T::* member) {
             Value kv = {};
@@ -46,6 +52,7 @@ namespace keg {
         template<typename T, typename... Types, typename M, typename... Members>
         static Value value(M T::* member, Members Types ::*... children) {
             static_assert(sizeof...(Types) == sizeof...(Members) && sizeof...(children) == sizeof...(Members), "Pairs of types must be specified");
+            empty_assert<M, Types...>();
             Value val = value(children...);
             val.offset += offsetMember(member);
             return val;

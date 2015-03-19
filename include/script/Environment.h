@@ -65,7 +65,7 @@ namespace vorb {
             }
             template<typename T>
             void addValue(const nString& name, T value) {
-                ScriptValueSender<T>::push(value);
+                ScriptValueSender<T>::push(m_state, value);
                 setValueName(name);
             }
 

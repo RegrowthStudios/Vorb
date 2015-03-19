@@ -113,9 +113,10 @@ namespace vorb {
         }
 
         typedef int(*ScriptFunc)(EnvironmentHandle s);
-        template<typename F, F f, typename... Args>
-        ScriptFunc fromFunction() {
-            return impl::luaCall<F, f, Args...>;
+        template<void* f, typename... Args>
+        ScriptFunc fromFunction(void (*func)(Args...)) {
+            typedef void(*FuncType)(Args...);
+            return impl::luaCall<FuncType, (FuncType)f, Args...>;
         }
         typedef int(*ScriptFunc)(EnvironmentHandle s);
         template<typename... Args>

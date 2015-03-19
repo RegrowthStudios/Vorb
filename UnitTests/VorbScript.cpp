@@ -45,16 +45,16 @@ public:
 
 TEST(LoadScript) {
     vscript::Environment env;
-    auto c = vscript::fromFunction<void(*)(void*, int, int), sum, void*, int, int>();
+    auto c = vscript::fromFunction<sum>(sum);
 
     TestObject to;
     auto df = makeRDelegate(to, &TestObject::increment);
     env.addCRDelegate("TestObject_increment", &df);
 
 
-    env.addCFunction("valEnum", vscript::fromFunction<void(*)(MyEnum), valEnum, MyEnum>());
-    env.addCFunction("valPtr", vscript::fromFunction<void(*)(int*), valPtr, int*>());
-    env.addCFunction("valRef", vscript::fromFunction<void(*)(int&), valRef, int&>());
+    env.addCFunction("valEnum", vscript::fromFunction<valEnum>(valEnum));
+    env.addCFunction("valPtr", vscript::fromFunction<valPtr>(valPtr));
+    env.addCFunction("valRef", vscript::fromFunction<valRef>(valRef));
 
     if (!env.load("data/add.lua")) return false;
 

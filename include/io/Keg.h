@@ -22,6 +22,9 @@
 #include "KegValue.h"
 #include "YAML.h"
 
+#define KEG_DOC_TYPE_ID "__TYPE__"
+#define KEG_DOC_DATA_ID "__DATA__"
+
 /** @brief Vorb extension for YAML parsing.
  * 
  * Provides utility classes for parsing YAML files as well

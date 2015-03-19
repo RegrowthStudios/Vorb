@@ -55,17 +55,17 @@ namespace keg {
 
         // Attempt To Find A Value With
         const Value* getValue(const nString& name) const {
-            auto kv = _values.find(name);
-            if (kv != _values.end()) return &kv->second;
+            auto kv = m_values.find(name);
+            if (kv != m_values.end()) return &kv->second;
             else return nullptr;
         }
 
         // Value Traversal
         std::map<nString, Value>::const_iterator getIter() const {
-            return _values.cbegin();
+            return m_values.cbegin();
         }
         std::map<nString, Value>::const_iterator getIterEnd() const {
-            return _values.cend();
+            return m_values.cend();
         }
 
         void construct(void* data);
@@ -75,11 +75,11 @@ namespace keg {
 
         // Set-Once Accessor
         size_t getSizeInBytes() const {
-            return _sizeInBytes;
+            return m_sizeInBytes;
         }
         template<typename T>
         void setStructType() {
-            _sizeInBytes = sizeof(T);
+            m_sizeInBytes = sizeof(T);
             m_ctor = simpleCTOR<T>;
             m_alloc = simpleNew<T>;
             m_allocArray = simpleNewArray<T>;
@@ -104,8 +104,8 @@ namespace keg {
             delete[] ref;
         }
     private:
-        size_t _sizeInBytes;
-        std::map<nString, Value> _values;
+        size_t m_sizeInBytes;
+        std::map<nString, Value> m_values;
         ConstructorFunction m_ctor; ///< Constructor function
         AllocatorFunction m_alloc;
         AllocatorArrayFunction m_allocArray;

@@ -183,6 +183,12 @@
     <ClCompile Include="src\io\KegEnvironment.cpp">
       <Filter>IO\Keg</Filter>
     </ClCompile>
+    <ClCompile Include="src\io\KegWrite.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegRead.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -482,6 +488,9 @@
     <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\script\ScriptValueSenders.h">
       <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegFuncs.h">
+      <Filter>IO\Keg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

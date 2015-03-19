@@ -33,5 +33,6 @@ KEG_TYPE_DEF(KT1, KT1, kt) {
 TEST(Parse) {
     KT1 data;
     keg::parse(&data, TestKeg1, "KT1");
+    delete[] data.other;
     return true;
 }

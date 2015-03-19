@@ -4,8 +4,8 @@
 #include "io/Keg.h"
 
 keg::Type::Type() :
-_sizeInBytes(0),
-_values() {
+    m_sizeInBytes(0),
+    m_values() {
     // Empty
 }
 keg::Type::Type(const nString& name, Environment* env) {
@@ -14,12 +14,12 @@ keg::Type::Type(const nString& name, Environment* env) {
 }
 
 void keg::Type::addValue(const nString& name, const Value& type) {
-    _values[name] = type;
+    m_values[name] = type;
 }
 void keg::Type::addSuper(const Type* type, size_t offset /*= 0*/) {
-    for (auto kvPair : type->_values) {
+    for (auto kvPair : type->m_values) {
         kvPair.second.offset += offset;
-        _values[kvPair.first] = kvPair.second;
+        m_values[kvPair.first] = kvPair.second;
     }
 }
 

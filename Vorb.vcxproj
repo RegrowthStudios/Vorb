@@ -293,8 +293,10 @@
     </ClCompile>
     <ClCompile Include="src\io\KegEnum.cpp" />
     <ClCompile Include="src\io\KegEnvironment.cpp" />
+    <ClCompile Include="src\io\KegRead.cpp" />
     <ClCompile Include="src\io\KegType.cpp" />
     <ClCompile Include="src\io\KegValue.cpp" />
+    <ClCompile Include="src\io\KegWrite.cpp" />
     <ClCompile Include="src\io\YAML.cpp" />
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp" />
@@ -380,6 +382,7 @@
     <ClInclude Include="include\io\KegBasic.h" />
     <ClInclude Include="include\io\KegEnum.h" />
     <ClInclude Include="include\io\KegEnvironment.h" />
+    <ClInclude Include="include\io\KegFuncs.h" />
     <ClInclude Include="include\io\KegType.h" />
     <ClInclude Include="include\io\KegValue.h" />
     <ClInclude Include="include\io\YAMLConverters.h" />

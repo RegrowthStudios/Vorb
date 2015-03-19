@@ -25,8 +25,11 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include "KegFuncs.h"
+
 namespace keg {
     enum class BasicType;
+
 
     // A Value Type Bound To An Offset In A Struct Of Data
     struct Value {
@@ -44,6 +47,7 @@ namespace keg {
 
         // Type Used To Determine Parsing Method
         BasicType type;
+        Evaluator evaluator;
 
         // If It's A Custom Type
         nString typeName;

@@ -34,6 +34,16 @@ namespace keg {
     // A Value Type Bound To An Offset In A Struct Of Data
     struct Value {
     public:
+        template<class T, class M>
+        static Value value(M T::* member) {
+            Value kv = {};
+            kv.type = BasicType::CUSTOM;
+            kv.offset = offsetMember(member);
+            kv.typeName.clear();
+            kv.evaluator = evaluate<M>;
+            return std::move(kv);
+        }
+
         // Set This As A Basic Parseable Value Type
         static Value basic(size_t off, BasicType t);
         // Set This As A Custom Value Type

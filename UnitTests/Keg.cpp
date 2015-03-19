@@ -24,8 +24,14 @@ KEG_TYPE_DECL(KT1);
 
 KEG_TYPE_DEF(KT1, KT1, kt) {
     using namespace keg;
-    kt.addValue("x",     Value::basic(offsetof(KT1, x),     BasicType::I32));
-    kt.addValue("y",     Value::basic(offsetof(KT1, y),     BasicType::STRING));
+
+    // Old syntax:
+    // kt.addValue("x", Value::basic(offsetof(KT1, x), BasicType::I32));
+
+    // Welcome to new age:
+    kt.addValue("x", Value::value(&KT1::x));
+
+    kt.addValue("y", Value::basic(offsetof(KT1, y), BasicType::STRING));
     kt.addValue("other", Value::basic(offsetof(KT1, other), BasicType::C_STRING));
     kt.addValue("z",     Value::basic(offsetof(KT1, z),     BasicType::UI8));
 }

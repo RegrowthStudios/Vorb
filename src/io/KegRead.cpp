@@ -5,12 +5,6 @@
 #include "io/KegFuncs.h"
 
 namespace keg {
-    struct ReadContext {
-    public:
-        YAMLReader reader;
-        Environment* env;
-    };
-
     Type* getCorrectType(keg::Node& node, ReadContext& context, Type* previous) {
         // Get interior node for the type information
         if (!keg::hasInterior(node, KEG_DOC_TYPE_ID)) return previous;
@@ -28,8 +22,6 @@ namespace keg {
         // Return correct type
         return otherType ? otherType : previous;
     }
-    Error parse(ui8* dest, keg::Node& data, ReadContext& context, Type* type);
-    void evalData(ui8* dest, const Value* decl, keg::Node& node, ReadContext& context);
 
     class TypeValueIterator {
     public:
@@ -62,6 +54,7 @@ namespace keg {
 
         // Parse YAML
         ReadContext context;
+        context.env = env;
         context.reader.init(data);
         keg::Node baseNode = context.reader.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
@@ -85,6 +78,7 @@ namespace keg {
 
         // Parse YAML
         ReadContext context;
+        context.env = env;
         context.reader.init(data);
         keg::Node baseNode = context.reader.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;
@@ -108,6 +102,7 @@ namespace keg {
 
         // Parse YAML
         ReadContext context;
+        context.env = env;
         context.reader.init(data);
         keg::Node baseNode = context.reader.getFirst();
         if (keg::getType(baseNode) == keg::NodeType::NONE) return Error::EARLY_EOF;

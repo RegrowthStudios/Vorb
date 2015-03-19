@@ -45,14 +45,21 @@ namespace keg {
         EARLY_EOF
     };
 
+    struct ReadContext {
+    public:
+        YAMLReader reader;
+        Environment* env;
+    };
+
+
     // Parse String Of Data Into A Destination Given A Type And Optionally A Separate Environment
     Error parse(void* dest, const cString data, Type* type = nullptr, Environment* env = nullptr);
     // Parse String Of Data Into A Destination Given A Type Name And Optionally A Separate Environment
     Error parse(void* dest, const cString data, const nString& typeName, Environment* env = nullptr);
     // Parse String Of Data Into A Destination Given A Type ID And Optionally A Separate Environment
     Error parse(void* dest, const cString data, const ui32& typeID, Environment* env = nullptr);
-    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type);
-    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::YAMLReader& doc, Environment* env);
+    Error parse(ui8* dest, keg::Node& data, ReadContext& context, Type* type);
+    void evalData(ui8* dest, const Value* decl, keg::Node& node, ReadContext& context);
 
     nString write(const void* src, Type* type, Environment* env = nullptr);
     nString write(const void* src, const nString& typeName, Environment* env = nullptr);

@@ -36,7 +36,12 @@ namespace vorb {
             const nString& getName() const {
                 return m_name;
             }
+            bool isNil() const {
+                return m_name.empty();
+            }
         private:
+            static Function nil;
+
             Function(const nString& name) :
                 m_name(name) {
                 // Empty

@@ -13,6 +13,8 @@ extern "C" {
 #define VORB_SCRIPT_ENVIRONMENT_TABLE "VORB_VALUE_TABLE"
 #define VORB_SCRIPT_ENVIRONMENT_VALUE_FORMAT "VORB_VALUE_%d"
 
+vscript::Function vscript::Function::nil;
+
 vscript::Environment::Environment() {
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
@@ -70,10 +72,12 @@ bool vscript::Environment::load(const vio::Path& file) {
 }
 
 vscript::Function& vscript::Environment::operator[](const nString& name) {
-    return m_functions.at(name);
+    auto& kvp = m_functions.find(name);
+    return kvp == m_functions.end() ? Function::nil : kvp->second;
 }
 const vscript::Function& vscript::Environment::operator[](const nString& name) const {
-    return m_functions.at(name);
+    auto& kvp = m_functions.find(name);
+    return kvp == m_functions.end() ? Function::nil : kvp->second;
 }
 
 int vscript::Environment::registration(lua_State* L) {

@@ -40,6 +40,15 @@ namespace keg {
             static_assert(std::is_same<T1, T2>::value, "Invalid type chain");
         }
 
+        template<typename T>
+        static Value value() {
+            Value kv = {};
+            kv.type = BasicType::CUSTOM;
+            kv.offset = 0;
+            kv.typeName.clear();
+            kv.evaluator = evaluate<T>;
+            return std::move(kv);
+        }
         template<typename T, typename M>
         static Value value(M T::* member) {
             Value kv = {};
@@ -57,6 +66,7 @@ namespace keg {
             val.offset += offsetMember(member);
             return val;
         }
+        
 
         // Set This As A Basic Parseable Value Type
         static Value basic(size_t off, BasicType t);

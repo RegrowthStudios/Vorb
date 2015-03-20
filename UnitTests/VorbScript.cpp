@@ -34,6 +34,13 @@ void valRef(int& i) {
     puts("Called ref func");
 }
 
+f32v3 getUnitX() {
+    return f32v3(1, 0, 0);
+}
+void printVec(f32v3 v) {
+    printf("%f,%f,%f\n", v.x, v.y, v.z);
+}
+
 class TestObject {
 public:
     int increment() {
@@ -51,7 +58,9 @@ TEST(LoadScript) {
     auto df = makeRDelegate(to, &TestObject::increment);
     env.addCRDelegate("TestObject_increment", &df);
 
-
+    auto gux = makeRDelegate(getUnitX);
+    env.addCRDelegate("getUnitX", &gux);
+    env.addCFunction("printVec", vscript::fromFunction<printVec>(printVec));
     env.addCFunction("valEnum", vscript::fromFunction<valEnum>(valEnum));
     env.addCFunction("valPtr", vscript::fromFunction<valPtr>(valPtr));
     env.addCFunction("valRef", vscript::fromFunction<valRef>(valRef));

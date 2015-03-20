@@ -1,4 +1,10 @@
 function add (x, y)
+  x,y,z = getUnitX()
+  print(x)
+  print(y)
+  print(z)
+  printVec(z,y,x)
+
   toValue = TestObject_increment()
   print(toValue)
   valEnum(1)

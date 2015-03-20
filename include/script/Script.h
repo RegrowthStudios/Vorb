@@ -37,56 +37,57 @@ namespace vorb {
             void* popUpvalueObject(EnvironmentHandle h);
 
             template<typename Arg>
-            void pushArgs(EnvironmentHandle h, Arg a) {
-                ScriptValueSender<Arg>::push(h, a);
+            i32 pushArgs(EnvironmentHandle h, Arg a) {
+                return ScriptValueSender<Arg>::push(h, a);
             }
             template<typename Arg, typename... Args>
-            void pushArgs(EnvironmentHandle h, Arg a, Args... other) {
-                ScriptValueSender<Arg>::push(h, a);
-                pushArgs<Args...>(h, other...);
+            i32 pushArgs(EnvironmentHandle h, Arg a, Args... other) {
+                i32 val = ScriptValueSender<Arg>::push(h, a);
+                return val + pushArgs<Args...>(h, other...);
+            }
+            inline i32 pushArgs(EnvironmentHandle h) {
+                return 0;
             }
 
             template<typename Arg>
             Arg popValue(EnvironmentHandle h) {
                 Arg a = ScriptValueSender<Arg>::pop(h);
-                popStack(h);
                 return a;
             }
 
             template<typename F, typename... Args>
-            void cCall(EnvironmentHandle h, F func) {
+            i32 cCall(EnvironmentHandle h, F func) {
                 func(popValue<Args>(h)...);
+                return 0;
             }
             template<typename... Args>
-            void fCall(EnvironmentHandle h, void* del) {
+            i32 fCall(EnvironmentHandle h, void* del) {
                 typedef RDelegate<void, Args...>* FunctionPtr;
                 FunctionPtr f = (FunctionPtr)del;
                 f->invoke(popValue<Args>(h)...);
+                return 0;
             }
             template<typename Ret, typename... Args>
-            void fRCall(EnvironmentHandle h, void* del) {
+            i32 fRCall(EnvironmentHandle h, void* del) {
                 typedef RDelegate<Ret, Args...>* FunctionPtr;
                 FunctionPtr f = (FunctionPtr)del;
                 Ret retValue = f->invoke(popValue<Args>(h)...);
-                ScriptValueSender<Ret>::push(h, retValue);
+                return ScriptValueSender<Ret>::push(h, retValue);
             }
 
             template<typename F, F f, typename... Args>
             int luaCall(lua_State* s) {
-                cCall<F, Args...>(s, f);
-                return 0;
+                return cCall<F, Args...>(s, f);
             }
             template<typename... Args>
             int luaDCall(lua_State* s) {
                 void* del = popUpvalueObject(s);
-                fCall<Args...>(s, del);
-                return 0;
+                return fCall<Args...>(s, del);
             }
             template<typename Ret, typename... Args>
             int luaDRCall(lua_State* s) {
                 void* del = popUpvalueObject(s);
-                fRCall<Ret, Args...>(s, del);
-                return 1;
+                return fRCall<Ret, Args...>(s, del);
             }
         }
 
@@ -96,7 +97,7 @@ namespace vorb {
             EnvironmentHandle hnd = env.getHandle();
 
             impl::pushToTop(hnd, scr);
-            impl::pushArgs<Args...>(hnd, args...);
+            impl::pushArgs(hnd, args...);
             impl::call(hnd, sizeof...(Args), 0);
             return true;
         }
@@ -106,8 +107,8 @@ namespace vorb {
             EnvironmentHandle hnd = env.getHandle();
 
             impl::pushToTop(hnd, scr);
-            impl::pushArgs<Args...>(hnd, args...);
-            impl::call(hnd, sizeof...(Args), 1);
+            impl::pushArgs(hnd, args...);
+            impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
             *retValue = impl::popValue<Ret>(hnd);
             return true;
         }

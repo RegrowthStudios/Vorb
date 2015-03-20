@@ -35,19 +35,26 @@ namespace vorb {
         template<> \
         struct ScriptValueSender<TYPE, void> { \
         public: \
-            static void push(EnvironmentHandle h, TYPE v); \
+            static i32 getNumValues(); \
+            static i32 push(EnvironmentHandle h, TYPE v); \
             static TYPE pop(EnvironmentHandle h); \
         }
-        SCRIPT_SENDER(i8);
-        SCRIPT_SENDER(i16);
-        SCRIPT_SENDER(i32);
-        SCRIPT_SENDER(i64);
-        SCRIPT_SENDER(ui8);
-        SCRIPT_SENDER(ui16);
-        SCRIPT_SENDER(ui32);
-        SCRIPT_SENDER(ui64);
-        SCRIPT_SENDER(f32);
-        SCRIPT_SENDER(f64);
+#define SCRIPT_SENDER_VEC(TYPE) \
+        SCRIPT_SENDER(TYPE); \
+        SCRIPT_SENDER(TYPE##v2); \
+        SCRIPT_SENDER(TYPE##v3); \
+        SCRIPT_SENDER(TYPE##v4)
+
+        SCRIPT_SENDER_VEC(i8);
+        SCRIPT_SENDER_VEC(i16);
+        SCRIPT_SENDER_VEC(i32);
+        SCRIPT_SENDER_VEC(i64);
+        SCRIPT_SENDER_VEC(ui8);
+        SCRIPT_SENDER_VEC(ui16);
+        SCRIPT_SENDER_VEC(ui32);
+        SCRIPT_SENDER_VEC(ui64);
+        SCRIPT_SENDER_VEC(f32);
+        SCRIPT_SENDER_VEC(f64);
         SCRIPT_SENDER(bool);
         SCRIPT_SENDER(nString);
         SCRIPT_SENDER(const cString);
@@ -58,8 +65,11 @@ namespace vorb {
         public:
             typedef typename std::underlying_type<T>::type EnumType;
 
-            static void push(EnvironmentHandle h, T v) {
-                ScriptValueSender<EnumType>::push(h, static_cast<EnumType>(v));
+            static i32 getNumValues() {
+                return ScriptValueSender<EnumType>::getNumValues();
+            }
+            static i32 push(EnvironmentHandle h, T v) {
+                return ScriptValueSender<EnumType>::push(h, static_cast<EnumType>(v));
             }
             static T pop(EnvironmentHandle h) {
                 return static_cast<T>(ScriptValueSender<EnumType>::pop(h));
@@ -69,8 +79,11 @@ namespace vorb {
         template<typename T>
         struct ScriptValueSender<T*, typename std::enable_if<std::is_pointer<T*>::value>::type> {
         public:
-            static void push(EnvironmentHandle h, T* v) {
-                ScriptValueSender<void*>::push(h, v);
+            static i32 getNumValues() {
+                return ScriptValueSender<void*>::getNumValues();
+            }
+            static i32 push(EnvironmentHandle h, T* v) {
+                return ScriptValueSender<void*>::push(h, v);
             }
             static T* pop(EnvironmentHandle h) {
                 return (T*)ScriptValueSender<void*>::pop(h);
@@ -80,13 +93,16 @@ namespace vorb {
         template<typename T>
         struct ScriptValueSender<T&, typename std::enable_if<std::is_reference<T&>::value>::type> {
         public:
-            static void push(EnvironmentHandle h, T& v) {
-                ScriptValueSender<void*>::push(h, &v);
+            static i32 getNumValues() {
+                return ScriptValueSender<void*>::getNumValues();
+            }
+            static i32 push(EnvironmentHandle h, T& v) {
+                return ScriptValueSender<void*>::push(h, &v);
             }
             static T& pop(EnvironmentHandle h) {
                 return *((T*)ScriptValueSender<void*>::pop(h));
             }
-        };
+        }; 
     }
 }
 namespace vscript = vorb::script;

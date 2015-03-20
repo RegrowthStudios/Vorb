@@ -189,6 +189,9 @@
     <ClCompile Include="src\io\YAMLConverters.cpp">
       <Filter>IO\YAML</Filter>
     </ClCompile>
+    <ClCompile Include="src\script\REPL.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -491,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="include\io\YAMLWriter.h">
       <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\REPL.h">
+      <Filter>Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

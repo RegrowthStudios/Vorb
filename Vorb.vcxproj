@@ -301,6 +301,7 @@
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp" />
     <ClCompile Include="src\script\Environment.cpp" />
+    <ClCompile Include="src\script\REPL.cpp" />
     <ClCompile Include="src\script\Script.cpp" />
     <ClCompile Include="src\script\ScriptValueSenders.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
+    <ClInclude Include="include\script\REPL.h" />
     <ClInclude Include="include\script\Script.h" />
     <ClInclude Include="include\script\ScriptValueSenders.h" />
     <ClInclude Include="include\TextureRecycler.hpp" />

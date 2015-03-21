@@ -50,6 +50,45 @@ public:
     int x = 0;
 };
 
+class TC {
+public:
+    TC() {
+        x = 0;
+        puts("TC CTOR");
+    }
+    ~TC() {
+        printf("TC DTOR %d\n", x);
+    }
+
+    TC(const TC& o) {
+        x = o.x;
+        puts("TC COPY");
+    }
+    TC& operator=(const TC& o) {
+        x = o.x;
+        puts("TC ATOR");
+        return *this;
+    }
+    TC(TC&& o) {
+        x = o.x;
+        o.x = 666;
+        puts("TC RCOPY");
+    }
+
+    i32 x;
+};
+
+TC getTC() {
+    TC v {};
+    v.x = 10;
+    return std::move(v);
+}
+
+TEST(MoveValue) {
+    TC v = getTC();
+    return true;
+}
+
 TEST(LoadScript) {
     vscript::Environment env;
     auto c = vscript::fromFunction<sum>(sum);
@@ -68,9 +107,10 @@ TEST(LoadScript) {
     if (!env.load("data/add.lua")) return false;
 
     i32 value;
-    vscript::callReturn(env, "add", &value, 1, 5);
-    vscript::callReturn(env, "add", &value, 1, 6);
-    vscript::callReturn(env, "add", &value, 1, 7);
-    vscript::callReturn(env, "add", &value, 1, 8);
+    auto f = env["add"].as<i32>();
+    value = f(1, 5);
+    value = f(1, 6);
+    value = f(1, 7);
+    value = f(1, 8);
     return value == 13 && to.x == 4;
 }

@@ -91,28 +91,6 @@ namespace vorb {
             }
         }
 
-        template<typename... Args>
-        bool call(Environment& env, const nString& f, Args... args) {
-            Function& scr = env[f];
-            EnvironmentHandle hnd = env.getHandle();
-
-            impl::pushToTop(hnd, scr);
-            impl::pushArgs(hnd, args...);
-            impl::call(hnd, sizeof...(Args), 0);
-            return true;
-        }
-        template<typename Ret, typename... Args>
-        bool callReturn(Environment& env, const nString& f, OUT Ret* retValue, Args... args) {
-            Function& scr = env[f];
-            EnvironmentHandle hnd = env.getHandle();
-
-            impl::pushToTop(hnd, scr);
-            impl::pushArgs(hnd, args...);
-            impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
-            *retValue = impl::popValue<Ret>(hnd);
-            return true;
-        }
-
         typedef int(*ScriptFunc)(EnvironmentHandle s);
         template<void* f, typename... Args>
         ScriptFunc fromFunction(void (*func)(Args...)) {

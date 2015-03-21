@@ -95,7 +95,7 @@ int vscript::Environment::registration(lua_State* L) {
     }
 
     nString nameLua(lua_tostring(L, 3));
-    e->m_functions[name] = nameLua;
+    e->m_functions[name] = Function(e, nameLua);
 
     return 0;
 }

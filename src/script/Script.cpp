@@ -7,6 +7,7 @@ extern "C" {
 #include "OOLua/lua/lauxlib.h"
 }
 
+#include "script/Function.h"
 
 void vscript::impl::pushToTop(EnvironmentHandle h, const Function& f) {
     lua_getglobal(h, f.getName().c_str());

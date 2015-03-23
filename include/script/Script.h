@@ -23,11 +23,9 @@
 #endif // !VORB_USING_PCH
 
 #include "ScriptValueSenders.h"
-#include "Environment.h"
 
 namespace vorb {
     namespace script {
-        class Environment;
         class Function;
 
         namespace impl {

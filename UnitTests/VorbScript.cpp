@@ -94,12 +94,11 @@ TEST(LoadScript) {
     auto c = vscript::fromFunction<sum>(sum);
 
     TestObject to;
-    auto df = makeRDelegate(to, &TestObject::increment);
-    env.addCRDelegate("TestObject_increment", &df);
+    env.addCRDelegate("TestObject_increment", makeRDelegate(to, &TestObject::increment));
 
-    auto gux = makeRDelegate(getUnitX);
-    env.addCRDelegate("getUnitX", &gux);
+    env.addCRDelegate("getUnitX", makeRDelegate(getUnitX));
     env.addCFunction("printVec", vscript::fromFunction<printVec>(printVec));
+    env.setNamespaces("Test", "Namespace");
     env.addCFunction("valEnum", vscript::fromFunction<valEnum>(valEnum));
     env.addCFunction("valPtr", vscript::fromFunction<valPtr>(valPtr));
     env.addCFunction("valRef", vscript::fromFunction<valRef>(valRef));
@@ -112,5 +111,6 @@ TEST(LoadScript) {
     value = f(1, 6);
     value = f(1, 7);
     value = f(1, 8);
-    return value == 13 && to.x == 4;
+    auto f2 = env["add2"].as<i32>();
+    return value == 13 && to.x == 4 && f2(5, 7) == 12;
 }

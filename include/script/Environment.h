@@ -40,6 +40,8 @@ namespace vorb {
     namespace script {
         typedef lua_State* EnvironmentHandle;
 
+#define VORB_SCRIPT_FUNCTION_TABLE "VorbScriptFuncs"
+
         class Environment {
         public:
             Environment();
@@ -52,21 +54,34 @@ namespace vorb {
             bool load(const vio::Path& file);
             void addCFunction(const nString& name, int(*f)(EnvironmentHandle));
             template<typename... Args>
-            void addCDelegate(const nString& name, RDelegate<void, Args...>* del) {
+            void addCDelegate(const nString& name, RDelegate<void, Args...>& del) {
+                typedef RDelegate<void, Args...> DelegateType;
+                m_cFuncs.emplace_back(new DelegateType(del));
                 ScriptFunc f = fromDelegate<Args...>();
-                ScriptValueSender<void*>::push(m_state, del);
+                ScriptValueSender<void*>::push(m_state, (DelegateType*)m_cFuncs.back().get());
                 addCClosure(name, f);
             }
             template<typename Ret, typename... Args>
-            void addCRDelegate(const nString& name, RDelegate<Ret, Args...>* del) {
+            void addCRDelegate(const nString& name, RDelegate<Ret, Args...>& del) {
+                typedef RDelegate<Ret, Args...> DelegateType;
+                m_cFuncs.emplace_back(new DelegateType(del));
                 ScriptFunc f = fromRDelegate<Ret, Args...>();
-                ScriptValueSender<void*>::push(m_state, del);
+                ScriptValueSender<void*>::push(m_state, (DelegateType*)m_cFuncs.back().get());
                 addCClosure(name, f);
             }
             template<typename T>
             void addValue(const nString& name, T value) {
                 ScriptValueSender<T>::push(m_state, value);
                 setValueName(name);
+            }
+            
+            template<typename... Args>
+            void setNamespaces(Args... v) {
+                if (namespaceCount > 0) {
+                    impl::popNamespaces(m_state, namespaceCount);
+                }
+                impl::pushNamespaces(m_state, v...);
+                namespaceCount = sizeof...(Args);
             }
 
             Function& operator[] (const nString& name);
@@ -81,6 +96,9 @@ namespace vorb {
             std::unordered_map<nString, Function> m_functions;
             EnvironmentHandle m_state;
             vcore::IDGenerator<i32> m_idGen;
+
+            size_t namespaceCount = 0;
+            std::vector<std::unique_ptr<DelegateBase>> m_cFuncs;
         };
     }
 }

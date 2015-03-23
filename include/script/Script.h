@@ -23,36 +23,13 @@
 #endif // !VORB_USING_PCH
 
 #include "ScriptValueSenders.h"
+#include "ScriptImpl.h"
 
 namespace vorb {
     namespace script {
         class Function;
 
         namespace impl {
-            void pushToTop(EnvironmentHandle h, const Function& f);
-            void call(EnvironmentHandle h, size_t n, size_t r);
-            void popStack(EnvironmentHandle h);
-            void* popUpvalueObject(EnvironmentHandle h);
-
-            template<typename Arg>
-            i32 pushArgs(EnvironmentHandle h, Arg a) {
-                return ScriptValueSender<Arg>::push(h, a);
-            }
-            template<typename Arg, typename... Args>
-            i32 pushArgs(EnvironmentHandle h, Arg a, Args... other) {
-                i32 val = ScriptValueSender<Arg>::push(h, a);
-                return val + pushArgs<Args...>(h, other...);
-            }
-            inline i32 pushArgs(EnvironmentHandle h) {
-                return 0;
-            }
-
-            template<typename Arg>
-            Arg popValue(EnvironmentHandle h) {
-                Arg a = ScriptValueSender<Arg>::pop(h);
-                return a;
-            }
-
             template<typename F, typename... Args>
             i32 cCall(EnvironmentHandle h, F func) {
                 func(popValue<Args>(h)...);

@@ -16,15 +16,24 @@ extern "C" {
 vscript::Function vscript::Function::nil;
 
 vscript::Environment::Environment() {
+    // Create Lua environment
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
     lua_register(m_state, "register", vscript::Environment::registration);
 
     // Create our special function table
-    lua_pushglobaltable(m_state);
     lua_newtable(m_state);
-    lua_setfield(m_state, -2, VORB_SCRIPT_ENVIRONMENT_TABLE);
+    lua_setfield(m_state, LUA_REGISTRYINDEX, VORB_SCRIPT_FUNCTION_TABLE);
+    
+    // Add registration function
+    lua_pushglobaltable(m_state);
+    impl::pushNamespace(m_state, "Vorb");
+    lua_pushlightuserdata(m_state, this);
+    lua_pushcclosure(m_state, vscript::Environment::registration, 1);
+    lua_setfield(m_state, -2, "register");
     lua_pop(m_state, 1);
+
+    impl::dumpStack(m_state);
 }
 vscript::Environment::~Environment() {
     lua_close(m_state);
@@ -53,21 +62,6 @@ bool vscript::Environment::load(const vio::Path& file) {
 
     if (!success) return false;
 
-    lua_getglobal(m_state, "registerFuncs");
-    
-    if (lua_isfunction(m_state, -1)) {
-        // Register functions
-        lua_pushlightuserdata(m_state, this);
-        lua_call(m_state, 1, 0);
-        lua_pop(m_state, 1);
-
-        // Delete register function
-        lua_pushnil(m_state);
-        lua_setglobal(m_state, "registerFuncs");
-    } else {
-        lua_pop(m_state, 1);
-    }
-
     return true;
 }
 
@@ -81,32 +75,30 @@ const vscript::Function& vscript::Environment::operator[](const nString& name) c
 }
 
 int vscript::Environment::registration(lua_State* L) {
-    if (lua_gettop(L) != 3) return 0;
-    if (!lua_isuserdata(L, 1)) return 0;
-    if (!lua_isstring(L, 2)) return 0;
-    if (!lua_isstring(L, 3)) return 0;
-    
-    vscript::Environment* e = (vscript::Environment*)lua_touserdata(L, 1);
-    nString name(lua_tostring(L, 2));
+    // Get arguments
+    if (lua_gettop(L) != 2) return 0;
+    if (!lua_isstring(L, 1)) return 0;
+    if (!lua_isfunction(L, 2)) return 0;
+    vscript::Environment* e = (vscript::Environment*)lua_touserdata(L, lua_upvalueindex(1));
+    nString name(lua_tostring(L, 1));
 
-    {
-        char buf[255];
-        sprintf(buf, VORB_SCRIPT_ENVIRONMENT_VALUE_FORMAT, e->m_idGen.generate());
-    }
-
-    nString nameLua(lua_tostring(L, 3));
-    e->m_functions[name] = Function(e, nameLua);
+    // Add function to the registry
+    e->m_functions[name] = Function(e, name);
+    lua_getfield(L, LUA_REGISTRYINDEX, VORB_SCRIPT_FUNCTION_TABLE);
+    lua_insert(L, -2);
+    lua_setfield(L, -2, name.c_str());
 
     return 0;
 }
 
 void vorb::script::Environment::addCFunction(const nString& name, int(*f)(EnvironmentHandle)) {
-    lua_register(m_state, name.c_str(), f);
+    lua_pushcfunction(m_state, f);
+    lua_setfield(m_state, -2, name.c_str());
 }
 void vorb::script::Environment::addCClosure(const nString& name, int(*f)(EnvironmentHandle)) {
     lua_pushcclosure(m_state, f, 1);
-    lua_setglobal(m_state, name.c_str());
+    lua_setfield(m_state, -2, name.c_str());
 }
 void vorb::script::Environment::setValueName(const nString& name) {
-    lua_setglobal(m_state, name.c_str());
+    lua_setfield(m_state, -2, name.c_str());
 }

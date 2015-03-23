@@ -150,9 +150,6 @@
     <ClCompile Include="src\script\Environment.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\script\Script.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp">
       <Filter>UI\Input</Filter>
     </ClCompile>
@@ -190,6 +187,9 @@
       <Filter>IO\YAML</Filter>
     </ClCompile>
     <ClCompile Include="src\script\REPL.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\ScriptImpl.cpp">
       <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -496,6 +496,9 @@
       <Filter>IO\YAML</Filter>
     </ClInclude>
     <ClInclude Include="include\script\REPL.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\ScriptImpl.h">
       <Filter>Script</Filter>
     </ClInclude>
   </ItemGroup>

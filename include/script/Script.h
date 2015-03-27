@@ -22,6 +22,11 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include <tuple>
+#include <iostream>
+#include <array>
+#include <utility>
+
 #include "ScriptValueSenders.h"
 #include "ScriptImpl.h"
 
@@ -30,39 +35,73 @@ namespace vorb {
         class Function;
 
         namespace impl {
+            template<size_t... Is>
+            struct index_sequence {};
+            template<size_t N, size_t... Is>
+            struct make_index_sequence : make_index_sequence<N - 1, N - 1, Is...> {};
+            template<size_t... Is>
+            struct make_index_sequence<0, Is...> : index_sequence<Is...> {};
+            template<typename... T>
+            struct index_sequence_for : make_index_sequence<sizeof...(T)> {};
+
+            template <typename Ret, typename F, typename Tuple, size_t... Is>
+            Ret invokeCall(F f, Tuple& t, index_sequence<Is...>) {
+                return f(std::get<Is>(t)...);
+            }
+            template <typename Ret, typename F, typename Tuple, size_t... Is>
+            Ret invoke(F f, Tuple& t, index_sequence<Is...>) {
+                return f->invoke(std::get<Is>(t)...);
+            }
+
             template<typename F, typename... Args>
-            i32 cCall(EnvironmentHandle h, F func) {
-                func(popValue<Args>(h)...);
+            i32 cCall(EnvironmentHandle h, void(*func)(Args...)) {
+                std::tuple<Args...> tValue { popValue<Args>(h)... };
+                invokeCall<void>(func, tValue, index_sequence_for<Args...>());
                 return 0;
             }
+            template<typename F>
+            i32 cCall(EnvironmentHandle h, void(*func)()) {
+                func();
+                return 0;
+            }
+
             template<typename... Args>
-            i32 fCall(EnvironmentHandle h, void* del) {
-                typedef RDelegate<void, Args...>* FunctionPtr;
-                FunctionPtr f = (FunctionPtr)del;
-                f->invoke(popValue<Args>(h)...);
+            i32 fCall(EnvironmentHandle h, RDelegate<void, Args...>* del) {
+                std::tuple<Args...> tValue { popValue<Args>(h)... };
+                invoke<void>(del, tValue, index_sequence_for<Args...>());
                 return 0;
             }
+            inline i32 fCall(EnvironmentHandle h, RDelegate<void>* del) {
+                del->invoke();
+                return 0;
+            }
+         
             template<typename Ret, typename... Args>
-            i32 fRCall(EnvironmentHandle h, void* del) {
-                typedef RDelegate<Ret, Args...>* FunctionPtr;
-                FunctionPtr f = (FunctionPtr)del;
-                Ret retValue = f->invoke(popValue<Args>(h)...);
+            i32 fRCall(EnvironmentHandle h, RDelegate<Ret, Args...>* del) {
+                std::tuple<Args...> tValue { popValue<Args>(h)... };
+                Ret retValue = invoke<Ret>(del, tValue, index_sequence_for<Args...>());
+                return ScriptValueSender<Ret>::push(h, retValue);
+            }
+            template<typename Ret>
+            i32 fRCall(EnvironmentHandle h, RDelegate<Ret>* del) {
+                Ret retValue = del->invoke();
                 return ScriptValueSender<Ret>::push(h, retValue);
             }
 
             template<typename F, F f, typename... Args>
             int luaCall(lua_State* s) {
-                return cCall<F, Args...>(s, f);
+                typedef void(*FPtr)(Args...);
+                return cCall<F>(s, (FPtr)f);
             }
             template<typename... Args>
             int luaDCall(lua_State* s) {
                 void* del = popUpvalueObject(s);
-                return fCall<Args...>(s, del);
+                return fCall<Args...>(s, (RDelegate<void, Args...>*)del);
             }
             template<typename Ret, typename... Args>
             int luaDRCall(lua_State* s) {
                 void* del = popUpvalueObject(s);
-                return fRCall<Ret, Args...>(s, del);
+                return fRCall<Ret, Args...>(s, (RDelegate<Ret, Args...>*)del);
             }
         }
 

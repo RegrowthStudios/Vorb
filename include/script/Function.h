@@ -53,7 +53,6 @@ namespace vorb {
                 impl::pushArgs(hnd, args...);
                 impl::call(hnd, sizeof...(Args), 0);
                 impl::popStack(hnd);
-                impl::dumpStack(hnd);
             }
             template<typename Ret, typename... Args>
             void rcall(OUT Ret* retValue, Args... args) const {
@@ -64,7 +63,6 @@ namespace vorb {
                 impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
                 *retValue = impl::popValue<Ret>(hnd);
                 impl::popStack(hnd);
-                impl::dumpStack(hnd);
             }
 
             template<typename... Args>

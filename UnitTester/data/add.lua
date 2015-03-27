@@ -5,6 +5,7 @@ function add (x, y)
   Test.Namespace.valPtr(nil)
   Test.Namespace.valRef(nil)
   v = stuffs(1,2,3)
+  print(v)
   print("Adding X+Y+TO.value\n")
   return x + y + toValue
 end

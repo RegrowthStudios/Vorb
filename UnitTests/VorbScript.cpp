@@ -21,7 +21,7 @@ void sum(void* ret, int a, int b) {
 }
 
 i32 stuff(i32 a, i32 b, i32 c) {
-    return a + b + c;
+    return a + b * c;
 }
 
 enum class MyEnum {

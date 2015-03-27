@@ -20,6 +20,10 @@ void sum(void* ret, int a, int b) {
     *r = a + b + b;
 }
 
+i32 stuff(i32 a, i32 b, i32 c) {
+    return a + b + c;
+}
+
 enum class MyEnum {
     RED,
     DOG
@@ -97,6 +101,7 @@ TEST(LoadScript) {
     env.addCRDelegate("TestObject_increment", makeRDelegate(to, &TestObject::increment));
 
     env.addCRDelegate("getUnitX", makeRDelegate(getUnitX));
+    env.addCRDelegate("stuffs", makeRDelegate(stuff));
     env.addCFunction("printVec", vscript::fromFunction<printVec>(printVec));
     env.setNamespaces("Test", "Namespace");
     env.addCFunction("valEnum", vscript::fromFunction<valEnum>(valEnum));

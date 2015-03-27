@@ -4,6 +4,7 @@ function add (x, y)
   Test.Namespace.valEnum(1)
   Test.Namespace.valPtr(nil)
   Test.Namespace.valRef(nil)
+  v = stuffs(1,2,3)
   print("Adding X+Y+TO.value\n")
   return x + y + toValue
 end

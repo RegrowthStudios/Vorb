@@ -11,6 +11,9 @@ extern "C" {
 /* Integer casts                                                        */
 /************************************************************************/
 #define CAST_INTEGER(TYPE) \
+    TYPE vscript::ScriptValueSender<TYPE, void>::defaultValue() { \
+        return 0; \
+    } \
     i32 vscript::ScriptValueSender<TYPE, void>::getNumValues() { \
         return 1; \
     } \
@@ -28,6 +31,9 @@ CAST_INTEGER(i16)
 CAST_INTEGER(i32)
 CAST_INTEGER(i64)
 #define CAST_UNSIGNED(TYPE) \
+    TYPE vscript::ScriptValueSender<TYPE, void>::defaultValue() { \
+        return 0; \
+    } \
     i32 vscript::ScriptValueSender<TYPE, void>::getNumValues() { \
         return 1; \
     } \
@@ -49,6 +55,9 @@ CAST_UNSIGNED(ui64)
 /* Number casts                                                         */
 /************************************************************************/
 #define CAST_NUMBER(TYPE) \
+    TYPE vscript::ScriptValueSender<TYPE, void>::defaultValue() { \
+        return 0; \
+    } \
     i32 vscript::ScriptValueSender<TYPE, void>::getNumValues() { \
         return 1; \
     } \
@@ -67,6 +76,9 @@ CAST_NUMBER(f64);
 /************************************************************************/
 /* Boolean cast                                                         */
 /************************************************************************/
+bool vscript::ScriptValueSender<bool, void>::defaultValue() {
+    return false;
+}
 i32 vscript::ScriptValueSender<bool, void>::getNumValues() {
     return 1;
 }
@@ -83,6 +95,9 @@ bool vscript::ScriptValueSender<bool, void>::pop(EnvironmentHandle h) {
 /************************************************************************/
 /* String casts                                                         */
 /************************************************************************/
+nString vscript::ScriptValueSender<nString, void>::defaultValue() {
+    return nString();
+}
 i32 vscript::ScriptValueSender<nString, void>::getNumValues() {
     return 1;
 }
@@ -94,6 +109,9 @@ nString vscript::ScriptValueSender<nString, void>::pop(EnvironmentHandle h) {
     nString v(lua_tostring(h, -1));
     lua_pop(h, 1);
     return v;
+}
+const cString vscript::ScriptValueSender<const cString, void>::defaultValue() {
+    return nullptr;
 }
 i32 vscript::ScriptValueSender<const cString, void>::getNumValues() {
     return 1;
@@ -110,6 +128,9 @@ const cString vscript::ScriptValueSender<const cString, void>::pop(EnvironmentHa
 /************************************************************************/
 /* User data cast                                                      */
 /************************************************************************/
+void* vscript::ScriptValueSender<void*, void>::defaultValue() {
+    return nullptr;
+}
 i32 vscript::ScriptValueSender<void*, void>::getNumValues() {
     return 1;
 }
@@ -124,6 +145,9 @@ void* vscript::ScriptValueSender<void*, void>::pop(EnvironmentHandle h) {
 }
 
 #define TYPE_VEC2(TYPE) \
+    TYPE##v2 vscript::ScriptValueSender<TYPE##v2, void>::defaultValue() { \
+        return TYPE##v2(); \
+    } \
     i32 vscript::ScriptValueSender<TYPE##v2, void>::getNumValues() { \
         return 2; \
     } \
@@ -139,6 +163,9 @@ void* vscript::ScriptValueSender<void*, void>::pop(EnvironmentHandle h) {
         return v; \
     }
 #define TYPE_VEC3(TYPE) \
+    TYPE##v3 vscript::ScriptValueSender<TYPE##v3, void>::defaultValue() { \
+        return TYPE##v3(); \
+    } \
     i32 vscript::ScriptValueSender<TYPE##v3, void>::getNumValues() { \
         return 3; \
     } \
@@ -156,6 +183,9 @@ void* vscript::ScriptValueSender<void*, void>::pop(EnvironmentHandle h) {
         return v; \
     }
 #define TYPE_VEC4(TYPE) \
+    TYPE##v4 vscript::ScriptValueSender<TYPE##v4, void>::defaultValue() { \
+        return TYPE##v4(); \
+    } \
     i32 vscript::ScriptValueSender<TYPE##v4, void>::getNumValues() { \
         return 4; \
     } \

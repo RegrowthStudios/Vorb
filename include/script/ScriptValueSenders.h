@@ -39,6 +39,7 @@ namespace vorb {
         template<> \
         struct ScriptValueSender<TYPE, void> { \
         public: \
+            static TYPE defaultValue(); \
             static i32 getNumValues(); \
             static i32 push(EnvironmentHandle h, TYPE v); \
             static TYPE pop(EnvironmentHandle h); \
@@ -69,6 +70,9 @@ namespace vorb {
         public:
             typedef typename std::underlying_type<T>::type EnumType;
 
+            static T defaultValue() {
+                return static_cast<T>(0);
+            }
             static i32 getNumValues() {
                 return ScriptValueSender<EnumType>::getNumValues();
             }
@@ -83,6 +87,9 @@ namespace vorb {
         template<typename T>
         struct ScriptValueSender<T*, typename std::enable_if<std::is_pointer<T*>::value>::type> {
         public:
+            static T* defaultValue() {
+                return (T*)nullptr;
+            }
             static i32 getNumValues() {
                 return ScriptValueSender<void*>::getNumValues();
             }
@@ -97,6 +104,10 @@ namespace vorb {
         template<typename T>
         struct ScriptValueSender<T&, typename std::enable_if<std::is_reference<T&>::value>::type> {
         public:
+            static T& defaultValue() {
+                T* t = (T*)nullptr;
+                return *t;
+            }
             static i32 getNumValues() {
                 return ScriptValueSender<void*>::getNumValues();
             }

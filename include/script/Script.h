@@ -44,6 +44,33 @@ namespace vorb {
             template<typename... T>
             struct index_sequence_for : make_index_sequence<sizeof...(T)> {};
 
+            template<typename... T>
+            std::tuple<T...> popArgs(EnvironmentHandle h) {
+                std::cout << sizeof(std::tuple<T...>) << std::endl;
+                std::tuple<T...> tValue { ScriptValueSender<T>::defaultValue()... };
+                popArgsR<T...>(h, &tValue);
+                return std::move(tValue);
+            }
+            template<typename T>
+            void popArgsR(EnvironmentHandle h, std::tuple<T>* v) {
+                T tValue = popValue<T>(h);
+                T* ptr = &std::get<0>(*v);
+                *ptr = tValue;
+            }
+            template<typename T>
+            void popArgsR(EnvironmentHandle h, std::tuple<T&>* v) {
+                void* tValue = popValue<void*>(h);
+                memcpy(v, &tValue, sizeof(void*));
+            }
+            template<typename V, typename... T>
+            void popArgsR(EnvironmentHandle h, std::tuple<V, T...>* v) {
+                std::tuple<T...> tPopped { ScriptValueSender<T>::defaultValue()... };
+                popArgsR<T...>(h, &tPopped);
+                std::tuple<V> tValue { ScriptValueSender<V>::defaultValue() };
+                popArgsR<V>(h, &tValue);
+                std::swap(*v, std::tuple_cat(tValue, tPopped));
+            }
+
             template <typename Ret, typename F, typename Tuple, size_t... Is>
             Ret invokeCall(F f, Tuple& t, index_sequence<Is...>) {
                 return f(std::get<Is>(t)...);
@@ -52,10 +79,14 @@ namespace vorb {
             Ret invoke(F f, Tuple& t, index_sequence<Is...>) {
                 return f->invoke(std::get<Is>(t)...);
             }
+            template <typename F, typename Tuple, size_t... Is>
+            void invokeNone(F f, Tuple& t, index_sequence<Is...>) {
+                f->invoke(std::get<Is>(t)...);
+            }
 
             template<typename F, typename... Args>
             i32 cCall(EnvironmentHandle h, void(*func)(Args...)) {
-                std::tuple<Args...> tValue { popValue<Args>(h)... };
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
                 invokeCall<void>(func, tValue, index_sequence_for<Args...>());
                 return 0;
             }
@@ -67,18 +98,18 @@ namespace vorb {
 
             template<typename... Args>
             i32 fCall(EnvironmentHandle h, RDelegate<void, Args...>* del) {
-                std::tuple<Args...> tValue { popValue<Args>(h)... };
-                invoke<void>(del, tValue, index_sequence_for<Args...>());
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
+                invokeNone(del, tValue, index_sequence_for<Args...>());
                 return 0;
             }
             inline i32 fCall(EnvironmentHandle h, RDelegate<void>* del) {
                 del->invoke();
                 return 0;
             }
-         
+
             template<typename Ret, typename... Args>
             i32 fRCall(EnvironmentHandle h, RDelegate<Ret, Args...>* del) {
-                std::tuple<Args...> tValue { popValue<Args>(h)... };
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
                 Ret retValue = invoke<Ret>(del, tValue, index_sequence_for<Args...>());
                 return ScriptValueSender<Ret>::push(h, retValue);
             }
@@ -96,7 +127,7 @@ namespace vorb {
             template<typename... Args>
             int luaDCall(lua_State* s) {
                 void* del = popUpvalueObject(s);
-                return fCall<Args...>(s, (RDelegate<void, Args...>*)del);
+                return fCall(s, (RDelegate<void, Args...>*)del);
             }
             template<typename Ret, typename... Args>
             int luaDRCall(lua_State* s) {
@@ -107,7 +138,7 @@ namespace vorb {
 
         typedef int(*ScriptFunc)(EnvironmentHandle s);
         template<void* f, typename... Args>
-        ScriptFunc fromFunction(void (*func)(Args...)) {
+        ScriptFunc fromFunction(void(*func)(Args...)) {
             typedef void(*FuncType)(Args...);
             return impl::luaCall<FuncType, (FuncType)f, Args...>;
         }

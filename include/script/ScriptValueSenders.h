@@ -8,7 +8,7 @@
 //
 
 /*! \file ScriptValueSenders.h
- * @brief 
+ * @brief Defines a preset number of scripting conversion methods.
  * 
  * 
  */
@@ -21,14 +21,18 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 struct lua_State;
 
 namespace vorb {
     namespace script {
-        typedef lua_State* EnvironmentHandle;
+        typedef lua_State* EnvironmentHandle; ///< The pointer to the scripting environment implementation
+        /*! @brief Pre-declaration of the conversion API
+         * 
+         * @tparam T: Type of the value that can be converted into/from the scripting environment
+         */
         template<typename T, typename = void> struct ScriptValueSender;
 
 #define SCRIPT_SENDER(TYPE) \
@@ -102,7 +106,7 @@ namespace vorb {
             static T& pop(EnvironmentHandle h) {
                 return *((T*)ScriptValueSender<void*>::pop(h));
             }
-        }; 
+        };
     }
 }
 namespace vscript = vorb::script;

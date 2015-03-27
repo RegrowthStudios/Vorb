@@ -32,8 +32,6 @@ vscript::Environment::Environment() {
     lua_pushcclosure(m_state, vscript::Environment::registration, 1);
     lua_setfield(m_state, -2, "register");
     lua_pop(m_state, 1);
-
-    impl::dumpStack(m_state);
 }
 vscript::Environment::~Environment() {
     lua_close(m_state);

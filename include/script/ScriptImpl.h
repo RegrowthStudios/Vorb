@@ -31,10 +31,22 @@ namespace vorb {
         class Function;
 
         namespace impl {
+            /*! @brief Dumps the scripting environment's stack contents to the console
+             * 
+             * @pre: The handle must a valid handle
+             * @param h: Environment handle
+             */
             void dumpStack(EnvironmentHandle h);
 
-            bool pushGlobalNamespace(EnvironmentHandle h);
-            bool pushNamespace(EnvironmentHandle h, const nString& name);
+            /*! @brief Put the global namespace on the stack
+             * 
+             * 
+             * 
+             * @param h: 
+             * @return 
+             */
+            void pushGlobalNamespace(EnvironmentHandle h);
+            void pushNamespace(EnvironmentHandle h, const nString& name);
             inline void pushNamespaces(EnvironmentHandle h) {
                 // Empty
             }
@@ -68,8 +80,7 @@ namespace vorb {
 
             template<typename Arg>
             Arg popValue(EnvironmentHandle h) {
-                Arg a = ScriptValueSender<Arg>::pop(h);
-                return a;
+                return ScriptValueSender<Arg>::pop(h);
             }
         }
     }

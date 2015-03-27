@@ -26,11 +26,10 @@ void* vorb::script::impl::popUpvalueObject(EnvironmentHandle h) {
     return val;
 }
 
-bool vorb::script::impl::pushGlobalNamespace(EnvironmentHandle h) {
+void vorb::script::impl::pushGlobalNamespace(EnvironmentHandle h) {
     lua_pushglobaltable(h);
-    return true;
 }
-bool vorb::script::impl::pushNamespace(EnvironmentHandle h, const nString& name) {
+void vorb::script::impl::pushNamespace(EnvironmentHandle h, const nString& name) {
     // Attempt to get the namespace
     lua_getfield(h, -1, name.c_str());
     if (lua_isnil(h, -1)) {
@@ -42,7 +41,6 @@ bool vorb::script::impl::pushNamespace(EnvironmentHandle h, const nString& name)
         // Push new namespace
         lua_getfield(h, -1, name.c_str());
     }
-    return true;
 }
 void vorb::script::impl::popNamespaces(EnvironmentHandle h, i32 n) {
     lua_pop(h, n);

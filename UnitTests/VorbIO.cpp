@@ -9,6 +9,7 @@
 #include <include/io/IOManager.h>
 #include <include/Vorb.h>
 #include <include/Timing.h>
+#include "tiny_obj_loader.h"
 
 TEST(Path) {
     vpath path = ".";
@@ -148,9 +149,9 @@ TEST(VRAW) {
         l = (size_t)fs.read(l, 1, data);
         fs.close();
 
-        vg::MeshDataRaw mesh;
         timer.start();
-        for (size_t i = 0; i < 100; i++) {
+        vg::MeshDataRaw mesh;
+        for (size_t i = 0; i < 1; i++) {
             vg::VertexDeclaration vdecl;
             ui32 indexSize;
             mesh = vg::ModelIO::loadRAW(data, vdecl, indexSize);
@@ -163,6 +164,42 @@ TEST(VRAW) {
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", mesh.vertexCount);
         printf("Inds: %d\n", mesh.indexCount);
+        printf("Load Time (MS): %f\n", ms);
+    });
+
+    return true;
+}
+
+TEST(TINYOBJ) {
+    vpath path = "data/models/WaveOBJ";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(false);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l + 1];
+        l = (size_t)fs.read(l, 1, data);
+        data[l] = 0;
+        fs.close();
+        std::stringstream ss(data);
+        tinyobj::MaterialFileReader mr { path.getString() };
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> mats;
+        timer.start();
+        tinyobj::LoadObj(shapes, mats, ss, mr);
+        f32 ms = timer.stop();
+        delete[] data;
+
+        printf("Model: %s\n", file.getPath().getCString());
+        printf("Verts: %d\n", shapes[0].mesh.positions.size());
+        printf("Inds: %d\n", shapes[0].mesh.indices.size() * 3);
         printf("Load Time (MS): %f\n", ms);
     });
 

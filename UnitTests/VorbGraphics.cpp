@@ -649,12 +649,13 @@ public:
     public:
         void render() override {
             if (!m_program) {
+                printf("Building shader\n");
                 m_program = new vg::GLProgram(true);
                 m_program->addShader(vg::ShaderType::VERTEX_SHADER, R"(
-uniform vec2 offset;
+uniform vec2 unOffset;
 in vec4 vPosition;
 void main() {
-    gl_Position = vPosition + vec4(offset, 0.0, 0.0);
+    gl_Position = vPosition + vec4(unOffset, 0.0, 0.0);
 }
 )");
                 m_program->addShader(vg::ShaderType::FRAGMENT_SHADER, R"(
@@ -667,8 +668,10 @@ void main() {
                 m_program->link();
                 m_program->initAttributes();
                 m_program->initUniforms();
+                if (!m_program->getIsLinked()) throw 123;
             }
             if (!m_verts) {
+                printf("Building vbo\n");
                 glGenBuffers(1, &m_verts);
                 float verts[12] = { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f };
@@ -677,8 +680,10 @@ void main() {
             }
             m_program->use();
             m_program->enableVertexAttribArrays();
+            glUniform4fv(m_program->getUniform("unColor"), 1, &m_color[0]);
+            glUniform2fv(m_program->getUniform("unOffset"), 1, &m_offset[0]);
             glBindBuffer(GL_ARRAY_BUFFER, m_verts);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+            glVertexAttribPointer(m_program->getAttribute("vPosition"), 2, GL_FLOAT, GL_FALSE, 0, 0);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             m_program->disableVertexAttribArrays();
@@ -721,7 +726,19 @@ void main() {
             }
         });
         std::shared_ptr<QuadRenderStage> s1 = std::make_shared<QuadRenderStage>();
+        std::shared_ptr<QuadRenderStage> s2 = std::make_shared<QuadRenderStage>();
+        s2->setColor(f32v4(1.0f, 0.0f, 0.0f, 1.0f));
+        s2->setOffset(f32v2(1.0f, 0.0f));
+        std::shared_ptr<QuadRenderStage> s3 = std::make_shared<QuadRenderStage>();
+        s3->setColor(f32v4(0.0f, 1.0f, 0.0f, 1.0f));
+        s3->setOffset(f32v2(0.0f, 1.0f));
+        std::shared_ptr<QuadRenderStage> s4 = std::make_shared<QuadRenderStage>();
+        s4->setColor(f32v4(0.0f, 0.0f, 1.0f, 1.0f));
+        s4->setOffset(f32v2(1.0f, 1.0f));
         m_pipeline.addStage(s1);
+        m_pipeline.addStage(s2);
+        m_pipeline.addStage(s3);
+        m_pipeline.addStage(s4);
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         m_pipeline.destroy(true);
@@ -729,14 +746,17 @@ void main() {
 
     virtual void update(const vui::GameTime& gameTime) {
         if (m_reloadShaders) {
-            printf("RELOADING SHADERS\n");
+            printf("Reloading shaders\n");
             m_pipeline.reloadShaders();
             m_reloadShaders = false;
         }
     }
     virtual void draw(const vui::GameTime& gameTime) {
+        vg::DepthState::NONE.set();
+        glDisable(GL_CULL_FACE);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_pipeline.render();
+        vg::DepthState::FULL.set();
     }
 private:
     vg::RenderPipeline m_pipeline;
@@ -794,3 +814,9 @@ TEST(AnimViewer) {
     return true;
 }
 
+TEST(PipelineViewer) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new PipelineViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}

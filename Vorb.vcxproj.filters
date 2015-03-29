@@ -17,9 +17,6 @@
     <ClCompile Include="src/graphics/IRenderStage.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src/graphics/IRenderPipeline.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src/io/IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
@@ -168,6 +165,9 @@
     <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\RenderPipeline.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -196,9 +196,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include/graphics/IRenderStage.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include/graphics/IRenderPipeline.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include/io/IOManager.h">
@@ -462,6 +459,9 @@
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\AnimationData.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\RenderPipeline.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>

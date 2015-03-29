@@ -260,7 +260,7 @@
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
-    <ClCompile Include="src/graphics/IRenderPipeline.cpp" />
+    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src/graphics/IRenderStage.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
@@ -343,7 +343,7 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
-    <ClInclude Include="include/graphics/IRenderPipeline.h" />
+    <ClInclude Include="include\graphics\RenderPipeline.h" />
     <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />

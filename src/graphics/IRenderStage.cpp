@@ -2,7 +2,7 @@
 #include "graphics/IRenderStage.h"
 #include "graphics/GLProgram.h"
 
-vg::IRenderStage::IRenderStage(const nString& displayName, const Camera* camera /* = nullptr */) :
+vg::IRenderStage::IRenderStage(const nString& displayName /* = "" */, const Camera* camera /* = nullptr */) :
     m_name(displayName),
     m_camera(camera),
     m_isVisible(true) {

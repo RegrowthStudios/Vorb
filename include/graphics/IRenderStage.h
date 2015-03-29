@@ -25,16 +25,19 @@ namespace vorb {
 
         class IRenderStage {
         public:
-            IRenderStage(const nString& displayName, const Camera* camera = nullptr);
+            IRenderStage(const nString& displayName = "", const Camera* camera = nullptr);
             virtual ~IRenderStage();
 
             /// Renders the stage
             virtual void render() = 0;
 
-            /// Check if the stage is visible
-            virtual const bool& isVisible() const {
-                return m_isVisible;
-            }
+            /// Reloads the shader. By default, it simply
+            /// disposes the shader and allows a lazy init at next draw
+            virtual void reloadShader();
+
+            /// Disposes and deletes the shader and turns off visibility
+            /// If stage does lazy init, shader will reload at next draw
+            virtual void dispose();
 
             /// Sets the visibility of the stage
             /// @param isVisible: The visibility
@@ -47,19 +50,20 @@ namespace vorb {
                 m_isVisible = !m_isVisible;
             }
 
+            /// Check if the stage is visible
+            virtual const bool& isVisible() const {
+                return m_isVisible;
+            }
+
             /// Sets the camera
             /// @param camera: Camera to be used in rendering.
             virtual void setCamera(const Camera* camera) {
                 m_camera = camera;
             }
 
-            /// Reloads the shader. By default, it simply
-            /// disposes the shader and allows a lazy init at next draw
-            virtual void reloadShader();
+            /// Gets the name
+            virtual const nString& getName() const { return m_name; }
 
-            /// Disposes and deletes the shader and turns off visibility
-            /// If stage does lazy init, shader will reload at next draw
-            virtual void dispose();
         protected:
             GLProgram* m_program = nullptr; ///< Optional shader program
             const Camera* m_camera = nullptr; ///< Optional Camera, not needed for post processing stages

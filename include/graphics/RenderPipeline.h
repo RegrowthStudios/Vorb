@@ -50,8 +50,14 @@ namespace vorb {
             /// Renders the pipeline
             virtual void render();
 
-            /// Frees all resources
-            virtual void destroy();
+            /// Frees all resources and disposes all render stages
+            /// @param shouldDisposeStages: Set to true when you want to
+            /// dispose managed stages as well.
+            virtual void destroy(bool shouldDisposeStages);
+
+            /// Disposes all render stages
+            /// Call before destroy
+            virtual void disposeStages();
 
             /// Reloads all shaders
             virtual void reloadShaders();

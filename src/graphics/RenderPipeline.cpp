@@ -22,17 +22,25 @@ void vorb::graphics::RenderPipeline::addStage(StagePtr stage) {
 }
 
 void vorb::graphics::RenderPipeline::render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     for (auto& stage : m_stages) {
         if (stage->isVisible()) stage->render();
     }
 }
 
-void vorb::graphics::RenderPipeline::destroy() {
+void vorb::graphics::RenderPipeline::destroy(bool shouldDisposeStages) {
+    if (shouldDisposeStages) {
+        disposeStages();
+    }
     for (auto& stage : m_stages) {
         stage.reset();
     }
     std::vector <StagePtr>().swap(m_stages);
+}
+
+void vorb::graphics::RenderPipeline::disposeStages() {
+    for (auto& stage : m_stages) {
+        stage->dispose();
+    }
 }
 
 void vorb::graphics::RenderPipeline::reloadShaders() {

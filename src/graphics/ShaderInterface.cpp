@@ -27,6 +27,13 @@ i32 vg::ShaderInterface::build(const AttributeSemBinding& semBinds) {
     return numLinked;
 }
 
+void vg::ShaderInterface::dispose() {
+    if (m_vao) {
+        glDeleteVertexArrays(1, &m_vao);
+        m_vao = 0;
+    }
+}
+
 i32 vg::ShaderInterface::build(const GLProgram* program) {
     return build(program->getSemanticBinding());
 }

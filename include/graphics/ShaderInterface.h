@@ -16,7 +16,7 @@
 #define ShaderInterface_h__
 
 #include "../Vorb.h"
-#include "graphics/GLEnums.h"
+#include "GLEnums.h"
 #include <vector>
 
 namespace vorb {
@@ -41,7 +41,8 @@ namespace vorb {
             ShaderInterface(const AttributeBindings& bindings) : m_bindings(bindings) {
                 // Empty
             };
-            ~ShaderInterface();
+
+            void dispose();
 
             i32 build(const AttributeSemBinding& semBinds);
 

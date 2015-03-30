@@ -21,7 +21,7 @@
 #include "../Vorb.h"
 #include "gtypes.h"
 #include "GLenums.h"
-#include "graphics/ShaderInterface.h"
+#include "ShaderInterface.h"
 
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MAJOR 1
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MINOR 3

@@ -21,6 +21,7 @@
 #include "../Vorb.h"
 #include "gtypes.h"
 #include "GLenums.h"
+#include "graphics/ShaderInterface.h"
 
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MAJOR 1
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MINOR 3
@@ -59,7 +60,6 @@ namespace vorb {
             typedef std::pair<nString, VGAttribute> AttributeBinding; ///< Binds attribute names to locations
             typedef std::map<nString, VGAttribute> AttributeMap; ///< Dictionary of attribute locations by name
             typedef std::map<nString, VGUniform> UniformMap; ///< Dictionary of uniform locations by name
-            typedef std::map<VGSemantic, VGAttribute> AttributeSemBinding; ///< Binds semantics to locations
 
             /// Create and possibly initialize program
             /// @param init: True to call init()
@@ -71,19 +71,19 @@ namespace vorb {
             void dispose();
             /// @return The program ID
             const VGProgram& getID() const {
-                return _id;
+                return m_id;
             }
             /// @return True if the program was created
             bool getIsCreated() const {
-                return _id != 0;
+                return m_id != 0;
             }
             /// @return True if the program is linked
             bool getIsLinked() const {
-                return _isLinked;
+                return m_isLinked;
             }
             /// @return True if the program is in use
             bool getIsInUse() const {
-                return _programInUse == this;
+                return m_programInUse == this;
             }
 
             /// Attaches shader to the build information
@@ -110,6 +110,10 @@ namespace vorb {
             /// Sets a list of attributes before the link step
             /// @param attr: List of attributes (array index as attribute index)
             void setAttributes(const std::vector<nString>& attr);
+            /// Sets a list of attributes before the link step
+            /// @param attr: List of attributes (array index as attribute index)
+            /// @param sem: List of semantics (array index as attribute index)
+            void setAttributes(const std::vector<nString>& attr, const std::vector<VGSemantic>& sem);
 
             /// Links the shader program using its currently added shaders
             /// @return True on success
@@ -128,14 +132,17 @@ namespace vorb {
             /// @param name: The attribute's name
             /// @return Attribute location
             const VGAttribute& getAttribute(const nString& name) const {
-                return _attributes.at(name);
+                return m_attributes.at(name);
             }
             /// Gets a uniform index
             /// @param name: The uniform's name
             /// @return Uniform location
             const VGUniform& getUniform(const nString& name) const {
-                return _uniforms.at(name);
+                return m_uniforms.at(name);
             }
+
+            /// Gets the current semantic binding
+            const AttributeSemBinding& getSemanticBinding() const { return m_semanticBinding; }
 
             /// Enables all vertex attrib arrays used by the program
             void enableVertexAttribArrays() const;
@@ -150,7 +157,7 @@ namespace vorb {
 
             /// @return The current program that is in use
             static GLProgram* getCurrentProgram() {
-                return _programInUse;
+                return m_programInUse;
             }
 
             Event<nString> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
@@ -158,17 +165,17 @@ namespace vorb {
         private:
             void shaderCompilationError(const nString& s);
 
-            VGProgram _id = 0; ///< Program
-            VGShader _idVS = 0; ///< Vertex shader
-            VGShader _idFS = 0; ///< Fragment shader
+            VGProgram m_id = 0; ///< Program
+            VGShader m_idVS = 0; ///< Vertex shader
+            VGShader m_idFS = 0; ///< Fragment shader
 
-            bool _isLinked = false; ///< Keeps track of link status
+            bool m_isLinked = false; ///< Keeps track of link status
 
-            AttributeMap _attributes; ///< Dictionary of attributes
-            UniformMap _uniforms; ///< Dictionary of uniforms
-            AttributeSemBinding m_semBinding; ///< Dictionary of attributes for semantics
+            AttributeMap m_attributes; ///< Dictionary of attributes
+            UniformMap m_uniforms; ///< Dictionary of uniforms
+            AttributeSemBinding m_semanticBinding; ///< Dictionary of attributes for semantics
 
-            static GLProgram* _programInUse; ///< The current program in use
+            static GLProgram* m_programInUse; ///< The current program in use
         };
     }
 }

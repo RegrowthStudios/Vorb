@@ -26,7 +26,7 @@ namespace vorb {
 
         struct AttributeBind {
             VGAttribute location;
-            ui32 semantic;
+            VGSemantic semantic;
             ui32 stride;
             ui32 offset;
             i32 size;
@@ -34,6 +34,7 @@ namespace vorb {
             bool normalized;
         };
         typedef std::vector<AttributeBind> AttributeBindings;
+        typedef std::unordered_map<VGSemantic, VGAttribute> AttributeSemBinding;
              
         class ShaderInterface {
         public:
@@ -41,7 +42,7 @@ namespace vorb {
                 // Empty
             };
 
-            i32 build(const std::unordered_map<ui32, VGAttribute>& semBinds);
+            i32 build(const SemAttrMap& semBinds);
 
             i32 build(const GLProgram* program);
 

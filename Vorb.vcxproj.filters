@@ -171,6 +171,12 @@
     <ClCompile Include="src\graphics\ShaderManager.cpp">
       <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\ShaderParser.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\ShaderInterface.cpp">
+      <Filter>Graphics\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -469,6 +475,12 @@
     </ClInclude>
     <ClInclude Include="include\graphics\ShaderManager.h">
       <Filter>Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\ShaderParser.h">
+      <Filter>Graphics\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\ShaderInterface.h">
+      <Filter>Graphics\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

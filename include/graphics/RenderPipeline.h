@@ -45,7 +45,8 @@ namespace vorb {
             /// Adds a stage to the internal stack of stages
             /// Also sets its camera if the render pipeline has a camera
             /// @param stage: The render stage to add
-            virtual void addStage(StagePtr stage);
+            /// @return handle to the stage
+            IRenderStage* addStage(StagePtr stage);
 
             /// Renders the pipeline
             virtual void render();

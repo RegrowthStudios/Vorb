@@ -17,8 +17,9 @@ void vorb::graphics::RenderPipeline::setCamera(Camera* camera) {
     }
 }
 
-void vorb::graphics::RenderPipeline::addStage(StagePtr stage) {
+vg::IRenderStage* vorb::graphics::RenderPipeline::addStage(StagePtr stage) {
     m_stages.push_back(stage);
+    return stage.get();
 }
 
 void vorb::graphics::RenderPipeline::render() {

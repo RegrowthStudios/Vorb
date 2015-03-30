@@ -41,13 +41,19 @@ namespace vorb {
             ShaderInterface(const AttributeBindings& bindings) : m_bindings(bindings) {
                 // Empty
             };
+            ~ShaderInterface();
 
             i32 build(const AttributeSemBinding& semBinds);
 
             i32 build(const GLProgram* program);
 
+            void use();
+
+            static void unuse();
+
             const AttributeBindings& getBindings() const { return m_bindings; }
         private:
+            VGVertexArray m_vao = 0;
             AttributeBindings m_bindings;
         };
     }

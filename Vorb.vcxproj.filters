@@ -168,6 +168,9 @@
     <ClCompile Include="src\graphics\RenderPipeline.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\ShaderManager.cpp">
+      <Filter>Graphics\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="include\graphics\RenderPipeline.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\ShaderManager.h">
+      <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

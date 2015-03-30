@@ -281,6 +281,7 @@
     <ClCompile Include="src/sound/SoundInstance.cpp" />
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
+    <ClCompile Include="src\graphics\ShaderManager.cpp" />
     <ClCompile Include="src\graphics\SpriteBatch.cpp" />
     <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
@@ -359,6 +360,7 @@
     <ClInclude Include="include/ui/ScreenList.h" />
     <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
+    <ClInclude Include="include\graphics\ShaderManager.h" />
     <ClInclude Include="include\graphics\SpriteBatch.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />

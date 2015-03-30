@@ -16,6 +16,7 @@
 #define ShaderManager_h__
 
 #include <map>
+#include "Events.hpp"
 #include "VorbPreDecl.inl"
 
 DECL_VIO(class Path; class IOManager)
@@ -33,7 +34,7 @@ namespace vorb {
             /// Creates a program from source code
             /// Does not register
             static CALLER_DELETE GLProgram* createProgram(const cString vertSrc, const cString fragSrc,
-                                                          cString defines = nullptr);
+                                                          vio::IOManager* iom = nullptr, cString defines = nullptr);
             /// Creates a program using code loaded from files
             /// Does not register
             static CALLER_DELETE GLProgram* createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
@@ -54,13 +55,16 @@ namespace vorb {
             /// Removes a program from the global cache and returns it
             /// WARNING: Is slower than the nString version - O(n) lookup
             /// instead of O(log(n))
-            static CALLER_DELETE GLProgram* unregisterProgram(const GLProgram* program);
+            static bool unregisterProgram(const GLProgram* program);
 
             /// Gets size of program cache
             static GLProgramMap::size_type getNumCachedPrograms() { return m_programMap.size(); };
 
             /// Gets the program map of cached programs
             static const GLProgramMap& getProgramCache() { return m_programMap; }
+
+            /// Event that triggers when IO fails for reading the input files
+            static Event<nString> onFileIOFailure;
         private:
             static GLProgramMap m_programMap; ///< For globally caching programs
         };

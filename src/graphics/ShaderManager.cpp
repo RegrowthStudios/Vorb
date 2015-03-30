@@ -1,34 +1,123 @@
 #include "stdafx.h"
 #include "graphics/ShaderManager.h"
-
+#include "graphics/GLProgram.h"
+#include "graphics/ShaderParser.h"
 #include "io/IOManager.h"
 
-CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc, cString defines /*= nullptr*/) {
+#include <errno.h>
 
+vg::GLProgramMap vg::ShaderManager::m_programMap;
+
+CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc,
+                                                              vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
+    vio::IOManager ioManager;
+    if (!iom) iom = &ioManager;
+
+    std::vector<nString> attributeNames;
+    std::vector<VGSemantic> semantics;
+    nString parsedVertSrc;
+    nString parsedFragSrc;
+
+    // Allocate program object
+    GLProgram* program = new GLProgram(true);
+   
+    // Parse vertex shader code
+    ShaderParser::parseVertexShader(vertSrc, parsedVertSrc,
+                                    attributeNames, semantics, iom);
+
+    // Create vertex shader
+    ShaderSource srcVert;
+    srcVert.stage = vg::ShaderType::VERTEX_SHADER;
+    if (defines) srcVert.sources.push_back(defines);
+    srcVert.sources.push_back(parsedVertSrc.c_str());
+    if (!program->addShader(srcVert)) {
+        program->dispose();
+        delete program;
+        return nullptr;
+    }
+
+    // Parse fragment shader code
+    ShaderParser::parseFragmentShader(fragSrc, parsedFragSrc, iom);
+
+    // Create the fragment shader
+    ShaderSource srcFrag;
+    srcFrag.stage = vg::ShaderType::FRAGMENT_SHADER;
+    if (defines) srcFrag.sources.push_back(defines);
+    srcFrag.sources.push_back(parsedFragSrc.c_str());
+    if (!program->addShader(srcFrag)) {
+        program->dispose();
+        delete program;
+        return nullptr;
+    }
+
+    // Set the attributes
+    program->setAttributes(attributeNames, semantics);
+
+    // Link the program
+    if (!program->link()) {
+        program->dispose();
+        delete program;
+        return nullptr;
+    }
+    return program;
 }
 
-CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath, vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
+CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
+                                                                      vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
+    vio::IOManager ioManager;
+    if (!iom) iom = &ioManager;
 
+    nString vertSrc;
+    nString fragSrc;
+    
+    // Load in the files with error checking
+    if (!iom->readFileToString(vertPath, vertSrc)) {
+        onFileIOFailure(nString(strerror(errno)) + " : " + vertPath.getString());
+        return nullptr;
+    }
+    if (!iom->readFileToString(fragPath, fragSrc)) {
+        onFileIOFailure(nString(strerror(errno)) + " : " + fragPath.getString());
+        return nullptr;
+    }
+
+    createProgram(vertSrc.c_str(), fragSrc.c_str(), iom, defines);
 }
 
 void vg::ShaderManager::destroyProgram(CALLEE_DELETE GLProgram** program) {
-
+    (*program)->dispose();
+    delete (*program);
+    (*program) = nullptr;
 }
 
 void vg::ShaderManager::destroyAllPrograms() {
-
+    for (auto& it : m_programMap) {
+        auto& program = it.second;
+        program->dispose();
+        delete program;
+    }
+    GLProgramMap().swap(m_programMap);
 }
 
 bool vg::ShaderManager::registerProgram(const nString& name, GLProgram* program) {
-
+    auto& it = m_programMap.find(name);
+    if (it != m_programMap.end()) return false;
+    m_programMap[name] = program;
+    return true;
 }
 
 CALLER_DELETE vg::GLProgram* vg::ShaderManager::unregisterProgram(const nString& name) {
-
+    auto& it = m_programMap.find(name);
+    GLProgram* rv = it->second;
+    m_programMap.erase(it);
+    return rv;
 }
 
-CALLER_DELETE vg::GLProgram* vg::ShaderManager::unregisterProgram(const GLProgram* program) {
-
+bool vg::ShaderManager::unregisterProgram(const GLProgram* program) {
+    for (auto& it = m_programMap.begin(); it != m_programMap.end(); it++) {
+        if (it->second == program) {
+            m_programMap.erase(it);
+            return true;
+        }
+    }
+    return false;
 }
-
-vg::GLProgramMap vg::ShaderManager::m_programMap;

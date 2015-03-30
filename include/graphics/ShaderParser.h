@@ -29,18 +29,18 @@ namespace vorb {
 
         class ShaderParser {
         public:
-            static void parseVertexShader(const nString& inputCode, OUT nString& resultCode,
+            static void parseVertexShader(const cString inputCode, OUT nString& resultCode,
                                           OUT std::vector<nString>& attributeNames, 
                                           OUT std::vector<VGSemantic>& semantics,
                                           vio::IOManager* iom = nullptr);
-            static void parseFragmentShader(const nString& inputCode, OUT nString& resultCode,
+            static void parseFragmentShader(const cString inputCode, OUT nString& resultCode,
                                             vio::IOManager* iom = nullptr);
 
             static Event<nString> onParseError;
         private:
             static void initSemantics();
-            static nString tryParseInclude(const nString& s, size_t& i);
-            static nString tryParseAttribute(const nString& s, size_t i, VGSemantic& semantic);
+            static nString tryParseInclude(const cString s, size_t& i);
+            static nString tryParseAttribute(const cString s, size_t i, VGSemantic& semantic);
 
             static std::map<nString, Semantic> m_semantics;
         };

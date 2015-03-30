@@ -42,7 +42,7 @@ namespace vorb {
                 // Empty
             };
 
-            i32 build(const SemAttrMap& semBinds);
+            i32 build(const AttributeSemBinding& semBinds);
 
             i32 build(const GLProgram* program);
 

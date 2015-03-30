@@ -59,6 +59,7 @@ namespace vorb {
             typedef std::pair<nString, VGAttribute> AttributeBinding; ///< Binds attribute names to locations
             typedef std::map<nString, VGAttribute> AttributeMap; ///< Dictionary of attribute locations by name
             typedef std::map<nString, VGUniform> UniformMap; ///< Dictionary of uniform locations by name
+            typedef std::map<VGSemantic, VGAttribute> AttributeSemBinding; ///< Binds semantics to locations
 
             /// Create and possibly initialize program
             /// @param init: True to call init()
@@ -165,6 +166,7 @@ namespace vorb {
 
             AttributeMap _attributes; ///< Dictionary of attributes
             UniformMap _uniforms; ///< Dictionary of uniforms
+            AttributeSemBinding m_semBinding; ///< Dictionary of attributes for semantics
 
             static GLProgram* _programInUse; ///< The current program in use
         };

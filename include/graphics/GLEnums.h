@@ -664,6 +664,22 @@ namespace vorb {
             TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
             TRIANGLE_STRIP_ADJACENCY = GL_TRIANGLE_STRIP_ADJACENCY
         };
+
+        enum Semantic : VGSemantic {
+            SEM_INVALID = 0,
+            SEM_COLOR,
+            SEM_POSITION,
+            SEM_TEXCOORD,
+            SEM_NORMAL,
+            SEM_BINORMAL,
+            SEM_TANGENT,
+            SEM_FOG,
+            SEM_BLENDINDICES,
+            SEM_BLENDWEIGHT,
+            SEM_PSIZE,
+            SEM_TESSFACTOR,
+            SEM_NUM_SEMANTICS = SEM_TESSFACTOR
+        };
     }
 }
 namespace vg = vorb::graphics;

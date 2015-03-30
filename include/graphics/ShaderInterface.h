@@ -15,6 +15,7 @@
 #ifndef ShaderInterface_h__
 #define ShaderInterface_h__
 
+#include "../Vorb.h"
 #include "graphics/GLEnums.h"
 #include <vector>
 

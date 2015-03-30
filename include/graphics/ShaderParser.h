@@ -15,12 +15,34 @@
 #ifndef ShaderParser_h__
 #define ShaderParser_h__
 
+#include "../Events.hpp"
+#include "../Vorb.h"
+#include "VorbPreDecl.inl"
+#include "graphics/GLEnums.h"
+#include "gtypes.h"
+#include <vector>
+
+DECL_VIO(class IOManager);
+
 namespace vorb {
     namespace graphics {
 
         class ShaderParser {
         public:
-            static bool parseShader(const nString& inputCode, OUT nString& resultCode);
+            static void parseVertexShader(const nString& inputCode, OUT nString& resultCode,
+                                          OUT std::vector<nString>& attributeNames, 
+                                          OUT std::vector<VGSemantic>& semantics,
+                                          vio::IOManager* iom = nullptr);
+            static void parseFragmentShader(const nString& inputCode, OUT nString& resultCode,
+                                            vio::IOManager* iom = nullptr);
+
+            static Event<nString> onParseError;
+        private:
+            static void initSemantics();
+            static nString tryParseInclude(const nString& s, size_t& i);
+            static nString tryParseAttribute(const nString& s, size_t i, VGSemantic& semantic);
+
+            static std::map<nString, Semantic> m_semantics;
         };
     }
 }

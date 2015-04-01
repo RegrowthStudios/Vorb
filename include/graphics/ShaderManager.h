@@ -16,10 +16,11 @@
 #define ShaderManager_h__
 
 #include <map>
-#include "Events.hpp"
-#include "VorbPreDecl.inl"
+#include "../Events.hpp"
+#include "../VorbPreDecl.inl"
+#include "../io/Path.h"
 
-DECL_VIO(class Path; class IOManager)
+DECL_VIO(class IOManager)
 
 namespace vorb {
     namespace graphics {
@@ -64,8 +65,12 @@ namespace vorb {
             static const GLProgramMap& getProgramCache() { return m_programMap; }
 
             /// Event that triggers when IO fails for reading the input files
-            static Event<nString> onFileIOFailure;
+            static Event<const nString&> onFileIOFailure;
+            static Event<const nString&> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
+            static Event<const nString&> onProgramLinkError; ///< Event signaled during link when an error occurs
         private:
+            static void triggerShaderCompilationError(Sender s, const nString& n);
+            static void triggerProgramLinkError(Sender s, const nString& n);
             static GLProgramMap m_programMap; ///< For globally caching programs
         };
     }

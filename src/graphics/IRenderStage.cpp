@@ -4,8 +4,7 @@
 
 vg::IRenderStage::IRenderStage(const nString& displayName /* = "" */, const Camera* camera /* = nullptr */) :
     m_name(displayName),
-    m_camera(camera),
-    m_isVisible(true) {
+    m_camera(camera) {
     // Empty
 }
 

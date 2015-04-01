@@ -50,7 +50,7 @@ void vg::GLProgram::dispose() {
 bool vg::GLProgram::addShader(const ShaderSource& data) {
     // Check current state
     if (getIsLinked() || !getIsCreated()) {
-        shaderCompilationError("Cannot add a shader to a fully created or non-existent program");
+        onShaderCompilationError("Cannot add a shader to a fully created or non-existent program");
         return false;
     }
 
@@ -58,18 +58,18 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
     switch (data.stage) {
         case ShaderType::VERTEX_SHADER:
             if (m_idVS != 0) {
-                shaderCompilationError("Attempting to add another vertex shader");
+                onShaderCompilationError("Attempting to add another vertex shader");
                 return false;
             }
             break;
         case ShaderType::FRAGMENT_SHADER:
             if (m_idFS != 0) {
-                shaderCompilationError("Attempting to add another fragment shader");
+                onShaderCompilationError("Attempting to add another fragment shader");
                 return false;
             }
             break;
         default:
-            shaderCompilationError("Shader stage is not supported");
+            onShaderCompilationError("Shader stage is not supported");
             return false;
     }
 
@@ -100,7 +100,7 @@ bool vg::GLProgram::addShader(const ShaderSource& data) {
         glGetShaderiv(idS, GL_INFO_LOG_LENGTH, &infoLogLength);
         std::vector<char> FragmentShaderErrorMessage(infoLogLength);
         glGetShaderInfoLog(idS, infoLogLength, NULL, FragmentShaderErrorMessage.data());
-        shaderCompilationError(FragmentShaderErrorMessage.data());
+        onShaderCompilationError(FragmentShaderErrorMessage.data());
         glDeleteShader(idS);
         return false;
     }
@@ -178,13 +178,13 @@ void vg::GLProgram::setAttributes(const std::vector<nString>& attr, const std::v
 bool vg::GLProgram::link() {
     // Check internal state
     if (getIsLinked() || !getIsCreated()) {
-        onProgramLinkError("Cannot link a fully created or non-existent program");
+        linkError("Cannot link a fully created or non-existent program");
         return false;
     }
 
     // Check for available shaders
     if (!m_idVS || !m_idFS) {
-        onProgramLinkError("Insufficient stages for a program link");
+        linkError("Insufficient stages for a program link");
         return false;
     }
 
@@ -206,7 +206,7 @@ bool vg::GLProgram::link() {
     glGetProgramiv(m_id, GL_LINK_STATUS, &status);
     m_isLinked = status == 1;
     if (!m_isLinked) {
-        onProgramLinkError("Program had link errors");
+        linkError("Program had link errors");
         return false;
     }
     return true;
@@ -295,7 +295,12 @@ void vg::GLProgram::unuse() {
     }
 }
 
-void vg::GLProgram::shaderCompilationError(const nString& s) {
-    fprintf(stderr, "%s\n", s.c_str());
-    onShaderCompilationError(s);
+void vg::GLProgram::linkError(const nString& s) {
+    char buf[256];
+    GLsizei len;
+    glGetProgramInfoLog(getID(), 255, &len, buf);
+    buf[len] = 0;
+
+    nString s2 = s + ": " + buf;
+    onProgramLinkError(s2);
 }

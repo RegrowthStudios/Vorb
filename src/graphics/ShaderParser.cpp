@@ -9,7 +9,7 @@ std::map<nString, vg::Semantic> vg::ShaderParser::m_semantics;
 Event<nString> vg::ShaderParser::onParseError;
 
 inline bool isWhitespace(char c) {
-    return (c == '\n' || c == '\0' || c == '\t' || c == '\r');
+    return (c == '\n' || c == '\0' || c == '\t' || c == '\r' || c == ' ');
 }
 
 inline void skipWhitespace(const nString& s, size_t& i) {

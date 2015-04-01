@@ -160,10 +160,10 @@ namespace vorb {
                 return m_programInUse;
             }
 
-            Event<nString> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
-            Event<nString> onProgramLinkError; ///< Event signaled during link when an error occurs
+            Event<const nString&> onShaderCompilationError; ///< Event signaled during addShader when an error occurs
+            Event<const nString&> onProgramLinkError; ///< Event signaled during link when an error occurs
         private:
-            void shaderCompilationError(const nString& s);
+            void linkError(const nString& s);
 
             VGProgram m_id = 0; ///< Program
             VGShader m_idVS = 0; ///< Vertex shader

@@ -6,6 +6,9 @@
 
 #include <errno.h>
 
+Event<const nString&> vg::ShaderManager::onFileIOFailure;
+Event<const nString&> vg::ShaderManager::onShaderCompilationError;
+Event<const nString&> vg::ShaderManager::onProgramLinkError;
 vg::GLProgramMap vg::ShaderManager::m_programMap;
 
 CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc,
@@ -20,6 +23,8 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
 
     // Allocate program object
     GLProgram* program = new GLProgram(true);
+    program->onShaderCompilationError += makeDelegate(triggerShaderCompilationError);
+    program->onProgramLinkError += makeDelegate(triggerProgramLinkError);
    
     // Parse vertex shader code
     ShaderParser::parseVertexShader(vertSrc, parsedVertSrc,
@@ -52,13 +57,17 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
 
     // Set the attributes
     program->setAttributes(attributeNames, semantics);
-
     // Link the program
     if (!program->link()) {
         program->dispose();
         delete program;
         return nullptr;
     }
+    // Set uniforms
+    program->initUniforms();
+
+    program->onShaderCompilationError -= makeDelegate(triggerShaderCompilationError);
+    program->onProgramLinkError -= makeDelegate(triggerProgramLinkError);
     return program;
 }
 
@@ -80,7 +89,7 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio:
         return nullptr;
     }
 
-    createProgram(vertSrc.c_str(), fragSrc.c_str(), iom, defines);
+    return createProgram(vertSrc.c_str(), fragSrc.c_str(), iom, defines);
 }
 
 void vg::ShaderManager::destroyProgram(CALLEE_DELETE GLProgram** program) {
@@ -120,4 +129,12 @@ bool vg::ShaderManager::unregisterProgram(const GLProgram* program) {
         }
     }
     return false;
+}
+
+void vg::ShaderManager::triggerShaderCompilationError(Sender s, const nString& n) {
+    onShaderCompilationError(n);
+}
+
+void vg::ShaderManager::triggerProgramLinkError(Sender s, const nString& n) {
+    onProgramLinkError(n);
 }

@@ -67,7 +67,7 @@ namespace vorb {
         protected:
             GLProgram* m_program = nullptr; ///< Optional shader program
             const Camera* m_camera = nullptr; ///< Optional Camera, not needed for post processing stages
-            bool m_isVisible; ///< Determines if the stage should be rendered
+            bool m_isVisible = true; ///< Determines if the stage should be rendered
             nString m_name = ""; ///< Display name of the stage
         };
 

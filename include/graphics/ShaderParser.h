@@ -41,8 +41,12 @@ namespace vorb {
             static void initSemantics();
             static nString tryParseInclude(const cString s, size_t& i);
             static nString tryParseAttribute(const cString s, size_t i, VGSemantic& semantic);
+            static bool checkForComment(const cString s, size_t i);
+            static bool isComment() { return isBlockComment || isNormalComment; }
 
             static std::map<nString, Semantic> m_semantics;
+            static bool isNormalComment;
+            static bool isBlockComment;
         };
     }
 }

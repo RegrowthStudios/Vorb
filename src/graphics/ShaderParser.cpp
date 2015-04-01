@@ -5,8 +5,10 @@
 
 #include "io/IOManager.h"
 
-std::map<nString, vg::Semantic> vg::ShaderParser::m_semantics;
 Event<nString> vg::ShaderParser::onParseError;
+std::map<nString, vg::Semantic> vg::ShaderParser::m_semantics;
+bool vg::ShaderParser::isNormalComment = false;
+bool vg::ShaderParser::isBlockComment = false;
 
 inline bool isWhitespace(char c) {
     return (c == '\n' || c == '\0' || c == '\t' || c == '\r' || c == ' ');
@@ -25,6 +27,8 @@ void vg::ShaderParser::parseVertexShader(const cString inputCode, OUT nString& r
                                          OUT std::vector<VGSemantic>& semantics,
                                          vio::IOManager* iom /*= nullptr*/) {
     if (m_semantics.empty()) initSemantics();
+    isNormalComment = false;
+    isBlockComment = false;
 
     vio::IOManager ioManager;
     if (!iom) iom = &ioManager;
@@ -37,24 +41,27 @@ void vg::ShaderParser::parseVertexShader(const cString inputCode, OUT nString& r
 
     for (size_t i = 0; i < size; i++) {
         char c = inputCode[i];
-        if (c == '#') {
-            nString include = tryParseInclude(inputCode, i);
-            if (include.size()) {
-                // Replace the include with the file contents
-                if (ioManager.readFileToString(include, data)) {
-                    resultCode += data;
-                    continue; // Skip over last "
-                } else {
-                    onParseError("Failed to open file " + include);
+        checkForComment(inputCode, i);
+        if (!isComment()) {
+            if (c == '#') {
+                nString include = tryParseInclude(inputCode, i);
+                if (include.size()) {
+                    // Replace the include with the file contents
+                    if (ioManager.readFileToString(include, data)) {
+                        resultCode += data;
+                        continue; // Skip over last "
+                    } else {
+                        onParseError("Failed to open file " + include);
+                    }
                 }
-            }
-        } else if (c == 'i') {
-            // Attempt to parse as an attribute
-            VGSemantic semantic;
-            nString attribute = tryParseAttribute(inputCode, i, semantic);
-            if (attribute.size()) {
-                attributeNames.push_back(attribute);
-                semantics.push_back(semantic);
+            } else if (c == 'i') {
+                // Attempt to parse as an attribute
+                VGSemantic semantic;
+                nString attribute = tryParseAttribute(inputCode, i, semantic);
+                if (attribute.size()) {
+                    attributeNames.push_back(attribute);
+                    semantics.push_back(semantic);
+                }
             }
         }
         resultCode += c;
@@ -63,6 +70,8 @@ void vg::ShaderParser::parseVertexShader(const cString inputCode, OUT nString& r
 
 void vg::ShaderParser::parseFragmentShader(const cString inputCode, OUT nString& resultCode, vio::IOManager* iom /*= nullptr*/) {
     if (m_semantics.empty()) initSemantics();
+    isNormalComment = false;
+    isBlockComment = false;
 
     vio::IOManager ioManager;
     if (!iom) iom = &ioManager;
@@ -75,7 +84,8 @@ void vg::ShaderParser::parseFragmentShader(const cString inputCode, OUT nString&
 
     for (size_t i = 0; i < size; i++) {
         char c = inputCode[i];
-        if (c == '#') {
+        checkForComment(inputCode, i);
+        if (!isComment() && c == '#') {
             nString include = tryParseInclude(inputCode, i);
             if (include.size()) {
                 // Replace the include with the file contents
@@ -103,6 +113,21 @@ void vorb::graphics::ShaderParser::initSemantics() {
     m_semantics["BLENDWEIGHT"] = SEM_BLENDWEIGHT;
     m_semantics["PSIZE"] = SEM_PSIZE;
     m_semantics["TESSFACTOR"] = SEM_TESSFACTOR;
+}
+
+bool vg::ShaderParser::checkForComment(const cString s, size_t i) {
+    if (s[i] == '/' && s[i + 1] == '/') {
+        isNormalComment = true;
+        return true;
+    } else if (s[i] == '\n') {
+        isNormalComment = false;
+    } else if (s[i] == '/' && s[i + 1] == '*') {
+        isBlockComment = true;
+        return true;
+    } else if (s[i] == '*' && s[i + 1] == '/') {
+        isBlockComment = false;
+    }
+    return false;
 }
 
 nString vg::ShaderParser::tryParseInclude(const cString s, size_t& i) {

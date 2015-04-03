@@ -5,19 +5,23 @@
 
 #include "io/IOManager.h"
 
+// Static definitions
 Event<nString> vg::ShaderParser::onParseError;
 std::map<nString, vg::Semantic> vg::ShaderParser::m_semantics;
+std::set<nString> vg::ShaderParser::m_parsedIncludes;
 bool vg::ShaderParser::isNormalComment = false;
 bool vg::ShaderParser::isBlockComment = false;
+vio::IOManager* vg::ShaderParser::ioManager;
 
+// Checks if c is a whitespace char
 inline bool isWhitespace(char c) {
     return (c == '\n' || c == '\0' || c == '\t' || c == '\r' || c == ' ');
 }
-
+// Skips all whitespace by incrementing i accordingly
 inline void skipWhitespace(const nString& s, size_t& i) {
     while (isWhitespace(s[i]) && i < s.size()) i++;
 }
-
+// Checks if c is a number
 inline bool isNumeric(char c) {
     return (c >= '0' && c <= '9');
 }
@@ -49,7 +53,10 @@ void vg::ShaderParser::parseVertexShader(const cString inputCode, OUT nString& r
         checkForComment(input.c_str(), i);
         if (!isComment()) {
             if (c == '#') {
-                tryParseInclude(input, i);
+                if (tryParseInclude(input, i)) {
+                    i--;
+                    continue;
+                }
             } else if (c == 'i') {
                 // Attempt to parse as an attribute
                 VGSemantic semantic;
@@ -87,7 +94,10 @@ void vg::ShaderParser::parseFragmentShader(const cString inputCode, OUT nString&
         char c = input[i];
         checkForComment(input.c_str(), i);
         if (!isComment() && c == '#') {
-            tryParseInclude(input, i);
+            if (tryParseInclude(input, i)) {
+                i--;
+                continue;
+            }
         } 
         resultCode += c;
     }
@@ -122,48 +132,52 @@ bool vg::ShaderParser::checkForComment(const cString s, size_t i) {
     return false;
 }
 
-void vg::ShaderParser::tryParseInclude(nString& s, size_t i) {
+bool vg::ShaderParser::tryParseInclude(nString& s, size_t i) {
     size_t startI = i;
     static const char INCLUDE_STR[10] = "#include";
     // Check that #include is correct
     for (int j = 0; INCLUDE_STR[j] != '\0'; j++) {
-        if (s[i] == '\0') {return; }
-        if (s[i++] != INCLUDE_STR[j]) {  return; }
+        if (s[i] == '\0') { return false; }
+        if (s[i++] != INCLUDE_STR[j]) { return false; }
     }
 
     skipWhitespace(s, i);
-    if (s[i] == '\0') { return; }
+    if (s[i] == '\0') { return false; }
 
-    if (s[i++] != '\"') { return; }
+    if (s[i++] != '\"') { return false; }
     // Grab the include string
     nString include = "";
     while (s[i] != '\"' && s[i] != '\n') {
         // Check for invalid characters in path
-        if (isWhitespace(s[i])) { return; }
+        if (isWhitespace(s[i])) { return false; }
         include += s[i++];
     }
-    if (s[i] != '\"') return;
+    if (s[i] != '\"') return false;
 
     if (include.size()) {
+
         if (m_parsedIncludes.find(include) != m_parsedIncludes.end()) {
             onParseError("Circular include detected: " + include);
-            return;
+            return false;
         }
         m_parsedIncludes.insert(include);
         // Replace the include with the file contents
         nString data = "";
         if (ioManager->readFileToString(include, data)) {
+            while (data.back() == '\0') data.pop_back();
             // Replace by erasing and inserting
-            s.erase(startI, i - startI);
-            s.insert(startI, data);
+            s.erase(startI, i + 1 - startI);
+            if (data.length()) s.insert(startI, data.c_str());
+            return true;
         } else {
             onParseError("Failed to open file " + include);
+            return false;
         }
     }
-
+    return false;
 }
 
-nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, VGSemantic& semantic) {
+nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, OUT VGSemantic& semantic) {
     static const char IN_STR[4] = "in ";
     static const char SEM_STR[5] = "SEM ";
     semantic = vg::Semantic::SEM_INVALID;

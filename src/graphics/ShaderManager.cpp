@@ -16,6 +16,7 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
                                                               vio::IOManager* fragIOM /*= nullptr*/,
                                                               cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
+    // Use default ioManager
     if (!vertIOM) vertIOM = &ioManager;
     if (!fragIOM) fragIOM = &ioManager;
 
@@ -80,37 +81,38 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio:
     vio::Path vertSearchDir;
     vio::Path fragSearchDir;
 
-    vio::IOManager* vertIOM;
-    vio::IOManager* fragIOM;
+    vio::IOManager vertIOM;
+    vio::IOManager fragIOM;
     if (iom) {
-        *vertIOM = *iom;
-        *fragIOM = *iom;
+        vertIOM = *iom;
+        fragIOM = *iom;
     } else {
-        vertIOM = &ioManager;
-        fragIOM = &ioManager;
+        vertIOM = ioManager;
+        fragIOM = ioManager;
     }
 
+    // Set search dir to same dir as the files
     vertSearchDir = vertPath;
     fragSearchDir = fragPath;
     vertSearchDir--;
     fragSearchDir--;
-    vertIOM->setSearchDirectory(vertSearchDir);
-    fragIOM->setSearchDirectory(fragSearchDir);
+    vertIOM.setSearchDirectory(vertSearchDir);
+    fragIOM.setSearchDirectory(fragSearchDir);
 
     nString vertSrc;
     nString fragSrc;
     
     // Load in the files with error checking
-    if (!vertIOM->readFileToString(vertPath, vertSrc)) {
+    if (!vertIOM.readFileToString(vertPath, vertSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + vertPath.getString());
         return nullptr;
     }
-    if (!fragIOM->readFileToString(fragPath, fragSrc)) {
+    if (!fragIOM.readFileToString(fragPath, fragSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + fragPath.getString());
         return nullptr;
     }
 
-    return createProgram(vertSrc.c_str(), fragSrc.c_str(), vertIOM, fragIOM, defines);
+    return createProgram(vertSrc.c_str(), fragSrc.c_str(), &vertIOM, &fragIOM, defines);
 }
 
 void vg::ShaderManager::destroyProgram(CALLEE_DELETE GLProgram** program) {

@@ -39,14 +39,16 @@ namespace vorb {
             static Event<nString> onParseError;
         private:
             static void initSemantics();
-            static nString tryParseInclude(const cString s, size_t& i);
+            static void tryParseInclude(nString& s, size_t i);
             static nString tryParseAttribute(const cString s, size_t i, VGSemantic& semantic);
             static bool checkForComment(const cString s, size_t i);
             static bool isComment() { return isBlockComment || isNormalComment; }
 
             static std::map<nString, Semantic> m_semantics;
+            static std::set<nString> m_parsedIncludes;
             static bool isNormalComment;
             static bool isBlockComment;
+            static vio::IOManager* ioManager;
         };
     }
 }

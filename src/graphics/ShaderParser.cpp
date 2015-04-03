@@ -29,35 +29,31 @@ void vg::ShaderParser::parseVertexShader(const cString inputCode, OUT nString& r
     if (m_semantics.empty()) initSemantics();
     isNormalComment = false;
     isBlockComment = false;
+    m_parsedIncludes.clear();
 
-    vio::IOManager ioManager;
-    if (!iom) iom = &ioManager;
+    // Convert to nString for easy include replacements
+    nString input(inputCode);
+
+    vio::IOManager tmpIoManager;
+    if (!iom) iom = &tmpIoManager;
+    ioManager = iom;
+
     nString data;
-    size_t size = strlen(inputCode);
 
     // Anticipate final code size
     resultCode = "";
-    resultCode.reserve(size);
+    resultCode.reserve(input.size());
 
-    for (size_t i = 0; i < size; i++) {
-        char c = inputCode[i];
-        checkForComment(inputCode, i);
+    for (size_t i = 0; i < input.size(); i++) {
+        char c = input[i];
+        checkForComment(input.c_str(), i);
         if (!isComment()) {
             if (c == '#') {
-                nString include = tryParseInclude(inputCode, i);
-                if (include.size()) {
-                    // Replace the include with the file contents
-                    if (ioManager.readFileToString(include, data)) {
-                        resultCode += data;
-                        continue; // Skip over last "
-                    } else {
-                        onParseError("Failed to open file " + include);
-                    }
-                }
+                tryParseInclude(input, i);
             } else if (c == 'i') {
                 // Attempt to parse as an attribute
                 VGSemantic semantic;
-                nString attribute = tryParseAttribute(inputCode, i, semantic);
+                nString attribute = tryParseAttribute(input.c_str(), i, semantic);
                 if (attribute.size()) {
                     attributeNames.push_back(attribute);
                     semantics.push_back(semantic);
@@ -72,30 +68,26 @@ void vg::ShaderParser::parseFragmentShader(const cString inputCode, OUT nString&
     if (m_semantics.empty()) initSemantics();
     isNormalComment = false;
     isBlockComment = false;
+    m_parsedIncludes.clear();
 
-    vio::IOManager ioManager;
-    if (!iom) iom = &ioManager;
+    // Convert to nString for easy include replacements
+    nString input(inputCode);
+
+    vio::IOManager tmpIoManager;
+    if (!iom) iom = &tmpIoManager;
+    ioManager = iom;
+
     nString data;
-    size_t size = strlen(inputCode);
 
     // Anticipate final code size
     resultCode = "";
-    resultCode.reserve(size);
+    resultCode.reserve(input.size());
 
-    for (size_t i = 0; i < size; i++) {
-        char c = inputCode[i];
-        checkForComment(inputCode, i);
+    for (size_t i = 0; i < input.size(); i++) {
+        char c = input[i];
+        checkForComment(input.c_str(), i);
         if (!isComment() && c == '#') {
-            nString include = tryParseInclude(inputCode, i);
-            if (include.size()) {
-                // Replace the include with the file contents
-                if (ioManager.readFileToString(include, data)) {
-                    resultCode += data;
-                    continue; // Skip over last "
-                } else {
-                    onParseError("Failed to open file " + include);
-                }
-            }
+            tryParseInclude(input, i);
         } 
         resultCode += c;
     }
@@ -130,27 +122,45 @@ bool vg::ShaderParser::checkForComment(const cString s, size_t i) {
     return false;
 }
 
-nString vg::ShaderParser::tryParseInclude(const cString s, size_t& i) {
+void vg::ShaderParser::tryParseInclude(nString& s, size_t i) {
     size_t startI = i;
     static const char INCLUDE_STR[10] = "#include";
     // Check that #include is correct
     for (int j = 0; INCLUDE_STR[j] != '\0'; j++) {
-        if (s[i] == '\0') { i = startI; return ""; }
-        if (s[i++] != INCLUDE_STR[j]) { i = startI; return ""; }
+        if (s[i] == '\0') {return; }
+        if (s[i++] != INCLUDE_STR[j]) {  return; }
     }
 
     skipWhitespace(s, i);
-    if (s[i] == '\0') { i = startI; return ""; }
+    if (s[i] == '\0') { return; }
 
-    if (s[i++] != '\"') { i = startI; return ""; }
+    if (s[i++] != '\"') { return; }
     // Grab the include string
     nString include = "";
-    while (s[i] != '\"') {
+    while (s[i] != '\"' && s[i] != '\n') {
         // Check for invalid characters in path
-        if (isWhitespace(s[i])) { i = startI; return ""; }
+        if (isWhitespace(s[i])) { return; }
         include += s[i++];
     }
-    return include;
+    if (s[i] != '\"') return;
+
+    if (include.size()) {
+        if (m_parsedIncludes.find(include) != m_parsedIncludes.end()) {
+            onParseError("Circular include detected: " + include);
+            return;
+        }
+        m_parsedIncludes.insert(include);
+        // Replace the include with the file contents
+        nString data = "";
+        if (ioManager->readFileToString(include, data)) {
+            // Replace by erasing and inserting
+            s.erase(startI, i - startI);
+            s.insert(startI, data);
+        } else {
+            onParseError("Failed to open file " + include);
+        }
+    }
+
 }
 
 nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, VGSemantic& semantic) {

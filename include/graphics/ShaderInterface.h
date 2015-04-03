@@ -24,6 +24,7 @@ namespace vorb {
 
         class GLProgram;
 
+        /// Data for an attribute
         struct AttributeBind {
             VGAttribute location;
             VGSemantic semantic;
@@ -42,16 +43,25 @@ namespace vorb {
                 // Empty
             };
 
+            /// Disposes VAO and clears bindings
             void dispose();
 
+            /// Builds the VAO from semantic bindings
+            /// @param semBinds: The semantic to attribute bindings
+            /// @return number of bindings successfully linked
             i32 build(const AttributeSemBinding& semBinds);
 
+            /// Builds the VAO from a GLProgram
+            /// @return number of bindings successfully linked
             i32 build(const GLProgram* program);
 
+            /// Enables the VAO for this interface
             void use();
 
+            /// Disables VAO
             static void unuse();
 
+            /// Gets the attribute bindings
             const AttributeBindings& getBindings() const { return m_bindings; }
         private:
             VGVertexArray m_vao = 0;

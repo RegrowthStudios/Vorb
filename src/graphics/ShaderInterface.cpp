@@ -32,6 +32,7 @@ void vg::ShaderInterface::dispose() {
         glDeleteVertexArrays(1, &m_vao);
         m_vao = 0;
     }
+    AttributeBindings().swap(m_bindings);
 }
 
 i32 vg::ShaderInterface::build(const GLProgram* program) {

@@ -154,6 +154,12 @@ bool vg::ShaderManager::unregisterProgram(const GLProgram* program) {
     return false;
 }
 
+vg::GLProgram* vg::ShaderManager::getProgram(const nString& name) {
+    auto& it = m_programMap.find(name);
+    if (it == m_programMap.end()) return nullptr;
+    return it->second;
+}
+
 void vg::ShaderManager::triggerShaderCompilationError(Sender s, const nString& n) {
     onShaderCompilationError(n);
 }

@@ -79,6 +79,11 @@ namespace vorb {
             /// @return false if it was not cached
             static bool unregisterProgram(const GLProgram* program);
 
+            /// Gets a program from the cache.
+            /// @param name: String identifier for the program
+            /// @return nullptr on failure or the program
+            static GLProgram* getProgram(const nString& name);
+
             /// Gets size of program cache
             static GLProgramMap::size_type getNumCachedPrograms() { return m_programMap.size(); };
 

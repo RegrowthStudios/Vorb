@@ -35,7 +35,9 @@ namespace vorb {
             /// Creates a program from source code
             /// Does not register
             static CALLER_DELETE GLProgram* createProgram(const cString vertSrc, const cString fragSrc,
-                                                          vio::IOManager* iom = nullptr, cString defines = nullptr);
+                                                          vio::IOManager* vertIOM = nullptr,
+                                                          vio::IOManager* fragIOM = nullptr,
+                                                          cString defines = nullptr);
             /// Creates a program using code loaded from files
             /// Does not register
             static CALLER_DELETE GLProgram* createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,

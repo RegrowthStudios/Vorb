@@ -12,9 +12,12 @@ Event<const nString&> vg::ShaderManager::onProgramLinkError;
 vg::GLProgramMap vg::ShaderManager::m_programMap;
 
 CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc,
-                                                              vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
+                                                              vio::IOManager* vertIOM /*= nullptr*/,
+                                                              vio::IOManager* fragIOM /*= nullptr*/,
+                                                              cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
-    if (!iom) iom = &ioManager;
+    if (!vertIOM) vertIOM = &ioManager;
+    if (!fragIOM) fragIOM = &ioManager;
 
     std::vector<nString> attributeNames;
     std::vector<VGSemantic> semantics;
@@ -28,7 +31,7 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
    
     // Parse vertex shader code
     ShaderParser::parseVertexShader(vertSrc, parsedVertSrc,
-                                    attributeNames, semantics, iom);
+                                    attributeNames, semantics, vertIOM);
 
     // Create vertex shader
     ShaderSource srcVert;
@@ -42,7 +45,7 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
     }
 
     // Parse fragment shader code
-    ShaderParser::parseFragmentShader(fragSrc, parsedFragSrc, iom);
+    ShaderParser::parseFragmentShader(fragSrc, parsedFragSrc, fragIOM);
 
     // Create the fragment shader
     ShaderSource srcFrag;
@@ -76,33 +79,38 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio:
     vio::IOManager ioManager;
     vio::Path vertSearchDir;
     vio::Path fragSearchDir;
-    if (!iom) {
-        iom = &ioManager;
-        // Use the paths of the files as the search dir for includes
-        vertSearchDir = vertPath;
-        fragSearchDir = fragPath;
-        vertSearchDir--;
-        fragSearchDir--;
+
+    vio::IOManager* vertIOM;
+    vio::IOManager* fragIOM;
+    if (iom) {
+        *vertIOM = *iom;
+        *fragIOM = *iom;
     } else {
-        vertSearchDir = iom->getSearchDirectory();
-        fragSearchDir = iom->getSearchDirectory();
+        vertIOM = &ioManager;
+        fragIOM = &ioManager;
     }
+
+    vertSearchDir = vertPath;
+    fragSearchDir = fragPath;
+    vertSearchDir--;
+    fragSearchDir--;
+    vertIOM->setSearchDirectory(vertSearchDir);
+    fragIOM->setSearchDirectory(fragSearchDir);
+
     nString vertSrc;
     nString fragSrc;
     
     // Load in the files with error checking
-    iom->setSearchDirectory(vertSearchDir);
-    if (!iom->readFileToString(vertPath, vertSrc)) {
+    if (!vertIOM->readFileToString(vertPath, vertSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + vertPath.getString());
         return nullptr;
     }
-    iom->setSearchDirectory(fragSearchDir);
-    if (!iom->readFileToString(fragPath, fragSrc)) {
+    if (!fragIOM->readFileToString(fragPath, fragSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + fragPath.getString());
         return nullptr;
     }
 
-    return createProgram(vertSrc.c_str(), fragSrc.c_str(), iom, defines);
+    return createProgram(vertSrc.c_str(), fragSrc.c_str(), vertIOM, fragIOM, defines);
 }
 
 void vg::ShaderManager::destroyProgram(CALLEE_DELETE GLProgram** program) {

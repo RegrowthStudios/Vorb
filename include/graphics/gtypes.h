@@ -42,5 +42,6 @@ typedef VGObject VGQuery;
 typedef GLint VGAttribute;
 typedef GLint VGUniform;
 typedef GLenum VGEnum;
+typedef ui32 VGSemantic;
 
 #endif // gtypes_h__

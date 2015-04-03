@@ -74,16 +74,29 @@ CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgram(const cString vert
 CALLER_DELETE vg::GLProgram* vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
                                                                       vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
-    if (!iom) iom = &ioManager;
-
+    vio::Path vertSearchDir;
+    vio::Path fragSearchDir;
+    if (!iom) {
+        iom = &ioManager;
+        // Use the paths of the files as the search dir for includes
+        vertSearchDir = vertPath;
+        fragSearchDir = fragPath;
+        vertSearchDir--;
+        fragSearchDir--;
+    } else {
+        vertSearchDir = iom->getSearchDirectory();
+        fragSearchDir = iom->getSearchDirectory();
+    }
     nString vertSrc;
     nString fragSrc;
     
     // Load in the files with error checking
+    iom->setSearchDirectory(vertSearchDir);
     if (!iom->readFileToString(vertPath, vertSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + vertPath.getString());
         return nullptr;
     }
+    iom->setSearchDirectory(fragSearchDir);
     if (!iom->readFileToString(fragPath, fragSrc)) {
         onFileIOFailure(nString(strerror(errno)) + " : " + fragPath.getString());
         return nullptr;

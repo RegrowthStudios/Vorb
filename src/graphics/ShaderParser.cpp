@@ -164,10 +164,14 @@ bool vg::ShaderParser::tryParseInclude(nString& s, size_t i) {
         // Replace the include with the file contents
         nString data = "";
         if (ioManager->readFileToString(include, data)) {
-            while (data.back() == '\0') data.pop_back();
-            // Replace by erasing and inserting
-            s.erase(startI, i + 1 - startI);
-            if (data.length()) s.insert(startI, data.c_str());
+            if (data.empty()) {
+                s.erase(startI, i + 1 - startI);
+            } else {
+                while (data.back() == '\0') data.pop_back();
+                // Replace by erasing and inserting
+                s.erase(startI, i + 1 - startI);
+                if (data.length()) s.insert(startI, data.c_str());
+            }
             return true;
         } else {
             onParseError("Failed to open file " + include);

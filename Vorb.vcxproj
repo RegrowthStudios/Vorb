@@ -406,6 +406,7 @@
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
     <ClInclude Include="include\VorbLibs.h" />
+    <ClInclude Include="KeyStrings.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />

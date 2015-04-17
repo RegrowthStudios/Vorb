@@ -482,6 +482,9 @@
     <ClInclude Include="include\graphics\ShaderInterface.h">
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="KeyStrings.h">
+      <Filter>UI\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -6,6 +6,7 @@
 
 #include <include/IO.h>
 #include <include/graphics/ModelIO.h>
+#include <include/graphics/ImageIO.h>
 #include <include/io/IOManager.h>
 #include <include/Vorb.h>
 #include <include/Timing.h>
@@ -236,5 +237,16 @@ TEST(Animation) {
         printf("Load Time (MS): %f\n", ms);
     });
 
+    return true;
+}
+
+TEST(ImageIO) {
+    vorb::init(vorb::InitParam::ALL);
+    // Test for damn memory leaks
+    for (size_t i = 0; i < 100; i++) {
+        auto bmp = vg::ImageIO().load("data/BigImage.png");
+        vg::ImageIO::free(bmp);
+    }
+    vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

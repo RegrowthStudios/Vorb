@@ -79,7 +79,8 @@ bool vsound::Engine::dispose() {
     }
     m_resources.clear();
 
-    FMOD_RESULT result = m_data->system->release();      // Create the main system object.
+    m_data->system->close();
+    FMOD_RESULT result = m_data->system->release();      // Delete the main system object.
     if (result != FMOD_OK) {
 #ifdef DEBUG
         printf("FMOD Release Error!\n(%d) %s\n", result, FMOD_ErrorString(result));
@@ -114,7 +115,7 @@ vsound::Resource vsound::Engine::loadSound(const vio::Path& path, bool is3D /*= 
     FMOD_MODE mode = FMOD_LOOP_NORMAL;
     mode |= is3D ? FMOD_3D : FMOD_2D;
     mode |= isStream ? FMOD_CREATESTREAM : FMOD_CREATESAMPLE;
-    m_data->system->createSound(path.getCString(), FMOD_3D | FMOD_LOOP_NORMAL, nullptr, &sound.m_data->sound);
+    m_data->system->createSound(path.getCString(), mode, nullptr, &sound.m_data->sound);
     sound.m_data->sound->setLoopCount(1);
     return sound;
 }
@@ -126,7 +127,7 @@ void vsound::Engine::disposeSound(Resource& sound) {
     sound.m_id = ID_GENERATOR_NULL_ID;
 
     // Dispose sound data
-    sound.m_data->sound->release();
+    auto res = sound.m_data->sound->release();
     delete sound.m_data;
     sound.m_data = nullptr;
 }

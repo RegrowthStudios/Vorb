@@ -58,6 +58,25 @@ namespace vorb {
                 vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
                 i32 mipmapLevels = INT_MAX);
 
+            /// Loads and uploads a png texture and adds it to the cache or returns
+            /// an existing texture ID if it already exists in the cache. Also
+            /// returns the BitmapResource in the rvBitmap parameter
+            /// @param filePath: The file path of the texture
+            /// @param rvBitmap: Bitmap data to be filled
+            /// @param rvFormat: Format of the returned data
+            /// @param samplingParameters: The texture sampler parameters
+            /// @param internalFormat: Internal format of the pixel data
+            /// @param textureFormat: Format of uploaded pixels
+            /// @param mipmapLevels: The max number of mipmap levels
+            /// @return The texture ID or 0 if loading fails
+            Texture addTexture(const vio::Path& filePath,
+                               OUT vg::BitmapResource& rvBitmap,
+                               vg::ImageIOFormat rvFormat,
+                               SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                               vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                               vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                               i32 mipmapLevels = INT_MAX);
+
             /// Uploads a png texture and adds it to the cache
             /// an existing texture ID if it already exists in the cache
             /// @param filePath: The path of the texture

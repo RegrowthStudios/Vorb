@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <iostream>
 #include <map>
+
+#include <include\decorators.h>
 #include <include\types.h>
 
 #include <UnitTests/Tests.h>

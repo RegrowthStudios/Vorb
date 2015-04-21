@@ -621,4 +621,9 @@ typedef glm::highp_mat4 f64m4;
  */
 #define offsetptr(s, m) ((void*)offsetof(s, m))
 
+template<typename T, typename U>
+size_t offsetMember(U T::*member) {
+    return (const volatile char*)&((T*)nullptr->*member) - (const volatile char*)nullptr;
+}
+
 #endif // !Vorb_types_h__

@@ -1,8 +1,16 @@
 function add (x, y)
-  print("Adding X+Y\n");
-  return x + y
+  toValue = TestObject_increment()
+  print(toValue)
+  Test.Namespace.valEnum(1)
+  Test.Namespace.valPtr(nil)
+  Test.Namespace.valRef(nil)
+  v = stuffs(1,2,3)
+  print(v)
+  print("Adding X+Y+TO.value\n")
+  return x + y + toValue
 end
 
-function registerFuncs (env)
-  register(env, "add", "add")
-end
+Vorb.register("add", add)
+Vorb.register("add2", function (x, y)
+  return x + y
+end)

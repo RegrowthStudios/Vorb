@@ -24,6 +24,7 @@
     <ClInclude Include="stdafx.h">
       <Filter>Required Files</Filter>
     </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -74,6 +75,7 @@
     <ClCompile Include="QD.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

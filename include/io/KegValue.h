@@ -25,12 +25,49 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include <typeindex>
+
+#include "KegFuncs.h"
+
 namespace keg {
     enum class BasicType;
 
     // A Value Type Bound To An Offset In A Struct Of Data
     struct Value {
     public:
+        template<typename T1, typename T2, typename... TOther>
+        static void empty_assert() {
+            static_assert(std::is_same<T1, T2>::value, "Invalid type chain");
+        }
+
+        template<typename T>
+        static Value value() {
+            Value kv = {};
+            kv.type = BasicType::CUSTOM;
+            kv.offset = 0;
+            kv.typeName.clear();
+            kv.evaluator = evaluate<T>;
+            return std::move(kv);
+        }
+        template<typename T, typename M>
+        static Value value(M T::* member) {
+            Value kv = {};
+            kv.type = BasicType::CUSTOM;
+            kv.offset = offsetMember(member);
+            kv.typeName.clear();
+            kv.evaluator = evaluate<M>;
+            return std::move(kv);
+        }
+        template<typename T, typename... Types, typename M, typename... Members>
+        static Value value(M T::* member, Members Types ::*... children) {
+            static_assert(sizeof...(Types) == sizeof...(Members) && sizeof...(children) == sizeof...(Members), "Pairs of types must be specified");
+            empty_assert<M, Types...>();
+            Value val = value(children...);
+            val.offset += offsetMember(member);
+            return val;
+        }
+        
+
         // Set This As A Basic Parseable Value Type
         static Value basic(size_t off, BasicType t);
         // Set This As A Custom Value Type
@@ -44,6 +81,7 @@ namespace keg {
 
         // Type Used To Determine Parsing Method
         BasicType type;
+        Evaluator evaluator;
 
         // If It's A Custom Type
         nString typeName;

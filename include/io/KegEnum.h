@@ -37,8 +37,10 @@ namespace keg {
 
         template<typename T>
         void addValue(const nString& s, T v) {
-            _values[s] = (EnumType)v;
-            _valuesRev[(EnumType)v] = s;
+            static_assert(sizeof(T) <= sizeof(EnumType), "Value type to be added exceeds maximum size");
+            EnumType eValue = static_cast<EnumType>(v);
+            _values[s] = eValue;
+            _valuesRev[eValue] = s;
         }
         void setValue(void* data, const nString& s) {
             _fSetter(data, s, this);
@@ -60,17 +62,20 @@ namespace keg {
             return _sizeInBytes;
         }
     private:
-        static void setValue64(void* data, const nString& s, Enum* e);
-        static void setValue32(void* data, const nString& s, Enum* e);
-        static void setValue16(void* data, const nString& s, Enum* e);
-        static void setValue8(void* data, const nString& s, Enum* e);
-        static nString getValue64(const void* data, Enum* e);
-        static nString getValue32(const void* data, Enum* e);
-        static nString getValue16(const void* data, Enum* e);
-        static nString getValue8(const void* data, Enum* e);
+        template<typename T>
+        static void setValue(void* data, const nString& s, Enum* e) {
+            auto kv = e->_values.find(s);
+            if (kv != e->_values.end()) *((T*)data) = static_cast<T>(kv->second);
+        }
+        template<typename T>
+        static nString getValue(const void* data, const Enum* e) {
+            T key = *((const T*)data);
+            auto kv = e->_valuesRev.find(static_cast<EnumType>(key));
+            return kv != e->_valuesRev.end() ? kv->second : "";
+        }
 
         void(*_fSetter)(void*, const nString&, Enum*);
-        nString(*_fGetter)(const void*, Enum*);
+        nString(*_fGetter)(const void*, const Enum*);
 
         size_t _sizeInBytes;
         std::map<nString, EnumType> _values;

@@ -10,6 +10,13 @@
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/Timing.h>
+#include <include/Graphics.h>
+#include <glm/gtx/transform.hpp>
+
+struct Vertex {
+    f32v3 position;
+    color4 color;
+};
 
 class TestScreen : public vui::IGameScreen {
 public:
@@ -119,18 +126,52 @@ TEST(SoloWindow) {
 
     vui::GameWindow window;
     window.init();
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
     bool running = true;
     auto f = vui::InputDispatcher::onQuit.addFunctor([&] (Sender) { 
         running = false;
     });
-    
+
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    auto dev = (IDirect3DDevice9*)window.getContext();
+    f32m4 mat = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
+    dev->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&mat[0][0]);
+    dev->SetRenderState(D3DRS_AMBIENT, RGB(255, 255, 255));
+    dev->SetRenderState(D3DRS_LIGHTING, false);
+    dev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    dev->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+    dev->SetFVF((D3DFVF_XYZ | D3DFVF_DIFFUSE));
+    IDirect3DVertexBuffer9* tri_buffer = nullptr;
+    void* pData;
+    Vertex aTriangle[3] = {
+        { f32v3(-1.0f, -1.0f, -2.0f), color4(0x00, 0xff, 0x00, 0xff) },
+        { f32v3(0.0f, 1.0f, -3.0f), color4(0x00, 0x00, 0xff, 0xff) },
+        { f32v3(1.0f, 0.0f, -3.0f), color4(0xff, 0x00, 0x00, 0xff) }
+    };
+
+    dev->CreateVertexBuffer(sizeof(aTriangle), D3DUSAGE_WRITEONLY,
+        (D3DFVF_XYZ | D3DFVF_DIFFUSE),
+        D3DPOOL_MANAGED, &tri_buffer, NULL);
+    tri_buffer->Lock(0, sizeof(pData), (void**)&pData, 0);
+    memcpy(pData, aTriangle, sizeof(aTriangle));
+    tri_buffer->Unlock();
+#endif
+
     PreciseTimer timer;
     timer.start();
     while (running) {
         // Do something here
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+        dev->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+
+        dev->BeginScene();
+        dev->SetStreamSource(0, tri_buffer, 0, sizeof(Vertex));
+        dev->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
+        dev->EndScene();
+#endif
 
         // Synchronize frame-step
         ui32 ms = (ui32)timer.stop();

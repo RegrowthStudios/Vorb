@@ -95,8 +95,9 @@ namespace vorb {
 
         protected:
             virtual void addComponent(ComponentID cID, EntityID eID) override {
-                T val = getDefaultData();
-                _components.emplace_back(eID, val);
+                if (cID >= _components.size()) _components.resize(cID + 1);
+                _components[cID].first = eID;
+                _components[cID].second = getDefaultData();
             }
             virtual void setComponent(ComponentID cID, EntityID eID) override {
                 _components[cID].first = eID;

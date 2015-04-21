@@ -18,29 +18,67 @@
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
 
-template<typename Ret, typename... Args>
-class RDelegate {
-    template<typename... Params> friend class Event;
+class DelegateBase {
 public:
     typedef void* Caller;
     typedef void* Function;
-    typedef Ret(*CallStub)(Caller, Function, Args...); ///< Function type for a stub
     typedef void(*Deleter)(Caller);
+    typedef void* UnknownStub;
 
-    RDelegate(Caller c, Function f, CallStub s, Deleter d) :
+    DelegateBase(Caller c, Function f, UnknownStub s, Deleter d) :
         m_caller(c),
         m_func(f),
         m_stub(s),
         m_deletion(d) {
         // Empty
     }
-    RDelegate() :
-        m_stub(simpleCall),
+    DelegateBase() :
+        m_caller(nullptr),
+        m_func(nullptr),
+        m_stub(nullptr),
         m_deletion(doNothing) {
         // Empty
     }
-    ~RDelegate() {
+    ~DelegateBase() {
         m_deletion(m_caller);
+    }
+
+    Caller m_caller;
+    Function m_func;
+protected:
+    static void doNothing(Caller c) {
+        // Empty
+    }
+    template<typename T>
+    static void freeObject(Caller c) {
+        T* obj = (T*)c;
+        obj->~T();
+        operator delete(c);
+    }
+
+    void neuter() {
+        m_deletion = doNothing;
+    }
+    template<typename T>
+    void engorge() {
+        m_deletion = freeObject<T>;
+    }
+
+    Deleter m_deletion;
+    UnknownStub m_stub;
+};
+
+template<typename Ret, typename... Args>
+class RDelegate : public DelegateBase {
+    template<typename... Params> friend class Event;
+public:
+    typedef Ret(*CallStub)(Caller, Function, Args...); ///< Function type for a stub
+
+    RDelegate(Caller c, Function f, CallStub s, Deleter d) : DelegateBase(c, f, s, d) {
+        // Empty
+    }
+    RDelegate() : DelegateBase(nullptr, nullptr, simpleCall, doNothing) {
+        // Empty
     }
 
     template<typename T>
@@ -68,10 +106,10 @@ public:
     }
 
     Ret invoke(Args... args) const {
-        return m_stub(m_caller, m_func, args...);
+        return ((CallStub)m_stub)(m_caller, m_func, args...);
     }
     Ret operator()(Args... args) const {
-        return m_stub(m_caller, m_func, args...);
+        return ((CallStub)m_stub)(m_caller, m_func, args...);
     }
 
     bool operator==(const RDelegate& other) const {
@@ -98,30 +136,6 @@ protected:
         // Call function
         return ((fType)func)(args...);
     }
-
-    static void doNothing(Caller c) {
-        // Empty
-    }
-    template<typename T>
-    static void freeObject(Caller c) {
-        T* obj = (T*)c;
-        obj->~T();
-        operator delete(c);
-    }
-
-    void neuter() {
-        m_deletion = doNothing;
-    }
-    template<typename T>
-    void engorge() {
-        m_deletion = freeObject<T>;
-    }
-
-    Caller m_caller;
-    Function m_func;
-private:
-    Deleter m_deletion;
-    CallStub m_stub;
 };
 
 template<typename... Args>

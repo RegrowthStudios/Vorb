@@ -120,12 +120,6 @@
     <ClCompile Include="src/graphics/ModelIO.cpp">
       <Filter>Graphics\IO</Filter>
     </ClCompile>
-    <ClCompile Include="src\io\YAML.cpp">
-      <Filter>IO\Keg</Filter>
-    </ClCompile>
-    <ClCompile Include="src\io\YAMLConverters.cpp">
-      <Filter>IO\Keg</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\SpriteBatch.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
@@ -153,9 +147,6 @@
     <ClCompile Include="src\script\Environment.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\script\Script.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp">
       <Filter>UI\Input</Filter>
     </ClCompile>
@@ -164,6 +155,39 @@
     </ClCompile>
     <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegEnum.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegType.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegValue.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\ScriptValueSenders.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegEnvironment.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegWrite.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\KegRead.cpp">
+      <Filter>IO\Keg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\YAML.cpp">
+      <Filter>IO\YAML</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\YAMLConverters.cpp">
+      <Filter>IO\YAML</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\REPL.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\ScriptImpl.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\RenderPipeline.cpp">
       <Filter>Graphics</Filter>
@@ -409,24 +433,6 @@
     <ClInclude Include="include\ScopedTiming.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\io\YAML.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="include\io\YAMLNode.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="include\io\YAMLConverters.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="src\io\YAMLImpl.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="include\io\YAMLReader.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
-    <ClInclude Include="include\io\YAMLWriter.h">
-      <Filter>IO\Keg</Filter>
-    </ClInclude>
     <ClInclude Include="include\graphics\SpriteBatch.h">
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
@@ -469,6 +475,37 @@
     </ClInclude>
     <ClInclude Include="include\graphics\AnimationData.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics.h" />
+    <ClInclude Include="include\script\ScriptValueSenders.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\KegFuncs.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAML.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLConverters.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\YAMLImpl.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLNode.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLReader.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\io\YAMLWriter.h">
+      <Filter>IO\YAML</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\REPL.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\ScriptImpl.h">
+      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\RenderPipeline.h">
       <Filter>Graphics</Filter>
@@ -568,6 +605,9 @@
     <Filter Include="Script">
       <UniqueIdentifier>{71198462-646c-4056-be32-d4bd63e5ad85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IO\YAML">
+      <UniqueIdentifier>{9a85e0eb-e38f-4c09-bbb6-96b126863b0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">
@@ -597,9 +637,6 @@
     <None Include="src\graphics\SpriteBatchShader.inl">
       <Filter>Graphics\Utils</Filter>
     </None>
-    <None Include="src\io\YAMLInternal.inl">
-      <Filter>IO\Keg</Filter>
-    </None>
     <None Include="include/IntersectionUtils.inl">
       <Filter>Utils</Filter>
     </None>
@@ -611,6 +648,10 @@
     </None>
     <None Include="src\graphics\ImageIOConvF.inl">
       <Filter>Graphics\IO</Filter>
+    </None>
+    <None Include="src\ImplGraphicsH.inl" />
+    <None Include="src\io\YAMLInternal.inl">
+      <Filter>IO\YAML</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

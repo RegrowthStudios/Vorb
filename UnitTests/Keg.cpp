@@ -18,14 +18,20 @@ public:
     i32 x;
     nString y;
     cString other;
+    std::pair<f32v3, f32v3> pt;
     ui8 z;
 };
 KEG_TYPE_DECL(KT1);
 
 KEG_TYPE_DEF(KT1, KT1, kt) {
     using namespace keg;
-    kt.addValue("x",     Value::basic(offsetof(KT1, x),     BasicType::I32));
-    kt.addValue("y",     Value::basic(offsetof(KT1, y),     BasicType::STRING));
+
+    // Old syntax:
+    // kt.addValue("x", Value::basic(offsetof(KT1, x), BasicType::I32));
+    // Welcome to new age:
+    kt.addValue("x", Value::value(&KT1::pt, &std::pair<f32v3, f32v3>::second, &f32v3::x));
+
+    kt.addValue("y", Value::basic(offsetof(KT1, y), BasicType::STRING));
     kt.addValue("other", Value::basic(offsetof(KT1, other), BasicType::C_STRING));
     kt.addValue("z",     Value::basic(offsetof(KT1, z),     BasicType::UI8));
 }
@@ -33,5 +39,6 @@ KEG_TYPE_DEF(KT1, KT1, kt) {
 TEST(Parse) {
     KT1 data;
     keg::parse(&data, TestKeg1, "KT1");
+    delete[] data.other;
     return true;
 }

@@ -19,8 +19,11 @@
 
 class PreciseTimer {
 public:
+    PreciseTimer() {
+        start();
+    }
     void start();
-    f32 stop();
+    f64 stop();
 
     const bool& isRunning() const {
         return m_timerRunning;
@@ -33,19 +36,19 @@ private:
 class AccumulationTimer {
 public:
     void start(const nString& tag);
-    f32 stop();
+    f64 stop();
 
     void clear();
     void printAll(bool averages);
 private:
     class AccumNode {
     public:
-        void addSample(f32 sample) {
+        void addSample(f64 sample) {
             numSamples++;
             time += sample;
         }
         i32 numSamples = 0;
-        f32 time = 0.0f;
+        f64 time = 0.0f;
     };
 
     bool m_timerRunning = false;
@@ -72,7 +75,7 @@ private:
         };
         
         nString tag;
-        f32 time = 0.0f;
+        f64 time = 0.0f;
     };
 
     i32 m_samples = 0;

@@ -9,7 +9,7 @@
 
 typedef std::chrono::milliseconds ms;
 
-const f32 MS_PER_SECOND = 1000.0f;
+const f64 MS_PER_SECOND = 1000.0;
 
 void PreciseTimer::start() {
     m_timerRunning = true;
@@ -17,9 +17,9 @@ void PreciseTimer::start() {
 }
 
 // Returns time in ms
-f32 PreciseTimer::stop() {
+f64 PreciseTimer::stop() {
     m_timerRunning = false;
-    std::chrono::duration<f32> duration = std::chrono::high_resolution_clock::now() - m_start;
+    std::chrono::duration<f64> duration = std::chrono::high_resolution_clock::now() - m_start;
     return duration.count() * MS_PER_SECOND;
 }
 
@@ -33,10 +33,10 @@ void AccumulationTimer::start(const nString& tag) {
     }
 }
 
-f32 AccumulationTimer::stop() {
+f64 AccumulationTimer::stop() {
     m_timerRunning = false;
-    std::chrono::duration<f32> duration = std::chrono::high_resolution_clock::now() - m_start;
-    f32 time = duration.count() * MS_PER_SECOND;
+    std::chrono::duration<f64> duration = std::chrono::high_resolution_clock::now() - m_start;
+    f64 time = duration.count() * MS_PER_SECOND;
     m_it->second.addSample(time);
     return time;
 }
@@ -49,11 +49,11 @@ void AccumulationTimer::clear() {
 void AccumulationTimer::printAll(bool averages) {
     if (averages) {
         for (auto& it : m_accum) {
-            printf("  %-20s: %12f ms\n", it.first.c_str(), (it.second.time / (float)it.second.numSamples));
+            printf("  %-20s: %12lf ms\n", it.first.c_str(), (it.second.time / (f64)it.second.numSamples));
         }
     } else {
         for (auto& it : m_accum) {
-            printf("  %-20s: %12f ms\n", it.first.c_str(), it.second.time / 10.0f);
+            printf("  %-20s: %12lf ms\n", it.first.c_str(), it.second.time / 10.0f);
         }
     }
 }
@@ -78,7 +78,7 @@ void MultiplePreciseTimer::end(const bool& print) {
         if (print) {
             printf("TIMINGS: \n");
             for (size_t i = 0; i < m_intervals.size(); i++) {
-                printf("  %-20s: %12f ms\n", m_intervals[i].tag.c_str(), m_intervals[i].time / m_samples);
+                printf("  %-20s: %12lf ms\n", m_intervals[i].tag.c_str(), m_intervals[i].time / m_samples);
             }
             printf("\n");
         }
@@ -94,7 +94,7 @@ void MultiplePreciseTimer::end(const bool& print) {
 void FpsCounter::beginFrame() {
     m_startTicks = SDL_GetTicks();
 }
-float FpsCounter::endFrame() {
+f32 FpsCounter::endFrame() {
     calculateFPS();
     return m_fps;
 }
@@ -121,7 +121,7 @@ void FpsLimiter::init(const f32& maxFPS) {
 void FpsLimiter::setMaxFPS(const f32& maxFPS) {
     m_maxFPS = maxFPS;
 }
-float FpsLimiter::endFrame() {
+f32 FpsLimiter::endFrame() {
     calculateFPS();
 
     f32 frameTicks = (f32)(SDL_GetTicks() - m_startTicks);

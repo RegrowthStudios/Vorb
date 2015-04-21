@@ -260,7 +260,7 @@
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
-    <ClCompile Include="src/graphics/IRenderPipeline.cpp" />
+    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src/graphics/IRenderStage.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
@@ -281,6 +281,9 @@
     <ClCompile Include="src/sound/SoundInstance.cpp" />
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
+    <ClCompile Include="src\graphics\ShaderInterface.cpp" />
+    <ClCompile Include="src\graphics\ShaderManager.cpp" />
+    <ClCompile Include="src\graphics\ShaderParser.cpp" />
     <ClCompile Include="src\graphics\SpriteBatch.cpp" />
     <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
@@ -343,7 +346,7 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
-    <ClInclude Include="include/graphics/IRenderPipeline.h" />
+    <ClInclude Include="include\graphics\RenderPipeline.h" />
     <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
@@ -359,6 +362,9 @@
     <ClInclude Include="include/ui/ScreenList.h" />
     <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
+    <ClInclude Include="include\graphics\ShaderInterface.h" />
+    <ClInclude Include="include\graphics\ShaderManager.h" />
+    <ClInclude Include="include\graphics\ShaderParser.h" />
     <ClInclude Include="include\graphics\SpriteBatch.h" />
     <ClInclude Include="include/graphics/SpriteFont.h" />
     <ClInclude Include="include/stdafx.h" />
@@ -399,6 +405,7 @@
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
+    <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />

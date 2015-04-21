@@ -1,3 +1,5 @@
+#ifndef KEYS_INL__
+#define KEYS_INL__
 /// An enum for defining all the virtual keys
 enum VirtualKey : ui16 {
     VKEY_UNKNOWN = 0,
@@ -241,3 +243,5 @@ enum VirtualKey : ui16 {
     VKEY_SLEEP,
     VKEY_HIGHEST_VALUE
 };
+
+#endif // KEYS_INL__

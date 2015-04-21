@@ -63,6 +63,9 @@ namespace vorb {
                 return _components.size(); // This should be equal to _genComponent.getActiveCount()
             }
 
+            void unsafeSetSize(size_t n);
+            void unsafeSetLink(ECS& ecs, EntityID, ComponentID);
+
             Event<ComponentID, EntityID> onEntityAdded; ///< Called when an entity is added to this table
             Event<ComponentID, EntityID> onEntityRemoved; ///< Called when an entity is removed from this table
         protected:

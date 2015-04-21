@@ -30,6 +30,7 @@ namespace vorb {
 
         /// Entity Component System
         class ECS {
+            friend class ComponentTableBase;
         public:
             /// Default constructor which initializes events
             ECS();

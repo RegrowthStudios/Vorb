@@ -193,3 +193,110 @@ TEST(PtrRecycler) {
 
     return b;
 }
+
+class OValue {
+public:
+    OValue(i32 c) {
+        x = c;
+    }
+
+    i32 add(i32 a, i32 b) {
+        return a + b + x;
+    }
+    i32 getValue() {
+        return x;
+    }
+private:
+    i32 x;
+};
+
+TEST(DelegateSpeed) {
+
+    {
+        vorb::MTDetailedSamplerContext context;
+        OValue ovalue(3);
+        auto f = makeRDelegate(ovalue, &OValue::add);
+
+        i32 val = 0;
+        {
+            VORB_SAMPLE_SCOPE(context);
+            for (size_t i = 0; i < 15000000; i++) {
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+            }
+        }
+        std::cout << val << " Accum. Time: " << context.getAccumulatedSeconds() << std::endl;
+    }
+
+    {
+        vorb::MTDetailedSamplerContext context;
+        OValue ovalue(3);
+        std::function<i32(i32,i32)> f = std::bind(&OValue::add, &ovalue, std::placeholders::_1, std::placeholders::_2);
+
+        i32 val = 0;
+        {
+            VORB_SAMPLE_SCOPE(context);
+            for (size_t i = 0; i < 15000000; i++) {
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+                val += f(val, val);
+            }
+        }
+        std::cout << val << " Accum. Time: " << context.getAccumulatedSeconds() << std::endl;
+    }
+
+    return true;
+}

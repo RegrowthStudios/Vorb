@@ -22,67 +22,134 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#include "Environment.h"
+#include <tuple>
+#include <iostream>
+#include <array>
+#include <utility>
+
+#include "ScriptValueSenders.h"
+#include "ScriptImpl.h"
 
 namespace vorb {
     namespace script {
-        class Environment;
         class Function;
 
-        template<typename T> struct ScriptValueSender;
-
-#define SCRIPT_SENDER(TYPE)
-        template<typename TYPE> \
-        struct ScriptValueSender { \
-        public: \
-                static void push(EnvironmentHandle h, TYPE v); \
-                static TYPE pop(EnvironmentHandle h); \
-        }
-        SCRIPT_SENDER(i32);
-        SCRIPT_SENDER(ui32);
-        SCRIPT_SENDER(i64);
-        SCRIPT_SENDER(ui64);
-
         namespace impl {
-            void pushToTop(EnvironmentHandle h, const Function& f);
-            void call(EnvironmentHandle h, size_t n, size_t r);
+            template<size_t... Is>
+            struct index_sequence {};
+            template<size_t N, size_t... Is>
+            struct make_index_sequence : make_index_sequence<N - 1, N - 1, Is...> {};
+            template<size_t... Is>
+            struct make_index_sequence<0, Is...> : index_sequence<Is...> {};
+            template<typename... T>
+            struct index_sequence_for : make_index_sequence<sizeof...(T)> {};
 
-            template<typename Arg>
-            void pushArgs(EnvironmentHandle h, Arg a) {
-                ScriptValueSender<Arg>::push(h, a);
+            template<typename... T>
+            std::tuple<T...> popArgs(EnvironmentHandle h) {
+                std::cout << sizeof(std::tuple<T...>) << std::endl;
+                std::tuple<T...> tValue { ScriptValueSender<T>::defaultValue()... };
+                popArgsR<T...>(h, &tValue);
+                return std::move(tValue);
             }
-            template<typename Arg, typename... Args>
-            void pushArgs(EnvironmentHandle h, Arg a, Args... other) {
-                ScriptValueSender<Arg>::push(h, a);
-                pushArgs<Args...>(h, other...);
+            template<typename T>
+            void popArgsR(EnvironmentHandle h, std::tuple<T>* v) {
+                T tValue = popValue<T>(h);
+                T* ptr = &std::get<0>(*v);
+                *ptr = tValue;
+            }
+            template<typename T>
+            void popArgsR(EnvironmentHandle h, std::tuple<T&>* v) {
+                void* tValue = popValue<void*>(h);
+                memcpy(v, &tValue, sizeof(void*));
+            }
+            template<typename V, typename... T>
+            void popArgsR(EnvironmentHandle h, std::tuple<V, T...>* v) {
+                std::tuple<T...> tPopped { ScriptValueSender<T>::defaultValue()... };
+                popArgsR<T...>(h, &tPopped);
+                std::tuple<V> tValue { ScriptValueSender<V>::defaultValue() };
+                popArgsR<V>(h, &tValue);
+                std::swap(*v, std::tuple_cat(tValue, tPopped));
             }
 
-            template<typename Arg>
-            Arg popValue(EnvironmentHandle h) {
-                return ScriptValueSender<Arg>::pop(h);
+            template <typename Ret, typename F, typename Tuple, size_t... Is>
+            Ret invokeCall(F f, Tuple& t, index_sequence<Is...>) {
+                return f(std::get<Is>(t)...);
+            }
+            template <typename Ret, typename F, typename Tuple, size_t... Is>
+            Ret invoke(F f, Tuple& t, index_sequence<Is...>) {
+                return f->invoke(std::get<Is>(t)...);
+            }
+            template <typename F, typename Tuple, size_t... Is>
+            void invokeNone(F f, Tuple& t, index_sequence<Is...>) {
+                f->invoke(std::get<Is>(t)...);
+            }
+
+            template<typename F, typename... Args>
+            i32 cCall(EnvironmentHandle h, void(*func)(Args...)) {
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
+                invokeCall<void>(func, tValue, index_sequence_for<Args...>());
+                return 0;
+            }
+            template<typename F>
+            i32 cCall(EnvironmentHandle h, void(*func)()) {
+                func();
+                return 0;
+            }
+
+            template<typename... Args>
+            i32 fCall(EnvironmentHandle h, RDelegate<void, Args...>* del) {
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
+                invokeNone(del, tValue, index_sequence_for<Args...>());
+                return 0;
+            }
+            inline i32 fCall(EnvironmentHandle h, RDelegate<void>* del) {
+                del->invoke();
+                return 0;
+            }
+
+            template<typename Ret, typename... Args>
+            i32 fRCall(EnvironmentHandle h, RDelegate<Ret, Args...>* del) {
+                std::tuple<Args...> tValue = popArgs<Args...>(h);
+                Ret retValue = invoke<Ret>(del, tValue, index_sequence_for<Args...>());
+                return ScriptValueSender<Ret>::push(h, retValue);
+            }
+            template<typename Ret>
+            i32 fRCall(EnvironmentHandle h, RDelegate<Ret>* del) {
+                Ret retValue = del->invoke();
+                return ScriptValueSender<Ret>::push(h, retValue);
+            }
+
+            template<typename F, F f, typename... Args>
+            int luaCall(lua_State* s) {
+                typedef void(*FPtr)(Args...);
+                return cCall<F>(s, (FPtr)f);
+            }
+            template<typename... Args>
+            int luaDCall(lua_State* s) {
+                void* del = popUpvalueObject(s);
+                return fCall(s, (RDelegate<void, Args...>*)del);
+            }
+            template<typename Ret, typename... Args>
+            int luaDRCall(lua_State* s) {
+                void* del = popUpvalueObject(s);
+                return fRCall<Ret, Args...>(s, (RDelegate<Ret, Args...>*)del);
             }
         }
 
+        typedef int(*ScriptFunc)(EnvironmentHandle s);
+        template<void* f, typename... Args>
+        ScriptFunc fromFunction(void(*func)(Args...)) {
+            typedef void(*FuncType)(Args...);
+            return impl::luaCall<FuncType, (FuncType)f, Args...>;
+        }
+        typedef int(*ScriptFunc)(EnvironmentHandle s);
         template<typename... Args>
-        bool call(Environment& env, const nString& f, Args... args) {
-            Function& scr = env[f];
-            EnvironmentHandle hnd = env.getHandle();
-
-            impl::pushToTop(hnd, scr);
-            impl::pushArgs<Args...>(hnd, args...);
-            impl::call(hnd, sizeof...(Args), 0);
-            return true;
+        ScriptFunc fromDelegate() {
+            return impl::luaDCall<Args...>;
         }
         template<typename Ret, typename... Args>
-        bool callReturn(Environment& env, const nString& f, OUT Ret* retValue, Args... args) {
-            Function& scr = env[f];
-            EnvironmentHandle hnd = env.getHandle();
-
-            impl::pushToTop(hnd, scr);
-            impl::pushArgs<Args...>(hnd, args...);
-            impl::call(hnd, sizeof...(Args), 1);
-            *retValue = impl::popValue<Ret>(hnd);
-            return true;
+        ScriptFunc fromRDelegate() {
+            return impl::luaDRCall<Ret, Args...>;
         }
     }
 }

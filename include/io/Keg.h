@@ -22,6 +22,9 @@
 #include "KegValue.h"
 #include "YAML.h"
 
+#define KEG_DOC_TYPE_ID "__TYPE__"
+#define KEG_DOC_DATA_ID "__DATA__"
+
 /** @brief Vorb extension for YAML parsing.
  * 
  * Provides utility classes for parsing YAML files as well
@@ -42,23 +45,27 @@ namespace keg {
         EARLY_EOF
     };
 
+    struct ReadContext {
+    public:
+        YAMLReader reader;
+        Environment* env;
+    };
+
+
     // Parse String Of Data Into A Destination Given A Type And Optionally A Separate Environment
     Error parse(void* dest, const cString data, Type* type = nullptr, Environment* env = nullptr);
     // Parse String Of Data Into A Destination Given A Type Name And Optionally A Separate Environment
     Error parse(void* dest, const cString data, const nString& typeName, Environment* env = nullptr);
     // Parse String Of Data Into A Destination Given A Type ID And Optionally A Separate Environment
     Error parse(void* dest, const cString data, const ui32& typeID, Environment* env = nullptr);
-    Error parse(ui8* dest, keg::Node& data, keg::YAMLReader& doc, Environment* env, Type* type);
-    void evalData(ui8* dest, const Value* decl, keg::Node& node, keg::YAMLReader& doc, Environment* env);
+    Error parse(ui8* dest, keg::Node& data, ReadContext& context, Type* type);
+    void evalData(ui8* dest, const Value* decl, keg::Node& node, ReadContext& context);
 
     nString write(const void* src, Type* type, Environment* env = nullptr);
     nString write(const void* src, const nString& typeName, Environment* env = nullptr);
     nString write(const void* src, const ui32& typeID, Environment* env = nullptr);
     bool write(const ui8* src, keg::YAMLWriter& e, Environment* env, Type* type);
 
-    // Get The Global Environment Of Custom Types
-    Environment* getGlobalEnvironment();
-  
     VORB_INTERNAL Type& getType(bool& initialized, Type& type, bool (*fInit)());
     VORB_INTERNAL Enum& getEnum(bool& initialized, Enum& type, bool (*fInit)());
 }
@@ -73,10 +80,11 @@ namespace keg {
 #define KEG_GLOBAL_ENUM_INIT_FUNC(TYPENAME) ke_init_##TYPENAME
 #define KEG_GLOBAL_ENUM_BUILD_FUNC(TYPENAME) ke_build_##TYPENAME
 #ifdef DEBUG
-#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)() { \
         if (KEG_GLOBAL_TYPE_INIT(TYPENAME)) return true; \
         puts("Initializing Keg Type: "#TYPENAME); \
+        KEG_GLOBAL_TYPE(TYPENAME).setStructType<STRUCT_TYPE>(); \
         KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(KEG_GLOBAL_TYPE(TYPENAME)); \
         return true; \
     }
@@ -88,9 +96,10 @@ namespace keg {
         return true; \
     }
 #else
-#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+#define KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)() { \
         if (KEG_GLOBAL_TYPE_INIT(TYPENAME)) return true; \
+        KEG_GLOBAL_TYPE(TYPENAME).setStructType<STRUCT_TYPE>(); \
         KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(KEG_GLOBAL_TYPE(TYPENAME)); \
         return true; \
     }
@@ -110,9 +119,9 @@ namespace keg {
 #define KEG_TYPE_DEF(TYPENAME, STRUCT_TYPE, VAR_NAME) \
     bool KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)(); \
     void KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(keg::Type&); \
-    keg::Type KEG_GLOBAL_TYPE(TYPENAME)(sizeof(STRUCT_TYPE), #TYPENAME, nullptr); \
+    keg::Type KEG_GLOBAL_TYPE(TYPENAME)(#TYPENAME, nullptr); \
     bool KEG_GLOBAL_TYPE_INIT(TYPENAME) = KEG_GLOBAL_TYPE_INIT_FUNC(TYPENAME)(); \
-    KEG_TYPE_INIT_FUNC_DEF(TYPENAME) \
+    KEG_TYPE_INIT_FUNC_DEF(TYPENAME, STRUCT_TYPE) \
     void KEG_GLOBAL_TYPE_BUILD_FUNC(TYPENAME)(keg::Type& VAR_NAME)
 #define KEG_ENUM_DEF(TYPENAME, STRUCT_TYPE, VAR_NAME) \
     bool KEG_GLOBAL_ENUM_INIT_FUNC(TYPENAME)(); \

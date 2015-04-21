@@ -123,7 +123,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SFML;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -179,7 +179,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SFML;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -294,11 +294,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\io\KegEnum.cpp" />
+    <ClCompile Include="src\io\KegEnvironment.cpp" />
+    <ClCompile Include="src\io\KegRead.cpp" />
+    <ClCompile Include="src\io\KegType.cpp" />
+    <ClCompile Include="src\io\KegValue.cpp" />
+    <ClCompile Include="src\io\KegWrite.cpp" />
     <ClCompile Include="src\io\YAML.cpp" />
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp" />
     <ClCompile Include="src\script\Environment.cpp" />
-    <ClCompile Include="src\script\Script.cpp" />
+    <ClCompile Include="src\script\REPL.cpp" />
+    <ClCompile Include="src\script\ScriptImpl.cpp" />
+    <ClCompile Include="src\script\ScriptValueSenders.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />
@@ -361,6 +369,7 @@
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
     <ClInclude Include="include\examples\VorbKeg.h" />
+    <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
     <ClInclude Include="include\graphics\ShaderInterface.h" />
     <ClInclude Include="include\graphics\ShaderManager.h" />
@@ -380,6 +389,7 @@
     <ClInclude Include="include\io\KegBasic.h" />
     <ClInclude Include="include\io\KegEnum.h" />
     <ClInclude Include="include\io\KegEnvironment.h" />
+    <ClInclude Include="include\io\KegFuncs.h" />
     <ClInclude Include="include\io\KegType.h" />
     <ClInclude Include="include\io\KegValue.h" />
     <ClInclude Include="include\io\YAMLConverters.h" />
@@ -400,7 +410,10 @@
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
+    <ClInclude Include="include\script\REPL.h" />
     <ClInclude Include="include\script\Script.h" />
+    <ClInclude Include="include\script\ScriptImpl.h" />
+    <ClInclude Include="include\script\ScriptValueSenders.h" />
     <ClInclude Include="include\TextureRecycler.hpp" />
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
@@ -428,6 +441,7 @@
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />
     <None Include="src\graphics\SpriteBatchShader.inl" />
+    <None Include="src\ImplGraphicsH.inl" />
     <None Include="src\io\YAMLInternal.inl" />
     <None Include="include/IntersectionUtils.inl" />
     <None Include="src\ui\KeyMappings.inl" />

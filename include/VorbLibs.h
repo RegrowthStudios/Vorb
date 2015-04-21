@@ -20,12 +20,29 @@
 /************************************************************************/
 /* Common                                                               */
 /************************************************************************/
-#pragma message("VORB LIB: Linking Common")
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+#pragma message("VORB LIB: Linking GRAPHICS=OPENGL")
 #pragma message("Linking against <opengl32.lib>")
 #pragma comment(lib, "opengl32.lib")
 #pragma message("Linking against <glew32.lib>")
 #pragma comment(lib, "glew32.lib")
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+#ifndef OS_WINDOWS
+#error DirectX is Windows-only
+#endif // !OS_WINDOWS
+#pragma message("VORB LIB: Linking GRAPHICS=D3D")
+#if defined(VORB_DX_9)
+#pragma message("Linking against <d3d9.lib>")
+#pragma comment(lib, "d3d9.lib")
+#elif defined(VORB_DX_11)
+// TODO(Cristian): Link moar
+#endif
+#else
+#error A graphics implementation must be specified
+#endif
+
 #ifdef DEBUG
+#pragma message("VORB LIB: Linking Common")
 #pragma message("Linking against <libboost_system-vc120-mt-gd-1_55.lib>")
 #pragma comment(lib, "libboost_system-vc120-mt-gd-1_55.lib")
 #pragma message("Linking against <libboost_filesystem-vc120-mt-gd-1_55.lib>")

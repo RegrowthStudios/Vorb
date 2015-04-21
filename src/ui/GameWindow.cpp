@@ -18,10 +18,15 @@
 #define VUI_WINDOW_HANDLE(WINDOW_VAR) ( (sf::RenderWindow*) WINDOW_VAR )
 #endif
 
+#include "../ImplGraphicsH.inl"
 #include "io/IOManager.h"
 #include "ui/InputDispatcher.h"
 
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+#define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_SHOWN)
+#endif
 
 KEG_ENUM_DEF(GameSwapInterval, vui::GameSwapInterval, ke) {
     using namespace keg;
@@ -102,6 +107,7 @@ bool vui::GameWindow::init() {
     }
 
 #if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, (int)m_displayMode.major);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, (int)m_displayMode.minor);
@@ -112,6 +118,35 @@ bool vui::GameWindow::init() {
     }
     m_glc = SDL_GL_CreateContext(VUI_WINDOW_HANDLE(m_window));
     SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    m_glc = new D3DContext;
+
+    // Make COM object for D3D initialization
+    VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
+
+    { // Create D3D device context
+        D3DPRESENT_PARAMETERS pp = {};
+        pp.hDeviceWindow = GetActiveWindow();
+        pp.Windowed = TRUE;
+        pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+        pp.EnableAutoDepthStencil = true;
+        pp.AutoDepthStencilFormat = D3DFMT_D16;
+        pp.BackBufferWidth = 800;
+        pp.BackBufferHeight = 600;
+        pp.BackBufferFormat = D3DFMT_R5G6B5;
+        pp.MultiSampleType = D3DMULTISAMPLE_NONE;
+
+        VUI_COM(m_glc)->CreateDevice(
+            D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL,
+            pp.hDeviceWindow,
+            D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+            &pp,
+            &(VUI_CONTEXT(m_glc))
+            );
+    }
+#endif
+
 #elif defined(VORB_IMPL_UI_GLFW)
     // Initialize OpenGL
     glfwMakeContextCurrent(VUI_WINDOW_HANDLE(m_window));
@@ -121,22 +156,31 @@ bool vui::GameWindow::init() {
     m_glc = m_window;
 #endif
 
+    // Check for a valid context
     if (m_glc == nullptr) {
         printf("Could Not Create OpenGL Context");
         return false;
     }
 
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         printf("Glew failed to initialize. Your graphics card is probably WAY too old. Or you forgot to extract the .zip. It might be time for an upgrade :)");
         return false;
     }
 
+    // Create default clear values
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearDepth(1.0f);
+
+    // Initialize Frame Buffer
+    glViewport(0, 0, getWidth(), getHeight());
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    // TODO(Cristian): Place some defaults?
+#endif
+
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
-
-    // Make sure default clear depth is 1.0f
-    glClearDepth(1.0f);
 
     // Push input from this window
     vui::InputDispatcher::init(this);
@@ -148,10 +192,17 @@ void vui::GameWindow::dispose() {
     saveSettings();
 
 #if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     if (m_glc) {
         SDL_GL_DeleteContext((SDL_GLContext)m_glc);
         m_glc = nullptr;
     }
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    if (m_glc) {
+        VUI_CONTEXT(m_glc)->Release();
+        VUI_COM(m_glc)->Release();
+    }
+#endif
     if (m_window) {
         SDL_DestroyWindow(VUI_WINDOW_HANDLE(m_window));
         m_window = nullptr;
@@ -255,6 +306,7 @@ void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& 
     if (overrideCheck || m_displayMode.swapInterval != mode) {
         m_displayMode.swapInterval = mode;
 #if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
         switch (m_displayMode.swapInterval) {
         case GameSwapInterval::UNLIMITED_FPS:
         case GameSwapInterval::USE_VALUE_CAP:
@@ -264,6 +316,9 @@ void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& 
             SDL_GL_SetSwapInterval(static_cast<i32>(DEFAULT_SWAP_INTERVAL));
             break;
         }
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+        // TODO(Cristian): Swap interval
+#endif
 #elif defined(VORB_IMPL_UI_GLFW)
         // TODO: GLFW Impl
 #elif defined(VORB_IMPL_UI_SFML)
@@ -299,7 +354,11 @@ void vui::GameWindow::sync(ui32 frameTime) {
     pollInput();
 
 #if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
     SDL_GL_SwapWindow(VUI_WINDOW_HANDLE(m_window));
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    VUI_CONTEXT(m_glc)->Present(nullptr, nullptr, nullptr, nullptr);
+#endif
 #elif defined(VORB_IMPL_UI_GLFW)
     glfwSwapBuffers(VUI_WINDOW_HANDLE(m_window));
     glfwPollEvents();
@@ -315,6 +374,13 @@ void vui::GameWindow::sync(ui32 frameTime) {
     }
 }
 
+vui::GraphicsContext vui::GameWindow::getContext() const {
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+    return m_glc;
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    return VUI_CONTEXT(m_glc);
+#endif
+}
 i32 vui::GameWindow::getX() const {
     i32 v;
 #if defined(VORB_IMPL_UI_SDL)
@@ -362,3 +428,4 @@ void vui::GameWindow::pollInput() {
     }
 #endif
 }
+

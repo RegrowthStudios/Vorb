@@ -599,6 +599,8 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         vui::InputDispatcher::window.onEvent();
         break;
     case sf::Event::TextEntered:
+        if (e.text.unicode < 32 || (e.text.unicode > 126 && e.text.unicode < 160)) break;
+
         memcpy(ie.text.text, &e.text.unicode, sizeof(sf::Uint32));
         ie.text.text[sizeof(sf::Uint32)] = 0;
         vui::InputDispatcher::key.onText(ie.text);

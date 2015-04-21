@@ -85,6 +85,9 @@ namespace keg {
         std::map<nString, Enum*> _enumsByName;
         std::map<ui32, Enum*> _enumsByID;
     };
+
+    // Get The Global Environment Of Custom Types
+    Environment* getGlobalEnvironment();
 }
 
 #endif // !Vorb_KegEnvironment_h__

@@ -29,6 +29,9 @@ namespace keg {
     /*! @brief These are all the types that can be parsed directly into a value.
      */
     enum class BasicType {
+        /************************************************************************/
+        /* Simple types                                                         */
+        /************************************************************************/
 #define KEG_BASIC_NUM_VEC(TYPE) TYPE, TYPE##_V2, TYPE##_V3, TYPE##_V4
         // Signed Integral Types
         KEG_BASIC_NUM_VEC(I8),
@@ -46,10 +49,15 @@ namespace keg {
         BOOL, ///< Boolean
         C_STRING, ///< C-style string (char* array)
         STRING, ///< New-style C++ string
+
+        /************************************************************************/
+        /* Complex types                                                        */
+        /************************************************************************/
         ARRAY, ///< Array of values
         PTR, ///< Pointer to a value
         ENUM, ///< Enum
-        CUSTOM ///< Custom user-defined type
+        CUSTOM, ///< Custom user-defined type
+        VORB_INTERNAL COUNT, ///< Number of defined types
 #undef KEG_BASIC_NUM_VEC
     };
 

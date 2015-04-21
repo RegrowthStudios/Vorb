@@ -99,7 +99,8 @@ namespace vorb {
             WindowHandle getHandle() const {
                 return m_window;
             }
-        
+            GraphicsContext getContext() const;
+
             // Change Display Settings
             void setScreenSize(const i32& w, const i32& h, const bool& overrideCheck = false);
             void setFullscreen(const bool& useFullscreen, const bool& overrideCheck = false);

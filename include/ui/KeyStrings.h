@@ -16,7 +16,7 @@
 #define KeyStrings_h__
 
 /// An enum for string names of virtual keys
-const char* VirtualKeyStrings[] = {
+const char* const VirtualKeyStrings[] = {
     "UNKNOWN",
     "A",
     "B",

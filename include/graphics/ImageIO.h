@@ -80,6 +80,10 @@ namespace vorb {
             virtual ~ScopedBitmapResource() {
                 ImageIO::free(*this);
             }
+            ScopedBitmapResource& operator=(const BitmapResource& rs) {
+                memcpy(this, &rs, sizeof(BitmapResource));
+                return *this;
+            }
         };
     }
 }

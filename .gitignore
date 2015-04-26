@@ -182,4 +182,5 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 # Doxygen output
-include/html/
+docs/
+*.dox.txt

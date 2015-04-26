@@ -6,6 +6,7 @@
 #include <FreeImage.h>
 
 #include "graphics/ConnectedTextures.h"
+#include "graphics/SpriteBatch.h"
 #include "io/IOManager.h"
 #include "sound/SoundEngine.h"
 #include "utils.h"
@@ -100,6 +101,7 @@ namespace vorb {
         }
 
         FreeImage_DeInitialise();
+        vg::SpriteBatch::disposeProgram();
 
         return InitParam::GRAPHICS;
     }

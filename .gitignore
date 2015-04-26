@@ -184,3 +184,4 @@ FakesAssemblies/
 # Doxygen output
 docs/
 *.dox.txt
+UnitTester/app.config

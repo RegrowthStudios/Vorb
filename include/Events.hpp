@@ -255,6 +255,16 @@ public:
         // Empty
     }
 
+    /*! @brief Reset the sender value of this event to another.
+     * 
+     * @warning Resetting a sender of an event could cause harm to existing listeners.
+     * 
+     * @param s: New sender pointer.
+     */
+    void setSender(Sender s) {
+        m_sender = s;
+    }
+
     /// Call all bound methods
     /// @param p: Arguments used in function calls
     void send(Params... p) {

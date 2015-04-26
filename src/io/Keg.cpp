@@ -52,6 +52,31 @@ namespace keg {
         nullptr
     };
 #undef KEG_SIMPLE_EVAL
+#define KEG_SIMPLE_OUT(TYPE) \
+    output<TYPE>, \
+    output<TYPE##v2>, \
+    output<TYPE##v3>, \
+    output<TYPE##v4>
+    Outputter simpleOutputters[(size_t)keg::BasicType::COUNT] = {
+        KEG_SIMPLE_OUT(i8),
+        KEG_SIMPLE_OUT(i16),
+        KEG_SIMPLE_OUT(i32),
+        KEG_SIMPLE_OUT(i64),
+        KEG_SIMPLE_OUT(ui8),
+        KEG_SIMPLE_OUT(ui16),
+        KEG_SIMPLE_OUT(ui32),
+        KEG_SIMPLE_OUT(ui64),
+        KEG_SIMPLE_OUT(f32),
+        KEG_SIMPLE_OUT(f64),
+        output<bool>,
+        output<cString>,
+        output<nString>,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
+    };
+#undef KEG_SIMPLE_OUT
 
     // Our Global Environment :)
     Environment* kegGE = nullptr;

@@ -77,6 +77,11 @@ namespace vorb {
         /// Destroys the resource in the destructor
         class ScopedBitmapResource : public BitmapResource {
         public:
+            ScopedBitmapResource() {};
+            ScopedBitmapResource(ScopedBitmapResource& other) = delete;
+            ScopedBitmapResource(const BitmapResource& rs) {
+                memcpy(this, &rs, sizeof(BitmapResource));
+            }
             virtual ~ScopedBitmapResource() {
                 ImageIO::free(*this);
             }

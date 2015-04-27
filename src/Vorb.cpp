@@ -4,6 +4,15 @@
 #include <boost/filesystem.hpp>
 #include <enet/enet.h>
 #include <FreeImage.h>
+#if defined(VORB_IMPL_FONT_SDL)
+#if defined(OS_WINDOWS)
+#include <TTF/SDL_ttf.h>
+#else
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
+#else
+// TODO: FreeType?
+#endif
 
 #include "graphics/ConnectedTextures.h"
 #include "graphics/SpriteBatch.h"
@@ -28,6 +37,14 @@ namespace vorb {
             return InitParam::GRAPHICS;
         }
 
+#if defined(VORB_IMPL_FONT_SDL)
+        if (TTF_Init() == -1) {
+            printf("TTF_Init Error: %s\n", TTF_GetError());
+            return InitParam::NONE;
+        }
+#else
+        // TODO(Cristian): FreeType
+#endif
         FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
@@ -100,6 +117,11 @@ namespace vorb {
             return InitParam::GRAPHICS;
         }
 
+#if defined(VORB_IMPL_FONT_SDL)
+        TTF_Quit();
+#else
+        // TODO(Cristian): FreeType
+#endif
         FreeImage_DeInitialise();
         vg::SpriteBatch::disposeProgram();
 

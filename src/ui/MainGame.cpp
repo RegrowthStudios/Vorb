@@ -26,16 +26,6 @@ static ui32 getCurrentTime() {
 #define MS_TIME getCurrentTime()
 #endif
 
-#if defined(VORB_IMPL_FONT_SDL)
-#if defined(OS_WINDOWS)
-#include <TTF/SDL_ttf.h>
-#else
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
-#else
-// TODO: FreeType?
-#endif
-
 #include "../ImplGraphicsH.inl"
 
 #include "graphics/GLStates.h"
@@ -76,15 +66,6 @@ bool vui::MainGame::initSystems() {
 
 #endif
 
-    // Initialize Fonts Library
-#if defined(VORB_IMPL_FONT_SDL)
-    if (TTF_Init() == -1) {
-        printf("TTF_Init Error: %s\n", TTF_GetError());
-        return false;
-    }
-#else
-    // TODO: FreeType library
-#endif
     return true;
 }
 
@@ -138,11 +119,6 @@ void vui::MainGame::run() {
         }
     }
 
-#if defined(VORB_IMPL_FONT_SDL)
-    TTF_Quit();
-#else
-    // TODO(Cristian): FreeType
-#endif
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_Quit();

@@ -1,19 +1,26 @@
-///
-/// GBuffer.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 21 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A special render target used for deferred rendering
-///
+//
+// GBuffer.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 27 Apr 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GBuffer.h
+ * @brief A special render target used for deferred rendering
+ */
 
 #pragma once
 
-#ifndef GBuffer_h__
-#define GBuffer_h__
+#ifndef Vorb_GBuffer_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GBuffer_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 #include "gtypes.h"
@@ -37,18 +44,17 @@
 
 namespace vorb {
     namespace graphics {
+         /*! @brief Information that specifies size and location of a texture in the GBuffer
+          */
+        struct GBufferAttachment {
+        public:
+            vg::TextureInternalFormat format; ///< Internal format for the attachment (all must be the same size).
+            ui32 number; ///< Attachment index for the texture [0, MaxAttachments).
+        };
+
         /// Geometry and light render target for deferred rendering
         class GBuffer {
         public:
-            /// Name-defined textures stored in a GBuffer
-            struct TextureIDs {
-            public:
-                VGTexture color; ///< RGBA-16f colorRGB-specularAlpha texture
-                VGTexture normal; ///< RGBA-16f normal texture
-                VGTexture depth; ///< RG-32f texture
-                VGTexture light; ///< RGB-16f texture
-            };
-
             /// Set up a GBuffer with a certain size
             /// @param w: Width in pixels of each target
             /// @param h: Height in pixels of each target
@@ -61,7 +67,7 @@ namespace vorb {
 
             /// Create the value-based render targets
             /// @return Self
-            GBuffer& init();
+            GBuffer& init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat);
             /// Attach a depth buffer to this GBuffer
             /// @param depthFormat: Precision used for depth buffer
             /// @return Self
@@ -81,8 +87,12 @@ namespace vorb {
             void useLight();
 
             /// @return OpenGL texture IDs
-            const GBuffer::TextureIDs& getTextureIDs() const {
-                return m_tex;
+            const VGTexture& getGeometryTexture(size_t i) const {
+                return m_textures[i];
+            }
+            /// @return Light texture
+            const VGTexture& getLightTexture() const {
+                return m_textures[m_textures.size() - 1];
             }
 
             /// @return Size of the GBuffer in pixels (W,H)
@@ -103,14 +113,12 @@ namespace vorb {
 
             VGFramebuffer m_fboGeom; ///< The rendering target for geometry
             VGFramebuffer m_fboLight; ///< The rendering target for light
-            union {
-                TextureIDs m_tex; ///< Named texture targets
-                VGTexture m_textures[4]; ///< All 3 textures
-            };
+            Array<VGTexture> m_textures; ///< An array of all the textures
             VGTexture m_texDepth = 0; ///< Depth texture of GBuffer
         };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // GBuffer_h__
+
+#endif // !Vorb_GBuffer_h__

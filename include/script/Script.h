@@ -46,7 +46,6 @@ namespace vorb {
 
             template<typename... T>
             std::tuple<T...> popArgs(EnvironmentHandle h) {
-                std::cout << sizeof(std::tuple<T...>) << std::endl;
                 std::tuple<T...> tValue { ScriptValueSender<T>::defaultValue()... };
                 popArgsR<T...>(h, &tValue);
                 return std::move(tValue);

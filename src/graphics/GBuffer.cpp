@@ -8,11 +8,15 @@ m_size(w, h) {
     // Empty
 }
 
-void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::TextureInternalFormat& format, const ui32& attachment) {
+void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::GBufferAttachment& attachment) {
     glBindTexture(GL_TEXTURE_2D, texID);
-    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)format, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    if (glTexStorage2D) {
+        glTexStorage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y);
+    } else {
+        glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y, 0, (VGEnum)attachment.pixelFormat, (VGEnum)attachment.pixelType, nullptr);
+    }
     SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachment, GL_TEXTURE_2D, texID, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachment.number, GL_TEXTURE_2D, texID, 0);
 }
 vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat) {
     // Create texture targets
@@ -27,7 +31,7 @@ vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::
     VGEnum* bufs = (VGEnum*)alloca(attachments.size() * sizeof(VGEnum));
     for (ui32 i = 0; i < attachments.size(); i++) {
         bufs[i] = GL_COLOR_ATTACHMENT0 + attachments[i].number;
-        initTarget(m_size, m_textures[i], attachments[i].format, attachments[i].number);
+        initTarget(m_size, m_textures[i], attachments[i]);
     }
 
     // Set the output location for pixels
@@ -36,7 +40,7 @@ vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::
     // Make the framebuffer for lighting
     glGenFramebuffers(1, &m_fboLight);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
-    initTarget(m_size, m_textures[m_textures.size() - 1], lightFormat, 0);
+    initTarget(m_size, m_textures[m_textures.size() - 1], { lightFormat, vg::TextureFormat::RGBA, vg::TexturePixelType::UNSIGNED_BYTE, 0 });
 
     // Set the output location for pixels
     glDrawBuffer(GL_COLOR_ATTACHMENT0);

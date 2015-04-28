@@ -49,6 +49,8 @@ namespace vorb {
         struct GBufferAttachment {
         public:
             vg::TextureInternalFormat format; ///< Internal format for the attachment (all must be the same size).
+            vg::TextureFormat pixelFormat;
+            vg::TexturePixelType pixelType;
             ui32 number; ///< Attachment index for the texture [0, MaxAttachments).
         };
 
@@ -77,7 +79,7 @@ namespace vorb {
             /// @return Self
             GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
 
-            void initTarget(const ui32v2& _size, const ui32& texID, const vg::TextureInternalFormat& format, const ui32& attachment);
+            void initTarget(const ui32v2& _size, const ui32& texID, const GBufferAttachment& attachment);
             /// Destroy all render targets
             void dispose();
 

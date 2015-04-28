@@ -307,6 +307,7 @@
     <ClCompile Include="src\script\REPL.cpp" />
     <ClCompile Include="src\script\ScriptImpl.cpp" />
     <ClCompile Include="src\script\ScriptValueSenders.cpp" />
+    <ClCompile Include="src\ui\Control.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />
@@ -418,6 +419,7 @@
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
+    <ClInclude Include="include\ui\Control.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />

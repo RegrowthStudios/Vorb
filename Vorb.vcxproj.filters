@@ -201,6 +201,9 @@
     <ClCompile Include="src\graphics\ShaderInterface.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\Control.cpp">
+      <Filter>UI\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -522,6 +525,9 @@
     <ClInclude Include="include\ui\KeyStrings.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\Control.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -607,6 +613,9 @@
     </Filter>
     <Filter Include="IO\YAML">
       <UniqueIdentifier>{9a85e0eb-e38f-4c09-bbb6-96b126863b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Controls">
+      <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

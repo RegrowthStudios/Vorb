@@ -23,19 +23,13 @@ namespace vorb {
         template<int N>
         class RTSwapChain {
         public:
-            /// Create the swapchain and set sizes on all FBOs
+            /// Initialize all of the FBOs on the chain
             /// @param w: Width in pixels of each FBO
             /// @param h: Height in pixels of each FBO
-            RTSwapChain(const ui32& w, const ui32& h) {
+            /// @param format: Internal pixel format for the color textures
+            void init(ui32 w, ui32 h, TextureInternalFormat format = TextureInternalFormat::RGBA8) {
                 for (i32 i = 0; i < N; i++) {
                     _fbos[i].setSize(w, h);
-                }
-            }
-
-            /// Initialize all of the FBOs on the chain
-            /// @param format: Internal pixel format for the color textures
-            void init(TextureInternalFormat format = TextureInternalFormat::RGBA8) {
-                for (i32 i = 0; i < N; i++) {
                     _fbos[i].init(format, 0);
                 }
             }
@@ -51,26 +45,24 @@ namespace vorb {
             /// @param rt: Rendered input FBO
             /// @param isMSAA: True if the input FBO has MSAA turned on
             /// @param shouldClear: True if the current target should have its color cleared
-            void reset(ui32 textureUnit, GLRenderTarget* rt, bool isMSAA, bool shouldClear = true) {
-                const GLRenderTarget* prev = rt;
-
+            void reset(ui32 textureUnit, VGFramebuffer fb, VGTexture rt, bool isMSAA, bool shouldClear = true) {
                 _current = 0;
                 if (isMSAA) {
                     ui32 w = getCurrent().getWidth();
                     ui32 h = getCurrent().getHeight();
                     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, getCurrent().getID());
-                    glBindFramebuffer(GL_READ_FRAMEBUFFER, rt->getID());
+                    glBindFramebuffer(GL_READ_FRAMEBUFFER, fb);
                     glDrawBuffer(GL_COLOR_ATTACHMENT0);
                     glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
                     swap();
-                    prev = &getPrevious();
+                    rt = getPrevious().getTextureID();
                 }
 
                 getCurrent().use();
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
-                prev->bindTexture();
+                glBindTexture(GL_TEXTURE_2D, rt);
             }
             /// Move pointer to the next FBO on the chain
             void swap() {

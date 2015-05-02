@@ -201,7 +201,10 @@
     <ClCompile Include="src\graphics\ShaderInterface.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\Control.cpp">
+    <ClCompile Include="src\ui\UIRenderer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Widget.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
   </ItemGroup>
@@ -525,7 +528,10 @@
     <ClInclude Include="include\ui\KeyStrings.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\Control.h">
+    <ClInclude Include="include\ui\UIRenderer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Widget.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
   </ItemGroup>

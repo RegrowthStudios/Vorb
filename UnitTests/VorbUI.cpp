@@ -50,8 +50,8 @@ public:
         // Empty
     }
     virtual void addScreens() {
-        _screenList->addScreen(new TestScreen);
-        _screenList->setScreen(m_index);
+        m_screenList.addScreen(new TestScreen);
+        m_screenList.setScreen(m_index);
     }
     virtual void onExit() {
         // Empty

@@ -37,22 +37,41 @@ static ui32 getCurrentTime() {
 #include "Timing.h"
 #include "InputDispatcherEventCatcher.h"
 
-vui::MainGame::MainGame() : _fps(0) {
+vui::MainGame::MainGame() :
+    m_screenList(this) {
+    // Empty
 }
 vui::MainGame::~MainGame() {
     // Empty
 }
 
+bool vui::MainGame::init() {
+    m_lastTime = {};
+    m_curTime = {};
+
+    // This Is Vital
+    if (!initSystems()) return false;
+    m_window.setTitle(nullptr);
+
+    // Initialize Logic And Screens
+    onInit();
+    addScreens();
+
+    // Try To Get A Screen
+    m_screen = m_screenList.getCurrent();
+    if (m_screen) {
+        // Run The First Game Screen
+        m_screen->setRunning();
+        m_screen->onEntry(m_lastTime);
+    }
+
+    // Set last known time
+    m_lastMS = MS_TIME;
+    return true;
+}
 bool vui::MainGame::initSystems() {
     // Create The Window
-    if (!_window.init()) return false;
-
-    // Initialize input
-    vui::InputDispatcher::onQuit += makeDelegate(*this, &MainGame::onQuit);
-
-    // Get The Machine's Graphics Capabilities
-    _gDevice = new vg::GraphicsDevice(_window.getHandle());
-    _gDevice->refreshInformation();
+    if (!m_window.init()) return false;
 
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // TODO: Replace With BlendState
@@ -67,6 +86,49 @@ bool vui::MainGame::initSystems() {
 #endif
 
     return true;
+}
+void vui::MainGame::exitGame() {
+    if (m_screen) {
+        m_screen->onExit(m_lastTime);
+        m_screen = nullptr;
+    }
+    m_screenList.destroy(m_lastTime);
+    onExit();
+    m_window.dispose();
+    m_isRunning = false;
+}
+
+bool vui::MainGame::shouldTerminate() const {
+    return !m_isRunning || m_window.shouldQuit() || m_screen == nullptr;
+}
+bool vui::MainGame::checkScreenChange() {
+    // If no screen, then the frame should not do anything
+    if (!m_screen) return true;
+
+    switch (m_screen->getState()) {
+    case ScreenState::CHANGE_NEXT:
+        m_screen->onExit(m_curTime);
+        m_screen = m_screenList.moveNext();
+        if (m_screen != nullptr) {
+            m_screen->setRunning();
+            m_screen->onEntry(m_curTime);
+        }
+        return true;
+    case ScreenState::CHANGE_PREVIOUS:
+        m_screen->onExit(m_curTime);
+        m_screen = m_screenList.movePrevious();
+        if (m_screen != nullptr) {
+            m_screen->setRunning();
+            m_screen->onEntry(m_curTime);
+        }
+        return true;
+    case ScreenState::EXIT_APPLICATION:
+        m_isRunning = false;
+        return true;
+    default:
+        // No change occurs otherwise
+        return false;
+    }
 }
 
 void vui::MainGame::run() {
@@ -92,31 +154,34 @@ void vui::MainGame::run() {
 
     // Game Loop
     if (init()) {
-        _isRunning = true;
-        while (_isRunning) {
+        m_isRunning = true;
+        while (!shouldTerminate()) {
             // Start the FPS counter
             fpsCounter.beginFrame();
-            // Refresh Time Information
+
+            // Refresh time information for this frame
             refreshElapsedTime();
 
-            // Main Game Logic
-            checkInput();
-            if (!_isRunning) break;
-            onUpdateFrame();
-#if defined(VORB_IMPL_GRAPHICS_OPENGL)
-            onRenderFrame();
-#elif defined(VORB_IMPL_GRAPHICS_D3D)
-            VG_DX_DEVICE(_window.getContext())->BeginScene();
-            onRenderFrame();
-            VG_DX_DEVICE(_window.getContext())->EndScene();
-#endif
-            // Swap buffers
+            // Scree logic
+            if (!checkScreenChange()) {
+                // Update
+                onUpdateFrame();
+                if (!checkScreenChange()) {
+                    // Render
+                    onRenderFrame();
+                }
+            }
+
+            // Swap buffers and synchronize time-step and window input
             ui32 curMS = MS_TIME;
-            _window.sync(curMS - _lastMS);
+            m_window.sync(curMS - m_lastMS);
 
             // Get the FPS
-            _fps = fpsCounter.endFrame();
+            m_fps = fpsCounter.endFrame();
         }
+
+        // Exit application logic
+        exitGame();
     }
 
 
@@ -128,117 +193,45 @@ void vui::MainGame::run() {
     // Don't have to do anything
 #endif
 }
-void vui::MainGame::exitGame() {
-    if (_screen) {
-        _screen->onExit(_lastTime);
-    }
-    if (_screenList) {
-        _screenList->destroy(_lastTime);
-    }
-    vui::InputDispatcher::onQuit -= makeDelegate(*this, &MainGame::onQuit);
-    _window.dispose();
-    _isRunning = false;
-}
 
-bool vui::MainGame::init() {
-    // This Is Vital
-    if (!initSystems()) return false;
-    _window.setTitle(nullptr);
-
-    // Initialize Logic And Screens
-    _screenList = new ScreenList(this);
-    onInit();
-    addScreens();
-
-    // Try To Get A Screen
-    _screen = _screenList->getCurrent();
-    if (_screen == nullptr) {
-        exitGame();
-        return false;
-    }
-
-    // Run The First Game Screen
-    _screen->setRunning();
-    _lastTime = {};
-    _curTime = {};
-    _screen->onEntry(_lastTime);
-    _lastMS = MS_TIME;
-
-    return true;
-}
 void vui::MainGame::refreshElapsedTime() {
     ui32 ct = MS_TIME;
-    f64 et = (ct - _lastMS) / 1000.0;
-    _lastMS = ct;
+    f64 et = (ct - m_lastMS) / 1000.0;
+    m_lastMS = ct;
 
-    _lastTime = _curTime;
-    _curTime.elapsed = et;
-    _curTime.total += et;
+    m_lastTime = m_curTime;
+    m_curTime.elapsed = et;
+    m_curTime.total += et;
 }
-void vui::MainGame::checkInput() {
-    if (m_signalQuit) {
-        m_signalQuit = false;
-        exitGame();
-    }
-}
-
 void vui::MainGame::onUpdateFrame() {
-    if (_screen != nullptr) {
-        switch (_screen->getState()) {
-        case ScreenState::RUNNING:
-            _screen->update(_curTime);
-            break;
-        case ScreenState::CHANGE_NEXT:
-            _screen->onExit(_curTime);
-            _screen = _screenList->moveNext();
-            if (_screen != nullptr) {
-                _screen->setRunning();
-                _screen->onEntry(_curTime);
-            }
-            break;
-        case ScreenState::CHANGE_PREVIOUS:
-            _screen->onExit(_curTime);
-            _screen = _screenList->movePrevious();
-            if (_screen != nullptr) {
-                _screen->setRunning();
-                _screen->onEntry(_curTime);
-            }
-            break;
-        case ScreenState::EXIT_APPLICATION:
-            exitGame();
-            return;
-        default:
-            return;
-        }
-    } else {
-        exitGame();
-        return;
-    }
+    // Perform the screen's update logic
+    m_screen->update(m_curTime);
 }
-
 void vui::MainGame::onRenderFrame() {
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     // TODO: Investigate Removing This
-    glViewport(0, 0, _window.getWidth(), _window.getHeight());
+    glViewport(0, 0, m_window.getWidth(), m_window.getHeight());
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     {
 #if defined(VORB_DX_9)
         D3DVIEWPORT9 vp;
         vp.X = 0;
         vp.Y = 0;
-        vp.Width = _window.getWidth();
-        vp.Height = _window.getHeight();
+        vp.Width = m_window.getWidth();
+        vp.Height = m_window.getHeight();
         vp.MinZ = 0.0f;
         vp.MaxZ = 1.0f;
-        VG_DX_DEVICE(_window.getContext())->SetViewport(&vp);
+        VG_DX_DEVICE(m_window.getContext())->SetViewport(&vp);
 #endif
     }
+    VG_DX_DEVICE(m_window.getContext())->BeginScene();
 #endif
-    if (_screen != nullptr && _screen->getState() == ScreenState::RUNNING) {
-        _screen->draw(_curTime);
-    }
+
+    // Draw the screen
+    m_screen->draw(m_curTime);
+
+#if defined(VORB_IMPL_GRAPHICS_D3D)
+    VG_DX_DEVICE(m_window.getContext())->EndScene();
+#endif
 }
 
-void vui::MainGame::onQuit(Sender) {
-    m_signalQuit = true;
-}

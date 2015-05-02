@@ -307,6 +307,8 @@
     <ClCompile Include="src\script\REPL.cpp" />
     <ClCompile Include="src\script\ScriptImpl.cpp" />
     <ClCompile Include="src\script\ScriptValueSenders.cpp" />
+    <ClCompile Include="src\ui\ButtonBase.cpp" />
+    <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
@@ -420,6 +422,8 @@
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
+    <ClInclude Include="include\ui\ButtonBase.h" />
+    <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\ui\UIRenderer.h" />

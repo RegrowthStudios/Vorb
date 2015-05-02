@@ -207,6 +207,12 @@
     <ClCompile Include="src\ui\Widget.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\ButtonBase.cpp">
+      <Filter>UI\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Drawables.cpp">
+      <Filter>UI\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -532,6 +538,12 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Widget.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ButtonBase.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Drawables.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
   </ItemGroup>

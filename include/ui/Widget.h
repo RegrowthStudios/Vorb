@@ -102,34 +102,38 @@ namespace vorb {
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
-            virtual const ControlStyle& getStyle() const { return m_style; }
-            virtual const std::vector<Widget*>& getControls() const { return m_controls; }
-            virtual const ui32v4& getDestRect() const { return m_destRect; }
-            virtual const ui32& getX() const { return m_destRect.x; }
-            virtual const ui32& getY() const { return m_destRect.y; }
-            virtual const ui32& getWidth() const { return m_destRect.z; }
-            virtual const ui32& getHeight() const { return m_destRect.w; }
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
+            virtual const ControlStyle& getStyle() const { return m_style; }
             virtual const DockStyle& getDock() const { return m_dock; }
             virtual const bool& isRenderInit() const { return m_isRenderInit; }
+            virtual const f32& getHeight() const { return m_destRect.w; }
+            virtual const f32& getWidth() const { return m_destRect.z; }
+            virtual const f32& getX() const { return m_destRect.x; }
+            virtual const f32& getY() const { return m_destRect.y; }
+            virtual const f32v2& getDimensions() const { return *(f32v2*)(&m_destRect.z); }
+            virtual const f32v2& getPosition() const { return *(f32v2*)(&m_destRect.x); }
+            virtual const f32v4& getDestRect() const { return m_destRect; }
+            virtual const std::vector<Widget*>& getControls() const { return m_controls; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             // TODO(Ben): Propagate changes to children
+            virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
+            virtual void setDestRect(const f32v4& destRect) { m_destRect = destRect; }
+            virtual void setDimensions(const f32v2& dimensions) { m_destRect.z = dimensions.x; m_destRect.w = dimensions.y; }
+            virtual void setDock(const DockStyle& dock) { m_dock = dock; }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
+            virtual void setFont(vorb::graphics::SpriteFont* font) { m_font = font; }
+            virtual void setHeight(f32 height) { m_destRect.w = height; }
+            virtual void setPosition(const f32v2& position) { m_destRect.x = position.x; m_destRect.y = position.y; }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ControlStyle& style) { m_style = style; }
-            virtual void setDestRect(const ui32v4& destRect) { m_destRect = destRect; }
-            virtual void setX(ui32 x) { m_destRect.x = x; }
-            virtual void setY(ui32 y) { m_destRect.y = y; }
-            virtual void setWidth(ui32 width) { m_destRect.z = width; }
-            virtual void setHeight(ui32 height) { m_destRect.w = height; }
-            virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
-            virtual void setDock(const DockStyle& dock) { m_dock = dock; }
-            virtual void setFont(vorb::graphics::SpriteFont* font);
+            virtual void setWidth(f32 width) { m_destRect.z = width; }
+            virtual void setX(f32 x) { m_destRect.x = x; }
+            virtual void setY(f32 y) { m_destRect.y = y; }
 
             /************************************************************************/
             /* Events                                                               */
@@ -143,6 +147,9 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /************************************************************************/
+            /* Event Handlers                                                       */
+            /************************************************************************/
             virtual void onMouseClick(Sender s, const MouseButtonEvent& e);
             virtual void onMouseDown(Sender s, const MouseButtonEvent& e);
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
@@ -150,12 +157,15 @@ namespace vorb {
             virtual void onMouseLeave(Sender s, const MouseEvent& e);
             virtual void onMouseMove(Sender s, const MouseEvent& e);
 
+            /************************************************************************/
+            /* Members                                                              */
+            /************************************************************************/
             vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             AnchorStyle m_anchor; ///< The anchor data.
             ControlStyle m_style = {}; ///< The current style.
             DockStyle m_dock; ///< The dock type.
             std::vector<Widget*> m_controls; ///< All child controls.
-            ui32v4 m_destRect; ///< The position and dimensions.
+            f32v4 m_destRect; ///< The position and dimensions.
 
             bool m_isRenderInit = false; ///< True when rendering is initialized.
         };

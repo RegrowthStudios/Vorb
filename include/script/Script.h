@@ -29,6 +29,7 @@
 
 #include "ScriptValueSenders.h"
 #include "ScriptImpl.h"
+#include "../Events.hpp"
 
 namespace vorb {
     namespace script {

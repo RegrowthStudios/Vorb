@@ -50,9 +50,9 @@ public:
      * Objects created using this method should be recycled in
      * order to preserve memory.
      * 
-     * @tparam Args: Types of constructor arguments
-     * @param args: Argument values for object constructor
-     * @return A pointer to an object
+     * @tparam Args: Types of constructor arguments.
+     * @param args: Argument values for object constructor.
+     * @return A pointer to an object.
      */
     template<typename... Args>
     CALLEE_DELETE T* create(Args... args) {

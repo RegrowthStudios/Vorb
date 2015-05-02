@@ -50,8 +50,8 @@ public:
         // Empty
     }
     virtual void addScreens() {
-        _screenList->addScreen(new TestScreen);
-        _screenList->setScreen(m_index);
+        m_screenList.addScreen(new TestScreen);
+        m_screenList.setScreen(m_index);
     }
     virtual void onExit() {
         // Empty
@@ -126,10 +126,6 @@ TEST(SoloWindow) {
 
     vui::GameWindow window;
     window.init();
-    bool running = true;
-    auto f = vui::InputDispatcher::onQuit.addFunctor([&] (Sender) { 
-        running = false;
-    });
 
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -160,7 +156,7 @@ TEST(SoloWindow) {
 
     PreciseTimer timer;
     timer.start();
-    while (running) {
+    while (!window.shouldQuit()) {
         // Do something here
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -182,8 +178,6 @@ TEST(SoloWindow) {
     }
     window.dispose();
 
-    vui::InputDispatcher::onQuit -= *f;
-    delete f;
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
 }

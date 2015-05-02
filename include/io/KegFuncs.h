@@ -29,18 +29,32 @@
 
 namespace keg {
     typedef void(*Evaluator)(void* dest, keg::Node n);
+    typedef void(*Outputter)(keg::YAMLWriter& writer, const void* src);
 
     template<typename T>
     void evaluate(void* dest, Node node) {
         T* value = (T*)dest;
         *value = keg::convert<T>(node);
     }
+    template<typename T>
+    void output(keg::YAMLWriter& writer, const void* src) {
+        const T* value = (const T*)src;
+        writer << *value;
+    }
+
 
     template<>
     inline void evaluate<ui8>(void* dest, Node node) {
         ui8* value = (ui8*)dest;
         *value = static_cast<ui8>(keg::convert<ui16>(node));
     }
+    template<>
+    inline void output<ui8>(keg::YAMLWriter& writer, const void* src) {
+        const ui8* value = (const ui8*)src;
+        writer << static_cast<ui16>(*value);
+    }
+
+
     template<>
     inline void evaluate<cString>(void* dest, Node node) {
         cString* value = (cString*)dest;
@@ -52,8 +66,14 @@ namespace keg {
 
         *value = dataCopy;
     }
+    template<>
+    inline void output<cString>(keg::YAMLWriter& writer, const void* src) {
+        const cString value = *(const cString*)src;
+        writer << (cString)((value == nullptr) ? value : "");
+    }
 
     VORB_INTERNAL extern Evaluator simpleEvaluators[(size_t)BasicType::COUNT];
+    VORB_INTERNAL extern Outputter simpleOutputters[(size_t)BasicType::COUNT];
 }
 
 #endif // !Vorb_KegFuncs_h__

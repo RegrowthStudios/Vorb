@@ -43,20 +43,23 @@ namespace vorb {
 
         class GraphicsDevice {
         public:
-            GraphicsDevice(void* w);
+            GraphicsDevice();
 
             static GraphicsDevice* getCurrent() {
+                if (!_current) {
+                    _current = new GraphicsDevice();
+                    _current->refreshInformation();
+                }
                 return _current;
             }
 
+            void initResolutions(void* w);
             void refreshInformation();
 
             const GraphicsDeviceProperties& getProperties() const {
                 return _props;
             }
         private:
-            void initResolutions(void* w);
-
             GraphicsDeviceProperties _props;
 
             static GraphicsDevice* _current;

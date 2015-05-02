@@ -1,25 +1,46 @@
-///
-/// GameWindow.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Controls system window operations
-///
+//
+// GameWindow.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GameWindow.h
+ * @brief A window wrapper object for simple applications.
+ */
 
 #pragma once
 
-#ifndef GameWindow_h__
-#define GameWindow_h__
+#ifndef Vorb_GameWindow_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GameWindow_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#include "../decorators.h"
+#endif // !VORB_USING_PCH
 
 #include "../io/Keg.h"
 
 namespace vorb {
     namespace ui {
+        /*! @brief Typeless window handle.
+         * <br/>
+         * GLFW - GLFWwindow* <br/>
+         * SDL - SDL_Window* <br/>
+         * SFML - sf::RenderWindow* <br/>
+         */
         typedef void* WindowHandle;
+        /*! @brief Typeless graphics handle
+         * <br/>
+         * GLFW - GLFWwindow* <br/>
+         * SDL/D3D - D3DContext* <br/>
+         * SDL/GL - SDL_GLContext <br/>
+         * SFML - sf::RenderWindow* <br/>
+         */
         typedef void* GraphicsContext;
 
         #define DEFAULT_TITLE "Vorb Application Management Peer Interface Redist Environment (V.A.M.P.I.R.E.)"
@@ -29,45 +50,78 @@ namespace vorb {
         #define DEFAULT_MAX_FPS 60.0f
         #define DEFAULT_APP_CONFIG_FILE "app.config"
         
-        // Different Kinds Of Swap Intervals Available
+        /*! @brief Swapping intervals used for monitor synchronization and graphics stability.
+         */
         enum class GameSwapInterval : i32 {
-            UNLIMITED_FPS = 0,
-            V_SYNC = 1,
-            LOW_SYNC = 2,
-            POWER_SAVER = 3,
-            USE_VALUE_CAP = 4
+            UNLIMITED_FPS = 0, ///< No synchronization or FPS limiting is performed.
+            V_SYNC = 1, ///< Synchronize with monitor frame by frame, full refresh rate.
+            LOW_SYNC = 2, ///< Skip synchronization every other frame, half the refresh rate of the system.
+            POWER_SAVER = 3, ///< Large pause between window and graphics updates, saves computations and power.
+            USE_VALUE_CAP = 4 ///< Do not use monitor synchronization, but FPS cap and high resolution timer.
         };
         
-        // The Current Displaying Mode
+        /*! @brief Window properties that additionally define graphics usage.
+         */
         struct GameDisplayMode {
         public:
-            // Screen Buffer Parameters
-            i32 screenWidth;
-            i32 screenHeight;
+            UNIT_SPACE(PIXEL) i32 screenWidth; ///< Width of the backbuffer (and borderless window width).
+            UNIT_SPACE(PIXEL) i32 screenHeight; ///< Height of the backbuffer (and borderless window height).
         
-            // Window Settings
-            bool isFullscreen;
-            bool isBorderless;
+            bool isFullscreen; ///< True if the window is fullscreen.
+            bool isBorderless; ///< True if the window does not have a border/
         
-            // Frame Rate Options
-            GameSwapInterval swapInterval;
-            f32 maxFPS;
+            GameSwapInterval swapInterval; ///< Synchronization value for the system's refresh rate.
+            f32 maxFPS; ///< Maximum desired FPS with if the FPS limiter is used.
 
-            // Graphics Context
-            ui32 major;
-            ui32 minor;
-            bool core;
+            ui32 major; ///< Major version for the graphics context (ex. GL:4, DX:11).
+            ui32 minor; ///< Minor version for the graphics context (ex. GL:4, DX:0).
+            bool core; ///< True if the graphics context should disable compatability with lower versions.
         };
         
         class GameWindow {
         public:
+            /*! @brief Initializes window with default application settings.
+             * 
+             * Does not create the physical window or modify any OS settings.
+             */
             GameWindow();
         
-            // Attempts To Load Application Settings Creates The Window And OpenGL Context
+            /*! @brief Create the window and graphics context.
+             * 
+             * The window will attempt to load application settings from DEFAULT_APP_CONFIG_FILE
+             * for user configuration purposes, otherwise it will use the default settings. The
+             * graphics context will be created during window initialization and it will be configured
+             * to the thread that this method is called upon. The InputDispatcher will be created as well.
+             * 
+             * @return True if no error occurred.
+             */
             bool init();
-            // Saves Application Settings (If Changed) And Destroys The Window And OpenGL Context
+            /*! @brief Destroys the window and associated graphics context.
+             * 
+             * @pre: This disposal method should be called on the thread where the window was created and the
+             * graphics context has ownership.
+             * 
+             * The window will save its current settings to DEFAULT_APP_CONFIG_FILE. The InputDispatcher will
+             * be destroyed.
+             */
             void dispose();
         
+            /*! @brief A check for whether the window has been created or not.
+             * 
+             * @return True if the window is created and if it is still alive.
+             */
+            bool isInitialized() const {
+                return m_window != nullptr;
+            }
+
+            /*! @brief Detection of input to terminate this window.
+             * 
+             * @return True if a quit signal was received by this window.
+             */
+            const bool& shouldQuit() const {
+                return m_quitSignal;
+            }
+
             // Access Display Settings
             i32 getX() const;
             i32 getY() const;
@@ -99,7 +153,14 @@ namespace vorb {
             WindowHandle getHandle() const {
                 return m_window;
             }
-            GraphicsContext getContext() const;
+
+            /*! @brief Obtain the handle to the graphics context.
+             * 
+             * @warning When utilizing D3D, the D3D device pointer will be returned instead of the full struct.
+             * 
+             * @return This window's graphics context.
+             */
+            GraphicsContext getContext() const; // TODO(Cristian): Does returning the D3D Device cause convenience or confusion?
 
             // Change Display Settings
             void setScreenSize(const i32& w, const i32& h, const bool& overrideCheck = false);
@@ -110,7 +171,13 @@ namespace vorb {
             void setTitle(const cString title) const;
         
             void sync(ui32 frameTime);
+
+            Event<> onQuit;
         private:
+            VORB_NON_COPYABLE(GameWindow);
+            VORB_MOVABLE_DECL(GameWindow);
+
+            void onQuitSignal(Sender);
             void pollInput();
 
             // Application Setting Management
@@ -118,12 +185,10 @@ namespace vorb {
             void readSettings();
             void saveSettings() const;
         
-            // Window Handle
-            WindowHandle m_window = nullptr;
-            GraphicsContext m_glc = nullptr;
-        
-            // Display Settings
-            GameDisplayMode m_displayMode;
+            WindowHandle m_window = nullptr; ///< Window's OS handle.
+            GraphicsContext m_glc = nullptr; ///< Window's graphics context.
+            GameDisplayMode m_displayMode; ///< The current display settings of the window.
+            bool m_quitSignal = false; ///< Flag for the window's termination request status.
         };
     }
 }
@@ -132,4 +197,5 @@ namespace vui = vorb::ui;
 KEG_ENUM_DECL(GameSwapInterval);
 KEG_TYPE_DECL(GameDisplayMode);
 
-#endif // GameWindow_h__
+
+#endif // !Vorb_GameWindow_h__

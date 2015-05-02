@@ -89,7 +89,7 @@ i32 vscript::ScriptValueSender<bool, void>::push(EnvironmentHandle h, bool v) {
 bool vscript::ScriptValueSender<bool, void>::pop(EnvironmentHandle h) {
     auto v = lua_toboolean(h, -1);
     lua_pop(h, 1);
-    return v;
+    return v != 0;
 }
 
 /************************************************************************/

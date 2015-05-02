@@ -36,41 +36,40 @@ KEG_ENUM_DEF(GameSwapInterval, vui::GameSwapInterval, ke) {
     ke.addValue("PowerSaver", vui::GameSwapInterval::POWER_SAVER);
     ke.addValue("ValueCap", vui::GameSwapInterval::USE_VALUE_CAP);
 }
-
 KEG_TYPE_DEF(GameDisplayMode, vui::GameDisplayMode, kt) {
     using namespace keg;
-    kt.addValue("ScreenWidth", Value::basic(offsetof(vui::GameDisplayMode, screenWidth), BasicType::I32));
-    kt.addValue("ScreenHeight", Value::basic(offsetof(vui::GameDisplayMode, screenHeight), BasicType::I32));
-    kt.addValue("IsFullscreen", Value::basic(offsetof(vui::GameDisplayMode, isFullscreen), BasicType::BOOL));
-    kt.addValue("IsBorderless", Value::basic(offsetof(vui::GameDisplayMode, isBorderless), BasicType::BOOL));
+    kt.addValue("ScreenWidth", Value::value(&vui::GameDisplayMode::screenWidth));
+    kt.addValue("ScreenHeight", Value::value(&vui::GameDisplayMode::screenHeight));
+    kt.addValue("IsFullscreen", Value::value(&vui::GameDisplayMode::isFullscreen));
+    kt.addValue("IsBorderless", Value::value(&vui::GameDisplayMode::isBorderless));
     kt.addValue("SwapInterval", Value::custom(offsetof(vui::GameDisplayMode, swapInterval), "GameSwapInterval", true));
-    kt.addValue("MaxFPS", Value::basic(offsetof(vui::GameDisplayMode, maxFPS), BasicType::F32));
-    kt.addValue("GraphicsMajor", Value::basic(offsetof(vui::GameDisplayMode, major), BasicType::UI32));
-    kt.addValue("GraphicsMinor", Value::basic(offsetof(vui::GameDisplayMode, minor), BasicType::UI32));
-    kt.addValue("GraphicsCore", Value::basic(offsetof(vui::GameDisplayMode, core), BasicType::BOOL));
+    kt.addValue("MaxFPS", Value::value(&vui::GameDisplayMode::maxFPS));
+    kt.addValue("GraphicsMajor", Value::value(&vui::GameDisplayMode::major));
+    kt.addValue("GraphicsMinor", Value::value(&vui::GameDisplayMode::minor));
+    kt.addValue("GraphicsCore", Value::value(&vui::GameDisplayMode::core));
 }
 
-// For Comparing Display Modes When Saving Data
-static bool operator==(const vui::GameDisplayMode& m1, const vui::GameDisplayMode& m2) {
-    return
-        m1.screenWidth == m2.screenWidth &&
-        m1.screenHeight == m2.screenHeight &&
-        m1.isFullscreen == m2.isFullscreen &&
-        m1.isBorderless == m2.isBorderless &&
-        m1.swapInterval == m2.swapInterval &&
-        m1.maxFPS == m2.maxFPS
-        ;
-}
-static bool operator!=(const vui::GameDisplayMode& m1, const vui::GameDisplayMode& m2) {
-    return !(m1 == m2);
-}
-
-vui::GameWindow::GameWindow() {
+vui::GameWindow::GameWindow() :
+    onQuit(this) {
     setDefaultSettings(&m_displayMode);
+}
+VORB_MOVABLE_DEF(vui::GameWindow, o) {
+    std::swap(m_glc, o.m_glc);
+    std::swap(m_window, o.m_window);
+    std::swap(m_displayMode, o.m_displayMode);
+    std::swap(m_quitSignal, o.m_quitSignal);
+
+    // Swap events, but keep correct senders
+    std::swap(onQuit, o.onQuit);
+    this->onQuit.setSender(this);
+    o.onQuit.setSender(&o);
+    return *this;
 }
 
 bool vui::GameWindow::init() {
-    // Attempt To Read Custom Settings
+    if (isInitialized()) return false;
+
+    // Attempt to read custom settings
     readSettings();
 
 #if defined(VORB_IMPL_UI_SDL)
@@ -182,12 +181,19 @@ bool vui::GameWindow::init() {
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
 
-    // Push input from this window
+    // Push input from this window and receive quit signals
     vui::InputDispatcher::init(this);
+    vui::InputDispatcher::window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::onQuit += makeDelegate(*this, &GameWindow::onQuitSignal);
+    m_quitSignal = false;
 
     return true;
 }
 void vui::GameWindow::dispose() {
+    if (!isInitialized()) return;
+
+    vui::InputDispatcher::onQuit -= makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::dispose();
     saveSettings();
 
@@ -195,30 +201,31 @@ void vui::GameWindow::dispose() {
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     if (m_glc) {
         SDL_GL_DeleteContext((SDL_GLContext)m_glc);
-        m_glc = nullptr;
     }
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     if (m_glc) {
         VUI_CONTEXT(m_glc)->Release();
         VUI_COM(m_glc)->Release();
+        delete m_glc;
     }
 #endif
     if (m_window) {
         SDL_DestroyWindow(VUI_WINDOW_HANDLE(m_window));
-        m_window = nullptr;
     }
 #elif defined(VORB_IMPL_UI_GLFW)
     if (m_window) {
         glfwDestroyWindow(VUI_WINDOW_HANDLE(m_window));
-        m_window = nullptr;
     }
 #elif defined(VORB_IMPL_UI_SFML)
     if (m_window) {
         VUI_WINDOW_HANDLE(m_window)->close();
         delete VUI_WINDOW_HANDLE(m_window);
-        m_window = nullptr;
     }
 #endif
+
+    // Get rid of dangling pointers
+    m_window = nullptr;
+    m_glc = nullptr;
 }
 
 void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
@@ -228,34 +235,32 @@ void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->isFullscreen = false;
     mode->maxFPS = DEFAULT_MAX_FPS;
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
+#if defined(VORB_IMPL_GRAPHICS_D3D)
+    mode->major = 9;
+    mode->minor = 0;
+#elif defined(VORB_IMPL_GRAPHICS_OPENGL)
     mode->major = 3;
     mode->minor = 2;
+#endif
     mode->core = false;
 }
-
 void vui::GameWindow::readSettings() {
     vio::IOManager iom;
-    nString data;
-    iom.readFileToString(DEFAULT_APP_CONFIG_FILE, data);
-    if (data.length()) {
-        keg::parse(&m_displayMode, data.c_str(), "GameDisplayMode");
+    cString data = iom.readFileToString(DEFAULT_APP_CONFIG_FILE);
+    if (data) {
+        keg::parse(&m_displayMode, data, "GameDisplayMode");
+        delete[] data;
     } else {
         // If there is no app.config, save a default one.
         saveSettings();
     }
 }
-
 void vui::GameWindow::saveSettings() const {
-    GameDisplayMode modeBasis = {};
-    setDefaultSettings(&modeBasis);
-
-    if (m_displayMode != modeBasis) {
-        nString data = keg::write(&m_displayMode, "GameDisplayMode", nullptr);
-        std::ofstream file(DEFAULT_APP_CONFIG_FILE);
-        file << data << std::endl;
-        file.flush();
-        file.close();
-    }
+    nString data = keg::write(&m_displayMode, "GameDisplayMode", nullptr);
+    std::ofstream file(DEFAULT_APP_CONFIG_FILE);
+    file << data << std::endl;
+    file.flush();
+    file.close();
 }
 
 void vui::GameWindow::setScreenSize(const i32& w, const i32& h, const bool& overrideCheck /*= false*/) {
@@ -428,4 +433,6 @@ void vui::GameWindow::pollInput() {
     }
 #endif
 }
-
+void vorb::ui::GameWindow::onQuitSignal(Sender) {
+    m_quitSignal = true;
+}

@@ -14,9 +14,9 @@
 #endif
 
 
-vg::GraphicsDevice::GraphicsDevice(void* w) :
+vg::GraphicsDevice::GraphicsDevice() :
 _props({}) {
-    initResolutions(w);
+    // Empty
 }
 
 void vg::GraphicsDevice::refreshInformation() {

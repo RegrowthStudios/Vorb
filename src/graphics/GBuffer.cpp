@@ -11,7 +11,7 @@ m_size(w, h) {
 void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::GBufferAttachment& attachment) {
     glBindTexture(GL_TEXTURE_2D, texID);
     if (glTexStorage2D) {
-        glTexStorage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y);
+        glTexStorage2D(GL_TEXTURE_2D, 1, (VGEnum)attachment.format, _size.x, _size.y);
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y, 0, (VGEnum)attachment.pixelFormat, (VGEnum)attachment.pixelType, nullptr);
     }

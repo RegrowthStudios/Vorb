@@ -30,6 +30,10 @@
 
 namespace vorb {
     namespace ui {
+
+        /// Forward Declarations
+        class UIRenderer;
+
         class ButtonBase : public Widget {
         public:
             ButtonBase();
@@ -52,6 +56,7 @@ namespace vorb {
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
+            virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
         protected:
             /************************************************************************/
             /* Members                                                              */

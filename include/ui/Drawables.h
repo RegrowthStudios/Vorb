@@ -33,9 +33,13 @@ DECL_VG(class SpriteBatch;
 
 namespace vorb {
     namespace ui {
+
+        /// Forward Declarations
+        class UIRenderer;
+
         class IDrawable {
         public:
-            virtual void draw(vg::SpriteBatch* spriteBatch) = 0;
+            virtual void draw(vg::SpriteBatch* spriteBatch) const = 0;
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -44,6 +48,7 @@ namespace vorb {
             virtual const f32& getX() const { return m_position.x; }
             virtual const f32& getY() const { return m_position.y; }
             virtual const f32v2& getPosition() const { return m_position; }
+            virtual const UIRenderer* getRenderer() const { return m_renderer; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -53,14 +58,16 @@ namespace vorb {
             virtual void setPosition(const f32v2& position) { m_position = position; }
             virtual void setX(f32 x) { m_position.x = x; }
             virtual void setY(f32 y) { m_position.y = y; }
+            virtual void setRenderer(const UIRenderer* renderer) { m_renderer = renderer; }
         protected:
             color4 m_color = color::White; ///< Color of the control
+            const UIRenderer* m_renderer = nullptr; ///< Parent renderer TODO(Ben): Multiple renderers?
             f32 m_layerDepth = 0.0f; ///< Depth used in SpriteBatch rendering
             f32v2 m_position = f32v2(0.0f); ///< Position of the control
         };
         class DrawableRect : public IDrawable {
         public:
-            virtual void draw(vg::SpriteBatch* spriteBatch) override;
+            virtual void draw(vg::SpriteBatch* spriteBatch) const override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -84,7 +91,7 @@ namespace vorb {
         };
         class DrawableText : public IDrawable {
         public:
-            virtual void draw(vg::SpriteBatch* spriteBatch) override;
+            virtual void draw(vg::SpriteBatch* spriteBatch) const override;
 
             /************************************************************************/
             /* Getters                                                              */

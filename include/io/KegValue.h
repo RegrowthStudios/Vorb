@@ -47,6 +47,7 @@ namespace keg {
             kv.offset = 0;
             kv.typeName.clear();
             kv.evaluator = evaluate<T>;
+            kv.outputter = output<T>;
             return std::move(kv);
         }
         template<typename T, typename M>
@@ -56,6 +57,7 @@ namespace keg {
             kv.offset = offsetMember(member);
             kv.typeName.clear();
             kv.evaluator = evaluate<M>;
+            kv.outputter = output<M>;
             return std::move(kv);
         }
         template<typename T, typename... Types, typename M, typename... Members>
@@ -66,7 +68,6 @@ namespace keg {
             val.offset += offsetMember(member);
             return val;
         }
-        
 
         // Set This As A Basic Parseable Value Type
         static Value basic(size_t off, BasicType t);
@@ -82,6 +83,7 @@ namespace keg {
         // Type Used To Determine Parsing Method
         BasicType type;
         Evaluator evaluator;
+        Outputter outputter;
 
         // If It's A Custom Type
         nString typeName;

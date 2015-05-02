@@ -2,6 +2,7 @@
 #include "ui/ScreenList.h"
 
 #include "ui/IGameScreen.h"
+#include "ui/MainGame.h"
 
 vui::ScreenList::ScreenList(MainGame* g) {
     _game = g;
@@ -51,7 +52,7 @@ vui::ScreenList* vui::ScreenList::addScreen(IGameScreen* s) {
     return this;
 }
 
-void vui::ScreenList::destroy(GameTime gameTime) {
+void vui::ScreenList::destroy(const GameTime& gameTime) {
     i32 s = (i32)_screens.size();
     if (s < 1) return;
     for (i32 i = 0; i < s; i++) {

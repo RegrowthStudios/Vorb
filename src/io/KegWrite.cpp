@@ -36,7 +36,7 @@ namespace keg {
         keg::YAMLWriter e;
         e.push(keg::WriterParam::BEGIN_MAP);
         if (!write((ui8*)src, e, env, type)) {
-            return nullptr;
+            return "";
         }
         e.push(keg::WriterParam::END_MAP);
         return nString(e.c_str());
@@ -76,71 +76,76 @@ namespace keg {
             // Write The Value
             Value v = iter->second;
             const ui8* data = src + v.offset;
-            switch (v.type) {
-            case BasicType::ENUM:
-                // Attempt To Find The Enum
-                interiorEnum = env->getEnum(v.typeName);
-                if (interiorEnum == nullptr) {
-                    return false;
-                }
-                // Write Enum String
-                e << interiorEnum->getValue(data);
-                break;
-            case BasicType::CUSTOM:
-                // Attempt To Find The Type
-                interiorType = env->getType(v.typeName);
-                if (interiorType == nullptr) {
-                    return false;
-                }
-                // Write To Interior Node
-                e.push(keg::WriterParam::BEGIN_MAP);
-                write(data, e, env, interiorType);
-                e.push(keg::WriterParam::END_MAP);
-                break;
-            case BasicType::PTR:
-                break;
-            case BasicType::ARRAY:
-                // Attempt To Find The Type
-                interiorType = env->getType(v.interiorValue->typeName);
-                if (interiorType == nullptr) return false;
 
-                // TODO: Write To Interior Array
-                //writeArray(*(ArrayBase*)data, e, env, interiorType);
-                break;
-            case BasicType::BOOL:
-                e << *(bool*)data;
-                break;
-            case BasicType::C_STRING:
-                e << *(cString*)data;
-                break;
-            case BasicType::STRING:
-                e << (*(nString*)data);
-                break;
+            if (v.outputter) {
+                v.outputter(e, data);
+            } else {
+                switch (v.type) {
+                case BasicType::ENUM:
+                    // Attempt To Find The Enum
+                    interiorEnum = env->getEnum(v.typeName);
+                    if (interiorEnum == nullptr) {
+                        return false;
+                    }
+                    // Write Enum String
+                    e << interiorEnum->getValue(data);
+                    break;
+                case BasicType::CUSTOM:
+                    // Attempt To Find The Type
+                    interiorType = env->getType(v.typeName);
+                    if (interiorType == nullptr) {
+                        return false;
+                    }
+                    // Write To Interior Node
+                    e.push(keg::WriterParam::BEGIN_MAP);
+                    write(data, e, env, interiorType);
+                    e.push(keg::WriterParam::END_MAP);
+                    break;
+                case BasicType::PTR:
+                    break;
+                case BasicType::ARRAY:
+                    // Attempt To Find The Type
+                    interiorType = env->getType(v.interiorValue->typeName);
+                    if (interiorType == nullptr) return false;
 
-                // For when we want to cast TYPE to C_TYPE
+                    // TODO: Write To Interior Array
+                    //writeArray(*(ArrayBase*)data, e, env, interiorType);
+                    break;
+                case BasicType::BOOL:
+                    e << *(bool*)data;
+                    break;
+                case BasicType::C_STRING:
+                    e << *(cString*)data;
+                    break;
+                case BasicType::STRING:
+                    e << (*(nString*)data);
+                    break;
+
+                    // For when we want to cast TYPE to C_TYPE
 #define EMIT_CAST(TYPE, C_TYPE) \
-            case BasicType::TYPE: e << (C_TYPE)*data; break; \
-            case BasicType::TYPE##_V2: e << C_TYPE##v2(*data); break; \
-            case BasicType::TYPE##_V3: e << C_TYPE##v3(*data); break; \
-            case BasicType::TYPE##_V4: e << C_TYPE##v4(*data); break
-                // For when we want to interpret TYPE as C_TYPE
+                case BasicType::TYPE: e << (C_TYPE)*data; break; \
+                case BasicType::TYPE##_V2: e << C_TYPE##v2(*data); break; \
+                case BasicType::TYPE##_V3: e << C_TYPE##v3(*data); break; \
+                case BasicType::TYPE##_V4: e << C_TYPE##v4(*data); break
+                    // For when we want to interpret TYPE as C_TYPE
 #define EMIT_NUM(TYPE, C_TYPE) \
-            case BasicType::TYPE: e << *(C_TYPE*)data; break; \
-            case BasicType::TYPE##_V2: e << *(C_TYPE##v2*)data; break; \
-            case BasicType::TYPE##_V3: e << *(C_TYPE##v3*)data; break; \
-            case BasicType::TYPE##_V4: e << *(C_TYPE##v4*)data; break
-                EMIT_CAST(I8, i32); // Prints out bytes as ints
-                EMIT_NUM(I16, i16);
-                EMIT_NUM(I32, i32);
-                EMIT_NUM(I64, i64);
-                EMIT_CAST(UI8, ui32); // Prints out bytes as ints
-                EMIT_NUM(UI16, ui16);
-                EMIT_NUM(UI32, ui32);
-                EMIT_NUM(UI64, ui64);
-                EMIT_NUM(F32, f32);
-                EMIT_NUM(F64, f64);
-            default:
-                break;
+                case BasicType::TYPE: e << *(C_TYPE*)data; break; \
+                case BasicType::TYPE##_V2: e << *(C_TYPE##v2*)data; break; \
+                case BasicType::TYPE##_V3: e << *(C_TYPE##v3*)data; break; \
+                case BasicType::TYPE##_V4: e << *(C_TYPE##v4*)data; break
+                    EMIT_CAST(I8, i32); // Prints out bytes as ints
+                    EMIT_NUM(I16, i16);
+                    EMIT_NUM(I32, i32);
+                    EMIT_NUM(I64, i64);
+                    EMIT_CAST(UI8, ui32); // Prints out bytes as ints
+                    EMIT_NUM(UI16, ui16);
+                    EMIT_NUM(UI32, ui32);
+                    EMIT_NUM(UI64, ui64);
+                    EMIT_NUM(F32, f32);
+                    EMIT_NUM(F64, f64);
+                default:
+                    break;
+                }
             }
             iter++;
         }

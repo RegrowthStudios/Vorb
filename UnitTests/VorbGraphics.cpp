@@ -774,8 +774,8 @@ public:
     virtual void onInit() {
     }
     virtual void addScreens() {
-        _screenList->addScreen(screen);
-        _screenList->setScreen(0);
+        m_screenList.addScreen(screen);
+        m_screenList.setScreen(0);
     }
     virtual void onExit() {
         delete screen;

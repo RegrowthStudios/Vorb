@@ -8,36 +8,39 @@ m_size(w, h) {
     // Empty
 }
 
-void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::TextureInternalFormat& format, const ui32& attachment) {
+void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::GBufferAttachment& attachment) {
     glBindTexture(GL_TEXTURE_2D, texID);
-    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)format, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    if (glTexStorage2D) {
+        glTexStorage2D(GL_TEXTURE_2D, 1, (VGEnum)attachment.format, _size.x, _size.y);
+    } else {
+        glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y, 0, (VGEnum)attachment.pixelFormat, (VGEnum)attachment.pixelType, nullptr);
+    }
     SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachment, GL_TEXTURE_2D, texID, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachment.number, GL_TEXTURE_2D, texID, 0);
 }
-vg::GBuffer& vg::GBuffer::init() {
+vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat) {
     // Create texture targets
-    glGenTextures(4, m_textures);
+    m_textures.setData(attachments.size() + 1);
+    glGenTextures(m_textures.size(), &m_textures[0]);
 
     // Make the framebuffer
     glGenFramebuffers(1, &m_fboGeom);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboGeom);
-    initTarget(m_size, m_tex.color, GBUFFER_INTERNAL_FORMAT_COLOR, 0);
-    initTarget(m_size, m_tex.normal, GBUFFER_INTERNAL_FORMAT_NORMAL, 1);
-    initTarget(m_size, m_tex.depth, GBUFFER_INTERNAL_FORMAT_DEPTH, 2);
 
+    // Add the attachments
+    VGEnum* bufs = (VGEnum*)alloca(attachments.size() * sizeof(VGEnum));
+    for (ui32 i = 0; i < attachments.size(); i++) {
+        bufs[i] = GL_COLOR_ATTACHMENT0 + attachments[i].number;
+        initTarget(m_size, m_textures[i], attachments[i]);
+    }
 
     // Set the output location for pixels
-    VGEnum bufs[3] = {
-        GL_COLOR_ATTACHMENT0,
-        GL_COLOR_ATTACHMENT1,
-        GL_COLOR_ATTACHMENT2
-    };
-    glDrawBuffers(3, bufs);
+    glDrawBuffers(attachments.size(), bufs);
 
     // Make the framebuffer for lighting
     glGenFramebuffers(1, &m_fboLight);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
-    initTarget(m_size, m_tex.light, GBUFFER_INTERNAL_FORMAT_LIGHT, 0);
+    initTarget(m_size, m_textures[m_textures.size() - 1], { lightFormat, vg::TextureFormat::RGBA, vg::TexturePixelType::UNSIGNED_BYTE, 0 });
 
     // Set the output location for pixels
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
@@ -46,7 +49,7 @@ vg::GBuffer& vg::GBuffer::init() {
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // TODO: Change The Memory Usage Of The GPU
+    // TODO(Cristian): Change The Memory Usage Of The GPU
 
     return *this;
 }
@@ -86,20 +89,24 @@ vg::GBuffer& vg::GBuffer::initDepthStencil(TextureInternalFormat depthFormat /*=
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // TODO: Change The Memory Usage Of The GPU
+    // TODO(Cristian): Change The Memory Usage Of The GPU
 
     return *this;
 }
 void vg::GBuffer::dispose() {
-    // TODO: Change The Memory Usage Of The GPU
+    // TODO(Cristian): Change The Memory Usage Of The GPU
 
     if (m_fboGeom != 0) {
         glDeleteFramebuffers(1, &m_fboGeom);
         m_fboGeom = 0;
     }
-    if (m_tex.color != 0) {
-        glDeleteTextures(4, m_textures);
-        m_tex = { 0, 0, 0, 0 };
+    if (m_fboLight != 0) {
+        glDeleteFramebuffers(1, &m_fboLight);
+        m_fboLight = 0;
+    }
+    if (m_textures.size() != 0) {
+        glDeleteTextures(m_textures.size(), &m_textures[0]);
+        m_textures.setData(0);
     }
     if (m_texDepth != 0) {
         glDeleteTextures(1, &m_texDepth);

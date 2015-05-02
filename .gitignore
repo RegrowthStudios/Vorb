@@ -182,4 +182,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 # Doxygen output
-include/html/
+docs/
+*.dox.txt
+UnitTester/app.config

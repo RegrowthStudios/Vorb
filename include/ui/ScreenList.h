@@ -15,11 +15,11 @@
 #ifndef ScreenList_h__
 #define ScreenList_h__
 
-#include "MainGame.h"
-
 namespace vorb {
     namespace ui {
+        class MainGame;
         class IGameScreen;
+        struct GameTime;
         
         class ScreenList {
         public:
@@ -39,7 +39,7 @@ namespace vorb {
             ScreenList* addScreens(IGameScreen** s, size_t c = 0);
             ScreenList* addScreen(IGameScreen* s);
         
-            void destroy(GameTime gameTime);
+            void destroy(const GameTime& gameTime);
         
         protected:
             MainGame* _game;

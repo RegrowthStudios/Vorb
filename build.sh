@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 if [ "$1" == "clean" ] ; then
     rm -Rf build
+    rm -Rf deps/*
 fi
 if [ ! -d "build" ] ; then
     mkdir build

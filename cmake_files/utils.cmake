@@ -33,12 +33,21 @@ macro(initialize_for_platform)
                    # "-Wno-missing-braces"
                    "-Wno-unknown-pragmas"
                    )
-      ADD_DEFINITIONS(
-          -std=c++11
-          -stdlib=libc++
-          # Other flags
-          ${warnings}
-      )
+      IF(APPLE)
+        ADD_DEFINITIONS(
+            -std=c++11
+            -stdlib=libc++
+            # Other flags
+            ${warnings}
+        )
+      ELSEIF(UNIX)
+        ADD_DEFINITIONS(
+            -std=c++11
+            # Other flags
+            ${warnings}
+        )
+      ENDIF(APPLE)
+
   elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
       set(warnings "/W4 /WX /EHsc")
   endif()

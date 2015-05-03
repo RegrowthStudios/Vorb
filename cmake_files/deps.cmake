@@ -8,7 +8,8 @@ endmacro(setup_dependencies)
 
 macro(install_glm)
     # GLM
-    find_package(GLM)
+    SET(RGS_USE_OUR_GLM True)
+    find_package(GLM QUIET)
     if (GLM_FOUND)
       add_definitions(-DTYPES_GLM)
       add_definitions(-Dglm_core_type_gentype2)
@@ -27,7 +28,7 @@ endmacro(install_glm)
 
 macro(install_glew)
     # GLEW
-    find_package(GLEW)
+    find_package(GLEW QUIET)
     if (GLEW_FOUND)
       include_directories(SYSTEM ${GLEW_INCLUDE_DIRS})
       link_directories(${GLEW_LIBRARY_DIRS})

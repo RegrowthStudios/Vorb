@@ -4,14 +4,18 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_UI_
 
+#include <glm/gtx/transform.hpp>
+#include <include/Graphics.h>
+#include <include/Timing.h>
 #include <include/Vorb.h>
-#include <include/ui/MainGame.h>
-#include <include/ui/ScreenList.h>
+#include <include/graphics/SpriteBatch.h>
+#include <include/graphics/SpriteFont.h>
+#include <include/ui/IButton.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
-#include <include/Timing.h>
-#include <include/Graphics.h>
-#include <glm/gtx/transform.hpp>
+#include <include/ui/MainGame.h>
+#include <include/ui/ScreenList.h>
+#include <include/ui/UIRenderer.h>
 
 struct Vertex {
     f32v3 position;
@@ -39,30 +43,74 @@ public:
     virtual void draw(const vui::GameTime& gameTime) {
     }
 };
-class App : public vui::MainGame {
+
+class WidgetTestScreen : public vui::IGameScreen {
 public:
-    App(i32 index) :
-    m_index(index) {
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual void build() {
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+    }
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        batch.init();
+        font.init("Data/chintzy.ttf", 32);
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        batch.dispose();
+        font.dispose();
+    }
+    virtual void update(const vui::GameTime& gameTime) {
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        batch.begin();
+        batch.drawString(&font, "Hello World", f32v2(10, 10), 80.0f, 1.0f, color4(1.0f, 1.0f, 1.0f));
+        batch.end();
+        batch.renderBatch(f32v2(800, 600));
+    }
+
+    vui::UIRenderer uiRenderer;
+    vg::SpriteFont font;
+    vg::SpriteBatch batch;
+};
+
+class VGTestApp : public vui::MainGame {
+public:
+    VGTestApp(vui::IGameScreen* s) :
+        screen(s) {
         // Empty
     }
 
     virtual void onInit() {
-        // Empty
     }
     virtual void addScreens() {
-        m_screenList.addScreen(new TestScreen);
-        m_screenList.setScreen(m_index);
+        m_screenList.addScreen(screen);
+        m_screenList.setScreen(0);
     }
     virtual void onExit() {
-        // Empty
+        delete screen;
+        screen = nullptr;
     }
-private:
-    i32 m_index;
+
+    vui::IGameScreen* screen = nullptr;
 };
 
 TEST(MainGame) {
     vorb::init(vorb::InitParam::ALL);
-    { App(0).run(); }
+    { VGTestApp(new TestScreen).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(Widgets) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new WidgetTestScreen).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
@@ -113,7 +161,7 @@ TEST(InputFuncs) {
     });
 
 
-    { App(0).run(); }
+    { VGTestApp(new TestScreen).run(); }
 
     pool.dispose();
 

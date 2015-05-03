@@ -27,4 +27,5 @@ void vui::Widget::dispose() {
 
 bool vui::Widget::addChild(Widget* child) {
     m_widgets.push_back(child);
+    return true; // TODO(Ben): Is this needed?
 }

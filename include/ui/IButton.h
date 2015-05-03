@@ -36,7 +36,7 @@ namespace vorb {
 
         class IButton : public Widget {
         public:
-            virtual ~IButton() = 0;
+            virtual ~IButton(); // TODO(Ben): Maybe make abstract?
 
             /*! @brief Adds all drawables to the UIRenderer
             *

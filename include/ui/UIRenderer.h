@@ -54,8 +54,9 @@ namespace vorb {
             /*! @brief Removes all drawables for a widget
              * 
              * @param widget: The Widget who's drawables should be removed
+             * @return true if successfully removed
              */
-            virtual void remove(const Widget* widget);
+            virtual bool remove(const Widget* widget);
             /*! @brief Frees resources used by renderer */
             virtual void dispose();
             /*! @brief Draws all IDrawables held by this renderer

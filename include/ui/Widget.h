@@ -36,6 +36,7 @@ namespace vorb {
         // Forward Declarations
         struct MouseButtonEvent;
         struct MouseEvent;
+        class UIRenderer;
 
         //! Bitfield of control styling flags
         struct ControlStyle {
@@ -119,7 +120,7 @@ namespace vorb {
             virtual const f32v2& getDimensions() const { return *(f32v2*)(&m_destRect.z); }
             virtual const f32v2& getPosition() const { return *(f32v2*)(&m_destRect.x); }
             virtual const f32v4& getDestRect() const { return m_destRect; }
-            virtual const std::vector<Widget*>& getControls() const { return m_controls; }
+            virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             
             /************************************************************************/
@@ -144,12 +145,12 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<const MouseButtonEvent&> onMouseClick; ///< Occurs when control is clicked by mouse.
-            Event<const MouseButtonEvent&> onMouseDown; ///< Occurs when mouse button is pressed over control.
-            Event<const MouseButtonEvent&> onMouseUp; ///< Occurs when mouse button is released over control.
-            Event<const MouseEvent&> onMouseEnter; ///< Occurs when mouse pointer enters the control.
-            Event<const MouseEvent&> onMouseLeave; ///< Occurs when mouse pointer leaves the control.
-            Event<const MouseEvent&> onMouseMove; ///< Occurs when mouse pointer is moved over control.
+            Event<const MouseButtonEvent&> MouseClick; ///< Occurs when control is clicked by mouse.
+            Event<const MouseButtonEvent&> MouseDown; ///< Occurs when mouse button is pressed over control.
+            Event<const MouseButtonEvent&> MouseUp; ///< Occurs when mouse button is released over control.
+            Event<const MouseEvent&> MouseEnter; ///< Occurs when mouse pointer enters the control.
+            Event<const MouseEvent&> MouseLeave; ///< Occurs when mouse pointer leaves the control.
+            Event<const MouseEvent&> MouseMove; ///< Occurs when mouse pointer is moved over control.
             // TODO(Ben): Lots more events!
 
         protected:

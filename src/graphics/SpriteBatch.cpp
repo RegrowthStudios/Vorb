@@ -289,11 +289,11 @@ void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8&
     _glyphs.push_back(g);
 }
 
-void vg::SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     font->draw(this, s, position, scaling, tint, depth);
 }
-void vg::SpriteBatch::drawString(SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     f32v2 scaling(desiredHeight / (f32)font->getFontHeight());
     scaling.x *= scaleX;

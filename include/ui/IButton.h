@@ -98,8 +98,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect m_drawableRect;
-            DrawableText m_drawableText;
+            DrawableRect m_drawableRect, m_drawnRect;
+            DrawableText m_drawableText, m_drawnText;
         };
     }
 }

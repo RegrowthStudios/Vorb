@@ -258,7 +258,7 @@ std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui
     return l;
 }
 
-f32v2 vg::SpriteFont::measure(const cString s) {
+f32v2 vg::SpriteFont::measure(const cString s) const {
     f32v2 size(0, _fontHeight);
     float cw = 0;
     for (int si = 0; s[si] != 0; si++) {
@@ -281,7 +281,7 @@ f32v2 vg::SpriteFont::measure(const cString s) {
     return size;
 }
 
-void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) {
+void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) const {
     f32v2 tp = position;
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];

@@ -24,23 +24,21 @@ vui::IButton::~IButton() {
 }
 
 void vui::IButton::addDrawables(UIRenderer* renderer) {
+    // Make copies
+    m_drawnText = m_drawableText;
+    m_drawnRect = m_drawableRect;
+
     // Add the rect
     renderer->add(this,
-                  makeDelegate(m_drawableRect, &DrawableRect::draw),
+                  makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &IButton::refreshDrawable));
-    // Add the text
-    if (!m_drawableText.getFont()) {
-        // Use renderer default font if we dont have a font
-        m_drawableText.setFont(renderer->getDefaultFont());
-        renderer->add(this,
-                      makeDelegate(m_drawableText, &DrawableText::draw),
-                      makeDelegate(*this, &IButton::refreshDrawable));
-        m_drawableText.setFont(nullptr);
-    } else {
-        renderer->add(this,
-                      makeDelegate(m_drawableText, &DrawableText::draw),
-                      makeDelegate(*this, &IButton::refreshDrawable));
-    }
+
+    // Use renderer default font if we dont have a font
+    if (!m_drawnText.getFont()) m_drawnText.setFont(renderer->getDefaultFont());
+    // Add the text 
+    renderer->add(this,
+                  makeDelegate(m_drawnText, &DrawableText::draw),
+                  makeDelegate(*this, &IButton::refreshDrawable));  
 }
 
 void vui::IButton::removeDrawables(UIRenderer* renderer) {

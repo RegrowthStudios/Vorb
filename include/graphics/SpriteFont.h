@@ -46,10 +46,10 @@ namespace vorb {
 
             static void getInstalledFonts(std::map<nString, nString>& fontFileDictionary);
 
-            f32v2 measure(const cString s);
+            f32v2 measure(const cString s) const;
 
         private:
-            void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth);
+            void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) const;
 
             static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 

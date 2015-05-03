@@ -39,6 +39,18 @@ namespace vorb {
             IButton();
             virtual ~IButton() = 0;
 
+            /*! @brief Adds all drawables to the UIRenderer
+            *
+            * @param renderer: UIRenderer to add to
+            */
+            virtual void addDrawables(UIRenderer* renderer) override;
+
+            /*! @brief Removes all drawables from the UIRenderer
+            *
+            * @param renderer: UIRenderer to remove from
+            */
+            virtual void removeDrawables(UIRenderer* renderer) override;
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -61,6 +73,7 @@ namespace vorb {
             virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
             virtual void setBackgroundStyle(const WidgetStyle& style) { m_drawableRect.setStyle(style); }
             virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
+
         protected:
             /************************************************************************/
             /* Members                                                              */

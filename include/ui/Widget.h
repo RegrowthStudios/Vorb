@@ -52,7 +52,7 @@ namespace vorb {
         };
         //! Bitfield of dock flags
         enum class DockStyle {
-            LEFT, RIGHT, BOTTOM, TOP, FILL
+            NONE, LEFT, RIGHT, BOTTOM, TOP, FILL
         };
 
         class Widget {
@@ -77,12 +77,6 @@ namespace vorb {
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
 
-            /*! @brief Draws the control.
-             *
-             * Gets called in the destructor.
-             */
-            virtual void draw();
-
             /*! @brief Releases all resources used by the Control.
              * 
              * Gets called in the destructor.
@@ -95,7 +89,19 @@ namespace vorb {
              * @return true on success.
              */
             virtual bool addChild(Widget* child);
-            
+
+            /*! @brief Adds all drawables to the UIRenderer
+            *
+            * @param renderer: UIRenderer to add to
+            */
+            virtual void addDrawables(UIRenderer* renderer) { /* Empty */ }
+
+            /*! @brief Removes all drawables from the UIRenderer
+            *
+            * @param renderer: UIRenderer to remove from
+            */
+            virtual void removeDrawables(UIRenderer* renderer) { /* Empty */ }
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -160,12 +166,14 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            Widget* m_parent = nullptr;
             vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             AnchorStyle m_anchor; ///< The anchor data.
-            ControlStyle m_style = {}; ///< The current style.
+            ControlStyle m_style; ///< The current style.
             DockStyle m_dock; ///< The dock type.
-            std::vector<Widget*> m_controls; ///< All child controls.
-            f32v4 m_destRect; ///< The position and dimensions.
+            std::vector<Widget*> m_widgets; ///< All child widgets.
+            f32v4 m_destRect = f32v4(0.0f); ///< The position and dimensions.
+            nString m_name = ""; ///< Display name of the control
 
             bool m_isRenderInit = false; ///< True when rendering is initialized.
         };

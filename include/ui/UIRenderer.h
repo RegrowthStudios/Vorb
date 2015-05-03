@@ -33,26 +33,34 @@ DECL_VG(class SpriteBatch;
 
 namespace vorb {
     namespace ui {
+
+        // Forward Declarations
+        class Widget;
+
         class UIRenderer {
         public:
+            typedef Delegate<vg::SpriteBatch*> DrawFunc;
+            typedef Delegate<> RefreshFunc;
+
+            /// Constructor
             UIRenderer();
+            /// Destructor
             virtual ~UIRenderer();
-            /*! @brief Adds an IDrawable to be drawn
+            /*! @brief Adds an drawable to be drawn
              * 
-             * @param drawable The IDrawable to render
+             * @param drawable The drawable to render
              */
-            virtual void add(const IDrawable* drawable);
-            /*! @brief Removes an IDrawable from render list
+            virtual void add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc);
+            /*! @brief Removes all drawables for a widget
              * 
-             * @param drawable: The IDrawable to remove 
-             * @return true if successfully removed
+             * @param widget: The Widget who's drawables should be removed
              */
-            virtual void remove(const IDrawable* drawable);
+            virtual void remove(const Widget* widget);
             /*! @brief Frees resources used by renderer */
             virtual void dispose();
             /*! @brief Draws all IDrawables held by this renderer
              * 
-             * @param sb: The spritebatch to use in rendering
+             * @param sb: The SpriteBatch to use in rendering
              */
             virtual void draw(vg::SpriteBatch* sb);
 
@@ -60,8 +68,9 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            std::map<const IDrawable*, ui32> m_drawableLookup; ///< Maps IDrawables to vector indices for m_drawables
-            std::vector<const IDrawable*> m_drawables; ///< Vector for draw iteration
+            std::map<const Widget*, std::vector<ui32> > m_widgetLookup; ///< Maps Widgets to vector indices for lookups
+            std::vector<DrawFunc> m_drawFuncs; ///< Vector for draw iteration
+            std::vector<RefreshFunc> m_refreshFuncs; ///< Vector for refresh iteration
             VGTexture m_defaultTexture = 0; ///< Default texture if drawable doesn't have one
             vg::SpriteFont* m_defaultFont = nullptr; ///< Default font if drawable doesn't have one
         };

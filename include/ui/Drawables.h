@@ -64,7 +64,7 @@ namespace vorb {
             virtual void setRenderer(const UIRenderer* renderer) { m_renderer = renderer; }
             virtual void setStyle(const WidgetStyle& style) { m_style = style; }
         protected:
-            WidgetStyle m_style;
+            WidgetStyle m_style; ///< The style of the widget
             const UIRenderer* m_renderer = nullptr; ///< Parent renderer TODO(Ben): Multiple renderers?
             f32 m_layerDepth = 0.0f; ///< Depth used in SpriteBatch rendering
             f32v2 m_position = f32v2(0.0f); ///< Position of the control

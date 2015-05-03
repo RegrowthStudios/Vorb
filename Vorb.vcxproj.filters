@@ -207,10 +207,10 @@
     <ClCompile Include="src\ui\Widget.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\ButtonBase.cpp">
+    <ClCompile Include="src\ui\Drawables.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\Drawables.cpp">
+    <ClCompile Include="src\ui\IButton.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
   </ItemGroup>
@@ -540,13 +540,13 @@
     <ClInclude Include="include\ui\Widget.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\ButtonBase.h">
-      <Filter>UI\Controls</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\Drawables.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\WidgetStyle.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\IButton.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
   </ItemGroup>

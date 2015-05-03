@@ -1,5 +1,5 @@
 //
-// ButtonBase.h
+// IButton.h
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 2 May 2015
@@ -7,7 +7,7 @@
 // All Rights Reserved
 //
 
-/*! \file ButtonBase.h
+/*! \file IButton.h
 * @brief 
 * Abstract base class for all button widget.
 *
@@ -15,9 +15,9 @@
 
 #pragma once
 
-#ifndef Vorb_ButtonBase_h__
+#ifndef Vorb_IButton_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_ButtonBase_h__
+#define Vorb_IButton_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -34,10 +34,10 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class ButtonBase : public Widget {
+        class IButton : public Widget {
         public:
-            ButtonBase();
-            virtual ~ButtonBase() = 0;
+            IButton();
+            virtual ~IButton() = 0;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -72,4 +72,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_ButtonBase_h__
+#endif // !Vorb_IButton_h__

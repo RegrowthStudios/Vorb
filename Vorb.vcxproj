@@ -427,6 +427,7 @@
     <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\ui\UIRenderer.h" />
+    <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />

@@ -44,6 +44,8 @@ namespace vorb {
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
+            virtual const WidgetStyle& getBackgroundStyle() const { return m_drawableRect.getStyle(); }
+            virtual const WidgetStyle& getTextStyle() const { return m_drawableText.getStyle(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -57,6 +59,8 @@ namespace vorb {
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
+            virtual void setBackgroundStyle(const WidgetStyle& style) { m_drawableRect.setStyle(style); }
+            virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
         protected:
             /************************************************************************/
             /* Members                                                              */

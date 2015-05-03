@@ -26,7 +26,7 @@
 
 #include "../VorbPreDecl.inl"
 #include "../graphics/gtypes.h"
-#include "../colors.h"
+#include "WidgetStyle.h"
 
 DECL_VG(class SpriteBatch;
         class SpriteFont)
@@ -43,24 +43,28 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const color4& getColor() const { return m_color; }
+            virtual const color4& getTextColor() const { return m_style.textColor; }
+            virtual const color4& getBackgroundColor() const { return m_style.backgroundColor; }
             virtual const f32& getLayerDepth() const { return m_layerDepth; }
             virtual const f32& getX() const { return m_position.x; }
             virtual const f32& getY() const { return m_position.y; }
             virtual const f32v2& getPosition() const { return m_position; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
+            virtual const WidgetStyle& getStyle() const { return m_style; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setColor(const color4& color) { m_color = color; }
+            virtual void setTextColor(const color4& color) { m_style.textColor = color; }
+            virtual void setBackgroundColor(const color4& color) { m_style.backgroundColor = color; }
             virtual void setLayerDepth(f32 layerDepth) { m_layerDepth = layerDepth; }
             virtual void setPosition(const f32v2& position) { m_position = position; }
             virtual void setX(f32 x) { m_position.x = x; }
             virtual void setY(f32 y) { m_position.y = y; }
             virtual void setRenderer(const UIRenderer* renderer) { m_renderer = renderer; }
+            virtual void setStyle(const WidgetStyle& style) { m_style = style; }
         protected:
-            color4 m_color = color::White; ///< Color of the control
+            WidgetStyle m_style;
             const UIRenderer* m_renderer = nullptr; ///< Parent renderer TODO(Ben): Multiple renderers?
             f32 m_layerDepth = 0.0f; ///< Depth used in SpriteBatch rendering
             f32v2 m_position = f32v2(0.0f); ///< Position of the control

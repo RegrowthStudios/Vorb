@@ -546,6 +546,9 @@
     <ClInclude Include="include\ui\Drawables.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\WidgetStyle.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

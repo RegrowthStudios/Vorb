@@ -86,7 +86,7 @@ namespace vorb {
             /************************************************************************/
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }
             virtual void setTexture(VGTexture texture) { m_texture = texture; }
-            virtual void setWidth(f32 height) { m_dimensions.y = height; }
+            virtual void setHeight(f32 height) { m_dimensions.y = height; }
             virtual void setWidth(f32 width) { m_dimensions.x = width; }
 
         protected:

@@ -36,7 +36,6 @@ namespace vorb {
 
         class IButton : public Widget {
         public:
-            IButton();
             virtual ~IButton() = 0;
 
             /*! @brief Adds all drawables to the UIRenderer
@@ -75,6 +74,7 @@ namespace vorb {
             virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
 
         protected:
+            virtual void refreshDrawable();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

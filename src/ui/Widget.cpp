@@ -29,3 +29,27 @@ bool vui::Widget::addChild(Widget* child) {
     m_widgets.push_back(child);
     return true; // TODO(Ben): Is this needed?
 }
+
+void vorb::ui::Widget::onMouseClick(Sender s, const MouseButtonEvent& e) {
+    // TODO(Ben): Implement
+}
+
+void vorb::ui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {
+    // TODO(Ben): Implement
+}
+
+void vorb::ui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
+    // TODO(Ben): Implement
+}
+
+void vorb::ui::Widget::onMouseEnter(Sender s, const MouseEvent& e) {
+    // TODO(Ben): Implement
+}
+
+void vorb::ui::Widget::onMouseLeave(Sender s, const MouseEvent& e) {
+    // TODO(Ben): Implement
+}
+
+void vorb::ui::Widget::onMouseMove(Sender s, const MouseEvent& e) {
+    // TODO(Ben): Implement
+}

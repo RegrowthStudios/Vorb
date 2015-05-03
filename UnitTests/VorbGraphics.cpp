@@ -297,12 +297,11 @@ void main() {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        auto bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
         if (bmp.data == nullptr) {
             std::cerr << "Error: Failed to load data/TW.jpg\n";
         }
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
-        vg::ImageIO::free(bmp);
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
 

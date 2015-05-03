@@ -8,6 +8,8 @@
 #include <include/Graphics.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
+#include <include/graphics/ImageIO.h>
+#include <include/graphics/SamplerState.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
 #include <include/ui/IButton.h>
@@ -56,12 +58,36 @@ public:
     }
     virtual void destroy(const vui::GameTime& gameTime) {
     }
-    virtual void onEntry(const vui::GameTime& gameTime) {
-        batch.init();
+    virtual void onEntry(const vui::GameTime& gameTime) {       
         font.init("Data/chintzy.ttf", 32);
+        uiRenderer.init(&font);
+
+        // Load texture
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/button_test.jpg\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // Set up widgets
+        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 200, 200));
+        button->setTexture(texture);
+        button->setText("TEST!");
+        vui::WidgetStyle style;
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+
+        for (auto& w : m_widgets) {
+            w->addDrawables(&uiRenderer);
+        }
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        batch.dispose();
+        uiRenderer.dispose();
         font.dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
@@ -69,15 +95,13 @@ public:
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        batch.begin();
-        batch.drawString(&font, "Hello World", f32v2(10, 10), 80.0f, 1.0f, color4(1.0f, 1.0f, 1.0f));
-        batch.end();
-        batch.renderBatch(f32v2(800, 600));
+        uiRenderer.draw(f32v2(800, 600));
     }
 
+    std::vector<vui::Widget*> m_widgets;
     vui::UIRenderer uiRenderer;
     vg::SpriteFont font;
-    vg::SpriteBatch batch;
+    VGTexture texture;
 };
 
 class VGTestApp : public vui::MainGame {

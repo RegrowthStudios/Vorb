@@ -2,6 +2,23 @@
 #include "UI/IButton.h"
 #include "UI/UIRenderer.h"
 
+vui::IButton::IButton() : Widget(){
+   // Empty
+}
+
+vui::IButton::IButton(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton() {
+    m_name = name;
+    m_destRect = destRect;
+    m_drawableText.setPosition(getPosition());
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+}
+
+vui::IButton::IButton(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton(name, destRect) {
+    parent->addChild(this);
+    m_parent = parent;
+}
+
 vui::IButton::~IButton() {
     // Empty
 }
@@ -12,9 +29,18 @@ void vui::IButton::addDrawables(UIRenderer* renderer) {
                   makeDelegate(m_drawableRect, &DrawableRect::draw),
                   makeDelegate(*this, &IButton::refreshDrawable));
     // Add the text
-    renderer->add(this,
-                  makeDelegate(m_drawableText, &DrawableText::draw),
-                  makeDelegate(*this, &IButton::refreshDrawable));
+    if (!m_drawableText.getFont()) {
+        // Use renderer default font if we dont have a font
+        m_drawableText.setFont(renderer->getDefaultFont());
+        renderer->add(this,
+                      makeDelegate(m_drawableText, &DrawableText::draw),
+                      makeDelegate(*this, &IButton::refreshDrawable));
+        m_drawableText.setFont(nullptr);
+    } else {
+        renderer->add(this,
+                      makeDelegate(m_drawableText, &DrawableText::draw),
+                      makeDelegate(*this, &IButton::refreshDrawable));
+    }
 }
 
 void vui::IButton::removeDrawables(UIRenderer* renderer) {

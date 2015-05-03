@@ -36,6 +36,24 @@ namespace vorb {
 
         class IButton : public Widget {
         public:
+            /*! @brief Default constructor. */
+            IButton();
+            /*! @brief Constructor that sets name, position, and dimensions.
+            *
+            * @param name: Name of the control.
+            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            IButton(const nString& name, const ui32v4& destRect = ui32v4(0));
+            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * @param parent: Parent control object.
+            * @param name: Name of the control.
+            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            IButton(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
+            /*! @brief Default destructor. */
             virtual ~IButton(); // TODO(Ben): Maybe make abstract?
 
             /*! @brief Adds all drawables to the UIRenderer
@@ -57,6 +75,7 @@ namespace vorb {
             virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
             virtual const WidgetStyle& getBackgroundStyle() const { return m_drawableRect.getStyle(); }
             virtual const WidgetStyle& getTextStyle() const { return m_drawableText.getStyle(); }
+            virtual const nString& getText() const { return m_drawableText.getText(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -71,6 +90,7 @@ namespace vorb {
             virtual void setY(f32 y) override;
             virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
             virtual void setBackgroundStyle(const WidgetStyle& style) { m_drawableRect.setStyle(style); }
+            virtual void setText(const nString& text) { m_drawableText.setText(text); }
             virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
 
         protected:

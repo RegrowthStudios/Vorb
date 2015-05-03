@@ -40,11 +40,14 @@ namespace vorb {
         };
         class WidgetStyle {
         public:
-            WidgetStyle();
+            WidgetStyle() {
+                memset(borderColor, 0, sizeof(borderColor));
+                memset(borderStyle, 0, sizeof(borderStyle));
+            }
 
-            color4 textColor = color::Black; ///< Color of the text
+            color4 textColor = color::Red; ///< Color of the text
             color4 backgroundColor = color::White; ///< Color of the background
-            f32v4 borderWidth;
+            f32v4 borderWidth = f32v4(0.0f);
             color4 borderColor[4];
             BorderStyle borderStyle[4];
         };

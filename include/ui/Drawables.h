@@ -101,14 +101,17 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
+            virtual const nString& getText() const { return m_text; }
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(vorb::graphics::SpriteFont* font);
+            virtual void setFont(vorb::graphics::SpriteFont* font) { m_font = font; }
+            virtual void setText(const nString& text) { m_text = text; }
 
         private:
             vg::SpriteFont* m_font = nullptr; ///< SpriteFont handle
-            f32 m_scale = 1.0f; ///< Scale for font rendering
+            f32v2 m_scale = f32v2(1.0f); ///< Scale for font rendering
+            nString m_text = ""; ///< Text to be drawn
         };
     }
 }

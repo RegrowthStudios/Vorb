@@ -46,19 +46,19 @@ void vui::UIRenderer::draw(f32m4 mWorld, f32m4 mCamera, const vg::SamplerState* 
     m_sb->begin();
     for (auto& f : m_drawFuncs) f(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
-    m_sb->renderBatch(mWorld, mCamera, ss, ds, rs, shader);
+    m_sb->render(mWorld, mCamera, ss, ds, rs, shader);
 }
 
 void vui::UIRenderer::draw(f32m4 mWorld, const f32v2& screenSize, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     m_sb->begin();
     for (auto& f : m_drawFuncs) f(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
-    m_sb->renderBatch(mWorld, screenSize, ss, ds, rs, shader);
+    m_sb->render(mWorld, screenSize, ss, ds, rs, shader);
 }
 
 void vui::UIRenderer::draw(const f32v2& screenSize, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     m_sb->begin();
     for (auto& f : m_drawFuncs) f(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
-    m_sb->renderBatch(screenSize, ss, ds, rs, shader);
+    m_sb->render(screenSize, ss, ds, rs, shader);
 }

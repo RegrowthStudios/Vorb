@@ -67,9 +67,9 @@ namespace vorb {
 
             void end(SpriteSortMode ssm = SpriteSortMode::TEXTURE);
 
-            void renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            void renderBatch(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            void renderBatch(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            void render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            void render(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            void render(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
 
             void sortGlyphs(SpriteSortMode ssm);
             void generateBatches();
@@ -102,6 +102,13 @@ namespace vorb {
                 f32v4 uvRect;
                 color4 color;
             };
+            class Batch {
+            public:
+                void set(ui32 iOff, ui32 texID);
+                ui32 textureID;
+                ui32 indices;
+                ui32 indexOffset;
+            };
 
             /// Sorting functions
             static bool SSMTexture(Glyph* g1, Glyph* g2) { return g1->tex < g2->tex; }
@@ -112,14 +119,6 @@ namespace vorb {
             void buildQuad(const Glyph* g, Vertex* verts);
             void buildQuadOffset(const Glyph* g, Vertex* verts);
             void buildQuadRotated(const Glyph* g, Vertex* verts);    
-
-            class Batch {
-            public:          
-                void set(ui32 iOff, ui32 texID);
-                ui32 textureID;
-                ui32 indices;
-                ui32 indexOffset;
-            };
 
             std::vector<Glyph> m_glyphs; ///< Glyph data
             std::vector<Glyph*> m_glyphPtrs; ///< Pointers to glyphs for fast sorting

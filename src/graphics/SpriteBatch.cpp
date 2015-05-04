@@ -37,7 +37,6 @@ vg::SpriteBatch::Glyph::Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRec
 
 }
 
-
 vg::SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
     m_bufUsage(isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW) {
     if (doInit) init();
@@ -186,7 +185,7 @@ void vg::SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) {
     generateBatches();
 }
 
-void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     //if (bs == nullptr) bs = BlendState::PremultipliedAlphaBlend;
     if (ds == nullptr) ds = &DepthState::NONE;
     if (rs == nullptr) rs = &RasterizerState::CULL_NONE;
@@ -220,18 +219,18 @@ void vg::SpriteBatch::renderBatch(f32m4 mWorld, f32m4 mCamera, /*const BlendStat
 
     shader->unuse();
 }
-void vg::SpriteBatch::renderBatch(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::render(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     f32m4 mCamera(
         2.0f / screenSize.x, 0, 0, 0,
         0, -2.0f / screenSize.y, 0, 0,
         0, 0, 1, 0,
         -1, 1, 0, 1
         );
-    renderBatch(mWorld, mCamera, /*bs, */ ss, ds, rs, shader);
+    render(mWorld, mCamera, /*bs, */ ss, ds, rs, shader);
 }
-void vg::SpriteBatch::renderBatch(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::render(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     f32m4 mIdentity(1.0f);
-    renderBatch(mIdentity, screenSize, /*bs, */ ss, ds, rs, shader);
+    render(mIdentity, screenSize, /*bs, */ ss, ds, rs, shader);
 }
 
 void vg::SpriteBatch::sortGlyphs(SpriteSortMode ssm) {

@@ -126,7 +126,7 @@ public:
         m_sb.begin();
         m_sb.draw(m_tex.id, f32v2(0, 0), f32v2(400, 400), color::White);
         m_sb.end(vg::SpriteSortMode::NONE);
-        m_sb.renderBatch(f32v2(800, 600));
+        m_sb.render(f32v2(800, 600));
     }
 private:
     static ImageTestFormats m_testFormats[6];
@@ -210,7 +210,7 @@ public:
         batch.begin();
         batch.drawString(&font, "Hello World", f32v2(10, 10), 80.0f, 1.0f, color4(1.0f, 1.0f, 1.0f));
         batch.end();
-        batch.renderBatch(f32v2(800, 600));
+        batch.render(f32v2(800, 600));
     }
 
     vg::SpriteFont font;
@@ -355,7 +355,7 @@ void main() {
         spriteBatch.draw(texture, f32v2(700.0f + ((yaw / PI_2) * 100.0f),
             (100.0f - (pitch / PI_2) * 100.0f)) - pointSize.y / 2.0f, pointSize, color::Red);
         spriteBatch.end();
-        spriteBatch.renderBatch(f32v2(800.0f, 600.0f));
+        spriteBatch.render(f32v2(800.0f, 600.0f));
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         vg::DepthState::FULL.set();
     }
@@ -436,7 +436,7 @@ public:
         batch.end();
         f64 endTime = timer.stop();
         timer.start();
-        batch.renderBatch(f32v2(800, 600));
+        batch.render(f32v2(800, 600));
         glFinish();
         f64 renderTime = timer.stop();
         f64 totalTime = drawTime + endTime + renderTime;

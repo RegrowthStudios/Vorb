@@ -25,11 +25,11 @@
 #endif // !VORB_USING_PCH
 
 #include "../VorbPreDecl.inl"
+#include "../graphics/SpriteBatch.h"
 #include "../graphics/gtypes.h"
 #include "WidgetStyle.h"
 
-DECL_VG(class SpriteBatch;
-        class SpriteFont)
+DECL_VG(class SpriteFont)
 
 namespace vorb {
     namespace ui {

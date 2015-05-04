@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UI/IButton.h"
 #include "UI/UIRenderer.h"
+#include "graphics/SpriteFont.h"
 
 vui::IButton::IButton() : Widget(){
    // Empty
@@ -48,34 +49,51 @@ void vui::IButton::removeDrawables(UIRenderer* renderer) {
 void vui::IButton::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
     m_drawableRect.setDimensions(dimensions);
+    updateTextPosition();
 }
 
 void vui::IButton::setHeight(f32 height) {
     Widget::setHeight(height);
     m_drawableRect.setHeight(height);
+    updateTextPosition();
 }
 
 void vui::IButton::setPosition(const f32v2& position) {
     Widget::setPosition(position);
     m_drawableRect.setPosition(position);
-    m_drawableText.setPosition(position);
+    updateTextPosition();
 }
 
 void vui::IButton::setWidth(f32 width) {
     Widget::setWidth(width);
     m_drawableRect.setWidth(width);
+    updateTextPosition();
 }
 
 void vui::IButton::setX(f32 x) {
     Widget::setX(x);
     m_drawableRect.setX(x);
-    m_drawableText.setX(x);
+    updateTextPosition();
 }
 
 void vui::IButton::setY(f32 y) {
     Widget::setY(y);
     m_drawableRect.setX(y);
-    m_drawableText.setX(y);
+    updateTextPosition();
+}
+
+void vui::IButton::setTextAlign(TextAlign textAlign) {
+    m_textAlign = textAlign;
+    updateTextPosition();
+}
+
+void vui::IButton::updateTextPosition() {
+    const vg::SpriteFont* m_font = getFont();
+    if (!m_font) return;
+    f32v2 size = m_font->measure(getText().c_str());
+    const f32v2& dims = getDimensions();
+
+   
 }
 
 void vui::IButton::refreshDrawable() {

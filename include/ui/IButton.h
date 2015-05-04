@@ -24,9 +24,9 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-#include "Widget.h"
 #include "../graphics/gtypes.h"
 #include "Drawables.h"
+#include "Widget.h"
 
 namespace vorb {
     namespace ui {
@@ -92,14 +92,17 @@ namespace vorb {
             virtual void setBackgroundStyle(const WidgetStyle& style) { m_drawableRect.setStyle(style); }
             virtual void setText(const nString& text) { m_drawableText.setText(text); }
             virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
+            virtual void setTextAlign(vg::TextAlign textAlign);
 
         protected:
+            virtual void updateTextPosition();
             virtual void refreshDrawable();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableText m_drawableText, m_drawnText;
+            vg::TextAlign m_textAlign = vg::TextAlign::MIDDLE;
         };
     }
 }

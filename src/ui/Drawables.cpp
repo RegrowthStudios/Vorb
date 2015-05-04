@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "UI/Drawables.h"
-#include "graphics/SpriteBatch.h"
 
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {
     spriteBatch->draw(m_texture, m_position, m_dimensions, m_style.backgroundColor, m_layerDepth);

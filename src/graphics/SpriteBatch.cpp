@@ -343,7 +343,7 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vtl.color = g->tint;
     // Top Right
     Vertex& vtr = verts[1];
-    vtr.position.x = g->position.x;
+    vtr.position.x = g->size.x + g->position.x;
     vtr.position.y = g->position.y;
     vtr.position.z = g->depth;
     vtr.uv.x = g->uvTiling.x;
@@ -353,7 +353,7 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     // Bottom Left
     Vertex& vbl = verts[2];
     vbl.position.x = g->position.x;
-    vbl.position.y = g->position.y;
+    vbl.position.y = g->size.y + g->position.y;
     vbl.position.z = g->depth;
     vbl.uv.x = 0.0f;
     vbl.uv.y = g->uvTiling.y;
@@ -361,8 +361,8 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vbl.color = g->tint;
     // Bottom Right
     Vertex& vbr = verts[3];
-    vbr.position.x = g->position.x;
-    vbr.position.y = g->position.y;
+    vbr.position.x = g->size.x + g->position.x;
+    vbr.position.y = g->size.y + g->position.y;
     vbr.position.z = g->depth;
     vbr.uv.x = g->uvTiling.x;
     vbr.uv.y = g->uvTiling.y;

@@ -451,7 +451,6 @@ public:
     VGTexture texture;
 };
 
-
 class AnimViewer : public vui::IGameScreen {
 public:
     static f32m4 fromQuat(const f32q& q) {

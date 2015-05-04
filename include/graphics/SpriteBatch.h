@@ -48,7 +48,7 @@ namespace vorb {
             BOTTOM_RIGHT,
             BOTTOM,
             BOTTOM_LEFT,
-            MIDDLE,
+            CENTER,
         };
 
         /// Sorting mode for SpriteBatch sprites
@@ -75,8 +75,8 @@ namespace vorb {
             void draw(VGTexture tex, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
             void draw(VGTexture tex, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
 
-            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const color4& tint, TextAlign textAlign = TextAlign::LEFT, f32 depth = 0.0f);
-            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const color4& tint, TextAlign textAlign = TextAlign::LEFT, f32 depth = 0.0f);
+            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f);
+            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f);
 
             void end(SpriteSortMode ssm = SpriteSortMode::TEXTURE);
 

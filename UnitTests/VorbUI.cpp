@@ -76,11 +76,50 @@ public:
         // Set up widgets
         vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 200, 200));
         button->setTexture(texture);
-        button->setText("TEST!");
+        button->setText("Center");
+        button->setTextAlign(vg::TextAlign::CENTER);
         vui::WidgetStyle style;
         style.backgroundColor = color::AliceBlue;
         button->setBackgroundStyle(style);
         m_widgets.push_back(button);
+        button = new vui::IButton("TestButton", ui32v4(250, 30, 200, 200));
+        button->setTexture(texture);
+        button->setText("Top Right");
+        button->setTextAlign(vg::TextAlign::TOP_RIGHT);
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+        button = new vui::IButton("TestButton", ui32v4(470, 30, 200, 200));
+        button->setTexture(texture);
+        button->setText("Bottom Left");
+        button->setTextAlign(vg::TextAlign::BOTTOM_LEFT);
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+        button = new vui::IButton("TestButton", ui32v4(470, 230, 200, 200));
+        button->setTexture(texture);
+        button->setText("Right");
+        button->setTextAlign(vg::TextAlign::RIGHT);
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+        button = new vui::IButton("TestButton", ui32v4(250, 230, 200, 200));
+        button->setTexture(texture);
+        button->setText("Bottom");
+        button->setTextAlign(vg::TextAlign::BOTTOM);
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+        button = new vui::IButton("TestButton", ui32v4(30, 230, 200, 200));
+        button->setTexture(texture);
+        button->setText("Left");
+        button->setTextAlign(vg::TextAlign::LEFT);
+        style.backgroundColor = color::AliceBlue;
+        button->setBackgroundStyle(style);
+        m_widgets.push_back(button);
+
+
+        
 
         for (auto& w : m_widgets) {
             w->addDrawables(&uiRenderer);

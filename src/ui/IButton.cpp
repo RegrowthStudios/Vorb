@@ -82,18 +82,46 @@ void vui::IButton::setY(f32 y) {
     updateTextPosition();
 }
 
-void vui::IButton::setTextAlign(TextAlign textAlign) {
-    m_textAlign = textAlign;
+void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
+    m_drawableText.setTextAlign(textAlign);
     updateTextPosition();
 }
 
 void vui::IButton::updateTextPosition() {
-    const vg::SpriteFont* m_font = getFont();
-    if (!m_font) return;
-    f32v2 size = m_font->measure(getText().c_str());
     const f32v2& dims = getDimensions();
+    const f32v2& pos = getPosition();
+    const vg::TextAlign& textAlign = getTextAlign();
 
-   
+    // TODO(Ben): Padding
+    switch (textAlign) {
+        case vg::TextAlign::LEFT:
+            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
+            break;
+        case vg::TextAlign::TOP_LEFT:
+            m_drawableText.setPosition(pos);
+            break;
+        case vg::TextAlign::TOP:
+            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
+            break;
+        case vg::TextAlign::TOP_RIGHT:
+            m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
+            break;
+        case vg::TextAlign::RIGHT:
+            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
+            break;
+        case vg::TextAlign::BOTTOM_RIGHT:
+            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
+            break;
+        case vg::TextAlign::BOTTOM:
+            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
+            break;
+        case vg::TextAlign::BOTTOM_LEFT:
+            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
+            break;
+        case vg::TextAlign::CENTER:
+            m_drawableText.setPosition(pos + dims / 2.0f);
+            break;
+    }
 }
 
 void vui::IButton::refreshDrawable() {

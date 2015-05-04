@@ -167,7 +167,7 @@ void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8&
 
 inline f32v2 getStringOffset(const vg::SpriteFont* font, const cString s, vg::TextAlign textAlign) {
     // No need to measure bottom lef
-    if (textAlign == vg::TextAlign::BOTTOM_LEFT) return f32v2(0.0f);
+    if (textAlign == vg::TextAlign::TOP_LEFT) return f32v2(0.0f);
     // Measure the string
     f32v2 size = font->measure(s);
     f32v2 rv;
@@ -176,27 +176,27 @@ inline f32v2 getStringOffset(const vg::SpriteFont* font, const cString s, vg::Te
             rv = f32v2(0.0f, -size.y / 2.0f);
             break;
         case vg::TextAlign::TOP_LEFT:
-            rv = f32v2(0.0f, -size.y);
+            rv = f32v2(0.0f, 0.0f);
             break;
         case vg::TextAlign::TOP:
-            rv = f32v2(-size.x / 2.0f, -size.y);
+            rv = f32v2(-size.x / 2.0f, size.y);
             break;
         case vg::TextAlign::TOP_RIGHT:
-            rv = f32v2(-size.x, -size.y);
+            rv = f32v2(-size.x, 0.0f);
             break;
         case vg::TextAlign::RIGHT:
             rv = f32v2(-size.x, -size.y / 2.0f);
             break;
         case vg::TextAlign::BOTTOM_RIGHT:
-            rv = f32v2(-size.x, 0.0f);
+            rv = -size;
             break;
         case vg::TextAlign::BOTTOM:
-            rv = f32v2(-size.x / 2.0f, 0.0f);
+            rv = f32v2(-size.x / 2.0f, -size.y);
             break;
         case vg::TextAlign::BOTTOM_LEFT:
-            rv = f32v2(0.0f, 0.0f);
+            rv = f32v2(0.0f, -size.y);
             break;
-        case vg::TextAlign::MIDDLE:
+        case vg::TextAlign::CENTER:
             rv = -size / 2.0f;
             break;
         default:
@@ -206,11 +206,11 @@ inline f32v2 getStringOffset(const vg::SpriteFont* font, const cString s, vg::Te
     return rv;
 }
 
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::LEFT */, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     font->draw(this, s, position + getStringOffset(font, s, textAlign), scaling, tint, depth);
 }
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::LEFT */, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/) {
     if (s == nullptr) s = "";
     f32v2 scaling(desiredHeight / (f32)font->getFontHeight());
     scaling.x *= scaleX;

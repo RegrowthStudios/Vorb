@@ -102,16 +102,19 @@ namespace vorb {
             /************************************************************************/
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const nString& getText() const { return m_text; }
+            virtual const vg::TextAlign& getTextAlign() const { return m_textAlign; }
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setText(const nString& text) { m_text = text; }
+            virtual void setTextAlign(vg::TextAlign textAlign) { m_textAlign = textAlign; }
 
         private:
             const vg::SpriteFont* m_font = nullptr; ///< SpriteFont handle
             f32v2 m_scale = f32v2(1.0f); ///< Scale for font rendering
             nString m_text = ""; ///< Text to be drawn
+            vg::TextAlign m_textAlign = vg::TextAlign::CENTER; ///< Alignment of the text
         };
     }
 }

@@ -76,6 +76,7 @@ namespace vorb {
             virtual const WidgetStyle& getBackgroundStyle() const { return m_drawableRect.getStyle(); }
             virtual const WidgetStyle& getTextStyle() const { return m_drawableText.getStyle(); }
             virtual const nString& getText() const { return m_drawableText.getText(); }
+            virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -102,7 +103,6 @@ namespace vorb {
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableText m_drawableText, m_drawnText;
-            vg::TextAlign m_textAlign = vg::TextAlign::MIDDLE;
         };
     }
 }

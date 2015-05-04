@@ -109,7 +109,6 @@ namespace vorb {
                 return g1->depth > g2->depth;
             }
 
-            void createProgram();
             void createVertexArray();
             void createPixelTexture();
 
@@ -125,9 +124,9 @@ namespace vorb {
             std::vector<Glyph*> m_glyphPtrs; ///< Pointers to glyphs for fast sorting
 
             ui32 m_bufUsage; ///< Buffer usage hint
-            ui32 m_vao = 0; ///< Vertex Array Object
-            ui32 m_vbo = 0; ///< Vertex Buffer Object
-            ui32 m_ibo = 0; ///< Index Buffer Object
+            VGVertexArray m_vao = 0; ///< Vertex Array Object
+            VGBuffer m_vbo = 0; ///< Vertex Buffer Object
+            VGBuffer m_ibo = 0; ///< Index Buffer Object
             ui32 m_indexCapacity = 0; ///< Current capacity of the m_ibo
             std::vector<Batch> m_batches; ///< Vector of batches for rendering
 

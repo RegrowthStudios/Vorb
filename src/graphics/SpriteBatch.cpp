@@ -7,6 +7,7 @@
 #include "graphics/RasterizerState.h"
 #include "graphics/SamplerState.h"
 #include "graphics/SpriteFont.h"
+#include "graphics/ShaderManager.h"
 #include "SpriteBatchShader.inl"
 
 #define VERTS_PER_QUAD 4
@@ -45,7 +46,8 @@ vg::SpriteBatch::~SpriteBatch() {
 }
 
 void vg::SpriteBatch::init() {
-    createProgram();
+    // Only need to create it if it isn't cached
+    if (!m_program) m_program = vg::ShaderManager::createProgram(impl::SPRITEBATCH_VS_SRC, impl::SPRITEBATCH_FS_SRC);
     createVertexArray();
     createPixelTexture();
 }
@@ -323,38 +325,6 @@ void vg::SpriteBatch::generateBatches() {
     delete[] verts;
 }
 
-void vg::SpriteBatch::createProgram() {
-    // Only need to create it if it isn't cached
-    if (!m_program) {
-
-        // Allocate the program
-        m_program = new vg::GLProgram(true);
-
-        // Create the vertex shader
-        m_program->addShader(vg::ShaderType::VERTEX_SHADER, impl::SPRITEBATCH_VS_SRC);
-
-        // Create the fragment shader
-        m_program->addShader(vg::ShaderType::FRAGMENT_SHADER, impl::SPRITEBATCH_FS_SRC);
-
-        // Set the attributes
-        std::vector <nString> attributes;
-        attributes.push_back("vPosition");
-        attributes.push_back("vTint");
-        attributes.push_back("vUV");
-        attributes.push_back("vUVRect");
-        m_program->setAttributes(attributes);
-
-        // Link the program
-        m_program->link();
-
-        // Init the uniforms
-        m_program->initUniforms();
-
-        // Init the attributes
-        m_program->initAttributes();
-    }
-}
-
 void vg::SpriteBatch::createVertexArray() {
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
@@ -366,14 +336,10 @@ void vg::SpriteBatch::createVertexArray() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
   
     m_program->enableVertexAttribArrays();
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
+    glVertexAttribPointer(m_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glVertexAttribPointer(m_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glVertexAttribPointer(m_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    glVertexAttribPointer(m_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -77,6 +77,7 @@ namespace vorb {
             virtual const WidgetStyle& getTextStyle() const { return m_drawableText.getStyle(); }
             virtual const nString& getText() const { return m_drawableText.getText(); }
             virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
+            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -94,6 +95,7 @@ namespace vorb {
             virtual void setText(const nString& text) { m_drawableText.setText(text); }
             virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
             virtual void setTextAlign(vg::TextAlign textAlign);
+            virtual void setTextScale(const f32v2& textScale) { m_drawableText.setTextScale(textScale); }
 
         protected:
             virtual void updateTextPosition();

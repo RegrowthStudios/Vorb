@@ -281,13 +281,14 @@ f32v2 vg::SpriteFont::measure(const cString s) const {
     return size;
 }
 
-void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) const {
-    f32v2 tp = position;
+void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, TextAlign align, f32 depth) const {
+    f32v2 pos = position + getStringOffset(s, align) * scaling;
+    f32v2 tp = pos;
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];
         if (s[si] == '\n') {
             tp.y += _fontHeight * scaling.y;
-            tp.x = position.x;
+            tp.x = pos.x;
         } else {
             // Check For Correct Glyph
             size_t gi = c - _regStart;
@@ -297,4 +298,45 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f
             tp.x += _glyphs[gi].size.x * scaling.x;
         }
     }
+}
+
+f32v2 vg::SpriteFont::getStringOffset(const cString s, TextAlign textAlign) const {
+    // No need to measure top left
+    if (textAlign == vg::TextAlign::TOP_LEFT) return f32v2(0.0f);
+    // Measure the string
+    f32v2 size = measure(s);
+    f32v2 rv;
+    switch (textAlign) {
+        case vg::TextAlign::LEFT:
+            rv = f32v2(0.0f, -size.y / 2.0f);
+            break;
+        case vg::TextAlign::TOP_LEFT:
+            rv = f32v2(0.0f, 0.0f);
+            break;
+        case vg::TextAlign::TOP:
+            rv = f32v2(-size.x / 2.0f, size.y);
+            break;
+        case vg::TextAlign::TOP_RIGHT:
+            rv = f32v2(-size.x, 0.0f);
+            break;
+        case vg::TextAlign::RIGHT:
+            rv = f32v2(-size.x, -size.y / 2.0f);
+            break;
+        case vg::TextAlign::BOTTOM_RIGHT:
+            rv = -size;
+            break;
+        case vg::TextAlign::BOTTOM:
+            rv = f32v2(-size.x / 2.0f, -size.y);
+            break;
+        case vg::TextAlign::BOTTOM_LEFT:
+            rv = f32v2(0.0f, -size.y);
+            break;
+        case vg::TextAlign::CENTER:
+            rv = -size / 2.0f;
+            break;
+        default:
+            rv = f32v2(0.0f); // should never happen
+            break;
+    }
+    return rv;
 }

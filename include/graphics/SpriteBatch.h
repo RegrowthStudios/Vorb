@@ -28,6 +28,7 @@
 
 #include "../PtrRecycler.hpp"
 #include "../VorbPreDecl.inl"
+#include "SpriteFont.h"
 #include "gtypes.h"
 
 namespace vorb {
@@ -36,20 +37,6 @@ namespace vorb {
         class GLProgram;
         class RasterizerState;
         class SamplerState;
-        class SpriteFont;
-
-        /// Alignment for SpriteFont
-        enum class TextAlign {
-            LEFT,
-            TOP_LEFT,
-            TOP,
-            TOP_RIGHT,
-            RIGHT,
-            BOTTOM_RIGHT,
-            BOTTOM,
-            BOTTOM_LEFT,
-            CENTER,
-        };
 
         /// Sorting mode for SpriteBatch sprites
         enum class SpriteSortMode {

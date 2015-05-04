@@ -28,6 +28,18 @@ namespace vorb {
             f32v2 size;
         };
 
+        enum class TextAlign {
+            LEFT,
+            TOP_LEFT,
+            TOP,
+            TOP_RIGHT,
+            RIGHT,
+            BOTTOM_RIGHT,
+            BOTTOM,
+            BOTTOM_LEFT,
+            CENTER,
+        };
+
 #define FIRST_PRINTABLE_CHAR ((char)32)
 #define LAST_PRINTABLE_CHAR ((char)126)
 
@@ -49,7 +61,8 @@ namespace vorb {
             f32v2 measure(const cString s) const;
 
         private:
-            void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) const;
+            void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, TextAlign align, f32 depth) const;
+            f32v2 getStringOffset(const cString s, TextAlign textAlign) const;
 
             static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 

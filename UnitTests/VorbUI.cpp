@@ -99,6 +99,7 @@ public:
         button = new vui::IButton("TestButton", ui32v4(470, 230, 200, 200));
         button->setTexture(texture);
         button->setText("Right");
+        button->setTextScale(f32v2(2.0f));
         button->setTextAlign(vg::TextAlign::RIGHT);
         style.backgroundColor = color::AliceBlue;
         button->setBackgroundStyle(style);
@@ -106,6 +107,7 @@ public:
         button = new vui::IButton("TestButton", ui32v4(250, 230, 200, 200));
         button->setTexture(texture);
         button->setText("Bottom");
+        button->setTextScale(f32v2(2.0f));
         button->setTextAlign(vg::TextAlign::BOTTOM);
         style.backgroundColor = color::AliceBlue;
         button->setBackgroundStyle(style);

@@ -14,9 +14,9 @@ void vui::UIRenderer::init(vg::SpriteFont* defaultFont /*= nullptr*/, vg::Sprite
     if (spriteBatch) {
         m_sb = spriteBatch;
     } else {
+        m_defaultSb.init();
         m_sb = &m_defaultSb;
-    }
-    m_sb->init();
+    }  
 }
 
 void vui::UIRenderer::add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc) {

@@ -56,7 +56,7 @@ namespace vorb {
             * Call on the GL thread after GL initialization
             *
             * @param defaultFont: Optional default font to use for rendering.
-            * @param spriteBatch: Optional SpriteBatch to use. If nullptr, will use it's own.
+            * @param spriteBatch: Optional SpriteBatch to use. Will not init if passed in. If nullptr, will init it's own.
             */
             virtual void init(vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
 

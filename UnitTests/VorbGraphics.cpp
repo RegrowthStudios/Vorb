@@ -5,7 +5,9 @@
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
 #include <glm/gtx/transform.hpp>
+#include <random>
 #include <include/MeshGenerators.h>
+#include <include/Timing.h>
 #include <include/Vorb.h>
 #include <include/colors.h>
 #include <include/graphics/GLProgram.h>
@@ -373,6 +375,82 @@ void main() {
     f32 yaw = 0;
     f32 pitch = 0;
 };
+
+class SpriteBatchTester : public vui::IGameScreen {
+public:
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+
+    virtual void build() {
+        // Empty
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+        // Empty
+    }
+
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        batch.init();
+
+        // Init sprites
+        std::mt19937 rgen(0);
+        std::uniform_real_distribution<f32>x(0.0f, 800.0f);
+        std::uniform_real_distribution<f32>y(0.0f, 600.0f);
+        spritePositions.resize(NUM_SPRITES);
+        for (auto& p : spritePositions) {
+            p.x = x(rgen);
+            p.y = y(rgen);
+        }
+
+        // Load texture
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/BigImage.png", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/BigImage.png\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        batch.dispose();
+    }
+
+    virtual void update(const vui::GameTime& gameTime) {
+        angle += 0.1f;
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        timer.start();
+        batch.begin();
+        for (auto& p : spritePositions) {
+            batch.draw(texture, nullptr, nullptr, p, f32v2(0.5f), size, angle, color::White);
+        }
+        f64 drawTime = timer.stop();
+        timer.start();
+        batch.end();
+        f64 endTime = timer.stop();
+        timer.start();
+        batch.renderBatch(f32v2(800, 600));
+        glFinish();
+        f64 renderTime = timer.stop();
+        f64 totalTime = drawTime + endTime + renderTime;
+        printf("Draw: %5.2lf End: %5.2lf Render %5.2lf Total %5.2lf\n", drawTime, endTime, renderTime, totalTime);
+    }
+    PreciseTimer timer;
+    f32 angle = 0.0f;
+    f32v2 size = f32v2(30.0f);
+    const int NUM_SPRITES = 100000;
+    std::vector<f32v2> spritePositions;
+    vg::SpriteBatch batch;
+    VGTexture texture;
+};
+
 
 class AnimViewer : public vui::IGameScreen {
 public:
@@ -809,6 +887,13 @@ TEST(TorusWorld) {
 TEST(AnimViewer) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new AnimViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(SpriteBatch) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new SpriteBatchTester).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

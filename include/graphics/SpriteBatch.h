@@ -1,19 +1,30 @@
-///
-/// SpriteBatch.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 17 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// 
-///
+//
+// SpriteBatch.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 17 Jan 2015
+// Refactored by Benjamin Arnold on 3 May 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SpriteBatch.h
+* @brief 
+* Defines the SpriteBatch for easy and efficient
+* 2D rendering of Sprites.
+*
+*/
 
 #pragma once
 
-#ifndef SpriteBatch_h__
-#define SpriteBatch_h__
+#ifndef Vorb_SpriteBatch_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SpriteBatch_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include "../PtrRecycler.hpp"
 #include "../VorbPreDecl.inl"
@@ -27,36 +38,12 @@ namespace vorb {
         class SamplerState;
         class SpriteFont;
 
-        struct VertexSpriteBatch {
-        public:
-            VertexSpriteBatch();
-            VertexSpriteBatch(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const color4& color);
-
-            f32v3 position;
-            f32v2 uv;
-            f32v4 uvRect;
-            color4 color;
-        };
-
+        /// Sorting mode for SpriteBatch sprites
         enum class SpriteSortMode {
             NONE,
             FRONT_TO_BACK,
             BACK_TO_FRONT,
             TEXTURE
-        };
-
-        class SpriteGlyph {
-        public:
-            SpriteGlyph();
-            SpriteGlyph(VGTexture texID, f32 d);
-
-            VGTexture textureID;
-            f32 depth;
-
-            VertexSpriteBatch vtl;
-            VertexSpriteBatch vtr;
-            VertexSpriteBatch vbl;
-            VertexSpriteBatch vbr;
         };
 
         class SpriteBatch {
@@ -69,7 +56,7 @@ namespace vorb {
 
             void begin();
 
-            void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, f32 rotation, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth = 0.0f);
             void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint, f32 depth = 0.0f);
             void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
             void draw(VGTexture tex, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
@@ -89,13 +76,36 @@ namespace vorb {
 
             static void disposeProgram();
         private:
-            static bool SSMTexture(SpriteGlyph* g1, SpriteGlyph* g2) {
-                return g1->textureID < g2->textureID;
+            struct Glyph {
+                Glyph(VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth);
+                VGTexture tex;
+                f32v4 uvRect;
+                f32v2 uvTiling;
+                f32v2 position;
+                f32v2 offset;
+                f32v2 size;
+                f32 rotation;
+                color4 tint;
+                f32 depth;
+            };
+            struct Vertex {
+            public:
+                Vertex() {};
+                Vertex(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const color4& color);
+
+                f32v3 position;
+                f32v2 uv;
+                f32v4 uvRect;
+                color4 color;
+            };
+
+            static bool SSMTexture(Glyph* g1, Glyph* g2) {
+                return g1->tex < g2->tex;
             }
-            static bool SSMFrontToBack(SpriteGlyph* g1, SpriteGlyph* g2) {
+            static bool SSMFrontToBack(Glyph* g1, Glyph* g2) {
                 return g1->depth < g2->depth;
             }
-            static bool SSMBackToFront(SpriteGlyph* g1, SpriteGlyph* g2) {
+            static bool SSMBackToFront(Glyph* g1, Glyph* g2) {
                 return g1->depth > g2->depth;
             }
 
@@ -103,37 +113,30 @@ namespace vorb {
             void createVertexArray();
             void createPixelTexture();
 
-            class SpriteBatchCall {
-            public:
+            class Batch {
+            public:          
+                void set(ui32 iOff, ui32 texID);
                 ui32 textureID;
-                i32 indices;
-                i32 indexOffset;
-
-                void set(i32 iOff, ui32 texID, std::vector<SpriteBatchCall*>& calls);
-                SpriteBatchCall* append(SpriteGlyph* g, std::vector<SpriteBatchCall*>& calls, PtrRecycler<SpriteBatchCall>* recycler);
+                ui32 indices;
+                ui32 indexOffset;
             };
 
-            // Glyph Information
-            std::vector<SpriteGlyph*> _glyphs;
-            PtrRecycler<SpriteGlyph> _glyphRecycler;
+            std::vector<Glyph> m_glyphs; ///< Glyph data
+            std::vector<Glyph*> m_glyphPtrs; ///< Pointers to glyphs for fast sorting
 
-            // Render Batches
-            ui32 _bufUsage;
-            ui32 _vao, _vbo;
-            size_t _glyphCapacity;
-            std::vector<SpriteBatchCall*> _batches;
-            PtrRecycler<SpriteBatchCall> _batchRecycler;
+            ui32 m_bufUsage; ///< Buffer usage hint
+            ui32 m_vao = 0; ///< Vertex Array Object
+            ui32 m_vbo = 0; ///< Vertex Buffer Object
+            ui32 m_ibo = 0; ///< Index Buffer Object
+            ui32 m_indexCapacity = 0; ///< Current capacity of the m_ibo
+            std::vector<Batch> m_batches; ///< Vector of batches for rendering
 
-            // Custom Shader
-            static vg::GLProgram* _program;
+            static vg::GLProgram* m_program; ///< Shader handle
 
-            // Default White Pixel Texture
-            ui32 _texPixel;
-
-            static const i32 _INITIAL_GLYPH_CAPACITY = 32;
+            ui32 m_texPixel; ///< Default White Pixel Texture
         };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // SpriteBatch_h__
+#endif // !Vorb_SpriteBatch_h__

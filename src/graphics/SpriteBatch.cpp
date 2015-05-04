@@ -46,10 +46,37 @@ vg::SpriteBatch::~SpriteBatch() {
 }
 
 void vg::SpriteBatch::init() {
-    // Only need to create it if it isn't cached
+    // Create program if it's not cached
     if (!m_program) m_program = vg::ShaderManager::createProgram(impl::SPRITEBATCH_VS_SRC, impl::SPRITEBATCH_FS_SRC);
-    createVertexArray();
-    createPixelTexture();
+
+    { // Create VAO
+        glGenVertexArrays(1, &m_vao);
+        glBindVertexArray(m_vao);
+
+        glGenBuffers(1, &m_vbo);
+        glGenBuffers(1, &m_ibo);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+
+        m_program->enableVertexAttribArrays();
+        glVertexAttribPointer(m_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
+        glVertexAttribPointer(m_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glVertexAttribPointer(m_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+        glVertexAttribPointer(m_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    { // Create Pixel Texture
+        glGenTextures(1, &m_texPixel);
+        glBindTexture(GL_TEXTURE_2D, m_texPixel);
+        ui32 pix = 0xffffffffu;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pix);
+        vg::SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
 void vg::SpriteBatch::dispose() {
     if (m_vbo != 0) {
@@ -147,7 +174,7 @@ void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 
 void vg::SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) { 
     // Set pointers for fast sort
     m_glyphPtrs.resize(m_glyphs.size());
-    for (int i = 0; i < m_glyphs.size(); i++) m_glyphPtrs[i] = &m_glyphs[i];
+    for (size_t i = 0; i < m_glyphs.size(); i++) m_glyphPtrs[i] = &m_glyphs[i];
 
     sortGlyphs(ssm);
     generateBatches();
@@ -325,33 +352,6 @@ void vg::SpriteBatch::generateBatches() {
     delete[] verts;
 }
 
-void vg::SpriteBatch::createVertexArray() {
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
-
-    glGenBuffers(1, &m_vbo);
-    glGenBuffers(1, &m_ibo);
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-  
-    m_program->enableVertexAttribArrays();
-    glVertexAttribPointer(m_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
-    glVertexAttribPointer(m_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    glVertexAttribPointer(m_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-    glVertexAttribPointer(m_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-void vg::SpriteBatch::createPixelTexture() {
-    glGenTextures(1, &m_texPixel);
-    glBindTexture(GL_TEXTURE_2D, m_texPixel);
-    ui32 pix = 0xffffffffu;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pix);
-    vg::SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
 void vg::SpriteBatch::disposeProgram() {
     if (m_program) {
         m_program->dispose();

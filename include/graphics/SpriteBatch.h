@@ -99,18 +99,10 @@ namespace vorb {
                 color4 color;
             };
 
-            static bool SSMTexture(Glyph* g1, Glyph* g2) {
-                return g1->tex < g2->tex;
-            }
-            static bool SSMFrontToBack(Glyph* g1, Glyph* g2) {
-                return g1->depth < g2->depth;
-            }
-            static bool SSMBackToFront(Glyph* g1, Glyph* g2) {
-                return g1->depth > g2->depth;
-            }
-
-            void createVertexArray();
-            void createPixelTexture();
+            /// Sorting functions
+            static bool SSMTexture(Glyph* g1, Glyph* g2) { return g1->tex < g2->tex; }
+            static bool SSMFrontToBack(Glyph* g1, Glyph* g2) { return g1->depth < g2->depth; }
+            static bool SSMBackToFront(Glyph* g1, Glyph* g2) { return g1->depth > g2->depth; }
 
             class Batch {
             public:          

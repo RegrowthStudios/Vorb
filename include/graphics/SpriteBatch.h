@@ -76,8 +76,11 @@ namespace vorb {
 
             static void disposeProgram();
         private:
+            struct Glyph; struct Vertex;
+            typedef void(SpriteBatch::*QuadBuildFunc)(const Glyph*, Vertex*);
+
             struct Glyph {
-                Glyph(VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth);
+                Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth);
                 VGTexture tex;
                 f32v4 uvRect;
                 f32v2 uvTiling;
@@ -87,6 +90,7 @@ namespace vorb {
                 f32 rotation;
                 color4 tint;
                 f32 depth;
+                QuadBuildFunc func;
             };
             struct Vertex {
             public:
@@ -103,6 +107,11 @@ namespace vorb {
             static bool SSMTexture(Glyph* g1, Glyph* g2) { return g1->tex < g2->tex; }
             static bool SSMFrontToBack(Glyph* g1, Glyph* g2) { return g1->depth < g2->depth; }
             static bool SSMBackToFront(Glyph* g1, Glyph* g2) { return g1->depth > g2->depth; }
+
+            /// Quad builders
+            void buildQuad(const Glyph* g, Vertex* verts);
+            void buildQuadOffset(const Glyph* g, Vertex* verts);
+            void buildQuadRotated(const Glyph* g, Vertex* verts);    
 
             class Batch {
             public:          

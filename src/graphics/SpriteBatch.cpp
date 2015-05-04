@@ -23,7 +23,7 @@ vg::SpriteBatch::Vertex::Vertex(const f32v3& pos, const f32v2& uv, const f32v4& 
     // Empty
 }
 
-vg::SpriteBatch::Glyph::Glyph(VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth) :
+vg::SpriteBatch::Glyph::Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth) :
     tex(tex),
     uvRect(uvRect),
     uvTiling(uvTiling),
@@ -32,8 +32,9 @@ vg::SpriteBatch::Glyph::Glyph(VGTexture tex, const f32v4& uvRect, const f32v2& u
     size(size),
     rotation(rotation),
     tint(tint),
-    depth(depth) {
-    // Empty
+    depth(depth),
+    func(f) {
+
 }
 
 
@@ -105,7 +106,8 @@ void vg::SpriteBatch::begin() {
 }
 
 void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
-    m_glyphs.emplace_back(t == 0 ? m_texPixel : t,
+    m_glyphs.emplace_back(&SpriteBatch::buildQuadRotated,
+                          t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
                           uvTiling != nullptr ? *uvTiling : f32v2(1, 1),
                           position,
@@ -116,7 +118,8 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& 
                           depth);
 }
 void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
-    m_glyphs.emplace_back(t == 0 ? m_texPixel : t,
+    m_glyphs.emplace_back(&SpriteBatch::buildQuadOffset,
+                          t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
                           uvTiling != nullptr ? *uvTiling : f32v2(1, 1),
                           position,
@@ -127,7 +130,8 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 positio
                           depth);
 }
 void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
-    m_glyphs.emplace_back(t == 0 ? m_texPixel : t,
+    m_glyphs.emplace_back(&SpriteBatch::buildQuad,
+                          t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
                           uvTiling != nullptr ? *uvTiling : f32v2(1, 1),
                           position,
@@ -138,7 +142,8 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 positio
                           depth);
 }
 void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
-    m_glyphs.emplace_back(t == 0 ? m_texPixel : t,
+    m_glyphs.emplace_back(&SpriteBatch::buildQuad,
+                          t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
                           f32v2(1, 1),
                           position,
@@ -149,7 +154,8 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, co
                           depth);
 }
 void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
-    m_glyphs.emplace_back(t == 0 ? m_texPixel : t,
+    m_glyphs.emplace_back(&SpriteBatch::buildQuad,
+                          t == 0 ? m_texPixel : t,
                           f32v4(0, 0, 1, 1),
                           f32v2(1, 1),
                           position,
@@ -265,54 +271,15 @@ void vg::SpriteBatch::generateBatches() {
     // Loop through all glyphs
     for (auto& g : m_glyphPtrs) {
         auto& oldBatch = m_batches.back();
+        // Check for new batch
         if (g->tex != oldBatch.textureID) {
             oldBatch.indices = indexCount - oldBatch.indexOffset;
             m_batches.emplace_back();
             m_batches.back().set(indexCount, g->tex);
         }
-        // Apply rotation
-        f32 rxx = (f32)cos(-g->rotation);
-        f32 rxy = (f32)sin(-g->rotation);
-        f32 cl = g->size.x * (-g->offset.x);
-        f32 cr = g->size.x * (1.0f - g->offset.x);
-        f32 ct = g->size.y * (-g->offset.y);
-        f32 cb = g->size.y * (1.0f - g->offset.y);
-        // Top Left
-        Vertex& vtl = verts[vi++];
-        vtl.position.x = (cl * rxx) + (ct * rxy) + g->position.x;
-        vtl.position.y = (cl * -rxy) + (ct * rxx) + g->position.y;
-        vtl.position.z = g->depth;
-        vtl.uv.x = 0.0f;
-        vtl.uv.y = 0.0f;
-        vtl.uvRect = g->uvRect;
-        vtl.color = g->tint;
-        // Top Right
-        Vertex& vtr = verts[vi++];
-        vtr.position.x = (cr * rxx) + (ct * rxy) + g->position.x;
-        vtr.position.y = (cr * -rxy) + (ct * rxx) + g->position.y;
-        vtr.position.z = g->depth;
-        vtr.uv.x = g->uvTiling.x;
-        vtr.uv.y = 0.0f;
-        vtr.uvRect = g->uvRect;
-        vtr.color = g->tint;
-        // Bottom Left
-        Vertex& vbl = verts[vi++];
-        vbl.position.x = (cl * rxx) + (cb * rxy) + g->position.x;
-        vbl.position.y = (cl * -rxy) + (cb * rxx) + g->position.y;
-        vbl.position.z = g->depth;
-        vbl.uv.x = 0.0f;
-        vbl.uv.y = g->uvTiling.y;
-        vbl.uvRect = g->uvRect;
-        vbl.color = g->tint;
-        // Bottom Right
-        Vertex& vbr = verts[vi++];
-        vbr.position.x = (cr * rxx) + (cb * rxy) + g->position.x;
-        vbr.position.y = (cr * -rxy) + (cb * rxx) + g->position.y;
-        vbr.position.z = g->depth;
-        vbr.uv.x = g->uvTiling.x;
-        vbr.uv.y = g->uvTiling.y;
-        vbr.uvRect = g->uvRect;
-        vbr.color = g->tint;
+        // Call builder function
+        (this->*g->func)(g, verts + vi);
+        vi += VERTS_PER_QUAD;
         indexCount += INDICES_PER_QUAD;
     }
     m_batches.back().indices = indexCount - m_batches.back().indexOffset;
@@ -363,4 +330,132 @@ void vg::SpriteBatch::disposeProgram() {
 void vg::SpriteBatch::Batch::set(ui32 iOff, ui32 texID) {
     textureID = texID;
     indexOffset = iOff;
+}
+
+void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
+    // Top Left
+    Vertex& vtl = verts[0];
+    vtl.position.x = g->position.x;
+    vtl.position.y = g->position.y;
+    vtl.position.z = g->depth;
+    vtl.uv.x = 0.0f;
+    vtl.uv.y = 0.0f;
+    vtl.uvRect = g->uvRect;
+    vtl.color = g->tint;
+    // Top Right
+    Vertex& vtr = verts[1];
+    vtr.position.x = g->position.x;
+    vtr.position.y = g->position.y;
+    vtr.position.z = g->depth;
+    vtr.uv.x = g->uvTiling.x;
+    vtr.uv.y = 0.0f;
+    vtr.uvRect = g->uvRect;
+    vtr.color = g->tint;
+    // Bottom Left
+    Vertex& vbl = verts[2];
+    vbl.position.x = g->position.x;
+    vbl.position.y = g->position.y;
+    vbl.position.z = g->depth;
+    vbl.uv.x = 0.0f;
+    vbl.uv.y = g->uvTiling.y;
+    vbl.uvRect = g->uvRect;
+    vbl.color = g->tint;
+    // Bottom Right
+    Vertex& vbr = verts[3];
+    vbr.position.x = g->position.x;
+    vbr.position.y = g->position.y;
+    vbr.position.z = g->depth;
+    vbr.uv.x = g->uvTiling.x;
+    vbr.uv.y = g->uvTiling.y;
+    vbr.uvRect = g->uvRect;
+    vbr.color = g->tint;
+}
+
+void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
+    f32 cl = g->size.x * (-g->offset.x);
+    f32 cr = g->size.x * (1.0f - g->offset.x);
+    f32 ct = g->size.y * (-g->offset.y);
+    f32 cb = g->size.y * (1.0f - g->offset.y);
+    // Top Left
+    Vertex& vtl = verts[0];
+    vtl.position.x = cl + g->position.x;
+    vtl.position.y = ct + g->position.y;
+    vtl.position.z = g->depth;
+    vtl.uv.x = 0.0f;
+    vtl.uv.y = 0.0f;
+    vtl.uvRect = g->uvRect;
+    vtl.color = g->tint;
+    // Top Right
+    Vertex& vtr = verts[1];
+    vtr.position.x = cr + g->position.x;
+    vtr.position.y = ct + g->position.y;
+    vtr.position.z = g->depth;
+    vtr.uv.x = g->uvTiling.x;
+    vtr.uv.y = 0.0f;
+    vtr.uvRect = g->uvRect;
+    vtr.color = g->tint;
+    // Bottom Left
+    Vertex& vbl = verts[2];
+    vbl.position.x = cl + g->position.x;
+    vbl.position.y = cb + g->position.y;
+    vbl.position.z = g->depth;
+    vbl.uv.x = 0.0f;
+    vbl.uv.y = g->uvTiling.y;
+    vbl.uvRect = g->uvRect;
+    vbl.color = g->tint;
+    // Bottom Right
+    Vertex& vbr = verts[3];
+    vbr.position.x = cr + g->position.x;
+    vbr.position.y = cb + g->position.y;
+    vbr.position.z = g->depth;
+    vbr.uv.x = g->uvTiling.x;
+    vbr.uv.y = g->uvTiling.y;
+    vbr.uvRect = g->uvRect;
+    vbr.color = g->tint;
+}
+
+void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
+    // Apply rotation
+    f32 rxx = (f32)cos(-g->rotation);
+    f32 rxy = (f32)sin(-g->rotation);
+    f32 cl = g->size.x * (-g->offset.x);
+    f32 cr = g->size.x * (1.0f - g->offset.x);
+    f32 ct = g->size.y * (-g->offset.y);
+    f32 cb = g->size.y * (1.0f - g->offset.y);
+    // Top Left
+    Vertex& vtl = verts[0];
+    vtl.position.x = (cl * rxx) + (ct * rxy) + g->position.x;
+    vtl.position.y = (cl * -rxy) + (ct * rxx) + g->position.y;
+    vtl.position.z = g->depth;
+    vtl.uv.x = 0.0f;
+    vtl.uv.y = 0.0f;
+    vtl.uvRect = g->uvRect;
+    vtl.color = g->tint;
+    // Top Right
+    Vertex& vtr = verts[1];
+    vtr.position.x = (cr * rxx) + (ct * rxy) + g->position.x;
+    vtr.position.y = (cr * -rxy) + (ct * rxx) + g->position.y;
+    vtr.position.z = g->depth;
+    vtr.uv.x = g->uvTiling.x;
+    vtr.uv.y = 0.0f;
+    vtr.uvRect = g->uvRect;
+    vtr.color = g->tint;
+    // Bottom Left
+    Vertex& vbl = verts[2];
+    vbl.position.x = (cl * rxx) + (cb * rxy) + g->position.x;
+    vbl.position.y = (cl * -rxy) + (cb * rxx) + g->position.y;
+    vbl.position.z = g->depth;
+    vbl.uv.x = 0.0f;
+    vbl.uv.y = g->uvTiling.y;
+    vbl.uvRect = g->uvRect;
+    vbl.color = g->tint;
+    // Bottom Right
+    Vertex& vbr = verts[3];
+    vbr.position.x = (cr * rxx) + (cb * rxy) + g->position.x;
+    vbr.position.y = (cr * -rxy) + (cb * rxx) + g->position.y;
+    vbr.position.z = g->depth;
+    vbr.uv.x = g->uvTiling.x;
+    vbr.uv.y = g->uvTiling.y;
+    vbr.uvRect = g->uvRect;
+    vbr.color = g->tint;
 }

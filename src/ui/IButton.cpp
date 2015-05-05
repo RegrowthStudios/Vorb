@@ -85,12 +85,12 @@ void vui::IButton::setY(f32 y) {
     updateTextPosition();
 }
 
-void vui::IButton::setBackgroundColor(const color4& color) {
+void vui::IButton::setBackColor(const color4& color) {
     m_backColor = color;
     updateColor();
 }
 
-void vui::IButton::setBackgroundHoverColor(const color4& color) {
+void vui::IButton::setBackHoverColor(const color4& color) {
     m_backHoverColor = color;
     updateColor();
 }
@@ -101,7 +101,7 @@ void vui::IButton::setTextColor(const color4& color) {
 }
 
 void vui::IButton::setTextHoverColor(const color4& color) {
-    m_textColorHover = color;
+    m_textHoverColor = color;
     updateColor();
 }
 
@@ -113,7 +113,7 @@ void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
 void vui::IButton::updateColor() {
     if (m_isMouseIn) {
         m_drawableRect.setColor(m_backHoverColor);
-        m_drawableText.setColor(m_textColorHover);
+        m_drawableText.setColor(m_textHoverColor);
     } else {
         m_drawableRect.setColor(m_backColor);
         m_drawableText.setColor(m_textColor);

@@ -213,6 +213,9 @@
     <ClCompile Include="src\ui\IButton.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\Slider.cpp">
+      <Filter>UI\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -547,6 +550,9 @@
       <Filter>UI\Controls</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\IButton.h">
+      <Filter>UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Slider.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
   </ItemGroup>

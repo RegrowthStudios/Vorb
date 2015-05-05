@@ -1,23 +1,23 @@
 //
-// IButton.h
+// Slider.h
 // Vorb Engine
 //
-// Created by Benjamin Arnold on 2 May 2015
+// Created by Benjamin Arnold on 5 May 2015
 // Copyright 2014 Regrowth Studios
 // All Rights Reserved
 //
 
-/*! \file IButton.h
+/*! \file Slider.h
 * @brief 
-* Abstract base class for all button widget.
+* Defines the slider widget.
 *
 */
 
 #pragma once
 
-#ifndef Vorb_IButton_h__
+#ifndef Vorb_Slider_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_IButton_h__
+#define Vorb_Slider_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -33,16 +33,16 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class IButton : public Widget {
+        class Slider : public Widget {
         public:
             /*! @brief Default constructor. */
-            IButton();
+            Slider();
             /*! @brief Constructor that sets name, position, and dimensions.
             *
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(const nString& name, const ui32v4& destRect = ui32v4(0));
+            Slider(const nString& name, const ui32v4& destRect = ui32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
@@ -51,9 +51,9 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
+            Slider(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
             /*! @brief Default destructor. */
-            virtual ~IButton(); // TODO(Ben): Maybe make abstract?
+            virtual ~Slider();
 
             /*! @brief Adds all drawables to the UIRenderer
             *
@@ -70,53 +70,54 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const color4& getBackColor() const { return m_backColor; }
-            virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
-            virtual const color4& getTextColor() const { return m_textColor; }
-            virtual const color4& getTextHoverColor() const { return m_textHoverColor; }
-            virtual const nString& getText() const { return m_drawableText.getText(); }
-            virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual const VGTexture& getSlideTexture() const { return m_drawableSlide.getTexture(); }
+            virtual const VGTexture& getBarTexture() const { return m_drawableBar.getTexture(); }
+            virtual const color4& getSlideColor() const { return m_slideColor; }
+            virtual const color4& getSlideHoverColor() const { return m_slideHoverColor; }
+            virtual const color4& getBarColor() const { return m_barColor; }
+            virtual const int& getValue() const { return m_value; }
+            virtual const int& getMin() const { return m_min; }
+            virtual const int& getMax() const { return m_max; }
+            virtual const int& getStep() const { return m_step; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            virtual void setSlideDimensions(const f32v2& dimensions);
             virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(vorb::graphics::SpriteFont* font) override { m_drawableText.setFont(font); }
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
-            virtual void setTexture(VGTexture texture) { m_drawableRect.setTexture(texture); }
+            virtual void setSlideTexture(VGTexture texture);
+            virtual void setBarTexture(VGTexture texture);
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
-            virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
+            virtual void setRenderer(const UIRenderer* renderer);
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
-            virtual void setText(const nString& text) { m_drawableText.setText(text); }
-            virtual void setTextColor(const color4& color);
-            virtual void setTextHoverColor(const color4& color);
-            virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale) { m_drawableText.setTextScale(textScale); }
+            virtual void setValue(int value);
+            virtual void setRange(int min, int max);
+            virtual void setMin(int value);
+            virtual void setMax(int value);
+            virtual void setStep(int step);
 
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawable();
 
-            virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
-            /************************************************************************/
-            /* Members                                                              */
-            /************************************************************************/
-            DrawableRect m_drawableRect, m_drawnRect;
-            DrawableText m_drawableText, m_drawnText;
-            color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
-            color4 m_textColor = color::Black, m_textHoverColor = color::Black;
-            const vg::SpriteFont* m_defaultFont = nullptr;
+            DrawableRect m_drawableBar, m_drawnBar;
+            DrawableRect m_drawableSlide, m_drawnSlide;
+            color4 m_barColor = color::LightGray;
+            color4 m_slideColor = color::DarkGray, m_slideHoverColor = color::LightSlateGray;
+            f32v2 m_slideDimensions = f32v2(10.0f, 20.0f);
+            int m_value = 0;
+            int m_min = 0;
+            int m_max = 10;
+            int m_step = 1;
         };
     }
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_IButton_h__
+#endif // !Vorb_Slider_h__

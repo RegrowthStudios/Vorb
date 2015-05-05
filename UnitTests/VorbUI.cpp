@@ -78,9 +78,6 @@ public:
         button->setTexture(texture);
         button->setText("Test Button");
         button->setTextAlign(vg::TextAlign::CENTER);
-        vui::WidgetStyle style;
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
         button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseClick Event\n"); });
         button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseDown Event\n"); });
         button->MouseUp.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseUp Event\n"); });

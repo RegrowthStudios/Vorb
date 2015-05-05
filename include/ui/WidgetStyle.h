@@ -38,7 +38,8 @@ namespace vorb {
             DOUBLE, GROOVE, RIDGE, INSET,
             OUTSET, INITIAL
         };
-        class WidgetStyle {
+        // TODO(Ben): rethink this
+       /* class WidgetStyle {
         public:
             WidgetStyle() {
                 memset(borderColor, 0, sizeof(borderColor));
@@ -50,7 +51,7 @@ namespace vorb {
             f32v4 borderWidth = f32v4(0.0f);
             color4 borderColor[4];
             BorderStyle borderStyle[4];
-        };
+        };*/
     }
 }
 namespace vui = vorb::ui;

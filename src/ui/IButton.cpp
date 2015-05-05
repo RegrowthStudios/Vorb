@@ -1,18 +1,19 @@
 #include "stdafx.h"
-#include "UI/IButton.h"
-#include "UI/UIRenderer.h"
 #include "graphics/SpriteFont.h"
+#include "ui/IButton.h"
+#include "ui/MouseInputDispatcher.h"
+#include "ui/UIRenderer.h"
 
 vui::IButton::IButton() : Widget(){
-   // Empty
+    updateColor();
 }
 
 vui::IButton::IButton(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton() {
     m_name = name;
     m_destRect = destRect;
-    m_drawableText.setPosition(getPosition());
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
+    updateTextPosition();
 }
 
 vui::IButton::IButton(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton(name, destRect) {
@@ -28,14 +29,16 @@ void vui::IButton::addDrawables(UIRenderer* renderer) {
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
+    // Use renderer default font if we dont have a font
+    m_defaultFont = renderer->getDefaultFont();
+    if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &IButton::refreshDrawable));
 
-    // Use renderer default font if we dont have a font
-    if (!m_drawnText.getFont()) m_drawnText.setFont(renderer->getDefaultFont());
+    
     // Add the text 
     renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
@@ -82,9 +85,40 @@ void vui::IButton::setY(f32 y) {
     updateTextPosition();
 }
 
+void vui::IButton::setBackgroundColor(const color4& color) {
+    m_backColor = color;
+    updateColor();
+}
+
+void vui::IButton::setBackgroundHoverColor(const color4& color) {
+    m_backHoverColor = color;
+    updateColor();
+}
+
+void vui::IButton::setTextColor(const color4& color) {
+    m_textColor = color;
+    updateColor();
+}
+
+void vui::IButton::setTextHoverColor(const color4& color) {
+    m_textColorHover = color;
+    updateColor();
+}
+
 void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
-    updateTextPosition();
+    refreshDrawable();
+}
+
+void vui::IButton::updateColor() {
+    if (m_isMouseIn) {
+        m_drawableRect.setColor(m_backHoverColor);
+        m_drawableText.setColor(m_textColorHover);
+    } else {
+        m_drawableRect.setColor(m_backColor);
+        m_drawableText.setColor(m_textColor);
+    }
+    refreshDrawable();
 }
 
 void vui::IButton::updateTextPosition() {
@@ -123,8 +157,40 @@ void vui::IButton::updateTextPosition() {
             m_drawableText.setPosition(pos + dims / 2.0f);
             break;
     }
+    refreshDrawable();
 }
 
 void vui::IButton::refreshDrawable() {
-    // TODO(Ben): Implement
+
+    // Use renderer default font if we don't have a font
+    if (!m_drawableText.getFont()) {
+        m_drawableText.setFont(m_defaultFont);
+        m_drawnText = m_drawableText;
+        m_drawableText.setFont(nullptr);
+    } else {
+        m_drawnText = m_drawableText;
+    }
+    
+    m_drawnRect = m_drawableRect;
+}
+
+void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    if (isInBounds(e.x, e.y)) {  
+        if (!m_isMouseIn) {
+            m_isMouseIn = true;
+            MouseEnter(e);
+            updateColor();
+        } else {
+            m_isMouseIn = true;
+        }
+        MouseMove(e);
+    } else {        
+        if (m_isMouseIn) {
+            m_isMouseIn = false;
+            MouseLeave(e);
+            updateColor();
+        } else {
+            m_isMouseIn = false;
+        }
+    }
 }

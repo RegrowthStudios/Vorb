@@ -73,8 +73,8 @@ namespace vorb {
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const WidgetStyle& getBackgroundStyle() const { return m_drawableRect.getStyle(); }
-            virtual const WidgetStyle& getTextStyle() const { return m_drawableText.getStyle(); }
+            virtual const color4& getBackgroundColor() const { return m_drawableRect.getColor(); }
+            virtual const color4& getTextColor() const { return m_drawableText.getColor(); }
             virtual const nString& getText() const { return m_drawableText.getText(); }
             virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
             virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
@@ -91,20 +91,29 @@ namespace vorb {
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
-            virtual void setBackgroundStyle(const WidgetStyle& style) { m_drawableRect.setStyle(style); }
+            virtual void setBackgroundColor(const color4& color);
+            virtual void setBackgroundHoverColor(const color4& color);
             virtual void setText(const nString& text) { m_drawableText.setText(text); }
-            virtual void setTextStyle(const WidgetStyle& style) { m_drawableText.setStyle(style); }
+            virtual void setTextColor(const color4& color);
+            virtual void setTextHoverColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale) { m_drawableText.setTextScale(textScale); }
 
         protected:
+            virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawable();
+
+            virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableText m_drawableText, m_drawnText;
+            color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
+            color4 m_textColor = color::Black, m_textColorHover = color::Black;
+            const vg::SpriteFont* m_defaultFont = nullptr;
+
         };
     }
 }

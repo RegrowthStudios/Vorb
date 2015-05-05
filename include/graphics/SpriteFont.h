@@ -53,7 +53,7 @@ namespace vorb {
             void dispose();
 
             const ui32& getFontHeight() const {
-                return _fontHeight;
+                return m_fontHeight;
             }
 
             static void getInstalledFonts(std::map<nString, nString>& fontFileDictionary);
@@ -61,17 +61,17 @@ namespace vorb {
             f32v2 measure(const cString s) const;
 
         private:
-            void draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, TextAlign align, f32 depth) const;
-            f32v2 getStringOffset(const cString s, TextAlign textAlign) const;
+            void draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect) const;
+            f32 getInitialYOffset(TextAlign textAlign) const;
 
             static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 
-            ui32 _regStart = FIRST_PRINTABLE_CHAR;
-            ui32 _regLength = (LAST_PRINTABLE_CHAR - FIRST_PRINTABLE_CHAR + 1);
-            CharGlyph* _glyphs = nullptr;
-            ui32 _fontHeight = 0;
+            ui32 m_regStart = FIRST_PRINTABLE_CHAR;
+            ui32 m_regLength = (LAST_PRINTABLE_CHAR - FIRST_PRINTABLE_CHAR + 1);
+            CharGlyph* m_glyphs = nullptr;
+            ui32 m_fontHeight = 0;
 
-            VGTexture _texID = 0;
+            VGTexture m_texID = 0;
         };
     }
 }

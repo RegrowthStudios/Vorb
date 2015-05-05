@@ -91,6 +91,7 @@ void vui::IButton::updateTextPosition() {
     const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
+    m_drawableText.setClipRect(getDestRect());
 
     // TODO(Ben): Padding
     switch (textAlign) {

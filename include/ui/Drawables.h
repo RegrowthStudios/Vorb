@@ -111,10 +111,12 @@ namespace vorb {
             virtual void setText(const nString& text) { m_text = text; }
             virtual void setTextAlign(vg::TextAlign textAlign) { m_textAlign = textAlign; }
             virtual void setTextScale(const f32v2& textScale) { m_scale = textScale; }
+            virtual void setClipRect(const f32v4& clipRect) { m_clipRect = clipRect; }
 
         private:
             const vg::SpriteFont* m_font = nullptr; ///< SpriteFont handle
             f32v2 m_scale = f32v2(1.0f); ///< Scale for font rendering
+            f32v4 m_clipRect = f32v4(-1000000.0f, -1000000.0f, 2000000.0f, 2000000.0f);
             nString m_text = ""; ///< Text to be drawn
             vg::TextAlign m_textAlign = vg::TextAlign::CENTER; ///< Alignment of the text
         };

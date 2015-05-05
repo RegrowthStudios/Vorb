@@ -63,6 +63,7 @@ namespace vorb {
         private:
             void draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect) const;
             f32 getInitialYOffset(TextAlign textAlign) const;
+            f32 getYOffset(size_t numRows, TextAlign align) const;
 
             static std::vector<ui32>* createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w);
 

@@ -35,6 +35,7 @@ namespace vorb {
 
         // Forward Declarations
         struct MouseButtonEvent;
+        struct MouseMotionEvent;
         struct MouseEvent;
         class UIRenderer;
 
@@ -103,6 +104,20 @@ namespace vorb {
             */
             virtual void removeDrawables(UIRenderer* renderer) { /* Empty */ }
 
+            /*! @brief Enables events* */
+            virtual void enable(); 
+
+            /*! @brief Disables events* */
+            virtual void disable();
+
+            /*! @brief Checks if a point is inside the widget
+            *
+            * @param point: The point to check
+            * @return true if point is in m_destRect
+            */
+            virtual bool isInBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
+            virtual bool isInBounds(f32 x, f32 y);
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -113,6 +128,7 @@ namespace vorb {
             virtual const ControlStyle& getStyle() const { return m_style; }
             virtual const DockStyle& getDock() const { return m_dock; }
             virtual const bool& isRenderInit() const { return m_isRenderInit; }
+            virtual const bool& isEnabled() const { return m_isEnabled; }
             virtual const f32& getHeight() const { return m_destRect.w; }
             virtual const f32& getWidth() const { return m_destRect.z; }
             virtual const f32& getX() const { return m_destRect.x; }
@@ -148,21 +164,20 @@ namespace vorb {
             Event<const MouseButtonEvent&> MouseClick; ///< Occurs when control is clicked by mouse.
             Event<const MouseButtonEvent&> MouseDown; ///< Occurs when mouse button is pressed over control.
             Event<const MouseButtonEvent&> MouseUp; ///< Occurs when mouse button is released over control.
-            Event<const MouseEvent&> MouseEnter; ///< Occurs when mouse pointer enters the control.
-            Event<const MouseEvent&> MouseLeave; ///< Occurs when mouse pointer leaves the control.
-            Event<const MouseEvent&> MouseMove; ///< Occurs when mouse pointer is moved over control.
+            Event<const MouseMotionEvent&> MouseEnter; ///< Occurs when mouse pointer enters the control.
+            Event<const MouseMotionEvent&> MouseLeave; ///< Occurs when mouse pointer leaves the control.
+            Event<const MouseMotionEvent&> MouseMove; ///< Occurs when mouse pointer is moved over control.
             // TODO(Ben): Lots more events!
 
         protected:
+            
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
-            virtual void onMouseClick(Sender s, const MouseButtonEvent& e);
             virtual void onMouseDown(Sender s, const MouseButtonEvent& e);
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
-            virtual void onMouseEnter(Sender s, const MouseEvent& e);
-            virtual void onMouseLeave(Sender s, const MouseEvent& e);
-            virtual void onMouseMove(Sender s, const MouseEvent& e);
+            virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
 
             /************************************************************************/
             /* Members                                                              */
@@ -176,7 +191,11 @@ namespace vorb {
             f32v4 m_destRect = f32v4(0.0f); ///< The position and dimensions.
             nString m_name = ""; ///< Display name of the control
 
+            // TODO(Ben): Bitfield for memory reduction?
             bool m_isRenderInit = false; ///< True when rendering is initialized.
+            bool m_isEnabled = false; ///< True when events are enabled
+            bool m_isClicking = false; ///< Used for click event tracking
+            bool m_isMouseIn = false; ///< Used for motion event tracking
         };
     }
 }

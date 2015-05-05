@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "UI/Widget.h"
+#include "UI/InputDispatcher.h"
 
 vui::Widget::Widget() {
     m_anchor = {};
     m_style = {};
     m_dock = DockStyle::NONE;
+    enable();
 }
 
 vui::Widget::Widget(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Widget() {
@@ -30,26 +32,52 @@ bool vui::Widget::addChild(Widget* child) {
     return true; // TODO(Ben): Is this needed?
 }
 
-void vorb::ui::Widget::onMouseClick(Sender s, const MouseButtonEvent& e) {
-    // TODO(Ben): Implement
+void vui::Widget::enable() {
+    if (!m_isEnabled) {
+        vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &Widget::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &Widget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &Widget::onMouseMove);
+        m_isEnabled = true;
+    }
 }
 
-void vorb::ui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {
-    // TODO(Ben): Implement
+void vui::Widget::disable() {
+    if (m_isEnabled) {
+        vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &Widget::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &Widget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &Widget::onMouseMove);
+        m_isEnabled = false;
+        m_isClicking = false;
+    }
 }
 
-void vorb::ui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
-    // TODO(Ben): Implement
+bool vui::Widget::isInBounds(f32 x, f32 y) {
+    return (x >= m_destRect.x && x <= m_destRect.x + m_destRect.z &&
+            y >= m_destRect.y && y <= m_destRect.y + m_destRect.w);
 }
 
-void vorb::ui::Widget::onMouseEnter(Sender s, const MouseEvent& e) {
-    // TODO(Ben): Implement
+void vui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {
+    if (m_isMouseIn) {
+        MouseDown(e);
+        m_isClicking = true;
+    }   
 }
 
-void vorb::ui::Widget::onMouseLeave(Sender s, const MouseEvent& e) {
-    // TODO(Ben): Implement
+void vui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
+    if (m_isMouseIn) {
+        MouseUp(e);
+        if (m_isClicking) MouseClick(e);
+    }
+    m_isClicking = false;
 }
 
-void vorb::ui::Widget::onMouseMove(Sender s, const MouseEvent& e) {
-    // TODO(Ben): Implement
+void vui::Widget::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    if (isInBounds(e.x, e.y)) {
+        if (!m_isMouseIn) MouseEnter(e);
+        m_isMouseIn = true;
+        MouseMove(e);
+    } else {
+        if (m_isMouseIn) MouseLeave(e);
+        m_isMouseIn = false;
+    }
 }

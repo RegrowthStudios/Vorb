@@ -301,21 +301,7 @@ f32v2 vg::SpriteFont::measure(const cString s) const {
     return size;
 }
 
-f32 getYOffset(size_t numRows, vg::TextAlign align, f32 fontHeight) {
-    switch (align) {
-        case vg::TextAlign::TOP_LEFT:
-        case vg::TextAlign::TOP:
-        case vg::TextAlign::TOP_RIGHT:
-            return 0.0f;
-        case vg::TextAlign::LEFT:
-        case vg::TextAlign::CENTER:
-        case vg::TextAlign::RIGHT:
-            return -((f32)(numRows - 1) * fontHeight / 2.0f);
-        default:
-            return -((f32)(numRows - 1) * fontHeight);
-    }
-    return 0.0f; // Should never happen
-}
+
 
 void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect) const {
     f32v2 pos = position;
@@ -352,7 +338,7 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
                     default:
                         didClip = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
                 }
-                // If we clipped, to to new row
+                // If we clipped, go to new row
                 if (didClip) {
                     rightEdges.back() = gx;
                     rightEdges.push_back(0.0f);
@@ -367,7 +353,7 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
     }
     rightEdges.back() = gx;
     // Get y offset
-    f32 yOff = getYOffset(rows.size(), align, m_fontHeight) * scaling.y;
+    f32 yOff = getYOffset(rows.size(), align) * scaling.y;
     // Render each row
     for (int y = 0; y < rows.size(); y++) {
         f32 rightEdge = rightEdges[y];
@@ -382,6 +368,7 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
         }
     }
 }
+
 
 f32 vg::SpriteFont::getInitialYOffset(TextAlign textAlign) const {
     // No need to measure top left
@@ -409,4 +396,20 @@ f32 vg::SpriteFont::getInitialYOffset(TextAlign textAlign) const {
             return 0.0f; // Should never happen
     }
     return 0.0f;
+}
+
+f32 vg::SpriteFont::getYOffset(size_t numRows, vg::TextAlign align) const {
+    switch (align) {
+        case vg::TextAlign::TOP_LEFT:
+        case vg::TextAlign::TOP:
+        case vg::TextAlign::TOP_RIGHT:
+            return 0.0f;
+        case vg::TextAlign::LEFT:
+        case vg::TextAlign::CENTER:
+        case vg::TextAlign::RIGHT:
+            return -((f32)(numRows - 1) * m_fontHeight / 2.0f);
+        default:
+            return -((f32)(numRows - 1) * m_fontHeight);
+    }
+    return 0.0f; // Should never happen
 }

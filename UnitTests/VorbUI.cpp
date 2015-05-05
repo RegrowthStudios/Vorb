@@ -74,52 +74,20 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Set up widgets
-        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 100, 200));
+        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 150, 150));
         button->setTexture(texture);
-        button->setText("Center");
+        button->setText("Test Button");
         button->setTextAlign(vg::TextAlign::CENTER);
         vui::WidgetStyle style;
         style.backgroundColor = color::AliceBlue;
         button->setBackgroundStyle(style);
+        button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseClick Event\n"); });
+        button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseDown Event\n"); });
+        button->MouseUp.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseUp Event\n"); });
+        button->MouseEnter.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseEnter Event\n"); });
+        button->MouseLeave.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseLeave Event\n"); });
+        button->MouseMove.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseMove Event\n"); });
         m_widgets.push_back(button);
-        button = new vui::IButton("TestButton", ui32v4(250, 30, 100, 200));
-        button->setTexture(texture);
-        button->setText("Top Right");
-        button->setTextAlign(vg::TextAlign::TOP_RIGHT);
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
-        m_widgets.push_back(button);
-        button = new vui::IButton("TestButton", ui32v4(470, 30, 100, 200));
-        button->setTexture(texture);
-        button->setText("Bottom Left");
-        button->setTextAlign(vg::TextAlign::BOTTOM_LEFT);
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
-        m_widgets.push_back(button);
-        button = new vui::IButton("TestButton", ui32v4(470, 230, 100, 200));
-        button->setTexture(texture);
-        button->setText("Right");
-        button->setTextAlign(vg::TextAlign::RIGHT);
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
-        m_widgets.push_back(button);
-        button = new vui::IButton("TestButton", ui32v4(250, 230, 100, 200));
-        button->setTexture(texture);
-        button->setText("Bottom");
-        button->setTextAlign(vg::TextAlign::BOTTOM);
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
-        m_widgets.push_back(button);
-        button = new vui::IButton("TestButton", ui32v4(30, 230, 100, 200));
-        button->setTexture(texture);
-        button->setText("Left");
-        button->setTextAlign(vg::TextAlign::LEFT);
-        style.backgroundColor = color::AliceBlue;
-        button->setBackgroundStyle(style);
-        m_widgets.push_back(button);
-
-
-        
 
         for (auto& w : m_widgets) {
             w->addDrawables(&uiRenderer);

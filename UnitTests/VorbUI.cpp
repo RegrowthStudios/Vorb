@@ -75,10 +75,11 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Set up widgets
-        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 150, 150));
+        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 125, 125));
         button->setTexture(texture);
         button->setText("Test Button");
         button->setTextAlign(vg::TextAlign::CENTER);
+        button->setTextColor(color::Red);
         button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseClick Event\n"); });
         button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseDown Event\n"); });
         button->MouseUp.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseUp Event\n"); });

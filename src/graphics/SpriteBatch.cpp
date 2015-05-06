@@ -165,15 +165,15 @@ void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8&
                           depth);
 }
 
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
     if (s == nullptr) s = "";
-    font->draw(this, s, position, scaling, tint, textAlign, depth, clipRect);
+    font->draw(this, s, position, scaling, tint, textAlign, depth, clipRect, shouldWrap);
 }
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
     if (s == nullptr) s = "";
     f32v2 scaling(desiredHeight / (f32)font->getFontHeight());
     scaling.x *= scaleX;
-    font->draw(this, s, position, scaling, tint, textAlign, depth, clipRect);
+    font->draw(this, s, position, scaling, tint, textAlign, depth, clipRect, shouldWrap);
 }
 
 void vg::SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) { 

@@ -303,7 +303,7 @@ f32v2 vg::SpriteFont::measure(const cString s) const {
 
 
 
-void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect) const {
+void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect, bool shouldWrap) const {
     f32v2 pos = position;
     pos.y += getInitialYOffset(align) * scaling.y;
     if (pos.x < clipRect.x) pos.x = clipRect.x;
@@ -324,22 +324,22 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
             if (gi >= m_regLength) gi = m_regLength;
             // Get glyph width
             f32 gWidth = m_glyphs[gi].size.x * scaling.x;
-            { // Check for clipping
-                bool didClip;
+            if (shouldWrap) { // Check for wrapping
+                bool didWrap;
                 switch (align) {
                     case vg::TextAlign::TOP:
                     case vg::TextAlign::CENTER:
                     case vg::TextAlign::BOTTOM:
-                        didClip = ((pos.x + (gx + gWidth) / 2.0f > clipRect.x + clipRect.z)); break;
+                        didWrap = ((pos.x + (gx + gWidth) / 2.0f > clipRect.x + clipRect.z)); break;
                     case vg::TextAlign::TOP_RIGHT:
                     case vg::TextAlign::RIGHT:
                     case vg::TextAlign::BOTTOM_RIGHT:
-                        didClip = ((pos.x - gx - gWidth < clipRect.x)); break;
+                        didWrap = ((pos.x - gx - gWidth < clipRect.x)); break;
                     default:
-                        didClip = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
+                        didWrap = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
                 }
                 // If we clipped, go to new row
-                if (didClip) {
+                if (didWrap) {
                     rightEdges.back() = gx;
                     rightEdges.push_back(0.0f);
                     rows.emplace_back();
@@ -360,15 +360,43 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
         for (auto& g : rows[y]) {   
             f32v2 position = pos + f32v2(g.x + rightEdges[y] * X_OFF_MULTS[(int)align], yOff + y * m_fontHeight * scaling.y);
             f32v2 size = m_glyphs[g.gi].size * scaling;
-            // Draw the glyph if its not intersecting clipRect
-            if (position.x >= clipRect.x && position.x + size.x <= clipRect.x + clipRect.z &&
-                position.y >= clipRect.y && position.y + size.y <= clipRect.y + clipRect.w) {
-                batch->draw(m_texID, &m_glyphs[g.gi].uvRect, position, size, tint, depth);
+            f32v4 uvRect = m_glyphs[g.gi].uvRect;
+            // Clip the glyphs with clipRect
+            checkClipping(clipRect, position, size, uvRect);
+            // Draw the glyph if its too small after clipping
+            if (size.x > 0.0f && size.y > 0.0f) {
+                batch->draw(m_texID, &uvRect, position, size, tint, depth);
             }
         }
     }
 }
 
+void vg::SpriteFont::checkClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) const {
+    if (position.x < clipRect.x) {
+        f32 t = clipRect.x - position.x;
+        uvRect.x += uvRect.z * (t / size.x);
+        uvRect.z *= 1.0 - (t / size.x);
+        position.x = clipRect.x;
+        size.x -= t;
+    }
+    if (position.x + size.x > clipRect.x + clipRect.z) {
+        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
+        uvRect.z *= 1.0 - (t / size.x);
+        size.x -= t;
+    }
+    if (position.y < clipRect.y) {
+        f32 t = clipRect.y - position.y;
+        uvRect.y += uvRect.w * (t / size.y);
+        uvRect.w *= 1.0 - (t / size.y);
+        position.y = clipRect.y;
+        size.y -= t;
+    }
+    if (position.y + size.y > clipRect.y + clipRect.w) {
+        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
+        uvRect.w *= 1.0 - (t / size.y);
+        size.y -= t;
+    }
+}
 
 f32 vg::SpriteFont::getInitialYOffset(TextAlign textAlign) const {
     // No need to measure top left

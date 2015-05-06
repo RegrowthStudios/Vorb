@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "graphics/SpriteFont.h"
 #include "ui/IButton.h"
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
@@ -36,13 +35,13 @@ void vui::IButton::addDrawables(UIRenderer* renderer) {
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &IButton::refreshDrawable));
+                  makeDelegate(*this, &IButton::refreshDrawables));
 
     
     // Add the text 
     renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
-                  makeDelegate(*this, &IButton::refreshDrawable));  
+                  makeDelegate(*this, &IButton::refreshDrawables));  
 }
 
 void vui::IButton::removeDrawables(UIRenderer* renderer) {
@@ -107,7 +106,7 @@ void vui::IButton::setTextHoverColor(const color4& color) {
 
 void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
-    refreshDrawable();
+    refreshDrawables();
 }
 
 void vui::IButton::updateColor() {
@@ -118,7 +117,7 @@ void vui::IButton::updateColor() {
         m_drawableRect.setColor(m_backColor);
         m_drawableText.setColor(m_textColor);
     }
-    refreshDrawable();
+    refreshDrawables();
 }
 
 void vui::IButton::updateTextPosition() {
@@ -157,10 +156,10 @@ void vui::IButton::updateTextPosition() {
             m_drawableText.setPosition(pos + dims / 2.0f);
             break;
     }
-    refreshDrawable();
+    refreshDrawables();
 }
 
-void vui::IButton::refreshDrawable() {
+void vui::IButton::refreshDrawables() {
 
     // Use renderer default font if we don't have a font
     if (!m_drawableText.getFont()) {
@@ -180,8 +179,6 @@ void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
             m_isMouseIn = true;
             MouseEnter(e);
             updateColor();
-        } else {
-            m_isMouseIn = true;
         }
         MouseMove(e);
     } else {        
@@ -189,8 +186,6 @@ void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
             m_isMouseIn = false;
             MouseLeave(e);
             updateColor();
-        } else {
-            m_isMouseIn = false;
         }
     }
 }

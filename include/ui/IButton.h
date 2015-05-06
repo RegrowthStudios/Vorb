@@ -91,7 +91,6 @@ namespace vorb {
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
-            virtual void setRenderer(const UIRenderer* renderer) { m_drawableRect.setRenderer(renderer); m_drawableText.setRenderer(renderer); }
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setText(const nString& text) { m_drawableText.setText(text); }
@@ -103,7 +102,7 @@ namespace vorb {
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();
-            virtual void refreshDrawable();
+            virtual void refreshDrawables();
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             /************************************************************************/

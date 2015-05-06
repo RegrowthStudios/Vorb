@@ -12,6 +12,7 @@
 #include <include/graphics/SamplerState.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
+#include <include/ui/Slider.h>
 #include <include/ui/IButton.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
@@ -78,13 +79,19 @@ public:
         button->setTexture(texture);
         button->setText("Test Button");
         button->setTextAlign(vg::TextAlign::CENTER);
-        button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseClick Event\n"); });
-        button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseDown Event\n"); });
-        button->MouseUp.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("MouseUp Event\n"); });
-        button->MouseEnter.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseEnter Event\n"); });
-        button->MouseLeave.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseLeave Event\n"); });
-        button->MouseMove.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("MouseMove Event\n"); });
+        button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseClick Event\n"); });
+        button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseDown Event\n"); });
+        button->MouseUp.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseUp Event\n"); });
+        button->MouseEnter.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseEnter Event\n"); });
+        button->MouseLeave.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseLeave Event\n"); });
+        button->MouseMove.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseMove Event\n"); });
         m_widgets.push_back(button);
+
+        vui::Slider* slider = new vui::Slider("TestSlider", ui32v4(250, 30, 300, 20));
+        slider->setBarTexture(texture);
+        slider->setSlideTexture(texture);
+        slider->ValueChange.addFunctor([](Sender, int value) { printf("Slider ValueChange Event: %d\n", value); });
+        m_widgets.push_back(slider);
 
         for (auto& w : m_widgets) {
             w->addDrawables(&uiRenderer);

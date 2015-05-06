@@ -79,6 +79,8 @@ namespace vorb {
             virtual const int& getMin() const { return m_min; }
             virtual const int& getMax() const { return m_max; }
             virtual const int& getStep() const { return m_step; }
+            /// Gets slider value scaled between 0.0f and 1.0f
+            virtual const f32& getValueScaled() const { return (f32)(m_value - m_min) / (m_max - m_min); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -89,28 +91,42 @@ namespace vorb {
             virtual void setPosition(const f32v2& position) override;
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
+            virtual void setBarColor(const color4& color);
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
-            virtual void setRenderer(const UIRenderer* renderer);
-            virtual void setBackColor(const color4& color);
-            virtual void setBackHoverColor(const color4& color);
+            virtual void setSlideColor(const color4& color);
+            virtual void setSlideHoverColor(const color4& color);
             virtual void setValue(int value);
             virtual void setRange(int min, int max);
-            virtual void setMin(int value);
-            virtual void setMax(int value);
+            virtual void setMin(int min);
+            virtual void setMax(int max);
             virtual void setStep(int step);
 
+            virtual bool isInSlideBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
+            virtual bool isInSlideBounds(f32 x, f32 y);
+
+            /************************************************************************/
+            /* Events                                                               */
+            /************************************************************************/
+            Event<int> ValueChange; ///< Occurs when control is clicked by mouse.
+
         protected:
+            virtual void updateSlidePosition();
             virtual void updateColor();
-            virtual void updateTextPosition();
-            virtual void refreshDrawable();
+            virtual void refreshDrawables();
+
+            /************************************************************************/
+            /* Event Handlers                                                       */
+            /************************************************************************/
+            virtual void onMouseDown(Sender s, const MouseButtonEvent& e) override;
+            virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
+            virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
 
             DrawableRect m_drawableBar, m_drawnBar;
             DrawableRect m_drawableSlide, m_drawnSlide;
             color4 m_barColor = color::LightGray;
             color4 m_slideColor = color::DarkGray, m_slideHoverColor = color::LightSlateGray;
-            f32v2 m_slideDimensions = f32v2(10.0f, 20.0f);
             int m_value = 0;
             int m_min = 0;
             int m_max = 10;

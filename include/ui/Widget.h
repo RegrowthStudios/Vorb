@@ -124,6 +124,7 @@ namespace vorb {
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
+            virtual bool isMouseIn() const { return m_isMouseIn; }
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const ControlStyle& getStyle() const { return m_style; }
             virtual const DockStyle& getDock() const { return m_dock; }
@@ -170,8 +171,6 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
-            
-
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

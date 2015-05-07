@@ -12,6 +12,7 @@
 #include <include/graphics/SamplerState.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
+#include <include/ui/CheckBox.h>
 #include <include/ui/Slider.h>
 #include <include/ui/IButton.h>
 #include <include/ui/IGameScreen.h>
@@ -63,7 +64,7 @@ public:
         font.init("Data/chintzy.ttf", 32);
         uiRenderer.init(&font);
 
-        // Load texture
+        // Load texturea
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
@@ -71,6 +72,15 @@ public:
             std::cerr << "Error: Failed to load data/button_test.jpg\n";
         }
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+
+        glGenTextures(1, &checkedTexture);
+        glBindTexture(GL_TEXTURE_2D, checkedTexture);
+        vg::ScopedBitmapResource bmp2 = vg::ImageIO().load("data/checked_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/checked_test.jpg\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp2.data);
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -94,6 +104,14 @@ public:
         slider->ValueChange.addFunctor([](Sender, int value) { printf("Slider ValueChange Event: %d\n", value); });
         m_widgets.push_back(slider);
 
+        vui::CheckBox* checkBox = new vui::CheckBox("TestCheckbox", ui32v4(130, 200, 30, 30));
+        checkBox->setUncheckedTexture(texture);
+        checkBox->setCheckedTexture(checkedTexture);
+        checkBox->setText("Test Checkbox");
+        checkBox->setTextColor(color::Red);
+        checkBox->ValueChange.addFunctor([](Sender, bool value) { printf("CheckBox ValueChange Event: %d\n", (int)value); });
+        m_widgets.push_back(checkBox);
+
         for (auto& w : m_widgets) {
             w->addDrawables(&uiRenderer);
         }
@@ -113,7 +131,7 @@ public:
     std::vector<vui::Widget*> m_widgets;
     vui::UIRenderer uiRenderer;
     vg::SpriteFont font;
-    VGTexture texture;
+    VGTexture texture, checkedTexture;
 };
 
 class VGTestApp : public vui::MainGame {

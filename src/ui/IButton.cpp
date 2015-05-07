@@ -3,7 +3,7 @@
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 
-vui::IButton::IButton() : Widget(){
+vui::IButton::IButton() : Widget() {
     updateColor();
 }
 

@@ -97,11 +97,10 @@ namespace vorb {
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
-            virtual void setBackColor(const color4& color);
-            virtual void setBackHoverColor(const color4& color);
+            virtual void setBoxColor(const color4& color);
+            virtual void setBoxHoverColor(const color4& color);
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
-            virtual void setTextHoverColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
             virtual void setChecked(bool checked);
@@ -109,13 +108,14 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<int> ValueChange; ///< Occurs when control is clicked by mouse.
+            Event<bool> ValueChange; ///< Occurs when control is clicked by mouse.
 
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();
 
+            virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             /************************************************************************/
             /* Members                                                              */

@@ -3,7 +3,7 @@
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 
-vui::Slider::Slider() {
+vui::Slider::Slider() : Widget() {
     updateColor();
     m_drawableSlide.setDimensions(f32v2(15.0f, 30.0f));
 }

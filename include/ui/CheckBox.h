@@ -106,6 +106,11 @@ namespace vorb {
             virtual void setTextScale(const f32v2& textScale);
             virtual void setChecked(bool checked);
 
+            /************************************************************************/
+            /* Events                                                               */
+            /************************************************************************/
+            Event<int> ValueChange; ///< Occurs when control is clicked by mouse.
+
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();

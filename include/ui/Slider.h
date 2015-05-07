@@ -78,7 +78,6 @@ namespace vorb {
             virtual const int& getValue() const { return m_value; }
             virtual const int& getMin() const { return m_min; }
             virtual const int& getMax() const { return m_max; }
-            virtual const int& getStep() const { return m_step; }
             /// Gets slider value scaled between 0.0f and 1.0f
             virtual const f32& getValueScaled() const { return (f32)(m_value - m_min) / (m_max - m_min); }
 
@@ -101,7 +100,6 @@ namespace vorb {
             virtual void setRange(int min, int max);
             virtual void setMin(int min);
             virtual void setMax(int max);
-            virtual void setStep(int step);
 
             virtual bool isInSlideBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
             virtual bool isInSlideBounds(f32 x, f32 y);
@@ -109,7 +107,7 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<int> ValueChange; ///< Occurs when control is clicked by mouse.
+            Event<int> ValueChange; ///< Occurs when the value changes
 
         protected:
             virtual void updateSlidePosition();
@@ -130,7 +128,6 @@ namespace vorb {
             int m_value = 0;
             int m_min = 0;
             int m_max = 10;
-            int m_step = 1;
         };
     }
 }

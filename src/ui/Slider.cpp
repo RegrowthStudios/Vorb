@@ -112,29 +112,26 @@ void vui::Slider::setSlideHoverColor(const color4& color) {
 }
 
 void vui::Slider::setValue(int value) {
+    int old = m_value;
     m_value = glm::clamp(value, m_min, m_max);
+    if (old != m_value) ValueChange(m_value);
     updateSlidePosition();
 }
 
 void vui::Slider::setRange(int min, int max) {
     m_min = min;
     m_max = max;
-    updateSlidePosition();
+    setValue(m_value);
 }
 
 void vui::Slider::setMin(int min) {
     m_min = min;
-    updateSlidePosition();
+    setValue(m_value);
 }
 
 void vui::Slider::setMax(int max) {
     m_max = max;
-    updateSlidePosition();
-}
-
-void vui::Slider::setStep(int step) {
-    m_step = glm::max(step, 1);
-    updateSlidePosition();
+    setValue(m_value);
 }
 
 bool vui::Slider::isInSlideBounds(f32 x, f32 y) {
@@ -211,7 +208,6 @@ void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
         int newValue = round(v * (m_max - m_min)) + m_min;
         if (newValue != m_value) {
             setValue(newValue);
-            ValueChange(m_value);
         }
     }
 }

@@ -40,9 +40,9 @@ namespace vorb {
             /// @return True if no error occurred and properly disposed
             bool dispose();
 
-            /// @return True if this engine is currently initialized
+            /// @return True if this engine is not initialized or has been disposed
             bool isDisposed() const {
-                return (m_alive.get() == nullptr) || *m_alive;
+                return (m_alive.get() == nullptr) || !(*m_alive);
             }
 
             /// Load a sound resource into this engine

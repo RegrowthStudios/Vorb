@@ -61,17 +61,14 @@ namespace vorb {
              * @param name: Name of the container.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            IWidgetContainer(const nString& name, const f32v4& destRect = f32v4(0));
-          
+            IWidgetContainer(const nString& name, const f32v4& destRect = f32v4(0));     
             /*! @brief Destructor that unhooks events */
             virtual ~IWidgetContainer();
-
             /*! @brief Releases all resources used by the Control.
              *
              * Gets called in the destructor.
              */
             virtual void dispose();
-
             /*! @brief Adds a child Widget to the container
              *
              * @param child: The Widget to add
@@ -89,13 +86,10 @@ namespace vorb {
              *  The simplest form could be m_position = m_relativePosition;
              */
             virtual void updatePosition() = 0;
-
             /*! @brief Enables events* */
             virtual void enable();
-
             /*! @brief Disables events* */
             virtual void disable();
-
             /*! @brief Checks if a point is inside the container
              *
              * @param point: The point to check

@@ -72,6 +72,12 @@ namespace vorb {
             */
             virtual void removeDrawables(UIRenderer* renderer) { /* Empty */ }
 
+            /*! @brief Updates the widget. Can be used for animation.
+            *
+            * @param dt: The TimeStep
+            */
+            virtual void update(f32 dt = 1.0f) { }
+
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
 

@@ -41,6 +41,16 @@ bool vui::IWidgetContainer::addWidget(Widget* child) {
     return true; // TODO(Ben): Is this needed?
 }
 
+bool vui::IWidgetContainer::removeWidget(Widget* child) {
+    for (auto& it = m_widgets.begin(); it != m_widgets.end(); it++) {
+        if (*it == child) {
+            m_widgets.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 void vui::IWidgetContainer::enable() {
     m_isEnabled = true;
 }

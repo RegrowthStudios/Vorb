@@ -15,6 +15,7 @@
 #include <include/ui/CheckBox.h>
 #include <include/ui/ComboBox.h>
 #include <include/ui/IButton.h>
+#include <include/ui/Form.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
@@ -63,9 +64,9 @@ public:
     }
     virtual void onEntry(const vui::GameTime& gameTime) {       
         font.init("Data/chintzy.ttf", 32);
-        uiRenderer.init(&font);
+        form.init(&_game->getWindow(), ui32v4(0, 0, m_viewportDims.x, m_viewportDims.y), &font);
 
-        // Load texturea
+        // Load textures
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
@@ -97,13 +98,13 @@ public:
         button->MouseEnter.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseEnter Event\n"); });
         button->MouseLeave.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseLeave Event\n"); });
         button->MouseMove.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseMove Event\n"); });
-        m_widgets.push_back(button);
+        form.addWidget(button);
 
         vui::Slider* slider = new vui::Slider("TestSlider", f32v4(250, 30, 300, 20));
         slider->setBarTexture(texture);
         slider->setSlideTexture(texture);
         slider->ValueChange.addFunctor([](Sender, int value) { printf("Slider ValueChange Event: %d\n", value); });
-        m_widgets.push_back(slider);
+        form.addWidget(slider);
 
         vui::CheckBox* checkBox = new vui::CheckBox("TestCheckbox", f32v4(130, 200, 30, 30));
         checkBox->setUncheckedTexture(texture);
@@ -111,7 +112,7 @@ public:
         checkBox->setText("Test Checkbox");
         checkBox->setTextColor(color::Red);
         checkBox->ValueChange.addFunctor([](Sender, bool value) { printf("CheckBox ValueChange Event: %d\n", (int)value); });
-        m_widgets.push_back(checkBox);
+        form.addWidget(checkBox);
 
         vui::ComboBox* comboBox = new vui::ComboBox("TestCombobox", f32v4(350, 300, 250, 30));
         comboBox->setTexture(texture);
@@ -124,26 +125,21 @@ public:
         comboBox->selectItem(0);
         comboBox->setTextColor(color::Red);
         comboBox->ValueChange.addFunctor([](Sender, const nString& value) { printf("ComboBox ValueChange Event: %s\n", value.c_str()); });
-        m_widgets.push_back(comboBox);
-
-        for (auto& w : m_widgets) {
-            w->addDrawables(&uiRenderer);
-        }
+        form.addWidget(comboBox);
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        uiRenderer.dispose();
+        form.dispose();
         font.dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        uiRenderer.draw(f32v2(800, 600));
+        form.draw();
     }
 
-    std::vector<vui::Widget*> m_widgets;
-    vui::UIRenderer uiRenderer;
+    ui32v2 m_viewportDims = ui32v2(800, 600);
+    vui::Form form;
     vg::SpriteFont font;
     VGTexture texture, checkedTexture;
 };

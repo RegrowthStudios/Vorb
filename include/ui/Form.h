@@ -25,6 +25,7 @@
 #endif // !VORB_USING_PCH\
 
 #include "../VorbPreDecl.inl"
+#include "IWidgetContainer.h"
 #include "UIRenderer.h"
 
 DECL_VG(class SpriteFont; class SpriteBatch)
@@ -36,22 +37,24 @@ namespace vorb {
         class Widget;
         class GameWindow;
 
-        class Form {
+        class Form : public IWidgetContainer {
         public:
             Form();
             virtual ~Form();
 
-            void init(const GameWindow* ownerWindow, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(const GameWindow* ownerWindow, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
 
-            void addWidget(Widget* widget);
+            virtual bool addWidget(Widget* widget) override;
 
-            void removeWidget(Widget* widget);
+            virtual bool removeWidget(Widget* widget) override;
 
-            void update(f32 dt = 1.0f);
+            virtual void updatePosition() override;
 
-            void draw();
+            virtual void update(f32 dt = 1.0f);
 
-            void dispose();
+            virtual void draw();
+
+            virtual void dispose() override;
 
         protected:
             UIRenderer m_renderer;

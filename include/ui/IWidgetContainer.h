@@ -78,6 +78,12 @@ namespace vorb {
              * @return true on success.
              */
             virtual bool addWidget(Widget* child);
+            /*! @brief Removes a Widget from the container
+            *
+            * @param child: The Widget to remove
+            * @return true on success.
+            */
+            virtual bool removeWidget(Widget* child);
 
             /*! @brief Defines how relative position is used to update position.
              *  The simplest form could be m_position = m_relativePosition;

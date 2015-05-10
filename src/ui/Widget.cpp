@@ -73,11 +73,13 @@ void vui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
 
 void vui::Widget::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (isInBounds(e.x, e.y)) {
-        if (!m_isMouseIn) MouseEnter(e);
-        m_isMouseIn = true;
+        if (!m_isMouseIn) {
+            m_isMouseIn = true;
+            MouseEnter(e);
+        }
         MouseMove(e);
-    } else {
-        if (m_isMouseIn) MouseLeave(e);
+    } else if (m_isMouseIn) {
         m_isMouseIn = false;
+        MouseLeave(e);
     }
 }

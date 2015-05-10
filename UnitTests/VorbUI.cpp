@@ -13,12 +13,13 @@
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
 #include <include/ui/CheckBox.h>
-#include <include/ui/Slider.h>
+#include <include/ui/ComboBox.h>
 #include <include/ui/IButton.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
 #include <include/ui/ScreenList.h>
+#include <include/ui/Slider.h>
 #include <include/ui/UIRenderer.h>
 
 struct Vertex {
@@ -111,6 +112,19 @@ public:
         checkBox->setTextColor(color::Red);
         checkBox->ValueChange.addFunctor([](Sender, bool value) { printf("CheckBox ValueChange Event: %d\n", (int)value); });
         m_widgets.push_back(checkBox);
+
+        vui::ComboBox* comboBox = new vui::ComboBox("TestCombobox", ui32v4(350, 300, 250, 30));
+        comboBox->setTexture(texture);
+        comboBox->addItem("TestItem0");
+        comboBox->addItem("TestItem1");
+        comboBox->addItem("TestItem2");
+        comboBox->addItem("TestItem3");
+        comboBox->addItem("TestItem4");
+        comboBox->addItem("TestItem5");
+        comboBox->selectItem(0);
+        comboBox->setTextColor(color::Red);
+        comboBox->ValueChange.addFunctor([](Sender, bool value) { printf("ComboBox ValueChange Event: %d\n", (int)value); });
+        m_widgets.push_back(comboBox);
 
         for (auto& w : m_widgets) {
             w->addDrawables(&uiRenderer);

@@ -108,7 +108,7 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<bool> ValueChange; ///< Occurs when control is clicked by mouse.
+            Event<bool> ValueChange; ///< Occurs when value of the box is changed
 
         protected:
             virtual void updateColor();

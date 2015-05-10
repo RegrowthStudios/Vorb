@@ -73,36 +73,78 @@ namespace vorb {
             */
             virtual void removeDrawables(UIRenderer* renderer) override;
 
+            /*! @brief Adds an item to the combo box
+             * 
+             * @param item: The item to add
+             */
+            virtual void addItem(const nString& item);
+            /*! @brief Adds an item to the combo box at a specific index
+            * and shifts other items accordingly.
+            *
+            * @param index: The index to add at
+            * @param item: The item to add
+            * @return true if successfully added
+            */
+            virtual bool addItemAtIndex(int index, const nString& item);
+            /*! @brief Removes an item from the combo box
+            * If there are multiple instances of the item, only the
+            * first will be removed
+            * @param item: The item to remove
+            * @return true if successfully removed
+            */
+            virtual bool removeItem(const nString& item);
+            /*! @brief Removes an item from the combo box
+            * 
+            * @param item: The index of the item to remove
+            * @return true if successfully removed
+            */
+            virtual bool removeItem(int index);
+            /*! @brief Adds a series of items to the combo box
+            *
+            * @param itemsToAdd: The items to add
+            */
+            virtual void addItems(const std::vector <nString>& itemsToAdd);
+            /*! @brief Selects an item index
+            *
+            * @param index: The index to select
+            * @return true if successfully selected
+            */
+            virtual bool selectItem(int index);
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
+            virtual const vorb::graphics::SpriteFont* getFont() const override;
             virtual const color4& getBackColor() const { return m_backColor; }
             virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
             virtual const color4& getTextColor() const { return m_textColor; }
             virtual const color4& getTextHoverColor() const { return m_textHoverColor; }
-            virtual const nString& getText() const { return m_drawableText.getText(); }
-            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual f32v2 getTextScale() const;
+            virtual const std::vector <nString>& getItems() const { return m_items; }
+            virtual size_t getNumItems() const { return m_items.size(); }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(vorb::graphics::SpriteFont* font) override { m_drawableText.setFont(font); }
+            virtual void setFont(vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
-            virtual void setTexture(VGTexture texture) { m_drawableRect.setTexture(texture); }
+            virtual void setTexture(VGTexture texture);
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
-            virtual void setText(const nString& text) { m_drawableText.setText(text); }
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
-            virtual void setTextScale(const f32v2& textScale) { m_drawableText.setTextScale(textScale); }
+            virtual void setTextScale(const f32v2& textScale);
 
+            /************************************************************************/
+            /* Events                                                               */
+            /************************************************************************/
+            Event<bool> ValueChange; ///< Occurs when selected item is changed
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();
@@ -110,7 +152,6 @@ namespace vorb {
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
-            virtual void onMouseDown(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
 
@@ -118,11 +159,15 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
+            DrawableRect m_drawableDropList, m_drawnDropList;
             DrawableText m_drawableText, m_drawnText;
+            std::list<std::pair<DrawableText, DrawableText> > m_drawableTexts; // Pairs of <drawable, drawn> texts
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
             const vg::SpriteFont* m_defaultFont = nullptr;
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
+            std::vector <nString> m_items; ///< All combo box items
+            int m_selected = -1; ///< Currently selected item index
         };
     }
 }

@@ -110,7 +110,7 @@ namespace vorb {
             f32v2 m_scale = f32v2(1.0f); ///< Scale for font rendering
             f32v4 m_clipRect = f32v4(-1000000.0f, -1000000.0f, 2000000.0f, 2000000.0f);
             nString m_text = ""; ///< Text to be drawn
-            vg::TextAlign m_textAlign = vg::TextAlign::CENTER; ///< Alignment of the text
+            vg::TextAlign m_textAlign = vg::TextAlign::TOP_LEFT; ///< Alignment of the text
         };
     }
 }

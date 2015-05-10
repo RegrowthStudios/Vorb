@@ -109,7 +109,7 @@ void FpsCounter::calculateFPS() {
 
     //Calculate FPS
     if (m_frameTime > 0.0f) {
-        m_fps = MS_PER_SECOND / m_frameTime;
+        m_fps = (f32)(MS_PER_SECOND / m_frameTime);
     } else {
         m_fps = 60.0f;
     }

@@ -5,14 +5,14 @@
 
 vui::ComboBox::ComboBox() : Widget() {
     ValueChange.setSender(this);
+    m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
     updateColor();
 }
 
 vui::ComboBox::ComboBox(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : ComboBox() {
     m_name = name;
     m_destRect = destRect;
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
+    m_mainButton.setDestRect(m_destRect);
     updateTextPosition();
 }
 
@@ -32,8 +32,10 @@ void vui::ComboBox::addDrawables(UIRenderer* renderer) {
     // Make copies
     m_drawnRect = m_drawableRect;
     m_drawableDropList = m_drawableDropList;
-    m_drawnText = m_drawableText;
-    if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
+
+    // Add the main button
+    m_mainButton.removeDrawables(renderer);
+    m_mainButton.addDrawables(renderer);
 
     // Add the rect
     renderer->add(this,
@@ -43,11 +45,6 @@ void vui::ComboBox::addDrawables(UIRenderer* renderer) {
     // Add the drop list
     renderer->add(this,
                   makeDelegate(m_drawnDropList, &DrawableRect::draw),
-                  makeDelegate(*this, &ComboBox::refreshDrawables));
-
-    // Add box text
-    renderer->add(this,
-                  makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &ComboBox::refreshDrawables));
 
     // Add the drop down texts TODO(Ben): Inefficient
@@ -107,8 +104,8 @@ void vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
 
 bool vui::ComboBox::selectItem(int index) {
     if (index > m_items.size()) return false;
-    if (m_items[index] != m_drawableText.getText()) {
-        m_drawableText.setText(m_items[index]);
+    if (m_items[index] != m_mainButton.getText()) {
+        m_mainButton.setText(m_items[index]);
         refreshDrawables();
         ValueChange(m_items[index]);
     }
@@ -123,11 +120,11 @@ bool vui::ComboBox::isInDropBounds(f32 x, f32 y) {
 }
 
 const vorb::graphics::SpriteFont* vui::ComboBox::getFont() const {
-    return m_drawableText.getFont();
+    return m_mainButton.getFont();
 }
 
 f32v2 vui::ComboBox::getTextScale() const {
-    return m_drawableText.getTextScale();
+    return m_mainButton.getTextScale();
 }
 
 void vui::ComboBox::setDimensions(const f32v2& dimensions) {
@@ -137,25 +134,25 @@ void vui::ComboBox::setDimensions(const f32v2& dimensions) {
 }
 
 void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
-    m_drawableText.setFont(font);
+    m_mainButton.setFont(font);
     for (auto& b : m_buttons) b.setFont(font);
     refreshDrawables();
 }
 
 void vui::ComboBox::setHeight(f32 height) {
     Widget::setHeight(height);
-    m_drawableRect.setHeight(height);
+    m_mainButton.setHeight(height);
     updateTextPosition();
 }
 
 void vui::ComboBox::setPosition(const f32v2& position) {
     Widget::setPosition(position);
-    m_drawableRect.setPosition(position);
+    m_mainButton.setPosition(position);
     updateTextPosition();
 }
 
 void vui::ComboBox::setTexture(VGTexture texture) {
-    m_drawableRect.setTexture(texture);
+    m_mainButton.setTexture(texture);
     refreshDrawables();
 }
 
@@ -170,48 +167,52 @@ void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
 
 void vui::ComboBox::setWidth(f32 width) {
     Widget::setWidth(width);
-    m_drawableRect.setWidth(width);
+    m_mainButton.setWidth(width);
     updateTextPosition();
 }
 
 void vui::ComboBox::setX(f32 x) {
     Widget::setX(x);
-    m_drawableRect.setX(x);
+    m_mainButton.setX(x);
     updateTextPosition();
 }
 
 void vui::ComboBox::setY(f32 y) {
     Widget::setY(y);
-    m_drawableRect.setX(y);
+    m_mainButton.setX(y);
     updateTextPosition();
 }
 
 void vui::ComboBox::setBackColor(const color4& color) {
     m_backColor = color;
+    m_mainButton.setBackColor(color);
     for (auto& b : m_buttons)  b.setBackColor(color);
     updateColor();
 }
 
 void vui::ComboBox::setBackHoverColor(const color4& color) {
     m_backHoverColor = color;
+    m_mainButton.setBackHoverColor(color);
     for (auto& b : m_buttons)  b.setBackHoverColor(color);
     updateColor();
 }
 
 void vui::ComboBox::setTextColor(const color4& color) {
     m_textColor = color;
+    m_mainButton.setTextColor(color);
     for (auto& b : m_buttons)  b.setTextColor(color);
     updateColor();
 }
 
 void vui::ComboBox::setTextHoverColor(const color4& color) {
     m_textHoverColor = color;
+    m_mainButton.setTextHoverColor(color);
     for (auto& b : m_buttons) b.setTextHoverColor(color);
     updateColor();
 }
 
 void vui::ComboBox::setTextScale(const f32v2& textScale) {
-    m_drawableText.setTextScale(textScale);
+    m_mainButton.setTextScale(textScale);
     for (auto& it : m_buttons) {
         it.setTextScale(textScale);
     }
@@ -219,7 +220,7 @@ void vui::ComboBox::setTextScale(const f32v2& textScale) {
 }
 
 void vui::ComboBox::updateDropButton(vui::IButton& b) {
-    b.setFont(m_drawableText.getFont());
+    b.setFont(m_mainButton.getFont());
     b.setBackColor(m_backColor);
     b.setBackHoverColor(m_backHoverColor);
     b.setTextColor(m_textColor);
@@ -228,21 +229,20 @@ void vui::ComboBox::updateDropButton(vui::IButton& b) {
 
 void vui::ComboBox::updateColor() {
     if (m_isMouseIn) {
+        m_mainButton.setBackColor(m_backHoverColor);
+        m_mainButton.setTextColor(m_textHoverColor);
         m_drawableRect.setColor(m_backHoverColor);
-        m_drawableText.setColor(m_textHoverColor); 
     } else {
+        m_mainButton.setBackColor(m_backColor);
+        m_mainButton.setTextColor(m_textColor);
         m_drawableRect.setColor(m_backColor);
-        m_drawableText.setColor(m_textColor);
     }
     refreshDrawables();
 }
 
 void vui::ComboBox::updateTextPosition() {
-    const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
 
-    m_drawableText.setClipRect(getDestRect());
-    m_drawableText.setPosition(pos);
     ui32 i = 1;
     for (auto& b : m_buttons) {
         if (m_isDropped) {
@@ -274,15 +274,6 @@ void vui::ComboBox::refreshDrawables() {
     const f32v4 clipRect(dPos.x, dPos.y, dDims.x, dDims.y);
 
     m_drawnRect = m_drawableRect;
-
-    if (!m_drawableText.getFont()) {
-        m_drawableText.setFont(m_defaultFont);
-        m_drawnText = m_drawableText;
-        m_drawableText.setFont(nullptr);
-    } else {
-        m_drawnText = m_drawableText;
-    }
-
 }
 
 void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
@@ -305,11 +296,7 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
-        if (m_isClicking) {
-            MouseClick(e);
-            m_isDropped = !m_isDropped;
-            updateTextPosition();
-        } else if (!isInDropBounds(e.x, e.y) && m_isDropped) {
+        if (!m_isClicking && !isInDropBounds(e.x, e.y) && m_isDropped) {
             m_isDropped = false;
             updateTextPosition();
         }
@@ -323,9 +310,15 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
 void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent& e) {
     vui::IButton* b = (vui::IButton*)s;
     const nString& text = b->getText();
-    if (m_drawableText.getText() != text) {
-        m_drawableText.setText(text);
+    if (m_mainButton.getText() != text) {
+        m_mainButton.setText(text);
         refreshDrawables();
         ValueChange(text);
     }
+}
+
+void vui::ComboBox::onMainButtonClick(Sender s, const MouseButtonEvent& e) {
+    MouseClick(e);
+    m_isDropped = !m_isDropped;
+    updateTextPosition();
 }

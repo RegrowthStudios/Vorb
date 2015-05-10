@@ -168,13 +168,14 @@ namespace vorb {
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onSubButtonClick(Sender s, const MouseButtonEvent& e);
+            virtual void onMainButtonClick(Sender s, const MouseButtonEvent& e);
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableRect m_drawableDropList, m_drawnDropList;
-            DrawableText m_drawableText, m_drawnText;
+            vorb::ui::IButton m_mainButton; // Main button for dropping
             std::list<vorb::ui::IButton> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;

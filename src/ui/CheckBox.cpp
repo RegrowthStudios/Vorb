@@ -18,7 +18,7 @@ vui::CheckBox::CheckBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
 }
 
 vui::CheckBox::CheckBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
-    parent->addChild(this);
+    parent->addWidget(this);
     m_parent = parent;
 }
 

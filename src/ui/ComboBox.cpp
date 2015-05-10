@@ -5,7 +5,7 @@
 
 vui::ComboBox::ComboBox() : Widget() {
     ValueChange.setSender(this);
-    addChild(&m_mainButton);
+    addWidget(&m_mainButton);
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
     updateColor();
 }
@@ -18,7 +18,7 @@ vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
 }
 
 vui::ComboBox::ComboBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
-    parent->addChild(this);
+    parent->addWidget(this);
 }
 
 vui::ComboBox::~ComboBox() {
@@ -62,7 +62,7 @@ void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
     m_buttons.emplace_back();
     auto& b = m_buttons.back();
-    addChild(&b);
+    addWidget(&b);
     b.setText(item);
     if (!m_isDropped) {
         b.disable();

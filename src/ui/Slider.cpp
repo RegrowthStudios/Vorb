@@ -18,7 +18,7 @@ vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
 }
 
 vui::Slider::Slider(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
-    parent->addChild(this);
+    parent->addWidget(this);
     m_parent = parent;
 }
 

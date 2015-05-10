@@ -225,6 +225,9 @@
     <ClCompile Include="src\ui\Form.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\IWidgetContainer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -571,6 +574,9 @@
       <Filter>UI\Controls</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Form.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\IWidgetContainer.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

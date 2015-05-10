@@ -39,7 +39,7 @@ namespace vorb {
         class Form {
         public:
             Form();
-            ~Form();
+            virtual ~Form();
 
             void init(const GameWindow* ownerWindow, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
 

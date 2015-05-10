@@ -16,7 +16,7 @@ vui::IButton::IButton(const nString& name, const f32v4& destRect /*= f32v4(0)*/)
 }
 
 vui::IButton::IButton(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IButton(name, destRect) {
-    parent->addChild(this);
+    parent->addWidget(this);
     m_parent = parent;
 }
 

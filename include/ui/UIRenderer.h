@@ -26,6 +26,7 @@
 
 #include "../VorbPreDecl.inl"
 #include "../graphics/SpriteBatch.h"
+#include "../graphics/GLRenderTarget.h"
 #include "Drawables.h"
 #include <vector>
 
@@ -40,6 +41,7 @@ namespace vorb {
 
         // Forward Declarations
         class Widget;
+        class GameWindow;
 
         class UIRenderer {
         public:
@@ -58,7 +60,8 @@ namespace vorb {
             * @param defaultFont: Optional default font to use for rendering.
             * @param spriteBatch: Optional SpriteBatch to use. Will not init if passed in. If nullptr, will init it's own.
             */
-            virtual void init(vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(vg::SpriteFont* defaultFont = nullptr,
+                              vg::SpriteBatch* spriteBatch = nullptr);
 
             /*! @brief Adds an drawable to be drawn
              * 
@@ -98,6 +101,7 @@ namespace vorb {
             vg::SpriteFont* m_defaultFont = nullptr; ///< Default font if drawable doesn't have one
             vg::SpriteBatch m_defaultSb; ///< Default SpriteBatch if none specified
             vg::SpriteBatch* m_sb = nullptr; ///< SpriteBatch used for rendering
+            bool m_shouldRenderToTexture = false; ///< When true, renders to a framebuffer instead
         };
     }
 }

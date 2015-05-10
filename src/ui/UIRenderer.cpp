@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "UI/UIRenderer.h"
 
+#include "ui/GameWindow.h"
+
 vui::UIRenderer::UIRenderer() {
     // Empty
 }
@@ -9,14 +11,15 @@ vui::UIRenderer::~UIRenderer() {
     // Empty
 }
 
-void vui::UIRenderer::init(vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::UIRenderer::init(vg::SpriteFont* defaultFont /*= nullptr*/,
+                           vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_defaultFont = defaultFont;
     if (spriteBatch) {
         m_sb = spriteBatch;
     } else {
         m_defaultSb.init();
         m_sb = &m_defaultSb;
-    }  
+    }
 }
 
 void vui::UIRenderer::add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc) {

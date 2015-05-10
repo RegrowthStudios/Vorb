@@ -295,11 +295,11 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
-        if (!m_isClicking && !isInDropBounds(e.x, e.y) && m_isDropped) {
+        if (!m_isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
             updateTextPosition();
         }
-    } else if (!isInDropBounds(e.x, e.y) && m_isDropped) {
+    } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
         updateTextPosition();
     }

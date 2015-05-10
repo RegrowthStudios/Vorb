@@ -236,7 +236,7 @@ void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
 
 void vui::CheckBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
-    if (isInBounds(e.x, e.y)) {
+    if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);

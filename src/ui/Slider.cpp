@@ -149,7 +149,7 @@ void vui::Slider::updateSlidePosition() {
     const f32v2& dims = m_drawableSlide.getDimensions();
     f32v2 newPos;
     newPos.x = barPos.x + scale * barDims.x - dims.x * 0.5f;
-    newPos.y = barPos.y + barDims.y * 0.5 - dims.y * 0.5f;
+    newPos.y = barPos.y + barDims.y * 0.5f - dims.y * 0.5f;
     m_drawableSlide.setPosition(newPos);
     refreshDrawables();
 }
@@ -185,7 +185,7 @@ void vui::Slider::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
-    if (isInSlideBounds(e.x, e.y)) {
+    if (isInSlideBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);
@@ -206,7 +206,7 @@ void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
         const f32v2& dims = m_drawableBar.getDimensions();
         float v = glm::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
         // TODO(Ben): Faster round
-        int newValue = round(v * (m_max - m_min)) + m_min;
+        int newValue = (int)round(v * (m_max - m_min)) + m_min;
         if (newValue != m_value) {
             setValue(newValue);
         }

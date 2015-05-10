@@ -79,7 +79,7 @@ namespace vorb {
             virtual const int& getMin() const { return m_min; }
             virtual const int& getMax() const { return m_max; }
             /// Gets slider value scaled between 0.0f and 1.0f
-            virtual const f32& getValueScaled() const { return (f32)(m_value - m_min) / (m_max - m_min); }
+            virtual f32 getValueScaled() const { return (f32)(m_value - m_min) / (m_max - m_min); }
 
             /************************************************************************/
             /* Setters                                                              */

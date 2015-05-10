@@ -3,7 +3,7 @@
 #include "ui/Widget.h"
 #include "ui/GameWindow.h"
 
-vui::Form::Form() {
+vui::Form::Form() : IWidgetContainer() {
     // Empty
 }
 
@@ -13,10 +13,10 @@ vui::Form::~Form() {
 
 void vui::Form::init(const GameWindow* ownerWindow, ui32v4 destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_ownerWindow = ownerWindow;
-    m_position.x = destRect.x;
-    m_position.y = destRect.y;
-    m_dimensions.x = destRect.z;
-    m_dimensions.y = destRect.w;
+    m_position.x = (f32)destRect.x;
+    m_position.y = (f32)destRect.y;
+    m_dimensions.x = (f32)destRect.z;
+    m_dimensions.y = (f32)destRect.w;
     m_renderer.init(defaultFont, spriteBatch);
 }
 
@@ -49,9 +49,7 @@ void vui::Form::update(f32 dt /*= 1.0f*/) {
 }
 
 void vui::Form::draw() {
-    glViewport(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y);
     m_renderer.draw(m_dimensions);
-    glViewport(0, 0, m_ownerWindow->getWidth(), m_ownerWindow->getHeight());
 }
 
 void vui::Form::dispose() {

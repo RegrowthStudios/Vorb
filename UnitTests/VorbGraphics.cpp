@@ -492,10 +492,10 @@ public:
     }
     void walk(vg::Bone& bone, const f32m4& parent, i32 frame) {
         i32 pfi = 0, nfi = 0;
-        while (nfi < bone.numFrames && bone.keyframes[nfi].frame <= frame) nfi++;
+        while (nfi < (i32)bone.numFrames && bone.keyframes[nfi].frame <= frame) nfi++;
         pfi = nfi - 1;
         if (pfi < 0) pfi = 0;
-        if (nfi >= bone.numFrames) nfi = bone.numFrames - 1;
+        if (nfi >= (i32)bone.numFrames) nfi = bone.numFrames - 1;
 
         if (nfi == pfi) {
             // Compute world transform

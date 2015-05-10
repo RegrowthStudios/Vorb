@@ -4,6 +4,7 @@
 #include "ui/UIRenderer.h"
 
 vui::Slider::Slider() : Widget() {
+    ValueChange.setSender(this);
     updateColor();
     m_drawableSlide.setDimensions(f32v2(15.0f, 30.0f));
 }

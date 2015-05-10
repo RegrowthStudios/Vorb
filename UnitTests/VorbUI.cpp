@@ -123,7 +123,7 @@ public:
         comboBox->addItem("TestItem5");
         comboBox->selectItem(0);
         comboBox->setTextColor(color::Red);
-        comboBox->ValueChange.addFunctor([](Sender, bool value) { printf("ComboBox ValueChange Event: %d\n", (int)value); });
+        comboBox->ValueChange.addFunctor([](Sender, const nString& value) { printf("ComboBox ValueChange Event: %s\n", value.c_str()); });
         m_widgets.push_back(comboBox);
 
         for (auto& w : m_widgets) {

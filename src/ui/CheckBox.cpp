@@ -4,6 +4,7 @@
 #include "ui/UIRenderer.h"
 
 vui::CheckBox::CheckBox() : Widget() {
+    ValueChange.setSender(this);
     updateColor();
     setTextAlign(vg::TextAlign::LEFT);
 }
@@ -77,7 +78,7 @@ void vui::CheckBox::setDimensions(const f32v2& dimensions) {
     updateTextPosition();
 }
 
-void vui::CheckBox::setFont(vg::SpriteFont* font) {
+void vui::CheckBox::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
     refreshDrawables();
 }
@@ -222,6 +223,7 @@ void vui::CheckBox::refreshDrawables() {
 }
 
 void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
+    if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
         if (m_isClicking) {
@@ -233,6 +235,7 @@ void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::CheckBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    if (!m_isEnabled) return;
     if (isInBounds(e.x, e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;

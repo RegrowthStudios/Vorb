@@ -89,7 +89,7 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(vorb::graphics::SpriteFont* font) override;
+            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
             virtual void setCheckedTexture(VGTexture texture);

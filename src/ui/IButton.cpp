@@ -174,6 +174,7 @@ void vui::IButton::refreshDrawables() {
 }
 
 void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    if (!m_isEnabled) return;
     if (isInBounds(e.x, e.y)) {  
         if (!m_isMouseIn) {
             m_isMouseIn = true;

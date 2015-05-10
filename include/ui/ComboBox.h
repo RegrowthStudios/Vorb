@@ -26,6 +26,7 @@
 
 #include "Drawables.h"
 #include "Widget.h"
+#include "IButton.h"
 
 namespace vorb {
     namespace ui {
@@ -39,6 +40,7 @@ namespace vorb {
             DROP_DOWN_LIST
         };
 
+        // TODO(Ben): Proper combo box
         class ComboBox : public Widget {
         public:
             /*! @brief Default constructor. */
@@ -111,6 +113,14 @@ namespace vorb {
             */
             virtual bool selectItem(int index);
 
+            /*! @brief Checks if a point is inside the drop window
+            *
+            * @param point: The point to check
+            * @return true if point is in m_destRect
+            */
+            virtual bool isInDropBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
+            virtual bool isInDropBounds(f32 x, f32 y);
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -128,10 +138,12 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(vorb::graphics::SpriteFont* font) override;
+            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
             virtual void setTexture(VGTexture texture);
+            virtual void setDropBoxTexture(VGTexture texture);
+            virtual void setDropButtonTexture(VGTexture texture);
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
@@ -144,16 +156,18 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<bool> ValueChange; ///< Occurs when selected item is changed
+            Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
+            virtual void updateDropButton(vorb::ui::IButton& b);
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
-            virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+            virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
+            virtual void onSubButtonClick(Sender s, const MouseButtonEvent& e);
 
             /************************************************************************/
             /* Members                                                              */
@@ -161,13 +175,12 @@ namespace vorb {
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableRect m_drawableDropList, m_drawnDropList;
             DrawableText m_drawableText, m_drawnText;
-            std::list<std::pair<DrawableText, DrawableText> > m_drawableTexts; // Pairs of <drawable, drawn> texts
+            std::list<vorb::ui::IButton> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
             const vg::SpriteFont* m_defaultFont = nullptr;
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items
-            int m_selected = -1; ///< Currently selected item index
             bool m_isDropped = false;
         };
     }

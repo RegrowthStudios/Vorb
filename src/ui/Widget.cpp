@@ -2,11 +2,20 @@
 #include "UI/Widget.h"
 #include "UI/InputDispatcher.h"
 
-vui::Widget::Widget() {
+vui::Widget::Widget() :
+    MouseClick(this),
+    MouseDown(this),
+    MouseUp(this),
+    MouseEnter(this),
+    MouseLeave(this),
+    MouseMove(this) {
     m_anchor = {};
     m_style = {};
     m_dock = DockStyle::NONE;
     enable();
+    vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &Widget::onMouseDown);
+    vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &Widget::onMouseUp);
+    vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &Widget::onMouseMove);
 }
 
 vui::Widget::Widget(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Widget() {
@@ -24,7 +33,9 @@ vui::Widget::~Widget() {
 }
 
 void vui::Widget::dispose() {
-    // TODO(Ben): Implement
+    vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &Widget::onMouseDown);
+    vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &Widget::onMouseUp);
+    vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &Widget::onMouseMove);
 }
 
 bool vui::Widget::addChild(Widget* child) {
@@ -34,18 +45,12 @@ bool vui::Widget::addChild(Widget* child) {
 
 void vui::Widget::enable() {
     if (!m_isEnabled) {
-        vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &Widget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &Widget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &Widget::onMouseMove);
         m_isEnabled = true;
     }
 }
 
 void vui::Widget::disable() {
     if (m_isEnabled) {
-        vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &Widget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &Widget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &Widget::onMouseMove);
         m_isEnabled = false;
         m_isClicking = false;
     }
@@ -57,6 +62,7 @@ bool vui::Widget::isInBounds(f32 x, f32 y) {
 }
 
 void vui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {
+    if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseDown(e);
         m_isClicking = true;
@@ -64,6 +70,7 @@ void vui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
+    if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
         if (m_isClicking) MouseClick(e);
@@ -72,6 +79,7 @@ void vui::Widget::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::Widget::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    if (!m_isEnabled) return;
     if (isInBounds(e.x, e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;

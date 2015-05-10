@@ -150,7 +150,7 @@ namespace vorb {
             virtual void setDock(const DockStyle& dock) { m_dock = dock; }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setFont(vorb::graphics::SpriteFont* font) { m_font = font; }
+            virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setHeight(f32 height) { m_destRect.w = height; }
             virtual void setPosition(const f32v2& position) { m_destRect.x = position.x; m_destRect.y = position.y; }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
@@ -182,7 +182,7 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             Widget* m_parent = nullptr;
-            vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
+            const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             AnchorStyle m_anchor; ///< The anchor data.
             ControlStyle m_style; ///< The current style.
             DockStyle m_dock; ///< The dock type.

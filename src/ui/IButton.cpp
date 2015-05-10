@@ -106,7 +106,7 @@ void vui::IButton::setTextHoverColor(const color4& color) {
 
 void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
-    refreshDrawables();
+    updateTextPosition();
 }
 
 void vui::IButton::updateColor() {

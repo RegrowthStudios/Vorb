@@ -168,6 +168,7 @@ namespace vorb {
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items
             int m_selected = -1; ///< Currently selected item index
+            bool m_isDropped = false;
         };
     }
 }

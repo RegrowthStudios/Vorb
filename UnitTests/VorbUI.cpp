@@ -87,9 +87,9 @@ public:
 
         // Set up widgets
         vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 125, 125));
+        button->setTextAlign(vg::TextAlign::CENTER);
         button->setTexture(texture);
         button->setText("Test Button");
-        button->setTextAlign(vg::TextAlign::CENTER);
         button->setTextColor(color::Red);
         button->MouseClick.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseClick Event\n"); });
         button->MouseDown.addFunctor([](Sender, const vui::MouseButtonEvent& e) { printf("Button MouseDown Event\n"); });

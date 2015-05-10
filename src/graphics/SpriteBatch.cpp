@@ -285,15 +285,16 @@ void vg::SpriteBatch::generateBatches() {
 
     // Upload index data if needed
     if (m_indexCapacity < indexCount) {
-        ui32 start = m_indexCapacity;
+       
         m_indexCapacity = indexCount;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
         // Orphan the buffer for speed
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(ui32), nullptr, m_bufUsage);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCapacity * sizeof(ui32), nullptr, m_bufUsage);
+        
         // Generate indices
-        std::vector<ui32> indices(indexCount - start);
+        std::vector<ui32> indices(m_indexCapacity);
         ui32 i = 0;
-        for (ui32 v = start; i < indexCount; v += 4u) {
+        for (ui32 v = 0; i < indices.size(); v += 4u) {
             indices[i++] = v;
             indices[i++] = v + 2;
             indices[i++] = v + 3;
@@ -302,7 +303,7 @@ void vg::SpriteBatch::generateBatches() {
             indices[i++] = v;
         }
         // Set data
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, start * sizeof(ui32), indexCount * sizeof(ui32), indices.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices.size() * sizeof(ui32), indices.data());
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);

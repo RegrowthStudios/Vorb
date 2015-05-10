@@ -42,7 +42,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            CheckBox(const nString& name, const ui32v4& destRect = ui32v4(0));
+            CheckBox(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
@@ -51,7 +51,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            CheckBox(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
+            CheckBox(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~CheckBox();
 

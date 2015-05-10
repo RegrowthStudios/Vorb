@@ -7,15 +7,15 @@ vui::IButton::IButton() : Widget() {
     updateColor();
 }
 
-vui::IButton::IButton(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton() {
+vui::IButton::IButton(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IButton() {
     m_name = name;
-    m_destRect = destRect;
+    setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
     updateTextPosition();
 }
 
-vui::IButton::IButton(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : IButton(name, destRect) {
+vui::IButton::IButton(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IButton(name, destRect) {
     parent->addChild(this);
     m_parent = parent;
 }
@@ -48,9 +48,27 @@ void vui::IButton::removeDrawables(UIRenderer* renderer) {
     renderer->remove(this);
 }
 
+void vui::IButton::updatePosition() {
+    Widget::updatePosition();
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+    updateTextPosition();
+}
+
+void vui::IButton::setDestRect(const f32v4& destRect) {
+    vui::Widget::setDestRect(destRect);
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+}
+
 void vui::IButton::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
     m_drawableRect.setDimensions(dimensions);
+    updateTextPosition();
+}
+
+void vui::IButton::setFont(const vorb::graphics::SpriteFont* font) {
+    m_font = font;
     updateTextPosition();
 }
 
@@ -62,8 +80,13 @@ void vui::IButton::setHeight(f32 height) {
 
 void vui::IButton::setPosition(const f32v2& position) {
     Widget::setPosition(position);
-    m_drawableRect.setPosition(position);
+    m_drawableRect.setPosition(m_position);
     updateTextPosition();
+}
+
+void vui::IButton::setTexture(VGTexture texture) {
+    m_drawableRect.setTexture(texture);
+    refreshDrawables();
 }
 
 void vui::IButton::setWidth(f32 width) {
@@ -74,13 +97,13 @@ void vui::IButton::setWidth(f32 width) {
 
 void vui::IButton::setX(f32 x) {
     Widget::setX(x);
-    m_drawableRect.setX(x);
+    m_drawableRect.setX(m_position.x);
     updateTextPosition();
 }
 
 void vui::IButton::setY(f32 y) {
     Widget::setY(y);
-    m_drawableRect.setX(y);
+    m_drawableRect.setX(m_position.y);
     updateTextPosition();
 }
 
@@ -92,6 +115,11 @@ void vui::IButton::setBackColor(const color4& color) {
 void vui::IButton::setBackHoverColor(const color4& color) {
     m_backHoverColor = color;
     updateColor();
+}
+
+void vui::IButton::setText(const nString& text) {
+    m_drawableText.setText(text);
+    updateTextPosition();
 }
 
 void vui::IButton::setTextColor(const color4& color) {
@@ -106,6 +134,11 @@ void vui::IButton::setTextHoverColor(const color4& color) {
 
 void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
+    updateTextPosition();
+}
+
+void vui::IButton::setTextScale(const f32v2& textScale) {
+    m_drawableText.setTextScale(textScale);
     updateTextPosition();
 }
 
@@ -124,7 +157,7 @@ void vui::IButton::updateTextPosition() {
     const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
-    m_drawableText.setClipRect(getDestRect());
+    m_drawableText.setClipRect(f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y));
 
     // TODO(Ben): Padding
     switch (textAlign) {
@@ -175,7 +208,7 @@ void vui::IButton::refreshDrawables() {
 
 void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
-    if (isInBounds(e.x, e.y)) {  
+    if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);

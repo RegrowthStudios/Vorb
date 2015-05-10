@@ -18,12 +18,12 @@ vui::Widget::Widget() :
     vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &Widget::onMouseMove);
 }
 
-vui::Widget::Widget(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Widget() {
+vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget() {
     m_name = name;
-    m_destRect = destRect;
+    setDestRect(destRect);
 }
 
-vui::Widget::Widget(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Widget(name, destRect) {
+vui::Widget::Widget(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
     parent->addChild(this);
     m_parent = parent;
 }
@@ -40,7 +40,22 @@ void vui::Widget::dispose() {
 
 bool vui::Widget::addChild(Widget* child) {
     m_widgets.push_back(child);
+    child->setParent(this);
+    child->updatePosition();
     return true; // TODO(Ben): Is this needed?
+}
+
+void vui::Widget::updatePosition() {
+    f32v2 newPos = m_relativePosition;
+    if (m_parent) {
+        newPos += m_parent->getPosition();
+    }
+    m_position = newPos;
+    
+    // Update child positions
+    for (auto& w : m_widgets) {
+        w->updatePosition();
+    }
 }
 
 void vui::Widget::enable() {
@@ -57,8 +72,16 @@ void vui::Widget::disable() {
 }
 
 bool vui::Widget::isInBounds(f32 x, f32 y) {
-    return (x >= m_destRect.x && x <= m_destRect.x + m_destRect.z &&
-            y >= m_destRect.y && y <= m_destRect.y + m_destRect.w);
+    return (x >= m_position.x && x <= m_position.x + m_dimensions.x &&
+            y >= m_position.y && y <= m_position.y + m_dimensions.y);
+}
+
+void vui::Widget::setDestRect(const f32v4& destRect) {
+    m_relativePosition.x = destRect.x;
+    m_relativePosition.y = destRect.y;
+    m_dimensions.x = destRect.z;
+    m_dimensions.y = destRect.w;
+    updatePosition();
 }
 
 void vui::Widget::onMouseDown(Sender s, const MouseButtonEvent& e) {

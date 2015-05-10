@@ -9,15 +9,15 @@ vui::Slider::Slider() : Widget() {
     m_drawableSlide.setDimensions(f32v2(15.0f, 30.0f));
 }
 
-vui::Slider::Slider(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Slider() {
+vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
     m_name = name;
-    m_destRect = destRect;
+    setDestRect(destRect);
     m_drawableBar.setDimensions(getDimensions());
     m_drawableBar.setPosition(getPosition());
     updateSlidePosition();
 }
 
-vui::Slider::Slider(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : Slider(name, destRect) {
+vui::Slider::Slider(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
     parent->addChild(this);
     m_parent = parent;
 }

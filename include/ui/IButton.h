@@ -42,7 +42,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(const nString& name, const ui32v4& destRect = ui32v4(0));
+            IButton(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
@@ -51,7 +51,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
+            IButton(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~IButton(); // TODO(Ben): Maybe make abstract?
 
@@ -66,6 +66,9 @@ namespace vorb {
             * @param renderer: UIRenderer to remove from
             */
             virtual void removeDrawables(UIRenderer* renderer) override;
+
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -83,21 +86,22 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            virtual void setDestRect(const f32v4& destRect) override;
             virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
-            virtual void setTexture(VGTexture texture) { m_drawableRect.setTexture(texture); }
+            virtual void setTexture(VGTexture texture);
             virtual void setWidth(f32 width) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
-            virtual void setText(const nString& text) { m_drawableText.setText(text); }
+            virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale) { m_drawableText.setTextScale(textScale); }
+            virtual void setTextScale(const f32v2& textScale);
 
         protected:
             virtual void updateColor();

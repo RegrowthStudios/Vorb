@@ -86,7 +86,7 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Set up widgets
-        vui::IButton* button = new vui::IButton("TestButton", ui32v4(30, 30, 125, 125));
+        vui::IButton* button = new vui::IButton("TestButton", f32v4(30, 30, 125, 125));
         button->setTextAlign(vg::TextAlign::CENTER);
         button->setTexture(texture);
         button->setText("Test Button");
@@ -99,13 +99,13 @@ public:
         button->MouseMove.addFunctor([](Sender, const vui::MouseMotionEvent& e) { printf("Button MouseMove Event\n"); });
         m_widgets.push_back(button);
 
-        vui::Slider* slider = new vui::Slider("TestSlider", ui32v4(250, 30, 300, 20));
+        vui::Slider* slider = new vui::Slider("TestSlider", f32v4(250, 30, 300, 20));
         slider->setBarTexture(texture);
         slider->setSlideTexture(texture);
         slider->ValueChange.addFunctor([](Sender, int value) { printf("Slider ValueChange Event: %d\n", value); });
         m_widgets.push_back(slider);
 
-        vui::CheckBox* checkBox = new vui::CheckBox("TestCheckbox", ui32v4(130, 200, 30, 30));
+        vui::CheckBox* checkBox = new vui::CheckBox("TestCheckbox", f32v4(130, 200, 30, 30));
         checkBox->setUncheckedTexture(texture);
         checkBox->setCheckedTexture(checkedTexture);
         checkBox->setText("Test Checkbox");
@@ -113,7 +113,7 @@ public:
         checkBox->ValueChange.addFunctor([](Sender, bool value) { printf("CheckBox ValueChange Event: %d\n", (int)value); });
         m_widgets.push_back(checkBox);
 
-        vui::ComboBox* comboBox = new vui::ComboBox("TestCombobox", ui32v4(350, 300, 250, 30));
+        vui::ComboBox* comboBox = new vui::ComboBox("TestCombobox", f32v4(350, 300, 250, 30));
         comboBox->setTexture(texture);
         comboBox->addItem("TestItem0");
         comboBox->addItem("TestItem1");

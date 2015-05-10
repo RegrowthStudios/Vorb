@@ -66,7 +66,7 @@ namespace vorb {
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            Widget(const nString& name, const ui32v4& destRect = ui32v4(0));
+            Widget(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
              *
              * The control will be made a child of parent.
@@ -75,7 +75,7 @@ namespace vorb {
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            Widget(Widget* parent, const nString& name, const ui32v4& destRect = ui32v4(0));
+            Widget(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
 
@@ -104,6 +104,9 @@ namespace vorb {
             */
             virtual void removeDrawables(UIRenderer* renderer) { /* Empty */ }
 
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition();
+
             /*! @brief Enables events* */
             virtual void enable(); 
 
@@ -130,13 +133,13 @@ namespace vorb {
             virtual const DockStyle& getDock() const { return m_dock; }
             virtual const bool& isRenderInit() const { return m_isRenderInit; }
             virtual const bool& isEnabled() const { return m_isEnabled; }
-            virtual const f32& getHeight() const { return m_destRect.w; }
-            virtual const f32& getWidth() const { return m_destRect.z; }
-            virtual const f32& getX() const { return m_destRect.x; }
-            virtual const f32& getY() const { return m_destRect.y; }
-            virtual const f32v2& getDimensions() const { return *(f32v2*)(&m_destRect.z); }
-            virtual const f32v2& getPosition() const { return *(f32v2*)(&m_destRect.x); }
-            virtual const f32v4& getDestRect() const { return m_destRect; }
+            virtual const f32& getHeight() const { return m_dimensions.y; }
+            virtual const f32& getWidth() const { return m_dimensions.x; }
+            virtual const f32& getX() const { return m_position.x; }
+            virtual const f32& getY() const { return m_position.y; }
+            virtual const f32v2& getDimensions() const { return m_dimensions; }
+            virtual const f32v2& getPosition() const { return m_position; }
+            virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             
@@ -145,19 +148,19 @@ namespace vorb {
             /************************************************************************/
             // TODO(Ben): Propagate changes to children
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
-            virtual void setDestRect(const f32v4& destRect) { m_destRect = destRect; }
-            virtual void setDimensions(const f32v2& dimensions) { m_destRect.z = dimensions.x; m_destRect.w = dimensions.y; }
+            virtual void setDestRect(const f32v4& destRect);
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }
             virtual void setDock(const DockStyle& dock) { m_dock = dock; }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
-            virtual void setHeight(f32 height) { m_destRect.w = height; }
-            virtual void setPosition(const f32v2& position) { m_destRect.x = position.x; m_destRect.y = position.y; }
+            virtual void setHeight(f32 height) { m_dimensions.y = height; }
+            virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ControlStyle& style) { m_style = style; }
-            virtual void setWidth(f32 width) { m_destRect.z = width; }
-            virtual void setX(f32 x) { m_destRect.x = x; }
-            virtual void setY(f32 y) { m_destRect.y = y; }
+            virtual void setWidth(f32 width) { m_dimensions.x = width; }
+            virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
+            virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -171,6 +174,7 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            virtual void setParent(Widget* parent) { m_parent = parent; }
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -181,13 +185,15 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            Widget* m_parent = nullptr;
+            Widget* m_parent = nullptr; ///< Widget that this widget is relative to
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             AnchorStyle m_anchor; ///< The anchor data.
             ControlStyle m_style; ///< The current style.
             DockStyle m_dock; ///< The dock type.
             std::vector<Widget*> m_widgets; ///< All child widgets.
-            f32v4 m_destRect = f32v4(0.0f); ///< The position and dimensions.
+            f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent
+            f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
+            f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
             nString m_name = ""; ///< Display name of the control
 
             // TODO(Ben): Bitfield for memory reduction?

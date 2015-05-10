@@ -9,15 +9,15 @@ vui::CheckBox::CheckBox() : Widget() {
     setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::CheckBox::CheckBox(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : CheckBox() {
+vui::CheckBox::CheckBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox() {
     m_name = name;
-    m_destRect = destRect;
+    setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
     updateTextPosition();
 }
 
-vui::CheckBox::CheckBox(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : CheckBox(name, destRect) {
+vui::CheckBox::CheckBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
     parent->addChild(this);
     m_parent = parent;
 }

@@ -5,20 +5,20 @@
 
 vui::ComboBox::ComboBox() : Widget() {
     ValueChange.setSender(this);
+    addChild(&m_mainButton);
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
     updateColor();
 }
 
-vui::ComboBox::ComboBox(const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : ComboBox() {
+vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
     m_name = name;
-    m_destRect = destRect;
-    m_mainButton.setDestRect(m_destRect);
+    setDestRect(destRect);
+    m_mainButton.setDimensions(m_dimensions);
     updateTextPosition();
 }
 
-vui::ComboBox::ComboBox(Widget* parent, const nString& name, const ui32v4& destRect /*= ui32v4(0)*/) : ComboBox(name, destRect) {
+vui::ComboBox::ComboBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
     parent->addChild(this);
-    m_parent = parent;
 }
 
 vui::ComboBox::~ComboBox() {
@@ -62,13 +62,14 @@ void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
     m_buttons.emplace_back();
     auto& b = m_buttons.back();
+    addChild(&b);
     b.setText(item);
     if (!m_isDropped) {
         b.disable();
     }
     b.MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
     updateDropButton(b);
-    b.setDestRect(m_destRect);
+    b.setDimensions(m_dimensions);
     updateTextPosition();
 }
 
@@ -103,7 +104,7 @@ void vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
 }
 
 bool vui::ComboBox::selectItem(int index) {
-    if (index > m_items.size()) return false;
+    if (index > (int)m_items.size()) return false;
     if (m_items[index] != m_mainButton.getText()) {
         m_mainButton.setText(m_items[index]);
         refreshDrawables();
@@ -147,7 +148,7 @@ void vui::ComboBox::setHeight(f32 height) {
 
 void vui::ComboBox::setPosition(const f32v2& position) {
     Widget::setPosition(position);
-    m_mainButton.setPosition(position);
+    m_mainButton.setPosition(m_position);
     updateTextPosition();
 }
 
@@ -173,13 +174,13 @@ void vui::ComboBox::setWidth(f32 width) {
 
 void vui::ComboBox::setX(f32 x) {
     Widget::setX(x);
-    m_mainButton.setX(x);
+    m_mainButton.setX(m_position.x);
     updateTextPosition();
 }
 
 void vui::ComboBox::setY(f32 y) {
     Widget::setY(y);
-    m_mainButton.setX(y);
+    m_mainButton.setX(m_position.y);
     updateTextPosition();
 }
 
@@ -241,13 +242,11 @@ void vui::ComboBox::updateColor() {
 }
 
 void vui::ComboBox::updateTextPosition() {
-    const f32v2& pos = getPosition();
-
     ui32 i = 1;
     for (auto& b : m_buttons) {
         if (m_isDropped) {
             b.enable();
-            b.setPosition(pos + f32v2(0.0f, i * getHeight()));
+            b.setPosition(f32v2(0.0f, i * getHeight()));
             b.setDimensions(getDimensions());
         } else {
             b.disable();
@@ -278,7 +277,7 @@ void vui::ComboBox::refreshDrawables() {
 
 void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
-    if (isInBounds(e.x, e.y)) {
+    if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);

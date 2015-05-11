@@ -293,4 +293,3 @@ TEST(SoloWindow) {
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
 }
-

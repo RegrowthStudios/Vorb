@@ -39,7 +39,7 @@ namespace vorb {
             virtual ~FormScriptEnvironment();
             virtual bool init(Form* form, const cString filePath);
         protected:
-            
+            virtual void registerConstants();
             virtual vui::Widget* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);
 
             Form* m_form = nullptr;

@@ -25,6 +25,9 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_buttonFuncs.registerFuncs("Button", m_env);
     }
 
+    // Initialize enums and constants
+    registerConstants();
+
     // Load script
     if (!m_env.load(filePath)) {
         fprintf(stderr, "Failed to load FormScriptEnvironment script %s\n", filePath);
@@ -36,7 +39,37 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_init();
     }
 
+
+
     return true;
+}
+
+void vorb::ui::FormScriptEnvironment::registerConstants() {
+    // Set enums
+    { // vg::TextAlign
+        m_env.setNamespaces("TextAlign");
+        m_env.addValue("LEFT", vg::TextAlign::LEFT);
+        m_env.addValue("TOP_LEFT", vg::TextAlign::TOP_LEFT);
+        m_env.addValue("TOP", vg::TextAlign::TOP);
+        m_env.addValue("TOP_RIGHT", vg::TextAlign::TOP_RIGHT);
+        m_env.addValue("RIGHT", vg::TextAlign::RIGHT);
+        m_env.addValue("BOTTOM_RIGHT", vg::TextAlign::BOTTOM_RIGHT);
+        m_env.addValue("BOTTOM", vg::TextAlign::BOTTOM);
+        m_env.addValue("BOTTOM_LEFT", vg::TextAlign::BOTTOM_LEFT);
+        m_env.addValue("CENTER", vg::TextAlign::CENTER);
+        m_env.setNamespaces();
+    }
+    { // vui::DockStyle
+        m_env.setNamespaces("DockStyle");
+        m_env.addValue("NONE", DockStyle::NONE);
+        m_env.addValue("LEFT", DockStyle::LEFT);
+        m_env.addValue("RIGHT", DockStyle::RIGHT);
+        m_env.addValue("BOTTOM", DockStyle::BOTTOM);
+        m_env.addValue("TOP", DockStyle::TOP);
+        m_env.addValue("FILL", DockStyle::FILL);
+        m_env.setNamespaces();
+    }
+
 }
 
 vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {

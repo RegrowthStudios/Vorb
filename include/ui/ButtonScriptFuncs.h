@@ -59,7 +59,7 @@ namespace vorb {
             virtual void setText(Button* b, nString text);
             virtual void setTextColor(Button* b, color4 color);
             virtual void setTextHoverColor(Button* b, color4 color);
-            virtual void setTextAlign(Button* b, int textAlign);
+            virtual void setTextAlign(Button* b, vg::TextAlign textAlign);
             virtual void setTextScale(Button* b, f32v2 textScale);
         };
     }

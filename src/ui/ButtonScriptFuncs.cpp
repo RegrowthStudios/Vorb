@@ -93,8 +93,8 @@ void vorb::ui::ButtonScriptFuncs::setTextHoverColor(Button* b, color4 color) {
     b->setTextHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextAlign(Button* b, int textAlign) {
-    b->setTextAlign((vg::TextAlign)textAlign);
+void vorb::ui::ButtonScriptFuncs::setTextAlign(Button* b, vg::TextAlign textAlign) {
+    b->setTextAlign(textAlign);
 }
 
 void vorb::ui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) {

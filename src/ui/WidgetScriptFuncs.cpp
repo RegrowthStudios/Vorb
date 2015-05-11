@@ -2,11 +2,15 @@
 #include "ui/WidgetScriptFuncs.h"
 #include "ui/Widget.h"
 #include "script/Environment.h"
+#include "VorbPreDecl.inl"
+
+DECL_VUI(class ButtonScriptFuncs)
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
+#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
+#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
 
+template <class T = WidgetScriptFuncs>
 void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     env.setNamespaces(nSpace);
 
@@ -30,6 +34,7 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_RDEL(env, getWidgets);
         // Setters
         REGISTER_DEL(env, setAnchor);
+        REGISTER_DEL(env, setDestRect);
         REGISTER_DEL(env, setDimensions);
         REGISTER_DEL(env, setDock);
         REGISTER_DEL(env, setFixedHeight);
@@ -48,6 +53,9 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
     }
     env.setNamespaces();
 }
+// Explicit templates so we can have code in the cpp file
+template void vui::WidgetScriptFuncs::registerFuncs<vui::WidgetScriptFuncs>(const cString nSpace, vscript::Environment& env);
+template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
@@ -165,9 +173,14 @@ void vui::WidgetScriptFuncs::setAnchor(WidgetID id, int anchor) {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setDimensions(WidgetID id, f32 width, f32 height) {
+void vui::WidgetScriptFuncs::setDestRect(WidgetID id, f32v4 destRect) {
     Widget* w = getWidget(id);
-    w->setDimensions(f32v2(width, height));
+    w->setDestRect(destRect);
+}
+
+void vui::WidgetScriptFuncs::setDimensions(WidgetID id, f32v2 dims) {
+    Widget* w = getWidget(id);
+    w->setDimensions(dims);
 }
 
 void vui::WidgetScriptFuncs::setDock(WidgetID id, int dock) {
@@ -189,9 +202,9 @@ void vui::WidgetScriptFuncs::setHeight(WidgetID id, f32 height) {
     w->setHeight(height);
 }
 
-void vui::WidgetScriptFuncs::setPosition(WidgetID id, f32 x, f32 y) {
+void vui::WidgetScriptFuncs::setPosition(WidgetID id, f32v2 pos) {
     Widget* w = getWidget(id);
-    w->setPosition(f32v2(x, y));
+    w->setPosition(pos);
 }
 
 void vui::WidgetScriptFuncs::setSelectable(WidgetID id, bool selectable) {

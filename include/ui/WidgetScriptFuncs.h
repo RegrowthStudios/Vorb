@@ -40,6 +40,7 @@ namespace vorb {
 
         class WidgetScriptFuncs {
         public:
+            template <class T = WidgetScriptFuncs>
             virtual void registerFuncs(const cString nSpace, vscript::Environment& env);
             virtual WidgetID registerWidget(Widget* widget);
             virtual void unregisterWidget(WidgetID id);
@@ -80,12 +81,13 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setAnchor(WidgetID id, int anchor);
-            virtual void setDimensions(WidgetID id, f32 width, f32 height);
+            virtual void setDestRect(WidgetID id, f32v4 destRect);
+            virtual void setDimensions(WidgetID id, f32v2 dims);
             virtual void setDock(WidgetID id, int dock);
             virtual void setFixedHeight(WidgetID id, bool fixedHeight);
             virtual void setFixedWidth(WidgetID id, bool fixedWidth);
             virtual void setHeight(WidgetID id, f32 height);
-            virtual void setPosition(WidgetID id, f32 x, f32 y);
+            virtual void setPosition(WidgetID id, f32v2 pos);
             virtual void setSelectable(WidgetID id, bool selectable);
             virtual void setStyle(WidgetID id, int style);
             virtual void setWidth(WidgetID id, f32 width);

@@ -4,6 +4,7 @@
 #include "graphics/GLEnums.h"
 
 void vscript::GraphicsScriptingInterface::registerGraphics(vscript::Environment& env) {
+    env.setNamespaces();
     textureCache.registerTextureCache(env);
     registerConstants(env);
     registerFunctions(env);
@@ -182,6 +183,42 @@ void vscript::GraphicsScriptingInterface::registerConstants(vscript::Environment
         env.addValue("UNSIGNED_SHORT_5_5_5_1", vg::TexturePixelType::UNSIGNED_SHORT_5_5_5_1);
         env.addValue("UNSIGNED_SHORT_5_6_5", vg::TexturePixelType::UNSIGNED_SHORT_5_6_5);
         env.setNamespaces();
+    }
+    { // vg::TextureTarget
+        env.setNamespaces("TextureTarget");
+        env.addValue("NONE", vg::TextureTarget::NONE);
+        env.addValue("PROXY_TEXTURE_1D", vg::TextureTarget::PROXY_TEXTURE_1D);
+        env.addValue("PROXY_TEXTURE_1D_ARRAY", vg::TextureTarget::PROXY_TEXTURE_1D_ARRAY);
+        env.addValue("PROXY_TEXTURE_2D", vg::TextureTarget::PROXY_TEXTURE_2D);
+        env.addValue("PROXY_TEXTURE_2D_ARRAY", vg::TextureTarget::PROXY_TEXTURE_2D_ARRAY);
+        env.addValue("PROXY_TEXTURE_2D_MULTISAMPLE", vg::TextureTarget::PROXY_TEXTURE_2D_MULTISAMPLE);
+        env.addValue("PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY", vg::TextureTarget::PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY);
+        env.addValue("PROXY_TEXTURE_3D", vg::TextureTarget::PROXY_TEXTURE_3D);
+        env.addValue("PROXY_TEXTURE_CUBE_MAP", vg::TextureTarget::PROXY_TEXTURE_CUBE_MAP);
+        env.addValue("PROXY_TEXTURE_CUBE_MAP_ARRAY", vg::TextureTarget::PROXY_TEXTURE_CUBE_MAP_ARRAY);
+        env.addValue("PROXY_TEXTURE_RECTANGLE", vg::TextureTarget::PROXY_TEXTURE_RECTANGLE);
+        env.addValue("TEXTURE_1D", vg::TextureTarget::TEXTURE_1D);
+        env.addValue("TEXTURE_1D_ARRAY", vg::TextureTarget::TEXTURE_1D_ARRAY);
+        env.addValue("TEXTURE_2D", vg::TextureTarget::TEXTURE_2D);
+        env.addValue("TEXTURE_2D_ARRAY", vg::TextureTarget::TEXTURE_2D_ARRAY);
+        env.addValue("TEXTURE_2D_MULTISAMPLE", vg::TextureTarget::TEXTURE_2D_MULTISAMPLE);
+        env.addValue("TEXTURE_2D_MULTISAMPLE_ARRAY", vg::TextureTarget::TEXTURE_2D_MULTISAMPLE_ARRAY);
+        env.addValue("TEXTURE_3D", vg::TextureTarget::TEXTURE_3D);
+        env.addValue("TEXTURE_BASE_LEVEL", vg::TextureTarget::TEXTURE_BASE_LEVEL);
+        env.addValue("TEXTURE_BINDING_CUBE_MAP", vg::TextureTarget::TEXTURE_BINDING_CUBE_MAP);
+        env.addValue("TEXTURE_BUFFER", vg::TextureTarget::TEXTURE_BUFFER);
+        env.addValue("TEXTURE_CUBE_MAP", vg::TextureTarget::TEXTURE_CUBE_MAP);
+        env.addValue("TEXTURE_CUBE_MAP_ARRAY", vg::TextureTarget::TEXTURE_CUBE_MAP_ARRAY);
+        env.addValue("TEXTURE_CUBE_MAP_NEGATIVE_X", vg::TextureTarget::TEXTURE_CUBE_MAP_NEGATIVE_X);
+        env.addValue("TEXTURE_CUBE_MAP_NEGATIVE_Y", vg::TextureTarget::TEXTURE_CUBE_MAP_NEGATIVE_Y);
+        env.addValue("TEXTURE_CUBE_MAP_NEGATIVE_Z", vg::TextureTarget::TEXTURE_CUBE_MAP_NEGATIVE_Z);
+        env.addValue("TEXTURE_CUBE_MAP_POSITIVE_X", vg::TextureTarget::TEXTURE_CUBE_MAP_POSITIVE_X);
+        env.addValue("TEXTURE_CUBE_MAP_POSITIVE_Y", vg::TextureTarget::TEXTURE_CUBE_MAP_POSITIVE_Y);
+        env.addValue("TEXTURE_CUBE_MAP_POSITIVE_Z", vg::TextureTarget::TEXTURE_CUBE_MAP_POSITIVE_Z);
+        env.addValue("TEXTURE_MAX_LEVEL", vg::TextureTarget::TEXTURE_MAX_LEVEL);
+        env.addValue("TEXTURE_MAX_LOD", vg::TextureTarget::TEXTURE_MAX_LOD);
+        env.addValue("TEXTURE_MIN_LOD", vg::TextureTarget::TEXTURE_MIN_LOD);
+        env.addValue("TEXTURE_RECTANGLE", vg::TextureTarget::TEXTURE_RECTANGLE);
     }
 }
 

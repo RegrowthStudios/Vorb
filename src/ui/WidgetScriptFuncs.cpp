@@ -3,6 +3,7 @@
 #include "ui/Widget.h"
 #include "ui/ButtonScriptFuncs.h"
 #include "ui/SliderScriptFuncs.h"
+#include "ui/CheckBoxScriptFuncs.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 
@@ -58,6 +59,8 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
 template void vui::WidgetScriptFuncs::registerFuncs<vui::WidgetScriptFuncs>(const cString nSpace, vscript::Environment& env);
 template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(const cString nSpace, vscript::Environment& env);
 template void vui::WidgetScriptFuncs::registerFuncs<vui::SliderScriptFuncs>(const cString nSpace, vscript::Environment& env);
+template void vui::WidgetScriptFuncs::registerFuncs<vui::CheckBoxScriptFuncs>(const cString nSpace, vscript::Environment& env);
+
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL

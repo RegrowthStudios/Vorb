@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ui/FormScriptEnvironment.h"
 #include "ui/Button.h"
+#include "ui/CheckBox.h"
+#include "ui/ComboBox.h"
 #include "ui/Form.h"
 #include "ui/Slider.h"
 
@@ -22,11 +24,14 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_env.setNamespaces("Form");
         m_env.addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env.addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
+        m_env.addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);
         // Slider functions
         m_sliderFuncs.registerFuncs("Slider", m_env);
+        // CheckBox functions
+        m_checkBoxFuncs.registerFuncs("CheckBox", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(m_env);
     }
@@ -88,4 +93,10 @@ vui::Slider* vui::FormScriptEnvironment::makeSlider(nString name, f32 x, f32 y, 
     vui::Slider* s = new vui::Slider(name, f32v4(x, y, width, height));
     m_form->addWidget(s);
     return s;
+}
+
+vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::CheckBox* c = new vui::CheckBox(name, f32v4(x, y, width, height));
+    m_form->addWidget(c);
+    return c;
 }

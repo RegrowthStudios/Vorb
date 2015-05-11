@@ -205,19 +205,19 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Widget.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Drawables.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Slider.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\CheckBox.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\ComboBox.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Form.cpp">
       <Filter>UI</Filter>
@@ -235,7 +235,7 @@
       <Filter>UI\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Button.cpp">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Texture.cpp">
       <Filter>Graphics\Wrappers</Filter>
@@ -244,6 +244,9 @@
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\SliderScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -571,22 +574,22 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Widget.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Drawables.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\WidgetStyle.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Slider.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\CheckBox.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\ComboBox.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Form.h">
       <Filter>UI</Filter>
@@ -604,12 +607,15 @@
       <Filter>UI\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\Button.h">
-      <Filter>UI\Controls</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="include\script\GraphicsScriptInterface.h">
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\SliderScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\CheckBoxScriptFuncs.h">
       <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -698,11 +704,11 @@
     <Filter Include="IO\YAML">
       <UniqueIdentifier>{9a85e0eb-e38f-4c09-bbb6-96b126863b0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Controls">
-      <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Script">
       <UniqueIdentifier>{fdb66444-3703-44c0-8d58-c7904078ab4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

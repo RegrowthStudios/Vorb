@@ -34,10 +34,11 @@ vio::Path vg::TextureCache::getTexturePath(ui32 textureID) {
 }
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
-    SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
-    vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
-    vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-    i32 mipmapLevels /* = INT_MAX */) {
+                                         vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
+                                         SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+                                         vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+                                         vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                                         i32 mipmapLevels /* = INT_MAX */) {
     // Get absolute path
     vio::Path texPath; 
     resolvePath(filePath, texPath);
@@ -51,9 +52,11 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (!rs.data) return Texture();
     texture.width = rs.width;
     texture.height = rs.height;
+    texture.textureTarget = textureTarget;
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(&rs,
+                                          textureTarget,
                                           samplingParameters,
                                           internalFormat,
                                           textureFormat,
@@ -67,6 +70,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                                          OUT vg::BitmapResource& rvBitmap,
                                          vg::ImageIOFormat rvFormat,
+                                         vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
                                          SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
                                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
                                          vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
@@ -84,9 +88,11 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (!rvBitmap.data) return Texture();
     texture.width = rvBitmap.width;
     texture.height = rvBitmap.height;
+    texture.textureTarget = textureTarget;
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(&rvBitmap,
+                                          textureTarget,
                                           samplingParameters,
                                           internalFormat,
                                           textureFormat,
@@ -99,10 +105,11 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                                          const vg::BitmapResource* rs,
-    SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
-    vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
-    vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-    i32 mipmapLevels /* = INT_MAX */) {
+                                         vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
+                                         SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+                                         vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+                                         vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                                         i32 mipmapLevels /* = INT_MAX */) {
 
     // Get absolute path
     vio::Path texPath;
@@ -114,12 +121,14 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(rs,
+                                          textureTarget,
                                           samplingParameters,
                                           internalFormat,
                                           textureFormat,
                                           mipmapLevels);
     texture.width = rs->width;
     texture.height = rs->height;
+    texture.textureTarget = textureTarget;
 
     // Store the texture in the cache
     insertTexture(texPath, texture);

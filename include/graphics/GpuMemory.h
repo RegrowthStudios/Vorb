@@ -17,12 +17,12 @@
 
 #include "GLEnums.h"
 #include "gtypes.h"
+#include "SamplerState.h"
 
 namespace vorb {
     namespace graphics {
         enum class BufferTarget : VGEnum;
         enum class BufferUsageHint : VGEnum;
-        class SamplerState;
         class BitmapResource;
 
         // TODO(Ben): Flesh this out
@@ -38,7 +38,8 @@ namespace vorb {
             /// @param mipmapLevels: The max number of mipmap levels
             static void uploadTexture(VGTexture texture,
                                       const vg::BitmapResource* res,
-                                      vg::SamplerState* samplingParameters,
+                                      vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
+                                      vg::SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
                                       vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
                                       vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
                                       i32 mipmapLevels = INT_MAX);
@@ -53,14 +54,15 @@ namespace vorb {
             /// @param mipmapLevels: The max number of mipmap levels
             /// @return The texture ID
             static VGTexture uploadTexture(const vg::BitmapResource* res,
-                                           SamplerState* samplingParameters,
+                                           vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
+                                           SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
                                            vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
                                            vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
                                            i32 mipmapLevels = INT_MAX) {
                 // Create one OpenGL texture
                 VGTexture textureID;
                 glGenTextures(1, &textureID);
-                uploadTexture(textureID, res, samplingParameters,
+                uploadTexture(textureID, res, textureTarget, samplingParameters,
                     internalFormat, textureFormat, mipmapLevels);
                 return textureID;
             }

@@ -25,12 +25,16 @@
 #endif // !VORB_USING_PCH
 
 #include "Environment.h"
+#include "../graphics/TextureCache.h"
 
 namespace vorb {
     namespace script {
         class GraphicsScriptingInterface {
         public:
             virtual void registerGraphics(vscript::Environment& env);
+            virtual void dispose();
+
+            vg::TextureCache textureCache; ///< Texture cache for textures loaded via scripts
         protected:
             virtual void registerConstants(vscript::Environment& env);
             virtual void registerFunctions(vscript::Environment& env);

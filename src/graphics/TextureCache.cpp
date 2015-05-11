@@ -4,6 +4,10 @@
 #include "io/IOManager.h"
 #include "graphics/GpuMemory.h"
 
+#ifdef VORB_USING_SCRIPT
+#include "script/Environment.h"
+#endif
+
 vg::TextureCache::TextureCache() {
     // Empty
 }
@@ -13,7 +17,7 @@ m_ioManager(ioManager) {
 }
 
 vg::TextureCache::~TextureCache() {
-    destroy();
+    dispose();
 }
 
 vg::Texture vg::TextureCache::findTexture(const vio::Path& filePath) {
@@ -176,7 +180,7 @@ void vg::TextureCache::freeTexture(const vio::Path& filePath) {
     }
 }
 
-void vg::TextureCache::freeTexture(ui32& textureID) {
+void vg::TextureCache::freeTexture(VGTexture& textureID) {
     auto it = _textureIdMap.find(textureID);
     if (it != _textureIdMap.end()) {
         // Free the texture
@@ -200,11 +204,33 @@ void vg::TextureCache::freeTexture(Texture& texture) {
     }
 }
 
-void vg::TextureCache::destroy() {
+void vg::TextureCache::dispose() {
     for (auto tex : _textureStringMap) {
         GpuMemory::freeTexture(tex.second.id);
     }
 }
+
+#ifdef VORB_USING_SCRIPT
+void vg::TextureCache::registerTextureCache(vscript::Environment& env) {
+    env.addCRDelegate("loadTexture", makeRDelegate(*this, &TextureCache::scriptLoadTexture));
+    env.addCDelegate("freeTexture", makeDelegate(*this, &TextureCache::scriptFreeTexture));
+}
+
+VGTexture vg::TextureCache::scriptLoadTexture(nString filePath,
+                                   vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
+                                   vg::SamplerState* samplingParameters /*= &SamplerState::LINEAR_CLAMP_MIPMAP*/,
+                                   vg::TextureInternalFormat internalFormat /*= vg::TextureInternalFormat::RGBA*/,
+                                   vg::TextureFormat textureFormat /*= vg::TextureFormat::RGBA*/,
+                                   i32 mipmapLevels /*= INT_MAX*/) {
+    Texture t = addTexture(filePath, textureTarget, samplingParameters,
+                internalFormat, textureFormat, mipmapLevels);
+    return t.id;
+}
+
+void vg::TextureCache::scriptFreeTexture(VGTexture texture) {
+    freeTexture(texture);
+}
+#endif
 
 void vg::TextureCache::insertTexture(const vio::Path& filePath, const Texture& texture) {
     // We store an iterator to the map node in the _textureIdMap

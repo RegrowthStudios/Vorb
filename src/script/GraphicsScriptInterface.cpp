@@ -3,12 +3,17 @@
 #include "graphics/SamplerState.h"
 #include "graphics/GLEnums.h"
 
-void vorb::script::GraphicsScriptingInterface::registerGraphics(vscript::Environment& env) {
+void vscript::GraphicsScriptingInterface::registerGraphics(vscript::Environment& env) {
+    textureCache.registerTextureCache(env);
     registerConstants(env);
     registerFunctions(env);
 }
 
-void vorb::script::GraphicsScriptingInterface::registerConstants(vscript::Environment& env) {
+void vscript::GraphicsScriptingInterface::dispose() {
+    textureCache.dispose();
+}
+
+void vscript::GraphicsScriptingInterface::registerConstants(vscript::Environment& env) {
     // Enums
     vg::SamplerState::registerStates(env);
     { // vg::TextureInternalFormat
@@ -180,6 +185,6 @@ void vorb::script::GraphicsScriptingInterface::registerConstants(vscript::Enviro
     }
 }
 
-void vorb::script::GraphicsScriptingInterface::registerFunctions(vscript::Environment& env) {
+void vscript::GraphicsScriptingInterface::registerFunctions(vscript::Environment& env) {
     // Empty for now
 }

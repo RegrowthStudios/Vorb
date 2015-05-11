@@ -25,6 +25,9 @@
 #include "../VorbPreDecl.inl"
 
 DECL_VIO(class IOManager)
+#ifdef VORB_USING_SCRIPT
+DECL_VSCRIPT(class Environment)
+#endif
 
 namespace vorb {
     namespace graphics {
@@ -112,19 +115,33 @@ namespace vorb {
 
             /// Frees a texture from the cache
             /// @param textureID: The ID of the texture to free. It will be set to 0
-            void freeTexture(ui32& textureID);
+            void freeTexture(VGTexture& texture);
 
             /// Frees a texture from the cache
             /// @param textureID: The texture to free. texture.ID will be set to 0
-            void freeTexture(Texture& textureID);
+            void freeTexture(Texture& texture);
 
             /// Frees all textures
-            void destroy();
+            void dispose();
 
+#ifdef VORB_USING_SCRIPT
+            /*! @brief Registers the texture cache functions with a script environment
+             * Does not set any namespaces.
+             * @param env: The scripting environment. 
+             */
+            void registerTextureCache(vscript::Environment& env);
         private:
-            bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
-            vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
-
+            /// Texture loading function used by scripts
+            VGTexture scriptLoadTexture(nString filePath,
+                             vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
+                             SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                             vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                             vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                             i32 mipmapLevels = INT_MAX);
+            /// Texture freeing function used by scripts
+            void scriptFreeTexture(VGTexture texture);
+#endif
+        private:
             /// Inserts a texture into the cache
             /// @param filePath: The path of the texture to insert
             /// #param texture: The texture to insert
@@ -134,6 +151,9 @@ namespace vorb {
             /// @param path: The path to resolve
             /// @param fullPath: resulting path. Will be equal to path if m_ioManager == nullptr
             void resolvePath(const vio::Path& path, OUT vio::Path& fullPath);
+
+            bool m_ownsIoManager = nullptr; ///< True when the cache should deallocate the iomanager
+            vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
             /// We store two maps here so that users can free textures using either the ID or filePath
             std::unordered_map <vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename

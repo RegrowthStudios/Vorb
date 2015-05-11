@@ -26,15 +26,12 @@ vui::ComboBox::~ComboBox() {
 }
 
 void vui::ComboBox::addDrawables(UIRenderer* renderer) {
-    removeDrawables(renderer);
-
     m_defaultFont = renderer->getDefaultFont();
     // Make copies
     m_drawnRect = m_drawableRect;
     m_drawableDropList = m_drawableDropList;
 
     // Add the main button
-    m_mainButton.removeDrawables(renderer);
     m_mainButton.addDrawables(renderer);
 
     // Add the rect
@@ -49,13 +46,16 @@ void vui::ComboBox::addDrawables(UIRenderer* renderer) {
 
     // Add the drop down texts TODO(Ben): Inefficient
     for (auto& it : m_buttons) {
-        it.removeDrawables(renderer);
         it.addDrawables(renderer);
     }
 }
 
 void vui::ComboBox::removeDrawables(UIRenderer* renderer) {
     renderer->remove(this);
+    m_mainButton.removeDrawables(renderer);
+    for (auto& it : m_buttons) {
+        it.removeDrawables(renderer);
+    }
 }
 
 void vui::ComboBox::addItem(const nString& item) {
@@ -71,11 +71,13 @@ void vui::ComboBox::addItem(const nString& item) {
     updateDropButton(b);
     b.setDimensions(m_dimensions);
     updateTextPosition();
+    m_needsDrawableReload = true;
 }
 
 bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
     if (index > (int)m_items.size()) return false;
     m_items.insert(m_items.begin() + index, item);
+    m_needsDrawableReload = true;
     return true;
 }
 
@@ -86,6 +88,7 @@ bool vui::ComboBox::removeItem(const nString& item) {
             return true;
         }
     }
+    m_needsDrawableReload = true;
     return false;
 }
 
@@ -93,7 +96,7 @@ bool vui::ComboBox::removeItem(int index) {
     if (index > (int)m_items.size()) return false;
 
     m_items.erase(m_items.begin() + index);
-  
+    m_needsDrawableReload = true;
     return true;
 }
 
@@ -101,6 +104,7 @@ void vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
     for (auto& it : itemsToAdd) {
         addItem(it);
     }
+    m_needsDrawableReload = true;
 }
 
 bool vui::ComboBox::selectItem(int index) {
@@ -113,7 +117,7 @@ bool vui::ComboBox::selectItem(int index) {
     return true;
 }
 
-bool vui::ComboBox::isInDropBounds(f32 x, f32 y) {
+bool vui::ComboBox::isInDropBounds(f32 x, f32 y) const {
     const f32v2& pos = m_drawableDropList.getPosition();
     const f32v2& dims = m_drawableDropList.getDimensions();
     return (x >= pos.x && x <= pos.x + dims.x &&
@@ -126,6 +130,10 @@ const vorb::graphics::SpriteFont* vui::ComboBox::getFont() const {
 
 f32v2 vui::ComboBox::getTextScale() const {
     return m_mainButton.getTextScale();
+}
+
+const nString& vui::ComboBox::getItem(int index) const {
+    return m_items.at(index);
 }
 
 void vui::ComboBox::setDimensions(const f32v2& dimensions) {

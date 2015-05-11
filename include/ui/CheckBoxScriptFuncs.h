@@ -9,7 +9,7 @@
 
 /*! \file CheckBoxScriptFuncs.h
 * @brief 
-* Script functions for CheckBox widget;
+* Script functions for CheckBox widget.
 *
 */
 

@@ -249,6 +249,9 @@
     <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -616,6 +619,9 @@
       <Filter>UI\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\CheckBoxScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ComboBoxScriptFuncs.h">
       <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>

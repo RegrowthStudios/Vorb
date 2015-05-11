@@ -45,7 +45,15 @@ void vui::Form::updatePosition() {
 }
 
 void vui::Form::update(f32 dt /*= 1.0f*/) {
-    for (auto& w : m_widgets) w->update(dt);
+    for (auto& w : m_widgets) {
+        // Check if we need to reload the drawables
+        if (w->needsDrawableReload()) {
+            w->removeDrawables(&m_renderer);
+            w->setNeedsDrawableReload(false);
+            w->addDrawables(&m_renderer);
+        }
+        w->update(dt);
+    }
 }
 
 void vui::Form::draw() {

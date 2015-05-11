@@ -118,8 +118,8 @@ namespace vorb {
             * @param point: The point to check
             * @return true if point is in m_destRect
             */
-            virtual bool isInDropBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
-            virtual bool isInDropBounds(f32 x, f32 y);
+            virtual bool isInDropBounds(const f32v2& point) const { return isInDropBounds(point.x, point.y); }
+            virtual bool isInDropBounds(f32 x, f32 y) const;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -133,6 +133,7 @@ namespace vorb {
             virtual f32v2 getTextScale() const;
             virtual const std::vector <nString>& getItems() const { return m_items; }
             virtual size_t getNumItems() const { return m_items.size(); }
+            virtual const nString& getItem(int index) const;
 
             /************************************************************************/
             /* Setters                                                              */

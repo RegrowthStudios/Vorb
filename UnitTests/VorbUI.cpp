@@ -95,6 +95,7 @@ public:
         font.dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
+        form.update();
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

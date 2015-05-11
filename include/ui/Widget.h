@@ -86,11 +86,13 @@ namespace vorb {
             /************************************************************************/ 
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const IWidgetContainer* getParent() const { return m_parent; }
+            virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
+            virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
 
         protected:
             /************************************************************************/
@@ -98,6 +100,7 @@ namespace vorb {
             /************************************************************************/
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             IWidgetContainer* m_parent = nullptr; ///< Parent container
+            volatile bool m_needsDrawableReload = false;
         };
     }
 }

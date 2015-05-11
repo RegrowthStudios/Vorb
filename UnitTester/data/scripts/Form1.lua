@@ -14,6 +14,15 @@ function init()
   CheckBox.setText(c1, "Yay Checkbox")
   CheckBox.setTextColor(c1, 255, 0, 0, 255)
   CheckBox.setCheckedTexture(c1, tex2)
+  -- Test ComboBox
+  cb1 = Form.makeComboBox("ComboBox1", 450, 200, 150, 30);
+  ComboBox.setTextColor(cb1, 255, 0, 0, 255)
+  ComboBox.addItem(cb1, "TestItem0")
+  ComboBox.addItem(cb1, "TestItem1")
+  ComboBox.addItem(cb1, "TestItem2")
+  ComboBox.addItem(cb1, "TestItem3")
+  ComboBox.addItem(cb1, "TestItem4")
+  ComboBox.addItem(cb1, "TestItem5")
 end
 
 Vorb.register("init", init)

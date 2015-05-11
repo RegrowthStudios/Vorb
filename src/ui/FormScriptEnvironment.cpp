@@ -25,6 +25,7 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_env.addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env.addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env.addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
+        m_env.addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);
@@ -32,6 +33,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_sliderFuncs.registerFuncs("Slider", m_env);
         // CheckBox functions
         m_checkBoxFuncs.registerFuncs("CheckBox", m_env);
+        // ComboBox functions
+        m_comboBoxFuncs.registerFuncs("ComboBox", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(m_env);
     }
@@ -97,6 +100,12 @@ vui::Slider* vui::FormScriptEnvironment::makeSlider(nString name, f32 x, f32 y, 
 
 vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::CheckBox* c = new vui::CheckBox(name, f32v4(x, y, width, height));
+    m_form->addWidget(c);
+    return c;
+}
+
+vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::ComboBox* c = new vui::ComboBox(name, f32v4(x, y, width, height));
     m_form->addWidget(c);
     return c;
 }

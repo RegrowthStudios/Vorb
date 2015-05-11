@@ -43,66 +43,66 @@ template void vui::ButtonScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(cons
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
-VGTexture vorb::ui::ButtonScriptFuncs::getTexture(Button* b) const {
+VGTexture vui::ButtonScriptFuncs::getTexture(Button* b) const {
     return b->getTexture();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getBackColor(Button* b) const {
+color4 vui::ButtonScriptFuncs::getBackColor(Button* b) const {
     return b->getBackColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getBackHoverColor(Button* b) const {
+color4 vui::ButtonScriptFuncs::getBackHoverColor(Button* b) const {
     return b->getBackHoverColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getTextColor(Button* b) const {
+color4 vui::ButtonScriptFuncs::getTextColor(Button* b) const {
     return b->getTextColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getTextHoverColor(Button* b) const {
+color4 vui::ButtonScriptFuncs::getTextHoverColor(Button* b) const {
     return b->getTextHoverColor();
 }
 
-nString vorb::ui::ButtonScriptFuncs::getText(Button* b) const {
+nString vui::ButtonScriptFuncs::getText(Button* b) const {
     return b->getText();
 }
 
-vg::TextAlign vorb::ui::ButtonScriptFuncs::getTextAlign(Button* b) const {
+vg::TextAlign vui::ButtonScriptFuncs::getTextAlign(Button* b) const {
     return b->getTextAlign();
 }
 
-f32v2 vorb::ui::ButtonScriptFuncs::getTextScale(Button* b) const {
+f32v2 vui::ButtonScriptFuncs::getTextScale(Button* b) const {
     return b->getTextScale();
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackColor(Button* b, color4 color) {
+void vui::ButtonScriptFuncs::setBackColor(Button* b, color4 color) const {
     b->setBackColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackHoverColor(Button* b, color4 color) {
+void vui::ButtonScriptFuncs::setBackHoverColor(Button* b, color4 color) const {
     b->setBackHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setText(Button* b, nString text) {
+void vui::ButtonScriptFuncs::setText(Button* b, nString text) const {
     b->setText(text);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextColor(Button* b, color4 color) {
+void vui::ButtonScriptFuncs::setTextColor(Button* b, color4 color) const {
     b->setTextColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextHoverColor(Button* b, color4 color) {
+void vui::ButtonScriptFuncs::setTextHoverColor(Button* b, color4 color) const {
     b->setTextHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextAlign(Button* b, vg::TextAlign textAlign) {
+void vui::ButtonScriptFuncs::setTextAlign(Button* b, vg::TextAlign textAlign) const {
     b->setTextAlign(textAlign);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) {
+void vui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) const {
     b->setTextScale(textScale);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) {
+void vui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) const {
     b->setTexture(texture);
 }

@@ -101,8 +101,8 @@ namespace vorb {
             virtual void setMin(int min);
             virtual void setMax(int max);
 
-            virtual bool isInSlideBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
-            virtual bool isInSlideBounds(f32 x, f32 y);
+            virtual bool isInSlideBounds(const f32v2& point) const { return isInSlideBounds(point.x, point.y); }
+            virtual bool isInSlideBounds(f32 x, f32 y) const;
 
             /************************************************************************/
             /* Events                                                               */

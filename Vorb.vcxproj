@@ -318,6 +318,7 @@
     <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
     <ClCompile Include="src\ui\Slider.cpp" />
+    <ClCompile Include="src\ui\SliderScriptFuncs.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
@@ -442,6 +443,7 @@
     <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\IWidgetContainer.h" />
     <ClInclude Include="include\ui\Slider.h" />
+    <ClInclude Include="include\ui\SliderScriptFuncs.h" />
     <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\ui\UIRenderer.h" />

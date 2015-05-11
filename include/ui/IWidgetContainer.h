@@ -95,8 +95,8 @@ namespace vorb {
              * @param point: The point to check
              * @return true if point is in the bounds of the container
              */
-            virtual bool isInBounds(const f32v2& point) { return isInBounds(point.x, point.y); }
-            virtual bool isInBounds(f32 x, f32 y);
+            virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
+            virtual bool isInBounds(f32 x, f32 y) const;
 
             /************************************************************************/
             /* Getters                                                              */

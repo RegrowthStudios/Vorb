@@ -60,7 +60,7 @@ void vui::IWidgetContainer::disable() {
     m_isClicking = false;
 }
 
-bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) {
+bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
     return (x >= m_position.x && x <= m_position.x + m_dimensions.x &&
             y >= m_position.y && y <= m_position.y + m_dimensions.y);
 }

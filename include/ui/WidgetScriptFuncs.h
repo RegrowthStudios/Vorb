@@ -76,19 +76,19 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setAnchor(Widget* w, int anchor);
-            virtual void setDestRect(Widget* w, f32v4 destRect);
-            virtual void setDimensions(Widget* w, f32v2 dims);
-            virtual void setDock(Widget* w, int dock);
-            virtual void setFixedHeight(Widget* w, bool fixedHeight);
-            virtual void setFixedWidth(Widget* w, bool fixedWidth);
-            virtual void setHeight(Widget* w, f32 height);
-            virtual void setPosition(Widget* w, f32v2 pos);
-            virtual void setSelectable(Widget* w, bool selectable);
-            virtual void setStyle(Widget* w, int style);
-            virtual void setWidth(Widget* w, f32 width);
-            virtual void setX(Widget* w, f32 x);
-            virtual void setY(Widget* w, f32 y);
+            virtual void setAnchor(Widget* w, int anchor) const;
+            virtual void setDestRect(Widget* w, f32v4 destRect) const;
+            virtual void setDimensions(Widget* w, f32v2 dims) const;
+            virtual void setDock(Widget* w, int dock) const;
+            virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
+            virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
+            virtual void setHeight(Widget* w, f32 height) const;
+            virtual void setPosition(Widget* w, f32v2 pos) const;
+            virtual void setSelectable(Widget* w, bool selectable) const;
+            virtual void setStyle(Widget* w, int style) const;
+            virtual void setWidth(Widget* w, f32 width) const;
+            virtual void setX(Widget* w, f32 x) const;
+            virtual void setY(Widget* w, f32 y) const;
         };
     }
 }

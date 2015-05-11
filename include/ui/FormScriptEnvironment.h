@@ -27,6 +27,7 @@
 #include "../script/Environment.h"
 #include "../script/GraphicsScriptInterface.h"
 #include "ButtonScriptFuncs.h"
+#include "SliderScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -41,13 +42,16 @@ namespace vorb {
             virtual bool init(Form* form, const cString filePath);
         protected:
             virtual void registerConstants();
-            virtual vui::Widget* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Button* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Slider* makeSlider(nString name, f32 x, f32 y, f32 width, f32 height);
+
 
             Form* m_form = nullptr;
             vscript::Environment m_env;
             vscript::Function m_init;
             vscript::GraphicsScriptInterface m_graphicsInterface;
             ButtonScriptFuncs m_buttonFuncs;
+            SliderScriptFuncs m_sliderFuncs;
         };
     }
 }

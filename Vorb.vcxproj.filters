@@ -237,11 +237,14 @@
     <ClCompile Include="src\ui\Button.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="src\script\GraphicsScriptInterface.cpp">
-      <Filter>UI\Script</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\Texture.cpp">
       <Filter>Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\GraphicsScriptInterface.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\SliderScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -604,6 +607,9 @@
       <Filter>UI\Controls</Filter>
     </ClInclude>
     <ClInclude Include="include\script\GraphicsScriptInterface.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\SliderScriptFuncs.h">
       <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>

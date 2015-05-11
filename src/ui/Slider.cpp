@@ -135,7 +135,7 @@ void vui::Slider::setMax(int max) {
     setValue(m_value);
 }
 
-bool vui::Slider::isInSlideBounds(f32 x, f32 y) {
+bool vui::Slider::isInSlideBounds(f32 x, f32 y) const {
     const f32v2& pos = m_drawableSlide.getPosition();
     const f32v2& dims = m_drawableSlide.getDimensions();
     return (x >= pos.x && x <= pos.x + dims.x &&

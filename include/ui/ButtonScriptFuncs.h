@@ -9,7 +9,7 @@
 
 /*! \file ButtonScriptFuncs.h
 * @brief 
-* Scripting functions for buttons
+* Scripting functions for buttons.
 *
 */
 
@@ -54,14 +54,14 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setBackColor(Button* b, color4 color);
-            virtual void setBackHoverColor(Button* b, color4 color);
-            virtual void setText(Button* b, nString text);
-            virtual void setTextColor(Button* b, color4 color);
-            virtual void setTextHoverColor(Button* b, color4 color);
-            virtual void setTextAlign(Button* b, vg::TextAlign textAlign);
-            virtual void setTextScale(Button* b, f32v2 textScale);
-            virtual void setTexture(Button* b, VGTexture texture);
+            virtual void setBackColor(Button* b, color4 color) const;
+            virtual void setBackHoverColor(Button* b, color4 color) const;
+            virtual void setText(Button* b, nString text) const;
+            virtual void setTextColor(Button* b, color4 color) const;
+            virtual void setTextHoverColor(Button* b, color4 color) const;
+            virtual void setTextAlign(Button* b, vg::TextAlign textAlign) const;
+            virtual void setTextScale(Button* b, f32v2 textScale) const;
+            virtual void setTexture(Button* b, VGTexture texture) const;
         };
     }
 }

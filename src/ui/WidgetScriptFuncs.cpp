@@ -2,6 +2,7 @@
 #include "ui/WidgetScriptFuncs.h"
 #include "ui/Widget.h"
 #include "ui/ButtonScriptFuncs.h"
+#include "ui/SliderScriptFuncs.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 
@@ -56,6 +57,7 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
 // Explicit templates so we can have code in the cpp file
 template void vui::WidgetScriptFuncs::registerFuncs<vui::WidgetScriptFuncs>(const cString nSpace, vscript::Environment& env);
 template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(const cString nSpace, vscript::Environment& env);
+template void vui::WidgetScriptFuncs::registerFuncs<vui::SliderScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
@@ -136,54 +138,54 @@ f32v2 vui::WidgetScriptFuncs::getRelativePosition(Widget* w) const {
     return w->getRelativePosition();
 }
 
-void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) {
+void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) {
+void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) const {
     w->setDestRect(destRect);
 }
 
-void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) {
+void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) const {
     w->setDimensions(dims);
 }
 
-void vui::WidgetScriptFuncs::setDock(Widget* w, int dock) {
+void vui::WidgetScriptFuncs::setDock(Widget* w, int dock) const {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) {
+void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) const {
     w->setFixedHeight(fixedHeight);
 }
 
-void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) {
+void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) const {
     w->setFixedWidth(fixedWidth);
 }
 
-void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) {
+void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) const {
     w->setHeight(height);
 }
 
-void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2 pos) {
+void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2 pos) const {
     w->setPosition(pos);
 }
 
-void vui::WidgetScriptFuncs::setSelectable(Widget* w, bool selectable) {
+void vui::WidgetScriptFuncs::setSelectable(Widget* w, bool selectable) const {
     w->setSelectable(selectable);
 }
 
-void vui::WidgetScriptFuncs::setStyle(Widget* w, int style) {
+void vui::WidgetScriptFuncs::setStyle(Widget* w, int style) const {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setWidth(Widget* w, f32 width) {
+void vui::WidgetScriptFuncs::setWidth(Widget* w, f32 width) const {
     w->setWidth(width);
 }
 
-void vui::WidgetScriptFuncs::setX(Widget* w, f32 x) {
+void vui::WidgetScriptFuncs::setX(Widget* w, f32 x) const {
     w->setX(x);
 }
 
-void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) {
+void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) const {
     w->setY(y);
 }

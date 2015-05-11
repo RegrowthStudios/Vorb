@@ -2,6 +2,7 @@
 #include "ui/FormScriptEnvironment.h"
 #include "ui/Button.h"
 #include "ui/Form.h"
+#include "ui/Slider.h"
 
 #define INIT_FUNCTION_NAME "init"
 
@@ -20,9 +21,12 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         // Form functions
         m_env.setNamespaces("Form");
         m_env.addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
+        m_env.addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);
+        // Slider functions
+        m_sliderFuncs.registerFuncs("Slider", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(m_env);
     }
@@ -74,8 +78,14 @@ void vorb::ui::FormScriptEnvironment::registerConstants() {
     m_env.addValue("INT_MIN", INT_MIN);
 }
 
-vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
+vui::Button* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Button* b = new vui::Button(name, f32v4(x, y, width, height));
     m_form->addWidget(b);
     return b;
+}
+
+vui::Slider* vui::FormScriptEnvironment::makeSlider(nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::Slider* s = new vui::Slider(name, f32v4(x, y, width, height));
+    m_form->addWidget(s);
+    return s;
 }

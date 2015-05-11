@@ -84,9 +84,8 @@ namespace vorb {
             /// Uploads a png texture and adds it to the cache
             /// an existing texture ID if it already exists in the cache
             /// @param filePath: The path of the texture
-            /// @param pixels: The pixel data
-            /// @param width: The texture width in pixels
-            /// @param height: The texture height in pixels
+            /// @param rs: The bitmap resource
+            /// @param texturePixelType: Format of the resource pixels.
             /// @param TextureTarget: The texture target
             /// @param samplingParameters: The texture sampler parameters
             /// @param internalFormat : Internal format of the pixel data
@@ -95,6 +94,7 @@ namespace vorb {
             /// @return The texture.
             Texture addTexture(const vio::Path& filePath,
                                const vg::BitmapResource* rs,
+                               TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
                                vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
                                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
                                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,

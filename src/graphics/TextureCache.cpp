@@ -56,6 +56,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(&rs,
+                                          TexturePixelType::UNSIGNED_BYTE,
                                           textureTarget,
                                           samplingParameters,
                                           internalFormat,
@@ -89,9 +90,25 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     texture.width = rvBitmap.width;
     texture.height = rvBitmap.height;
     texture.textureTarget = textureTarget;
+    
+    // Determine pixel type TODO(Ben): This is not comprehensive
+    TexturePixelType pixelType;
+    switch (rvFormat) {
+        case ImageIOFormat::RGB_F32:
+        case ImageIOFormat::RGB_F64:
+        case ImageIOFormat::RGBA_F32:
+        case ImageIOFormat::RGBA_F64:
+            pixelType = TexturePixelType::FLOAT; break;
+        case ImageIOFormat::RGB_UI16:
+        case ImageIOFormat::RGBA_UI16:
+            pixelType = TexturePixelType::UNSIGNED_SHORT; break;
+        default:
+            pixelType = TexturePixelType::UNSIGNED_BYTE; break;       
+    }
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(&rvBitmap,
+                                          pixelType,
                                           textureTarget,
                                           samplingParameters,
                                           internalFormat,
@@ -105,6 +122,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                                          const vg::BitmapResource* rs,
+                                         TexturePixelType texturePixelType /*= TexturePixelType::UNSIGNED_BYTE*/,
                                          vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
                                          SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
                                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
@@ -121,6 +139,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 
     // Upload the texture through GpuMemory
     texture.id = GpuMemory::uploadTexture(rs,
+                                          texturePixelType,
                                           textureTarget,
                                           samplingParameters,
                                           internalFormat,

@@ -29,41 +29,42 @@ namespace vorb {
         class GpuMemory {
         public:
             /// Uploads a texture to the GPU.
-            /// @param pixels: The image pixels
-            /// @param width: Width of the texture in pixels
-            /// @param height: Height of the texture in pixels
-            /// @param samplingParameters: The texture sampler parameters
-            /// @param internalFormat: Internal pixel data format
-            /// @param textureFormat: Format of uploaded pixels
-            /// @param mipmapLevels: The max number of mipmap levels
+            /// @param res: The bitmap resource.
+            /// @param texturePixelType: Format of the resource pixels.
+            /// @param samplingParameters: The texture sampler parameters.
+            /// @param internalFormat: Internal pixel data format.
+            /// @param textureFormat: Format of uploaded pixels.
+            /// @param mipmapLevels: The max number of mipmap levels.
             static void uploadTexture(VGTexture texture,
-                                      const vg::BitmapResource* res,
-                                      vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
-                                      vg::SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                                      vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                                      vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                      const BitmapResource* res,
+                                      TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
+                                      TextureTarget textureTarget = TextureTarget::TEXTURE_2D,
+                                      SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                                      TextureInternalFormat internalFormat = TextureInternalFormat::RGBA,
+                                      TextureFormat textureFormat = TextureFormat::RGBA,
                                       i32 mipmapLevels = INT_MAX);
 
             /// Uploads a texture to the GPU.
-            /// @param pixels: The image pixels
-            /// @param width: Width of the texture in pixels
-            /// @param height: Height of the texture in pixels
-            /// @param samplingParameters: The texture sampler parameters
-            /// @param internalFormat: Internal pixel data format
-            /// @param textureFormat: Format of uploaded pixels
-            /// @param mipmapLevels: The max number of mipmap levels
-            /// @return The texture ID
-            static VGTexture uploadTexture(const vg::BitmapResource* res,
-                                           vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
+            /// @param res: The bitmap resource.
+            /// @param texturePixelType: Format of the resource pixels.
+            /// @param samplingParameters: The texture sampler parameters.
+            /// @param internalFormat: Internal pixel data format.
+            /// @param textureFormat: Format of uploaded pixels.
+            /// @param mipmapLevels: The max number of mipmap levels.
+            /// @return The texture ID.
+            static VGTexture uploadTexture(const BitmapResource* res,
+                                           TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
+                                           TextureTarget textureTarget = TextureTarget::TEXTURE_2D,
                                            SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                                           vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                                           vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                           TextureInternalFormat internalFormat = TextureInternalFormat::RGBA,
+                                           TextureFormat textureFormat = TextureFormat::RGBA,
                                            i32 mipmapLevels = INT_MAX) {
                 // Create one OpenGL texture
                 VGTexture textureID;
                 glGenTextures(1, &textureID);
-                uploadTexture(textureID, res, textureTarget, samplingParameters,
-                    internalFormat, textureFormat, mipmapLevels);
+                uploadTexture(textureID, res, texturePixelType,
+                              textureTarget, samplingParameters,
+                              internalFormat, textureFormat, mipmapLevels);
                 return textureID;
             }
 

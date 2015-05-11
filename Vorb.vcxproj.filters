@@ -228,6 +228,9 @@
     <ClCompile Include="src\ui\IWidgetContainer.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\FormScriptEnvironment.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -577,6 +580,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\IWidgetContainer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\FormScriptEnvironment.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

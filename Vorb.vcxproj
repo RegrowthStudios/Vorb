@@ -310,6 +310,7 @@
     <ClCompile Include="src\ui\CheckBox.cpp" />
     <ClCompile Include="src\ui\ComboBox.cpp" />
     <ClCompile Include="src\ui\Form.cpp" />
+    <ClCompile Include="src\ui\FormScriptEnvironment.cpp" />
     <ClCompile Include="src\ui\IButton.cpp" />
     <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
@@ -430,6 +431,7 @@
     <ClInclude Include="include\ui\CheckBox.h" />
     <ClInclude Include="include\ui\ComboBox.h" />
     <ClInclude Include="include\ui\Form.h" />
+    <ClInclude Include="include\ui\FormScriptEnvironment.h" />
     <ClInclude Include="include\ui\IButton.h" />
     <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\IWidgetContainer.h" />

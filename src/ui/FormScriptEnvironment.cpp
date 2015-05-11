@@ -39,8 +39,6 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_init();
     }
 
-
-
     return true;
 }
 
@@ -69,7 +67,6 @@ void vorb::ui::FormScriptEnvironment::registerConstants() {
         m_env.addValue("FILL", DockStyle::FILL);
         m_env.setNamespaces();
     }
-
 }
 
 vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {

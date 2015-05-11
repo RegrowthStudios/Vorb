@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "graphics/SamplerState.h"
 
+#ifdef VORB_USING_SCRIPT
+#include "script/Environment.h"
+#endif
+
 vg::SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter,
     TextureWrapMode texWrapS, TextureWrapMode texWrapT, TextureWrapMode texWrapR) :
     _minFilter(texMinFilter),
@@ -39,6 +43,21 @@ void vg::SamplerState::setObject(ui32 textureUnit) const {
     glBindSampler(textureUnit, _id);
 }
 
+#ifdef VORB_USING_SCRIPT
+void vg::SamplerState::registerStates(vscript::Environment& env) {
+    env.setNamespaces("SamplerState");
+    env.addValue("POINT_WRAP", &vg::SamplerState::POINT_WRAP);
+    env.addValue("POINT_CLAMP", &vg::SamplerState::POINT_CLAMP);
+    env.addValue("LINEAR_WRAP", &vg::SamplerState::LINEAR_WRAP);
+    env.addValue("LINEAR_CLAMP", &vg::SamplerState::LINEAR_CLAMP);
+    env.addValue("POINT_WRAP_MIPMAP", &vg::SamplerState::POINT_WRAP_MIPMAP);
+    env.addValue("POINT_CLAMP_MIPMAP", &vg::SamplerState::POINT_CLAMP_MIPMAP);
+    env.addValue("LINEAR_WRAP_MIPMAP", &vg::SamplerState::LINEAR_WRAP_MIPMAP);
+    env.addValue("LINEAR_CLAMP_MIPMAP", &vg::SamplerState::LINEAR_CLAMP_MIPMAP);
+    env.setNamespaces();
+}
+#endif
+
 vg::SamplerState vg::SamplerState::POINT_WRAP(TextureMinFilter::NEAREST, TextureMagFilter::NEAREST,
     TextureWrapMode::REPEAT, TextureWrapMode::REPEAT, TextureWrapMode::REPEAT);
 vg::SamplerState vg::SamplerState::POINT_CLAMP(TextureMinFilter::NEAREST, TextureMagFilter::NEAREST,
@@ -54,4 +73,4 @@ vg::SamplerState vg::SamplerState::POINT_CLAMP_MIPMAP(TextureMinFilter::NEAREST_
 vg::SamplerState vg::SamplerState::LINEAR_WRAP_MIPMAP(TextureMinFilter::LINEAR_MIPMAP_LINEAR, TextureMagFilter::LINEAR,
     TextureWrapMode::REPEAT, TextureWrapMode::REPEAT, TextureWrapMode::REPEAT);
 vg::SamplerState vg::SamplerState::LINEAR_CLAMP_MIPMAP(TextureMinFilter::LINEAR_MIPMAP_LINEAR, TextureMagFilter::LINEAR,
-    TextureWrapMode::CLAMP_EDGE, TextureWrapMode::CLAMP_EDGE, TextureWrapMode::CLAMP_EDGE);
+                                                       TextureWrapMode::CLAMP_EDGE, TextureWrapMode::CLAMP_EDGE, TextureWrapMode::CLAMP_EDGE);

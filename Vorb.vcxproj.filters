@@ -237,6 +237,9 @@
     <ClCompile Include="src\ui\Button.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="src\script\GraphicsScriptInterface.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -596,6 +599,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\Button.h">
       <Filter>UI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\GraphicsScriptInterface.h">
+      <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

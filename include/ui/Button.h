@@ -1,5 +1,5 @@
 //
-// IButton.h
+// Button.h
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 2 May 2015
@@ -7,7 +7,7 @@
 // All Rights Reserved
 //
 
-/*! \file IButton.h
+/*! \file Button.h
 * @brief 
 * Abstract base class for all button widget.
 *
@@ -15,9 +15,9 @@
 
 #pragma once
 
-#ifndef Vorb_IButton_h__
+#ifndef Vorb_Button_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_IButton_h__
+#define Vorb_Button_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -33,16 +33,16 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class IButton : public Widget {
+        class Button : public Widget {
         public:
             /*! @brief Default constructor. */
-            IButton();
+            Button();
             /*! @brief Constructor that sets name, position, and dimensions.
             *
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(const nString& name, const f32v4& destRect = f32v4(0));
+            Button(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
@@ -51,9 +51,9 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            IButton(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Button(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
-            virtual ~IButton(); // TODO(Ben): Maybe make abstract?
+            virtual ~Button(); // TODO(Ben): Maybe make abstract?
 
             /*! @brief Adds all drawables to the UIRenderer
             *
@@ -122,4 +122,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_IButton_h__
+#endif // !Vorb_Button_h__

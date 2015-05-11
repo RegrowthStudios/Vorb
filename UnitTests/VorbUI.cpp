@@ -14,7 +14,7 @@
 #include <include/graphics/SpriteFont.h>
 #include <include/ui/CheckBox.h>
 #include <include/ui/ComboBox.h>
-#include <include/ui/IButton.h>
+#include <include/ui/Button.h>
 #include <include/ui/Form.h>
 #include <include/ui/FormScriptEnvironment.h>
 #include <include/ui/IGameScreen.h>

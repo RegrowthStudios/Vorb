@@ -10,7 +10,7 @@
 #define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
 #define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
 
-template <class T = WidgetScriptFuncs>
+template <class T>
 void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     env.setNamespaces(nSpace);
 

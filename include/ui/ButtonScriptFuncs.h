@@ -30,6 +30,10 @@
 
 namespace vorb {
     namespace ui {
+
+        // Forward declarations
+        class Button;
+
         class ButtonScriptFuncs : public WidgetScriptFuncs {
         public:
             template <class T = ButtonScriptFuncs>
@@ -38,25 +42,25 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual VGTexture getTexture(Widget* w) const;
-            virtual color4 getBackColor(Widget* w) const;
-            virtual color4 getBackHoverColor(Widget* w) const;
-            virtual color4 getTextColor(Widget* w) const;
-            virtual color4 getTextHoverColor(Widget* w) const;
-            virtual nString getText(Widget* w) const;
-            virtual vg::TextAlign getTextAlign(Widget* w) const;
-            virtual f32v2 getTextScale(Widget* w) const;
+            virtual VGTexture getTexture(Button* b) const;
+            virtual color4 getBackColor(Button* b) const;
+            virtual color4 getBackHoverColor(Button* b) const;
+            virtual color4 getTextColor(Button* b) const;
+            virtual color4 getTextHoverColor(Button* b) const;
+            virtual nString getText(Button* b) const;
+            virtual vg::TextAlign getTextAlign(Button* b) const;
+            virtual f32v2 getTextScale(Button* b) const;
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setBackColor(Widget* w, color4 color);
-            virtual void setBackHoverColor(Widget* w, color4 color);
-            virtual void setText(Widget* w, nString text);
-            virtual void setTextColor(Widget* w, color4 color);
-            virtual void setTextHoverColor(Widget* w, color4 color);
-            virtual void setTextAlign(Widget* w, int textAlign);
-            virtual void setTextScale(Widget* w, f32v2 textScale);
+            virtual void setBackColor(Button* b, color4 color);
+            virtual void setBackHoverColor(Button* b, color4 color);
+            virtual void setText(Button* b, nString text);
+            virtual void setTextColor(Button* b, color4 color);
+            virtual void setTextHoverColor(Button* b, color4 color);
+            virtual void setTextAlign(Button* b, int textAlign);
+            virtual void setTextScale(Button* b, f32v2 textScale);
         };
     }
 }

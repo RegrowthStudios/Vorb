@@ -210,9 +210,6 @@
     <ClCompile Include="src\ui\Drawables.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\IButton.cpp">
-      <Filter>UI\Controls</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\Slider.cpp">
       <Filter>UI\Controls</Filter>
     </ClCompile>
@@ -236,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="src\ui\WidgetScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Button.cpp">
+      <Filter>UI\Controls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -570,9 +570,6 @@
     <ClInclude Include="include\ui\WidgetStyle.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\IButton.h">
-      <Filter>UI\Controls</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\Slider.h">
       <Filter>UI\Controls</Filter>
     </ClInclude>
@@ -596,6 +593,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\WidgetScriptFuncs.h">
       <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Button.h">
+      <Filter>UI\Controls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

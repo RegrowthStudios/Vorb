@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ui/FormScriptEnvironment.h"
-#include "ui/IButton.h"
+#include "ui/Button.h"
 #include "ui/Form.h"
 
 #define INIT_FUNCTION_NAME "init"
@@ -40,7 +40,7 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
 }
 
 vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::IButton* b = new vui::IButton(name, f32v4(x, y, width, height));
+    vui::Button* b = new vui::Button(name, f32v4(x, y, width, height));
     m_form->addWidget(b);
     return b;
 }

@@ -220,7 +220,7 @@ void vui::ComboBox::setTextScale(const f32v2& textScale) {
     refreshDrawables();
 }
 
-void vui::ComboBox::updateDropButton(vui::IButton& b) {
+void vui::ComboBox::updateDropButton(vui::Button& b) {
     b.setFont(m_mainButton.getFont());
     b.setBackColor(m_backColor);
     b.setBackHoverColor(m_backHoverColor);
@@ -307,7 +307,7 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent& e) {
-    vui::IButton* b = (vui::IButton*)s;
+    vui::Button* b = (vui::Button*)s;
     const nString& text = b->getText();
     if (m_mainButton.getText() != text) {
         m_mainButton.setText(text);

@@ -26,7 +26,7 @@
 
 #include "Drawables.h"
 #include "Widget.h"
-#include "IButton.h"
+#include "Button.h"
 
 namespace vorb {
     namespace ui {
@@ -158,7 +158,7 @@ namespace vorb {
             /************************************************************************/
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
-            virtual void updateDropButton(vorb::ui::IButton& b);
+            virtual void updateDropButton(vorb::ui::Button& b);
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();
@@ -175,8 +175,8 @@ namespace vorb {
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableRect m_drawableDropList, m_drawnDropList;
-            vorb::ui::IButton m_mainButton; // Main button for dropping
-            std::list<vorb::ui::IButton> m_buttons; // Sub buttons
+            vorb::ui::Button m_mainButton; // Main button for dropping
+            std::list<vorb::ui::Button> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
             const vg::SpriteFont* m_defaultFont = nullptr;

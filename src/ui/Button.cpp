@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "ui/IButton.h"
+#include "ui/Button.h"
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 
-vui::IButton::IButton() : Widget() {
+vui::Button::Button() : Widget() {
     updateColor();
 }
 
-vui::IButton::IButton(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IButton() {
+vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button() {
     m_name = name;
     setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
@@ -15,16 +15,16 @@ vui::IButton::IButton(const nString& name, const f32v4& destRect /*= f32v4(0)*/)
     updateTextPosition();
 }
 
-vui::IButton::IButton(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IButton(name, destRect) {
+vui::Button::Button(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
     parent->addWidget(this);
     m_parent = parent;
 }
 
-vui::IButton::~IButton() {
+vui::Button::~Button() {
     // Empty
 }
 
-void vui::IButton::addDrawables(UIRenderer* renderer) {
+void vui::Button::addDrawables(UIRenderer* renderer) {
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
@@ -35,114 +35,114 @@ void vui::IButton::addDrawables(UIRenderer* renderer) {
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &IButton::refreshDrawables));
+                  makeDelegate(*this, &Button::refreshDrawables));
 
     
     // Add the text 
     renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
-                  makeDelegate(*this, &IButton::refreshDrawables));  
+                  makeDelegate(*this, &Button::refreshDrawables));  
 }
 
-void vui::IButton::removeDrawables(UIRenderer* renderer) {
+void vui::Button::removeDrawables(UIRenderer* renderer) {
     renderer->remove(this);
 }
 
-void vui::IButton::updatePosition() {
+void vui::Button::updatePosition() {
     Widget::updatePosition();
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
     updateTextPosition();
 }
 
-void vui::IButton::setDestRect(const f32v4& destRect) {
+void vui::Button::setDestRect(const f32v4& destRect) {
     vui::Widget::setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
 }
 
-void vui::IButton::setDimensions(const f32v2& dimensions) {
+void vui::Button::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
     m_drawableRect.setDimensions(dimensions);
     updateTextPosition();
 }
 
-void vui::IButton::setFont(const vorb::graphics::SpriteFont* font) {
+void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
     m_font = font;
     updateTextPosition();
 }
 
-void vui::IButton::setHeight(f32 height) {
+void vui::Button::setHeight(f32 height) {
     Widget::setHeight(height);
     m_drawableRect.setHeight(height);
     updateTextPosition();
 }
 
-void vui::IButton::setPosition(const f32v2& position) {
+void vui::Button::setPosition(const f32v2& position) {
     Widget::setPosition(position);
     m_drawableRect.setPosition(m_position);
     updateTextPosition();
 }
 
-void vui::IButton::setTexture(VGTexture texture) {
+void vui::Button::setTexture(VGTexture texture) {
     m_drawableRect.setTexture(texture);
     refreshDrawables();
 }
 
-void vui::IButton::setWidth(f32 width) {
+void vui::Button::setWidth(f32 width) {
     Widget::setWidth(width);
     m_drawableRect.setWidth(width);
     updateTextPosition();
 }
 
-void vui::IButton::setX(f32 x) {
+void vui::Button::setX(f32 x) {
     Widget::setX(x);
     m_drawableRect.setX(m_position.x);
     updateTextPosition();
 }
 
-void vui::IButton::setY(f32 y) {
+void vui::Button::setY(f32 y) {
     Widget::setY(y);
     m_drawableRect.setX(m_position.y);
     updateTextPosition();
 }
 
-void vui::IButton::setBackColor(const color4& color) {
+void vui::Button::setBackColor(const color4& color) {
     m_backColor = color;
     updateColor();
 }
 
-void vui::IButton::setBackHoverColor(const color4& color) {
+void vui::Button::setBackHoverColor(const color4& color) {
     m_backHoverColor = color;
     updateColor();
 }
 
-void vui::IButton::setText(const nString& text) {
+void vui::Button::setText(const nString& text) {
     m_drawableText.setText(text);
     updateTextPosition();
 }
 
-void vui::IButton::setTextColor(const color4& color) {
+void vui::Button::setTextColor(const color4& color) {
     m_textColor = color;
     updateColor();
 }
 
-void vui::IButton::setTextHoverColor(const color4& color) {
+void vui::Button::setTextHoverColor(const color4& color) {
     m_textHoverColor = color;
     updateColor();
 }
 
-void vui::IButton::setTextAlign(vg::TextAlign textAlign) {
+void vui::Button::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
     updateTextPosition();
 }
 
-void vui::IButton::setTextScale(const f32v2& textScale) {
+void vui::Button::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
     updateTextPosition();
 }
 
-void vui::IButton::updateColor() {
+void vui::Button::updateColor() {
     if (m_isMouseIn) {
         m_drawableRect.setColor(m_backHoverColor);
         m_drawableText.setColor(m_textHoverColor);
@@ -153,7 +153,7 @@ void vui::IButton::updateColor() {
     refreshDrawables();
 }
 
-void vui::IButton::updateTextPosition() {
+void vui::Button::updateTextPosition() {
     const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
@@ -192,7 +192,7 @@ void vui::IButton::updateTextPosition() {
     refreshDrawables();
 }
 
-void vui::IButton::refreshDrawables() {
+void vui::Button::refreshDrawables() {
 
     // Use renderer default font if we don't have a font
     if (!m_drawableText.getFont()) {
@@ -206,7 +206,7 @@ void vui::IButton::refreshDrawables() {
     m_drawnRect = m_drawableRect;
 }
 
-void vui::IButton::onMouseMove(Sender s, const MouseMotionEvent& e) {
+void vui::Button::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {

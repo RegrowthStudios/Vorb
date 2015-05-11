@@ -34,8 +34,15 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(static_cast<GLenum>(textureTarget), texture);
-    glTexImage2D(static_cast<GLenum>(textureTarget), 0, (VGEnum)internalFormat, res->width, res->height, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, res->bytesUI8);
-
+    switch (textureTarget) {
+        case TextureTarget::TEXTURE_1D:
+        case TextureTarget::PROXY_TEXTURE_1D:
+            glTexImage1D(static_cast<GLenum>(textureTarget), 0, (VGEnum)internalFormat, res->width, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, res->bytesUI8);
+            break;
+        default:
+            glTexImage2D(static_cast<GLenum>(textureTarget), 0, (VGEnum)internalFormat, res->width, res->height, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, res->bytesUI8);
+            break;
+    }
     // Setup Texture Sampling Parameters
     samplingParameters->set(static_cast<GLenum>(textureTarget));
 

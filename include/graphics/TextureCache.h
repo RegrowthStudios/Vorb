@@ -53,10 +53,10 @@ namespace vorb {
             /// @param mipmapLevels: The max number of mipmap levels
             /// @return The texture ID or 0 if loading fails
             Texture addTexture(const vio::Path& filePath,
-                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                i32 mipmapLevels = INT_MAX);
+                               SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                               vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                               vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                               i32 mipmapLevels = INT_MAX);
 
             /// Loads and uploads a png texture and adds it to the cache or returns
             /// an existing texture ID if it already exists in the cache. Also
@@ -89,13 +89,11 @@ namespace vorb {
             /// @param mipmapLevels: The max number of mipmap levels
             /// @return The texture. ID will be 0 if loading fails
             Texture addTexture(const vio::Path& filePath,
-                const ui8* pixels,
-                ui32 width,
-                ui32 height,
-                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                i32 mipmapLevels = INT_MAX);
+                               const vg::BitmapResource* rs,
+                               SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                               vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                               vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                               i32 mipmapLevels = INT_MAX);
 
             /// Adds a texture to the cache
             /// @param filePath: The path of the texture

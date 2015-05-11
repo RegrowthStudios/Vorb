@@ -23,6 +23,7 @@ namespace vorb {
         enum class BufferTarget : VGEnum;
         enum class BufferUsageHint : VGEnum;
         class SamplerState;
+        class BitmapResource;
 
         // TODO(Ben): Flesh this out
         class GpuMemory {
@@ -36,14 +37,11 @@ namespace vorb {
             /// @param textureFormat: Format of uploaded pixels
             /// @param mipmapLevels: The max number of mipmap levels
             static void uploadTexture(VGTexture texture,
-                const ui8* pixels,
-                ui32 width,
-                ui32 height,
-                vg::SamplerState* samplingParameters,
-                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                i32 mipmapLevels = INT_MAX);
-
+                                      const vg::BitmapResource* res,
+                                      vg::SamplerState* samplingParameters,
+                                      vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                                      vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                      i32 mipmapLevels = INT_MAX);
 
             /// Uploads a texture to the GPU.
             /// @param pixels: The image pixels
@@ -54,21 +52,18 @@ namespace vorb {
             /// @param textureFormat: Format of uploaded pixels
             /// @param mipmapLevels: The max number of mipmap levels
             /// @return The texture ID
-            static VGTexture uploadTexture(const ui8* pixels,
-                ui32 width,
-                ui32 height,
-                SamplerState* samplingParameters,
-                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                i32 mipmapLevels = INT_MAX) {
+            static VGTexture uploadTexture(const vg::BitmapResource* res,
+                                           SamplerState* samplingParameters,
+                                           vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
+                                           vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
+                                           i32 mipmapLevels = INT_MAX) {
                 // Create one OpenGL texture
                 VGTexture textureID;
                 glGenTextures(1, &textureID);
-                uploadTexture(textureID, pixels, width, height, samplingParameters,
+                uploadTexture(textureID, res, samplingParameters,
                     internalFormat, textureFormat, mipmapLevels);
                 return textureID;
             }
-
 
             /// Frees a texture and sets its ID to 0
             /// @param textureID: The texture to free. Will be set to 0.
@@ -101,10 +96,10 @@ namespace vorb {
             /// @param data: Pointer to the buffer data
             /// @usage: The desired buffer usage
             static void uploadBufferData(VGBuffer bufferID,
-                BufferTarget target,
-                ui32 bufferSize,
-                const void* data,
-                BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
+                                         BufferTarget target,
+                                         ui32 bufferSize,
+                                         const void* data,
+                                         BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
 
             /// Changes The Total Texture Memory Usage By A Specified Amount
             /// @param s: Amount Of Memory Change In Bytes

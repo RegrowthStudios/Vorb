@@ -47,18 +47,17 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Load the pixel data
-    vg::BitmapResource bmp = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
-    if (!bmp.data) return Texture();
-    texture.width = bmp.width;
-    texture.height = bmp.height;
+    vg::ScopedBitmapResource rs = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
+    if (!rs.data) return Texture();
+    texture.width = rs.width;
+    texture.height = rs.height;
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(bmp.bytesUI8, texture.width, texture.height,
-        samplingParameters,
-        internalFormat,
-        textureFormat,
-        mipmapLevels);
-    vg::ImageIO().free(bmp);
+    texture.id = GpuMemory::uploadTexture(&rs,
+                                          samplingParameters,
+                                          internalFormat,
+                                          textureFormat,
+                                          mipmapLevels);
 
     // Store the texture in the cache
     insertTexture(texPath, texture);
@@ -66,12 +65,12 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 }
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
-                   OUT vg::BitmapResource& rvBitmap,
-                   vg::ImageIOFormat rvFormat,
-                   SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
-                   vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
-                   vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-                   i32 mipmapLevels /* = INT_MAX */) {
+                                         OUT vg::BitmapResource& rvBitmap,
+                                         vg::ImageIOFormat rvFormat,
+                                         SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
+                                         vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
+                                         vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                                         i32 mipmapLevels /* = INT_MAX */) {
     // Get absolute path
     vio::Path texPath;
     resolvePath(filePath, texPath);
@@ -87,7 +86,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     texture.height = rvBitmap.height;
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(rvBitmap.bytesUI8, texture.width, texture.height,
+    texture.id = GpuMemory::uploadTexture(&rvBitmap,
                                           samplingParameters,
                                           internalFormat,
                                           textureFormat,
@@ -99,9 +98,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
 }
 
 vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
-    const ui8* pixels,
-    ui32 width,
-    ui32 height,
+                                         const vg::BitmapResource* rs,
     SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
     vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
     vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
@@ -116,13 +113,13 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Upload the texture through GpuMemory
-    texture.id = GpuMemory::uploadTexture(pixels, width, height,
-        samplingParameters,
-        internalFormat,
-        textureFormat,
-        mipmapLevels);
-    texture.width = width;
-    texture.height = height;
+    texture.id = GpuMemory::uploadTexture(rs,
+                                          samplingParameters,
+                                          internalFormat,
+                                          textureFormat,
+                                          mipmapLevels);
+    texture.width = rs->width;
+    texture.height = rs->height;
 
     // Store the texture in the cache
     insertTexture(texPath, texture);

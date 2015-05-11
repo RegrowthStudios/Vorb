@@ -38,25 +38,25 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual VGTexture getTexture(WidgetID id) const;
-            virtual color4 getBackColor(WidgetID id) const;
-            virtual color4 getBackHoverColor(WidgetID id) const;
-            virtual color4 getTextColor(WidgetID id) const;
-            virtual color4 getTextHoverColor(WidgetID id) const;
-            virtual nString getText(WidgetID id) const;
-            virtual vg::TextAlign getTextAlign(WidgetID id) const;
-            virtual f32v2 getTextScale(WidgetID id) const;
+            virtual VGTexture getTexture(Widget* w) const;
+            virtual color4 getBackColor(Widget* w) const;
+            virtual color4 getBackHoverColor(Widget* w) const;
+            virtual color4 getTextColor(Widget* w) const;
+            virtual color4 getTextHoverColor(Widget* w) const;
+            virtual nString getText(Widget* w) const;
+            virtual vg::TextAlign getTextAlign(Widget* w) const;
+            virtual f32v2 getTextScale(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setBackColor(WidgetID id, color4 color);
-            virtual void setBackHoverColor(WidgetID id, color4 color);
-            virtual void setText(WidgetID id, nString text);
-            virtual void setTextColor(WidgetID id, color4 color);
-            virtual void setTextHoverColor(WidgetID id, color4 color);
-            virtual void setTextAlign(WidgetID id, int textAlign);
-            virtual void setTextScale(WidgetID id, f32v2 textScale);
+            virtual void setBackColor(Widget* w, color4 color);
+            virtual void setBackHoverColor(Widget* w, color4 color);
+            virtual void setText(Widget* w, nString text);
+            virtual void setTextColor(Widget* w, color4 color);
+            virtual void setTextHoverColor(Widget* w, color4 color);
+            virtual void setTextAlign(Widget* w, int textAlign);
+            virtual void setTextScale(Widget* w, f32v2 textScale);
         };
     }
 }

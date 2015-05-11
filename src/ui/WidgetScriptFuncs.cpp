@@ -23,6 +23,7 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_RDEL(env, getAnchor);
         REGISTER_RDEL(env, getStyle);
         REGISTER_RDEL(env, getDock);
+        REGISTER_RDEL(env, getNumWidgets);
         REGISTER_RDEL(env, isEnabled);
         REGISTER_RDEL(env, getHeight);
         REGISTER_RDEL(env, getWidth);
@@ -31,7 +32,6 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_RDEL(env, getDimensions);
         REGISTER_RDEL(env, getPosition);
         REGISTER_RDEL(env, getRelativePosition);
-        //REGISTER_RDEL(env, getWidgets);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
@@ -60,172 +60,130 @@ template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(cons
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
-vui::WidgetID vui::WidgetScriptFuncs::registerWidget(Widget* widget) {
-    WidgetID id = m_idGenerator.generate();
-    m_widgets[id] = widget;
-    return id;
-}
-
-void vui::WidgetScriptFuncs::unregisterWidget(WidgetID id) {
-    m_widgets.erase(id);
-    m_idGenerator.recycle(id);
-}
-
-vui::Widget* vui::WidgetScriptFuncs::getWidget(WidgetID id) const {
-    auto& it = m_widgets.find(id);
-    if (it == m_widgets.end()) return nullptr;
-    return it->second;
-}
-
-void vui::WidgetScriptFuncs::dispose(WidgetID id) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::dispose(Widget* w) {
     w->dispose();
 }
 
-void vui::WidgetScriptFuncs::enable(WidgetID id) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::enable(Widget* w) {
     w->enable();
 }
 
-void vui::WidgetScriptFuncs::disable(WidgetID id) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::disable(Widget* w) {
     w->disable();
 }
 
-bool vui::WidgetScriptFuncs::getFixedHeight(WidgetID id) const {
-    Widget* w = getWidget(id);
+bool vui::WidgetScriptFuncs::getFixedHeight(Widget* w) const {
     return w->getFixedHeight();
 }
 
-bool vui::WidgetScriptFuncs::getFixedWidth(WidgetID id) const {
-    Widget* w = getWidget(id);
+bool vui::WidgetScriptFuncs::getFixedWidth(Widget* w) const {
     return w->getFixedWidth();
 }
 
-bool vui::WidgetScriptFuncs::getSelectable(WidgetID id) const {
-    Widget* w = getWidget(id);
+bool vui::WidgetScriptFuncs::getSelectable(Widget* w) const {
     return w->getSelectable();
 }
 
-bool vui::WidgetScriptFuncs::isMouseIn(WidgetID id) const {
-    Widget* w = getWidget(id);
+bool vui::WidgetScriptFuncs::isMouseIn(Widget* w) const {
     return w->isMouseIn();
 }
 
-int vui::WidgetScriptFuncs::getAnchor(WidgetID id) const {
+int vui::WidgetScriptFuncs::getAnchor(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-int vui::WidgetScriptFuncs::getStyle(WidgetID id) const {
+int vui::WidgetScriptFuncs::getStyle(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-int vui::WidgetScriptFuncs::getDock(WidgetID id) const {
+int vui::WidgetScriptFuncs::getDock(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-bool vui::WidgetScriptFuncs::isEnabled(WidgetID id) const {
-    Widget* w = getWidget(id);
+int vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
+    return w->getWidgets().size();
+}
+
+bool vui::WidgetScriptFuncs::isEnabled(Widget* w) const {
     return w->isEnabled();
 }
 
-f32 vui::WidgetScriptFuncs::getHeight(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32 vui::WidgetScriptFuncs::getHeight(Widget* w) const {
     return w->getHeight();
 }
 
-f32 vui::WidgetScriptFuncs::getWidth(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32 vui::WidgetScriptFuncs::getWidth(Widget* w) const {
     return w->getWidth();
 }
 
-f32 vui::WidgetScriptFuncs::getX(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32 vui::WidgetScriptFuncs::getX(Widget* w) const {
     return w->getX();
 }
 
-f32 vui::WidgetScriptFuncs::getY(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32 vui::WidgetScriptFuncs::getY(Widget* w) const {
     return w->getY();
 }
 
-f32v2 vui::WidgetScriptFuncs::getDimensions(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32v2 vui::WidgetScriptFuncs::getDimensions(Widget* w) const {
     return w->getDimensions();
 }
 
-f32v2 vui::WidgetScriptFuncs::getPosition(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32v2 vui::WidgetScriptFuncs::getPosition(Widget* w) const {
     return w->getPosition();
 }
 
-f32v2 vui::WidgetScriptFuncs::getRelativePosition(WidgetID id) const {
-    Widget* w = getWidget(id);
+f32v2 vui::WidgetScriptFuncs::getRelativePosition(Widget* w) const {
     return w->getRelativePosition();
 }
 
-std::vector<vui::WidgetID> vui::WidgetScriptFuncs::getWidgets(WidgetID id) const {
-    return std::vector<vui::WidgetID>(); // TODO(Ben): Implement
-}
-
-void vui::WidgetScriptFuncs::setAnchor(WidgetID id, int anchor) {
+void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setDestRect(WidgetID id, f32v4 destRect) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) {
     w->setDestRect(destRect);
 }
 
-void vui::WidgetScriptFuncs::setDimensions(WidgetID id, f32v2 dims) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) {
     w->setDimensions(dims);
 }
 
-void vui::WidgetScriptFuncs::setDock(WidgetID id, int dock) {
+void vui::WidgetScriptFuncs::setDock(Widget* w, int dock) {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setFixedHeight(WidgetID id, bool fixedHeight) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) {
     w->setFixedHeight(fixedHeight);
 }
 
-void vui::WidgetScriptFuncs::setFixedWidth(WidgetID id, bool fixedWidth) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) {
     w->setFixedWidth(fixedWidth);
 }
 
-void vui::WidgetScriptFuncs::setHeight(WidgetID id, f32 height) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) {
     w->setHeight(height);
 }
 
-void vui::WidgetScriptFuncs::setPosition(WidgetID id, f32v2 pos) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2 pos) {
     w->setPosition(pos);
 }
 
-void vui::WidgetScriptFuncs::setSelectable(WidgetID id, bool selectable) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setSelectable(Widget* w, bool selectable) {
     w->setSelectable(selectable);
 }
 
-void vui::WidgetScriptFuncs::setStyle(WidgetID id, int style) {
+void vui::WidgetScriptFuncs::setStyle(Widget* w, int style) {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setWidth(WidgetID id, f32 width) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setWidth(Widget* w, f32 width) {
     w->setWidth(width);
 }
 
-void vui::WidgetScriptFuncs::setX(WidgetID id, f32 x) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setX(Widget* w, f32 x) {
     w->setX(x);
 }
 
-void vui::WidgetScriptFuncs::setY(WidgetID id, f32 y) {
-    Widget* w = getWidget(id);
+void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) {
     w->setY(y);
 }

@@ -34,8 +34,6 @@ DECL_VSCRIPT(class Environment)
 namespace vorb {
     namespace ui {
 
-        typedef int WidgetID;
-
         // Forward Declarations
         class Widget;
 
@@ -43,63 +41,54 @@ namespace vorb {
         public:
             template <class T = WidgetScriptFuncs>
             void registerFuncs(const cString nSpace, vscript::Environment& env);
-            virtual WidgetID registerWidget(Widget* widget);
-            virtual void unregisterWidget(WidgetID id);
-            Widget* getWidget(WidgetID id) const;
         protected:
 
             /*! @brief Releases all resources used by the Widget.
             *
             * Gets called in the destructor.
             */
-            virtual void dispose(WidgetID id);
+            virtual void dispose(Widget* w);
             /*! @brief Enables events* */
-            virtual void enable(WidgetID id);
+            virtual void enable(Widget* w);
             /*! @brief Disables events* */
-            virtual void disable(WidgetID id);
+            virtual void disable(Widget* w);
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual bool getFixedHeight(WidgetID id) const;
-            virtual bool getFixedWidth(WidgetID id) const;
-            virtual bool getSelectable(WidgetID id) const;
-            virtual bool isMouseIn(WidgetID id) const;
-            virtual int getAnchor(WidgetID id) const;
-            virtual int getStyle(WidgetID id) const;
-            virtual int getDock(WidgetID id) const;
-            virtual bool isEnabled(WidgetID id) const;
-            virtual f32 getHeight(WidgetID id) const;
-            virtual f32 getWidth(WidgetID id) const;
-            virtual f32 getX(WidgetID id) const;
-            virtual f32 getY(WidgetID id) const;
-            virtual f32v2 getDimensions(WidgetID id) const;
-            virtual f32v2 getPosition(WidgetID id) const;
-            virtual f32v2 getRelativePosition(WidgetID id) const;
-            virtual std::vector<WidgetID> getWidgets(WidgetID id) const;
+            virtual bool getFixedHeight(Widget* w) const;
+            virtual bool getFixedWidth(Widget* w) const;
+            virtual bool getSelectable(Widget* w) const;
+            virtual bool isMouseIn(Widget* w) const;
+            virtual int getAnchor(Widget* w) const;
+            virtual int getStyle(Widget* w) const;
+            virtual int getDock(Widget* w) const;
+            virtual int getNumWidgets(Widget* w) const;
+            virtual bool isEnabled(Widget* w) const;
+            virtual f32 getHeight(Widget* w) const;
+            virtual f32 getWidth(Widget* w) const;
+            virtual f32 getX(Widget* w) const;
+            virtual f32 getY(Widget* w) const;
+            virtual f32v2 getDimensions(Widget* w) const;
+            virtual f32v2 getPosition(Widget* w) const;
+            virtual f32v2 getRelativePosition(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setAnchor(WidgetID id, int anchor);
-            virtual void setDestRect(WidgetID id, f32v4 destRect);
-            virtual void setDimensions(WidgetID id, f32v2 dims);
-            virtual void setDock(WidgetID id, int dock);
-            virtual void setFixedHeight(WidgetID id, bool fixedHeight);
-            virtual void setFixedWidth(WidgetID id, bool fixedWidth);
-            virtual void setHeight(WidgetID id, f32 height);
-            virtual void setPosition(WidgetID id, f32v2 pos);
-            virtual void setSelectable(WidgetID id, bool selectable);
-            virtual void setStyle(WidgetID id, int style);
-            virtual void setWidth(WidgetID id, f32 width);
-            virtual void setX(WidgetID id, f32 x);
-            virtual void setY(WidgetID id, f32 y);
-
-            /************************************************************************/
-            /* Members                                                              */
-            /************************************************************************/
-            vcore::IDGenerator<WidgetID> m_idGenerator;
-            std::map<WidgetID, Widget*> m_widgets;
+            virtual void setAnchor(Widget* w, int anchor);
+            virtual void setDestRect(Widget* w, f32v4 destRect);
+            virtual void setDimensions(Widget* w, f32v2 dims);
+            virtual void setDock(Widget* w, int dock);
+            virtual void setFixedHeight(Widget* w, bool fixedHeight);
+            virtual void setFixedWidth(Widget* w, bool fixedWidth);
+            virtual void setHeight(Widget* w, f32 height);
+            virtual void setPosition(Widget* w, f32v2 pos);
+            virtual void setSelectable(Widget* w, bool selectable);
+            virtual void setStyle(Widget* w, int style);
+            virtual void setWidth(Widget* w, f32 width);
+            virtual void setX(Widget* w, f32 x);
+            virtual void setY(Widget* w, f32 y);
         };
     }
 }

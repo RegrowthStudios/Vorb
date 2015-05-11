@@ -41,77 +41,77 @@ template void vui::ButtonScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(cons
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
-VGTexture vorb::ui::ButtonScriptFuncs::getTexture(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+VGTexture vorb::ui::ButtonScriptFuncs::getTexture(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getTexture();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getBackColor(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+color4 vorb::ui::ButtonScriptFuncs::getBackColor(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getBackColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getBackHoverColor(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+color4 vorb::ui::ButtonScriptFuncs::getBackHoverColor(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getBackHoverColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getTextColor(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+color4 vorb::ui::ButtonScriptFuncs::getTextColor(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getTextColor();
 }
 
-color4 vorb::ui::ButtonScriptFuncs::getTextHoverColor(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+color4 vorb::ui::ButtonScriptFuncs::getTextHoverColor(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getTextHoverColor();
 }
 
-nString vorb::ui::ButtonScriptFuncs::getText(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+nString vorb::ui::ButtonScriptFuncs::getText(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getText();
 }
 
-vg::TextAlign vorb::ui::ButtonScriptFuncs::getTextAlign(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+vg::TextAlign vorb::ui::ButtonScriptFuncs::getTextAlign(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getTextAlign();
 }
 
-f32v2 vorb::ui::ButtonScriptFuncs::getTextScale(WidgetID id) const {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+f32v2 vorb::ui::ButtonScriptFuncs::getTextScale(Widget* w) const {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     return b->getTextScale();
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackColor(WidgetID id, color4 color) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setBackColor(Widget* w, color4 color) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setBackColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackHoverColor(WidgetID id, color4 color) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setBackHoverColor(Widget* w, color4 color) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setBackHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setText(WidgetID id, nString text) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setText(Widget* w, nString text) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setText(text);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextColor(WidgetID id, color4 color) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setTextColor(Widget* w, color4 color) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setTextColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextHoverColor(WidgetID id, color4 color) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setTextHoverColor(Widget* w, color4 color) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setTextHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextAlign(WidgetID id, int textAlign) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setTextAlign(Widget* w, int textAlign) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setTextAlign((vg::TextAlign)textAlign);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextScale(WidgetID id, f32v2 textScale) {
-    vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
+void vorb::ui::ButtonScriptFuncs::setTextScale(Widget* w, f32v2 textScale) {
+    vui::IButton* b = static_cast<vui::IButton*>(w);
     b->setTextScale(textScale);
 }

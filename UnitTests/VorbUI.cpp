@@ -89,8 +89,6 @@ public:
 
         // Load script file and init
         env.init(&form, "data/scripts/Form1.lua");
-        
-
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         form.dispose();

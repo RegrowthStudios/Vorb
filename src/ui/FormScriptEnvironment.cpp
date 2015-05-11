@@ -39,8 +39,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
     return true;
 }
 
-int vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
+vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::IButton* b = new vui::IButton(name, f32v4(x, y, width, height));
     m_form->addWidget(b);
-    return m_buttonFuncs.registerWidget(b);
+    return b;
 }

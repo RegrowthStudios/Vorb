@@ -13,7 +13,8 @@ vui::FormScriptEnvironment::~FormScriptEnvironment() {
     // Empty
 }
 
-void vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
+bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
+    m_form = form;
 
     { // Initialize callbacks
         m_env.setNamespaces("Form");
@@ -22,15 +23,21 @@ void vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
     }
 
     // Load script
-    m_env.load(filePath);
+    if (!m_env.load(filePath)) {
+        fprintf(stderr, "Failed to load FormScriptEnvironment script %s\n", filePath);
+        return false;
+    }
 
     { // Call init function
         m_init = m_env[INIT_FUNCTION_NAME];
         m_init();
     }
+
+    return true;
 }
 
-int vui::FormScriptEnvironment::makeButton(const nString& name, f32 x, f32 y, f32 width, f32 height) {
+int vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::IButton* b = new vui::IButton(name, f32v4(x, y, width, height));
     m_form->addWidget(b);
+    return 0;
 }

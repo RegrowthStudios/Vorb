@@ -229,7 +229,13 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\FormScriptEnvironment.cpp">
-      <Filter>UI</Filter>
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ButtonScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\WidgetScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,7 +589,13 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\FormScriptEnvironment.h">
-      <Filter>UI</Filter>
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ButtonScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetScriptFuncs.h">
+      <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -673,6 +685,9 @@
     </Filter>
     <Filter Include="UI\Controls">
       <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Script">
+      <UniqueIdentifier>{fdb66444-3703-44c0-8d58-c7904078ab4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -64,7 +64,7 @@ namespace vorb {
             IWidgetContainer(const nString& name, const f32v4& destRect = f32v4(0));     
             /*! @brief Destructor that unhooks events */
             virtual ~IWidgetContainer();
-            /*! @brief Releases all resources used by the Control.
+            /*! @brief Releases all resources used by the Widget.
              *
              * Gets called in the destructor.
              */
@@ -121,7 +121,6 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // TODO(Ben): Propagate changes to children
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setDestRect(const f32v4& destRect);
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }

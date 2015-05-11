@@ -61,6 +61,7 @@ namespace vorb {
             virtual void setTextHoverColor(Button* b, color4 color);
             virtual void setTextAlign(Button* b, vg::TextAlign textAlign);
             virtual void setTextScale(Button* b, f32v2 textScale);
+            virtual void setTexture(Button* b, VGTexture texture);
         };
     }
 }

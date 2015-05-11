@@ -25,6 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "../script/Environment.h"
+#include "../script/GraphicsScriptInterface.h"
 #include "ButtonScriptFuncs.h"
 
 namespace vorb {
@@ -45,6 +46,7 @@ namespace vorb {
             Form* m_form = nullptr;
             vscript::Environment m_env;
             vscript::Function m_init;
+            vscript::GraphicsScriptInterface m_graphicsInterface;
             ButtonScriptFuncs m_buttonFuncs;
         };
     }

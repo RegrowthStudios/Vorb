@@ -133,11 +133,13 @@ namespace vorb {
         private:
             /// Texture loading function used by scripts
             VGTexture scriptLoadTexture(nString filePath,
-                             vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
-                             SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
-                             vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
-                             vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                             i32 mipmapLevels = INT_MAX);
+                             vg::TextureTarget textureTarget,
+                             SamplerState* samplingParameters,
+                             vg::TextureInternalFormat internalFormat,
+                             vg::TextureFormat textureFormat,
+                             i32 mipmapLevels);
+            /// Easy texture loading function
+            VGTexture scriptLoadTextureDefault(nString filePath);
             /// Texture freeing function used by scripts
             void scriptFreeTexture(VGTexture texture);
 #endif

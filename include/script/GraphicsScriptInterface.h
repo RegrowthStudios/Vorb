@@ -29,7 +29,7 @@
 
 namespace vorb {
     namespace script {
-        class GraphicsScriptingInterface {
+        class GraphicsScriptInterface {
         public:
             virtual void registerGraphics(vscript::Environment& env);
             virtual void dispose();

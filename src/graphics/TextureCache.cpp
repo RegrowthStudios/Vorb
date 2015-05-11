@@ -213,6 +213,7 @@ void vg::TextureCache::dispose() {
 #ifdef VORB_USING_SCRIPT
 void vg::TextureCache::registerTextureCache(vscript::Environment& env) {
     env.addCRDelegate("loadTexture", makeRDelegate(*this, &TextureCache::scriptLoadTexture));
+    env.addCRDelegate("loadTextureDefault", makeRDelegate(*this, &TextureCache::scriptLoadTextureDefault));
     env.addCDelegate("freeTexture", makeDelegate(*this, &TextureCache::scriptFreeTexture));
 }
 
@@ -222,9 +223,12 @@ VGTexture vg::TextureCache::scriptLoadTexture(nString filePath,
                                    vg::TextureInternalFormat internalFormat /*= vg::TextureInternalFormat::RGBA*/,
                                    vg::TextureFormat textureFormat /*= vg::TextureFormat::RGBA*/,
                                    i32 mipmapLevels /*= INT_MAX*/) {
-    Texture t = addTexture(filePath, textureTarget, samplingParameters,
-                internalFormat, textureFormat, mipmapLevels);
-    return t.id;
+    return addTexture(filePath, textureTarget, samplingParameters,
+                      internalFormat, textureFormat, mipmapLevels).id;
+}
+
+VGTexture vg::TextureCache::scriptLoadTextureDefault(nString filePath) {
+    return addTexture(filePath).id;
 }
 
 void vg::TextureCache::scriptFreeTexture(VGTexture texture) {

@@ -23,6 +23,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);
+        // Graphics functions
+        m_graphicsInterface.registerGraphics(m_env);
     }
 
     // Initialize enums and constants
@@ -67,6 +69,9 @@ void vorb::ui::FormScriptEnvironment::registerConstants() {
         m_env.addValue("FILL", DockStyle::FILL);
         m_env.setNamespaces();
     }
+    // Misc constants
+    m_env.addValue("INT_MAX", INT_MAX);
+    m_env.addValue("INT_MIN", INT_MIN);
 }
 
 vui::Widget* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {

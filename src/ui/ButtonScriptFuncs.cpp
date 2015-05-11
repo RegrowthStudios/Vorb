@@ -32,6 +32,8 @@ void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_DEL(env, setTextHoverColor);
         REGISTER_DEL(env, setTextAlign);
         REGISTER_DEL(env, setTextScale);
+        REGISTER_DEL(env, setTexture);
+        
     }
     env.setNamespaces();
 }
@@ -99,4 +101,8 @@ void vorb::ui::ButtonScriptFuncs::setTextAlign(Button* b, vg::TextAlign textAlig
 
 void vorb::ui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) {
     b->setTextScale(textScale);
+}
+
+void vorb::ui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) {
+    b->setTexture(texture);
 }

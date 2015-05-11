@@ -14,19 +14,26 @@
 #define TEXTURE_H_
 
 #include "gtypes.h"
+#include "GLEnums.h"
 
 namespace vorb {
     namespace graphics {
         /// Wrapper struct for a texture
         class Texture {
         public:
-            Texture(VGTexture id = 0, ui32 w = 0, ui32 h = 0) :
+            Texture(VGTexture id = 0u,
+                    ui32 w = 0u,
+                    ui32 h = 0u,
+                    vg::TextureTarget target = vg::TextureTarget::TEXTURE_2D) :
                 id(id),
                 width(w),
                 height(h) {
                 // Empty
             }
+            void bind();
+            void unbind();
 
+            vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D;
             VGTexture id = 0; ///< OpenGL texture ID
             ui32 width = 0; ///< Texture width in pixels
             ui32 height = 0; ///< Texture height in pixels

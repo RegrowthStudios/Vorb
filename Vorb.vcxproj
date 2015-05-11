@@ -294,6 +294,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\io\KegEnum.cpp" />
     <ClCompile Include="src\io\KegEnvironment.cpp" />
     <ClCompile Include="src\io\KegRead.cpp" />

@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "ui/WidgetScriptFuncs.h"
 #include "ui/Widget.h"
+#include "ui/ButtonScriptFuncs.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 
-DECL_VUI(class ButtonScriptFuncs)
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
@@ -31,7 +31,7 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_RDEL(env, getDimensions);
         REGISTER_RDEL(env, getPosition);
         REGISTER_RDEL(env, getRelativePosition);
-        REGISTER_RDEL(env, getWidgets);
+        //REGISTER_RDEL(env, getWidgets);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
@@ -60,7 +60,7 @@ template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(cons
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
-WidgetID vui::WidgetScriptFuncs::registerWidget(Widget* widget) {
+vui::WidgetID vui::WidgetScriptFuncs::registerWidget(Widget* widget) {
     WidgetID id = m_idGenerator.generate();
     m_widgets[id] = widget;
     return id;
@@ -112,15 +112,15 @@ bool vui::WidgetScriptFuncs::isMouseIn(WidgetID id) const {
     return w->isMouseIn();
 }
 
-const int vui::WidgetScriptFuncs::getAnchor(WidgetID id) const {
+int vui::WidgetScriptFuncs::getAnchor(WidgetID id) const {
     return 0; // TODO(Ben): Implement
 }
 
-const int vui::WidgetScriptFuncs::getStyle(WidgetID id) const {
+int vui::WidgetScriptFuncs::getStyle(WidgetID id) const {
     return 0; // TODO(Ben): Implement
 }
 
-const int vui::WidgetScriptFuncs::getDock(WidgetID id) const {
+int vui::WidgetScriptFuncs::getDock(WidgetID id) const {
     return 0; // TODO(Ben): Implement
 }
 
@@ -164,9 +164,8 @@ f32v2 vui::WidgetScriptFuncs::getRelativePosition(WidgetID id) const {
     return w->getRelativePosition();
 }
 
-const std::vector<vui::Widget*>& vui::WidgetScriptFuncs::getWidgets(WidgetID id) const {
-    Widget* w = getWidget(id);
-    return w->getWidgets();
+std::vector<vui::WidgetID> vui::WidgetScriptFuncs::getWidgets(WidgetID id) const {
+    return std::vector<vui::WidgetID>(); // TODO(Ben): Implement
 }
 
 void vui::WidgetScriptFuncs::setAnchor(WidgetID id, int anchor) {

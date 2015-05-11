@@ -17,9 +17,12 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
     m_form = form;
 
     { // Initialize callbacks
+        // Form functions
         m_env.setNamespaces("Form");
         m_env.addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env.setNamespaces();
+        // Button functions
+        m_buttonFuncs.registerFuncs("Button", m_env);
     }
 
     // Load script
@@ -39,5 +42,5 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
 int vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::IButton* b = new vui::IButton(name, f32v4(x, y, width, height));
     m_form->addWidget(b);
-    return 0;
+    return m_buttonFuncs.registerWidget(b);
 }

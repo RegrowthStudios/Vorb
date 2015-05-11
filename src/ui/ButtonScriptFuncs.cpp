@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "ui/ButtonScriptFuncs.h"
 #include "ui/IButton.h"
+#include "script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
 #define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
 
 template <class T = ButtonScriptFuncs>
-void registerFuncs(const cString nSpace, vscript::Environment& env) {
+void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     // Call base register
     WidgetScriptFuncs::registerFuncs<ButtonScriptFuncs>(nSpace, env);
 
@@ -15,22 +16,22 @@ void registerFuncs(const cString nSpace, vscript::Environment& env) {
 
     { // Register all functions
         // Getters
-        REGISTER_RDEL(env, "getTexture");
-        REGISTER_RDEL(env, "getBackColor");
-        REGISTER_RDEL(env, "getBackHoverColor");
-        REGISTER_RDEL(env, "getTextColor");
-        REGISTER_RDEL(env, "getTextHoverColor");
-        REGISTER_RDEL(env, "getText");
-        REGISTER_RDEL(env, "getTextAlign");
-        REGISTER_RDEL(env, "getTextScale");
+        REGISTER_RDEL(env, getTexture);
+        REGISTER_RDEL(env, getBackColor);
+        REGISTER_RDEL(env, getBackHoverColor);
+        REGISTER_RDEL(env, getTextColor);
+        REGISTER_RDEL(env, getTextHoverColor);
+        REGISTER_RDEL(env, getText);
+        REGISTER_RDEL(env, getTextAlign);
+        REGISTER_RDEL(env, getTextScale);
         // Setters
-        REGISTER_DEL(env, "setBackColor");
-        REGISTER_DEL(env, "setBackHoverColor");
-        REGISTER_DEL(env, "setText");
-        REGISTER_DEL(env, "setTextColor");
-        REGISTER_DEL(env, "setTextHoverColor");
-        REGISTER_DEL(env, "setTextAlign");
-        REGISTER_DEL(env, "setTextScale");
+        REGISTER_DEL(env, setBackColor);
+        REGISTER_DEL(env, setBackHoverColor);
+        REGISTER_DEL(env, setText);
+        REGISTER_DEL(env, setTextColor);
+        REGISTER_DEL(env, setTextHoverColor);
+        REGISTER_DEL(env, setTextAlign);
+        REGISTER_DEL(env, setTextScale);
     }
     env.setNamespaces();
 }
@@ -80,27 +81,27 @@ f32v2 vorb::ui::ButtonScriptFuncs::getTextScale(WidgetID id) const {
     return b->getTextScale();
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackColor(WidgetID id, const color4& color) {
+void vorb::ui::ButtonScriptFuncs::setBackColor(WidgetID id, color4 color) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setBackColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setBackHoverColor(WidgetID id, const color4& color) {
+void vorb::ui::ButtonScriptFuncs::setBackHoverColor(WidgetID id, color4 color) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setBackHoverColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setText(WidgetID id, const nString& text) {
+void vorb::ui::ButtonScriptFuncs::setText(WidgetID id, nString text) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setText(text);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextColor(WidgetID id, const color4& color) {
+void vorb::ui::ButtonScriptFuncs::setTextColor(WidgetID id, color4 color) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setTextColor(color);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextHoverColor(WidgetID id, const color4& color) {
+void vorb::ui::ButtonScriptFuncs::setTextHoverColor(WidgetID id, color4 color) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setTextHoverColor(color);
 }
@@ -110,7 +111,7 @@ void vorb::ui::ButtonScriptFuncs::setTextAlign(WidgetID id, int textAlign) {
     b->setTextAlign((vg::TextAlign)textAlign);
 }
 
-void vorb::ui::ButtonScriptFuncs::setTextScale(WidgetID id, const f32v2& textScale) {
+void vorb::ui::ButtonScriptFuncs::setTextScale(WidgetID id, f32v2 textScale) {
     vui::IButton* b = static_cast<vui::IButton*>(getWidget(id));
     b->setTextScale(textScale);
 }

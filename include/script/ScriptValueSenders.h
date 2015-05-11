@@ -64,6 +64,7 @@ namespace vorb {
         SCRIPT_SENDER(nString);
         SCRIPT_SENDER(const cString);
         SCRIPT_SENDER(void*);
+        SCRIPT_SENDER(color4);
 
         template<typename T>
         struct ScriptValueSender<T, typename std::enable_if<std::is_enum<T>::value>::type> {

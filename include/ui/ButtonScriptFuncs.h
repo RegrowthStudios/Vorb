@@ -25,15 +25,15 @@
 #endif // !VORB_USING_PCH
 
 #include "WidgetScriptFuncs.h"
-#include "graphics/gtypes.h"
-#include "graphics/SpriteFont.h"
+#include "../graphics/gtypes.h"
+#include "../graphics/SpriteFont.h"
 
 namespace vorb {
     namespace ui {
         class ButtonScriptFuncs : public WidgetScriptFuncs {
         public:
             template <class T = ButtonScriptFuncs>
-            virtual void registerFuncs(const cString nSpace, vscript::Environment& env) override;
+            void registerFuncs(const cString nSpace, vscript::Environment& env);
         protected:
             /************************************************************************/
             /* Getters                                                              */
@@ -50,13 +50,13 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setBackColor(WidgetID id, const color4& color);
-            virtual void setBackHoverColor(WidgetID id, const color4& color);
-            virtual void setText(WidgetID id, const nString& text);
-            virtual void setTextColor(WidgetID id, const color4& color);
-            virtual void setTextHoverColor(WidgetID id, const color4& color);
+            virtual void setBackColor(WidgetID id, color4 color);
+            virtual void setBackHoverColor(WidgetID id, color4 color);
+            virtual void setText(WidgetID id, nString text);
+            virtual void setTextColor(WidgetID id, color4 color);
+            virtual void setTextHoverColor(WidgetID id, color4 color);
             virtual void setTextAlign(WidgetID id, int textAlign);
-            virtual void setTextScale(WidgetID id, const f32v2& textScale);
+            virtual void setTextScale(WidgetID id, f32v2 textScale);
         };
     }
 }

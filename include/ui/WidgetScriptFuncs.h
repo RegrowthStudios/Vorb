@@ -30,10 +30,11 @@
 
 DECL_VSCRIPT(class Environment)
 
-typedef int WidgetID;
 
 namespace vorb {
     namespace ui {
+
+        typedef int WidgetID;
 
         // Forward Declarations
         class Widget;
@@ -41,7 +42,7 @@ namespace vorb {
         class WidgetScriptFuncs {
         public:
             template <class T = WidgetScriptFuncs>
-            virtual void registerFuncs(const cString nSpace, vscript::Environment& env);
+            void registerFuncs(const cString nSpace, vscript::Environment& env);
             virtual WidgetID registerWidget(Widget* widget);
             virtual void unregisterWidget(WidgetID id);
             Widget* getWidget(WidgetID id) const;
@@ -64,9 +65,9 @@ namespace vorb {
             virtual bool getFixedWidth(WidgetID id) const;
             virtual bool getSelectable(WidgetID id) const;
             virtual bool isMouseIn(WidgetID id) const;
-            virtual const int getAnchor(WidgetID id) const;
-            virtual const int getStyle(WidgetID id) const;
-            virtual const int getDock(WidgetID id) const;
+            virtual int getAnchor(WidgetID id) const;
+            virtual int getStyle(WidgetID id) const;
+            virtual int getDock(WidgetID id) const;
             virtual bool isEnabled(WidgetID id) const;
             virtual f32 getHeight(WidgetID id) const;
             virtual f32 getWidth(WidgetID id) const;
@@ -75,7 +76,7 @@ namespace vorb {
             virtual f32v2 getDimensions(WidgetID id) const;
             virtual f32v2 getPosition(WidgetID id) const;
             virtual f32v2 getRelativePosition(WidgetID id) const;
-            virtual const std::vector<Widget*>& getWidgets(WidgetID id) const;
+            virtual std::vector<WidgetID> getWidgets(WidgetID id) const;
 
             /************************************************************************/
             /* Setters                                                              */

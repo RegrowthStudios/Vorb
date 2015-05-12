@@ -49,7 +49,7 @@ namespace vorb {
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
-            virtual void init(IGameScreen* ownerScreen, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Adds a widget to the Form and initializes it for rendering.
              * 
              * @param widget: The Widget to add.

@@ -321,6 +321,7 @@
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
     <ClCompile Include="src\ui\Panel.cpp" />
     <ClCompile Include="src\ui\PanelScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\ScriptedUI.cpp" />
     <ClCompile Include="src\ui\Slider.cpp" />
     <ClCompile Include="src\ui\SliderScriptFuncs.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
@@ -450,6 +451,7 @@
     <ClInclude Include="include\ui\IWidgetContainer.h" />
     <ClInclude Include="include\ui\Panel.h" />
     <ClInclude Include="include\ui\PanelScriptFuncs.h" />
+    <ClInclude Include="include\ui\ScriptedUI.h" />
     <ClInclude Include="include\ui\Slider.h" />
     <ClInclude Include="include\ui\SliderScriptFuncs.h" />
     <ClInclude Include="include\ui\Widget.h" />

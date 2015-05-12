@@ -258,6 +258,9 @@
     <ClCompile Include="src\ui\PanelScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\ScriptedUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -635,6 +638,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\PanelScriptFuncs.h">
       <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ScriptedUI.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

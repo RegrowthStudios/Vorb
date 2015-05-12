@@ -23,22 +23,19 @@ void vui::UIRenderer::init(vg::SpriteFont* defaultFont /*= nullptr*/,
 }
 
 void vui::UIRenderer::add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc) {
-    ui32 index = m_drawFuncs.size();
-    m_widgetLookup[widget].push_back(index);
-    m_drawFuncs.push_back(drawFunc);
-    m_refreshFuncs.push_back(refreshFunc);
+    m_drawableFuncs.push_back({ widget, drawFunc, refreshFunc });
 }
 
 bool vui::UIRenderer::remove(const Widget* widget) {
-    auto& it = m_widgetLookup.find(widget);
-    if (it == m_widgetLookup.end()) return false;
+    bool rv = false;
     // Loop through and remove all // TODO(Ben): OPTIMIZE THIS CRAP
-    for (auto& id : it->second) {
-        m_drawFuncs.erase(m_drawFuncs.begin() + id);
-        m_refreshFuncs.erase(m_refreshFuncs.begin() + id);
+    for (int i = m_drawableFuncs.size() - 1; i >= 0; i--) {
+        if (m_drawableFuncs[i].owner == widget) {
+            m_drawableFuncs.erase(m_drawableFuncs.begin() + i);
+            rv = true;
+        }
     }
-    m_widgetLookup.erase(it);
-    return true;
+    return rv;
 }
 
 void vui::UIRenderer::dispose() {
@@ -47,21 +44,21 @@ void vui::UIRenderer::dispose() {
 
 void vui::UIRenderer::draw(f32m4 mWorld, f32m4 mCamera, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     m_sb->begin();
-    for (auto& f : m_drawFuncs) f(m_sb);
+    for (auto& f : m_drawableFuncs) f.drawFunc(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
     m_sb->render(mWorld, mCamera, ss, ds, rs, shader);
 }
 
 void vui::UIRenderer::draw(f32m4 mWorld, const f32v2& screenSize, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     m_sb->begin();
-    for (auto& f : m_drawFuncs) f(m_sb);
+    for (auto& f : m_drawableFuncs) f.drawFunc(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
     m_sb->render(mWorld, screenSize, ss, ds, rs, shader);
 }
 
 void vui::UIRenderer::draw(const f32v2& screenSize, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     m_sb->begin();
-    for (auto& f : m_drawFuncs) f(m_sb);
+    for (auto& f : m_drawableFuncs) f.drawFunc(m_sb);
     m_sb->end(vg::SpriteSortMode::BACK_TO_FRONT);
     m_sb->render(screenSize, ss, ds, rs, shader);
 }

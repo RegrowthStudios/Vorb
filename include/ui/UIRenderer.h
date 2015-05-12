@@ -91,12 +91,15 @@ namespace vorb {
              */
             virtual const vg::SpriteFont* getDefaultFont() const { return m_defaultFont; }
         protected:
+            struct DrawableFuncs {
+                const Widget* owner;
+                DrawFunc drawFunc;
+                RefreshFunc refreshFunc; // TODO(Ben): Do something with this or kill it
+            };
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            std::map<const Widget*, std::vector<ui32> > m_widgetLookup; ///< Maps Widgets to vector indices for lookups
-            std::vector<DrawFunc> m_drawFuncs; ///< Vector for draw iteration
-            std::vector<RefreshFunc> m_refreshFuncs; ///< Vector for refresh iteration
+            std::vector<DrawableFuncs> m_drawableFuncs; ///< The Ith widget is the widget that owns the Ith DrawFunc
             VGTexture m_defaultTexture = 0; ///< Default texture if drawable doesn't have one
             vg::SpriteFont* m_defaultFont = nullptr; ///< Default font if drawable doesn't have one
             vg::SpriteBatch m_defaultSb; ///< Default SpriteBatch if none specified

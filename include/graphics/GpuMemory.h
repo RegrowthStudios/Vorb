@@ -28,6 +28,53 @@ namespace vorb {
         // TODO(Ben): Flesh this out
         class GpuMemory {
         public:
+
+            /// Uploads a texture to the GPU.
+            /// @param data: The bitmap data.
+            /// @param width: The width of the data
+            /// @param height: The height of the data
+            /// @param texturePixelType: Format of the resource pixels.
+            /// @param samplingParameters: The texture sampler parameters.
+            /// @param internalFormat: Internal pixel data format.
+            /// @param textureFormat: Format of uploaded pixels.
+            /// @param mipmapLevels: The max number of mipmap levels.
+            static void uploadTexture(VGTexture texture,
+                                      const void* data,
+                                      ui32 width,
+                                      ui32 height,
+                                      TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
+                                      TextureTarget textureTarget = TextureTarget::TEXTURE_2D,
+                                      SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                                      TextureInternalFormat internalFormat = TextureInternalFormat::RGBA,
+                                      TextureFormat textureFormat = TextureFormat::RGBA,
+                                      i32 mipmapLevels = INT_MAX);
+
+            /// Uploads a texture to the GPU.
+            /// @param data: The bitmap data.
+            /// @param width: The width of the data
+            /// @param height: The height of the data
+            /// @param texturePixelType: Format of the resource pixels.
+            /// @param samplingParameters: The texture sampler parameters.
+            /// @param internalFormat: Internal pixel data format.
+            /// @param textureFormat: Format of uploaded pixels.
+            /// @param mipmapLevels: The max number of mipmap levels.
+            static VGTexture uploadTexture(const void* data,
+                                           ui32 width,
+                                           ui32 height,
+                                           TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
+                                           TextureTarget textureTarget = TextureTarget::TEXTURE_2D,
+                                           SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
+                                           TextureInternalFormat internalFormat = TextureInternalFormat::RGBA,
+                                           TextureFormat textureFormat = TextureFormat::RGBA,
+                                           i32 mipmapLevels = INT_MAX) {
+                VGTexture textureID;
+                glGenTextures(1, &textureID);
+                uploadTexture(textureID, data, width, height, texturePixelType,
+                              textureTarget, samplingParameters,
+                              internalFormat, textureFormat, mipmapLevels);
+                return textureID;
+            }
+
             /// Uploads a texture to the GPU.
             /// @param res: The bitmap resource.
             /// @param texturePixelType: Format of the resource pixels.
@@ -43,7 +90,6 @@ namespace vorb {
                                       TextureInternalFormat internalFormat = TextureInternalFormat::RGBA,
                                       TextureFormat textureFormat = TextureFormat::RGBA,
                                       i32 mipmapLevels = INT_MAX);
-
             /// Uploads a texture to the GPU.
             /// @param res: The bitmap resource.
             /// @param texturePixelType: Format of the resource pixels.

@@ -28,6 +28,7 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_env.addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env.addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
         m_env.addCRDelegate("makePanel", makeRDelegate(*this, &FormScriptEnvironment::makePanel));
+        m_env.addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);

@@ -18,7 +18,9 @@ std::unordered_map<VGTexture, ui32> vg::GpuMemory::m_textures;
 std::unordered_map<VGBuffer, ui32> vg::GpuMemory::m_buffers;
 
 void vg::GpuMemory::uploadTexture(VGTexture texture,
-                                  const vg::BitmapResource* res,
+                                  const void* data,
+                                  ui32 width,
+                                  ui32 height,
                                   TexturePixelType texturePixelType /*= TexturePixelType::UNSIGNED_BYTE*/,
                                   vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
                                   vg::SamplerState* samplingParameters /*= &SamplerState::LINEAR_CLAMP_MIPMAP*/,
@@ -27,7 +29,7 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
                                   i32 mipmapLevels /* = INT_MAX */) {
     // Determine The Maximum Number Of Mipmap Levels Available
     i32 maxMipmapLevels = 0;
-    i32 size = MIN(res->width, res->height);
+    i32 size = MIN(width, height);
     while (size > 1) {
         maxMipmapLevels++;
         size >>= 1;
@@ -38,10 +40,10 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
     switch (textureTarget) {
         case TextureTarget::TEXTURE_1D:
         case TextureTarget::PROXY_TEXTURE_1D:
-            glTexImage1D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, res->width, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, res->bytesUI8);
+            glTexImage1D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, width, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, data);
             break;
         default:
-            glTexImage2D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, res->width, res->height, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, res->bytesUI8);
+            glTexImage2D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, width, height, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, data);
             break;
     }
     // Setup Texture Sampling Parameters
@@ -59,8 +61,8 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
         glGenerateMipmap((VGEnum)textureTarget);
     }
 
-    // Calculate memory usage
-    ui32 vramUsage = res->width * res->height * RGBA_BYTES;
+    // Calculate memory usage TODO(Ben): This depends on internal format!!!
+    ui32 vramUsage = width * height * RGBA_BYTES;
 
     // If this texture already exists, change its vram usage
     auto it = m_textures.find(texture);
@@ -75,6 +77,19 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
     m_textureVramUsage += vramUsage;
     // Unbind texture
     glBindTexture((VGEnum)textureTarget, texture);
+}
+
+void vg::GpuMemory::uploadTexture(VGTexture texture,
+                                       const BitmapResource* res,
+                                       TexturePixelType texturePixelType /*= TexturePixelType::UNSIGNED_BYTE*/,
+                                       TextureTarget textureTarget /*= TextureTarget::TEXTURE_2D*/,
+                                       SamplerState* samplingParameters /*= &SamplerState::LINEAR_CLAMP_MIPMAP*/,
+                                       TextureInternalFormat internalFormat /*= TextureInternalFormat::RGBA*/,
+                                       TextureFormat textureFormat /*= TextureFormat::RGBA*/,
+                                       i32 mipmapLevels /*= INT_MAX*/) {
+    uploadTexture(texture, res->data, res->width, res->height, texturePixelType,
+                         textureTarget, samplingParameters,
+                         internalFormat, textureFormat, mipmapLevels);
 }
 
 void vg::GpuMemory::freeTexture(VGTexture& textureID) {

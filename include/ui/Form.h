@@ -27,6 +27,7 @@
 #include "../VorbPreDecl.inl"
 #include "IWidgetContainer.h"
 #include "UIRenderer.h"
+#include "IGameScreen.h"
 
 DECL_VG(class SpriteFont; class SpriteBatch)
 
@@ -35,20 +36,20 @@ namespace vorb {
 
         // Forward declarations
         class Widget;
-        class GameWindow;
 
+        // Template is the screen type
         class Form : public IWidgetContainer {
         public:
             Form();
             virtual ~Form();
             /*! @brief Initializes the Form and it's renderer.
              * 
-             * @param ownerWindow: The game window that owns the Form.
+             * @param ownerScreen: The game screen that owns the Form.
              * @param destRect: Position and size of the Form.
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
-            virtual void init(const GameWindow* ownerWindow, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(IGameScreen* ownerScreen, ui32v4 destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Adds a widget to the Form and initializes it for rendering.
              * 
              * @param widget: The Widget to add.
@@ -73,9 +74,16 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
+            /*! @brief Registers a custom callback with a widget event.
+             * Override this in custom forms to set up callbacks
+             * @param callbackName: Name of the custom callback 
+             * @return true if callbackName was the name of a function
+             */
+            virtual bool registerCallback(Widget* w, nString callback) { std::cout << "BASE\n"; return false; }
+
         protected:
             UIRenderer m_renderer; ///< The UI Renderer.
-            const GameWindow* m_ownerWindow = nullptr; ///< The Owning window.
+            IGameScreen* m_ownerIGameScreen = nullptr; ///< The Owning screen.
         };
     }
 }

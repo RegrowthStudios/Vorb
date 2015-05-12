@@ -109,6 +109,7 @@ namespace vorb {
             virtual void refreshDrawables();
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+            virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

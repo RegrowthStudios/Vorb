@@ -155,6 +155,7 @@ namespace vorb {
             virtual void onMouseDown(Sender s, const MouseButtonEvent& e);
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
+            virtual void onMouseFocusLost(Sender s, const MouseEvent& e);
 
             /************************************************************************/
             /* Members                                                              */

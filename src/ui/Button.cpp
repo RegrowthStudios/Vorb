@@ -223,3 +223,15 @@ void vui::Button::onMouseMove(Sender s, const MouseMotionEvent& e) {
         }
     }
 }
+
+void vui::Button::onMouseFocusLost(Sender s, const MouseEvent& e) {
+    if (!m_isEnabled) return;
+    if (m_isMouseIn) {
+        m_isMouseIn = false;
+        MouseMotionEvent ev;
+        ev.x = e.x;
+        ev.y = e.y;
+        MouseLeave(ev);
+        updateColor();
+    }
+}

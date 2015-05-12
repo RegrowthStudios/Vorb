@@ -15,6 +15,7 @@ vui::IWidgetContainer::IWidgetContainer() :
     vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidgetContainer::onMouseDown);
     vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &IWidgetContainer::onMouseUp);
     vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &IWidgetContainer::onMouseMove);
+    vui::InputDispatcher::mouse.onFocusLost += makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
 }
 
 vui::IWidgetContainer::IWidgetContainer(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer() {
@@ -30,6 +31,7 @@ void vui::IWidgetContainer::dispose() {
     vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidgetContainer::onMouseDown);
     vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidgetContainer::onMouseUp);
     vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidgetContainer::onMouseMove);
+    vui::InputDispatcher::mouse.onFocusLost -= makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
 }
 
 bool vui::IWidgetContainer::addWidget(Widget* child) {
@@ -177,5 +179,16 @@ void vui::IWidgetContainer::onMouseMove(Sender s, const MouseMotionEvent& e) {
     } else if (m_isMouseIn) {
         m_isMouseIn = false;
         MouseLeave(e);
+    }
+}
+
+void vui::IWidgetContainer::onMouseFocusLost(Sender s, const MouseEvent& e) {
+    if (!m_isEnabled) return;
+    if (m_isMouseIn) {
+        m_isMouseIn = false;
+        MouseMotionEvent ev;
+        ev.x = e.x;
+        ev.y = e.y;
+        MouseLeave(ev);
     }
 }

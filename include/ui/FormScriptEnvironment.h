@@ -30,6 +30,7 @@
 #include "SliderScriptFuncs.h"
 #include "CheckBoxScriptFuncs.h"
 #include "ComboBoxScriptFuncs.h"
+#include "PanelScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -48,6 +49,7 @@ namespace vorb {
             virtual vui::Slider* makeSlider(nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::CheckBox* makeCheckBox(nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::ComboBox* makeComboBox(nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Panel* makePanel(nString name, f32 x, f32 y, f32 width, f32 height);
 
             Form* m_form = nullptr;
             vscript::Environment m_env;
@@ -57,6 +59,7 @@ namespace vorb {
             SliderScriptFuncs m_sliderFuncs;
             CheckBoxScriptFuncs m_checkBoxFuncs;
             ComboBoxScriptFuncs m_comboBoxFuncs;
+            PanelScriptFuncs m_panelFuncs;
         };
     }
 }

@@ -5,6 +5,7 @@
 #include "ui/SliderScriptFuncs.h"
 #include "ui/CheckBoxScriptFuncs.h"
 #include "ui/ComboBoxScriptFuncs.h"
+#include "ui/PanelScriptFuncs.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 
@@ -62,6 +63,7 @@ template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(cons
 template void vui::WidgetScriptFuncs::registerFuncs<vui::SliderScriptFuncs>(const cString nSpace, vscript::Environment& env);
 template void vui::WidgetScriptFuncs::registerFuncs<vui::CheckBoxScriptFuncs>(const cString nSpace, vscript::Environment& env);
 template void vui::WidgetScriptFuncs::registerFuncs<vui::ComboBoxScriptFuncs>(const cString nSpace, vscript::Environment& env);
+template void vui::WidgetScriptFuncs::registerFuncs<vui::PanelScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL

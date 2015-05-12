@@ -5,6 +5,7 @@
 #include "ui/ComboBox.h"
 #include "ui/Form.h"
 #include "ui/Slider.h"
+#include "ui/Panel.h"
 
 #define INIT_FUNCTION_NAME "init"
 
@@ -26,6 +27,7 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_env.addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env.addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env.addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
+        m_env.addCRDelegate("makePanel", makeRDelegate(*this, &FormScriptEnvironment::makePanel));
         m_env.setNamespaces();
         // Button functions
         m_buttonFuncs.registerFuncs("Button", m_env);
@@ -35,6 +37,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_checkBoxFuncs.registerFuncs("CheckBox", m_env);
         // ComboBox functions
         m_comboBoxFuncs.registerFuncs("ComboBox", m_env);
+        // Panel functions
+        m_panelFuncs.registerFuncs("Panel", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(m_env);
     }
@@ -108,4 +112,10 @@ vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(nString name, f32 x, f32
     vui::ComboBox* c = new vui::ComboBox(name, f32v4(x, y, width, height));
     m_form->addWidget(c);
     return c;
+}
+
+vui::Panel* vui::FormScriptEnvironment::makePanel(nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::Panel* p = new vui::Panel(name, f32v4(x, y, width, height));
+    m_form->addWidget(p);
+    return p;
 }

@@ -28,6 +28,13 @@ vui::IWidgetContainer::~IWidgetContainer() {
 }
 
 void vui::IWidgetContainer::dispose() {
+    for (auto& w : m_widgets) {
+        w->dispose();
+        delete w;
+    }
+    std::vector<Widget*>().swap(m_widgets);
+    for (int i = 0; i < 5; i++) std::vector<Widget*>().swap(m_dockedWidgets[i]);
+
     vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidgetContainer::onMouseDown);
     vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidgetContainer::onMouseUp);
     vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidgetContainer::onMouseMove);

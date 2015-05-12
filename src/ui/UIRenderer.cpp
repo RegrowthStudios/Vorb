@@ -40,6 +40,7 @@ bool vui::UIRenderer::remove(const Widget* widget) {
 
 void vui::UIRenderer::dispose() {
     m_defaultSb.dispose();
+    std::vector<DrawableFuncs>().swap(m_drawableFuncs);
 }
 
 void vui::UIRenderer::draw(f32m4 mWorld, f32m4 mCamera, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {

@@ -43,6 +43,7 @@ namespace vorb {
             FormScriptEnvironment();
             virtual ~FormScriptEnvironment();
             virtual bool init(Form* form, const cString filePath);
+            virtual void dispose();
         protected:
             virtual void registerConstants();
             virtual vui::Button* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);
@@ -52,7 +53,7 @@ namespace vorb {
             virtual vui::Panel* makePanel(nString name, f32 x, f32 y, f32 width, f32 height);
 
             Form* m_form = nullptr;
-            vscript::Environment m_env;
+            vscript::Environment* m_env = nullptr;
             vscript::Function m_init;
             vscript::GraphicsScriptInterface m_graphicsInterface;
             ButtonScriptFuncs m_buttonFuncs;

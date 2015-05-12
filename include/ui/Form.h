@@ -79,7 +79,7 @@ namespace vorb {
              * @param callbackName: Name of the custom callback 
              * @return true if callbackName was the name of a function
              */
-            virtual bool registerCallback(Widget* w, nString callback) { std::cout << "BASE\n"; return false; }
+            virtual bool registerCallback(Widget* w, nString callback) { return false; }
 
         protected:
             UIRenderer m_renderer; ///< The UI Renderer.

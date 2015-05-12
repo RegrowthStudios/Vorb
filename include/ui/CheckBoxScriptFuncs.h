@@ -36,7 +36,6 @@ namespace vorb {
 
         class CheckBoxScriptFuncs : public WidgetScriptFuncs {
         public:
-            template <class T = CheckBoxScriptFuncs>
             void registerFuncs(const cString nSpace, vscript::Environment& env);
         protected:
             virtual void check(CheckBox* c) const;

@@ -35,8 +35,7 @@ namespace vorb {
 
         class SliderScriptFuncs : public WidgetScriptFuncs {
         public:
-            template <class T = SliderScriptFuncs>
-            void registerFuncs(const cString nSpace, vscript::Environment& env);
+            virtual void registerFuncs(const cString nSpace, vscript::Environment& env) override;
         protected:
             /************************************************************************/
             /* Getters                                                              */

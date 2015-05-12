@@ -36,7 +36,6 @@ namespace vorb {
 
         class ComboBoxScriptFuncs : public WidgetScriptFuncs {
         public:
-            template <class T = ComboBoxScriptFuncs>
             void registerFuncs(const cString nSpace, vscript::Environment& env);
         protected:
             virtual void addItem(ComboBox* c, nString item) const;

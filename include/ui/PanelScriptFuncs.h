@@ -36,8 +36,7 @@ namespace vorb {
 
         class PanelScriptFuncs : public WidgetScriptFuncs {
         public:
-            template <class T = PanelScriptFuncs>
-            void registerFuncs(const cString nSpace, vscript::Environment& env);
+            virtual void registerFuncs(const cString nSpace, vscript::Environment& env) override;
         protected:
             /************************************************************************/
             /* Getters                                                              */

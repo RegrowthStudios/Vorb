@@ -4,14 +4,13 @@
 #include "script/Environment.h"
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
+#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &PanelScriptFuncs::name));
+#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &PanelScriptFuncs::name));
 
-template <class T>
 void vui::PanelScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     env.setNamespaces(nSpace);
     // Call base register
-    WidgetScriptFuncs::registerFuncs<PanelScriptFuncs>(nSpace, env);
+    WidgetScriptFuncs::registerFuncs(nSpace, env);
 
     { // Register all functions
         // Getters
@@ -23,8 +22,6 @@ void vui::PanelScriptFuncs::registerFuncs(const cString nSpace, vscript::Environ
     }
     env.setNamespaces();
 }
-// Explicit templates so we can have code in the cpp file
-template void vui::PanelScriptFuncs::registerFuncs<vui::PanelScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL

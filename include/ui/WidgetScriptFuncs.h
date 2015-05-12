@@ -40,8 +40,7 @@ namespace vorb {
 
         class WidgetScriptFuncs {
         public:
-            template <class T = WidgetScriptFuncs>
-            void registerFuncs(const cString nSpace, vscript::Environment& env);
+            virtual void registerFuncs(const cString nSpace, vscript::Environment& env);
         protected:
 
             /*! @brief Releases all resources used by the Widget.

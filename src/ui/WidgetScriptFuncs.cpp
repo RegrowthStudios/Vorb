@@ -1,20 +1,14 @@
 #include "stdafx.h"
 #include "ui/WidgetScriptFuncs.h"
 #include "ui/Widget.h"
-#include "ui/ButtonScriptFuncs.h"
-#include "ui/SliderScriptFuncs.h"
-#include "ui/CheckBoxScriptFuncs.h"
-#include "ui/ComboBoxScriptFuncs.h"
-#include "ui/PanelScriptFuncs.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
+#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
+#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
 
-template <class T>
 void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     env.setNamespaces(nSpace);
 
@@ -57,13 +51,6 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
     }
     env.setNamespaces();
 }
-// Explicit templates so we can have code in the cpp file
-template void vui::WidgetScriptFuncs::registerFuncs<vui::WidgetScriptFuncs>(const cString nSpace, vscript::Environment& env);
-template void vui::WidgetScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(const cString nSpace, vscript::Environment& env);
-template void vui::WidgetScriptFuncs::registerFuncs<vui::SliderScriptFuncs>(const cString nSpace, vscript::Environment& env);
-template void vui::WidgetScriptFuncs::registerFuncs<vui::CheckBoxScriptFuncs>(const cString nSpace, vscript::Environment& env);
-template void vui::WidgetScriptFuncs::registerFuncs<vui::ComboBoxScriptFuncs>(const cString nSpace, vscript::Environment& env);
-template void vui::WidgetScriptFuncs::registerFuncs<vui::PanelScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL

@@ -4,13 +4,12 @@
 #include "script/Environment.h"
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &T::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &T::name));
+#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &ButtonScriptFuncs::name));
+#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &ButtonScriptFuncs::name));
 
-template <class T>
 void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
     // Call base register
-    WidgetScriptFuncs::registerFuncs<ButtonScriptFuncs>(nSpace, env);
+    WidgetScriptFuncs::registerFuncs(nSpace, env);
 
     env.setNamespaces(nSpace);
 
@@ -37,8 +36,6 @@ void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
     }
     env.setNamespaces();
 }
-// Explicit templates so we can have code in the cpp file
-template void vui::ButtonScriptFuncs::registerFuncs<vui::ButtonScriptFuncs>(const cString nSpace, vscript::Environment& env);
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL

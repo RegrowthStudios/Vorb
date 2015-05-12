@@ -4,6 +4,7 @@
 
 vui::Widget::Widget() : IWidgetContainer() {
     enable();
+    m_anchor = {};
 }
 
 vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect) {
@@ -29,5 +30,17 @@ void vui::Widget::updatePosition() {
     // Update child positions
     for (auto& w : m_widgets) {
         w->updatePosition();
+    }
+}
+
+void vorb::ui::Widget::setAnchor(const AnchorStyle& anchor) {
+    m_anchor = anchor;
+}
+
+void vorb::ui::Widget::setDock(const DockStyle& dock) {
+    if (m_parent) {
+        m_parent->setChildDock(this, dock);
+    } else {
+        m_dock = dock;
     }
 }

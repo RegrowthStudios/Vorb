@@ -154,8 +154,8 @@ void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) const {
     w->setDimensions(dims);
 }
 
-void vui::WidgetScriptFuncs::setDock(Widget* w, int dock) const {
-    // TODO(Ben): Implement
+void vui::WidgetScriptFuncs::setDock(Widget* w, DockStyle dock) const {
+    w->setDock(dock);
 }
 
 void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) const {

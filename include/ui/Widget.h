@@ -84,13 +84,17 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
+            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
+            virtual const DockStyle& getDock() const { return m_dock; }
             virtual const IWidgetContainer* getParent() const { return m_parent; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
-            
+            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
+
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            virtual void setAnchor(const AnchorStyle& anchor);
+            virtual void setDock(const DockStyle& dock);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
 
@@ -98,6 +102,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            AnchorStyle m_anchor; ///< The anchor data.
+            DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             IWidgetContainer* m_parent = nullptr; ///< Parent container
             volatile bool m_needsDrawableReload = false;

@@ -120,8 +120,8 @@ bool vui::ComboBox::selectItem(int index) {
 bool vui::ComboBox::isInDropBounds(f32 x, f32 y) const {
     const f32v2& pos = m_drawableDropList.getPosition();
     const f32v2& dims = m_drawableDropList.getDimensions();
-    return (x >= pos.x && x <= pos.x + dims.x &&
-            y >= pos.y && y <= pos.y + dims.y);
+    return (x >= pos.x && x < pos.x + dims.x &&
+            y >= pos.y && y < pos.y + dims.y);
 }
 
 const vorb::graphics::SpriteFont* vui::ComboBox::getFont() const {

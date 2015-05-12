@@ -24,7 +24,6 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-
 namespace vorb {
     namespace ui {
 
@@ -49,7 +48,7 @@ namespace vorb {
         };
         //! Bitfield of dock flags
         enum class DockStyle {
-            NONE, LEFT, RIGHT, BOTTOM, TOP, FILL
+            NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
         };
 
         class IWidgetContainer {
@@ -98,16 +97,16 @@ namespace vorb {
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
 
+            virtual void setChildDock(Widget* widget, DockStyle dockStyle);
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
-            virtual bool isMouseIn() const { return m_isMouseIn; }
-            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
+            virtual bool isMouseIn() const { return m_isMouseIn; }      
             virtual const ContainerStyle& getStyle() const { return m_style; }
-            virtual const DockStyle& getDock() const { return m_dock; }
             virtual const bool& isEnabled() const { return m_isEnabled; }
             virtual const f32& getHeight() const { return m_dimensions.y; }
             virtual const f32& getWidth() const { return m_dimensions.x; }
@@ -120,11 +119,9 @@ namespace vorb {
 
             /************************************************************************/
             /* Setters                                                              */
-            /************************************************************************/
-            virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
+            /************************************************************************/         
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }
-            virtual void setDock(const DockStyle& dock) { m_dock = dock; }
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }        
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             virtual void setHeight(f32 height) { m_dimensions.y = height; }
@@ -147,6 +144,11 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /*! Removes a widget from a dock and returns true on success. */
+            bool removeChildFromDock(Widget* widget);
+            /*! Refreshes all docked widget positions and sizes. */
+            void recalculateDockedWidgets();
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -156,20 +158,20 @@ namespace vorb {
 
             /************************************************************************/
             /* Members                                                              */
-            /************************************************************************/
-            AnchorStyle m_anchor; ///< The anchor data.
+            /************************************************************************/      
             ContainerStyle m_style; ///< The current style.
-            DockStyle m_dock; ///< The dock type.
             std::vector<Widget*> m_widgets; ///< All child widgets.
-            f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent
+            std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
+            f32v4 m_dockSizes = f32v4(0.0f); ///< Total size of each dock other than fill.
+            f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent.
             f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
             f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
-            nString m_name = ""; ///< Display name of the container
+            nString m_name = ""; ///< Display name of the container.
 
-            // TODO(Ben): Bitfield for memory reduction?
-            bool m_isClicking = false; ///< Used for click event tracking
-            bool m_isEnabled = false; ///< True when events are enabled
-            bool m_isMouseIn = false; ///< Used for motion event tracking
+            // TODO(Ben): Bitfield for memory reduction?.
+            bool m_isClicking = false; ///< Used for click event tracking.
+            bool m_isEnabled = false; ///< True when events are enabled.
+            bool m_isMouseIn = false; ///< Used for motion event tracking.
         };
     }
 }

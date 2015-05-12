@@ -25,6 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include <map>
+#include "IWidgetContainer.h"
 #include "../IDGenerator.h"
 #include "../VorbPreDecl.inl"
 
@@ -79,7 +80,7 @@ namespace vorb {
             virtual void setAnchor(Widget* w, int anchor) const;
             virtual void setDestRect(Widget* w, f32v4 destRect) const;
             virtual void setDimensions(Widget* w, f32v2 dims) const;
-            virtual void setDock(Widget* w, int dock) const;
+            virtual void setDock(Widget* w, DockStyle dock) const;
             virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
             virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;

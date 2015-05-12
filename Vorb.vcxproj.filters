@@ -252,6 +252,9 @@
     <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\Panel.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -623,6 +626,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\ComboBoxScriptFuncs.h">
       <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Panel.h">
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

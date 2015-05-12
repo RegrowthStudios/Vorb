@@ -319,6 +319,7 @@
     <ClCompile Include="src\ui\Button.cpp" />
     <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
+    <ClCompile Include="src\ui\Panel.cpp" />
     <ClCompile Include="src\ui\Slider.cpp" />
     <ClCompile Include="src\ui\SliderScriptFuncs.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
@@ -446,6 +447,7 @@
     <ClInclude Include="include\ui\Button.h" />
     <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\IWidgetContainer.h" />
+    <ClInclude Include="include\ui\Panel.h" />
     <ClInclude Include="include\ui\Slider.h" />
     <ClInclude Include="include\ui\SliderScriptFuncs.h" />
     <ClInclude Include="include\ui\Widget.h" />

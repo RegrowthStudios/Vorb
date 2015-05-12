@@ -59,6 +59,7 @@ void vui::Button::setDestRect(const f32v4& destRect) {
     vui::Widget::setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
+    refreshDrawables();
 }
 
 void vui::Button::setDimensions(const f32v2& dimensions) {

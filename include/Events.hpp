@@ -268,8 +268,8 @@ public:
     /// Call all bound methods
     /// @param p: Arguments used in function calls
     void send(Params... p) {
-        for (auto& f : m_funcs) {
-            f(m_sender, p...);
+        for (int i = (int)m_funcs.size() - 1; i >= 0; i--) {
+            m_funcs[i](m_sender, p...);
         }
     }
     /// Call all bound methods

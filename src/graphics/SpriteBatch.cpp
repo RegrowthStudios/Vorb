@@ -31,10 +31,27 @@ vg::SpriteBatch::Glyph::Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRec
     offset(offset),
     size(size),
     rotation(rotation),
-    tint(tint),
+    tint1(tint),
+    grad(GradientType::NONE),
     depth(depth),
     func(f) {
+    // Empty
+}
 
+vg::SpriteBatch::Glyph::Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint1, const color4& tint2, GradientType grad, f32 depth) :
+    tex(tex),
+    uvRect(uvRect),
+    uvTiling(uvTiling),
+    position(position),
+    offset(offset),
+    size(size),
+    rotation(rotation),
+    tint1(tint1),
+    tint2(tint2),
+    grad(grad),
+    depth(depth),
+    func(f) {
+    // Empty
 }
 
 vg::SpriteBatch::SpriteBatch(bool isDynamic /*= true*/, bool doInit /*= false*/) :
@@ -102,6 +119,21 @@ void vg::SpriteBatch::dispose() {
 void vg::SpriteBatch::begin() {
     m_glyphs.clear();
     std::vector<Batch>().swap(m_batches);
+}
+
+void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
+    m_glyphs.emplace_back(&SpriteBatch::buildQuadRotated,
+                          t == 0 ? m_texPixel : t,
+                          uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
+                          uvTiling != nullptr ? *uvTiling : f32v2(1, 1),
+                          position,
+                          offset,
+                          size,
+                          rotation,
+                          tint1,
+                          tint2,
+                          grad,
+                          depth);
 }
 
 void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
@@ -341,7 +373,6 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vtl.uv.x = 0.0f;
     vtl.uv.y = 0.0f;
     vtl.uvRect = g->uvRect;
-    vtl.color = g->tint;
     // Top Right
     Vertex& vtr = verts[1];
     vtr.position.x = g->size.x + g->position.x;
@@ -350,7 +381,6 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vtr.uv.x = g->uvTiling.x;
     vtr.uv.y = 0.0f;
     vtr.uvRect = g->uvRect;
-    vtr.color = g->tint;
     // Bottom Left
     Vertex& vbl = verts[2];
     vbl.position.x = g->position.x;
@@ -359,7 +389,6 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vbl.uv.x = 0.0f;
     vbl.uv.y = g->uvTiling.y;
     vbl.uvRect = g->uvRect;
-    vbl.color = g->tint;
     // Bottom Right
     Vertex& vbr = verts[3];
     vbr.position.x = g->size.x + g->position.x;
@@ -368,7 +397,8 @@ void vg::SpriteBatch::buildQuad(const Glyph* g, Vertex* verts) {
     vbr.uv.x = g->uvTiling.x;
     vbr.uv.y = g->uvTiling.y;
     vbr.uvRect = g->uvRect;
-    vbr.color = g->tint;
+
+    calcColor(vtl, vtr, vbl, vbr, g);
 }
 
 void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
@@ -384,7 +414,6 @@ void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
     vtl.uv.x = 0.0f;
     vtl.uv.y = 0.0f;
     vtl.uvRect = g->uvRect;
-    vtl.color = g->tint;
     // Top Right
     Vertex& vtr = verts[1];
     vtr.position.x = cr + g->position.x;
@@ -393,7 +422,6 @@ void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
     vtr.uv.x = g->uvTiling.x;
     vtr.uv.y = 0.0f;
     vtr.uvRect = g->uvRect;
-    vtr.color = g->tint;
     // Bottom Left
     Vertex& vbl = verts[2];
     vbl.position.x = cl + g->position.x;
@@ -402,7 +430,6 @@ void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
     vbl.uv.x = 0.0f;
     vbl.uv.y = g->uvTiling.y;
     vbl.uvRect = g->uvRect;
-    vbl.color = g->tint;
     // Bottom Right
     Vertex& vbr = verts[3];
     vbr.position.x = cr + g->position.x;
@@ -411,7 +438,8 @@ void vg::SpriteBatch::buildQuadOffset(const Glyph* g, Vertex* verts) {
     vbr.uv.x = g->uvTiling.x;
     vbr.uv.y = g->uvTiling.y;
     vbr.uvRect = g->uvRect;
-    vbr.color = g->tint;
+   
+    calcColor(vtl, vtr, vbl, vbr, g);
 }
 
 void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
@@ -430,7 +458,6 @@ void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
     vtl.uv.x = 0.0f;
     vtl.uv.y = 0.0f;
     vtl.uvRect = g->uvRect;
-    vtl.color = g->tint;
     // Top Right
     Vertex& vtr = verts[1];
     vtr.position.x = (cr * rxx) + (ct * rxy) + g->position.x;
@@ -439,7 +466,6 @@ void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
     vtr.uv.x = g->uvTiling.x;
     vtr.uv.y = 0.0f;
     vtr.uvRect = g->uvRect;
-    vtr.color = g->tint;
     // Bottom Left
     Vertex& vbl = verts[2];
     vbl.position.x = (cl * rxx) + (cb * rxy) + g->position.x;
@@ -448,7 +474,6 @@ void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
     vbl.uv.x = 0.0f;
     vbl.uv.y = g->uvTiling.y;
     vbl.uvRect = g->uvRect;
-    vbl.color = g->tint;
     // Bottom Right
     Vertex& vbr = verts[3];
     vbr.position.x = (cr * rxx) + (cb * rxy) + g->position.x;
@@ -457,5 +482,34 @@ void vg::SpriteBatch::buildQuadRotated(const Glyph* g, Vertex* verts) {
     vbr.uv.x = g->uvTiling.x;
     vbr.uv.y = g->uvTiling.y;
     vbr.uvRect = g->uvRect;
-    vbr.color = g->tint;
+
+    calcColor(vtl, vtr, vbl, vbr, g);
+}
+
+void vg::SpriteBatch::calcColor(Vertex& vtl, Vertex& vtr, Vertex& vbl, Vertex& vbr, const Glyph* g) {
+    switch (g->grad) {
+        case GradientType::NONE:
+            vtl.color = vtr.color = vbl.color = vbr.color = g->tint1;
+            break;
+        case GradientType::HORIZONTAL:
+            vtl.color = vbl.color = g->tint1;
+            vtr.color = vbr.color = g->tint2;
+            break;
+        case GradientType::VERTICAL:
+            vbl.color = vbr.color = g->tint2;
+            vtl.color = vtr.color = g->tint1;
+            break;
+        case GradientType::LEFT_DIAGONAL:
+            vbr.color = g->tint1;
+            vtl.color = g->tint2;
+            vbl.color.lerp(g->tint1, g->tint2, 0.5f);
+            vtr.color = vbl.color;
+            break;
+        case GradientType::RIGHT_DIAGONAL:
+            vbl.color = g->tint1;
+            vtr.color = g->tint2;
+            vbr.color.lerp(g->tint1, g->tint2, 0.5f);
+            vtl.color = vbr.color;
+            break;
+    }
 }

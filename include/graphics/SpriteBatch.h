@@ -50,6 +50,14 @@ namespace vorb {
             TEXTURE
         };
 
+        enum class GradientType {
+            NONE,
+            HORIZONTAL,
+            VERTICAL,
+            LEFT_DIAGONAL,
+            RIGHT_DIAGONAL
+        };
+
         class SpriteBatch {
         public:
             SpriteBatch(bool isDynamic = true, bool init = false);
@@ -60,11 +68,12 @@ namespace vorb {
 
             void begin();
 
-            void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture tex, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture tex, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture tex, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
 
             void drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
             void drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
@@ -85,6 +94,7 @@ namespace vorb {
 
             struct Glyph {
                 Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth);
+                Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint1, const color4& tint2, GradientType grad, f32 depth);
                 VGTexture tex;
                 f32v4 uvRect;
                 f32v2 uvTiling;
@@ -92,7 +102,9 @@ namespace vorb {
                 f32v2 offset;
                 f32v2 size;
                 f32 rotation;
-                color4 tint;
+                color4 tint1;
+                color4 tint2;
+                GradientType grad;
                 f32 depth;
                 QuadBuildFunc func;
             };
@@ -123,6 +135,9 @@ namespace vorb {
             void buildQuad(const Glyph* g, Vertex* verts);
             void buildQuadOffset(const Glyph* g, Vertex* verts);
             void buildQuadRotated(const Glyph* g, Vertex* verts);    
+
+            /// For color gradients
+            void calcColor(Vertex& vtl, Vertex& vtr, Vertex& vbl, Vertex& vbr, const Glyph* g);
 
             std::vector<Glyph> m_glyphs; ///< Glyph data
             std::vector<Glyph*> m_glyphPtrs; ///< Pointers to glyphs for fast sorting

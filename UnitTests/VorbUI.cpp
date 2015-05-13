@@ -88,7 +88,8 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Load script file and init
-        env.init(&form, "data/scripts/Form1.lua");
+        env.init(&form);
+        env.loadForm("data/scripts/Form1.lua");
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         form.dispose();

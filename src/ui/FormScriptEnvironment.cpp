@@ -17,7 +17,7 @@ vui::FormScriptEnvironment::~FormScriptEnvironment() {
     dispose();
 }
 
-bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
+bool vui::FormScriptEnvironment::init(Form* form) {
     m_form = form;
     dispose();
     m_env = new vscript::Environment();
@@ -49,6 +49,10 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
     // Initialize enums and constants
     registerConstants();
 
+    return true;
+}
+
+bool vui::FormScriptEnvironment::loadForm(const cString filePath) {
     // Load script
     if (!m_env->load(filePath)) {
         fprintf(stderr, "Failed to load FormScriptEnvironment script %s\n", filePath);
@@ -59,7 +63,6 @@ bool vui::FormScriptEnvironment::init(Form* form, const cString filePath) {
         m_init = (*m_env)[INIT_FUNCTION_NAME];
         m_init();
     }
-
     return true;
 }
 

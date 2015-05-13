@@ -24,7 +24,10 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include "../VorbPreDecl.inl"
 #include <vector>
+
+DECL_VG(class SpriteFont)
 
 namespace vorb {
     namespace ui {
@@ -38,7 +41,7 @@ namespace vorb {
         public:
             ScriptedUI();
             virtual ~ScriptedUI();
-            virtual void init(IGameScreen* ownerScreen, const ui32v4& destRect, const nString& startFormPath);
+            virtual void init(const nString& startFormPath, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont = nullptr);
             virtual void draw();
             virtual void update(f32 dt = 1.0f);
             virtual void dispose();
@@ -46,6 +49,9 @@ namespace vorb {
             VORB_NON_COPYABLE(ScriptedUI);
             virtual Form* makeForm(nString name, nString filePath);
 
+            vg::SpriteFont* m_defaultFont = nullptr;
+            ui32v4 m_destRect;
+            IGameScreen* m_ownerScreen = nullptr;
             std::vector<std::pair<Form*, FormScriptEnvironment*> > m_forms; ///< The forms and script envs in draw order
         };
     }

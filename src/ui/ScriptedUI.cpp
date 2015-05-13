@@ -11,10 +11,12 @@ vui::ScriptedUI::~ScriptedUI() {
     dispose();
 }
 
-void vui::ScriptedUI::init(IGameScreen* ownerScreen, const ui32v4& destRect, const nString& startFormPath) {
+void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/) {
     // Set up the first form
+    m_ownerScreen = ownerScreen;
+    m_destRect = destRect;
+    m_defaultFont = defaultFont;
     Form* baseForm = makeForm("base", startFormPath);
-    
 }
 
 void vui::ScriptedUI::draw() {
@@ -42,8 +44,9 @@ void vui::ScriptedUI::dispose() {
 vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
     // Make the form
     Form* newForm = new Form;
+    newForm->init(m_ownerScreen, m_destRect, m_defaultFont);
     FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
-    newFormEnv->init(newForm, filePath.c_str());
+    newFormEnv->init(newForm);
     m_forms.push_back(std::make_pair(newForm, newFormEnv));
 
     // Register callbacks
@@ -52,5 +55,7 @@ vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
     env->setNamespaces();
     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
 
+    // Load the script
+    newFormEnv->loadForm(filePath.c_str());
     return newForm;
 }

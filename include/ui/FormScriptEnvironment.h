@@ -42,7 +42,8 @@ namespace vorb {
         public:
             FormScriptEnvironment();
             virtual ~FormScriptEnvironment();
-            virtual bool init(Form* form, const cString filePath);
+            virtual bool init(Form* form);
+            virtual bool loadForm(const cString filePath);
             virtual void dispose();
 
             vscript::Environment* getEnv() { return m_env; }

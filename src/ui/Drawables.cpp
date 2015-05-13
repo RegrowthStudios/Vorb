@@ -2,9 +2,9 @@
 #include "UI/Drawables.h"
 
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {
-    spriteBatch->draw(m_texture, m_position, m_dimensions, m_color, m_layerDepth);
+    spriteBatch->draw(m_texture, m_position, m_dimensions, m_color1, m_color2, m_grad, m_layerDepth);
 }
 
 void vui::DrawableText::draw(vg::SpriteBatch* spriteBatch) const {
-    if (m_font) spriteBatch->drawString(m_font, m_text.c_str(), m_position, m_scale, m_color, m_textAlign, m_layerDepth, m_clipRect, true);
+    if (m_font) spriteBatch->drawString(m_font, m_text.c_str(), m_position, m_scale, m_color1, m_textAlign, m_layerDepth, m_clipRect, true);
 }

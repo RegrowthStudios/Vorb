@@ -74,6 +74,10 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
+            virtual void enable();
+            
+            virtual void disable();
+
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
              * @param callbackName: Name of the custom callback 
@@ -82,6 +86,7 @@ namespace vorb {
             virtual bool registerCallback(Widget* w, nString callback) { return false; }
 
         protected:
+            bool m_isEnabled = true;
             UIRenderer m_renderer; ///< The UI Renderer.
             IGameScreen* m_ownerIGameScreen = nullptr; ///< The Owning screen.
         };

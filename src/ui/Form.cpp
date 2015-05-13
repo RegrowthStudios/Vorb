@@ -45,6 +45,7 @@ void vui::Form::updatePosition() {
 }
 
 void vui::Form::update(f32 dt /*= 1.0f*/) {
+    if (!m_isEnabled) return;
     for (auto& w : m_widgets) {
         // Check if we need to reload the drawables
         if (w->needsDrawableReload()) {
@@ -57,10 +58,25 @@ void vui::Form::update(f32 dt /*= 1.0f*/) {
 }
 
 void vui::Form::draw() {
+    if (!m_isEnabled) return;
     m_renderer.draw(m_dimensions);
 }
 
 void vui::Form::dispose() {
     IWidgetContainer::dispose();
     m_renderer.dispose();
+}
+
+void vui::Form::enable() {
+    if (!m_isEnabled) {
+        m_isEnabled = true;
+        for (auto& w : m_widgets) w->enable();
+    }
+}
+
+void vui::Form::disable() {
+    if (m_isEnabled) {
+        m_isEnabled = false;
+        for (auto& w : m_widgets) w->disable();
+    }
 }

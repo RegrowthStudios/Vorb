@@ -44,6 +44,8 @@ namespace vorb {
             virtual ~FormScriptEnvironment();
             virtual bool init(Form* form, const cString filePath);
             virtual void dispose();
+
+            vscript::Environment* getEnv() { return m_env; }
         protected:
             virtual void registerConstants();
             virtual vui::Button* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);

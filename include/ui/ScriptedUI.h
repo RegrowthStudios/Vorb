@@ -38,11 +38,15 @@ namespace vorb {
         public:
             ScriptedUI();
             virtual ~ScriptedUI();
-            virtual void init(IGameScreen* ownerScreen, const ui32v4& destRect, const cString startFormPath);
+            virtual void init(IGameScreen* ownerScreen, const ui32v4& destRect, const nString& startFormPath);
+            virtual void draw();
+            virtual void update(f32 dt = 1.0f);
             virtual void dispose();
         protected:
-            vui::FormScriptEnvironment* m_env = nullptr; ///< Scripting Environment
-            std::vector<vui::Form*> m_currentForm; ///< The forms in draw order
+            VORB_NON_COPYABLE(ScriptedUI);
+            virtual Form* makeForm(nString name, nString filePath);
+
+            std::vector<std::pair<Form*, FormScriptEnvironment*> > m_forms; ///< The forms and script envs in draw order
         };
     }
 }

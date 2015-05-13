@@ -36,7 +36,7 @@ namespace vorb {
 
         class CheckBoxScriptFuncs : public WidgetScriptFuncs {
         public:
-            void registerFuncs(const cString nSpace, vscript::Environment& env) override;
+            void init(const cString nSpace, vscript::Environment* env) override;
         protected:
             virtual void check(CheckBox* c) const;
             virtual void unCheck(CheckBox* c) const;

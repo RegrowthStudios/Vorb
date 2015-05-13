@@ -4,14 +4,14 @@
 #include "script/Environment.h"
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &ButtonScriptFuncs::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &ButtonScriptFuncs::name));
+#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &ButtonScriptFuncs::name));
+#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &ButtonScriptFuncs::name));
 
-void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
+void vui::ButtonScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
     // Call base register
-    WidgetScriptFuncs::registerFuncs(nSpace, env);
+    WidgetScriptFuncs::init(nSpace, env);
 
-    env.setNamespaces(nSpace);
+    env->setNamespaces(nSpace);
 
     { // Register all functions
         // Getters
@@ -34,7 +34,7 @@ void vui::ButtonScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_DEL(env, setTexture);
         
     }
-    env.setNamespaces();
+    env->setNamespaces();
 }
 
 #undef REGISTER_RDEL

@@ -33,15 +33,15 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         m_env->setNamespaces();
         // Button functions
-        m_buttonFuncs.registerFuncs("Button", *m_env);
+        m_buttonFuncs.init("Button", m_env);
         // Slider functions
-        m_sliderFuncs.registerFuncs("Slider", *m_env);
+        m_sliderFuncs.init("Slider", m_env);
         // CheckBox functions
-        m_checkBoxFuncs.registerFuncs("CheckBox", *m_env);
+        m_checkBoxFuncs.init("CheckBox", m_env);
         // ComboBox functions
-        m_comboBoxFuncs.registerFuncs("ComboBox", *m_env);
+        m_comboBoxFuncs.init("ComboBox", m_env);
         // Panel functions
-        m_panelFuncs.registerFuncs("Panel", *m_env);
+        m_panelFuncs.init("Panel", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(*m_env);
     }

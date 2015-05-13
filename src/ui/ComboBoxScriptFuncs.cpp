@@ -4,14 +4,14 @@
 #include "script/Environment.h"
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &ComboBoxScriptFuncs::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &ComboBoxScriptFuncs::name));
+#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &ComboBoxScriptFuncs::name));
+#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &ComboBoxScriptFuncs::name));
 
-void vui::ComboBoxScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
+void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
     // Call base register
-    WidgetScriptFuncs::registerFuncs(nSpace, env);
+    WidgetScriptFuncs::init(nSpace, env);
 
-    env.setNamespaces(nSpace);
+    env->setNamespaces(nSpace);
 
     { // Register all functions
         // Item functions
@@ -42,7 +42,7 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const cString nSpace, vscript::Envi
         REGISTER_DEL(env, setTextHoverColor);
         REGISTER_DEL(env, setTextScale);
     }
-    env.setNamespaces();
+    env->setNamespaces();
 }
 
 #undef REGISTER_RDEL

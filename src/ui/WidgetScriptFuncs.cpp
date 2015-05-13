@@ -6,11 +6,12 @@
 
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env.addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
-#define REGISTER_DEL(env, name) env.addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
+#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
+#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
 
-void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Environment& env) {
-    env.setNamespaces(nSpace);
+void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
+    m_env = env;
+    env->setNamespaces(nSpace);
 
     { // Register all functions
         // Getters
@@ -49,7 +50,7 @@ void vui::WidgetScriptFuncs::registerFuncs(const cString nSpace, vscript::Enviro
         REGISTER_DEL(env, enable);
         REGISTER_DEL(env, disable);
     }
-    env.setNamespaces();
+    env->setNamespaces();
 }
 
 #undef REGISTER_RDEL

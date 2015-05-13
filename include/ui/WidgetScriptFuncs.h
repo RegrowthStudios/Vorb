@@ -40,7 +40,7 @@ namespace vorb {
 
         class WidgetScriptFuncs {
         public:
-            virtual void registerFuncs(const cString nSpace, vscript::Environment& env);
+            virtual void init(const cString nSpace, vscript::Environment* env);
         protected:
 
             /*! @brief Releases all resources used by the Widget.
@@ -89,6 +89,8 @@ namespace vorb {
             virtual void setWidth(Widget* w, f32 width) const;
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
+
+            vscript::Environment* m_env = nullptr;
         };
     }
 }

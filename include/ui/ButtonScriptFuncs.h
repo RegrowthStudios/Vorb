@@ -36,7 +36,7 @@ namespace vorb {
 
         class ButtonScriptFuncs : public WidgetScriptFuncs {
         public:
-            virtual void registerFuncs(const cString nSpace, vscript::Environment& env) override;
+            virtual void init(const cString nSpace, vscript::Environment* env) override;
         protected:
             /************************************************************************/
             /* Getters                                                              */

@@ -36,7 +36,7 @@ namespace vorb {
 
         class ComboBoxScriptFuncs : public WidgetScriptFuncs {
         public:
-            void registerFuncs(const cString nSpace, vscript::Environment& env) override;
+            void init(const cString nSpace, vscript::Environment* env) override;
         protected:
             virtual void addItem(ComboBox* c, nString item) const;
             virtual bool addItemAtIndex(ComboBox* c, int index, nString item) const;

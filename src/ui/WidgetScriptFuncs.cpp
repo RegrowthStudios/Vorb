@@ -50,7 +50,8 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
         REGISTER_DEL(env, disable);
-        REGISTER_RDEL(env, setCallback);
+        REGISTER_RDEL(env, addCallback);
+        REGISTER_RDEL(env, removeCallback);
     }
 
     { // Register EventType enum
@@ -82,42 +83,49 @@ void vui::WidgetScriptFuncs::disable(Widget* w) {
     w->disable();
 }
 
-bool vui::WidgetScriptFuncs::setCallback(Widget* w, EventType eventType, nString funcName) {
+bool vui::WidgetScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
     const vscript::Function& f = (*m_env)[funcName];
-    std::cout << "SETCALL " << funcName;
     if (f.isNil()) return false;
-    std::cout << "AHH";
     switch (eventType) {
         case EventType::MOUSE_CLICK:
-            w->MouseClick.addFunctor([=](Sender s, const MouseButtonEvent& e) {
-                std::cout << "CLICKING";
-                f(e.button, e.x, e.y);
-            });
+            w->m_mouseClickFuncs.push_back(f); break;
+        case EventType::MOUSE_DOWN:
+            w->m_mouseDownFuncs.push_back(f); break;
+        case EventType::MOUSE_ENTER:
+            w->m_mouseEnterFuncs.push_back(f); break;
+        case EventType::MOUSE_LEAVE:
+            w->m_mouseLeaveFuncs.push_back(f); break;
+        case EventType::MOUSE_MOVE:
+            w->m_mouseMoveFuncs.push_back(f); break;
+        case EventType::MOUSE_UP:
+            w->m_mouseUpFuncs.push_back(f); break;
+        default:
+            return false;
+    }
+    return true;
+}
+
+bool vui::WidgetScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    switch (eventType) {
+        case EventType::MOUSE_CLICK:
+            w->m_mouseClickFuncs.erase(std::find(w->m_mouseClickFuncs.begin(), w->m_mouseClickFuncs.end(), f));
             break;
         case EventType::MOUSE_DOWN:
-            w->MouseDown.addFunctor([=](Sender s, const MouseButtonEvent& e) {
-                f(e.button, e.x, e.y);
-            });
+            w->m_mouseDownFuncs.erase(std::find(w->m_mouseDownFuncs.begin(), w->m_mouseDownFuncs.end(), f));
             break;
         case EventType::MOUSE_ENTER:
-            w->MouseEnter.addFunctor([=](Sender s, const MouseMotionEvent& e) {
-                f(e.x, e.y);
-            });
+            w->m_mouseEnterFuncs.erase(std::find(w->m_mouseEnterFuncs.begin(), w->m_mouseEnterFuncs.end(), f));
             break;
         case EventType::MOUSE_LEAVE:
-            w->MouseLeave.addFunctor([=](Sender s, const MouseMotionEvent& e) {
-                f(e.x, e.y);
-            });
+            w->m_mouseLeaveFuncs.erase(std::find(w->m_mouseLeaveFuncs.begin(), w->m_mouseLeaveFuncs.end(), f));
             break;
         case EventType::MOUSE_MOVE:
-            w->MouseMove.addFunctor([=](Sender s, const MouseMotionEvent& e) {
-                f(e.x, e.y);
-            });
+            w->m_mouseMoveFuncs.erase(std::find(w->m_mouseMoveFuncs.begin(), w->m_mouseMoveFuncs.end(), f));
             break;
         case EventType::MOUSE_UP:
-            w->MouseUp.addFunctor([=](Sender s, const MouseButtonEvent& e) {
-                f(e.button, e.x, e.y);
-            });
+            w->m_mouseUpFuncs.erase(std::find(w->m_mouseUpFuncs.begin(), w->m_mouseUpFuncs.end(), f));
             break;
         default:
             return false;
@@ -239,4 +247,52 @@ void vui::WidgetScriptFuncs::setX(Widget* w, f32 x) const {
 
 void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) const {
     w->setY(y);
+}
+
+void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseClickFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseClickFuncs.size(); i++) {
+        w->m_mouseClickFuncs[i](e.button, e.x, e.y);
+    }
+}
+
+void vui::WidgetScriptFuncs::onMouseDown(Sender s, const MouseButtonEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseDownFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseDownFuncs.size(); i++) {
+        w->m_mouseDownFuncs[i](e.button, e.x, e.y);
+    }
+}
+
+void vui::WidgetScriptFuncs::onMouseUp(Sender s, const MouseButtonEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseUpFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseUpFuncs.size(); i++) {
+        w->m_mouseUpFuncs[i](e.button, e.x, e.y);
+    }
+}
+
+void vui::WidgetScriptFuncs::onMouseEnter(Sender s, const MouseMotionEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseEnterFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseEnterFuncs.size(); i++) {
+        w->m_mouseEnterFuncs[i](e.x, e.y);
+    }
+}
+
+void vui::WidgetScriptFuncs::onMouseLeave(Sender s, const MouseMotionEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseLeaveFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseLeaveFuncs.size(); i++) {
+        w->m_mouseLeaveFuncs[i](e.x, e.y);
+    }
+}
+
+void vui::WidgetScriptFuncs::onMouseMove(Sender s, const MouseMotionEvent& e) {
+    Widget* w = (Widget*)s;
+    size_t sz = w->m_mouseMoveFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_mouseMoveFuncs.size(); i++) {
+        w->m_mouseMoveFuncs[i](e.x, e.y);
+    }
 }

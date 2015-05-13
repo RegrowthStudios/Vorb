@@ -38,6 +38,7 @@ namespace vorb {
         class UIRenderer;
 
         class Widget : public IWidgetContainer {
+            friend class WidgetScriptFuncs;
             friend class IWidgetContainer;
         public:
             /*! @brief Default constructor. */

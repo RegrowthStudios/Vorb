@@ -69,6 +69,10 @@ namespace vorb {
             void operator()(Args... args) const {
                 call(args...);
             }
+
+            bool operator==(const Function& other) const {
+                return (m_env == other.m_env) && (m_name == other.m_name);
+            }
         protected:
             static Function nil;
 

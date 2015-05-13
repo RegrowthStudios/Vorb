@@ -63,7 +63,9 @@ namespace vorb {
             /*! @brief Disables events* */
             virtual void disable(Widget* w);
             /*! @brief Registers a LUA callback with a widget* */
-            virtual bool setCallback(Widget* w, EventType eventType, nString funcName);
+            virtual bool addCallback(Widget* w, EventType eventType, nString funcName);
+            /*! @brief Deregisters a LUA callback with a widget* */
+            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName);
 
             /************************************************************************/
             /* Getters                                                              */
@@ -102,6 +104,15 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
 
+            /************************************************************************/
+            /* Widget Event Handlers                                                */
+            /************************************************************************/
+            virtual void onMouseClick(Sender s, const MouseButtonEvent& e);
+            virtual void onMouseDown(Sender s, const MouseButtonEvent& e);
+            virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
+            virtual void onMouseEnter(Sender s, const MouseMotionEvent& e);
+            virtual void onMouseLeave(Sender s, const MouseMotionEvent& e);
+            virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
             vscript::Environment* m_env = nullptr;
         };
     }

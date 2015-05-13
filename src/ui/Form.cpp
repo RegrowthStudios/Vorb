@@ -11,7 +11,8 @@ vui::Form::~Form() {
     // Empty
 }
 
-void vui::Form::init(IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    m_name = name;
     m_ownerIGameScreen = ownerScreen;
     m_position.x = (f32)destRect.x;
     m_position.y = (f32)destRect.y;

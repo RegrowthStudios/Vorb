@@ -44,12 +44,13 @@ namespace vorb {
             virtual ~Form();
             /*! @brief Initializes the Form and it's renderer.
              * 
+             * @param name: The name of the screen.
              * @param ownerScreen: The game screen that owns the Form.
              * @param destRect: Position and size of the Form.
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
-            virtual void init(IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(const nString& name, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Adds a widget to the Form and initializes it for rendering.
              * 
              * @param widget: The Widget to add.

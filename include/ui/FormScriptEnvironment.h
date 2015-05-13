@@ -49,11 +49,15 @@ namespace vorb {
             vscript::Environment* getEnv() { return m_env; }
         protected:
             virtual void registerConstants();
-            virtual vui::Button* makeButton(nString name, f32 x, f32 y, f32 width, f32 height);
-            virtual vui::Slider* makeSlider(nString name, f32 x, f32 y, f32 width, f32 height);
-            virtual vui::CheckBox* makeCheckBox(nString name, f32 x, f32 y, f32 width, f32 height);
-            virtual vui::ComboBox* makeComboBox(nString name, f32 x, f32 y, f32 width, f32 height);
-            virtual vui::Panel* makePanel(nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Button* makeButton(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Slider* makeSlider(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::CheckBox* makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::ComboBox* makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Panel* makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+
+            virtual void enableForm(Form* f);
+            virtual void disableForm(Form* f);
+            virtual nString getFormName(Form* f);
 
             Form* m_form = nullptr;
             vscript::Environment* m_env = nullptr;

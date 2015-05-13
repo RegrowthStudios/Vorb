@@ -16,7 +16,8 @@ void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScree
     m_ownerScreen = ownerScreen;
     m_destRect = destRect;
     m_defaultFont = defaultFont;
-    Form* baseForm = makeForm("base", startFormPath);
+    Form* mainForm = makeForm("main", startFormPath);
+    m_activeForm = mainForm;
 }
 
 void vui::ScriptedUI::draw() {
@@ -44,7 +45,7 @@ void vui::ScriptedUI::dispose() {
 vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
     // Make the form
     Form* newForm = new Form;
-    newForm->init(m_ownerScreen, m_destRect, m_defaultFont);
+    newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);
     FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
     newFormEnv->init(newForm);
     m_forms.push_back(std::make_pair(newForm, newFormEnv));
@@ -54,8 +55,21 @@ vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
     vscript::Environment* env = newFormEnv->getEnv();
     env->setNamespaces();
     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
+    env->addCRDelegate("changeForm", makeRDelegate(*this, &ScriptedUI::changeForm));
 
     // Load the script
     newFormEnv->loadForm(filePath.c_str());
     return newForm;
+}
+
+vui::Form* vui::ScriptedUI::changeForm(nString nextForm) {
+    for (auto& it : m_forms) {
+        if (it.first->getName() == nextForm) {
+            m_activeForm->disable();
+            m_activeForm = it.first;
+            m_activeForm->enable();
+            return m_activeForm;
+        }
+    }
+    return nullptr;
 }

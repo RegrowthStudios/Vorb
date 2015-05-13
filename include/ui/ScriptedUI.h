@@ -48,10 +48,12 @@ namespace vorb {
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
             virtual Form* makeForm(nString name, nString filePath);
+            virtual Form* changeForm(nString nextForm);
 
             vg::SpriteFont* m_defaultFont = nullptr;
             ui32v4 m_destRect;
             IGameScreen* m_ownerScreen = nullptr;
+            Form* m_activeForm = nullptr;
             std::vector<std::pair<Form*, FormScriptEnvironment*> > m_forms; ///< The forms and script envs in draw order
         };
     }

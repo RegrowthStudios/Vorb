@@ -120,6 +120,7 @@ namespace vorb {
             virtual const f32v2& getPosition() const { return m_position; }
             virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
+            virtual const nString& getName() const { return m_name; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -135,6 +136,7 @@ namespace vorb {
             virtual void setWidth(f32 width) { m_dimensions.x = width; }
             virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
+            virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/
             /* Events                                                               */

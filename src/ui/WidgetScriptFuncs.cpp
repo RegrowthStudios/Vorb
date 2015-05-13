@@ -3,6 +3,7 @@
 #include "ui/Widget.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
+#include "ui/MouseInputDispatcher.h"
 
 
 // Helper macros for smaller code
@@ -49,7 +50,20 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
         REGISTER_DEL(env, disable);
+        REGISTER_RDEL(env, setCallback);
     }
+
+    { // Register EventType enum
+        env->setNamespaces("EventType");
+        env->addValue("NONE", vui::EventType::NONE);
+        env->addValue("MOUSE_CLICK", vui::EventType::MOUSE_CLICK);
+        env->addValue("MOUSE_DOWN", vui::EventType::MOUSE_DOWN);
+        env->addValue("MOUSE_UP", vui::EventType::MOUSE_UP);
+        env->addValue("MOUSE_ENTER", vui::EventType::MOUSE_ENTER);
+        env->addValue("MOUSE_LEAVE", vui::EventType::MOUSE_LEAVE);
+        env->addValue("MOUSE_MOVE", vui::EventType::MOUSE_MOVE);
+    }
+
     env->setNamespaces();
 }
 
@@ -66,6 +80,49 @@ void vui::WidgetScriptFuncs::enable(Widget* w) {
 
 void vui::WidgetScriptFuncs::disable(Widget* w) {
     w->disable();
+}
+
+bool vui::WidgetScriptFuncs::setCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    std::cout << "SETCALL " << funcName;
+    if (f.isNil()) return false;
+    std::cout << "AHH";
+    switch (eventType) {
+        case EventType::MOUSE_CLICK:
+            w->MouseClick.addFunctor([=](Sender s, const MouseButtonEvent& e) {
+                std::cout << "CLICKING";
+                f(e.button, e.x, e.y);
+            });
+            break;
+        case EventType::MOUSE_DOWN:
+            w->MouseDown.addFunctor([=](Sender s, const MouseButtonEvent& e) {
+                f(e.button, e.x, e.y);
+            });
+            break;
+        case EventType::MOUSE_ENTER:
+            w->MouseEnter.addFunctor([=](Sender s, const MouseMotionEvent& e) {
+                f(e.x, e.y);
+            });
+            break;
+        case EventType::MOUSE_LEAVE:
+            w->MouseLeave.addFunctor([=](Sender s, const MouseMotionEvent& e) {
+                f(e.x, e.y);
+            });
+            break;
+        case EventType::MOUSE_MOVE:
+            w->MouseMove.addFunctor([=](Sender s, const MouseMotionEvent& e) {
+                f(e.x, e.y);
+            });
+            break;
+        case EventType::MOUSE_UP:
+            w->MouseUp.addFunctor([=](Sender s, const MouseButtonEvent& e) {
+                f(e.button, e.x, e.y);
+            });
+            break;
+        default:
+            return false;
+    }
+    return true;
 }
 
 bool vui::WidgetScriptFuncs::getFixedHeight(Widget* w) const {

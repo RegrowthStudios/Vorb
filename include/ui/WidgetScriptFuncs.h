@@ -35,6 +35,16 @@ DECL_VSCRIPT(class Environment)
 namespace vorb {
     namespace ui {
 
+        enum class EventType {
+            NONE,
+            MOUSE_CLICK,
+            MOUSE_DOWN,
+            MOUSE_UP,
+            MOUSE_ENTER,
+            MOUSE_LEAVE,
+            MOUSE_MOVE
+        };
+
         // Forward Declarations
         class Widget;
 
@@ -52,6 +62,8 @@ namespace vorb {
             virtual void enable(Widget* w);
             /*! @brief Disables events* */
             virtual void disable(Widget* w);
+            /*! @brief Registers a LUA callback with a widget* */
+            virtual bool setCallback(Widget* w, EventType eventType, nString funcName);
 
             /************************************************************************/
             /* Getters                                                              */

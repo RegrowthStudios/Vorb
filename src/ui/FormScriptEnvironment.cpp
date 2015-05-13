@@ -103,30 +103,35 @@ void vui::FormScriptEnvironment::registerConstants() {
 
 vui::Button* vui::FormScriptEnvironment::makeButton(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Button* b = new vui::Button(name, f32v4(x, y, width, height));
-    m_form->addWidget(b);
+    m_buttonFuncs.registerWidget(b);
+    m_form->addWidget(b); 
     return b;
 }
 
 vui::Slider* vui::FormScriptEnvironment::makeSlider(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Slider* s = new vui::Slider(name, f32v4(x, y, width, height));
+    m_sliderFuncs.registerWidget(s);
     m_form->addWidget(s);
     return s;
 }
 
 vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::CheckBox* c = new vui::CheckBox(name, f32v4(x, y, width, height));
+    m_checkBoxFuncs.registerWidget(c);
     m_form->addWidget(c);
     return c;
 }
 
 vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::ComboBox* c = new vui::ComboBox(name, f32v4(x, y, width, height));
+    m_checkBoxFuncs.registerWidget(c);
     m_form->addWidget(c);
     return c;
 }
 
 vui::Panel* vui::FormScriptEnvironment::makePanel(nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Panel* p = new vui::Panel(name, f32v4(x, y, width, height));
+    m_panelFuncs.registerWidget(p);
     m_form->addWidget(p);
     return p;
 }

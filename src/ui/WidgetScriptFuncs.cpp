@@ -71,6 +71,24 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
+void vui::WidgetScriptFuncs::registerWidget(Widget* w) {
+    w->MouseClick += makeDelegate(*this, &WidgetScriptFuncs::onMouseClick);
+    w->MouseDown += makeDelegate(*this, &WidgetScriptFuncs::onMouseDown);
+    w->MouseUp += makeDelegate(*this, &WidgetScriptFuncs::onMouseUp);
+    w->MouseMove += makeDelegate(*this, &WidgetScriptFuncs::onMouseMove);
+    w->MouseEnter += makeDelegate(*this, &WidgetScriptFuncs::onMouseEnter);
+    w->MouseLeave += makeDelegate(*this, &WidgetScriptFuncs::onMouseLeave);
+}
+
+void vui::WidgetScriptFuncs::unregisterWidget(Widget* w) {
+    w->MouseClick -= makeDelegate(*this, &WidgetScriptFuncs::onMouseClick);
+    w->MouseDown -= makeDelegate(*this, &WidgetScriptFuncs::onMouseDown);
+    w->MouseUp -= makeDelegate(*this, &WidgetScriptFuncs::onMouseUp);
+    w->MouseMove -= makeDelegate(*this, &WidgetScriptFuncs::onMouseMove);
+    w->MouseEnter -= makeDelegate(*this, &WidgetScriptFuncs::onMouseEnter);
+    w->MouseLeave -= makeDelegate(*this, &WidgetScriptFuncs::onMouseLeave);
+}
+
 void vui::WidgetScriptFuncs::dispose(Widget* w) {
     w->dispose();
 }

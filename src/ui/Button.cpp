@@ -36,7 +36,6 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Button::refreshDrawables));
-
     
     // Add the text 
     renderer->add(this,

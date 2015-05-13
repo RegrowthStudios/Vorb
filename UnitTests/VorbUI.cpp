@@ -109,27 +109,28 @@ public:
     vg::SpriteFont font;
     VGTexture texture, checkedTexture;
 };
+namespace {
+    class VGTestApp : public vui::MainGame {
+    public:
+        VGTestApp(vui::IGameScreen* s) :
+            screen(s) {
+            // Empty
+        }
 
-class VGTestApp : public vui::MainGame {
-public:
-    VGTestApp(vui::IGameScreen* s) :
-        screen(s) {
-        // Empty
-    }
+        virtual void onInit() {
+        }
+        virtual void addScreens() {
+            m_screenList.addScreen(screen);
+            m_screenList.setScreen(0);
+        }
+        virtual void onExit() {
+            delete screen;
+            screen = nullptr;
+        }
 
-    virtual void onInit() {
-    }
-    virtual void addScreens() {
-        m_screenList.addScreen(screen);
-        m_screenList.setScreen(0);
-    }
-    virtual void onExit() {
-        delete screen;
-        screen = nullptr;
-    }
-
-    vui::IGameScreen* screen = nullptr;
-};
+        vui::IGameScreen* screen = nullptr;
+    };
+}
 
 TEST(MainGame) {
     vorb::init(vorb::InitParam::ALL);

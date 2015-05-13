@@ -51,6 +51,8 @@ namespace vorb {
         class WidgetScriptFuncs {
         public:
             virtual void init(const cString nSpace, vscript::Environment* env);
+            virtual void registerWidget(Widget* w);
+            virtual void unregisterWidget(Widget* w);
         protected:
 
             /*! @brief Releases all resources used by the Widget.

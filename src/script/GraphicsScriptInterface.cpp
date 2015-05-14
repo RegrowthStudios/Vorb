@@ -2,6 +2,7 @@
 #include "script/GraphicsScriptInterface.h"
 #include "graphics/SamplerState.h"
 #include "graphics/GLEnums.h"
+#include "graphics/SpriteBatch.h"
 
 void vscript::GraphicsScriptInterface::registerGraphics(vscript::Environment& env) {
     env.setNamespaces();
@@ -130,7 +131,6 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
         env.addValue("TWO", vg::TextureInternalFormat::TWO);
         env.addValue("THREE", vg::TextureInternalFormat::THREE);
         env.addValue("FOUR", vg::TextureInternalFormat::FOUR);
-        env.setNamespaces();
     }
     { // vg::TextureFormat
         env.setNamespaces("TextureFormat");
@@ -161,7 +161,6 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
         env.addValue("STENCIL_INDEX", vg::TextureFormat::STENCIL_INDEX);
         env.addValue("UNSIGNED_INT", vg::TextureFormat::UNSIGNED_INT);
         env.addValue("UNSIGNED_SHORT", vg::TextureFormat::UNSIGNED_SHORT);
-        env.setNamespaces();
     }
     { // vg::TexturePixelType
         env.setNamespaces("TexturePixelType");
@@ -182,7 +181,6 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
         env.addValue("UNSIGNED_SHORT_4_4_4_4", vg::TexturePixelType::UNSIGNED_SHORT_4_4_4_4);
         env.addValue("UNSIGNED_SHORT_5_5_5_1", vg::TexturePixelType::UNSIGNED_SHORT_5_5_5_1);
         env.addValue("UNSIGNED_SHORT_5_6_5", vg::TexturePixelType::UNSIGNED_SHORT_5_6_5);
-        env.setNamespaces();
     }
     { // vg::TextureTarget
         env.setNamespaces("TextureTarget");
@@ -220,6 +218,16 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
         env.addValue("TEXTURE_MIN_LOD", vg::TextureTarget::TEXTURE_MIN_LOD);
         env.addValue("TEXTURE_RECTANGLE", vg::TextureTarget::TEXTURE_RECTANGLE);
     }
+    { // vg::GradientType
+        env.setNamespaces("GradientType");
+        env.addValue("NONE", vg::GradientType::NONE);
+        env.addValue("HORIZONTAL", vg::GradientType::HORIZONTAL);
+        env.addValue("VERTICAL", vg::GradientType::VERTICAL);
+        env.addValue("LEFT_DIAGONAL", vg::GradientType::LEFT_DIAGONAL);
+        env.addValue("RIGHT_DIAGONAL", vg::GradientType::RIGHT_DIAGONAL);
+    }
+
+    env.setNamespaces();
 }
 
 void vscript::GraphicsScriptInterface::registerFunctions(vscript::Environment& env) {

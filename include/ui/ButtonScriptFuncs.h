@@ -27,6 +27,7 @@
 #include "WidgetScriptFuncs.h"
 #include "../graphics/gtypes.h"
 #include "../graphics/SpriteFont.h"
+#include "../graphics/SpriteBatch.h"
 
 namespace vorb {
     namespace ui {
@@ -54,7 +55,9 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setBackColor(Button* b, color4 color) const;
+            virtual void setBackColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const;
             virtual void setBackHoverColor(Button* b, color4 color) const;
+            virtual void setBackHoverColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const;
             virtual void setText(Button* b, nString text) const;
             virtual void setTextColor(Button* b, color4 color) const;
             virtual void setTextHoverColor(Button* b, color4 color) const;

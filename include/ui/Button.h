@@ -75,8 +75,8 @@ namespace vorb {
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const color4& getBackColor() const { return m_backColor; }
-            virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
+            virtual const color4& getBackColor() const { return m_backColor1; }
+            virtual const color4& getBackHoverColor() const { return m_backHoverColor1; }
             virtual const color4& getTextColor() const { return m_textColor; }
             virtual const color4& getTextHoverColor() const { return m_textHoverColor; }
             virtual const nString& getText() const { return m_drawableText.getText(); }
@@ -96,7 +96,9 @@ namespace vorb {
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setBackColor(const color4& color);
+            virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setBackHoverColor(const color4& color);
+            virtual void setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
@@ -115,7 +117,9 @@ namespace vorb {
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableText m_drawableText, m_drawnText;
-            color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
+            vg::GradientType gradBack = vg::GradientType::NONE, gradHover = vg::GradientType::NONE;
+            color4 m_backColor1 = color::LightGray, m_backColor2 = color::LightGray;
+            color4 m_backHoverColor1 = color::AliceBlue, m_backHoverColor2 = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
             const vg::SpriteFont* m_defaultFont = nullptr;
         };

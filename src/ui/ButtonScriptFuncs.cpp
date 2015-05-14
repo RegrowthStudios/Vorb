@@ -25,7 +25,9 @@ void vui::ButtonScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getTextScale);
         // Setters
         REGISTER_DEL(env, setBackColor);
+        REGISTER_DEL(env, setBackColorGrad);
         REGISTER_DEL(env, setBackHoverColor);
+        REGISTER_DEL(env, setBackHoverColorGrad);
         REGISTER_DEL(env, setText);
         REGISTER_DEL(env, setTextColor);
         REGISTER_DEL(env, setTextHoverColor);
@@ -76,8 +78,16 @@ void vui::ButtonScriptFuncs::setBackColor(Button* b, color4 color) const {
     b->setBackColor(color);
 }
 
+void vui::ButtonScriptFuncs::setBackColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const {
+    b->setBackColorGrad(color1, color2, grad);
+}
+
 void vui::ButtonScriptFuncs::setBackHoverColor(Button* b, color4 color) const {
     b->setBackHoverColor(color);
+}
+
+void vui::ButtonScriptFuncs::setBackHoverColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const {
+    b->setBackHoverColorGrad(color1, color2, grad);
 }
 
 void vui::ButtonScriptFuncs::setText(Button* b, nString text) const {

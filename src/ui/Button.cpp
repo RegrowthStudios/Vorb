@@ -108,12 +108,26 @@ void vui::Button::setY(f32 y) {
 }
 
 void vui::Button::setBackColor(const color4& color) {
-    m_backColor = color;
+    m_backColor1 = m_backColor2 = color;
+    updateColor();
+}
+
+void vui::Button::setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad) {
+    m_backColor1 = color1;
+    m_backColor2 = color2;
+    gradBack = grad;
     updateColor();
 }
 
 void vui::Button::setBackHoverColor(const color4& color) {
-    m_backHoverColor = color;
+    m_backHoverColor1 = m_backHoverColor2 = color;
+    updateColor();
+}
+
+void vui::Button::setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad) {
+    m_backHoverColor1 = color1;
+    m_backHoverColor2 = color2;
+    gradHover = grad;
     updateColor();
 }
 
@@ -144,10 +158,14 @@ void vui::Button::setTextScale(const f32v2& textScale) {
 
 void vui::Button::updateColor() {
     if (m_isMouseIn) {
-        m_drawableRect.setColor(m_backHoverColor);
+        m_drawableRect.setColor1(m_backHoverColor1);
+        m_drawableRect.setColor2(m_backHoverColor2);
+        m_drawableRect.setGradientType(gradBack);
         m_drawableText.setColor(m_textHoverColor);
     } else {
-        m_drawableRect.setColor(m_backColor);
+        m_drawableRect.setColor1(m_backColor1);
+        m_drawableRect.setColor2(m_backColor2);
+        m_drawableRect.setGradientType(gradHover);
         m_drawableText.setColor(m_textColor);
     }
     refreshDrawables();

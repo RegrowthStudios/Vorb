@@ -43,6 +43,45 @@ void vui::SliderScriptFuncs::init(const cString nSpace, vscript::Environment* en
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
+void vui::SliderScriptFuncs::registerWidget(Widget* w) {
+    WidgetScriptFuncs::registerWidget(w);
+    Slider* s = (Slider*)w;
+    s->ValueChange += makeDelegate(*this, &SliderScriptFuncs::onValueChange);
+}
+
+void vui::SliderScriptFuncs::unregisterWidget(Widget* w) {
+    WidgetScriptFuncs::unregisterWidget(w);
+    Slider* s = (Slider*)w;
+    s->ValueChange -= makeDelegate(*this, &SliderScriptFuncs::onValueChange);
+}
+
+bool vui::SliderScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    Slider* s = (Slider*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            s->m_valueChangeFuncs.push_back(f); break;
+        default:
+            return false;
+    }
+    return true;
+}
+
+bool vui::SliderScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    Slider* s = (Slider*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            s->m_valueChangeFuncs.erase(std::find(s->m_valueChangeFuncs.begin(), s->m_valueChangeFuncs.end(), f));
+            break;
+        default:
+            return WidgetScriptFuncs::removeCallback(w, eventType, funcName);
+    }
+    return true;
+}
+
 VGTexture vui::SliderScriptFuncs::getSlideTexture(Slider* s) const {
     return s->getSlideTexture();
 }
@@ -121,4 +160,12 @@ void vui::SliderScriptFuncs::setMax(Slider* s, int max) const {
 
 bool vui::SliderScriptFuncs::isInSlideBounds(Slider* s, f32v2 point) const {
     return s->isInSlideBounds(point);
+}
+
+void vui::SliderScriptFuncs::onValueChange(Sender s, int i) {
+    Slider* w = (Slider*)s;
+    size_t sz = w->m_valueChangeFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
+        w->m_valueChangeFuncs[i](i);
+    }
 }

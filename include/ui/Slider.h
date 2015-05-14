@@ -34,6 +34,7 @@ namespace vorb {
         class UIRenderer;
 
         class Slider : public Widget {
+            friend class SliderScriptFuncs;
         public:
             /*! @brief Default constructor. */
             Slider();
@@ -120,6 +121,13 @@ namespace vorb {
             virtual void onMouseDown(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+
+            /************************************************************************/
+            /* LUA Callbacks                                                        */
+            /************************************************************************/
+#ifdef VORB_USING_SCRIPT
+            std::vector<script::Function> m_valueChangeFuncs;
+#endif
 
             DrawableRect m_drawableBar, m_drawnBar;
             DrawableRect m_drawableSlide, m_drawnSlide;

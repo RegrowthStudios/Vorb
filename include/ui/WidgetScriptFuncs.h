@@ -42,7 +42,8 @@ namespace vorb {
             MOUSE_UP,
             MOUSE_ENTER,
             MOUSE_LEAVE,
-            MOUSE_MOVE
+            MOUSE_MOVE,
+            VALUE_CHANGE
         };
 
         // Forward Declarations

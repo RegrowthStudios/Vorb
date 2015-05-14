@@ -36,7 +36,13 @@ namespace vorb {
         class SliderScriptFuncs : public WidgetScriptFuncs {
         public:
             virtual void init(const cString nSpace, vscript::Environment* env) override;
+            virtual void registerWidget(Widget* w) override;
+            virtual void unregisterWidget(Widget* w) override;
         protected:
+            virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
+            /*! @brief Deregisters a LUA callback with a widget* */
+            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -66,6 +72,8 @@ namespace vorb {
             virtual void setMax(Slider* s, int max) const;
 
             virtual bool isInSlideBounds(Slider* s, f32v2 point) const;
+
+            void onValueChange(Sender s, int i);
         };
     }
 }

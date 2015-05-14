@@ -65,6 +65,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         env->addValue("MOUSE_ENTER", vui::EventType::MOUSE_ENTER);
         env->addValue("MOUSE_LEAVE", vui::EventType::MOUSE_LEAVE);
         env->addValue("MOUSE_MOVE", vui::EventType::MOUSE_MOVE);
+        env->addValue("VALUE_CHANGE", vui::EventType::VALUE_CHANGE);
     }
 
     env->setNamespaces();

@@ -52,14 +52,18 @@ vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
 
     // Register callbacks
     // Register other functions with the env
-    vscript::Environment* env = newFormEnv->getEnv();
-    env->setNamespaces();
-    env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
-    env->addCRDelegate("changeForm", makeRDelegate(*this, &ScriptedUI::changeForm));
+    registerScriptValues(newFormEnv);
 
     // Load the script
     newFormEnv->loadForm(filePath.c_str());
     return newForm;
+}
+
+void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {
+    vscript::Environment* env = newFormEnv->getEnv();
+    env->setNamespaces();
+    env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
+    env->addCRDelegate("changeForm", makeRDelegate(*this, &ScriptedUI::changeForm));
 }
 
 vui::Form* vui::ScriptedUI::changeForm(nString nextForm) {

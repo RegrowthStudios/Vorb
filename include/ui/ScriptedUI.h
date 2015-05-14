@@ -48,6 +48,7 @@ namespace vorb {
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
             virtual Form* makeForm(nString name, nString filePath);
+            virtual void registerScriptValues(FormScriptEnvironment* newFormEnv);
             virtual Form* changeForm(nString nextForm);
 
             vg::SpriteFont* m_defaultFont = nullptr;

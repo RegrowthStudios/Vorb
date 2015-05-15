@@ -20,6 +20,10 @@ vui::Widget::~Widget() {
     // Empty
 }
 
+void vui::Widget::removeDrawables(UIRenderer* renderer) {
+    renderer->remove(this);
+}
+
 void vui::Widget::updatePosition() {
     f32v2 newPos = m_relativePosition;
     if (m_parent) {

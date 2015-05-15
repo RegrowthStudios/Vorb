@@ -71,7 +71,7 @@ namespace vorb {
             *
             * @param renderer: UIRenderer to remove from
             */
-            virtual void removeDrawables(UIRenderer* renderer) { /* Empty */ }
+            virtual void removeDrawables(UIRenderer* renderer);
 
             /*! @brief Updates the widget. Can be used for animation.
             *

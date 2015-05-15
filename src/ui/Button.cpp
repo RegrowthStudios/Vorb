@@ -43,10 +43,6 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
 
-void vui::Button::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
-}
-
 void vui::Button::updatePosition() {
     Widget::updatePosition();
     m_drawableRect.setPosition(getPosition());

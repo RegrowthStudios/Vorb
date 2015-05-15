@@ -201,6 +201,72 @@
     <ClCompile Include="src\graphics\ShaderInterface.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\UIRenderer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Drawables.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Slider.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\CheckBox.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ComboBox.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Form.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\IWidgetContainer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\FormScriptEnvironment.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ButtonScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\WidgetScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Button.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\Texture.cpp">
+      <Filter>Graphics\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script\GraphicsScriptInterface.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\SliderScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Panel.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\PanelScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ScriptedUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Label.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\LabelScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -522,6 +588,72 @@
     <ClInclude Include="include\ui\KeyStrings.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\UIRenderer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Drawables.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetStyle.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Slider.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\CheckBox.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ComboBox.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Form.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\IWidgetContainer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\FormScriptEnvironment.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ButtonScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Button.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script\GraphicsScriptInterface.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\SliderScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\CheckBoxScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ComboBoxScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Panel.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\PanelScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\ScriptedUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\Label.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\LabelScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -607,6 +739,12 @@
     </Filter>
     <Filter Include="IO\YAML">
       <UniqueIdentifier>{9a85e0eb-e38f-4c09-bbb6-96b126863b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Script">
+      <UniqueIdentifier>{fdb66444-3703-44c0-8d58-c7904078ab4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -149,7 +149,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -294,6 +294,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\io\KegEnum.cpp" />
     <ClCompile Include="src\io\KegEnvironment.cpp" />
     <ClCompile Include="src\io\KegRead.cpp" />
@@ -304,12 +305,33 @@
     <ClCompile Include="src/MeshGenIcosphere.cpp" />
     <ClCompile Include="src\io\YAMLConverters.cpp" />
     <ClCompile Include="src\script\Environment.cpp" />
+    <ClCompile Include="src\script\GraphicsScriptInterface.cpp" />
     <ClCompile Include="src\script\REPL.cpp" />
     <ClCompile Include="src\script\ScriptImpl.cpp" />
     <ClCompile Include="src\script\ScriptValueSenders.cpp" />
+    <ClCompile Include="src\ui\ButtonScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\CheckBox.cpp" />
+    <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\ComboBox.cpp" />
+    <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\Form.cpp" />
+    <ClCompile Include="src\ui\FormScriptEnvironment.cpp" />
+    <ClCompile Include="src\ui\Button.cpp" />
+    <ClCompile Include="src\ui\Drawables.cpp" />
+    <ClCompile Include="src\ui\IWidgetContainer.cpp" />
+    <ClCompile Include="src\ui\Label.cpp" />
+    <ClCompile Include="src\ui\LabelScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\Panel.cpp" />
+    <ClCompile Include="src\ui\PanelScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\ScriptedUI.cpp" />
+    <ClCompile Include="src\ui\Slider.cpp" />
+    <ClCompile Include="src\ui\SliderScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\InputDispatcher.cpp" />
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />
+    <ClCompile Include="src\ui\UIRenderer.cpp" />
+    <ClCompile Include="src\ui\WidgetScriptFuncs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -410,6 +432,7 @@
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
+    <ClInclude Include="include\script\GraphicsScriptInterface.h" />
     <ClInclude Include="include\script\REPL.h" />
     <ClInclude Include="include\script\Script.h" />
     <ClInclude Include="include\script\ScriptImpl.h" />
@@ -418,7 +441,28 @@
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
+    <ClInclude Include="include\ui\ButtonScriptFuncs.h" />
+    <ClInclude Include="include\ui\CheckBox.h" />
+    <ClInclude Include="include\ui\CheckBoxScriptFuncs.h" />
+    <ClInclude Include="include\ui\ComboBox.h" />
+    <ClInclude Include="include\ui\ComboBoxScriptFuncs.h" />
+    <ClInclude Include="include\ui\Form.h" />
+    <ClInclude Include="include\ui\FormScriptEnvironment.h" />
+    <ClInclude Include="include\ui\Button.h" />
+    <ClInclude Include="include\ui\Drawables.h" />
+    <ClInclude Include="include\ui\IWidgetContainer.h" />
+    <ClInclude Include="include\ui\Label.h" />
+    <ClInclude Include="include\ui\LabelScriptFuncs.h" />
+    <ClInclude Include="include\ui\Panel.h" />
+    <ClInclude Include="include\ui\PanelScriptFuncs.h" />
+    <ClInclude Include="include\ui\ScriptedUI.h" />
+    <ClInclude Include="include\ui\Slider.h" />
+    <ClInclude Include="include\ui\SliderScriptFuncs.h" />
+    <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
+    <ClInclude Include="include\ui\UIRenderer.h" />
+    <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
+    <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />

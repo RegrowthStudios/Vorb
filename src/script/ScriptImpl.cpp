@@ -15,7 +15,7 @@ void vscript::impl::pushToTop(EnvironmentHandle h, const Function& f) {
     lua_getfield(h, -1, f.getName().c_str());
 }
 void vscript::impl::call(EnvironmentHandle h, size_t n, size_t r) {
-    lua_pcall(h, n, r, 0);
+    lua_pcall(h, (int)n, (int)r, 0);
 }
 void vorb::script::impl::popStack(EnvironmentHandle h) {
     lua_pop(h, 1);

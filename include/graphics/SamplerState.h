@@ -18,6 +18,11 @@
 #include "GLEnums.h"
 #include "gtypes.h"
 
+#ifdef VORB_USING_SCRIPT
+#include "VorbPreDecl.inl"
+DECL_VSCRIPT(class Environment);
+#endif
+
 namespace vorb {
 	namespace graphics {
         // TODO: Why are these here?
@@ -45,6 +50,14 @@ namespace vorb {
 		    void set(ui32 textureTarget) const;
 		    // Unit Is In The Range [0 - GraphicsDeviceProperties::maxTextureUnits)
 		    void setObject(ui32 textureUnit) const;
+
+#ifdef VORB_USING_SCRIPT
+            /*! @brief Registers states with a script environment.
+             * 
+             * @param env: The scripting environment. 
+             */
+            static void registerStates(vscript::Environment& env);
+#endif
 		
 		    static SamplerState POINT_WRAP;
 		    static SamplerState POINT_CLAMP;

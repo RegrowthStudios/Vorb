@@ -143,6 +143,30 @@ void* vscript::ScriptValueSender<void*, void>::pop(EnvironmentHandle h) {
     lua_pop(h, 1);
     return v;
 }
+/************************************************************************/
+/* Color4 cast                                                          */
+/************************************************************************/
+color4 vscript::ScriptValueSender<color4, void>::defaultValue() {
+    return color4();
+}
+i32 vscript::ScriptValueSender<color4, void>::getNumValues() {
+    return 4;
+}
+i32 vscript::ScriptValueSender<color4, void>::push(EnvironmentHandle h, color4 v) {
+    ScriptValueSender<ui8>::push(h, v.r);
+    ScriptValueSender<ui8>::push(h, v.g);
+    ScriptValueSender<ui8>::push(h, v.b);
+    ScriptValueSender<ui8>::push(h, v.a);
+    return 4;
+}
+color4 vscript::ScriptValueSender<color4, void>::pop(EnvironmentHandle h) {
+    color4 v;
+    v.a = ScriptValueSender<ui8>::pop(h);
+    v.b = ScriptValueSender<ui8>::pop(h);
+    v.g = ScriptValueSender<ui8>::pop(h);
+    v.r = ScriptValueSender<ui8>::pop(h);
+    return v;
+}
 
 #define TYPE_VEC2(TYPE) \
     TYPE##v2 vscript::ScriptValueSender<TYPE##v2, void>::defaultValue() { \

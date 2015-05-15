@@ -51,7 +51,7 @@ bool vscript::Environment::load(const vio::Path& file) {
 
         // Read the file
         vio::FileSeekOffset l = fs.length();
-        scriptData = new char[l];
+        scriptData = new char[l + 1];
         size_t end = fs.read(l, 1, scriptData);
         scriptData[end] = 0;
     }

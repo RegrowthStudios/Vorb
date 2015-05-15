@@ -75,6 +75,8 @@ namespace vorb {
      */
     namespace net {
     }
+    namespace script {
+    }
 }
 
 // Namespace aliases
@@ -86,6 +88,7 @@ namespace vio = vorb::io;
 namespace vsound = vorb::sound;
 namespace vecs = vorb::ecs;
 namespace vnet = vorb::net;
+namespace vscript = vorb::script;
 
 #define DECL_VORB(...) namespace vorb { __VA_ARGS__; }
 #define DECL_VCORE(...) namespace vorb { namespace core { __VA_ARGS__; }  }
@@ -96,5 +99,6 @@ namespace vnet = vorb::net;
 #define DECL_VSOUND(...) namespace vorb { namespace sound { __VA_ARGS__; }  }
 #define DECL_VECS(...) namespace vorb { namespace ecs { __VA_ARGS__; }  }
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
+#define DECL_VSCRIPT(...) namespace vorb { namespace script { __VA_ARGS__; }  }
 
 #endif // !Vorb_VorbPreDecl_inl__

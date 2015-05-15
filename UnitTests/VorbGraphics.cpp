@@ -5,7 +5,9 @@
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
 #include <glm/gtx/transform.hpp>
+#include <random>
 #include <include/MeshGenerators.h>
+#include <include/Timing.h>
 #include <include/Vorb.h>
 #include <include/colors.h>
 #include <include/graphics/GLProgram.h>
@@ -124,7 +126,7 @@ public:
         m_sb.begin();
         m_sb.draw(m_tex.id, f32v2(0, 0), f32v2(400, 400), color::White);
         m_sb.end(vg::SpriteSortMode::NONE);
-        m_sb.renderBatch(f32v2(800, 600));
+        m_sb.render(f32v2(800, 600));
     }
 private:
     static ImageTestFormats m_testFormats[6];
@@ -208,7 +210,7 @@ public:
         batch.begin();
         batch.drawString(&font, "Hello World", f32v2(10, 10), 80.0f, 1.0f, color4(1.0f, 1.0f, 1.0f));
         batch.end();
-        batch.renderBatch(f32v2(800, 600));
+        batch.render(f32v2(800, 600));
     }
 
     vg::SpriteFont font;
@@ -297,12 +299,11 @@ void main() {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        auto bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/TW.jpg", vg::ImageIOFormat::RGBA_UI8);
         if (bmp.data == nullptr) {
             std::cerr << "Error: Failed to load data/TW.jpg\n";
         }
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
-        vg::ImageIO::free(bmp);
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -354,7 +355,7 @@ void main() {
         spriteBatch.draw(texture, f32v2(700.0f + ((yaw / PI_2) * 100.0f),
             (100.0f - (pitch / PI_2) * 100.0f)) - pointSize.y / 2.0f, pointSize, color::Red);
         spriteBatch.end();
-        spriteBatch.renderBatch(f32v2(800.0f, 600.0f));
+        spriteBatch.render(f32v2(800.0f, 600.0f));
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         vg::DepthState::FULL.set();
     }
@@ -373,6 +374,81 @@ void main() {
 
     f32 yaw = 0;
     f32 pitch = 0;
+};
+
+class SpriteBatchTester : public vui::IGameScreen {
+public:
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+
+    virtual void build() {
+        // Empty
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+        // Empty
+    }
+
+    virtual void onEntry(const vui::GameTime& gameTime) {
+        batch.init();
+
+        // Init sprites
+        std::mt19937 rgen(0);
+        std::uniform_real_distribution<f32>x(0.0f, 800.0f);
+        std::uniform_real_distribution<f32>y(0.0f, 600.0f);
+        spritePositions.resize(NUM_SPRITES);
+        for (auto& p : spritePositions) {
+            p.x = x(rgen);
+            p.y = y(rgen);
+        }
+
+        // Load texture
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/BigImage.png", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/BigImage.png\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        batch.dispose();
+    }
+
+    virtual void update(const vui::GameTime& gameTime) {
+        angle += 0.1f;
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        timer.start();
+        batch.begin();
+        for (auto& p : spritePositions) {
+            batch.draw(texture, nullptr, nullptr, p, f32v2(0.5f), size, angle, color::White);
+        }
+        f64 drawTime = timer.stop();
+        timer.start();
+        batch.end();
+        f64 endTime = timer.stop();
+        timer.start();
+        batch.render(f32v2(800, 600));
+        glFinish();
+        f64 renderTime = timer.stop();
+        f64 totalTime = drawTime + endTime + renderTime;
+        printf("Draw: %5.2lf End: %5.2lf Render %5.2lf Total %5.2lf\n", drawTime, endTime, renderTime, totalTime);
+    }
+    PreciseTimer timer;
+    f32 angle = 0.0f;
+    f32v2 size = f32v2(30.0f);
+    const int NUM_SPRITES = 100000;
+    std::vector<f32v2> spritePositions;
+    vg::SpriteBatch batch;
+    VGTexture texture;
 };
 
 class AnimViewer : public vui::IGameScreen {
@@ -416,10 +492,10 @@ public:
     }
     void walk(vg::Bone& bone, const f32m4& parent, i32 frame) {
         i32 pfi = 0, nfi = 0;
-        while (nfi < bone.numFrames && bone.keyframes[nfi].frame <= frame) nfi++;
+        while (nfi < (i32)bone.numFrames && bone.keyframes[nfi].frame <= frame) nfi++;
         pfi = nfi - 1;
         if (pfi < 0) pfi = 0;
-        if (nfi >= bone.numFrames) nfi = bone.numFrames - 1;
+        if (nfi >= (i32)bone.numFrames) nfi = bone.numFrames - 1;
 
         if (nfi == pfi) {
             // Compute world transform
@@ -810,6 +886,13 @@ TEST(TorusWorld) {
 TEST(AnimViewer) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new AnimViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(SpriteBatch) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new SpriteBatchTester).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

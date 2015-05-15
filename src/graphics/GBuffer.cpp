@@ -21,7 +21,7 @@ void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::G
 vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat) {
     // Create texture targets
     m_textures.setData(attachments.size() + 1);
-    glGenTextures(m_textures.size(), &m_textures[0]);
+    glGenTextures((GLsizei)m_textures.size(), &m_textures[0]);
 
     // Make the framebuffer
     glGenFramebuffers(1, &m_fboGeom);
@@ -35,7 +35,7 @@ vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::
     }
 
     // Set the output location for pixels
-    glDrawBuffers(attachments.size(), bufs);
+    glDrawBuffers((GLsizei)attachments.size(), bufs);
 
     // Make the framebuffer for lighting
     glGenFramebuffers(1, &m_fboLight);
@@ -105,7 +105,7 @@ void vg::GBuffer::dispose() {
         m_fboLight = 0;
     }
     if (m_textures.size() != 0) {
-        glDeleteTextures(m_textures.size(), &m_textures[0]);
+        glDeleteTextures((GLsizei)m_textures.size(), &m_textures[0]);
         m_textures.setData(0);
     }
     if (m_texDepth != 0) {

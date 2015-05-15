@@ -74,6 +74,7 @@ bool vui::GameWindow::init() {
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
+    if (m_displayMode.isResizable) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_RESIZABLE);
     if (m_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
     if (m_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
     m_window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_displayMode.screenWidth, m_displayMode.screenHeight, flags);
@@ -185,6 +186,7 @@ bool vui::GameWindow::init() {
     vui::InputDispatcher::init(this);
     vui::InputDispatcher::window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::onQuit += makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize += makeDelegate(*this, &GameWindow::onResize);
     m_quitSignal = false;
 
     return true;
@@ -194,6 +196,7 @@ void vui::GameWindow::dispose() {
 
     vui::InputDispatcher::onQuit -= makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize -= makeDelegate(*this, &GameWindow::onResize);
     vui::InputDispatcher::dispose();
     saveSettings();
 
@@ -233,6 +236,7 @@ void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->screenHeight = DEFAULT_WINDOW_HEIGHT;
     mode->isBorderless = false;
     mode->isFullscreen = false;
+    mode->isResizable = true;
     mode->maxFPS = DEFAULT_MAX_FPS;
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
 #if defined(VORB_IMPL_GRAPHICS_D3D)
@@ -263,7 +267,7 @@ void vui::GameWindow::saveSettings() const {
     file.close();
 }
 
-void vui::GameWindow::setScreenSize(const i32& w, const i32& h, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/) {
     // Apply A Minimal State Change
     if (overrideCheck || m_displayMode.screenWidth != w || m_displayMode.screenHeight != h) {
         m_displayMode.screenWidth = w;
@@ -277,7 +281,7 @@ void vui::GameWindow::setScreenSize(const i32& w, const i32& h, const bool& over
 #endif
     }
 }
-void vui::GameWindow::setFullscreen(const bool& useFullscreen, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setFullscreen(bool useFullscreen, bool overrideCheck /*= false*/) {
     if (overrideCheck || m_displayMode.isFullscreen != useFullscreen) {
         m_displayMode.isFullscreen = useFullscreen;
 #if defined(VORB_IMPL_UI_SDL)
@@ -292,7 +296,7 @@ void vui::GameWindow::setFullscreen(const bool& useFullscreen, const bool& overr
 #endif
     }
 }
-void vui::GameWindow::setBorderless(const bool& useBorderless, const bool& overrideCheck /*= false*/) {
+void vui::GameWindow::setBorderless(bool useBorderless, bool overrideCheck /*= false*/) {
     if (overrideCheck || m_displayMode.isBorderless != useBorderless) {
         m_displayMode.isBorderless = useBorderless;
 #if defined(VORB_IMPL_UI_SDL)
@@ -307,7 +311,8 @@ void vui::GameWindow::setBorderless(const bool& useBorderless, const bool& overr
 #endif
     }
 }
-void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& overrideCheck /*= false*/) {
+
+void vui::GameWindow::setSwapInterval(GameSwapInterval mode, bool overrideCheck /*= false*/) {
     if (overrideCheck || m_displayMode.swapInterval != mode) {
         m_displayMode.swapInterval = mode;
 #if defined(VORB_IMPL_UI_SDL)
@@ -341,7 +346,7 @@ void vui::GameWindow::setSwapInterval(const GameSwapInterval& mode, const bool& 
 
     }
 }
-void vui::GameWindow::setMaxFPS(const f32& fpsLimit) {
+void vui::GameWindow::setMaxFPS(f32 fpsLimit) {
     m_displayMode.maxFPS = fpsLimit;
 }
 void vui::GameWindow::setTitle(const cString title) const {
@@ -433,6 +438,12 @@ void vui::GameWindow::pollInput() {
     }
 #endif
 }
+
+void vorb::ui::GameWindow::onResize(Sender s, const WindowResizeEvent& e) {
+    m_displayMode.screenWidth = e.w;
+    m_displayMode.screenHeight = e.h;
+}
+
 void vorb::ui::GameWindow::onQuitSignal(Sender) {
     m_quitSignal = true;
 }

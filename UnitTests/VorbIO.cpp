@@ -120,13 +120,13 @@ TEST(ModelIO) {
         vg::OBJMesh mesh;
         timer.start();
         vg::ModelIO::loadOBJ(data, mesh);
-        f32 ms = timer.stop();
+        f64 ms = timer.stop();
         delete[] data;
 
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", mesh.vertices.size());
         printf("Inds: %d\n", mesh.triangles.size() * 3);
-        printf("Load Time (MS): %f\n", ms);
+        printf("Load Time (MS): %lf\n", ms);
     });
 
     return true;
@@ -159,13 +159,13 @@ TEST(VRAW) {
             delete[] mesh.vertices;
             delete[] mesh.indices;
         }
-        f32 ms = timer.stop();
+        f64 ms = timer.stop();
         delete[] data;
 
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", mesh.vertexCount);
         printf("Inds: %d\n", mesh.indexCount);
-        printf("Load Time (MS): %f\n", ms);
+        printf("Load Time (MS): %lf\n", ms);
     });
 
     return true;
@@ -195,13 +195,13 @@ TEST(TINYOBJ) {
         std::vector<tinyobj::material_t> mats;
         timer.start();
         tinyobj::LoadObj(shapes, mats, ss, mr);
-        f32 ms = timer.stop();
+        f64 ms = timer.stop();
         delete[] data;
 
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", shapes[0].mesh.positions.size());
         printf("Inds: %d\n", shapes[0].mesh.indices.size() * 3);
-        printf("Load Time (MS): %f\n", ms);
+        printf("Load Time (MS): %lf\n", ms);
     });
 
     return true;
@@ -228,13 +228,13 @@ TEST(Animation) {
         vg::Skeleton skeleton;
         timer.start();
         skeleton = vg::ModelIO::loadAnim(data);
-        f32 ms = timer.stop();
+        f64 ms = timer.stop();
         delete[] data;
 
         printf("Animation: %s\n", file.getPath().getCString());
         printf("Bones:  %d\n", skeleton.numBones);
         printf("Frames: %d\n", skeleton.numFrames);
-        printf("Load Time (MS): %f\n", ms);
+        printf("Load Time (MS): %lf\n", ms);
     });
 
     return true;

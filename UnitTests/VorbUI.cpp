@@ -4,14 +4,25 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_UI_
 
+#include <glm/gtx/transform.hpp>
+#include <include/Graphics.h>
+#include <include/Timing.h>
 #include <include/Vorb.h>
-#include <include/ui/MainGame.h>
-#include <include/ui/ScreenList.h>
+#include <include/graphics/ImageIO.h>
+#include <include/graphics/SamplerState.h>
+#include <include/graphics/SpriteBatch.h>
+#include <include/graphics/SpriteFont.h>
+#include <include/ui/CheckBox.h>
+#include <include/ui/ComboBox.h>
+#include <include/ui/Button.h>
+#include <include/ui/Form.h>
+#include <include/ui/FormScriptEnvironment.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
-#include <include/Timing.h>
-#include <include/Graphics.h>
-#include <glm/gtx/transform.hpp>
+#include <include/ui/MainGame.h>
+#include <include/ui/ScreenList.h>
+#include <include/ui/Slider.h>
+#include <include/ui/UIRenderer.h>
 
 struct Vertex {
     f32v3 position;
@@ -39,30 +50,98 @@ public:
     virtual void draw(const vui::GameTime& gameTime) {
     }
 };
-class App : public vui::MainGame {
+
+class WidgetTestScreen : public vui::IGameScreen {
 public:
-    App(i32 index) :
-    m_index(index) {
-        // Empty
+    virtual i32 getNextScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual i32 getPreviousScreen() const {
+        return SCREEN_INDEX_NO_SCREEN;
+    }
+    virtual void build() {
+    }
+    virtual void destroy(const vui::GameTime& gameTime) {
+    }
+    virtual void onEntry(const vui::GameTime& gameTime) {       
+        font.init("Data/chintzy.ttf", 32);
+        form.init("main", this, ui32v4(0, 0, m_viewportDims.x, m_viewportDims.y), &font);
+
+        // Load textures
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/button_test.jpg\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+
+        glGenTextures(1, &checkedTexture);
+        glBindTexture(GL_TEXTURE_2D, checkedTexture);
+        vg::ScopedBitmapResource bmp2 = vg::ImageIO().load("data/checked_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+        if (bmp.data == nullptr) {
+            std::cerr << "Error: Failed to load data/checked_test.jpg\n";
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp2.data);
+        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // Load script file and init
+        env.init(&form);
+        env.loadForm("data/scripts/Form1.lua");
+    }
+    virtual void onExit(const vui::GameTime& gameTime) {
+        form.dispose();
+        font.dispose();
+    }
+    virtual void update(const vui::GameTime& gameTime) {
+        form.update();
+    }
+    virtual void draw(const vui::GameTime& gameTime) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        form.draw();
     }
 
-    virtual void onInit() {
-        // Empty
-    }
-    virtual void addScreens() {
-        m_screenList.addScreen(new TestScreen);
-        m_screenList.setScreen(m_index);
-    }
-    virtual void onExit() {
-        // Empty
-    }
-private:
-    i32 m_index;
+    ui32v2 m_viewportDims = ui32v2(800, 600);
+    vui::FormScriptEnvironment env;
+    vui::Form form;
+    vg::SpriteFont font;
+    VGTexture texture, checkedTexture;
 };
+namespace {
+    class VGTestApp : public vui::MainGame {
+    public:
+        VGTestApp(vui::IGameScreen* s) :
+            screen(s) {
+            // Empty
+        }
+
+        virtual void onInit() {
+        }
+        virtual void addScreens() {
+            m_screenList.addScreen(screen);
+            m_screenList.setScreen(0);
+        }
+        virtual void onExit() {
+            delete screen;
+            screen = nullptr;
+        }
+
+        vui::IGameScreen* screen = nullptr;
+    };
+}
 
 TEST(MainGame) {
     vorb::init(vorb::InitParam::ALL);
-    { App(0).run(); }
+    { VGTestApp(new TestScreen).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(Widgets) {
+    vorb::init(vorb::InitParam::ALL);
+    { VGTestApp(new WidgetTestScreen).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
@@ -113,7 +192,7 @@ TEST(InputFuncs) {
     });
 
 
-    { App(0).run(); }
+    { VGTestApp(new TestScreen).run(); }
 
     pool.dispose();
 
@@ -181,4 +260,3 @@ TEST(SoloWindow) {
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
 }
-

@@ -186,6 +186,7 @@ bool vui::GameWindow::init() {
     vui::InputDispatcher::init(this);
     vui::InputDispatcher::window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::onQuit += makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize += makeDelegate(*this, &GameWindow::onResize);
     m_quitSignal = false;
 
     return true;
@@ -195,6 +196,7 @@ void vui::GameWindow::dispose() {
 
     vui::InputDispatcher::onQuit -= makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize -= makeDelegate(*this, &GameWindow::onResize);
     vui::InputDispatcher::dispose();
     saveSettings();
 
@@ -436,6 +438,12 @@ void vui::GameWindow::pollInput() {
     }
 #endif
 }
+
+void vorb::ui::GameWindow::onResize(Sender s, const WindowResizeEvent& e) {
+    m_displayMode.screenWidth = e.w;
+    m_displayMode.screenHeight = e.h;
+}
+
 void vorb::ui::GameWindow::onQuitSignal(Sender) {
     m_quitSignal = true;
 }

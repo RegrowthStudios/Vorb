@@ -27,6 +27,10 @@
 
 namespace vorb {
     namespace ui {
+
+        // Forward declarations
+        struct WindowResizeEvent;
+
         /*! @brief Typeless window handle.
          * <br/>
          * GLFW - GLFWwindow* <br/>
@@ -181,6 +185,7 @@ namespace vorb {
             VORB_NON_COPYABLE(GameWindow);
             VORB_MOVABLE_DECL(GameWindow);
 
+            void onResize(Sender s, const WindowResizeEvent& e);
             void onQuitSignal(Sender);
             void pollInput();
 

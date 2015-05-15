@@ -26,6 +26,7 @@ vui::ComboBox::~ComboBox() {
 }
 
 void vui::ComboBox::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     m_defaultFont = renderer->getDefaultFont();
     // Make copies
     m_drawnRect = m_drawableRect;
@@ -50,11 +51,11 @@ void vui::ComboBox::addDrawables(UIRenderer* renderer) {
     }
 }
 
-void vui::ComboBox::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
-    m_mainButton.removeDrawables(renderer);
+void vui::ComboBox::removeDrawables() {
+    Widget::removeDrawables();
+    m_mainButton.removeDrawables();
     for (auto& it : m_buttons) {
-        it.removeDrawables(renderer);
+        it.removeDrawables();
     }
 }
 

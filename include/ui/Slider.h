@@ -62,6 +62,9 @@ namespace vorb {
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition() override;
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/

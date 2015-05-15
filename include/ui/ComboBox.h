@@ -73,7 +73,7 @@ namespace vorb {
             *
             * @param renderer: UIRenderer to remove from
             */
-            virtual void removeDrawables(UIRenderer* renderer) override;
+            virtual void removeDrawables() override;
 
             /*! @brief Adds an item to the combo box
              * 

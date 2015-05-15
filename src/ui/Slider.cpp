@@ -27,6 +27,7 @@ vui::Slider::~Slider() {
 }
 
 void vui::Slider::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     // Make copies
     m_drawnBar = m_drawableBar;
     m_drawnSlide = m_drawableSlide;
@@ -40,6 +41,11 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
     renderer->add(this,
                   makeDelegate(m_drawnSlide, &DrawableRect::draw),
                   makeDelegate(*this, &Slider::refreshDrawables));
+}
+
+void vui::Slider::updatePosition() {
+    Widget::updatePosition();
+    updateSlidePosition();
 }
 
 void vui::Slider::setSlideDimensions(const f32v2& dimensions) {

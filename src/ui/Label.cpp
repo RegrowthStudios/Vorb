@@ -22,6 +22,7 @@ vui::Label::~Label() {
 }
 
 void vui::Label::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     // Make copies
     m_drawnText = m_drawableText;
 

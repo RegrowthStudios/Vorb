@@ -27,6 +27,7 @@ vui::CheckBox::~CheckBox() {
 }
 
 void vui::CheckBox::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;

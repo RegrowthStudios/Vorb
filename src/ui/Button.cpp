@@ -25,6 +25,7 @@ vui::Button::~Button() {
 }
 
 void vui::Button::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;

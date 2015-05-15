@@ -60,18 +60,20 @@ namespace vorb {
             Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
+            /*! @brief Releases all resources used by the Widget.
+            *
+            * Gets called in the destructor.
+            */
+            virtual void dispose() override;
 
             /*! @brief Adds all drawables to the UIRenderer
             *
-            * @param renderer: UIRenderer to add to
+            * @param renderer: UIRenderer to add to.
             */
-            virtual void addDrawables(UIRenderer* renderer) { /* Empty */ }
+            virtual void addDrawables(UIRenderer* renderer) { m_renderer = renderer; }
 
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables(UIRenderer* renderer);
+            /*! @brief Removes all drawables from the UIRenderer */
+            virtual void removeDrawables();
 
             /*! @brief Updates the widget. Can be used for animation.
             *
@@ -90,7 +92,7 @@ namespace vorb {
             virtual const IWidgetContainer* getParent() const { return m_parent; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
-
+            virtual const UIRenderer* getRenderer() const { return m_renderer; }
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
@@ -107,6 +109,7 @@ namespace vorb {
             AnchorStyle m_anchor; ///< The anchor data.
             DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
+            UIRenderer* m_renderer = nullptr;
             IWidgetContainer* m_parent = nullptr; ///< Parent container
             volatile bool m_needsDrawableReload = false;
         };

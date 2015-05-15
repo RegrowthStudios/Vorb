@@ -20,8 +20,16 @@ vui::Widget::~Widget() {
     // Empty
 }
 
-void vui::Widget::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
+void vui::Widget::dispose() {
+    IWidgetContainer::dispose();
+    removeDrawables();
+}
+
+void vui::Widget::removeDrawables() {
+    if (m_renderer) {
+        m_renderer->remove(this);
+        m_renderer = nullptr;
+    }
 }
 
 void vui::Widget::updatePosition() {
@@ -50,9 +58,6 @@ void vorb::ui::Widget::setDock(const DockStyle& dock) {
 }
 
 void vorb::ui::Widget::setParent(IWidgetContainer* parent) {
-    if (m_parent) {
-        m_parent->removeWidget(this);
-    }
-    parent->addWidget(this);
-    m_parent = parent;
+    if (m_parent) m_parent->removeWidget(this);
+    if (parent) parent->addWidget(this);
 }

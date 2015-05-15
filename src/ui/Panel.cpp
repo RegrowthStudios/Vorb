@@ -24,16 +24,13 @@ vui::Panel::~Panel() {
 }
 
 void vui::Panel::addDrawables(UIRenderer* renderer) {
+    Widget::addDrawables(renderer);
     // Make copy
     m_drawnRect = m_drawableRect;
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Panel::refreshDrawables));
-}
-
-void vui::Panel::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
 }
 
 void vui::Panel::updatePosition() {

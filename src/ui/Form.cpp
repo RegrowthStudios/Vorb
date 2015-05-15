@@ -23,7 +23,7 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const ui32v4
 
 bool vui::Form::addWidget(Widget* widget) {
     if (IWidgetContainer::addWidget(widget)) {
-        widget->addDrawables(&m_renderer);
+        if (!widget->getRenderer()) widget->addDrawables(&m_renderer);
         return true;
     }
     return false;
@@ -31,7 +31,6 @@ bool vui::Form::addWidget(Widget* widget) {
 
 bool vui::Form::removeWidget(Widget* widget) {
     if (IWidgetContainer::removeWidget(widget)) {
-        widget->removeDrawables(&m_renderer);
         return true;
     }
     return false;
@@ -50,7 +49,7 @@ void vui::Form::update(f32 dt /*= 1.0f*/) {
     for (auto& w : m_widgets) {
         // Check if we need to reload the drawables
         if (w->needsDrawableReload()) {
-            w->removeDrawables(&m_renderer);
+            w->removeDrawables();
             w->setNeedsDrawableReload(false);
             w->addDrawables(&m_renderer);
         }

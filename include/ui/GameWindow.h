@@ -68,7 +68,8 @@ namespace vorb {
             UNIT_SPACE(PIXEL) i32 screenHeight; ///< Height of the backbuffer (and borderless window height).
         
             bool isFullscreen; ///< True if the window is fullscreen.
-            bool isBorderless; ///< True if the window does not have a border/
+            bool isBorderless; ///< True if the window does not have a border.
+            bool isResizable; ///< True if the window can be resized.
         
             GameSwapInterval swapInterval; ///< Synchronization value for the system's refresh rate.
             f32 maxFPS; ///< Maximum desired FPS with if the FPS limiter is used.
@@ -144,6 +145,9 @@ namespace vorb {
             const bool& isBorderless() const {
                 return m_displayMode.isFullscreen;
             }
+            const bool& isResizable() const {
+                return m_displayMode.isResizable;
+            }
             const GameSwapInterval& getSwapInterval() const {
                 return m_displayMode.swapInterval;
             }
@@ -163,11 +167,11 @@ namespace vorb {
             GraphicsContext getContext() const; // TODO(Cristian): Does returning the D3D Device cause convenience or confusion?
 
             // Change Display Settings
-            void setScreenSize(const i32& w, const i32& h, const bool& overrideCheck = false);
-            void setFullscreen(const bool& useFullscreen, const bool& overrideCheck = false);
-            void setBorderless(const bool& useBorderless, const bool& overrideCheck = false);
-            void setSwapInterval(const GameSwapInterval& mode, const bool& overrideCheck = false);
-            void setMaxFPS(const f32& fpsLimit);
+            void setScreenSize(i32 w, i32 h, bool overrideCheck = false);
+            void setFullscreen(bool useFullscreen, bool overrideCheck = false);
+            void setBorderless(bool useBorderless, bool overrideCheck = false);
+            void setSwapInterval(GameSwapInterval mode, bool overrideCheck = false);
+            void setMaxFPS(f32 fpsLimit);
             void setTitle(const cString title) const;
         
             void sync(ui32 frameTime);

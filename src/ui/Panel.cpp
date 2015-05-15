@@ -14,9 +14,8 @@ vui::Panel::Panel(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : P
     m_drawableRect.setDimensions(getDimensions());
 }
 
-vui::Panel::Panel(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
+vui::Panel::Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
     parent->addWidget(this);
-    m_parent = parent;
 }
 
 vui::Panel::~Panel() {

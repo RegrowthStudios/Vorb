@@ -52,7 +52,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Slider(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Slider();
 
@@ -113,6 +113,7 @@ namespace vorb {
             virtual void updateSlidePosition();
             virtual void updateColor();
             virtual void refreshDrawables();
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Event Handlers                                                       */
@@ -127,7 +128,6 @@ namespace vorb {
 #ifdef VORB_USING_SCRIPT
             std::vector<script::Function> m_valueChangeFuncs;
 #endif
-
             DrawableRect m_drawableBar, m_drawnBar;
             DrawableRect m_drawableSlide, m_drawnSlide;
             color4 m_barColor = color::LightGray;

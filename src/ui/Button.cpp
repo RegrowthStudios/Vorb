@@ -15,7 +15,7 @@ vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     updateTextPosition();
 }
 
-vui::Button::Button(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
+vui::Button::Button(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
     parent->addWidget(this);
     m_parent = parent;
 }

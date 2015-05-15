@@ -2,6 +2,7 @@
 #include "ui/Slider.h"
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
+#include "utils.h"
 
 vui::Slider::Slider() : Widget() {
     ValueChange.setSender(this);
@@ -17,9 +18,8 @@ vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     updateSlidePosition();
 }
 
-vui::Slider::Slider(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
     parent->addWidget(this);
-    m_parent = parent;
 }
 
 vui::Slider::~Slider() {
@@ -61,7 +61,6 @@ void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
 }
 
 void vui::Slider::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
     m_drawableBar.setDimensions(dimensions);
     updateSlidePosition();
 }
@@ -159,6 +158,7 @@ bool vui::Slider::isInSlideBounds(f32 x, f32 y) const {
 }
 
 void vui::Slider::updateSlidePosition() {
+ 
     f32 scale = getValueScaled();
     const f32v2& barPos = getPosition();
     const f32v2& barDims = getDimensions();
@@ -188,6 +188,20 @@ void vui::Slider::updateColor() {
 void vui::Slider::refreshDrawables() {
     m_drawnBar = m_drawableBar;
     m_drawnSlide = m_drawableSlide;
+}
+
+void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
+    f32v2 pos = m_position;
+    f32v2 dims = m_dimensions;
+    f32v2 slideDims = m_drawableSlide.getDimensions();
+    pos -= slideDims * 0.5f;
+    dims += slideDims * 2.0f;
+
+    computeClipping(parentClipRect, pos, dims);
+    if (dims.x < 0) dims.x = 0;
+    if (dims.y < 0) dims.y = 0;
+    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    computeChildClipRects();
 }
 
 void vui::Slider::onMouseDown(Sender s, const MouseButtonEvent& e) {

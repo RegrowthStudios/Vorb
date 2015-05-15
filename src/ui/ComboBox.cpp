@@ -17,7 +17,7 @@ vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
     updateTextPosition();
 }
 
-vui::ComboBox::ComboBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
+vui::ComboBox::ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
     parent->addWidget(this);
 }
 

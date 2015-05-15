@@ -34,13 +34,10 @@ void vui::Widget::removeDrawables() {
 
 void vui::Widget::updatePosition() {
     f32v2 newPos = m_relativePosition;
-    if (m_parent) {
-        newPos += m_parent->getPosition();
-    }
+    if (m_parent) newPos += m_parent->getPosition();
     m_position = newPos;
 
-    computeClipRect(m_parent->getClipRect());
-
+    if (m_parent) computeClipRect(m_parent->getClipRect());
     // Update child positions
     for (auto& w : m_widgets) {
         w->updatePosition();

@@ -13,9 +13,8 @@ vui::Label::Label(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : L
     updateTextPosition();
 }
 
-vui::Label::Label(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
+vui::Label::Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
     parent->addWidget(this);
-    m_parent = parent;
 }
 
 vui::Label::~Label() {

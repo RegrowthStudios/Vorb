@@ -166,6 +166,10 @@ void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v
     if (dims.x < 0) dims.x = 0;
     if (dims.y < 0) dims.y = 0;
     m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    computeChildClipRects();
+}
+
+void vui::IWidgetContainer::computeChildClipRects() {
     for (auto& w : m_widgets) {
         w->computeClipRect(m_clipRect);
     }

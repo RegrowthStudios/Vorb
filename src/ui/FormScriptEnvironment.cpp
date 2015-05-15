@@ -112,44 +112,38 @@ void vui::FormScriptEnvironment::registerConstants() {
 }
 
 vui::Button* vui::FormScriptEnvironment::makeButton(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Button* b = new vui::Button(name, f32v4(x, y, width, height));
+    vui::Button* b = new vui::Button(f, name, f32v4(x, y, width, height));
     m_buttonFuncs.registerWidget(b);
-    f->addWidget(b); 
     return b;
 }
 
 vui::Slider* vui::FormScriptEnvironment::makeSlider(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Slider* s = new vui::Slider(name, f32v4(x, y, width, height));
+    vui::Slider* s = new vui::Slider(f, name, f32v4(x, y, width, height));
     m_sliderFuncs.registerWidget(s);
-    f->addWidget(s);
     return s;
 }
 
 vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::CheckBox* c = new vui::CheckBox(name, f32v4(x, y, width, height));
+    vui::CheckBox* c = new vui::CheckBox(f, name, f32v4(x, y, width, height));
     m_checkBoxFuncs.registerWidget(c);
-    f->addWidget(c);
     return c;
 }
 
 vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::ComboBox* c = new vui::ComboBox(name, f32v4(x, y, width, height));
+    vui::ComboBox* c = new vui::ComboBox(f, name, f32v4(x, y, width, height));
     m_checkBoxFuncs.registerWidget(c);
-    f->addWidget(c);
     return c;
 }
 
 vui::Panel* vui::FormScriptEnvironment::makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Panel* p = new vui::Panel(name, f32v4(x, y, width, height));
+    vui::Panel* p = new vui::Panel(f, name, f32v4(x, y, width, height));
     m_panelFuncs.registerWidget(p);
-    f->addWidget(p);
     return p;
 }
 
 vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Label* l = new vui::Label(name, f32v4(x, y, width, height));
+    vui::Label* l = new vui::Label(f, name, f32v4(x, y, width, height));
     m_labelFuncs.registerWidget(l);
-    f->addWidget(l);
     return l;
 }
 

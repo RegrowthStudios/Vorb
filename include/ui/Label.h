@@ -51,7 +51,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Label(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Label();
 

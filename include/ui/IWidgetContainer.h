@@ -158,7 +158,7 @@ namespace vorb {
             void recalculateDockedWidgets();
             /*! Computes clipping for rendering and propagates through children. */
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX));
-
+            virtual void computeChildClipRects();
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

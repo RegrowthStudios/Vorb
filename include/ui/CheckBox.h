@@ -79,6 +79,8 @@ namespace vorb {
             virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
             virtual const color4& getBoxColor() const { return m_boxColor; }
             virtual const color4& getBoxHoverColor() const { return m_boxHoverColor; }
+            virtual const color4& getBoxCheckedColor() const { return m_boxCheckedColor; }
+            virtual const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor; }
             virtual const color4& getTextColor() const { return m_drawableText.getColor(); }
             virtual const nString& getText() const { return m_drawableText.getText(); }
             virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
@@ -99,6 +101,8 @@ namespace vorb {
             virtual void setY(f32 y) override;
             virtual void setBoxColor(const color4& color);
             virtual void setBoxHoverColor(const color4& color);
+            virtual void setBoxCheckedColor(const color4& color);
+            virtual void setBoxCheckedHoverColor(const color4& color);
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
@@ -122,7 +126,8 @@ namespace vorb {
             /************************************************************************/
             DrawableRect m_drawableRect, m_drawnRect;
             DrawableText m_drawableText, m_drawnText;
-            color4 m_boxColor = color::LightGray, m_boxHoverColor = color::AliceBlue;
+            color4 m_boxColor = color::DarkGray, m_boxHoverColor = color::AliceBlue;
+            color4 m_boxCheckedColor = color::LightGray, m_boxCheckedHoverColor = color::AliceBlue;
             const vg::SpriteFont* m_defaultFont = nullptr;
             VGTexture m_checkedTexture = 0, m_uncheckedTexture = 0;
             bool m_isChecked = false;

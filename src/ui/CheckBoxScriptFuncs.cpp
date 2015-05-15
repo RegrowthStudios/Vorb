@@ -19,6 +19,8 @@ void vui::CheckBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_RDEL(env, getCheckedTexture);
         REGISTER_RDEL(env, getBoxColor);
         REGISTER_RDEL(env, getBoxHoverColor);
+        REGISTER_RDEL(env, getBoxCheckedColor);
+        REGISTER_RDEL(env, getBoxCheckedHoverColor);
         REGISTER_RDEL(env, getTextColor);
         REGISTER_RDEL(env, getText);
         REGISTER_RDEL(env, getTextAlign);
@@ -29,6 +31,8 @@ void vui::CheckBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_DEL(env, setUncheckedTexture);
         REGISTER_DEL(env, setBoxColor);
         REGISTER_DEL(env, setBoxHoverColor);
+        REGISTER_DEL(env, setBoxCheckedColor);
+        REGISTER_DEL(env, setBoxCheckedHoverColor);
         REGISTER_DEL(env, setText);
         REGISTER_DEL(env, setTextColor);
         REGISTER_DEL(env, setTextAlign);
@@ -73,6 +77,14 @@ color4 vui::CheckBoxScriptFuncs::getBoxHoverColor(CheckBox* c) const {
     return c->getBoxHoverColor();
 }
 
+color4 vui::CheckBoxScriptFuncs::getBoxCheckedColor(CheckBox* c) const {
+    return c->getBoxCheckedColor();
+}
+
+color4 vui::CheckBoxScriptFuncs::getBoxCheckedHoverColor(CheckBox* c) const {
+    return c->getBoxCheckedHoverColor();
+}
+
 color4 vui::CheckBoxScriptFuncs::getTextColor(CheckBox* c) const {
     return c->getTextColor();
 }
@@ -107,6 +119,14 @@ void vui::CheckBoxScriptFuncs::setBoxColor(CheckBox* c, color4 color) const {
 
 void vui::CheckBoxScriptFuncs::setBoxHoverColor(CheckBox* c, color4 color) const {
     c->setBoxHoverColor(color);
+}
+
+void vui::CheckBoxScriptFuncs::setBoxCheckedColor(CheckBox* c, color4 color) const {
+    c->setBoxCheckedColor(color);
+}
+
+void vui::CheckBoxScriptFuncs::setBoxCheckedHoverColor(CheckBox* c, color4 color) const {
+    c->setBoxCheckedHoverColor(color);
 }
 
 void vui::CheckBoxScriptFuncs::setText(CheckBox* c, nString text) const {

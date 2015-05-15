@@ -133,6 +133,16 @@ void vui::CheckBox::setBoxHoverColor(const color4& color) {
     updateColor();
 }
 
+void vui::CheckBox::setBoxCheckedColor(const color4& color) {
+    m_boxCheckedColor = color;
+    updateColor();
+}
+
+void vui::CheckBox::setBoxCheckedHoverColor(const color4& color) {
+    m_boxCheckedHoverColor = color;
+    updateColor();
+}
+
 void vui::CheckBox::setText(const nString& text) {
     m_drawableText.setText(text);
     refreshDrawables();
@@ -162,10 +172,18 @@ void vui::CheckBox::setChecked(bool checked) {
 }
 
 void vui::CheckBox::updateColor() {
-    if (m_isMouseIn) {
-        m_drawableRect.setColor(m_boxHoverColor);
+    if (m_isChecked) {
+        if (m_isMouseIn) {
+            m_drawableRect.setColor(m_boxCheckedHoverColor);
+        } else {
+            m_drawableRect.setColor(m_boxCheckedColor);
+        }
     } else {
-        m_drawableRect.setColor(m_boxColor);
+        if (m_isMouseIn) {
+            m_drawableRect.setColor(m_boxHoverColor);
+        } else {
+            m_drawableRect.setColor(m_boxColor);
+        }
     }
     refreshDrawables();
 }
@@ -232,6 +250,7 @@ void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
         }
     }
     m_isClicking = false;
+    updateColor();
 }
 
 void vui::CheckBox::onMouseMove(Sender s, const MouseMotionEvent& e) {

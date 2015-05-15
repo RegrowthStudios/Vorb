@@ -162,10 +162,10 @@ bool vui::SliderScriptFuncs::isInSlideBounds(Slider* s, f32v2 point) const {
     return s->isInSlideBounds(point);
 }
 
-void vui::SliderScriptFuncs::onValueChange(Sender s, int i) {
+void vui::SliderScriptFuncs::onValueChange(Sender s, int v) {
     Slider* w = (Slider*)s;
     size_t sz = w->m_valueChangeFuncs.size();
     for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
-        w->m_valueChangeFuncs[i](i);
+        w->m_valueChangeFuncs[i](v);
     }
 }

@@ -49,6 +49,8 @@ namespace vorb {
             virtual VGTexture getCheckedTexture(CheckBox* c) const;
             virtual color4 getBoxColor(CheckBox* c) const;
             virtual color4 getBoxHoverColor(CheckBox* c) const;
+            virtual color4 getBoxCheckedColor(CheckBox* c) const;
+            virtual color4 getBoxCheckedHoverColor(CheckBox* c) const;
             virtual color4 getTextColor(CheckBox* c) const;
             virtual nString getText(CheckBox* c) const;
             virtual vg::TextAlign getTextAlign(CheckBox* c) const;
@@ -62,6 +64,8 @@ namespace vorb {
             virtual void setUncheckedTexture(CheckBox* c, VGTexture texture) const;
             virtual void setBoxColor(CheckBox* c, color4 color) const;
             virtual void setBoxHoverColor(CheckBox* c, color4 color) const;
+            virtual void setBoxCheckedColor(CheckBox* c, color4 color) const;
+            virtual void setBoxCheckedHoverColor(CheckBox* c, color4 color) const;
             virtual void setText(CheckBox* c, nString text) const;
             virtual void setTextColor(CheckBox* c, color4 color) const;
             virtual void setTextAlign(CheckBox* c, vg::TextAlign textAlign) const;

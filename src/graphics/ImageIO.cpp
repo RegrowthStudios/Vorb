@@ -61,8 +61,9 @@ vg::BitmapResource vg::ImageIO::alloc(const ui32& w, const ui32& h, const ImageI
     res.bytesUI8 = new ui8[size * res.width * res.height]();
     return res;
 }
-void vg::ImageIO::free(const BitmapResource& res) {
+void vg::ImageIO::free(BitmapResource& res) {
     delete[] res.bytesUI8;
+    res.bytesUI8 = nullptr;
 }
 
 vg::BitmapResource vg::ImageIO::load(const vio::Path& path,

@@ -36,6 +36,7 @@ namespace vorb {
         class BitmapResource {
             friend class ImageIO;
         public:
+            virtual ~BitmapResource() {};
             ui32 width = 0;
             ui32 height = 0;
             union {
@@ -62,7 +63,7 @@ namespace vorb {
         class ImageIO {
         public:
             static BitmapResource alloc(const ui32& w, const ui32& h, const ImageIOFormat& format);
-            static void free(const BitmapResource& res);
+            static void free(BitmapResource& res);
 
             BitmapResource load(const vio::Path& path,
                                 const ImageIOFormat& format = ImageIOFormat::RGBA_UI8,
@@ -71,6 +72,23 @@ namespace vorb {
                       const ui32& h, const ImageIOFormat& format);
 
             Event<nString> onError;
+        };
+
+        /// Destroys the resource in the destructor
+        class ScopedBitmapResource : public BitmapResource {
+        public:
+            ScopedBitmapResource() {};
+            ScopedBitmapResource(ScopedBitmapResource& other) = delete;
+            ScopedBitmapResource(const BitmapResource& rs) {
+                memcpy(this, &rs, sizeof(BitmapResource));
+            }
+            virtual ~ScopedBitmapResource() {
+                ImageIO::free(*this);
+            }
+            ScopedBitmapResource& operator=(const BitmapResource& rs) {
+                memcpy(this, &rs, sizeof(BitmapResource));
+                return *this;
+            }
         };
     }
 }

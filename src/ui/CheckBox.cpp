@@ -47,6 +47,26 @@ void vui::CheckBox::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 }
 
+void vui::CheckBox::updatePosition() {
+    f32v2 newPos = m_relativePosition;
+    if (m_parent) newPos += m_parent->getPosition();
+    m_position = newPos;
+
+    // Update child positions
+    for (auto& w : m_widgets) {
+        w->updatePosition();
+    }
+
+    updateTextPosition();
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+   
+    if (m_parent) computeClipRect(m_parent->getClipRect());
+    m_drawableText.setClipRect(m_clipRect);
+    m_drawableRect.setClipRect(m_clipRect);
+    
+}
+
 void vui::CheckBox::check() {
     if (!m_isChecked) {
         m_isChecked = true;
@@ -220,6 +240,7 @@ void vui::CheckBox::updateTextPosition() {
             m_drawableText.setPosition(pos + dims / 2.0f);
             break;
     }
+
     refreshDrawables();
 }
 
@@ -235,6 +256,12 @@ void vui::CheckBox::refreshDrawables() {
 
     m_drawableRect.setTexture(m_isChecked ? m_checkedTexture : m_uncheckedTexture);
     m_drawnRect = m_drawableRect;
+}
+
+
+void vui::CheckBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
+    m_clipRect = parentClipRect;
+    computeChildClipRects();
 }
 
 void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {

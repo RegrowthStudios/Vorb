@@ -45,13 +45,10 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
 
 void vui::Slider::updatePosition() {
     Widget::updatePosition();
-    if (m_parent) {
-        m_drawableBar.setClipRect(m_clipRect);
-        m_drawableSlide.setClipRect(m_clipRect);
-    } else {
-        m_drawableBar.setClipRect(CLIP_RECT_DEFAULT);
-        m_drawableSlide.setClipRect(CLIP_RECT_DEFAULT);
-    }
+
+    m_drawableBar.setClipRect(m_clipRect);
+    m_drawableSlide.setClipRect(m_clipRect);
+
     updateSlidePosition();
 }
 

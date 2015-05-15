@@ -48,6 +48,7 @@ void vui::Button::updatePosition() {
     Widget::updatePosition();
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
+    m_drawableRect.setClipRect(m_clipRect);
     updateTextPosition();
 }
 
@@ -172,7 +173,8 @@ void vui::Button::updateTextPosition() {
     const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
-    m_drawableText.setClipRect(f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y));
+
+    m_drawableText.setClipRect(m_clipRect);
 
     // TODO(Ben): Padding
     switch (textAlign) {

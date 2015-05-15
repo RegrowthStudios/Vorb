@@ -61,9 +61,13 @@ namespace vorb {
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition() override;
+
             virtual void check();
             virtual void unCheck();
             virtual void toggleChecked();
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Getters                                                              */

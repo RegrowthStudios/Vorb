@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ui/Label.h"
 #include "ui/UIRenderer.h"
+#include "utils.h"
 
 vui::Label::Label() : Widget() {
     refreshDrawables();
@@ -105,7 +106,8 @@ void vui::Label::updateTextPosition() {
     const f32v2& dims = getDimensions();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
-    m_drawableText.setClipRect(f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y));
+
+    m_drawableText.setClipRect(m_clipRect);
 
     // TODO(Ben): Padding
     switch (textAlign) {

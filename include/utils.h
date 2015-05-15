@@ -184,7 +184,75 @@ inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
     q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
     return glm::normalize(q);
 }
-
+/************************************************************************/
+/* Clip utilities                                                       */
+/************************************************************************/
+/*! @brief Computes clipping of a rect.
+ * 
+ * @param clipRect: The clipping rectangle
+ * @param position: The rectangle position to check. Will be clipped. 
+ * @param position: The rectangle size to check. Will be clipped.
+ * @param uvRect: The rectangle UVs. Will be clipped.
+ * @return true if it clipped.
+ */
+inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) {
+    bool rv = false;
+    if (position.x < clipRect.x) {
+        f32 t = clipRect.x - position.x;
+        uvRect.x += uvRect.z * (t / size.x);
+        uvRect.z *= 1.0f - (t / size.x);
+        position.x = clipRect.x;
+        size.x -= t;
+        rv = true;
+    }
+    if (position.x + size.x > clipRect.x + clipRect.z) {
+        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
+        uvRect.z *= 1.0f - (t / size.x);
+        size.x -= t;
+        rv = true;
+    }
+    if (position.y < clipRect.y) {
+        f32 t = clipRect.y - position.y;
+        uvRect.y += uvRect.w * (t / size.y);
+        uvRect.w *= 1.0f - (t / size.y);
+        position.y = clipRect.y;
+        size.y -= t;
+        rv = true;
+    }
+    if (position.y + size.y > clipRect.y + clipRect.w) {
+        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
+        uvRect.w *= 1.0f - (t / size.y);
+        size.y -= t;
+        rv = true;
+    }
+    return rv;
+}
+inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size) {
+    bool rv = false;
+    if (position.x < clipRect.x) {
+        f32 t = clipRect.x - position.x;
+        position.x = clipRect.x;
+        size.x -= t;
+        rv = true;
+    }
+    if (position.x + size.x > clipRect.x + clipRect.z) {
+        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
+        size.x -= t;
+        rv = true;
+    }
+    if (position.y < clipRect.y) {
+        f32 t = clipRect.y - position.y;
+        position.y = clipRect.y;
+        size.y -= t;
+        rv = true;
+    }
+    if (position.y + size.y > clipRect.y + clipRect.w) {
+        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
+        size.y -= t;
+        rv = true;
+    }
+    return rv;
+}
 
 /************************************************************************/
 /* Hash functions                                                       */

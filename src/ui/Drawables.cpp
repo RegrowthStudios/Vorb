@@ -1,16 +1,18 @@
 #include "stdafx.h"
 #include "UI/Drawables.h"
-#include "graphics/SpriteBatch.h"
+#include "utils.h"
 
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {
     f32v4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
     // Check clipping
     f32v2 pos = m_position;
     f32v2 dims = m_dimensions;
-    vg::SpriteBatch::computeClipping(m_clipRect, pos, dims, uvRect);
+    computeClipping(m_clipRect, pos, dims, uvRect);
 
     // Draw it
-    spriteBatch->draw(m_texture, &uvRect, m_position, m_dimensions, m_color1, m_color2, m_grad, m_layerDepth);
+    if (dims.x > 0 && dims.y > 0) {
+        spriteBatch->draw(m_texture, &uvRect, pos, dims, m_color1, m_color2, m_grad, m_layerDepth);
+    }
 }
 
 void vui::DrawableText::draw(vg::SpriteBatch* spriteBatch) const {

@@ -33,6 +33,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getPosition);
         REGISTER_RDEL(env, getRelativePosition);
         REGISTER_RDEL(env, getName);
+        REGISTER_RDEL(env, getDestRect);
         REGISTER_RDEL(env, getParent);
         // Setters
         REGISTER_DEL(env, setAnchor);
@@ -222,6 +223,10 @@ f32v2 vui::WidgetScriptFuncs::getRelativePosition(Widget* w) const {
 
 nString vui::WidgetScriptFuncs::getName(Widget* w) const {
     return w->getName();
+}
+
+f32v4 vui::WidgetScriptFuncs::getDestRect(Widget* w) const {
+    return w->getDestRect();
 }
 
 vui::IWidgetContainer* vui::WidgetScriptFuncs::getParent(Widget* w) const {

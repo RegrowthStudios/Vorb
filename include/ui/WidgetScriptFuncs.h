@@ -90,6 +90,7 @@ namespace vorb {
             virtual f32v2 getPosition(Widget* w) const;
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
+            virtual f32v4 getDestRect(Widget* w) const;
             virtual IWidgetContainer* getParent(Widget* w) const;
 
             /************************************************************************/

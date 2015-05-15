@@ -2,6 +2,7 @@
 #include "ui/IWidgetContainer.h"
 #include "UI/InputDispatcher.h"
 #include "UI/Widget.h"
+#include "utils.h"
 
 vui::IWidgetContainer::IWidgetContainer() :
     MouseClick(this),
@@ -155,6 +156,18 @@ void vui::IWidgetContainer::recalculateDockedWidgets() {
         w->setHeight(m_dimensions.y - m_dockSizes[2] - m_dockSizes[3]);
         w->setWidth(m_dimensions.x - m_dockSizes[0] - m_dockSizes[1]);
         w->setPosition(f32v2(m_dockSizes[0], m_dockSizes[3]));
+    }
+}
+
+void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
+    f32v2 pos = m_position;
+    f32v2 dims = m_dimensions;
+    computeClipping(parentClipRect, pos, dims);
+    if (dims.x < 0) dims.x = 0;
+    if (dims.y < 0) dims.y = 0;
+    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    for (auto& w : m_widgets) {
+        w->computeClipRect(m_clipRect);
     }
 }
 

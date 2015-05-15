@@ -39,6 +39,8 @@ void vui::Widget::updatePosition() {
     }
     m_position = newPos;
 
+    computeClipRect(m_parent->getClipRect());
+
     // Update child positions
     for (auto& w : m_widgets) {
         w->updatePosition();

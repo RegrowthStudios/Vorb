@@ -301,8 +301,6 @@ f32v2 vg::SpriteFont::measure(const cString s) const {
     return size;
 }
 
-
-
 void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect, bool shouldWrap) const {
     f32v2 pos = position;
     pos.y += getInitialYOffset(align) * scaling.y;

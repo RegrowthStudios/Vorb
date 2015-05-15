@@ -33,6 +33,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getPosition);
         REGISTER_RDEL(env, getRelativePosition);
         REGISTER_RDEL(env, getName);
+        REGISTER_RDEL(env, getParent);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
@@ -48,6 +49,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setX);
         REGISTER_DEL(env, setY);
         REGISTER_DEL(env, setName);
+        REGISTER_DEL(env, setParent);
         // Misc
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
@@ -222,6 +224,10 @@ nString vui::WidgetScriptFuncs::getName(Widget* w) const {
     return w->getName();
 }
 
+vui::IWidgetContainer* vui::WidgetScriptFuncs::getParent(Widget* w) const {
+    return (IWidgetContainer*)w->getParent();
+}
+
 void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
 }
@@ -276,6 +282,10 @@ void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) const {
 
 void vui::WidgetScriptFuncs::setName(Widget* w, nString name) const {
     w->setName(name);
+}
+
+void vui::WidgetScriptFuncs::setParent(Widget* w, IWidgetContainer* parent) const {
+    w->setParent(parent);
 }
 
 void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {

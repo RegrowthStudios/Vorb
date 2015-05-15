@@ -80,7 +80,7 @@ namespace vorb {
             virtual void update(f32 dt = 1.0f) { }
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            virtual void updatePosition() override;    
 
             /************************************************************************/
             /* Getters                                                              */
@@ -98,6 +98,7 @@ namespace vorb {
             virtual void setDock(const DockStyle& dock);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
+            virtual void setParent(IWidgetContainer* parent);
 
         protected:
             /************************************************************************/

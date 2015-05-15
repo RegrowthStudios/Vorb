@@ -13,8 +13,7 @@ vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
 }
 
 vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-    parent->addWidget(this);
-    m_parent = parent;
+    setParent(parent);
 }
 
 vui::Widget::~Widget() {
@@ -48,4 +47,12 @@ void vorb::ui::Widget::setDock(const DockStyle& dock) {
     } else {
         m_dock = dock;
     }
+}
+
+void vorb::ui::Widget::setParent(IWidgetContainer* parent) {
+    if (m_parent) {
+        m_parent->removeWidget(this);
+    }
+    parent->addWidget(this);
+    m_parent = parent;
 }

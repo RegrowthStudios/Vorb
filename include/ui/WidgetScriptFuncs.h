@@ -90,6 +90,7 @@ namespace vorb {
             virtual f32v2 getPosition(Widget* w) const;
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
+            virtual IWidgetContainer* getParent(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -108,6 +109,7 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
+            virtual void setParent(Widget* w, IWidgetContainer* parent) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

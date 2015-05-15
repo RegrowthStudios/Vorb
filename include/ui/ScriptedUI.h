@@ -45,6 +45,7 @@ namespace vorb {
             virtual void draw();
             virtual void update(f32 dt = 1.0f);
             virtual void dispose();
+            virtual void setDimensions(const ui32v2& dimensions);
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
             virtual Form* makeForm(nString name, nString filePath);

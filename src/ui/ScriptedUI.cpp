@@ -41,6 +41,12 @@ void vui::ScriptedUI::dispose() {
     std::vector<std::pair<Form*, FormScriptEnvironment*> >().swap(m_forms);
 }
 
+void vui::ScriptedUI::setDimensions(const ui32v2& dimensions) {
+    for (auto& it : m_forms) {
+        it.first->setDimensions(dimensions);
+    }
+}
+
 // TODO(Ben): use name
 vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
     // Make the form

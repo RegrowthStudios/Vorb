@@ -81,3 +81,7 @@ void vui::Form::disable() {
         for (auto& w : m_widgets) w->disable();
     }
 }
+
+void vui::Form::setDimensions(const ui32v2& dimensions) {
+    m_dimensions = dimensions;
+}

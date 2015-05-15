@@ -79,6 +79,8 @@ namespace vorb {
             
             virtual void disable();
 
+            virtual void setDimensions(const ui32v2& dimensions);
+
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
              * @param callbackName: Name of the custom callback 

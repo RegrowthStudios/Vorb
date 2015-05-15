@@ -30,6 +30,8 @@
 #include "../colors.h"
 #include "WidgetStyle.h"
 
+#define CLIP_RECT_DEFAULT f32v4(-FLT_MIN / 2.0f, -FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)
+
 DECL_VG(class SpriteFont)
 
 namespace vorb {
@@ -49,6 +51,7 @@ namespace vorb {
             virtual const f32& getY() const { return m_position.y; }
             virtual const f32v2& getPosition() const { return m_position; }
             virtual const vg::GradientType& getGradientType() const { return m_grad; }
+            virtual const f32v4& getClipRect() const { return m_clipRect; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -61,12 +64,15 @@ namespace vorb {
             virtual void setX(f32 x) { m_position.x = x; }
             virtual void setY(f32 y) { m_position.y = y; }
             virtual void setGradientType(vg::GradientType grad) { m_grad = grad; }
+            virtual void setClipRect(const f32v4& clipRect) { m_clipRect = clipRect; }
+
         protected:
             vg::GradientType m_grad = vg::GradientType::NONE;
             color4 m_color1 = color::LightGray;
             color4 m_color2 = color::LightGray;
             f32 m_layerDepth = 0.0f; ///< Depth used in SpriteBatch rendering
             f32v2 m_position = f32v2(0.0f); ///< Position of the control
+            f32v4 m_clipRect = CLIP_RECT_DEFAULT;
         };
         class DrawableRect : public IDrawable {
         public:
@@ -111,12 +117,10 @@ namespace vorb {
             virtual void setText(const nString& text) { m_text = text; }
             virtual void setTextAlign(vg::TextAlign textAlign) { m_textAlign = textAlign; }
             virtual void setTextScale(const f32v2& textScale) { m_scale = textScale; }
-            virtual void setClipRect(const f32v4& clipRect) { m_clipRect = clipRect; }
-
+            
         private:
             const vg::SpriteFont* m_font = nullptr; ///< SpriteFont handle
             f32v2 m_scale = f32v2(1.0f); ///< Scale for font rendering
-            f32v4 m_clipRect = f32v4(-1000000.0f, -1000000.0f, 2000000.0f, 2000000.0f);
             nString m_text = ""; ///< Text to be drawn
             vg::TextAlign m_textAlign = vg::TextAlign::TOP_LEFT; ///< Alignment of the text
         };

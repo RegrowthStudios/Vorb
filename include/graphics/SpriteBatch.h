@@ -91,6 +91,8 @@ namespace vorb {
             void sortGlyphs(SpriteSortMode ssm);
             void generateBatches();
 
+            static void computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect);
+
             static void disposeProgram();
         private:
             struct Glyph; struct Vertex;

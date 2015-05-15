@@ -62,7 +62,6 @@ namespace vorb {
 
         private:
             void draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect, bool shouldWrap) const;
-            void checkClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) const;
             f32 getInitialYOffset(TextAlign textAlign) const;
             f32 getYOffset(size_t numRows, TextAlign align) const;
 

@@ -362,39 +362,12 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
             f32v2 size = m_glyphs[g.gi].size * scaling;
             f32v4 uvRect = m_glyphs[g.gi].uvRect;
             // Clip the glyphs with clipRect
-            checkClipping(clipRect, position, size, uvRect);
+            SpriteBatch::computeClipping(clipRect, position, size, uvRect);
             // Don't draw the glyph if its too small after clipping
             if (size.x > 0.0f && size.y > 0.0f) {
                 batch->draw(m_texID, &uvRect, position, size, tint, depth);
             }
         }
-    }
-}
-
-void vg::SpriteFont::checkClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) const {
-    if (position.x < clipRect.x) {
-        f32 t = clipRect.x - position.x;
-        uvRect.x += uvRect.z * (t / size.x);
-        uvRect.z *= 1.0f - (t / size.x);
-        position.x = clipRect.x;
-        size.x -= t;
-    }
-    if (position.x + size.x > clipRect.x + clipRect.z) {
-        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
-        uvRect.z *= 1.0f - (t / size.x);
-        size.x -= t;
-    }
-    if (position.y < clipRect.y) {
-        f32 t = clipRect.y - position.y;
-        uvRect.y += uvRect.w * (t / size.y);
-        uvRect.w *= 1.0f - (t / size.y);
-        position.y = clipRect.y;
-        size.y -= t;
-    }
-    if (position.y + size.y > clipRect.y + clipRect.w) {
-        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
-        uvRect.w *= 1.0f - (t / size.y);
-        size.y -= t;
     }
 }
 

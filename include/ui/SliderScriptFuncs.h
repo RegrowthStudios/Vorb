@@ -56,6 +56,7 @@ namespace vorb {
             virtual int getMax(Slider* s) const;
             /// Gets slider value scaled between 0.0f and 1.0f
             virtual f32 getValueScaled(Slider* s) const;
+            virtual bool isVertical(Slider* s) const;
            
             /************************************************************************/
             /* Setters                                                              */
@@ -70,6 +71,7 @@ namespace vorb {
             virtual void setRange(Slider* s, int min, int max) const;
             virtual void setMin(Slider* s, int min) const;
             virtual void setMax(Slider* s, int max) const;
+            virtual void setIsVertical(Slider* s, bool isVertical) const;
 
             virtual bool isInSlideBounds(Slider* s, f32v2 point) const;
 

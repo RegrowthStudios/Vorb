@@ -25,6 +25,7 @@ void vui::SliderScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getMax);
         REGISTER_RDEL(env, getValueScaled);
         REGISTER_RDEL(env, isInSlideBounds);
+        REGISTER_RDEL(env, isVertical);
         // Setters
         REGISTER_DEL(env, setSlideDimensions);
         REGISTER_DEL(env, setSlideTexture);
@@ -36,6 +37,7 @@ void vui::SliderScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setRange);
         REGISTER_DEL(env, setMin);
         REGISTER_DEL(env, setMax);
+        REGISTER_DEL(env, setIsVertical);
     }
     env->setNamespaces();
 }
@@ -118,6 +120,10 @@ f32 vui::SliderScriptFuncs::getValueScaled(Slider* s) const {
     return s->getValueScaled();
 }
 
+bool vui::SliderScriptFuncs::isVertical(Slider* s) const {
+    return s->isVertical();
+}
+
 void vui::SliderScriptFuncs::setSlideDimensions(Slider* s, f32v2 dimensions) const {
     s->setSlideDimensions(dimensions);
 }
@@ -156,6 +162,10 @@ void vui::SliderScriptFuncs::setMin(Slider* s, int min) const {
 
 void vui::SliderScriptFuncs::setMax(Slider* s, int max) const {
     s->setMax(max);
+}
+
+void vui::SliderScriptFuncs::setIsVertical(Slider* s, bool isVertical) const {
+    s->setIsVertical(isVertical);
 }
 
 bool vui::SliderScriptFuncs::isInSlideBounds(Slider* s, f32v2 point) const {

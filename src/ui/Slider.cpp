@@ -6,7 +6,7 @@
 vui::Slider::Slider() : Widget() {
     ValueChange.setSender(this);
     updateColor();
-    m_drawableSlide.setDimensions(f32v2(15.0f, 30.0f));
+    m_drawableSlide.setDimensions(f32v2(30.0f, 30.0f));
 }
 
 vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
@@ -131,6 +131,13 @@ void vui::Slider::setMax(int max) {
     setValue(m_value);
 }
 
+void vui::Slider::setIsVertical(bool isVertical) {
+    if (isVertical != m_isVertical) {
+        m_isVertical = isVertical;
+        updateSlidePosition();
+    }
+}
+
 bool vui::Slider::isInSlideBounds(f32 x, f32 y) const {
     const f32v2& pos = m_drawableSlide.getPosition();
     const f32v2& dims = m_drawableSlide.getDimensions();
@@ -144,8 +151,13 @@ void vui::Slider::updateSlidePosition() {
     const f32v2& barDims = getDimensions();
     const f32v2& dims = m_drawableSlide.getDimensions();
     f32v2 newPos;
-    newPos.x = barPos.x + scale * barDims.x - dims.x * 0.5f;
-    newPos.y = barPos.y + barDims.y * 0.5f - dims.y * 0.5f;
+    if (m_isVertical) {
+        newPos.x = barPos.x + barDims.x * 0.5f - dims.x * 0.5f;
+        newPos.y = barPos.y + scale * barDims.y - dims.y * 0.5f;
+    } else {
+        newPos.x = barPos.x + scale * barDims.x - dims.x * 0.5f;
+        newPos.y = barPos.y + barDims.y * 0.5f - dims.y * 0.5f;
+    }
     m_drawableSlide.setPosition(newPos);
     refreshDrawables();
 }
@@ -200,7 +212,12 @@ void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
     if (m_isClicking) {
         const f32v2& pos = m_drawableBar.getPosition();
         const f32v2& dims = m_drawableBar.getDimensions();
-        float v = glm::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
+        float v;
+        if (m_isVertical) {
+            v = glm::clamp((e.y - pos.y) / dims.y, 0.0f, 1.0f);
+        } else {
+            v = glm::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
+        }
         // TODO(Ben): Faster round
         int newValue = (int)round(v * (m_max - m_min)) + m_min;
         if (newValue != m_value) {

@@ -61,12 +61,6 @@ namespace vorb {
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables(UIRenderer* renderer) override;
-
             virtual void check();
             virtual void unCheck();
             virtual void toggleChecked();

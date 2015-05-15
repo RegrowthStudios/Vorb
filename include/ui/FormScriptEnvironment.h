@@ -31,6 +31,7 @@
 #include "CheckBoxScriptFuncs.h"
 #include "ComboBoxScriptFuncs.h"
 #include "PanelScriptFuncs.h"
+#include "LabelScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -54,6 +55,7 @@ namespace vorb {
             virtual vui::CheckBox* makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::ComboBox* makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::Panel* makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::Label* makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
 
             virtual void enableForm(Form* f);
             virtual void disableForm(Form* f);
@@ -68,6 +70,7 @@ namespace vorb {
             CheckBoxScriptFuncs m_checkBoxFuncs;
             ComboBoxScriptFuncs m_comboBoxFuncs;
             PanelScriptFuncs m_panelFuncs;
+            LabelScriptFuncs m_labelFuncs;
         };
     }
 }

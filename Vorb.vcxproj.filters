@@ -264,6 +264,9 @@
     <ClCompile Include="src\ui\Label.cpp">
       <Filter>UI\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\LabelScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -647,6 +650,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\Label.h">
       <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\LabelScriptFuncs.h">
+      <Filter>UI\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

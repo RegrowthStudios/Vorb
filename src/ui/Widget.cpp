@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UI/Widget.h"
 #include "UI/InputDispatcher.h"
+#include "UI/UIRenderer.h"
 
 vui::Widget::Widget() : IWidgetContainer() {
     enable();

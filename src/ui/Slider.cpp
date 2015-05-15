@@ -42,10 +42,6 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Slider::refreshDrawables));
 }
 
-void vui::Slider::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
-}
-
 void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
     m_drawableSlide.setDimensions(dimensions);
     updateSlidePosition();

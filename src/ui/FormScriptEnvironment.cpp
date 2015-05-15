@@ -6,6 +6,7 @@
 #include "ui/Form.h"
 #include "ui/Slider.h"
 #include "ui/Panel.h"
+#include "ui/Label.h"
 
 #define INIT_FUNCTION_NAME "init"
 
@@ -33,6 +34,7 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_env->addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env->addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
         m_env->addCRDelegate("makePanel", makeRDelegate(*this, &FormScriptEnvironment::makePanel));
+        m_env->addCRDelegate("makeLabel", makeRDelegate(*this, &FormScriptEnvironment::makeLabel));
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
@@ -46,6 +48,8 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_comboBoxFuncs.init("ComboBox", m_env);
         // Panel functions
         m_panelFuncs.init("Panel", m_env);
+        // Label functions
+        m_labelFuncs.init("Label", m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(*m_env);
     }
@@ -140,6 +144,13 @@ vui::Panel* vui::FormScriptEnvironment::makePanel(Form* f, nString name, f32 x, 
     m_panelFuncs.registerWidget(p);
     f->addWidget(p);
     return p;
+}
+
+vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::Label* l = new vui::Label(name, f32v4(x, y, width, height));
+    m_labelFuncs.registerWidget(l);
+    f->addWidget(l);
+    return l;
 }
 
 void vui::FormScriptEnvironment::enableForm(Form* f) {

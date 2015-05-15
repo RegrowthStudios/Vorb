@@ -46,10 +46,6 @@ void vui::CheckBox::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 }
 
-void vui::CheckBox::removeDrawables(UIRenderer* renderer) {
-    renderer->remove(this);
-}
-
 void vui::CheckBox::check() {
     if (!m_isChecked) {
         m_isChecked = true;

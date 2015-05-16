@@ -34,6 +34,7 @@ namespace vorb {
         class UIRenderer;
 
         class CheckBox : public Widget {
+            friend class CheckBoxScriptFuncs;
         public:
             /*! @brief Default constructor. */
             CheckBox();
@@ -117,8 +118,19 @@ namespace vorb {
             virtual void updateTextPosition();
             virtual void refreshDrawables();
 
+            /************************************************************************/
+            /* Event Handlers                                                       */
+            /************************************************************************/
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+
+            /************************************************************************/
+            /* LUA Callbacks                                                        */
+            /************************************************************************/
+#ifdef VORB_USING_SCRIPT
+            std::vector<script::Function> m_valueChangeFuncs;
+#endif
+
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

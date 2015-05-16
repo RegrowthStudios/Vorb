@@ -174,7 +174,7 @@ void vui::CheckBox::setChecked(bool checked) {
     if (m_isChecked != checked) {
         m_isChecked = checked;
         ValueChange(m_isChecked);
-        refreshDrawables();
+        updateColor();
     }
 }
 

@@ -26,6 +26,7 @@
 
 #include "Drawables.h"
 #include "Widget.h"
+#include "Slider.h"
 
 namespace vorb {
     namespace ui {
@@ -60,6 +61,11 @@ namespace vorb {
             * @param renderer: UIRenderer to add to
             */
             virtual void addDrawables(UIRenderer* renderer) override;
+            /*! @brief Removes all drawables from the UIRenderer
+            *
+            * @param renderer: UIRenderer to remove from
+            */
+            virtual void removeDrawables() override;
 
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
@@ -68,6 +74,7 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
+            virtual const bool& getAutoScroll(bool autoScroll) { return m_autoScroll; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -82,10 +89,13 @@ namespace vorb {
             virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
+            virtual void setAutoScroll(bool autoScroll);
 
         protected:
             virtual void updateColor();
+            virtual void updateSliders();
             virtual void refreshDrawables();
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
@@ -93,6 +103,10 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            Slider* m_sliders[2];
+            f32 m_sliderWidth = 15.0f;
+            bool m_autoScroll = true;
+            f32v2 m_childOffset = f32v2(0.0f);
             DrawableRect m_drawableRect, m_drawnRect;
             // Has no color by default
             color4 m_backColor = color::Transparent, m_backHoverColor = color::Transparent;

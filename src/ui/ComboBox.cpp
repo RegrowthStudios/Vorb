@@ -59,6 +59,14 @@ void vui::ComboBox::removeDrawables() {
     }
 }
 
+void vui::ComboBox::updatePosition() {
+    vui::Widget::updatePosition();
+    m_mainButton.updatePosition();
+    for (auto& it : m_buttons) {
+        it.updatePosition();
+    }
+}
+
 void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
     m_buttons.emplace_back();

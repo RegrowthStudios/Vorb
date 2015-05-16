@@ -8,10 +8,11 @@
 #define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &PanelScriptFuncs::name));
 
 void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    env->setNamespaces(nSpace);
+    
     // Call base register
     WidgetScriptFuncs::init(nSpace, env);
 
+    env->setNamespaces(nSpace);
     { // Register all functions
         // Getters
         REGISTER_RDEL(env, getTexture);

@@ -5,7 +5,6 @@
 #include "VorbPreDecl.inl"
 #include "ui/MouseInputDispatcher.h"
 
-
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
 #define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));

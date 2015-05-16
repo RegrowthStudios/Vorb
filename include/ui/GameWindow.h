@@ -147,7 +147,7 @@ namespace vorb {
                 return m_displayMode.isFullscreen;
             }
             const bool& isBorderless() const {
-                return m_displayMode.isFullscreen;
+                return m_displayMode.isBorderless;
             }
             const bool& isResizable() const {
                 return m_displayMode.isResizable;

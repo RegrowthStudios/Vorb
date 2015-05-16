@@ -84,15 +84,12 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setSlideDimensions(const f32v2& dimensions);
-            virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setHeight(f32 height) override;
             virtual void setPosition(const f32v2& position) override;
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
             virtual void setBarColor(const color4& color);
             virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
             virtual void setValue(int value);

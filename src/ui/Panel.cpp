@@ -33,7 +33,7 @@ void vui::Panel::addDrawables(UIRenderer* renderer) {
     // Make copy
     m_drawnRect = m_drawableRect;
 
-    // Add child drawables
+
     m_sliders[0]->addDrawables(renderer);
     m_sliders[1]->addDrawables(renderer);
 
@@ -153,8 +153,8 @@ void vui::Panel::updateSliders() {
     if (m_autoScroll) {
         // Horizontal scroll bar
         m_sliders[0]->enable();
-        m_sliders[0]->setPosition(f32v2(0, m_dimensions.y - m_sliderWidth));
-        m_sliders[0]->setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
+        m_sliders[0]->setPosition(f32v2(m_dimensions.x / 2, m_dimensions.y / 2));
+        m_sliders[0]->setDimensions(f32v2(300, m_sliderWidth));
         m_sliders[0]->setSlideDimensions(f32v2(m_sliderWidth));
         m_sliders[0]->setRange(0, 10000);
         m_sliders[0]->setIsVertical(false);
@@ -184,7 +184,7 @@ void vui::Panel::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN /
     computeClipping(parentClipRect, pos, dims);
     if (dims.x < 0) dims.x = 0;
     if (dims.y < 0) dims.y = 0;
-    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    m_clipRect = f32v4(-1000, -1000, 3333, 3333);
     computeChildClipRects();
 }
 

@@ -12,10 +12,10 @@ vui::Slider::Slider() : Widget() {
 
 vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
     m_name = name;
-    setDestRect(destRect);
+    setDestRect(destRect); 
+    updatePosition();
     m_drawableBar.setDimensions(getDimensions());
     m_drawableBar.setPosition(getPosition());
-    updateSlidePosition();
 }
 
 vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
@@ -47,6 +47,7 @@ void vui::Slider::updatePosition() {
     Widget::updatePosition();
 
     m_drawableBar.setPosition(m_position);
+    m_drawableBar.setDimensions(m_dimensions);
     m_drawableBar.setClipRect(m_clipRect);
     m_drawableSlide.setClipRect(m_clipRect);
 
@@ -55,24 +56,17 @@ void vui::Slider::updatePosition() {
 
 void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
     m_drawableSlide.setDimensions(dimensions);
-    updateSlidePosition();
-}
-
-void vui::Slider::setDimensions(const f32v2& dimensions) {
-    m_drawableBar.setDimensions(dimensions);
-    updateSlidePosition();
+    updatePosition();
 }
 
 void vui::Slider::setHeight(f32 height) {
     Widget::setHeight(height);
-    m_drawableBar.setHeight(height);
-    updateSlidePosition();
+    updatePosition();
 }
 
 void vui::Slider::setPosition(const f32v2& position) {
     Widget::setPosition(position);
-    m_drawableBar.setPosition(position);
-    updateSlidePosition();
+    updatePosition();
 }
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
@@ -92,20 +86,7 @@ void vui::Slider::setBarColor(const color4& color) {
 
 void vui::Slider::setWidth(f32 width) {
     Widget::setWidth(width);
-    m_drawableBar.setWidth(width);
-    updateSlidePosition();
-}
-
-void vui::Slider::setX(f32 x) {
-    Widget::setX(x);
-    m_drawableBar.setX(x);
-    updateSlidePosition();
-}
-
-void vui::Slider::setY(f32 y) {
-    Widget::setY(y);
-    m_drawableBar.setX(y);
-    updateSlidePosition();
+    updatePosition();
 }
 
 void vui::Slider::setSlideColor(const color4& color) {
@@ -122,7 +103,7 @@ void vui::Slider::setValue(int value) {
     int old = m_value;
     m_value = glm::clamp(value, m_min, m_max);
     if (old != m_value) ValueChange(m_value);
-    updateSlidePosition();
+    updatePosition();
 }
 
 void vui::Slider::setRange(int min, int max) {
@@ -144,7 +125,7 @@ void vui::Slider::setMax(int max) {
 void vui::Slider::setIsVertical(bool isVertical) {
     if (isVertical != m_isVertical) {
         m_isVertical = isVertical;
-        updateSlidePosition();
+        updatePosition();
     }
 }
 
@@ -219,7 +200,13 @@ void vui::Slider::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
+
+  
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
+        std::cout << m_position.x << " " << m_position.y << " " << m_dimensions.x << " " << m_dimensions.y << std::endl;
+
+        std::cout << "b " << m_drawableBar.getPosition().x << " " << m_drawableBar.getPosition().y << " " << m_drawableBar.getDimensions().x << " " << m_drawableBar.getDimensions().y << std::endl;
+
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);

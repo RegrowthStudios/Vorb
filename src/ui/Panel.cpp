@@ -32,13 +32,16 @@ void vui::Panel::addDrawables(UIRenderer* renderer) {
     Widget::addDrawables(renderer);
     // Make copy
     m_drawnRect = m_drawableRect;
+
+    // Add child drawables
+    m_sliders[0]->addDrawables(renderer);
+    m_sliders[1]->addDrawables(renderer);
+
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Panel::refreshDrawables));
 
-    m_sliders[0]->addDrawables(renderer);
-    m_sliders[1]->addDrawables(renderer);
 }
 
 void vui::Panel::removeDrawables() {
@@ -150,17 +153,18 @@ void vui::Panel::updateSliders() {
     if (m_autoScroll) {
         // Horizontal scroll bar
         m_sliders[0]->enable();
-        m_sliders[0]->setPosition(f32v2(0, m_dimensions.y));
+        m_sliders[0]->setPosition(f32v2(0, m_dimensions.y - m_sliderWidth));
         m_sliders[0]->setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
         m_sliders[0]->setSlideDimensions(f32v2(m_sliderWidth));
         m_sliders[0]->setRange(0, 10000);
+        m_sliders[0]->setIsVertical(false);
         // Vertical scroll bar
         m_sliders[1]->enable();
         m_sliders[1]->setPosition(f32v2(m_dimensions.x - m_sliderWidth, 0));
         m_sliders[1]->setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
         m_sliders[1]->setSlideDimensions(f32v2(m_sliderWidth));
         m_sliders[1]->setRange(0, 10000);
-        
+        m_sliders[1]->setIsVertical(true);
     } else {
         for (int i = 0; i < 2; i++) {
             m_sliders[i]->setDimensions(f32v2(0.0f));

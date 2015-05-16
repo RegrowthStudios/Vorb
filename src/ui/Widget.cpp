@@ -21,8 +21,8 @@ vui::Widget::~Widget() {
 }
 
 void vui::Widget::dispose() {
-    IWidgetContainer::dispose();
     removeDrawables();
+    IWidgetContainer::dispose();
 }
 
 void vui::Widget::removeDrawables() {

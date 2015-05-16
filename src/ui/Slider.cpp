@@ -46,6 +46,7 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
 void vui::Slider::updatePosition() {
     Widget::updatePosition();
 
+    m_drawableBar.setPosition(m_position);
     m_drawableBar.setClipRect(m_clipRect);
     m_drawableSlide.setClipRect(m_clipRect);
 
@@ -160,6 +161,7 @@ void vui::Slider::updateSlidePosition() {
     const f32v2& barPos = getPosition();
     const f32v2& barDims = getDimensions();
     const f32v2& dims = m_drawableSlide.getDimensions();
+   
     f32v2 newPos;
     if (m_isVertical) {
         newPos.x = barPos.x + barDims.x * 0.5f - dims.x * 0.5f;

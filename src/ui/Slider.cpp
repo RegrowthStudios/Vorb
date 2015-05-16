@@ -201,12 +201,7 @@ void vui::Slider::onMouseUp(Sender s, const MouseButtonEvent& e) {
 
 void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
 
-  
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
-        std::cout << m_position.x << " " << m_position.y << " " << m_dimensions.x << " " << m_dimensions.y << std::endl;
-
-        std::cout << "b " << m_drawableBar.getPosition().x << " " << m_drawableBar.getPosition().y << " " << m_drawableBar.getDimensions().x << " " << m_drawableBar.getDimensions().y << std::endl;
-
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);

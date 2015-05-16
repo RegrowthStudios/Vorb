@@ -98,14 +98,15 @@ namespace vorb {
             virtual void updateColor();
             virtual void updateSliders();
             virtual void refreshDrawables();
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
-
+           
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
+            virtual void onSliderValueChange(Sender s, int v);
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            f32 minX = FLT_MAX, maxX = FLT_MIN, minY = FLT_MAX, maxY = FLT_MIN; ///< Used for auto scroll
             Slider* m_sliders[2];
             f32 m_sliderWidth = 15.0f;
             bool m_autoScroll = true;

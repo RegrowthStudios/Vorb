@@ -4,12 +4,16 @@
 #include "ui/UIRenderer.h"
 #include "utils.h"
 
+const int SLIDER_VAL_MAX = 10000;
+
 vui::Panel::Panel() : Widget() {
     m_sliders[0] = new Slider;
     m_sliders[1] = new Slider;
     updateColor();
     addWidget(m_sliders[0]);
     addWidget(m_sliders[1]);
+    m_sliders[0]->ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
+    m_sliders[1]->ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
     updateSliders();
 }
 
@@ -57,15 +61,26 @@ bool vui::Panel::addWidget(Widget* child) {
 }
 
 void vui::Panel::updatePosition() {
+    f32v2 newPos = m_relativePosition;
+    if (m_parent) newPos += m_parent->getPosition();
+    m_position = newPos;
+
+    if (m_parent) computeClipRect(m_parent->getClipRect());
+
     // Use child offset for auto-scroll
-    m_position += m_childOffset;
-    Widget::updatePosition();
     m_position -= m_childOffset;
+    // Update child positions
+    for (auto& w : m_widgets) {
+        w->updatePosition();
+    }
+    m_position += m_childOffset;
 
     if (m_autoScroll) {
         m_sliders[0]->updatePosition();
         m_sliders[1]->updatePosition();
     }
+
+    std::cout << m_clipRect.x << " " << m_clipRect.y << " " << m_clipRect.z << " " << m_clipRect.w << std::endl;
 
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
@@ -159,17 +174,41 @@ void vui::Panel::updateSliders() {
     bool needsHorizontal = false;
     bool needsVertical = false;
     // Check which scroll bars we need
-    if (m_autoScroll) {
+    maxX = FLT_MIN;
+    maxY = FLT_MIN;
+    minX = FLT_MAX;
+    minY = FLT_MAX;
+    if (m_autoScroll) {     
         for (auto& w : m_widgets) {
-            f32v2 pos = w->getPosition();
-            f32v2 dims = w->getDimensions();
-            if (computeClipping(m_position.x, m_dimensions.x, pos.x, dims.x)) {
-                needsHorizontal = true;
+            const f32v2& pos = w->getPosition();
+            const f32v2& dims = w->getDimensions();
+            if (pos.x < minX) {
+                minX = pos.x;
             }
-            if (computeClipping(m_position.y, m_dimensions.y, pos.y, dims.y)) {
-                needsVertical = true;
+            if (pos.y < minY) {
+                minY = pos.y;
+            }
+            if (pos.x + dims.x > maxX) {
+                maxY = pos.x + dims.x;
+            }
+            if (pos.y + dims.y > maxY) {
+                maxY = pos.y + dims.y;
             }
         }
+        if ((maxX > m_position.x + m_dimensions.x) || (minX < m_position.x)) {
+            needsVertical = true;
+        }
+        if ((maxY > m_position.y + m_dimensions.y) || (minY < m_position.y)) {
+            needsHorizontal = true;
+        }
+    }
+    if (minX > m_position.x) minX = m_position.x;
+    if (maxX < m_position.x + m_dimensions.x) {
+        maxX = m_position.x + m_dimensions.x;
+    }
+    if (minY > m_position.y) minY = m_position.y;
+    if (maxY < m_position.y + m_dimensions.y) {
+        maxY = m_position.y + m_dimensions.y;
     }
 
     if (needsHorizontal) {
@@ -177,7 +216,7 @@ void vui::Panel::updateSliders() {
         m_sliders[0]->setPosition(f32v2(0.0f, m_dimensions.y - m_sliderWidth));
         m_sliders[0]->setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
         m_sliders[0]->setSlideDimensions(f32v2(m_sliderWidth));
-        m_sliders[0]->setRange(0, 10000);
+        m_sliders[0]->setRange(0, SLIDER_VAL_MAX);
         m_sliders[0]->setIsVertical(false);
     } else {
         m_sliders[0]->setDimensions(f32v2(0.0f));
@@ -189,7 +228,7 @@ void vui::Panel::updateSliders() {
         m_sliders[1]->setPosition(f32v2(m_dimensions.x - m_sliderWidth, 0));
         m_sliders[1]->setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
         m_sliders[1]->setSlideDimensions(f32v2(m_sliderWidth));
-        m_sliders[1]->setRange(0, 10000);
+        m_sliders[1]->setRange(0, SLIDER_VAL_MAX);
         m_sliders[1]->setIsVertical(true);
     } else {
         m_sliders[1]->setDimensions(f32v2(0.0f));
@@ -200,16 +239,6 @@ void vui::Panel::updateSliders() {
 
 void vui::Panel::refreshDrawables() {
     m_drawnRect = m_drawableRect;
-}
-
-void vui::Panel::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
-    f32v2 pos = m_position - m_childOffset;
-    f32v2 dims = m_dimensions;
-    computeClipping(parentClipRect, pos, dims);
-    if (dims.x < 0) dims.x = 0;
-    if (dims.y < 0) dims.y = 0;
-    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    computeChildClipRects();
 }
 
 void vui::Panel::onMouseMove(Sender s, const MouseMotionEvent& e) {
@@ -240,4 +269,20 @@ void vui::Panel::onMouseFocusLost(Sender s, const MouseEvent& e) {
         MouseLeave(ev);
         updateColor();
     }
+}
+
+void vui::Panel::onSliderValueChange(Sender s, int v) {
+    if (m_autoScroll) {
+        f32 r = (f32)v / SLIDER_VAL_MAX;
+        if ((Slider*)s == m_sliders[0]) {
+            // Horizontal
+            f32 range = maxX - minX;
+            m_childOffset.x = minX + range * r - m_position.x;
+        } else {
+            // Vertical
+            f32 range = maxY - minY;
+            m_childOffset.y = minY + range * r - m_position.y;
+        }
+    }
+    updatePosition();
 }

@@ -67,6 +67,9 @@ namespace vorb {
             */
             virtual void removeDrawables() override;
 
+
+            bool addWidget(Widget* child) override;
+
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
 

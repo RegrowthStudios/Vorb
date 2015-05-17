@@ -145,7 +145,7 @@ vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(Form* f, nString name, f
 vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::ComboBox* c = new vui::ComboBox(f, name, f32v4(x, y, width, height));
     m_widgetsToDelete.push_back(c);
-    m_checkBoxFuncs.registerWidget(c);
+    m_comboBoxFuncs.registerWidget(c);
     return c;
 }
 

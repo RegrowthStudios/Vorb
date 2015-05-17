@@ -63,6 +63,8 @@ namespace vorb {
             /*! @brief Default destructor. */
             virtual ~ComboBox();
 
+            virtual void dispose() override;
+
             /*! @brief Adds all drawables to the UIRenderer
             *
             * @param renderer: UIRenderer to add to
@@ -126,7 +128,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
+            virtual const VGTexture& getTexture() const { return m_mainButton.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override;
             virtual const color4& getBackColor() const { return m_backColor; }
             virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
@@ -161,10 +163,12 @@ namespace vorb {
             /************************************************************************/
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
-            virtual void updateDropButton(vorb::ui::Button& b);
+            virtual void updateDropButton(vorb::ui::Button* b);
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -176,10 +180,9 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect m_drawableRect, m_drawnRect;
             DrawableRect m_drawableDropList, m_drawnDropList;
             vorb::ui::Button m_mainButton; // Main button for dropping
-            std::list<vorb::ui::Button> m_buttons; // Sub buttons
+            std::vector<Button*> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
             const vg::SpriteFont* m_defaultFont = nullptr;

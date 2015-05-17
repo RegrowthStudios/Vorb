@@ -27,6 +27,7 @@
 #include "Drawables.h"
 #include "Widget.h"
 #include "Button.h"
+#include "Panel.h"
 
 namespace vorb {
     namespace ui {
@@ -165,8 +166,6 @@ namespace vorb {
         protected:
             virtual void updateDropButton(vorb::ui::Button* b);
             virtual void updateColor();
-            virtual void updateTextPosition();
-            virtual void refreshDrawables();
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
@@ -180,8 +179,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect m_drawableDropList, m_drawnDropList;
-            vorb::ui::Button m_mainButton; // Main button for dropping
+            Panel m_dropPanel; // Panel that holds the drop buttons
+            Button m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;

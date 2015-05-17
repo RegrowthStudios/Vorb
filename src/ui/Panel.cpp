@@ -275,15 +275,13 @@ void vui::Panel::onSliderValueChange(Sender s, int v) {
         f32 r = (f32)v / SLIDER_VAL_MAX;
         if ((Slider*)s == &m_sliders[0]) {
             // Horizontal
-            f32 range = maxX - minX;
+            f32 range = maxX - minX - m_dimensions.x + m_sliderWidth;
             m_childOffset.x = minX + range * r;
         } else {
             // Vertical
-            f32 range = maxY - minY;
+            f32 range = maxY - minY - m_dimensions.y + m_sliderWidth;
             m_childOffset.y = minY + range * r;
-            std::cout << maxY << " " << minY << " " << range << " " << m_position.y << " " << r << std::endl;
         }
     }
-    std::cout << m_childOffset.y << std::endl;
     updatePosition();
 }

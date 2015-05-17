@@ -36,15 +36,7 @@ void vui::ComboBox::dispose() {
 }
 
 void vui::ComboBox::updatePosition() {
-    // Drop list
-    if (m_isDropped) {
-        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        f32v2 dims = getDimensions() * f32v2(1.0f, m_items.size());
-        dims.y = glm::min(dims.y, m_maxDropHeight);
-        m_dropPanel.setDimensions(dims);
-    } else {
-        m_dropPanel.setDimensions(f32v2(0.0f));
-    }
+  
 
     // Buttons
     f32 i = 0;
@@ -58,6 +50,16 @@ void vui::ComboBox::updatePosition() {
             b->setDimensions(f32v2(0.0f));
         }
         i += 1.0f;
+    }
+
+    // Drop list
+    if (m_isDropped) {
+        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
+        f32v2 dims = getDimensions() * f32v2(1.0f, m_items.size());
+        dims.y = glm::min(dims.y, m_maxDropHeight);
+        m_dropPanel.setDimensions(dims);
+    } else {
+        m_dropPanel.setDimensions(f32v2(0.0f));
     }
    
     vui::Widget::updatePosition();

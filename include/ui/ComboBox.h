@@ -139,6 +139,7 @@ namespace vorb {
             virtual const std::vector <nString>& getItems() const { return m_items; }
             virtual size_t getNumItems() const { return m_items.size(); }
             virtual const nString& getItem(int index) const;
+            virtual const vg::TextAlign& getTextAlign() const { return m_textAlign; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -158,6 +159,7 @@ namespace vorb {
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextScale(const f32v2& textScale);
+            virtual void setTextAlign(vg::TextAlign align);
 
             /************************************************************************/
             /* Events                                                               */
@@ -184,6 +186,7 @@ namespace vorb {
             std::vector<Button*> m_buttons; // Sub buttons
             color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
             color4 m_textColor = color::Black, m_textHoverColor = color::Black;
+            vg::TextAlign m_textAlign = vg::TextAlign::LEFT;
             const vg::SpriteFont* m_defaultFont = nullptr;
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items

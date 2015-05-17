@@ -30,6 +30,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_RDEL(env, getTextScale);
         REGISTER_RDEL(env, getItem);
         REGISTER_RDEL(env, getNumItems);
+        REGISTER_RDEL(env, getTextAlign);
 
         REGISTER_RDEL(env, isInDropBounds);
         // Setters
@@ -41,6 +42,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_DEL(env, setTextColor);
         REGISTER_DEL(env, setTextHoverColor);
         REGISTER_DEL(env, setTextScale);
+        REGISTER_DEL(env, setTextAlign);
     }
     env->setNamespaces();
 }
@@ -104,6 +106,10 @@ size_t vui::ComboBoxScriptFuncs::getNumItems(ComboBox* c) const {
     return c->getNumItems();
 }
 
+vg::TextAlign vui::ComboBoxScriptFuncs::getTextAlign(ComboBox* c) const {
+    return c->getTextAlign();
+}
+
 void vui::ComboBoxScriptFuncs::setTexture(ComboBox* c, VGTexture texture) const {
     c->setTexture(texture);
 }
@@ -134,4 +140,8 @@ void vui::ComboBoxScriptFuncs::setTextHoverColor(ComboBox* c, color4 color) cons
 
 void vui::ComboBoxScriptFuncs::setTextScale(ComboBox* c, f32v2 textScale) const {
     c->setTextScale(textScale);
+}
+
+void vui::ComboBoxScriptFuncs::setTextAlign(ComboBox* c, vg::TextAlign align) const {
+    c->setTextAlign(align);
 }

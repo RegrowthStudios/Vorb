@@ -27,6 +27,7 @@
 
 #include "WidgetScriptFuncs.h"
 #include "../graphics/gtypes.h"
+#include "../graphics/SpriteFont.h"
 
 namespace vorb {
     namespace ui {
@@ -57,6 +58,7 @@ namespace vorb {
             virtual f32v2 getTextScale(ComboBox* c) const;
             virtual nString getItem(ComboBox* c, int index) const;
             virtual size_t getNumItems(ComboBox* c) const;
+            virtual vg::TextAlign getTextAlign(ComboBox* c) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -69,6 +71,7 @@ namespace vorb {
             virtual void setTextColor(ComboBox* c, color4 color) const;
             virtual void setTextHoverColor(ComboBox* c, color4 color) const;
             virtual void setTextScale(ComboBox* c, f32v2 textScale) const;
+            virtual void setTextAlign(ComboBox* c, vg::TextAlign align) const;
         };
     }
 }

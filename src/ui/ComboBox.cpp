@@ -247,6 +247,14 @@ void vui::ComboBox::setTextScale(const f32v2& textScale) {
     }
 }
 
+void vui::ComboBox::setTextAlign(vg::TextAlign align) {
+    m_textAlign = align;
+    m_mainButton.setTextAlign(align);
+    for (auto& it : m_buttons) {
+        it->setTextAlign(align);
+    }
+}
+
 void vui::ComboBox::updateDropButton(vui::Button* b) {
     b->setFont(m_mainButton.getFont());
     b->setBackColor(m_backColor);

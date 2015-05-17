@@ -25,6 +25,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "decorators.h"
 #include "compat.h"
 
 // Use the correct glm private namespace
@@ -58,7 +59,7 @@ typedef double f64; ///< 64-bit floating point value (double)
 /* GLM types                                                            */
 /************************************************************************/
 /*! @brief 8-bit signed integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -69,7 +70,7 @@ typedef double f64; ///< 64-bit floating point value (double)
  */
 typedef glm_d::tvec2<i8> i8v2;
 /*! @brief 16-bit signed integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -80,7 +81,7 @@ typedef glm_d::tvec2<i8> i8v2;
  */
 typedef glm::lowp_ivec2 i16v2;
 /*! @brief 32-bit signed integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -91,7 +92,7 @@ typedef glm::lowp_ivec2 i16v2;
  */
 typedef glm::mediump_ivec2 i32v2;
 /*! @brief 64-bit signed integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -102,7 +103,7 @@ typedef glm::mediump_ivec2 i32v2;
  */
 typedef glm::highp_ivec2 i64v2;
 /*! @brief 8-bit unsigned integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -113,7 +114,7 @@ typedef glm::highp_ivec2 i64v2;
  */
 typedef glm_d::tvec2<ui8> ui8v2;
 /*! @brief 16-bit unsigned integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -124,7 +125,7 @@ typedef glm_d::tvec2<ui8> ui8v2;
  */
 typedef glm::lowp_uvec2 ui16v2;
 /*! @brief 32-bit unsigned integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -135,7 +136,7 @@ typedef glm::lowp_uvec2 ui16v2;
  */
 typedef glm::mediump_uvec2 ui32v2;
 /*! @brief 64-bit unsigned integer 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -146,7 +147,7 @@ typedef glm::mediump_uvec2 ui32v2;
  */
 typedef glm::highp_uvec2 ui64v2;
 /*! @brief 32-bit floating point (single) 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -157,7 +158,7 @@ typedef glm::highp_uvec2 ui64v2;
  */
 typedef glm::mediump_vec2 f32v2;
 /*! @brief 64-bit floating point (double) 2-value vector.
- * 
+ *
  * Elements can be accessed via: @n
  * <pre>
  * [0] , [1]
@@ -408,10 +409,10 @@ typedef glm::highp_quat f64q;
 /*! @brief 32-bit floating point (single) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.
- * 
+ *
  * Given axes (X, Y), the matrix: @n
  * <pre>
- * M = 
+ * M =
  * [ X.x , Y.x ]
  * [ X.y , Y.y ]
  * </pre>
@@ -564,12 +565,12 @@ typedef glm::highp_mat4 f64m4;
 #include "typesColor.inl"
 
 /*! @brief Implements a binary operator for an enum class.
- * 
+ *
  * The operator performs its operation using an operator that is defined for
  * a different proxy type. The enum value is first converted to the proxy type,
  * the operation is performed, and then the proxy result is converted back to
  * the enum type.
- * 
+ *
  * @param CLASS: The type of the enum class
  * @param PROXY_TYPE: The proxy type used for back-and-forth conversion on the enum values
  * @param OP: The operator that will be defined for this enum: (&, |, ^, +, -, *, /)
@@ -578,7 +579,7 @@ typedef glm::highp_mat4 f64m4;
     inline CLASS operator OP (const CLASS& a, const CLASS& b) { return (CLASS)static_cast<PROXY_TYPE>((PROXY_TYPE)a OP(PROXY_TYPE)b); } \
     inline CLASS& operator OP## = (CLASS& a, const CLASS& b) { a = a OP b; return a; }
 /*! @brief Implements a binary operators (&, |, ^, +, -) and the shift operators for an enum class.
- * 
+ *
  * @param CLASS: The type of the enum class
  * @param PROXY_TYPE: The proxy type used for back-and-forth conversion on the enum values
  */
@@ -593,7 +594,7 @@ typedef glm::highp_mat4 f64m4;
     inline CLASS operator >> (const CLASS& a, const size_t& b) { return (CLASS)((PROXY_TYPE)a >> b); } \
     inline CLASS& operator >>= (CLASS& a, const size_t& b) { a = a >> b; return a; }
 /*! \example "Enum Class Proxy Operators"
- * 
+ *
  * When using enum classes, it may be useful to
  * allow operators to take effect on them. By default,
  * enum classes have no defined operators, but with a useful
@@ -616,7 +617,7 @@ typedef glm::highp_mat4 f64m4;
 #define nString std::string
 
 /*! @brief Pointer offset
- * 
+ *
  * Converts the integral offset value of a member into a pointer representation
  */
 #define offsetptr(s, m) ((void*)offsetof(s, m))

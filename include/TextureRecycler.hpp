@@ -67,10 +67,12 @@ namespace vorb {
                     m_recycled.erase(rv);
                 } else {
                     rv = vg::GpuMemory::uploadTexture(pixels, m_width, m_height,
-                                                        m_samplingParameters,
-                                                        m_internalFormat,
-                                                        format,
-                                                        m_mipmapLevels);
+                                                      TexturePixelType::UNSIGNED_BYTE,
+                                                      TextureTarget::TEXTURE_2D,
+                                                      m_samplingParameters,
+                                                      m_internalFormat,
+                                                      format,
+                                                      m_mipmapLevels);
                 }
                 return rv;
             }

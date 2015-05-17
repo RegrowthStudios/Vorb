@@ -25,10 +25,20 @@ void vui::Widget::dispose() {
     IWidgetContainer::dispose();
 }
 
+void vui::Widget::addDrawables(UIRenderer* renderer) {
+    m_renderer = renderer;
+    for (auto& w : m_widgets) {
+        w->addDrawables(m_renderer);
+    }
+}
+
 void vui::Widget::removeDrawables() {
     if (m_renderer) {
         m_renderer->remove(this);
         m_renderer = nullptr;
+    }
+    for (auto& w : m_widgets) {
+        w->removeDrawables();
     }
 }
 

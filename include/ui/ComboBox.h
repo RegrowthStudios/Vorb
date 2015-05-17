@@ -66,17 +66,6 @@ namespace vorb {
 
             virtual void dispose() override;
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
-            */
-            virtual void addDrawables(UIRenderer* renderer) override;
-
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables() override;
             /*!@brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
@@ -183,7 +172,6 @@ namespace vorb {
             Panel m_dropPanel; // Panel that holds the drop buttons
             Button m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons; // Sub buttons
-            const vg::SpriteFont* m_defaultFont = nullptr;
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items
             bool m_isDropped = false;

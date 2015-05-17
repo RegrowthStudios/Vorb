@@ -70,7 +70,7 @@ namespace vorb {
             *
             * @param renderer: UIRenderer to add to.
             */
-            virtual void addDrawables(UIRenderer* renderer) { m_renderer = renderer; }
+            virtual void addDrawables(UIRenderer* renderer);
 
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();

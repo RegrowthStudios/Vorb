@@ -35,31 +35,6 @@ void vui::ComboBox::dispose() {
     std::vector<Button*>().swap(m_buttons);
 }
 
-void vui::ComboBox::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
-    m_defaultFont = renderer->getDefaultFont();
-
-    // Add the main button
-    m_mainButton.addDrawables(renderer);
-
-    // Add the panel
-    m_dropPanel.addDrawables(renderer);
-
-    // Add the drop down texts TODO(Ben): Inefficient
-    for (auto& it : m_buttons) {
-        it->addDrawables(renderer);
-    }
-}
-
-void vui::ComboBox::removeDrawables() {
-    Widget::removeDrawables();
-    m_mainButton.removeDrawables();
-    m_dropPanel.removeDrawables();
-    for (auto& it : m_buttons) {
-        it->removeDrawables();
-    }
-}
-
 void vui::ComboBox::updatePosition() {
     f32 i = 0;
     for (auto& b : m_buttons) {

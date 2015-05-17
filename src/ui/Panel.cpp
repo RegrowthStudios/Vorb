@@ -7,13 +7,11 @@
 const int SLIDER_VAL_MAX = 10000;
 
 vui::Panel::Panel() : Widget() {
-    m_sliders[0] = new Slider;
-    m_sliders[1] = new Slider;
     updateColor();
-    addWidget(m_sliders[0]);
-    addWidget(m_sliders[1]);
-    m_sliders[0]->ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
-    m_sliders[1]->ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
+    addWidget(&m_sliders[0]);
+    addWidget(&m_sliders[1]);
+    m_sliders[0].ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
+    m_sliders[1].ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
     updateSliders();
 }
 
@@ -38,8 +36,8 @@ void vui::Panel::addDrawables(UIRenderer* renderer) {
     m_drawnRect = m_drawableRect;
 
 
-    m_sliders[0]->addDrawables(renderer);
-    m_sliders[1]->addDrawables(renderer);
+    m_sliders[0].addDrawables(renderer);
+    m_sliders[1].addDrawables(renderer);
 
     // Add the rect
     renderer->add(this,
@@ -50,8 +48,8 @@ void vui::Panel::addDrawables(UIRenderer* renderer) {
 
 void vui::Panel::removeDrawables() {
     Widget::removeDrawables();
-    m_sliders[0]->removeDrawables();
-    m_sliders[1]->removeDrawables();
+    m_sliders[0].removeDrawables();
+    m_sliders[1].removeDrawables();
 }
 
 bool vui::Panel::addWidget(Widget* child) {
@@ -76,8 +74,8 @@ void vui::Panel::updatePosition() {
     m_position += m_childOffset;
 
     if (m_autoScroll) {
-        m_sliders[0]->updatePosition();
-        m_sliders[1]->updatePosition();
+        m_sliders[0].updatePosition();
+        m_sliders[1].updatePosition();
     }
 
     std::cout << m_clipRect.x << " " << m_clipRect.y << " " << m_clipRect.z << " " << m_clipRect.w << std::endl;
@@ -212,28 +210,28 @@ void vui::Panel::updateSliders() {
     }
 
     if (needsHorizontal) {
-        m_sliders[0]->enable();
-        m_sliders[0]->setPosition(f32v2(0.0f, m_dimensions.y - m_sliderWidth));
-        m_sliders[0]->setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
-        m_sliders[0]->setSlideDimensions(f32v2(m_sliderWidth));
-        m_sliders[0]->setRange(0, SLIDER_VAL_MAX);
-        m_sliders[0]->setIsVertical(false);
+        m_sliders[0].enable();
+        m_sliders[0].setPosition(f32v2(0.0f, m_dimensions.y - m_sliderWidth));
+        m_sliders[0].setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
+        m_sliders[0].setSlideDimensions(f32v2(m_sliderWidth));
+        m_sliders[0].setRange(0, SLIDER_VAL_MAX);
+        m_sliders[0].setIsVertical(false);
     } else {
-        m_sliders[0]->setDimensions(f32v2(0.0f));
-        m_sliders[0]->setSlideDimensions(f32v2(0.0f));
-        m_sliders[0]->disable();
+        m_sliders[0].setDimensions(f32v2(0.0f));
+        m_sliders[0].setSlideDimensions(f32v2(0.0f));
+        m_sliders[0].disable();
     }
     if (needsVertical) {
-        m_sliders[1]->enable();
-        m_sliders[1]->setPosition(f32v2(m_dimensions.x - m_sliderWidth, 0));
-        m_sliders[1]->setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
-        m_sliders[1]->setSlideDimensions(f32v2(m_sliderWidth));
-        m_sliders[1]->setRange(0, SLIDER_VAL_MAX);
-        m_sliders[1]->setIsVertical(true);
+        m_sliders[1].enable();
+        m_sliders[1].setPosition(f32v2(m_dimensions.x - m_sliderWidth, 0));
+        m_sliders[1].setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
+        m_sliders[1].setSlideDimensions(f32v2(m_sliderWidth));
+        m_sliders[1].setRange(0, SLIDER_VAL_MAX);
+        m_sliders[1].setIsVertical(true);
     } else {
-        m_sliders[1]->setDimensions(f32v2(0.0f));
-        m_sliders[1]->setSlideDimensions(f32v2(0.0f));
-        m_sliders[1]->disable();
+        m_sliders[1].setDimensions(f32v2(0.0f));
+        m_sliders[1].setSlideDimensions(f32v2(0.0f));
+        m_sliders[1].disable();
     }
 }
 
@@ -274,7 +272,7 @@ void vui::Panel::onMouseFocusLost(Sender s, const MouseEvent& e) {
 void vui::Panel::onSliderValueChange(Sender s, int v) {
     if (m_autoScroll) {
         f32 r = (f32)v / SLIDER_VAL_MAX;
-        if ((Slider*)s == m_sliders[0]) {
+        if ((Slider*)s == &m_sliders[0]) {
             // Horizontal
             f32 range = maxX - minX;
             m_childOffset.x = minX + range * r - m_position.x;

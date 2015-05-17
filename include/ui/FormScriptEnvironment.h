@@ -73,6 +73,7 @@ namespace vorb {
             ComboBoxScriptFuncs m_comboBoxFuncs;
             PanelScriptFuncs m_panelFuncs;
             LabelScriptFuncs m_labelFuncs;
+            std::vector <Widget*> m_widgetsToDelete;
         };
     }
 }

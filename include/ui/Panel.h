@@ -107,7 +107,7 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             f32 minX = FLT_MAX, maxX = FLT_MIN, minY = FLT_MAX, maxY = FLT_MIN; ///< Used for auto scroll
-            Slider* m_sliders[2];
+            Slider m_sliders[2];
             f32 m_sliderWidth = 15.0f;
             bool m_autoScroll = true;
             f32v2 m_childOffset = f32v2(0.0f);

@@ -80,7 +80,11 @@ bool vui::FormScriptEnvironment::loadForm(const cString filePath) {
     return true;
 }
 
-void vui::FormScriptEnvironment::dispose() {   
+void vui::FormScriptEnvironment::dispose() {
+    for (auto& w : m_widgetsToDelete) {
+        delete w;
+    }
+    std::vector <Widget*>().swap(m_widgetsToDelete);
     delete m_env;
     m_env = nullptr;
 }
@@ -119,36 +123,42 @@ void vui::FormScriptEnvironment::registerConstants() {
 
 vui::Button* vui::FormScriptEnvironment::makeButton(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Button* b = new vui::Button(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(b);
     m_buttonFuncs.registerWidget(b);
     return b;
 }
 
 vui::Slider* vui::FormScriptEnvironment::makeSlider(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Slider* s = new vui::Slider(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(s);
     m_sliderFuncs.registerWidget(s);
     return s;
 }
 
 vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::CheckBox* c = new vui::CheckBox(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(c);
     m_checkBoxFuncs.registerWidget(c);
     return c;
 }
 
 vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::ComboBox* c = new vui::ComboBox(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(c);
     m_checkBoxFuncs.registerWidget(c);
     return c;
 }
 
 vui::Panel* vui::FormScriptEnvironment::makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Panel* p = new vui::Panel(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(p);
     m_panelFuncs.registerWidget(p);
     return p;
 }
 
 vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
     vui::Label* l = new vui::Label(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(l);
     m_labelFuncs.registerWidget(l);
     return l;
 }

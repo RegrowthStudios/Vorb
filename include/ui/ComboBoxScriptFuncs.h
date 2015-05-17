@@ -59,6 +59,7 @@ namespace vorb {
             virtual nString getItem(ComboBox* c, int index) const;
             virtual size_t getNumItems(ComboBox* c) const;
             virtual vg::TextAlign getTextAlign(ComboBox* c) const;
+            virtual f32 getMaxDropHeight(ComboBox* c) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -72,6 +73,7 @@ namespace vorb {
             virtual void setTextHoverColor(ComboBox* c, color4 color) const;
             virtual void setTextScale(ComboBox* c, f32v2 textScale) const;
             virtual void setTextAlign(ComboBox* c, vg::TextAlign align) const;
+            virtual void setMaxDropHeight(ComboBox* c, f32 maxDropHeight) const;
         };
     }
 }

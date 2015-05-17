@@ -129,6 +129,7 @@ namespace vorb {
             virtual size_t getNumItems() const { return m_items.size(); }
             virtual const nString& getItem(int index) const;
             virtual const vg::TextAlign& getTextAlign() const { return m_mainButton.getTextAlign(); }
+            virtual const f32& getMaxDropHeight() const { return m_maxDropHeight; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -149,6 +150,7 @@ namespace vorb {
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextScale(const f32v2& textScale);
             virtual void setTextAlign(vg::TextAlign align);
+            virtual void setMaxDropHeight(f32 maxDropHeight);
 
             /************************************************************************/
             /* Events                                                               */
@@ -169,6 +171,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            f32 m_maxDropHeight = FLT_MAX;
             Panel m_dropPanel; // Panel that holds the drop buttons
             Button m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons; // Sub buttons

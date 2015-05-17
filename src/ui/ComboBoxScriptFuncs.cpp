@@ -31,6 +31,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_RDEL(env, getItem);
         REGISTER_RDEL(env, getNumItems);
         REGISTER_RDEL(env, getTextAlign);
+        REGISTER_RDEL(env, getMaxDropHeight);
 
         REGISTER_RDEL(env, isInDropBounds);
         // Setters
@@ -43,6 +44,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_DEL(env, setTextHoverColor);
         REGISTER_DEL(env, setTextScale);
         REGISTER_DEL(env, setTextAlign);
+        REGISTER_DEL(env, setMaxDropHeight);
     }
     env->setNamespaces();
 }
@@ -110,6 +112,10 @@ vg::TextAlign vui::ComboBoxScriptFuncs::getTextAlign(ComboBox* c) const {
     return c->getTextAlign();
 }
 
+f32 vui::ComboBoxScriptFuncs::getMaxDropHeight(ComboBox* c) const {
+    return c->getMaxDropHeight();
+}
+
 void vui::ComboBoxScriptFuncs::setTexture(ComboBox* c, VGTexture texture) const {
     c->setTexture(texture);
 }
@@ -144,4 +150,8 @@ void vui::ComboBoxScriptFuncs::setTextScale(ComboBox* c, f32v2 textScale) const 
 
 void vui::ComboBoxScriptFuncs::setTextAlign(ComboBox* c, vg::TextAlign align) const {
     c->setTextAlign(align);
+}
+
+void vui::ComboBoxScriptFuncs::setMaxDropHeight(ComboBox* c, f32 maxDropHeight) const {
+    c->setMaxDropHeight(maxDropHeight);
 }

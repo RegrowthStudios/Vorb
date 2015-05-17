@@ -52,7 +52,9 @@ void vui::ComboBox::updatePosition() {
     // Drop list
     if (m_isDropped) {
         m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        m_dropPanel.setDimensions(getDimensions() * f32v2(1.0f, m_items.size()));
+        f32v2 dims = getDimensions() * f32v2(1.0f, m_items.size());
+        dims.y = glm::min(dims.y, m_maxDropHeight);
+        m_dropPanel.setDimensions(dims);
     } else {
         m_dropPanel.setDimensions(f32v2(0.0f));
     }
@@ -219,6 +221,11 @@ void vui::ComboBox::setTextAlign(vg::TextAlign align) {
     for (auto& it : m_buttons) {
         it->setTextAlign(align);
     }
+}
+
+void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
+    m_maxDropHeight = maxDropHeight;
+    updatePosition();
 }
 
 void vui::ComboBox::updateDropButton(vui::Button* b) {

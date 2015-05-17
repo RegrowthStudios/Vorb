@@ -60,6 +60,8 @@ namespace vorb {
             virtual void enableForm(Form* f);
             virtual void disableForm(Form* f);
             virtual nString getFormName(Form* f);
+            virtual int getNumSupportedResolutions(int displayIndex);
+            virtual ui32v2 getSupportedResolution(int displayIndex, int resIndex);
 
             Form* m_form = nullptr;
             vscript::Environment* m_env = nullptr;

@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <SDL/SDL.h>
+
 #include "ui/FormScriptEnvironment.h"
 #include "ui/Button.h"
 #include "ui/CheckBox.h"
@@ -29,7 +32,7 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_env->addCDelegate("enable", makeDelegate(*this, &FormScriptEnvironment::enableForm));
         m_env->addCDelegate("disable", makeDelegate(*this, &FormScriptEnvironment::disableForm));
         m_env->addCRDelegate("getName", makeRDelegate(*this, &FormScriptEnvironment::getFormName));
-        m_env->addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
+       m_env->addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env->addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env->addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env->addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
@@ -38,6 +41,9 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
+        m_env->addCRDelegate("getNumSupportedResolutions", makeRDelegate(*this, &FormScriptEnvironment::getNumSupportedResolutions));
+        m_env->addCRDelegate("getSupportedResolution", makeRDelegate(*this, &FormScriptEnvironment::getSupportedResolution));
+        
         // Button functions
         m_buttonFuncs.init("Button", m_env);
         // Slider functions
@@ -157,4 +163,14 @@ void vui::FormScriptEnvironment::disableForm(Form* f) {
 
 nString vui::FormScriptEnvironment::getFormName(Form* f) {
     return f->getName();
+}
+
+int vui::FormScriptEnvironment::getNumSupportedResolutions(int displayIndex) {
+    return SDL_GetNumDisplayModes(displayIndex);
+}
+
+ui32v2 vui::FormScriptEnvironment::getSupportedResolution(int displayIndex, int resIndex) {
+    SDL_DisplayMode mode;
+    SDL_GetDisplayMode(displayIndex, resIndex, &mode);
+    return ui32v2(mode.w, mode.h);
 }

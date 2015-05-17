@@ -35,7 +35,6 @@ void vui::Panel::addDrawables(UIRenderer* renderer) {
     // Make copy
     m_drawnRect = m_drawableRect;
 
-
     m_sliders[0].addDrawables(renderer);
     m_sliders[1].addDrawables(renderer);
 
@@ -67,9 +66,9 @@ void vui::Panel::updatePosition() {
 
     // Use child offset for auto-scroll
     m_position -= m_childOffset;
-    // Update child positions
-    for (auto& w : m_widgets) {
-        w->updatePosition();
+    // Update child positions but skip sliders
+    for (size_t i = 2; i < m_widgets.size(); i++) {
+        m_widgets[i]->updatePosition();
     }
     m_position += m_childOffset;
 
@@ -77,8 +76,6 @@ void vui::Panel::updatePosition() {
         m_sliders[0].updatePosition();
         m_sliders[1].updatePosition();
     }
-
-    std::cout << m_clipRect.x << " " << m_clipRect.y << " " << m_clipRect.z << " " << m_clipRect.w << std::endl;
 
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
@@ -177,8 +174,11 @@ void vui::Panel::updateSliders() {
     minX = FLT_MAX;
     minY = FLT_MAX;
     if (m_autoScroll) {     
-        for (auto& w : m_widgets) {
-            const f32v2& pos = w->getPosition();
+        int a = 0;
+        // Skip sliders
+        for (size_t i = 2; i < m_widgets.size(); i++) {
+            auto& w = m_widgets[i];
+            const f32v2& pos = w->getRelativePosition();
             const f32v2& dims = w->getDimensions();
             if (pos.x < minX) {
                 minX = pos.x;
@@ -192,6 +192,7 @@ void vui::Panel::updateSliders() {
             if (pos.y + dims.y > maxY) {
                 maxY = pos.y + dims.y;
             }
+            a++;
         }
         if ((maxX > m_position.x + m_dimensions.x) || (minX < m_position.x)) {
             needsVertical = true;
@@ -200,13 +201,13 @@ void vui::Panel::updateSliders() {
             needsHorizontal = true;
         }
     }
-    if (minX > m_position.x) minX = m_position.x;
-    if (maxX < m_position.x + m_dimensions.x) {
-        maxX = m_position.x + m_dimensions.x;
+    if (minX > 0.0f) minX = 0.0f;
+    if (maxX < m_dimensions.x) {
+        maxX =  m_dimensions.x;
     }
-    if (minY > m_position.y) minY = m_position.y;
-    if (maxY < m_position.y + m_dimensions.y) {
-        maxY = m_position.y + m_dimensions.y;
+    if (minY > 0.0f) minY = 0.0f;
+    if (maxY < m_dimensions.y) {
+        maxY = m_dimensions.y;
     }
 
     if (needsHorizontal) {
@@ -275,12 +276,14 @@ void vui::Panel::onSliderValueChange(Sender s, int v) {
         if ((Slider*)s == &m_sliders[0]) {
             // Horizontal
             f32 range = maxX - minX;
-            m_childOffset.x = minX + range * r - m_position.x;
+            m_childOffset.x = minX + range * r;
         } else {
             // Vertical
             f32 range = maxY - minY;
-            m_childOffset.y = minY + range * r - m_position.y;
+            m_childOffset.y = minY + range * r;
+            std::cout << maxY << " " << minY << " " << range << " " << m_position.y << " " << r << std::endl;
         }
     }
+    std::cout << m_childOffset.y << std::endl;
     updatePosition();
 }

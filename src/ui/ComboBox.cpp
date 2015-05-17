@@ -36,7 +36,11 @@ void vui::ComboBox::dispose() {
 }
 
 void vui::ComboBox::updatePosition() {
-  
+
+    bool hasSlider = false;
+    if (m_items.size() * getHeight() > m_maxDropHeight) {
+        hasSlider = true;
+    }
 
     // Buttons
     f32 i = 0;
@@ -44,7 +48,11 @@ void vui::ComboBox::updatePosition() {
         if (m_isDropped) {
             b->enable();
             b->setPosition(f32v2(0.0f, i * getHeight()));
-            b->setDimensions(getDimensions());
+            if (hasSlider) {
+                b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
+            } else {
+                b->setDimensions(getDimensions());
+            }
         } else {
             b->disable();
             b->setDimensions(f32v2(0.0f));

@@ -194,11 +194,11 @@ void vui::Panel::updateSliders() {
             }
             a++;
         }
-        if ((maxX > m_position.x + m_dimensions.x) || (minX < m_position.x)) {
-            needsVertical = true;
-        }
-        if ((maxY > m_position.y + m_dimensions.y) || (minY < m_position.y)) {
+        if ((maxX > m_dimensions.x) || (minX < 0.0f)) {
             needsHorizontal = true;
+        }
+        if ((maxY > m_dimensions.y) || (minY < 0.0f)) {
+            needsVertical = true;
         }
     }
     if (minX > 0.0f) minX = 0.0f;
@@ -213,7 +213,11 @@ void vui::Panel::updateSliders() {
     if (needsHorizontal) {
         m_sliders[0].enable();
         m_sliders[0].setPosition(f32v2(0.0f, m_dimensions.y - m_sliderWidth));
-        m_sliders[0].setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
+        if (needsVertical) {
+            m_sliders[0].setDimensions(f32v2(m_dimensions.x - m_sliderWidth, m_sliderWidth));
+        } else {
+            m_sliders[0].setDimensions(f32v2(m_dimensions.x, m_sliderWidth));
+        }
         m_sliders[0].setSlideDimensions(f32v2(m_sliderWidth));
         m_sliders[0].setRange(0, SLIDER_VAL_MAX);
         m_sliders[0].setIsVertical(false);
@@ -225,7 +229,11 @@ void vui::Panel::updateSliders() {
     if (needsVertical) {
         m_sliders[1].enable();
         m_sliders[1].setPosition(f32v2(m_dimensions.x - m_sliderWidth, 0));
-        m_sliders[1].setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
+        if (needsHorizontal) {
+            m_sliders[1].setDimensions(f32v2(m_sliderWidth, m_dimensions.y - m_sliderWidth));
+        } else {
+            m_sliders[1].setDimensions(f32v2(m_sliderWidth, m_dimensions.y));
+        }
         m_sliders[1].setSlideDimensions(f32v2(m_sliderWidth));
         m_sliders[1].setRange(0, SLIDER_VAL_MAX);
         m_sliders[1].setIsVertical(true);
@@ -276,10 +284,12 @@ void vui::Panel::onSliderValueChange(Sender s, int v) {
         if ((Slider*)s == &m_sliders[0]) {
             // Horizontal
             f32 range = maxX - minX - m_dimensions.x + m_sliderWidth;
+            if (m_sliders[1].isEnabled()) range += m_sliderWidth;
             m_childOffset.x = minX + range * r;
         } else {
             // Vertical
             f32 range = maxY - minY - m_dimensions.y + m_sliderWidth;
+            if (m_sliders[0].isEnabled()) range += m_sliderWidth;
             m_childOffset.y = minY + range * r;
         }
     }

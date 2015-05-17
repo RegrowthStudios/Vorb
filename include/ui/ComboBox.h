@@ -131,15 +131,15 @@ namespace vorb {
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_mainButton.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override;
-            virtual const color4& getBackColor() const { return m_backColor; }
-            virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
-            virtual const color4& getTextColor() const { return m_textColor; }
-            virtual const color4& getTextHoverColor() const { return m_textHoverColor; }
+            virtual const color4& getBackColor() const { return m_mainButton.getBackColor(); }
+            virtual const color4& getBackHoverColor() const { return m_mainButton.getBackHoverColor(); }
+            virtual const color4& getTextColor() const { return m_mainButton.getTextColor(); }
+            virtual const color4& getTextHoverColor() const { return m_mainButton.getTextHoverColor(); }
             virtual f32v2 getTextScale() const;
             virtual const std::vector <nString>& getItems() const { return m_items; }
             virtual size_t getNumItems() const { return m_items.size(); }
             virtual const nString& getItem(int index) const;
-            virtual const vg::TextAlign& getTextAlign() const { return m_textAlign; }
+            virtual const vg::TextAlign& getTextAlign() const { return m_mainButton.getTextAlign(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -167,7 +167,6 @@ namespace vorb {
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
             virtual void updateDropButton(vorb::ui::Button* b);
-            virtual void updateColor();
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
@@ -184,9 +183,6 @@ namespace vorb {
             Panel m_dropPanel; // Panel that holds the drop buttons
             Button m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons; // Sub buttons
-            color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
-            color4 m_textColor = color::Black, m_textHoverColor = color::Black;
-            vg::TextAlign m_textAlign = vg::TextAlign::LEFT;
             const vg::SpriteFont* m_defaultFont = nullptr;
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items

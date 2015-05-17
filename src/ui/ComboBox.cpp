@@ -9,7 +9,7 @@ vui::ComboBox::ComboBox() : Widget() {
     addWidget(&m_mainButton);
     addWidget(&m_dropPanel);
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
-    updateColor();
+    m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
 vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
@@ -29,7 +29,7 @@ vui::ComboBox::~ComboBox() {
 
 void vui::ComboBox::dispose() {
     Widget::dispose();
-    for (int i = 0; i < m_buttons.size(); i++) {
+    for (size_t i = 0; i < m_buttons.size(); i++) {
         delete m_buttons[i];
     }
     std::vector<Button*>().swap(m_buttons);
@@ -213,31 +213,23 @@ void vui::ComboBox::setY(f32 y) {
 }
 
 void vui::ComboBox::setBackColor(const color4& color) {
-    m_backColor = color;
     m_mainButton.setBackColor(color);
     for (auto& b : m_buttons)  b->setBackColor(color);
-    updateColor();
 }
 
 void vui::ComboBox::setBackHoverColor(const color4& color) {
-    m_backHoverColor = color;
     m_mainButton.setBackHoverColor(color);
     for (auto& b : m_buttons)  b->setBackHoverColor(color);
-    updateColor();
 }
 
 void vui::ComboBox::setTextColor(const color4& color) {
-    m_textColor = color;
     m_mainButton.setTextColor(color);
     for (auto& b : m_buttons)  b->setTextColor(color);
-    updateColor();
 }
 
 void vui::ComboBox::setTextHoverColor(const color4& color) {
-    m_textHoverColor = color;
     m_mainButton.setTextHoverColor(color);
     for (auto& b : m_buttons) b->setTextHoverColor(color);
-    updateColor();
 }
 
 void vui::ComboBox::setTextScale(const f32v2& textScale) {
@@ -248,7 +240,6 @@ void vui::ComboBox::setTextScale(const f32v2& textScale) {
 }
 
 void vui::ComboBox::setTextAlign(vg::TextAlign align) {
-    m_textAlign = align;
     m_mainButton.setTextAlign(align);
     for (auto& it : m_buttons) {
         it->setTextAlign(align);
@@ -257,20 +248,12 @@ void vui::ComboBox::setTextAlign(vg::TextAlign align) {
 
 void vui::ComboBox::updateDropButton(vui::Button* b) {
     b->setFont(m_mainButton.getFont());
-    b->setBackColor(m_backColor);
-    b->setBackHoverColor(m_backHoverColor);
-    b->setTextColor(m_textColor);
-    b->setTextHoverColor(m_textHoverColor);
-}
-
-void vui::ComboBox::updateColor() {
-    if (m_isMouseIn) {
-        m_mainButton.setBackColor(m_backHoverColor);
-        m_mainButton.setTextColor(m_textHoverColor);
-    } else {
-        m_mainButton.setBackColor(m_backColor);
-        m_mainButton.setTextColor(m_textColor);
-    }
+    b->setBackColor(m_mainButton.getBackColor());
+    b->setBackHoverColor(m_mainButton.getBackHoverColor());
+    b->setTextColor(m_mainButton.getTextColor());
+    b->setTextHoverColor(m_mainButton.getTextHoverColor());
+    b->setTextAlign(m_mainButton.getTextAlign());
+    b->setTextScale(m_mainButton.getTextScale());
 }
 
 void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
@@ -292,13 +275,11 @@ void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
         if (!m_isMouseIn) {
             m_isMouseIn = true;
             MouseEnter(e);
-            updateColor();
         }
         MouseMove(e);
     } else if (m_isMouseIn) {
         m_isMouseIn = false;
         MouseLeave(e);
-        updateColor();
     }
 }
 

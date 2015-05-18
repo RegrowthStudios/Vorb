@@ -79,6 +79,8 @@ namespace vorb {
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
             virtual const bool& getAutoScroll(bool autoScroll) const { return m_autoScroll; }
             virtual const f32& getSliderWidth() const { return m_sliderWidth; }
+            virtual const color4& getColor() const { return m_backColor; }
+            virtual const color4& getHoverColor() const { return m_backHoverColor; }
 
             /************************************************************************/
             /* Setters                                                              */

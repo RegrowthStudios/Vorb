@@ -98,6 +98,7 @@ bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
 }
 
 bool vui::ComboBox::removeItem(const nString& item) {
+    // TODO(Ben): This is certainly wrong. It leaves button.
     for (auto& it = m_items.begin(); it != m_items.end(); it++) {
         if (*it == item) {
             m_items.erase(it);
@@ -150,6 +151,7 @@ const nString& vui::ComboBox::getItem(int index) const {
 
 void vui::ComboBox::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
+    m_mainButton.setDimensions(dimensions);
     updatePosition();
 }
 
@@ -161,12 +163,6 @@ void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
 void vui::ComboBox::setHeight(f32 height) {
     Widget::setHeight(height);
     m_mainButton.setHeight(height);
-    updatePosition();
-}
-
-void vui::ComboBox::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    m_mainButton.setPosition(m_position);
     updatePosition();
 }
 
@@ -185,18 +181,6 @@ void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
 void vui::ComboBox::setWidth(f32 width) {
     Widget::setWidth(width);
     m_mainButton.setWidth(width);
-    updatePosition();
-}
-
-void vui::ComboBox::setX(f32 x) {
-    Widget::setX(x);
-    m_mainButton.setX(m_position.x);
-    updatePosition();
-}
-
-void vui::ComboBox::setY(f32 y) {
-    Widget::setY(y);
-    m_mainButton.setX(m_position.y);
     updatePosition();
 }
 

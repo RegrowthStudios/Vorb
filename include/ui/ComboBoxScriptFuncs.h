@@ -38,7 +38,13 @@ namespace vorb {
         class ComboBoxScriptFuncs : public WidgetScriptFuncs {
         public:
             void init(const cString nSpace, vscript::Environment* env) override;
+            virtual void registerWidget(Widget* w) override;
+            virtual void unregisterWidget(Widget* w) override;
         protected:
+            virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
+            /*! @brief Deregisters a LUA callback with a widget* */
+            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
+
             virtual void addItem(ComboBox* c, nString item) const;
             virtual bool addItemAtIndex(ComboBox* c, int index, nString item) const;
             virtual bool removeItem(ComboBox* c, nString item) const;
@@ -59,6 +65,7 @@ namespace vorb {
             virtual nString getItem(ComboBox* c, int index) const;
             virtual size_t getNumItems(ComboBox* c) const;
             virtual vg::TextAlign getTextAlign(ComboBox* c) const;
+            virtual nString getText(ComboBox* c) const;
             virtual f32 getMaxDropHeight(ComboBox* c) const;
 
             /************************************************************************/
@@ -73,7 +80,10 @@ namespace vorb {
             virtual void setTextHoverColor(ComboBox* c, color4 color) const;
             virtual void setTextScale(ComboBox* c, f32v2 textScale) const;
             virtual void setTextAlign(ComboBox* c, vg::TextAlign align) const;
+            virtual void setText(ComboBox* c, nString text) const;
             virtual void setMaxDropHeight(ComboBox* c, f32 maxDropHeight) const;
+
+            void onValueChange(Sender s, const nString& v) const;
         };
     }
 }

@@ -189,7 +189,7 @@ bool vui::GameWindow::init() {
         for (int i = 0; i < numDisplayModes; i++) {
             SDL_GetDisplayMode(displayIndex, i, &mode);
             ui32v2 res(mode.w, mode.h);
-            if (i == 0 || m_supportedResolutions[i - 1] != res) {
+            if (i == 0 || m_supportedResolutions.back() != res) {
                 m_supportedResolutions.push_back(res);
             }
         }
@@ -290,6 +290,7 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
         m_displayMode.screenWidth = w;
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
+        InputDispatcher::window.onResize({w, h});
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SDL)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);

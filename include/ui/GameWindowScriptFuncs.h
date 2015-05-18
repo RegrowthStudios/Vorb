@@ -40,6 +40,7 @@ namespace vorb {
         protected:
             virtual int getNumSupportedResolutions() const;
             virtual ui32v2 getSupportedResolution(int resIndex) const;
+            virtual ui32v2 getCurrentResolution() const;
 
             const GameWindow* m_window = nullptr;
         };

@@ -34,6 +34,8 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getName);
         REGISTER_RDEL(env, getDestRect);
         REGISTER_RDEL(env, getParent);
+        REGISTER_RDEL(env, getPositionPercentage);
+        REGISTER_RDEL(env, getDimensionsPercentage);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
@@ -50,6 +52,12 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setY);
         REGISTER_DEL(env, setName);
         REGISTER_DEL(env, setParent);
+        REGISTER_DEL(env, setPositionPercentage);
+        REGISTER_DEL(env, setDimensionsPercentage);
+        REGISTER_DEL(env, setXPercentage);
+        REGISTER_DEL(env, setYPercentage);
+        REGISTER_DEL(env, setWidthPercentage);
+        REGISTER_DEL(env, setHeightPercentage);
         // Misc
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
@@ -232,6 +240,14 @@ vui::IWidgetContainer* vui::WidgetScriptFuncs::getParent(Widget* w) const {
     return (IWidgetContainer*)w->getParent();
 }
 
+f32v2 vui::WidgetScriptFuncs::getPositionPercentage(Widget* w) const {
+    return w->getPositionPercentage();
+}
+
+f32v2 vui::WidgetScriptFuncs::getDimensionsPercentage(Widget* w) const {
+    return w->getDimensionsPercentage();
+}
+
 void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
 }
@@ -290,6 +306,30 @@ void vui::WidgetScriptFuncs::setName(Widget* w, nString name) const {
 
 void vui::WidgetScriptFuncs::setParent(Widget* w, IWidgetContainer* parent) const {
     w->setParent(parent);
+}
+
+void vui::WidgetScriptFuncs::setPositionPercentage(Widget* w, f32v2 positionPercentage) const {
+    w->setPositionPercentage(positionPercentage);
+}
+
+void vui::WidgetScriptFuncs::setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const {
+    w->setDimensionsPercentage(dimensionsPercentage);
+}
+
+void vui::WidgetScriptFuncs::setXPercentage(Widget* w, f32 xPercentage) const {
+    w->setXPercentage(xPercentage);
+}
+
+void vui::WidgetScriptFuncs::setYPercentage(Widget* w, f32 yPercentage) const {
+    w->setYPercentage(yPercentage);
+}
+
+void vui::WidgetScriptFuncs::setWidthPercentage(Widget* w, f32 widthPercentage) const {
+    w->setWidthPercentage(widthPercentage);
+}
+
+void vui::WidgetScriptFuncs::setHeightPercentage(Widget* w, f32 heightPercentage) const {
+    w->setHeightPercentage(heightPercentage);
 }
 
 void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {

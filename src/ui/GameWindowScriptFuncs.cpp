@@ -12,6 +12,7 @@ void vui::GameWindowScriptFuncs::init(const cString nSpace, const GameWindow* ga
     env->setNamespaces(nSpace);
     REGISTER_RDEL(env, getNumSupportedResolutions);
     REGISTER_RDEL(env, getSupportedResolution);
+    REGISTER_RDEL(env, getCurrentResolution);
     env->setNamespaces();
 }
 
@@ -24,4 +25,8 @@ int vui::GameWindowScriptFuncs::getNumSupportedResolutions() const {
 
 ui32v2 vui::GameWindowScriptFuncs::getSupportedResolution(int resIndex) const {
     return m_window->getSupportedResolutions().at(resIndex);
+}
+
+ui32v2 vui::GameWindowScriptFuncs::getCurrentResolution() const {
+    return m_window->getViewportDims();
 }

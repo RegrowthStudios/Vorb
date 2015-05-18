@@ -44,8 +44,20 @@ void vui::Widget::removeDrawables() {
 
 void vui::Widget::updatePosition() {
     f32v2 newPos = m_relativePosition;
-    if (m_parent) newPos += m_parent->getPosition();
+    if (m_parent) {
+        // Handle percentages
+        if (m_positionPercentage.x >= 0.0f) {
+            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
+        }
+        if (m_positionPercentage.y >= 0.0f) {
+            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
+        }
+        newPos += m_parent->getPosition();
+    }
     m_position = newPos;
+    
+    // Update relative dimensions
+    updateDimensions();
 
     if (m_parent) computeClipRect(m_parent->getClipRect());
     // Update child positions
@@ -54,11 +66,11 @@ void vui::Widget::updatePosition() {
     }
 }
 
-void vorb::ui::Widget::setAnchor(const AnchorStyle& anchor) {
+void vui::Widget::setAnchor(const AnchorStyle& anchor) {
     m_anchor = anchor;
 }
 
-void vorb::ui::Widget::setDock(const DockStyle& dock) {
+void vui::Widget::setDock(const DockStyle& dock) {
     if (m_parent) {
         m_parent->setChildDock(this, dock);
     } else {
@@ -66,7 +78,22 @@ void vorb::ui::Widget::setDock(const DockStyle& dock) {
     }
 }
 
-void vorb::ui::Widget::setParent(IWidgetContainer* parent) {
+void vui::Widget::setParent(IWidgetContainer* parent) {
     if (m_parent) m_parent->removeWidget(this);
     if (parent) parent->addWidget(this);
+}
+
+void vui::Widget::updateDimensions() {
+    if (m_parent) {
+        f32v2 newDims = m_dimensions;
+        if (m_dimensionsPercentage.x > 0.0f) {
+            newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
+        }
+        if (m_dimensionsPercentage.y > 0.0f) {
+            newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
+        }
+        if (newDims != m_dimensions) {
+            setDimensions(newDims);
+        }
+    }
 }

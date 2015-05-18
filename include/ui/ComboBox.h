@@ -43,6 +43,7 @@ namespace vorb {
 
         // TODO(Ben): Proper combo box
         class ComboBox : public Widget {
+            friend class ComboBoxScriptFuncs;
         public:
             /*! @brief Default constructor. */
             ComboBox();
@@ -129,6 +130,7 @@ namespace vorb {
             virtual size_t getNumItems() const { return m_items.size(); }
             virtual const nString& getItem(int index) const;
             virtual const vg::TextAlign& getTextAlign() const { return m_mainButton.getTextAlign(); }
+            virtual const nString& getText() const { return m_mainButton.getText(); }
             virtual const f32& getMaxDropHeight() const { return m_maxDropHeight; }
 
             /************************************************************************/
@@ -150,6 +152,7 @@ namespace vorb {
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextScale(const f32v2& textScale);
             virtual void setTextAlign(vg::TextAlign align);
+            virtual void setText(const nString& text);
             virtual void setMaxDropHeight(f32 maxDropHeight);
 
             /************************************************************************/
@@ -167,6 +170,13 @@ namespace vorb {
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
             virtual void onSubButtonClick(Sender s, const MouseButtonEvent& e);
             virtual void onMainButtonClick(Sender s, const MouseButtonEvent& e);
+
+            /************************************************************************/
+            /* LUA Callbacks                                                        */
+            /************************************************************************/
+#ifdef VORB_USING_SCRIPT
+            std::vector<script::Function> m_valueChangeFuncs;
+#endif
 
             /************************************************************************/
             /* Members                                                              */

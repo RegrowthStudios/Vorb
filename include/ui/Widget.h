@@ -93,6 +93,9 @@ namespace vorb {
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
+            virtual const f32v2& getPositionPercentage() const { return m_positionPercentage; }
+            virtual const f32v2& getDimensionsPercentage() const { return m_dimensionsPercentage; }
+
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
@@ -101,8 +104,15 @@ namespace vorb {
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setParent(IWidgetContainer* parent);
-
+            virtual void setPositionPercentage(const f32v2& positionPercentage) { m_positionPercentage = positionPercentage; updatePosition(); }
+            virtual void setDimensionsPercentage(const f32v2& dimensionsPercentage) { m_dimensionsPercentage = dimensionsPercentage; updateDimensions(); }
+            virtual void setXPercentage(f32 xPercentage) { m_positionPercentage.x = xPercentage; updatePosition(); }
+            virtual void setYPercentage(f32 yPercentage) { m_positionPercentage.y = yPercentage; updatePosition(); }
+            virtual void setWidthPercentage(f32 widthPercentage) { m_dimensionsPercentage.x = widthPercentage; updateDimensions(); }
+            virtual void setHeightPercentage(f32 heightPercentage) { m_dimensionsPercentage.y = heightPercentage; updateDimensions(); }
+          
         protected:
+            virtual void updateDimensions();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
@@ -111,6 +121,8 @@ namespace vorb {
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
             IWidgetContainer* m_parent = nullptr; ///< Parent container
+            f32v2 m_positionPercentage = f32v2(-1.0f); ///< Position as percentage of parent dims
+            f32v2 m_dimensionsPercentage = f32v2(-1.0f); ///< Dims as percentage of parent dims
             volatile bool m_needsDrawableReload = false;
         };
     }

@@ -31,6 +31,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_RDEL(env, getItem);
         REGISTER_RDEL(env, getNumItems);
         REGISTER_RDEL(env, getTextAlign);
+        REGISTER_RDEL(env, getText);
         REGISTER_RDEL(env, getMaxDropHeight);
 
         REGISTER_RDEL(env, isInDropBounds);
@@ -44,6 +45,7 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_DEL(env, setTextHoverColor);
         REGISTER_DEL(env, setTextScale);
         REGISTER_DEL(env, setTextAlign);
+        REGISTER_DEL(env, setText);
         REGISTER_DEL(env, setMaxDropHeight);
     }
     env->setNamespaces();
@@ -51,6 +53,45 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
+
+void vui::ComboBoxScriptFuncs::registerWidget(Widget* w) {
+    WidgetScriptFuncs::registerWidget(w);
+    ComboBox* c = (ComboBox*)w;
+    c->ValueChange += makeDelegate(*this, &ComboBoxScriptFuncs::onValueChange);
+}
+
+void vui::ComboBoxScriptFuncs::unregisterWidget(Widget* w) {
+    WidgetScriptFuncs::unregisterWidget(w);
+    ComboBox* c = (ComboBox*)w;
+    c->ValueChange -= makeDelegate(*this, &ComboBoxScriptFuncs::onValueChange);
+}
+
+bool vui::ComboBoxScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    ComboBox* c = (ComboBox*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            c->m_valueChangeFuncs.push_back(f); break;
+        default:
+            return false;
+    }
+    return true;
+}
+
+bool vui::ComboBoxScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    ComboBox* c = (ComboBox*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            c->m_valueChangeFuncs.erase(std::find(c->m_valueChangeFuncs.begin(), c->m_valueChangeFuncs.end(), f));
+            break;
+        default:
+            return WidgetScriptFuncs::removeCallback(w, eventType, funcName);
+    }
+    return true;
+}
 
 void vui::ComboBoxScriptFuncs::addItem(ComboBox* c, nString item) const {
     c->addItem(item);
@@ -112,6 +153,10 @@ vg::TextAlign vui::ComboBoxScriptFuncs::getTextAlign(ComboBox* c) const {
     return c->getTextAlign();
 }
 
+nString vui::ComboBoxScriptFuncs::getText(ComboBox* c) const {
+    return c->getText();
+}
+
 f32 vui::ComboBoxScriptFuncs::getMaxDropHeight(ComboBox* c) const {
     return c->getMaxDropHeight();
 }
@@ -152,6 +197,18 @@ void vui::ComboBoxScriptFuncs::setTextAlign(ComboBox* c, vg::TextAlign align) co
     c->setTextAlign(align);
 }
 
+void vui::ComboBoxScriptFuncs::setText(ComboBox* c, nString text) const {
+    c->setText(text);
+}
+
 void vui::ComboBoxScriptFuncs::setMaxDropHeight(ComboBox* c, f32 maxDropHeight) const {
     c->setMaxDropHeight(maxDropHeight);
+}
+
+void vui::ComboBoxScriptFuncs::onValueChange(Sender s, const nString& v) const {
+    ComboBox* w = (ComboBox*)s;
+    size_t sz = w->m_valueChangeFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
+        w->m_valueChangeFuncs[i](v);
+    }
 }

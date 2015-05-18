@@ -91,6 +91,9 @@ namespace vorb {
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
             virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual f32v2 getPositionPercentage(Widget* w) const;
+            virtual f32v2 getDimensionsPercentage(Widget* w) const;
+
 
             /************************************************************************/
             /* Setters                                                              */
@@ -110,6 +113,12 @@ namespace vorb {
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
             virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
+            virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
+            virtual void setXPercentage(Widget* w, f32 xPercentage) const;
+            virtual void setYPercentage(Widget* w, f32 yPercentage) const;
+            virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
+            virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

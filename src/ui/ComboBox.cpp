@@ -234,6 +234,10 @@ void vui::ComboBox::setTextAlign(vg::TextAlign align) {
     }
 }
 
+void vui::ComboBox::setText(const nString& text) {
+    m_mainButton.setText(text);
+}
+
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_maxDropHeight = maxDropHeight;
     updatePosition();

@@ -42,6 +42,8 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual VGTexture getTexture(Panel* p) const;
+            virtual color4 getColor(Panel* p) const;
+            virtual color4 getHoverColor(Panel* p) const;
 
             /************************************************************************/
             /* Setters                                                              */

@@ -16,6 +16,8 @@ void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env
     { // Register all functions
         // Getters
         REGISTER_RDEL(env, getTexture);
+        REGISTER_RDEL(env, getColor);
+        REGISTER_RDEL(env, getHoverColor);
         // Setters
         REGISTER_DEL(env, setTexture);
         REGISTER_DEL(env, setColor);
@@ -29,6 +31,14 @@ void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env
 
 VGTexture vui::PanelScriptFuncs::getTexture(Panel* p) const {
     return p->getTexture();
+}
+
+color4 vui::PanelScriptFuncs::getColor(Panel* p) const {
+    return p->getColor();
+}
+
+color4 vui::PanelScriptFuncs::getHoverColor(Panel* p) const {
+    return p->getHoverColor();
 }
 
 void vui::PanelScriptFuncs::setTexture(Panel* p, VGTexture texture) const {

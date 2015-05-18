@@ -31,18 +31,14 @@ vui::Panel::~Panel() {
 }
 
 void vui::Panel::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
     // Make copy
     m_drawnRect = m_drawableRect;
-
-    m_sliders[0].addDrawables(renderer);
-    m_sliders[1].addDrawables(renderer);
-
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Panel::refreshDrawables));
 
+    Widget::addDrawables(renderer);
 }
 
 void vui::Panel::removeDrawables() {
@@ -61,6 +57,9 @@ void vui::Panel::updatePosition() {
     f32v2 newPos = m_relativePosition;
     if (m_parent) newPos += m_parent->getPosition();
     m_position = newPos;
+
+    // Update relative dimensions
+    updateDimensions();
 
     if (m_parent) computeClipRect(m_parent->getClipRect());
 

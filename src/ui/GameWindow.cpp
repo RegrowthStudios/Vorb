@@ -179,6 +179,23 @@ bool vui::GameWindow::init() {
     // TODO(Cristian): Place some defaults?
 #endif
 
+    // TODO(Ben): Handle for other IMPLs.
+#if defined(VORB_IMPL_UI_SDL)
+    { // Get supported window resolutions
+            SDL_DisplayMode mode;
+        // TODO(Ben): Handle other displays indices.
+        int displayIndex = 0;
+        int numDisplayModes = SDL_GetNumDisplayModes(displayIndex);
+        for (int i = 0; i < numDisplayModes; i++) {
+            SDL_GetDisplayMode(displayIndex, i, &mode);
+            ui32v2 res(mode.w, mode.h);
+            if (i == 0 || m_supportedResolutions[i - 1] != res) {
+                m_supportedResolutions.push_back(res);
+            }
+        }
+    }
+#endif
+
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
 

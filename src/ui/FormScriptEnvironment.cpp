@@ -174,13 +174,3 @@ void vui::FormScriptEnvironment::disableForm(Form* f) {
 nString vui::FormScriptEnvironment::getFormName(Form* f) {
     return f->getName();
 }
-
-int vui::FormScriptEnvironment::getNumSupportedResolutions(int displayIndex) {
-    return SDL_GetNumDisplayModes(displayIndex);
-}
-
-ui32v2 vui::FormScriptEnvironment::getSupportedResolution(int displayIndex, int resIndex) {
-    SDL_DisplayMode mode;
-    SDL_GetDisplayMode(displayIndex, resIndex, &mode);
-    return ui32v2(mode.w, mode.h);
-}

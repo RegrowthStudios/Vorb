@@ -26,7 +26,6 @@
 
 #include <map>
 #include "IWidgetContainer.h"
-#include "../IDGenerator.h"
 #include "../VorbPreDecl.inl"
 
 DECL_VSCRIPT(class Environment)

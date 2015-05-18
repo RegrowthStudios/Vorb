@@ -318,6 +318,7 @@
     <ClCompile Include="src\ui\FormScriptEnvironment.cpp" />
     <ClCompile Include="src\ui\Button.cpp" />
     <ClCompile Include="src\ui\Drawables.cpp" />
+    <ClCompile Include="src\ui\GameWindowScriptFuncs.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
     <ClCompile Include="src\ui\Label.cpp" />
     <ClCompile Include="src\ui\LabelScriptFuncs.cpp" />
@@ -450,6 +451,7 @@
     <ClInclude Include="include\ui\FormScriptEnvironment.h" />
     <ClInclude Include="include\ui\Button.h" />
     <ClInclude Include="include\ui\Drawables.h" />
+    <ClInclude Include="include\ui\GameWindowScriptFuncs.h" />
     <ClInclude Include="include\ui\IWidgetContainer.h" />
     <ClInclude Include="include\ui\Label.h" />
     <ClInclude Include="include\ui\LabelScriptFuncs.h" />

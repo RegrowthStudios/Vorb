@@ -161,6 +161,9 @@ namespace vorb {
             WindowHandle getHandle() const {
                 return m_window;
             }
+            const std::vector<ui32v2>& getSupportedResolutions() const {
+                return m_supportedResolutions;
+            }
 
             /*! @brief Obtain the handle to the graphics context.
              * 
@@ -194,6 +197,7 @@ namespace vorb {
             void readSettings();
             void saveSettings() const;
         
+            std::vector<ui32v2> m_supportedResolutions; ///< All resolutions supported by the window
             WindowHandle m_window = nullptr; ///< Window's OS handle.
             GraphicsContext m_glc = nullptr; ///< Window's graphics context.
             GameDisplayMode m_displayMode; ///< The current display settings of the window.

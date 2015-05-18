@@ -168,8 +168,8 @@ void vui::Panel::updateSliders() {
     bool needsHorizontal = false;
     bool needsVertical = false;
     // Check which scroll bars we need
-    maxX = FLT_MIN;
-    maxY = FLT_MIN;
+    maxX = -FLT_MAX;
+    maxY = -FLT_MAX;
     minX = FLT_MAX;
     minY = FLT_MAX;
     if (m_autoScroll) {     

@@ -237,7 +237,7 @@ void vui::ComboBox::updateDropButton(vui::Button* b) {
     b->setTextScale(m_mainButton.getTextScale());
 }
 
-void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
+void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
     f32v2 pos = m_position;
     f32v2 dims = m_dimensions;
     

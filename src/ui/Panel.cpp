@@ -172,7 +172,7 @@ void vui::Panel::updateSliders() {
     maxY = -FLT_MAX;
     minX = FLT_MAX;
     minY = FLT_MAX;
-    if (m_autoScroll) {     
+    if (m_autoScroll) {
         int a = 0;
         // Skip sliders
         for (size_t i = 2; i < m_widgets.size(); i++) {
@@ -186,7 +186,7 @@ void vui::Panel::updateSliders() {
                 minY = pos.y;
             }
             if (pos.x + dims.x > maxX) {
-                maxY = pos.x + dims.x;
+                maxX = pos.x + dims.x;
             }
             if (pos.y + dims.y > maxY) {
                 maxY = pos.y + dims.y;
@@ -197,13 +197,12 @@ void vui::Panel::updateSliders() {
             needsHorizontal = true;
         }
         if ((maxY > m_dimensions.y) || (minY < 0.0f)) {
-            std::cout << maxY << " " << m_dimensions.y << " " << minY << std::endl;
             needsVertical = true;
         }
     }
     if (minX > 0.0f) minX = 0.0f;
     if (maxX < m_dimensions.x) {
-        maxX =  m_dimensions.x;
+        maxX = m_dimensions.x;
     }
     if (minY > 0.0f) minY = 0.0f;
     if (maxY < m_dimensions.y) {

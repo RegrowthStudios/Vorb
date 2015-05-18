@@ -52,6 +52,7 @@ void vui::Widget::updatePosition() {
         if (m_positionPercentage.y >= 0.0f) {
             newPos.y = m_parent->getHeight() * m_positionPercentage.y;
         }
+        m_relativePosition = newPos;
         newPos += m_parent->getPosition();
     }
     m_position = newPos;

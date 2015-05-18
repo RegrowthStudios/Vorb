@@ -35,6 +35,7 @@ void vui::WidgetList::updatePosition() {
 }
 
 void vui::WidgetList::addItem(Widget* w) {
+    m_panel.addWidget(w);
     m_listedWidgets.push_back(w);
     updatePosition();
 }
@@ -42,6 +43,7 @@ void vui::WidgetList::addItem(Widget* w) {
 bool vui::WidgetList::addItemAtIndex(int index, Widget* w) {
     if (index > (int)m_listedWidgets.size()) return false;
     m_listedWidgets.insert(m_listedWidgets.begin() + index, w);
+    m_panel.removeWidget(w);
     updatePosition();
     return true;
 }
@@ -51,6 +53,7 @@ bool vui::WidgetList::removeItem(Widget* w) {
         if (*it == w) {
             w->removeDrawables();
             m_listedWidgets.erase(it);
+            m_panel.removeWidget(w);
             updatePosition();
             return true;
         }
@@ -62,6 +65,7 @@ bool vui::WidgetList::removeItem(int index) {
     if (index > (int)m_listedWidgets.size()) return false;
     auto& it = (m_listedWidgets.begin() + index);
     (*it)->removeDrawables();
+    m_panel.removeWidget(*it);
     m_listedWidgets.erase(it);
     updatePosition();
     return true;
@@ -69,7 +73,8 @@ bool vui::WidgetList::removeItem(int index) {
 
 void vui::WidgetList::addItems(const std::vector <Widget*>& widgetsToAdd) {
     for (auto& it : widgetsToAdd) {
-        m_listedWidgets.push_back(w);
+        m_panel.addWidget(it);
+        m_listedWidgets.push_back(it);
     }
     updatePosition();
 }

@@ -333,6 +333,7 @@
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />
     <ClCompile Include="src\ui\UIRenderer.cpp" />
     <ClCompile Include="src\ui\WidgetList.cpp" />
+    <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp" />
     <ClCompile Include="src\ui\WidgetScriptFuncs.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +466,7 @@
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\ui\UIRenderer.h" />
     <ClInclude Include="include\ui\WidgetList.h" />
+    <ClInclude Include="include\ui\WidgetListScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />

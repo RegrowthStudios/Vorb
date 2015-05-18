@@ -2,14 +2,15 @@
 
 #include <SDL/SDL.h>
 
-#include "ui/FormScriptEnvironment.h"
 #include "ui/Button.h"
 #include "ui/CheckBox.h"
 #include "ui/ComboBox.h"
 #include "ui/Form.h"
-#include "ui/Slider.h"
-#include "ui/Panel.h"
+#include "ui/FormScriptEnvironment.h"
 #include "ui/Label.h"
+#include "ui/Panel.h"
+#include "ui/Slider.h"
+#include "ui/WidgetList.h"
 
 #define INIT_FUNCTION_NAME "init"
 
@@ -32,12 +33,13 @@ bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) 
         m_env->addCDelegate("enable", makeDelegate(*this, &FormScriptEnvironment::enableForm));
         m_env->addCDelegate("disable", makeDelegate(*this, &FormScriptEnvironment::disableForm));
         m_env->addCRDelegate("getName", makeRDelegate(*this, &FormScriptEnvironment::getFormName));
-       m_env->addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
+        m_env->addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env->addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env->addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
         m_env->addCRDelegate("makeComboBox", makeRDelegate(*this, &FormScriptEnvironment::makeComboBox));
         m_env->addCRDelegate("makePanel", makeRDelegate(*this, &FormScriptEnvironment::makePanel));
         m_env->addCRDelegate("makeLabel", makeRDelegate(*this, &FormScriptEnvironment::makeLabel));
+        m_env->addCRDelegate("makeWidgetList", makeRDelegate(*this, &FormScriptEnvironment::makeWidgetList));
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
@@ -53,6 +55,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) 
         m_panelFuncs.init("Panel", m_env);
         // Label functions
         m_labelFuncs.init("Label", m_env);
+        // WidgetList functions
+        m_widgetListFuncs.init("WidgetList", m_env);
         // Window functions
         m_windowFuncs.init("Window", gameWindow, m_env);
         // Graphics functions
@@ -160,6 +164,13 @@ vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, 
     m_widgetsToDelete.push_back(l);
     m_labelFuncs.registerWidget(l);
     return l;
+}
+
+vui::WidgetList* vui::FormScriptEnvironment::makeWidgetList(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+    vui::WidgetList* w = new vui::WidgetList(f, name, f32v4(x, y, width, height));
+    m_widgetsToDelete.push_back(w);
+    m_widgetListFuncs.registerWidget(w);
+    return w;
 }
 
 void vui::FormScriptEnvironment::enableForm(Form* f) {

@@ -34,6 +34,7 @@
 #include "LabelScriptFuncs.h"
 #include "PanelScriptFuncs.h"
 #include "SliderScriptFuncs.h"
+#include "WidgetListScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -58,6 +59,7 @@ namespace vorb {
             virtual vui::ComboBox* makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::Panel* makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
             virtual vui::Label* makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
+            virtual vui::WidgetList* makeWidgetList(Form* f, nString name, f32 x, f32 y, f32 width, f32 height);
 
             virtual void enableForm(Form* f);
             virtual void disableForm(Form* f);
@@ -73,6 +75,7 @@ namespace vorb {
             ComboBoxScriptFuncs m_comboBoxFuncs;
             PanelScriptFuncs m_panelFuncs;
             LabelScriptFuncs m_labelFuncs;
+            WidgetListScriptFuncs m_widgetListFuncs;
             GameWindowScriptFuncs m_windowFuncs;
             std::vector <Widget*> m_widgetsToDelete;
         };

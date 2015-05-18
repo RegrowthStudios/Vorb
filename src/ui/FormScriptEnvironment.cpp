@@ -21,7 +21,7 @@ vui::FormScriptEnvironment::~FormScriptEnvironment() {
     dispose();
 }
 
-bool vui::FormScriptEnvironment::init(Form* form) {
+bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) {
     m_form = form;
     dispose();
     m_env = new vscript::Environment();
@@ -41,9 +41,6 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
-        m_env->addCRDelegate("getNumSupportedResolutions", makeRDelegate(*this, &FormScriptEnvironment::getNumSupportedResolutions));
-        m_env->addCRDelegate("getSupportedResolution", makeRDelegate(*this, &FormScriptEnvironment::getSupportedResolution));
-        
         // Button functions
         m_buttonFuncs.init("Button", m_env);
         // Slider functions
@@ -56,6 +53,8 @@ bool vui::FormScriptEnvironment::init(Form* form) {
         m_panelFuncs.init("Panel", m_env);
         // Label functions
         m_labelFuncs.init("Label", m_env);
+        // Window functions
+        m_windowFuncs.init("Window", gameWindow, m_env);
         // Graphics functions
         m_graphicsInterface.registerGraphics(*m_env);
     }

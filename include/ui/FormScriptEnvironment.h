@@ -27,11 +27,13 @@
 #include "../script/Environment.h"
 #include "../script/GraphicsScriptInterface.h"
 #include "ButtonScriptFuncs.h"
-#include "SliderScriptFuncs.h"
 #include "CheckBoxScriptFuncs.h"
 #include "ComboBoxScriptFuncs.h"
-#include "PanelScriptFuncs.h"
+#include "GameWindow.h"
+#include "GameWindowScriptFuncs.h"
 #include "LabelScriptFuncs.h"
+#include "PanelScriptFuncs.h"
+#include "SliderScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -43,7 +45,7 @@ namespace vorb {
         public:
             FormScriptEnvironment();
             virtual ~FormScriptEnvironment();
-            virtual bool init(Form* form);
+            virtual bool init(Form* form, const GameWindow* gameWindow);
             virtual bool loadForm(const cString filePath);
             virtual void dispose();
 
@@ -71,6 +73,7 @@ namespace vorb {
             ComboBoxScriptFuncs m_comboBoxFuncs;
             PanelScriptFuncs m_panelFuncs;
             LabelScriptFuncs m_labelFuncs;
+            GameWindowScriptFuncs m_windowFuncs;
             std::vector <Widget*> m_widgetsToDelete;
         };
     }

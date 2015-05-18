@@ -128,14 +128,14 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/         
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }        
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height) { m_dimensions.y = height; }
+            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateChildPositions(); }
             virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
-            virtual void setWidth(f32 width) { m_dimensions.x = width; }
+            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateChildPositions(); }
             virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
@@ -159,6 +159,7 @@ namespace vorb {
             /*! Computes clipping for rendering and propagates through children. */
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX));
             virtual void computeChildClipRects();
+            virtual void updateChildPositions();
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

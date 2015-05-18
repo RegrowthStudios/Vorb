@@ -174,6 +174,12 @@ void vui::IWidgetContainer::computeChildClipRects() {
     }
 }
 
+void vui::IWidgetContainer::updateChildPositions() {
+    for (auto& w : m_widgets) {
+        w->updatePosition();
+    }
+}
+
 void vui::IWidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {

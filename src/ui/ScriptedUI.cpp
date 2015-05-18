@@ -12,7 +12,7 @@ vui::ScriptedUI::~ScriptedUI() {
 }
 
 void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScreen,
-                           const GameWindow* window, const ui32v4& destRect,
+                           const GameWindow* window, const f32v4& destRect,
                            vg::SpriteFont* defaultFont /*= nullptr*/) {
     // Set up the first form
     m_ownerScreen = ownerScreen;
@@ -44,7 +44,7 @@ void vui::ScriptedUI::dispose() {
     std::vector<std::pair<Form*, FormScriptEnvironment*> >().swap(m_forms);
 }
 
-void vui::ScriptedUI::setDimensions(const ui32v2& dimensions) {
+void vui::ScriptedUI::setDimensions(const f32v2& dimensions) {
     for (auto& it : m_forms) {
         it.first->setDimensions(dimensions);
     }

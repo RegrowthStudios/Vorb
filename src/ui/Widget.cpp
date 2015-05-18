@@ -60,10 +60,8 @@ void vui::Widget::updatePosition() {
     updateDimensions();
 
     if (m_parent) computeClipRect(m_parent->getClipRect());
-    // Update child positions
-    for (auto& w : m_widgets) {
-        w->updatePosition();
-    }
+    
+    updateChildPositions();
 }
 
 void vui::Widget::setAnchor(const AnchorStyle& anchor) {

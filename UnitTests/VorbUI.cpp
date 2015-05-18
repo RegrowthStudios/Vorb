@@ -65,7 +65,7 @@ public:
     }
     virtual void onEntry(const vui::GameTime& gameTime) {       
         font.init("Data/chintzy.ttf", 32);
-        form.init("main", this, ui32v4(0, 0, m_viewportDims.x, m_viewportDims.y), &font);
+        form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), &font);
 
         // Load textures
         glGenTextures(1, &texture);

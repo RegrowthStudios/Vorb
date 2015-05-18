@@ -11,13 +11,13 @@ vui::Form::~Form() {
     // Empty
 }
 
-void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_name = name;
     m_ownerIGameScreen = ownerScreen;
-    m_position.x = (f32)destRect.x;
-    m_position.y = (f32)destRect.y;
-    m_dimensions.x = (f32)destRect.z;
-    m_dimensions.y = (f32)destRect.w;
+    m_position.x = destRect.x;
+    m_position.y = destRect.y;
+    m_dimensions.x = destRect.z;
+    m_dimensions.y = destRect.w;
     m_renderer.init(defaultFont, spriteBatch);
 }
 
@@ -40,10 +40,8 @@ void vui::Form::updatePosition() {
     m_position = m_relativePosition;
 
     computeClipRect();
-    // Update child positions
-    for (auto& w : m_widgets) {
-        w->updatePosition();
-    }
+    
+    updateChildPositions();
 }
 
 void vui::Form::update(f32 dt /*= 1.0f*/) {
@@ -81,8 +79,4 @@ void vui::Form::disable() {
         m_isEnabled = false;
         for (auto& w : m_widgets) w->disable();
     }
-}
-
-void vui::Form::setDimensions(const ui32v2& dimensions) {
-    m_dimensions = dimensions;
 }

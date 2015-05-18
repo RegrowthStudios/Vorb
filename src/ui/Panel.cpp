@@ -197,6 +197,7 @@ void vui::Panel::updateSliders() {
             needsHorizontal = true;
         }
         if ((maxY > m_dimensions.y) || (minY < 0.0f)) {
+            std::cout << maxY << " " << m_dimensions.y << " " << minY << std::endl;
             needsVertical = true;
         }
     }

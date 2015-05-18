@@ -55,6 +55,7 @@ void vui::Widget::updatePosition() {
         m_relativePosition = newPos;
         newPos += m_parent->getPosition();
     }
+    newPos += getWidgetAlignOffset();
     m_position = newPos;
     
     // Update relative dimensions
@@ -80,6 +81,29 @@ void vui::Widget::setDock(const DockStyle& dock) {
 void vui::Widget::setParent(IWidgetContainer* parent) {
     if (m_parent) m_parent->removeWidget(this);
     if (parent) parent->addWidget(this);
+}
+
+f32v2 vui::Widget::getWidgetAlignOffset() {
+    switch (m_align) {
+        case WidgetAlign::LEFT:
+            return f32v2(0, -m_dimensions.y * 0.5f);
+        case WidgetAlign::TOP_LEFT:
+            return f32v2(0.0f);
+        case WidgetAlign::TOP:
+            return f32v2(-m_dimensions.x * 0.5f, 0.0f);
+        case WidgetAlign::TOP_RIGHT:
+            return f32v2(-m_dimensions.x, 0.0f);
+        case WidgetAlign::RIGHT:
+            return f32v2(-m_dimensions.x, -m_dimensions.y * 0.5f);
+        case WidgetAlign::BOTTOM_RIGHT:
+            return f32v2(-m_dimensions.x, -m_dimensions.y);
+        case WidgetAlign::BOTTOM:
+            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y);
+        case WidgetAlign::BOTTOM_LEFT:
+            return f32v2(0.0f, -m_dimensions.y);
+        case WidgetAlign::CENTER:
+            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
+    }
 }
 
 void vui::Widget::updateDimensions() {

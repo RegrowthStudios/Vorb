@@ -34,6 +34,18 @@ DECL_VG(class SpriteFont)
 namespace vorb {
     namespace ui {
 
+        enum class WidgetAlign {
+            LEFT,
+            TOP_LEFT,
+            TOP,
+            TOP_RIGHT,
+            RIGHT,
+            BOTTOM_RIGHT,
+            BOTTOM,
+            BOTTOM_LEFT,
+            CENTER
+        };
+
         // Forward Declarations
         class UIRenderer;
 
@@ -95,6 +107,7 @@ namespace vorb {
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const f32v2& getPositionPercentage() const { return m_positionPercentage; }
             virtual const f32v2& getDimensionsPercentage() const { return m_dimensionsPercentage; }
+            virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -110,12 +123,15 @@ namespace vorb {
             virtual void setYPercentage(f32 yPercentage) { m_positionPercentage.y = yPercentage; updatePosition(); }
             virtual void setWidthPercentage(f32 widthPercentage) { m_dimensionsPercentage.x = widthPercentage; updateDimensions(); }
             virtual void setHeightPercentage(f32 heightPercentage) { m_dimensionsPercentage.y = heightPercentage; updateDimensions(); }
-          
+            virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
+
         protected:
+            virtual f32v2 getWidgetAlignOffset();
             virtual void updateDimensions();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
             AnchorStyle m_anchor; ///< The anchor data.
             DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.

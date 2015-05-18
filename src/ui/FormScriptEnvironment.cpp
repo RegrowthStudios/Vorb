@@ -94,6 +94,19 @@ void vui::FormScriptEnvironment::dispose() {
 
 void vui::FormScriptEnvironment::registerConstants() {
     // Set enums
+    { // vui::WidgetAlign
+        m_env->setNamespaces("WidgetAlign");
+        m_env->addValue("LEFT", WidgetAlign::LEFT);
+        m_env->addValue("TOP_LEFT", WidgetAlign::TOP_LEFT);
+        m_env->addValue("TOP", WidgetAlign::TOP);
+        m_env->addValue("TOP_RIGHT", WidgetAlign::TOP_RIGHT);
+        m_env->addValue("RIGHT", WidgetAlign::RIGHT);
+        m_env->addValue("BOTTOM_RIGHT", WidgetAlign::BOTTOM_RIGHT);
+        m_env->addValue("BOTTOM", WidgetAlign::BOTTOM);
+        m_env->addValue("BOTTOM_LEFT", WidgetAlign::BOTTOM_LEFT);
+        m_env->addValue("CENTER", WidgetAlign::CENTER);
+        m_env->setNamespaces();
+    }
     { // vg::TextAlign
         m_env->setNamespaces("TextAlign");
         m_env->addValue("LEFT", vg::TextAlign::LEFT);

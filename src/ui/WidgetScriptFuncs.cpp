@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ui/WidgetScriptFuncs.h"
-#include "ui/Widget.h"
 #include "script/Environment.h"
 #include "VorbPreDecl.inl"
 #include "ui/MouseInputDispatcher.h"
@@ -36,6 +35,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getParent);
         REGISTER_RDEL(env, getPositionPercentage);
         REGISTER_RDEL(env, getDimensionsPercentage);
+        REGISTER_RDEL(env, getWidgetAlign);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
@@ -58,6 +58,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setYPercentage);
         REGISTER_DEL(env, setWidthPercentage);
         REGISTER_DEL(env, setHeightPercentage);
+        REGISTER_DEL(env, setWidgetAlign);
         // Misc
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
@@ -248,6 +249,10 @@ f32v2 vui::WidgetScriptFuncs::getDimensionsPercentage(Widget* w) const {
     return w->getDimensionsPercentage();
 }
 
+vui::WidgetAlign vui::WidgetScriptFuncs::getWidgetAlign(Widget* w) const {
+    return w->getWidgetAlign();
+}
+
 void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
 }
@@ -330,6 +335,10 @@ void vui::WidgetScriptFuncs::setWidthPercentage(Widget* w, f32 widthPercentage) 
 
 void vui::WidgetScriptFuncs::setHeightPercentage(Widget* w, f32 heightPercentage) const {
     w->setHeightPercentage(heightPercentage);
+}
+
+void vui::WidgetScriptFuncs::setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const {
+    w->setWidgetAlign(widgetAlign);
 }
 
 void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {

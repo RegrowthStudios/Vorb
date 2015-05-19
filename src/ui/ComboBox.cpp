@@ -78,6 +78,7 @@ void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
     m_buttons.push_back(new Button);
     auto b = m_buttons.back();
+    b->addDrawables(m_renderer); // TODO(Ben): This only works consistently in LUA
     m_dropPanel.addWidget(b);
     b->setText(item);
     if (!m_isDropped) {
@@ -87,14 +88,11 @@ void vui::ComboBox::addItem(const nString& item) {
     updateDropButton(b);
     b->setDimensions(m_dimensions);
     updatePosition();
- 
-    m_needsDrawableReload = true;
 }
 
 bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
     if (index > (int)m_items.size()) return false;
     m_items.insert(m_items.begin() + index, item);
-    m_needsDrawableReload = true;
     return true;
 }
 
@@ -106,7 +104,6 @@ bool vui::ComboBox::removeItem(const nString& item) {
             return true;
         }
     }
-    m_needsDrawableReload = true;
     return false;
 }
 
@@ -114,7 +111,6 @@ bool vui::ComboBox::removeItem(int index) {
     if (index > (int)m_items.size()) return false;
 
     m_items.erase(m_items.begin() + index);
-    m_needsDrawableReload = true;
     return true;
 }
 
@@ -122,7 +118,6 @@ void vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
     for (auto& it : itemsToAdd) {
         addItem(it);
     }
-    m_needsDrawableReload = true;
 }
 
 bool vui::ComboBox::selectItem(int index) {

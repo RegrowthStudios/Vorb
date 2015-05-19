@@ -43,6 +43,8 @@ bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) 
         m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
+        // Widget functions
+        m_widgetFuncs.init("Widget", m_env);
         // Button functions
         m_buttonFuncs.init("Button", m_env);
         // Slider functions

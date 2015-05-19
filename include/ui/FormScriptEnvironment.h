@@ -69,6 +69,7 @@ namespace vorb {
             vscript::Environment* m_env = nullptr;
             vscript::Function m_init;
             vscript::GraphicsScriptInterface m_graphicsInterface;
+            WidgetScriptFuncs m_widgetFuncs;
             ButtonScriptFuncs m_buttonFuncs;
             SliderScriptFuncs m_sliderFuncs;
             CheckBoxScriptFuncs m_checkBoxFuncs;

@@ -8,6 +8,7 @@ vui::ComboBox::ComboBox() : Widget() {
     ValueChange.setSender(this);
     addWidget(&m_mainButton);
     addWidget(&m_dropPanel);
+    m_dropPanel.setAutoScroll(true);
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }

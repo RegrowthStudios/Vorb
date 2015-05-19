@@ -112,7 +112,7 @@ namespace vorb {
             f32 minX = FLT_MAX, maxX = -FLT_MAX, minY = FLT_MAX, maxY = -FLT_MAX; ///< Used for auto scroll
             Slider m_sliders[2];
             f32 m_sliderWidth = 15.0f;
-            bool m_autoScroll = true;
+            bool m_autoScroll = false;
             f32v2 m_childOffset = f32v2(0.0f);
             DrawableRect m_drawableRect, m_drawnRect;
             // Has no color by default

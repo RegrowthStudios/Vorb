@@ -290,8 +290,8 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
         m_displayMode.screenWidth = w;
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
-        InputDispatcher::window.onResize({w, h});
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
+        InputDispatcher::window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
 #elif defined(VORB_IMPL_UI_SDL)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)
@@ -315,7 +315,7 @@ void vui::GameWindow::setFullscreen(bool useFullscreen, bool overrideCheck /*= f
     }
 }
 void vui::GameWindow::setBorderless(bool useBorderless, bool overrideCheck /*= false*/) {
-    if (overrideCheck || m_displayMode.isBorderless != useBorderless) {
+    if ((overrideCheck || m_displayMode.isBorderless != useBorderless) && !m_displayMode.isFullscreen) {
         m_displayMode.isBorderless = useBorderless;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowBordered((SDL_Window*)m_window, m_displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);

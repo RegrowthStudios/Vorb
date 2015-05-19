@@ -61,11 +61,15 @@ bool vui::IWidgetContainer::removeWidget(Widget* child) {
 
 void vui::IWidgetContainer::enable() {
     m_isEnabled = true;
+    // Enable all children
+    for (auto& w : m_widgets) w->enable();
 }
 
 void vui::IWidgetContainer::disable() {
     m_isEnabled = false;
     m_isClicking = false;
+    // Disable all children
+    for (auto& w : m_widgets) w->disable();
 }
 
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {

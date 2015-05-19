@@ -107,16 +107,29 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
 }
 
 void vui::Widget::updateDimensions() {
-    if (m_parent) {
-        f32v2 newDims = m_dimensions;
+    f32v2 newDims = m_dimensions;
+    // Check parent relative dimensions
+    if (m_parent) {      
         if (m_dimensionsPercentage.x > 0.0f) {
             newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
         }
         if (m_dimensionsPercentage.y > 0.0f) {
             newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
-        }
-        if (newDims != m_dimensions) {
-            setDimensions(newDims);
-        }
+        } 
+    }
+    // Check min/max size
+    if (newDims.x < m_minSize.x) {
+        newDims.x = m_minSize.x;
+    } else if (newDims.x > m_maxSize.x) {
+        newDims.x = m_maxSize.x;
+    }
+    if (newDims.y < m_minSize.y) {
+        newDims.y = m_minSize.y;
+    } else if (newDims.y > m_maxSize.y) {
+        newDims.y = m_maxSize.y;
+    }
+    // Only set if it changed
+    if (newDims != m_dimensions) {
+        setDimensions(newDims);
     }
 }

@@ -33,6 +33,8 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getName);
         REGISTER_RDEL(env, getDestRect);
         REGISTER_RDEL(env, getParent);
+        REGISTER_RDEL(env, getMinSize);
+        REGISTER_RDEL(env, getMaxSize);
         REGISTER_RDEL(env, getPositionPercentage);
         REGISTER_RDEL(env, getDimensionsPercentage);
         REGISTER_RDEL(env, getWidgetAlign);
@@ -52,6 +54,8 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setY);
         REGISTER_DEL(env, setName);
         REGISTER_DEL(env, setParent);
+        REGISTER_DEL(env, setMinSize);
+        REGISTER_DEL(env, setMaxSize);
         REGISTER_DEL(env, setPositionPercentage);
         REGISTER_DEL(env, setDimensionsPercentage);
         REGISTER_DEL(env, setXPercentage);
@@ -241,6 +245,14 @@ vui::IWidgetContainer* vui::WidgetScriptFuncs::getParent(Widget* w) const {
     return (IWidgetContainer*)w->getParent();
 }
 
+f32v2 vui::WidgetScriptFuncs::getMinSize(Widget* w) const {
+    return w->getMinSize();
+}
+
+f32v2 vui::WidgetScriptFuncs::getMaxSize(Widget* w) const {
+    return w->getMaxSize();
+}
+
 f32v2 vui::WidgetScriptFuncs::getPositionPercentage(Widget* w) const {
     return w->getPositionPercentage();
 }
@@ -311,6 +323,14 @@ void vui::WidgetScriptFuncs::setName(Widget* w, nString name) const {
 
 void vui::WidgetScriptFuncs::setParent(Widget* w, IWidgetContainer* parent) const {
     w->setParent(parent);
+}
+
+void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2 minSize) const {
+    w->setMinSize(minSize);
+}
+
+void vui::WidgetScriptFuncs::setMaxSize(Widget* w, f32v2 maxSize) const {
+    w->setMaxSize(maxSize);
 }
 
 void vui::WidgetScriptFuncs::setPositionPercentage(Widget* w, f32v2 positionPercentage) const {

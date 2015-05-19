@@ -89,6 +89,8 @@ namespace vorb {
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
             virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual f32v2 getMinSize(Widget* w) const;
+            virtual f32v2 getMaxSize(Widget* w) const;
             virtual f32v2 getPositionPercentage(Widget* w) const;
             virtual f32v2 getDimensionsPercentage(Widget* w) const;
             virtual WidgetAlign getWidgetAlign(Widget* w) const;
@@ -111,6 +113,8 @@ namespace vorb {
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
             virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            virtual void setMinSize(Widget* w, f32v2 minSize) const;
+            virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
             virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
             virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
             virtual void setXPercentage(Widget* w, f32 xPercentage) const;

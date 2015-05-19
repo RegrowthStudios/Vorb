@@ -286,7 +286,7 @@ void vui::GameWindow::saveSettings() const {
 
 void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/) {
     // Apply A Minimal State Change
-    if (overrideCheck || m_displayMode.screenWidth != w || m_displayMode.screenHeight != h) {
+    if ((overrideCheck || m_displayMode.screenWidth != w || m_displayMode.screenHeight != h) && !m_displayMode.isFullscreen){
         m_displayMode.screenWidth = w;
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)

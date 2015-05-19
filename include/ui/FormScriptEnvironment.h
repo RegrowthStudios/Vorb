@@ -49,6 +49,7 @@ namespace vorb {
             virtual bool init(Form* form, const GameWindow* gameWindow);
             virtual bool loadForm(const cString filePath);
             virtual void dispose();
+            virtual void onOptionsChanged();
 
             vscript::Environment* getEnv() { return m_env; }
         protected:

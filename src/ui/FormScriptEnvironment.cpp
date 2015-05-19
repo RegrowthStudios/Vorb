@@ -13,6 +13,7 @@
 #include "ui/WidgetList.h"
 
 #define INIT_FUNCTION_NAME "init"
+#define OPTIONS_CHANGE_FUNCTION_NAME "onOptionsChanged"
 
 vui::FormScriptEnvironment::FormScriptEnvironment() {
     // Empty
@@ -92,6 +93,10 @@ void vui::FormScriptEnvironment::dispose() {
     std::vector <Widget*>().swap(m_widgetsToDelete);
     delete m_env;
     m_env = nullptr;
+}
+
+void vui::FormScriptEnvironment::onOptionsChanged() {
+    (*m_env)[OPTIONS_CHANGE_FUNCTION_NAME]();
 }
 
 void vui::FormScriptEnvironment::registerConstants() {

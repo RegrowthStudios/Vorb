@@ -48,6 +48,7 @@ namespace vorb {
             virtual void draw();
             virtual void update(f32 dt = 1.0f);
             virtual void dispose();
+            virtual void onOptionsChanged();
             virtual void setDimensions(const f32v2& dimensions);
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
@@ -60,6 +61,7 @@ namespace vorb {
             IGameScreen* m_ownerScreen = nullptr;
             const GameWindow* m_window = nullptr;
             Form* m_activeForm = nullptr;
+            FormScriptEnvironment* m_activeScriptEnvironment = nullptr;
             std::vector<std::pair<Form*, FormScriptEnvironment*> > m_forms; ///< The forms and script envs in draw order
         };
     }

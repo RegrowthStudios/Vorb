@@ -21,6 +21,7 @@ void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScree
     m_defaultFont = defaultFont;
     Form* mainForm = makeForm("main", startFormPath);
     m_activeForm = mainForm;
+    m_activeScriptEnvironment = m_forms[0].second;
 }
 
 void vui::ScriptedUI::draw() {
@@ -42,6 +43,10 @@ void vui::ScriptedUI::dispose() {
         delete it.second;
     }
     std::vector<std::pair<Form*, FormScriptEnvironment*> >().swap(m_forms);
+}
+
+void vui::ScriptedUI::onOptionsChanged() {
+    m_activeScriptEnvironment->onOptionsChanged();
 }
 
 void vui::ScriptedUI::setDimensions(const f32v2& dimensions) {
@@ -81,6 +86,7 @@ vui::Form* vui::ScriptedUI::changeForm(nString nextForm) {
             m_activeForm->disable();
             m_activeForm = it.first;
             m_activeForm->enable();
+            m_activeScriptEnvironment = it.second;
             return m_activeForm;
         }
     }

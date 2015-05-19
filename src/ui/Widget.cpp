@@ -104,6 +104,7 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
         case WidgetAlign::CENTER:
             return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
     }
+    return f32v2(0.0f); // Should never happen
 }
 
 void vui::Widget::updateDimensions() {

@@ -159,12 +159,16 @@ void vui::IWidgetContainer::recalculateDockedWidgets() {
 }
 
 void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX)*/) {
-    f32v2 pos = m_position;
-    f32v2 dims = m_dimensions;
-    computeClipping(parentClipRect, pos, dims);
-    if (dims.x < 0) dims.x = 0;
-    if (dims.y < 0) dims.y = 0;
-    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    if (m_isClippingEnabled) {
+        f32v2 pos = m_position;
+        f32v2 dims = m_dimensions;
+        computeClipping(parentClipRect, pos, dims);
+        if (dims.x < 0) dims.x = 0;
+        if (dims.y < 0) dims.y = 0;
+        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    } else {
+        m_clipRect = parentClipRect;
+    }
     computeChildClipRects();
 }
 

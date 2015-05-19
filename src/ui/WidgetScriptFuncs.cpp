@@ -23,6 +23,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getDock);
         REGISTER_RDEL(env, getNumWidgets);
         REGISTER_RDEL(env, isEnabled);
+        REGISTER_RDEL(env, getClippingEnabled);
         REGISTER_RDEL(env, getHeight);
         REGISTER_RDEL(env, getWidth);
         REGISTER_RDEL(env, getX);
@@ -63,6 +64,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setWidthPercentage);
         REGISTER_DEL(env, setHeightPercentage);
         REGISTER_DEL(env, setWidgetAlign);
+        REGISTER_DEL(env, setClippingEnabled);
         // Misc
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
@@ -203,6 +205,10 @@ int vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
 
 bool vui::WidgetScriptFuncs::isEnabled(Widget* w) const {
     return w->isEnabled();
+}
+
+bool vui::WidgetScriptFuncs::getClippingEnabled(Widget* w) const {
+    return w->getClippingEnabled();
 }
 
 f32 vui::WidgetScriptFuncs::getHeight(Widget* w) const {
@@ -359,6 +365,10 @@ void vui::WidgetScriptFuncs::setHeightPercentage(Widget* w, f32 heightPercentage
 
 void vui::WidgetScriptFuncs::setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const {
     w->setWidgetAlign(widgetAlign);
+}
+
+void vui::WidgetScriptFuncs::setClippingEnabled(Widget* w, bool clippingEnabled) const {
+    w->setClippingEnabled(clippingEnabled);
 }
 
 void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {

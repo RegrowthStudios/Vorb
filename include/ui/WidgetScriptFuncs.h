@@ -79,6 +79,7 @@ namespace vorb {
             virtual int getDock(Widget* w) const;
             virtual int getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
+            virtual bool getClippingEnabled(Widget* w) const;
             virtual f32 getHeight(Widget* w) const;
             virtual f32 getWidth(Widget* w) const;
             virtual f32 getX(Widget* w) const;
@@ -122,6 +123,7 @@ namespace vorb {
             virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
             virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
             virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
+            virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

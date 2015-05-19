@@ -128,7 +128,7 @@ namespace vorb {
             virtual void setWidthPercentage(f32 widthPercentage) { m_dimensionsPercentage.x = widthPercentage; updateDimensions(); }
             virtual void setHeightPercentage(f32 heightPercentage) { m_dimensionsPercentage.y = heightPercentage; updateDimensions(); }
             virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
-
+            
         protected:
             virtual f32v2 getWidgetAlignOffset();
             virtual void updateDimensions();

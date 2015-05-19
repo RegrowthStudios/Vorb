@@ -98,7 +98,7 @@ namespace vorb {
             virtual const VGTexture& getTexture() const { return m_panel.getTexture(); }
             virtual const color4& getBackColor() const { return m_panel.getColor(); }
             virtual const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
-            virtual const size_t& getNumItems() const { return m_listedWidgets.size(); }
+            virtual size_t getNumItems() const { return m_listedWidgets.size(); }
             virtual const f32& getSpacing() const { return m_spacing; }
 
             /************************************************************************/

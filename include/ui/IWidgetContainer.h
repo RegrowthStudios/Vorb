@@ -123,6 +123,7 @@ namespace vorb {
             virtual const nString& getName() const { return m_name; }
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual f32v4 getClipRect() const { return m_clipRect; }
+            virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -139,6 +140,7 @@ namespace vorb {
             virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
+            virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -192,6 +194,8 @@ namespace vorb {
             f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
             f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
             nString m_name = ""; ///< Display name of the container.
+
+            bool m_isClippingEnabled = true;
 
             // TODO(Ben): Bitfield for memory reduction?.
             bool m_isClicking = false; ///< Used for click event tracking.

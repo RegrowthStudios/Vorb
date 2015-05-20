@@ -19,7 +19,7 @@
 #include "gtypes.h"
 
 #ifdef VORB_USING_SCRIPT
-#include "VorbPreDecl.inl"
+#include "../VorbPreDecl.inl"
 DECL_VSCRIPT(class Environment);
 #endif
 

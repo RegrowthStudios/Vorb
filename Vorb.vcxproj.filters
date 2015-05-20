@@ -276,6 +276,9 @@
     <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\FocusController.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -671,6 +674,9 @@
     </ClInclude>
     <ClInclude Include="include\ui\WidgetListScriptFuncs.h">
       <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\FocusController.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

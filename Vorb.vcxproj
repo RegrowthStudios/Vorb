@@ -314,6 +314,7 @@
     <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp" />
     <ClCompile Include="src\ui\ComboBox.cpp" />
     <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\FocusController.cpp" />
     <ClCompile Include="src\ui\Form.cpp" />
     <ClCompile Include="src\ui\FormScriptEnvironment.cpp" />
     <ClCompile Include="src\ui\Button.cpp" />
@@ -449,6 +450,7 @@
     <ClInclude Include="include\ui\CheckBoxScriptFuncs.h" />
     <ClInclude Include="include\ui\ComboBox.h" />
     <ClInclude Include="include\ui\ComboBoxScriptFuncs.h" />
+    <ClInclude Include="include\ui\FocusController.h" />
     <ClInclude Include="include\ui\Form.h" />
     <ClInclude Include="include\ui\FormScriptEnvironment.h" />
     <ClInclude Include="include\ui\Button.h" />

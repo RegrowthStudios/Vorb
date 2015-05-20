@@ -113,3 +113,7 @@ void vui::WidgetList::setSpacing(f32 spacing) {
     m_spacing = spacing;
     updatePosition();
 }
+
+void vui::WidgetList::setAutoScroll(bool autoScroll) {
+    m_panel.setAutoScroll(autoScroll);
+}

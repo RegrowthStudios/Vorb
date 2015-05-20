@@ -73,6 +73,7 @@ namespace vorb {
             virtual color4 getBackHoverColor(WidgetList* w);
             virtual size_t getNumItems(WidgetList* w) const;
             virtual f32 getSpacing(WidgetList* w) const;
+            virtual bool getAutoScroll(WidgetList* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -81,6 +82,7 @@ namespace vorb {
             virtual void setBackColor(WidgetList* w, color4 color) const;
             virtual void setBackHoverColor(WidgetList* w, color4 color) const;
             virtual void setSpacing(WidgetList* w, f32 spacing) const;
+            virtual void setAutoScroll(WidgetList* w, bool autoScroll) const;
         };
     }
 }

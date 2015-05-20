@@ -24,12 +24,13 @@ void vui::WidgetListScriptFuncs::init(const cString nSpace, vscript::Environment
         REGISTER_RDEL(env, getBackHoverColor);
         REGISTER_RDEL(env, getNumItems);
         REGISTER_RDEL(env, getSpacing);
-      
+        REGISTER_RDEL(env, getAutoScroll);     
         // Setters
         REGISTER_DEL(env, setTexture);
         REGISTER_DEL(env, setBackColor);
         REGISTER_DEL(env, setBackHoverColor);
         REGISTER_DEL(env, setSpacing);
+        REGISTER_DEL(env, setAutoScroll);
     }
     env->setNamespaces();
 }
@@ -73,6 +74,10 @@ f32 vui::WidgetListScriptFuncs::getSpacing(WidgetList* w) const {
     return w->getSpacing();
 }
 
+bool vui::WidgetListScriptFuncs::getAutoScroll(WidgetList* w) const {
+    return w->getAutoScroll();
+}
+
 void vui::WidgetListScriptFuncs::setTexture(WidgetList* w, VGTexture texture) const {
     w->setTexture(texture);
 }
@@ -89,3 +94,6 @@ void vui::WidgetListScriptFuncs::setSpacing(WidgetList* w, f32 spacing) const {
     w->setSpacing(spacing);
 }
 
+void vui::WidgetListScriptFuncs::setAutoScroll(WidgetList* w, bool autoScroll) const {
+    w->setAutoScroll(autoScroll);
+}

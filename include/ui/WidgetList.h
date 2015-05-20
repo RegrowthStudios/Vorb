@@ -96,6 +96,7 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_panel.getTexture(); }
+            virtual const bool& getAutoScroll() const { return m_panel.getAutoScroll(); }
             virtual const color4& getBackColor() const { return m_panel.getColor(); }
             virtual const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
             virtual size_t getNumItems() const { return m_listedWidgets.size(); }
@@ -111,6 +112,7 @@ namespace vorb {
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);
+            virtual void setAutoScroll(bool autoScroll);
 
         protected:  
             /************************************************************************/

@@ -16,6 +16,7 @@
 #define IGameScreen_h__
 
 #include "MainGame.h"
+#include "FocusController.h"
 
 namespace vorb {
     namespace ui {
@@ -40,7 +41,7 @@ namespace vorb {
         class IGameScreen {
         public:
             IGameScreen()
-            : _state(ScreenState::NONE), _game(nullptr), _index(-1) {
+            : m_state(ScreenState::NONE) {
                 // empty
             }
         
@@ -50,13 +51,13 @@ namespace vorb {
         
             // All Screens Should Have A Parent
             void setParentGame(MainGame* game, i32 index) {
-                _game = game;
-                _index = index;
+                m_game = game;
+                m_index = index;
             }
         
             // The Screen's Location In The List
             i32 getIndex() const {
-                return _index;
+                return m_index;
             }
         
             // Returns Screen Index When Called To Change Screens
@@ -65,10 +66,10 @@ namespace vorb {
         
             // Screen State Functions
             ScreenState getState() const {
-                return _state;
+                return m_state;
             }
             void setRunning() {
-                _state = ScreenState::RUNNING;
+                m_state = ScreenState::RUNNING;
             }
         
             // Called At The Beginning And End Of The Application
@@ -83,21 +84,22 @@ namespace vorb {
             virtual void update(const vui::GameTime& gameTime) = 0;
             virtual void draw(const vui::GameTime& gameTime) = 0;
         protected:
-            ScreenState _state;
-            MainGame* _game;
+            ScreenState m_state;
+            MainGame* m_game = nullptr;
+            FocusController m_focusController;
         private:
             // Location In The ScreenList
-            i32 _index;
+            i32 m_index = -1;
         };
         
         template<typename T>
         class IAppScreen : public IGameScreen {
         public:
             IAppScreen(const T* app)
-                : _app(app) {
+                : m_app(app) {
             }
         protected:
-            const T* const _app;
+            const T* const m_app;
         };
         
 // Shorten Super-Constructors

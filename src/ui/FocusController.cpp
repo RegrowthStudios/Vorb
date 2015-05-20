@@ -22,7 +22,7 @@ void vui::FocusController::addObject(FocusObject* obj) {
 }
 
 bool vui::FocusController::removeObject(const FocusObject* obj) {
-
+    return false;
 }
 
 void vui::FocusController::onMouseDown(Sender s, const MouseButtonEvent& e) {

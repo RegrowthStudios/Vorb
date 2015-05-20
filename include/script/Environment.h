@@ -52,6 +52,8 @@ namespace vorb {
             }
 
             bool load(const vio::Path& file);
+            bool hasFunction(const nString& name);
+            Function* tryFindFunction(const nString& name);
             void addCFunction(const nString& name, int(*f)(EnvironmentHandle));
             template<typename... Args>
             void addCDelegate(const nString& name, RDelegate<void, Args...>& del) {

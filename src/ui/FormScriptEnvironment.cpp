@@ -96,7 +96,8 @@ void vui::FormScriptEnvironment::dispose() {
 }
 
 void vui::FormScriptEnvironment::onOptionsChanged() {
-    (*m_env)[OPTIONS_CHANGE_FUNCTION_NAME]();
+    vscript::Function f = (*m_env)[OPTIONS_CHANGE_FUNCTION_NAME];
+    if (!f.isNil()) f();
 }
 
 void vui::FormScriptEnvironment::registerConstants() {

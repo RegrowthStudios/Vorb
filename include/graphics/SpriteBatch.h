@@ -33,7 +33,7 @@
 
 #include <cfloat> // For FTL_MAX
 
-#define CLIP_RECT_DEFAULT f32v4(-FLT_MIN / 2.0f, -FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)
+#define CLIP_RECT_DEFAULT f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)
 
 namespace vorb {
     namespace graphics {

@@ -34,6 +34,18 @@ DECL_VG(class SpriteFont)
 namespace vorb {
     namespace ui {
 
+        enum class WidgetAlign {
+            LEFT,
+            TOP_LEFT,
+            TOP,
+            TOP_RIGHT,
+            RIGHT,
+            BOTTOM_RIGHT,
+            BOTTOM,
+            BOTTOM_LEFT,
+            CENTER
+        };
+
         // Forward Declarations
         class UIRenderer;
 
@@ -70,7 +82,7 @@ namespace vorb {
             *
             * @param renderer: UIRenderer to add to.
             */
-            virtual void addDrawables(UIRenderer* renderer) { m_renderer = renderer; }
+            virtual void addDrawables(UIRenderer* renderer);
 
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
@@ -93,6 +105,12 @@ namespace vorb {
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
+            virtual const f32v2& getMinSize() const { return m_minSize; }
+            virtual const f32v2& getMaxSize() const { return m_maxSize; }
+            virtual const f32v2& getPositionPercentage() const { return m_positionPercentage; }
+            virtual const f32v2& getDimensionsPercentage() const { return m_dimensionsPercentage; }
+            virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
+
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
@@ -101,16 +119,32 @@ namespace vorb {
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setParent(IWidgetContainer* parent);
-
+            virtual void setPositionPercentage(const f32v2& positionPercentage) { m_positionPercentage = positionPercentage; updatePosition(); }
+            virtual void setDimensionsPercentage(const f32v2& dimensionsPercentage) { m_dimensionsPercentage = dimensionsPercentage; updateDimensions(); }
+            virtual void setXPercentage(f32 xPercentage) { m_positionPercentage.x = xPercentage; updatePosition(); }
+            virtual void setYPercentage(f32 yPercentage) { m_positionPercentage.y = yPercentage; updatePosition(); }
+            virtual void setMaxSize(const f32v2& maxSize) { m_maxSize = maxSize; updatePosition(); }
+            virtual void setMinSize(const f32v2& minSize) { m_minSize = minSize; updatePosition(); }
+            virtual void setWidthPercentage(f32 widthPercentage) { m_dimensionsPercentage.x = widthPercentage; updateDimensions(); }
+            virtual void setHeightPercentage(f32 heightPercentage) { m_dimensionsPercentage.y = heightPercentage; updateDimensions(); }
+            virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
+            
         protected:
+            virtual f32v2 getWidgetAlignOffset();
+            virtual void updateDimensions();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
             AnchorStyle m_anchor; ///< The anchor data.
             DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
             IWidgetContainer* m_parent = nullptr; ///< Parent container
+            f32v2 m_minSize = f32v2(0.0f);
+            f32v2 m_maxSize = f32v2(FLT_MAX);
+            f32v2 m_positionPercentage = f32v2(-1.0f); ///< Position as percentage of parent dims
+            f32v2 m_dimensionsPercentage = f32v2(-1.0f); ///< Dims as percentage of parent dims
             volatile bool m_needsDrawableReload = false;
         };
     }

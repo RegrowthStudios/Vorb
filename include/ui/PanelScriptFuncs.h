@@ -42,6 +42,9 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual VGTexture getTexture(Panel* p) const;
+            virtual color4 getColor(Panel* p) const;
+            virtual color4 getHoverColor(Panel* p) const;
+            virtual bool getAutoScroll(Panel* p) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -49,6 +52,7 @@ namespace vorb {
             virtual void setTexture(Panel* p, VGTexture texture) const;
             virtual void setColor(Panel* p, color4 color) const;
             virtual void setHoverColor(Panel* p, color4 color) const;
+            virtual void setAutoScroll(Panel* p, bool autoScroll) const;
         };
     }
 }

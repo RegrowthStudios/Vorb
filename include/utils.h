@@ -253,7 +253,21 @@ inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size)
     }
     return rv;
 }
-
+inline bool computeClipping(f32 clipPos, f32 clipWidth, f32& position, f32& width) {
+    bool rv = false;
+    if (position < clipPos) {
+        f32 t = clipPos - position;
+        position = clipPos;
+        width -= t;
+        rv = true;
+    }
+    if (position + width > clipPos + clipWidth) {
+        f32 t = position + width - (clipPos + clipWidth);
+        width -= t;
+        rv = true;
+    }
+    return rv;
+}
 /************************************************************************/
 /* Hash functions                                                       */
 /************************************************************************/

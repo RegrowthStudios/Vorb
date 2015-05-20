@@ -50,7 +50,7 @@ namespace vorb {
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
-            virtual void init(const nString& name, IGameScreen* ownerScreen, const ui32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(const nString& name, IGameScreen* ownerScreen, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Adds a widget to the Form and initializes it for rendering.
              * 
              * @param widget: The Widget to add.
@@ -78,8 +78,6 @@ namespace vorb {
             virtual void enable();
             
             virtual void disable();
-
-            virtual void setDimensions(const ui32v2& dimensions);
 
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks

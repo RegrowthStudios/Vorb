@@ -8,17 +8,22 @@
 #define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &PanelScriptFuncs::name));
 
 void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    env->setNamespaces(nSpace);
+    
     // Call base register
     WidgetScriptFuncs::init(nSpace, env);
 
+    env->setNamespaces(nSpace);
     { // Register all functions
         // Getters
         REGISTER_RDEL(env, getTexture);
+        REGISTER_RDEL(env, getColor);
+        REGISTER_RDEL(env, getHoverColor);
+        REGISTER_RDEL(env, getAutoScroll);
         // Setters
         REGISTER_DEL(env, setTexture);
         REGISTER_DEL(env, setColor);
         REGISTER_DEL(env, setHoverColor);
+        REGISTER_DEL(env, setAutoScroll);
     }
     env->setNamespaces();
 }
@@ -28,6 +33,18 @@ void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env
 
 VGTexture vui::PanelScriptFuncs::getTexture(Panel* p) const {
     return p->getTexture();
+}
+
+color4 vui::PanelScriptFuncs::getColor(Panel* p) const {
+    return p->getColor();
+}
+
+color4 vui::PanelScriptFuncs::getHoverColor(Panel* p) const {
+    return p->getHoverColor();
+}
+
+bool vui::PanelScriptFuncs::getAutoScroll(Panel* p) const {
+    return p->getAutoScroll();
 }
 
 void vui::PanelScriptFuncs::setTexture(Panel* p, VGTexture texture) const {
@@ -40,4 +57,8 @@ void vui::PanelScriptFuncs::setColor(Panel* p, color4 color) const {
 
 void vui::PanelScriptFuncs::setHoverColor(Panel* p, color4 color) const {
     p->setHoverColor(color);
+}
+
+void vui::PanelScriptFuncs::setAutoScroll(Panel* p, bool autoScroll) const {
+    p->setAutoScroll(autoScroll);
 }

@@ -75,7 +75,7 @@ namespace vorb {
 
             virtual bool isInSlideBounds(Slider* s, f32v2 point) const;
 
-            void onValueChange(Sender s, int v);
+            void onValueChange(Sender s, int v) const;
         };
     }
 }

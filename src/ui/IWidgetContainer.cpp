@@ -31,7 +31,6 @@ vui::IWidgetContainer::~IWidgetContainer() {
 void vui::IWidgetContainer::dispose() {
     for (auto& w : m_widgets) {
         w->dispose();
-        delete w;
     }
     std::vector<Widget*>().swap(m_widgets);
     for (int i = 0; i < 5; i++) std::vector<Widget*>().swap(m_dockedWidgets[i]);
@@ -62,11 +61,15 @@ bool vui::IWidgetContainer::removeWidget(Widget* child) {
 
 void vui::IWidgetContainer::enable() {
     m_isEnabled = true;
+    // Enable all children
+    for (auto& w : m_widgets) w->enable();
 }
 
 void vui::IWidgetContainer::disable() {
     m_isEnabled = false;
     m_isClicking = false;
+    // Disable all children
+    for (auto& w : m_widgets) w->disable();
 }
 
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
@@ -159,19 +162,29 @@ void vui::IWidgetContainer::recalculateDockedWidgets() {
     }
 }
 
-void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX)*/) {
-    f32v2 pos = m_position;
-    f32v2 dims = m_dimensions;
-    computeClipping(parentClipRect, pos, dims);
-    if (dims.x < 0) dims.x = 0;
-    if (dims.y < 0) dims.y = 0;
-    m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX)*/) {
+    if (m_isClippingEnabled) {
+        f32v2 pos = m_position;
+        f32v2 dims = m_dimensions;
+        computeClipping(parentClipRect, pos, dims);
+        if (dims.x < 0) dims.x = 0;
+        if (dims.y < 0) dims.y = 0;
+        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+    } else {
+        m_clipRect = parentClipRect;
+    }
     computeChildClipRects();
 }
 
 void vui::IWidgetContainer::computeChildClipRects() {
     for (auto& w : m_widgets) {
         w->computeClipRect(m_clipRect);
+    }
+}
+
+void vui::IWidgetContainer::updateChildPositions() {
+    for (auto& w : m_widgets) {
+        w->updatePosition();
     }
 }
 

@@ -49,6 +49,45 @@ void vui::CheckBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
+void vui::CheckBoxScriptFuncs::registerWidget(Widget* w) {
+    WidgetScriptFuncs::registerWidget(w);
+    CheckBox* c = (CheckBox*)w;
+    c->ValueChange += makeDelegate(*this, &CheckBoxScriptFuncs::onValueChange);
+}
+
+void vui::CheckBoxScriptFuncs::unregisterWidget(Widget* w) {
+    WidgetScriptFuncs::unregisterWidget(w);
+    CheckBox* c = (CheckBox*)w;
+    c->ValueChange -= makeDelegate(*this, &CheckBoxScriptFuncs::onValueChange);
+}
+
+bool vui::CheckBoxScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    CheckBox* c = (CheckBox*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            c->m_valueChangeFuncs.push_back(f); break;
+        default:
+            return false;
+    }
+    return true;
+}
+
+bool vui::CheckBoxScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
+    const vscript::Function& f = (*m_env)[funcName];
+    if (f.isNil()) return false;
+    CheckBox* c = (CheckBox*)w;
+    switch (eventType) {
+        case EventType::VALUE_CHANGE:
+            c->m_valueChangeFuncs.erase(std::find(c->m_valueChangeFuncs.begin(), c->m_valueChangeFuncs.end(), f));
+            break;
+        default:
+            return WidgetScriptFuncs::removeCallback(w, eventType, funcName);
+    }
+    return true;
+}
+
 void vui::CheckBoxScriptFuncs::check(CheckBox* c) const {
     c->check();
 }
@@ -147,4 +186,12 @@ void vui::CheckBoxScriptFuncs::setTextScale(CheckBox* c, f32v2 textScale) const 
 
 void vui::CheckBoxScriptFuncs::setChecked(CheckBox* c, bool checked) const {
     c->setChecked(checked);
+}
+
+void vui::CheckBoxScriptFuncs::onValueChange(Sender s, bool b) const {
+    CheckBox* w = (CheckBox*)s;
+    size_t sz = w->m_valueChangeFuncs.size();
+    for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
+        w->m_valueChangeFuncs[i](b);
+    }
 }

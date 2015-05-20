@@ -48,7 +48,7 @@ void vui::Label::setDestRect(const f32v4& destRect) {
 
 void vui::Label::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
@@ -58,27 +58,27 @@ void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
 
 void vui::Label::setHeight(f32 height) {
     Widget::setHeight(height);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setPosition(const f32v2& position) {
     Widget::setPosition(position);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setWidth(f32 width) {
     Widget::setWidth(width);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setX(f32 x) {
     Widget::setX(x);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setY(f32 y) {
     Widget::setY(y);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Label::setText(const nString& text) {

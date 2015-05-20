@@ -26,8 +26,8 @@
 
 #include <map>
 #include "IWidgetContainer.h"
-#include "../IDGenerator.h"
 #include "../VorbPreDecl.inl"
+#include "Widget.h"
 
 DECL_VSCRIPT(class Environment)
 
@@ -45,9 +45,6 @@ namespace vorb {
             MOUSE_MOVE,
             VALUE_CHANGE
         };
-
-        // Forward Declarations
-        class Widget;
 
         class WidgetScriptFuncs {
         public:
@@ -82,6 +79,7 @@ namespace vorb {
             virtual int getDock(Widget* w) const;
             virtual int getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
+            virtual bool getClippingEnabled(Widget* w) const;
             virtual f32 getHeight(Widget* w) const;
             virtual f32 getWidth(Widget* w) const;
             virtual f32 getX(Widget* w) const;
@@ -92,6 +90,11 @@ namespace vorb {
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
             virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual f32v2 getMinSize(Widget* w) const;
+            virtual f32v2 getMaxSize(Widget* w) const;
+            virtual f32v2 getPositionPercentage(Widget* w) const;
+            virtual f32v2 getDimensionsPercentage(Widget* w) const;
+            virtual WidgetAlign getWidgetAlign(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -111,6 +114,16 @@ namespace vorb {
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
             virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            virtual void setMinSize(Widget* w, f32v2 minSize) const;
+            virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
+            virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
+            virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
+            virtual void setXPercentage(Widget* w, f32 xPercentage) const;
+            virtual void setYPercentage(Widget* w, f32 yPercentage) const;
+            virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
+            virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
+            virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
+            virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

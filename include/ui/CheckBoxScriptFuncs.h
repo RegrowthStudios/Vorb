@@ -37,7 +37,14 @@ namespace vorb {
         class CheckBoxScriptFuncs : public WidgetScriptFuncs {
         public:
             void init(const cString nSpace, vscript::Environment* env) override;
+
+            virtual void registerWidget(Widget* w) override;
+            virtual void unregisterWidget(Widget* w) override;
         protected:
+            virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
+            /*! @brief Deregisters a LUA callback with a widget* */
+            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
+
             virtual void check(CheckBox* c) const;
             virtual void unCheck(CheckBox* c) const;
             virtual void toggleChecked(CheckBox* c) const;
@@ -71,6 +78,8 @@ namespace vorb {
             virtual void setTextAlign(CheckBox* c, vg::TextAlign textAlign) const;
             virtual void setTextScale(CheckBox* c, f32v2 textScale) const;
             virtual void setChecked(CheckBox* c, bool checked) const;
+
+            virtual void onValueChange(Sender s, bool b) const;
         };
     }
 }

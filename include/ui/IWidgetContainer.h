@@ -123,22 +123,24 @@ namespace vorb {
             virtual const nString& getName() const { return m_name; }
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual f32v4 getClipRect() const { return m_clipRect; }
+            virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/         
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; }        
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height) { m_dimensions.y = height; }
+            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateChildPositions(); }
             virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
-            virtual void setWidth(f32 width) { m_dimensions.x = width; }
+            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateChildPositions(); }
             virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
+            virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -157,8 +159,9 @@ namespace vorb {
             /*! Refreshes all docked widget positions and sizes. */
             void recalculateDockedWidgets();
             /*! Computes clipping for rendering and propagates through children. */
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX));
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
             virtual void computeChildClipRects();
+            virtual void updateChildPositions();
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -185,12 +188,14 @@ namespace vorb {
             ContainerStyle m_style; ///< The current style.
             std::vector<Widget*> m_widgets; ///< All child widgets.
             std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            f32v4 m_clipRect = f32v4(FLT_MIN / 2.0f, FLT_MIN / 2.0f, FLT_MAX, FLT_MAX);
+            f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX);
             f32v4 m_dockSizes = f32v4(0.0f); ///< Total size of each dock other than fill.
             f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent.
             f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
             f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
             nString m_name = ""; ///< Display name of the container.
+
+            bool m_isClippingEnabled = true;
 
             // TODO(Ben): Bitfield for memory reduction?.
             bool m_isClicking = false; ///< Used for click event tracking.

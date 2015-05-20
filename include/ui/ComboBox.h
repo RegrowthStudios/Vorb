@@ -27,6 +27,7 @@
 #include "Drawables.h"
 #include "Widget.h"
 #include "Button.h"
+#include "Panel.h"
 
 namespace vorb {
     namespace ui {
@@ -42,6 +43,7 @@ namespace vorb {
 
         // TODO(Ben): Proper combo box
         class ComboBox : public Widget {
+            friend class ComboBoxScriptFuncs;
         public:
             /*! @brief Default constructor. */
             ComboBox();
@@ -63,17 +65,10 @@ namespace vorb {
             /*! @brief Default destructor. */
             virtual ~ComboBox();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
-            */
-            virtual void addDrawables(UIRenderer* renderer) override;
+            virtual void dispose() override;
 
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables() override;
+            /*!@brief Updates the position relative to parent */
+            virtual void updatePosition() override;
 
             /*! @brief Adds an item to the combo box
              * 
@@ -124,16 +119,19 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
+            virtual const VGTexture& getTexture() const { return m_mainButton.getTexture(); }
             virtual const vorb::graphics::SpriteFont* getFont() const override;
-            virtual const color4& getBackColor() const { return m_backColor; }
-            virtual const color4& getBackHoverColor() const { return m_backHoverColor; }
-            virtual const color4& getTextColor() const { return m_textColor; }
-            virtual const color4& getTextHoverColor() const { return m_textHoverColor; }
+            virtual const color4& getBackColor() const { return m_mainButton.getBackColor(); }
+            virtual const color4& getBackHoverColor() const { return m_mainButton.getBackHoverColor(); }
+            virtual const color4& getTextColor() const { return m_mainButton.getTextColor(); }
+            virtual const color4& getTextHoverColor() const { return m_mainButton.getTextHoverColor(); }
             virtual f32v2 getTextScale() const;
             virtual const std::vector <nString>& getItems() const { return m_items; }
             virtual size_t getNumItems() const { return m_items.size(); }
             virtual const nString& getItem(int index) const;
+            virtual const vg::TextAlign& getTextAlign() const { return m_mainButton.getTextAlign(); }
+            virtual const nString& getText() const { return m_mainButton.getText(); }
+            virtual const f32& getMaxDropHeight() const { return m_maxDropHeight; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -141,28 +139,27 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
             virtual void setTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture);
             virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextScale(const f32v2& textScale);
+            virtual void setTextAlign(vg::TextAlign align);
+            virtual void setText(const nString& text);
+            virtual void setMaxDropHeight(f32 maxDropHeight);
 
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
-            virtual void updateDropButton(vorb::ui::Button& b);
-            virtual void updateColor();
-            virtual void updateTextPosition();
-            virtual void refreshDrawables();
+            virtual void updateDropButton(vorb::ui::Button* b);
+            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -172,15 +169,19 @@ namespace vorb {
             virtual void onMainButtonClick(Sender s, const MouseButtonEvent& e);
 
             /************************************************************************/
+            /* LUA Callbacks                                                        */
+            /************************************************************************/
+#ifdef VORB_USING_SCRIPT
+            std::vector<script::Function> m_valueChangeFuncs;
+#endif
+
+            /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect m_drawableRect, m_drawnRect;
-            DrawableRect m_drawableDropList, m_drawnDropList;
-            vorb::ui::Button m_mainButton; // Main button for dropping
-            std::list<vorb::ui::Button> m_buttons; // Sub buttons
-            color4 m_backColor = color::LightGray, m_backHoverColor = color::AliceBlue;
-            color4 m_textColor = color::Black, m_textHoverColor = color::Black;
-            const vg::SpriteFont* m_defaultFont = nullptr;
+            f32 m_maxDropHeight = FLT_MAX;
+            Panel m_dropPanel; // Panel that holds the drop buttons
+            Button m_mainButton; // Main button for dropping
+            std::vector<Button*> m_buttons; // Sub buttons
             DropDownStyle m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
             std::vector <nString> m_items; ///< All combo box items
             bool m_isDropped = false;

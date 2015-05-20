@@ -267,6 +267,18 @@
     <ClCompile Include="src\ui\LabelScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\GameWindowScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\WidgetList.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp">
+      <Filter>UI\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\FocusController.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -653,6 +665,18 @@
     </ClInclude>
     <ClInclude Include="include\ui\LabelScriptFuncs.h">
       <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\GameWindowScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetList.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetListScriptFuncs.h">
+      <Filter>UI\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\FocusController.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

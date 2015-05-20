@@ -26,6 +26,7 @@
 
 #include "Drawables.h"
 #include "Widget.h"
+#include "Slider.h"
 
 namespace vorb {
     namespace ui {
@@ -60,6 +61,14 @@ namespace vorb {
             * @param renderer: UIRenderer to add to
             */
             virtual void addDrawables(UIRenderer* renderer) override;
+            /*! @brief Removes all drawables from the UIRenderer
+            *
+            * @param renderer: UIRenderer to remove from
+            */
+            virtual void removeDrawables() override;
+
+
+            bool addWidget(Widget* child) override;
 
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
@@ -68,6 +77,10 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
+            virtual const bool& getAutoScroll() const { return m_autoScroll; }
+            virtual const f32& getSliderWidth() const { return m_sliderWidth; }
+            virtual const color4& getColor() const { return m_backColor; }
+            virtual const color4& getHoverColor() const { return m_backHoverColor; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -82,17 +95,25 @@ namespace vorb {
             virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
+            virtual void setAutoScroll(bool autoScroll);
 
         protected:
             virtual void updateColor();
+            virtual void updateSliders();
             virtual void refreshDrawables();
-
+           
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
+            virtual void onSliderValueChange(Sender s, int v);
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            f32 minX = FLT_MAX, maxX = -FLT_MAX, minY = FLT_MAX, maxY = -FLT_MAX; ///< Used for auto scroll
+            Slider m_sliders[2];
+            f32 m_sliderWidth = 15.0f;
+            bool m_autoScroll = false;
+            f32v2 m_childOffset = f32v2(0.0f);
             DrawableRect m_drawableRect, m_drawnRect;
             // Has no color by default
             color4 m_backColor = color::Transparent, m_backHoverColor = color::Transparent;

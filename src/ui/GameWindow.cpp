@@ -179,6 +179,23 @@ bool vui::GameWindow::init() {
     // TODO(Cristian): Place some defaults?
 #endif
 
+    // TODO(Ben): Handle for other IMPLs.
+#if defined(VORB_IMPL_UI_SDL)
+    { // Get supported window resolutions
+            SDL_DisplayMode mode;
+        // TODO(Ben): Handle other displays indices.
+        int displayIndex = 0;
+        int numDisplayModes = SDL_GetNumDisplayModes(displayIndex);
+        for (int i = 0; i < numDisplayModes; i++) {
+            SDL_GetDisplayMode(displayIndex, i, &mode);
+            ui32v2 res(mode.w, mode.h);
+            if (i == 0 || m_supportedResolutions.back() != res) {
+                m_supportedResolutions.push_back(res);
+            }
+        }
+    }
+#endif
+
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);
 
@@ -269,11 +286,12 @@ void vui::GameWindow::saveSettings() const {
 
 void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/) {
     // Apply A Minimal State Change
-    if (overrideCheck || m_displayMode.screenWidth != w || m_displayMode.screenHeight != h) {
+    if ((overrideCheck || m_displayMode.screenWidth != w || m_displayMode.screenHeight != h) && !m_displayMode.isFullscreen){
         m_displayMode.screenWidth = w;
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
+        InputDispatcher::window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
 #elif defined(VORB_IMPL_UI_SDL)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)
@@ -297,7 +315,7 @@ void vui::GameWindow::setFullscreen(bool useFullscreen, bool overrideCheck /*= f
     }
 }
 void vui::GameWindow::setBorderless(bool useBorderless, bool overrideCheck /*= false*/) {
-    if (overrideCheck || m_displayMode.isBorderless != useBorderless) {
+    if ((overrideCheck || m_displayMode.isBorderless != useBorderless) && !m_displayMode.isFullscreen) {
         m_displayMode.isBorderless = useBorderless;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowBordered((SDL_Window*)m_window, m_displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);

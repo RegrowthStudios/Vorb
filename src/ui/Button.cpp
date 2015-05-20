@@ -62,24 +62,24 @@ void vui::Button::setDestRect(const f32v4& destRect) {
 void vui::Button::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
     m_drawableRect.setDimensions(dimensions);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
     m_font = font;
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setHeight(f32 height) {
     Widget::setHeight(height);
     m_drawableRect.setHeight(height);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setPosition(const f32v2& position) {
     Widget::setPosition(position);
     m_drawableRect.setPosition(m_position);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setTexture(VGTexture texture) {
@@ -90,19 +90,19 @@ void vui::Button::setTexture(VGTexture texture) {
 void vui::Button::setWidth(f32 width) {
     Widget::setWidth(width);
     m_drawableRect.setWidth(width);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setX(f32 x) {
     Widget::setX(x);
     m_drawableRect.setX(m_position.x);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setY(f32 y) {
     Widget::setY(y);
     m_drawableRect.setX(m_position.y);
-    updateTextPosition();
+    updatePosition();
 }
 
 void vui::Button::setBackColor(const color4& color) {
@@ -220,6 +220,7 @@ void vui::Button::refreshDrawables() {
         m_drawnText = m_drawableText;
     }
     
+    m_drawableRect.setClipRect(m_clipRect);
     m_drawnRect = m_drawableRect;
 }
 

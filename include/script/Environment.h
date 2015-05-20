@@ -52,6 +52,13 @@ namespace vorb {
             }
 
             bool load(const vio::Path& file);
+            /*! @brief Determines if the function exists.
+             * It's more efficient to get the function with operator [] and
+             * check vscript::Function::isNil().
+             * @param name: Name of the function. 
+             * @return true if the function exists.
+             */
+            bool hasFunction(const nString& name);
             void addCFunction(const nString& name, int(*f)(EnvironmentHandle));
             template<typename... Args>
             void addCDelegate(const nString& name, RDelegate<void, Args...>& del) {

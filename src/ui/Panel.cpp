@@ -55,7 +55,18 @@ bool vui::Panel::addWidget(Widget* child) {
 
 void vui::Panel::updatePosition() {
     f32v2 newPos = m_relativePosition;
-    if (m_parent) newPos += m_parent->getPosition();
+    if (m_parent) {
+        // Handle percentages
+        if (m_positionPercentage.x >= 0.0f) {
+            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
+        }
+        if (m_positionPercentage.y >= 0.0f) {
+            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
+        }
+        m_relativePosition = newPos;
+        newPos += m_parent->getPosition();
+    }
+    newPos += getWidgetAlignOffset();
     m_position = newPos;
 
     // Update relative dimensions

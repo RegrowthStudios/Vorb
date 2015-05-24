@@ -13,10 +13,6 @@ vui::IWidgetContainer::IWidgetContainer() :
     MouseMove(this) {
     m_style = {};
     enable();
-    vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidgetContainer::onMouseDown);
-    vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &IWidgetContainer::onMouseUp);
-    vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &IWidgetContainer::onMouseMove);
-    vui::InputDispatcher::mouse.onFocusLost += makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
 }
 
 vui::IWidgetContainer::IWidgetContainer(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer() {
@@ -35,10 +31,8 @@ void vui::IWidgetContainer::dispose() {
     std::vector<Widget*>().swap(m_widgets);
     for (int i = 0; i < 5; i++) std::vector<Widget*>().swap(m_dockedWidgets[i]);
 
-    vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidgetContainer::onMouseDown);
-    vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidgetContainer::onMouseUp);
-    vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidgetContainer::onMouseMove);
-    vui::InputDispatcher::mouse.onFocusLost -= makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
+    disable();
+    
 }
 
 bool vui::IWidgetContainer::addWidget(Widget* child) {
@@ -60,13 +54,25 @@ bool vui::IWidgetContainer::removeWidget(Widget* child) {
 }
 
 void vui::IWidgetContainer::enable() {
-    m_isEnabled = true;
+    if (!m_isEnabled) {
+        m_isEnabled = true;
+        vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidgetContainer::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &IWidgetContainer::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &IWidgetContainer::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost += makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
+    }
     // Enable all children
     for (auto& w : m_widgets) w->enable();
 }
 
 void vui::IWidgetContainer::disable() {
-    m_isEnabled = false;
+    if (m_isEnabled) {
+        m_isEnabled = false;
+        vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidgetContainer::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidgetContainer::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidgetContainer::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost -= makeDelegate(*this, &IWidgetContainer::onMouseFocusLost);
+    }
     m_isClicking = false;
     // Disable all children
     for (auto& w : m_widgets) w->disable();

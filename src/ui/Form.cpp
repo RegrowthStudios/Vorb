@@ -66,17 +66,3 @@ void vui::Form::dispose() {
     IWidgetContainer::dispose();
     m_renderer.dispose();
 }
-
-void vui::Form::enable() {
-    if (!m_isEnabled) {
-        m_isEnabled = true;
-        for (auto& w : m_widgets) w->enable();
-    }
-}
-
-void vui::Form::disable() {
-    if (m_isEnabled) {
-        m_isEnabled = false;
-        for (auto& w : m_widgets) w->disable();
-    }
-}

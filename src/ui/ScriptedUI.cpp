@@ -19,8 +19,7 @@ void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScree
     m_window = window;
     m_destRect = destRect;
     m_defaultFont = defaultFont;
-    Form* mainForm = makeForm("main", startFormPath);
-    m_activeForms.push_back(std::make_pair(mainForm, m_forms[0].second));
+    makeForm("main", startFormPath);
 }
 
 void vui::ScriptedUI::draw() {
@@ -45,8 +44,8 @@ void vui::ScriptedUI::dispose() {
 }
 
 void vui::ScriptedUI::onOptionsChanged() {
-    for (auto& it : m_activeForms) {
-        it.second->onOptionsChanged();
+    for (auto& it : m_forms) {
+        if (it.first->isEnabled()) it.second->onOptionsChanged();
     }
 }
 
@@ -80,50 +79,18 @@ void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {
     vscript::Environment* env = newFormEnv->getEnv();
     env->setNamespaces();
     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
-    env->addCRDelegate("changeForm", makeRDelegate(*this, &ScriptedUI::changeFormString));
-    env->addCRDelegate("changeForm", makeRDelegate(*this, &ScriptedUI::changeForm));
     env->addCRDelegate("enableForm", makeRDelegate(*this, &ScriptedUI::enableForm));
     env->addCRDelegate("disableForm", makeRDelegate(*this, &ScriptedUI::disableForm));
+    env->addCRDelegate("getForm", makeRDelegate(*this, &ScriptedUI::getForm));
 }
 
-vui::Form* vui::ScriptedUI::changeFormString(nString nextForm) {
-    for (auto& it : m_forms) {
-        if (it.first->getName() == nextForm) {
-            // TODO(Ben): This won't work in all situations. Give this more thought
-            auto& mainForm = m_activeForms[0];
-            mainForm.first->disable();
-            mainForm.first = it.first;
-            mainForm.second = it.second;
-            mainForm.first->enable();
-            return mainForm.first;
-        }
-    }
-    return nullptr;
-}
-
-vui::Form* vui::ScriptedUI::changeForm(vui::Form* nextForm) {
-    for (auto& it : m_forms) {
-        if (it.first == nextForm) {
-            // TODO(Ben): This won't work in all situations. Give this more thought
-            auto& mainForm = m_activeForms[0];
-            mainForm.first->disable();
-            mainForm.first = it.first;
-            mainForm.second = it.second;
-            mainForm.first->enable();
-            return mainForm.first;
-        }
-    }
-    return nullptr;
-}
-
-vui::Form* vui::ScriptedUI::enableForm(vui::Form* form) {
+vui::Form* vui::ScriptedUI::enableForm(nString name) {
     // This is O(n) but its fine.
     for (auto& it : m_forms) {
         // What am I doing.
-        if (it.first == form) {
+        if (it.first->getName() == name) {
             if (!it.first->isEnabled()) {
                 it.first->enable();
-                m_activeForms.push_back(it);
                 return it.first;
             }
         }
@@ -131,18 +98,21 @@ vui::Form* vui::ScriptedUI::enableForm(vui::Form* form) {
     return nullptr;
 }
 
-vui::Form* vui::ScriptedUI::disableForm(vui::Form* form) {
+vui::Form* vui::ScriptedUI::disableForm(nString name) {
     // This is O(n) but its fine.
     for (auto& it : m_forms) {
-        if (it.first == form) {
+        if (it.first->getName() == name) {
             it.first->disable();
-            // Remove from active forms list
-            for (auto& it2 = m_activeForms.begin(); it2 != m_activeForms.end(); it2++) {
-                if ((*it2).first == it.first) {
-                    m_activeForms.erase(it2);
-                    break;
-                }
-            }
+            return it.first;
+        }
+    }
+    return nullptr;
+}
+
+vui::Form* vui::ScriptedUI::getForm(nString name) {
+    // This is O(n) but its fine.
+    for (auto& it : m_forms) {
+        if (it.first->getName() == name) {
             return it.first;
         }
     }

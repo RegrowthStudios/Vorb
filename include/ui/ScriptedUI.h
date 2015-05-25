@@ -40,6 +40,8 @@ namespace vorb {
 
         class ScriptedUI {
         public:
+            typedef std::pair<Form*, FormScriptEnvironment*> FormEnv;
+
             ScriptedUI();
             virtual ~ScriptedUI();
             virtual void init(const nString& startFormPath, IGameScreen* ownerScreen,
@@ -54,15 +56,15 @@ namespace vorb {
             VORB_NON_COPYABLE(ScriptedUI);
             virtual Form* makeForm(nString name, nString filePath);
             virtual void registerScriptValues(FormScriptEnvironment* newFormEnv);
-            virtual Form* changeForm(nString nextForm);
+            virtual Form* enableForm(nString name);
+            virtual Form* disableForm(nString name);
+            virtual Form* getForm(nString name);
 
             vg::SpriteFont* m_defaultFont = nullptr;
             f32v4 m_destRect;
             IGameScreen* m_ownerScreen = nullptr;
-            const GameWindow* m_window = nullptr;
-            Form* m_activeForm = nullptr;
-            FormScriptEnvironment* m_activeScriptEnvironment = nullptr;
-            std::vector<std::pair<Form*, FormScriptEnvironment*> > m_forms; ///< The forms and script envs in draw order
+            const GameWindow* m_window = nullptr;     
+            std::vector<FormEnv> m_forms; ///< The forms and script envs in draw order
         };
     }
 }

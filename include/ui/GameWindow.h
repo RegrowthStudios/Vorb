@@ -184,6 +184,8 @@ namespace vorb {
             void sync(ui32 frameTime);
 
             Event<> onQuit;
+
+            void saveSettings() const;
         private:
             VORB_NON_COPYABLE(GameWindow);
             VORB_MOVABLE_DECL(GameWindow);
@@ -195,7 +197,7 @@ namespace vorb {
             // Application Setting Management
             static void setDefaultSettings(GameDisplayMode* mode);
             void readSettings();
-            void saveSettings() const;
+            
         
             std::vector<ui32v2> m_supportedResolutions; ///< All resolutions supported by the window
             WindowHandle m_window = nullptr; ///< Window's OS handle.

@@ -378,6 +378,16 @@ void vui::GameWindow::setTitle(const cString title) const {
 #endif
 }
 
+void vui::GameWindow::setPosition(int x, int y) {
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_SetWindowPosition((SDL_Window*)m_window, x, y);
+#elif defined(VORB_IMPL_UI_GLFW)
+    // TODO(Ben): Implement
+#elif defined(VORB_IMPL_UI_SFML)
+    // TODO(Ben): Implement
+#endif
+}
+
 void vui::GameWindow::sync(ui32 frameTime) {
     pollInput();
 

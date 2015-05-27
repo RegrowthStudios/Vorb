@@ -178,6 +178,12 @@ namespace vorb {
             void setFullscreen(bool useFullscreen, bool overrideCheck = false);
             void setBorderless(bool useBorderless, bool overrideCheck = false);
             void setSwapInterval(GameSwapInterval mode, bool overrideCheck = false);
+            /*! @brief Sets the position of the window
+             * 
+             * @param x: X position. -1 will center it.
+             * @param Y: Y position. -1 will center it.
+             */
+            void setPosition(int x, int y);
             void setMaxFPS(f32 fpsLimit);
             void setTitle(const cString title) const;
         

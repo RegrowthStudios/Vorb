@@ -180,8 +180,8 @@ namespace vorb {
             void setSwapInterval(GameSwapInterval mode, bool overrideCheck = false);
             /*! @brief Sets the position of the window
              * 
-             * @param x: X position. -1 will center it.
-             * @param Y: Y position. -1 will center it.
+             * @param x: X position. 0 will center it.
+             * @param Y: Y position. 0 will center it.
              */
             void setPosition(int x, int y);
             void setMaxFPS(f32 fpsLimit);

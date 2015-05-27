@@ -66,8 +66,9 @@ VORB_MOVABLE_DEF(vui::GameWindow, o) {
     return *this;
 }
 
-bool vui::GameWindow::init() {
+bool vui::GameWindow::init(bool isResizable /*= true*/) {
     if (isInitialized()) return false;
+    m_displayMode.isResizable = isResizable;
 
     // Attempt to read custom settings
     readSettings();

@@ -66,8 +66,9 @@ VORB_MOVABLE_DEF(vui::GameWindow, o) {
     return *this;
 }
 
-bool vui::GameWindow::init() {
+bool vui::GameWindow::init(bool isResizable /*= true*/) {
     if (isInitialized()) return false;
+    m_displayMode.isResizable = isResizable;
 
     // Attempt to read custom settings
     readSettings();
@@ -375,6 +376,16 @@ void vui::GameWindow::setTitle(const cString title) const {
     glfwSetWindowTitle((GLFWwindow*)m_window, title);
 #elif defined(VORB_IMPL_UI_SFML)
     VUI_WINDOW_HANDLE(m_window)->setTitle(title);
+#endif
+}
+
+void vui::GameWindow::setPosition(int x, int y) {
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_SetWindowPosition((SDL_Window*)m_window, x, y);
+#elif defined(VORB_IMPL_UI_GLFW)
+    // TODO(Ben): Implement
+#elif defined(VORB_IMPL_UI_SFML)
+    // TODO(Ben): Implement
 #endif
 }
 

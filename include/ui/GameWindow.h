@@ -100,7 +100,7 @@ namespace vorb {
              * 
              * @return True if no error occurred.
              */
-            bool init();
+            bool init(bool isResizable = true);
             /*! @brief Destroys the window and associated graphics context.
              * 
              * @pre: This disposal method should be called on the thread where the window was created and the
@@ -178,6 +178,12 @@ namespace vorb {
             void setFullscreen(bool useFullscreen, bool overrideCheck = false);
             void setBorderless(bool useBorderless, bool overrideCheck = false);
             void setSwapInterval(GameSwapInterval mode, bool overrideCheck = false);
+            /*! @brief Sets the position of the window
+             * 
+             * @param x: X position. 0 will center it.
+             * @param Y: Y position. 0 will center it.
+             */
+            void setPosition(int x, int y);
             void setMaxFPS(f32 fpsLimit);
             void setTitle(const cString title) const;
         

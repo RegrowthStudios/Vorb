@@ -75,10 +75,6 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
-            virtual void enable() override;
-            
-            virtual void disable() override;
-
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
              * @param callbackName: Name of the custom callback 

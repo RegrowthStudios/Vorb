@@ -25,6 +25,10 @@
 
 #include "../io/Keg.h"
 
+#if defined(VORB_DX_11)
+struct ID3D11RenderTargetView;
+#endif
+
 namespace vorb {
     namespace ui {
 
@@ -172,6 +176,9 @@ namespace vorb {
              * @return This window's graphics context.
              */
             GraphicsContext getContext() const; // TODO(Cristian): Does returning the D3D Device cause convenience or confusion?
+#if defined(VORB_DX_11)
+            ID3D11RenderTargetView* getMainRenderTargetView() const;
+#endif
 
             // Change Display Settings
             void setScreenSize(i32 w, i32 h, bool overrideCheck = false);

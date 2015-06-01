@@ -36,6 +36,7 @@
 #pragma comment(lib, "d3d9.lib")
 #elif defined(VORB_DX_11)
 // TODO(Cristian): Link moar
+#pragma comment(lib, "d3d11.lib")
 #endif
 #else
 #error A graphics implementation must be specified

@@ -1,5 +1,5 @@
 //
-// GraphicsContext.h
+// IContext.h
 // Vorb Engine
 //
 // Created by Cristian Zaloj on 2 Jun 2015
@@ -7,15 +7,15 @@
 // All Rights Reserved
 //
 
-/*! \file GraphicsContext.h
- * @brief 
+/*! \file IContext.h
+ * @brief The context hold graphics resources that multiple devices may share.
  */
 
 #pragma once
 
-#ifndef Vorb_GraphicsContext_h__
+#ifndef Vorb_IContext_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_GraphicsContext_h__
+#define Vorb_IContext_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -24,9 +24,13 @@
 
 namespace vorb {
     namespace graphics {
-
+        /* @brief
+         */
+        class IContext {
+        public:
+        };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // !Vorb_GraphicsContext_h__
+#endif // !Vorb_IContext_h__

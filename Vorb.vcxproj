@@ -382,6 +382,10 @@
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
+    <ClInclude Include="include\graphics\IObject.h" />
+    <ClInclude Include="include\graphics\IResource.h" />
+    <ClInclude Include="include\graphics\IContext.h" />
+    <ClInclude Include="include\graphics\IDevice.h" />
     <ClInclude Include="include\graphics\RenderPipeline.h" />
     <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />

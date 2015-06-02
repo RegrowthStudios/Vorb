@@ -684,6 +684,18 @@
     <ClInclude Include="include\graphics\GraphicsContext.h">
       <Filter>Graphics\Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\IResource.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\IContext.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\IDevice.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\IObject.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

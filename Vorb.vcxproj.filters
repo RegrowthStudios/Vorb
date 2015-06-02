@@ -282,6 +282,15 @@
     <ClCompile Include="src\graphics\GraphicsContext.cpp">
       <Filter>Graphics\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\D3DContext.cpp">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\D3DDescCompile.cpp">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\IResource.cpp">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -696,6 +705,18 @@
     <ClInclude Include="include\graphics\IObject.h">
       <Filter>Graphics\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\ResourceDescriptions.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DContext.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DDescCompile.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DResource.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -790,6 +811,12 @@
     </Filter>
     <Filter Include="Graphics\Interfaces">
       <UniqueIdentifier>{b4cbad0b-3072-4b64-9669-d140b55dab51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Interfaces\D3D">
+      <UniqueIdentifier>{7286cb6a-c9a9-42e3-93e8-ab1a4d461e9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Interfaces\GL">
+      <UniqueIdentifier>{d41b602c-5912-4ad3-a528-b589aa3d75e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

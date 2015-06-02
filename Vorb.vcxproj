@@ -260,7 +260,10 @@
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
+    <ClCompile Include="src\graphics\D3DContext.cpp" />
+    <ClCompile Include="src\graphics\D3DDescCompile.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
+    <ClCompile Include="src\graphics\IResource.cpp" />
     <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src/graphics/IRenderStage.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
@@ -403,6 +406,7 @@
     <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
+    <ClInclude Include="include\graphics\ResourceDescriptions.h" />
     <ClInclude Include="include\graphics\ShaderInterface.h" />
     <ClInclude Include="include\graphics\ShaderManager.h" />
     <ClInclude Include="include\graphics\ShaderParser.h" />
@@ -479,6 +483,9 @@
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
+    <ClInclude Include="src\graphics\D3DContext.h" />
+    <ClInclude Include="src\graphics\D3DDescCompile.h" />
+    <ClInclude Include="src\graphics\D3DResource.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />
   </ItemGroup>

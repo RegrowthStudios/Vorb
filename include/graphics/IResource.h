@@ -19,7 +19,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 namespace vorb {
@@ -35,12 +35,16 @@ namespace vorb {
                 // Empty
             }
 
+            void dispose();
+
             virtual size_t getMemoryUsed() = 0;
         protected:
             IResource(IContext* owner) : 
                 m_owner(owner) {
                 // Empty
             }
+
+            virtual void disposeInternal() = 0;
 
             IContext* m_owner; ///< The context that created this resource
         };
@@ -51,7 +55,9 @@ namespace vorb {
         public:
 
         protected:
-            IBuffer(IContext* owner);
+            IBuffer(IContext* owner) : IResource(owner) {
+                // Empty
+            }
         };
 
         /* @brief
@@ -60,7 +66,9 @@ namespace vorb {
         public:
 
         protected:
-            ITexture(IContext* owner);
+            ITexture(IContext* owner) : IResource(owner) {
+                // Empty
+            }
         };
 
         /* @brief
@@ -69,7 +77,9 @@ namespace vorb {
         public:
 
         protected:
-            IShader(IContext* owner);
+            IShader(IContext* owner) : IResource(owner) {
+                // Empty
+            }
         };
     }
 }

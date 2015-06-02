@@ -19,15 +19,27 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace graphics {
+        class IBuffer;
+        struct BufferDescription;
+        struct CBufferDescription;
+
         /* @brief
          */
         class IContext {
+            friend class IResource;
         public:
+            virtual IBuffer* createBuffer(const BufferDescription& desc) = 0;
+            virtual IBuffer* createBuffer(const CBufferDescription* desc) = 0;
+
+        protected:
+            void add(IResource* resource);
+            void remove(IResource* resource);
+            void free(IResource* resource);
         };
     }
 }

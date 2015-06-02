@@ -5,6 +5,7 @@
 #define UNIT_TEST_BATCH Vorb_UI_
 
 #include <glm/gtx/transform.hpp>
+#include <d3dcompiler.h>
 #include <include/Graphics.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -209,28 +210,85 @@ TEST(SoloWindow) {
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
-    auto dev = (IDirect3DDevice9*)window.getContext();
-    f32m4 mat = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
-    dev->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&mat[0][0]);
-    dev->SetRenderState(D3DRS_AMBIENT, RGB(255, 255, 255));
-    dev->SetRenderState(D3DRS_LIGHTING, false);
-    dev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    dev->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-    dev->SetFVF((D3DFVF_XYZ | D3DFVF_DIFFUSE));
-    IDirect3DVertexBuffer9* tri_buffer = nullptr;
+    auto dev = (ID3D11Device*)window.getContext();
+    ID3D11DeviceContext* context;
+    dev->GetImmediateContext(&context);
+
+    ID3D11Buffer* tri_buffer = nullptr;
     void* pData;
     Vertex aTriangle[3] = {
-        { f32v3(-1.0f, -1.0f, -2.0f), color4(0x00, 0xff, 0x00, 0xff) },
-        { f32v3(0.0f, 1.0f, -3.0f), color4(0x00, 0x00, 0xff, 0xff) },
-        { f32v3(1.0f, 0.0f, -3.0f), color4(0xff, 0x00, 0x00, 0xff) }
+        { f32v3(-1.0f, -1.0f, 0.0f), color4(0x00, 0xff, 0x00, 0xff) },
+        { f32v3(0.0f, 1.0f, 0.0f), color4(0x00, 0x00, 0xff, 0xff) },
+        { f32v3(1.0f, 0.0f, 0.0f), color4(0xff, 0x00, 0x00, 0xff) }
     };
 
-    dev->CreateVertexBuffer(sizeof(aTriangle), D3DUSAGE_WRITEONLY,
-        (D3DFVF_XYZ | D3DFVF_DIFFUSE),
-        D3DPOOL_MANAGED, &tri_buffer, NULL);
-    tri_buffer->Lock(0, sizeof(pData), (void**)&pData, 0);
-    memcpy(pData, aTriangle, sizeof(aTriangle));
-    tri_buffer->Unlock();
+    // Fill in a buffer description.
+    D3D11_BUFFER_DESC bufferDesc;
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(Vertex) * 3;
+    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+    bufferDesc.MiscFlags = 0;
+
+    // Fill in the subresource data.
+    D3D11_SUBRESOURCE_DATA InitData;
+    InitData.pSysMem = aTriangle;
+    InitData.SysMemPitch = 0;
+    InitData.SysMemSlicePitch = 0;
+    dev->CreateBuffer(&bufferDesc, &InitData, &tri_buffer);
+
+    ID3D11VertexShader* fxVertex;
+    ID3D11InputLayout* vLayout;
+    {
+        char src[] = R"(
+struct VSInput {
+    float4 pos : POSITION0;
+    float4 color : COLOR0;
+};
+struct VSOutput {
+    float4 pos : SV_POSITION;
+    float4 color : COLOR0;
+};
+
+VSOutput main(VSInput input) {
+    VSOutput res;
+    res.pos = input.pos;
+    res.color = input.color;
+    return res;
+}
+)";
+        ID3DBlob* bytecode;
+        printf("Size of source: %d\n", sizeof(src));
+        auto hr = D3DCompile(src, sizeof(src), nullptr, nullptr, nullptr, "main", "vs_4_0", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &bytecode, nullptr);
+        hr = dev->CreateVertexShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, &fxVertex);
+
+        D3D11_INPUT_ELEMENT_DESC vDesc[2] = {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex, position), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, offsetof(Vertex, color), D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+        hr = dev->CreateInputLayout(vDesc, 2, bytecode->GetBufferPointer(), bytecode->GetBufferSize(), &vLayout);
+        bytecode->Release();
+
+    }
+    ID3D11PixelShader* fxPixel;
+    {
+        char src[] = R"(
+struct PSInput {
+    float4 position : SV_POSITION;
+    float4 color : COLOR0;
+};
+
+float4 main(PSInput input) : SV_TARGET {
+    return input.color;
+}
+)";
+        ID3DBlob* bytecode;
+        printf("Size of source: %d\n", sizeof(src));
+        auto hr = D3DCompile(src, sizeof(src), nullptr, nullptr, nullptr, "main", "ps_4_0", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &bytecode, nullptr);
+        hr = dev->CreatePixelShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, &fxPixel);
+        bytecode->Release();
+    }
+
 #endif
 
     PreciseTimer timer;
@@ -240,12 +298,17 @@ TEST(SoloWindow) {
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
-        dev->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-
-        dev->BeginScene();
-        dev->SetStreamSource(0, tri_buffer, 0, sizeof(Vertex));
-        dev->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
-        dev->EndScene();
+        f32 clearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+        context->ClearRenderTargetView(window.getMainRenderTargetView(), clearColor);
+ 
+        ui32 vertSize = sizeof(Vertex);
+        ui32 vertOffset = 0;
+        context->IASetVertexBuffers(0, 1, &tri_buffer, &vertSize, &vertOffset);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->IASetInputLayout(vLayout);
+        context->VSSetShader(fxVertex, nullptr, 0);
+        context->PSSetShader(fxPixel, nullptr, 0);
+        context->Draw(3, 0);
 #endif
 
         // Synchronize frame-step

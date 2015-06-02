@@ -279,6 +279,9 @@
     <ClCompile Include="src\ui\FocusController.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\GraphicsContext.cpp">
+      <Filter>Graphics\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -678,6 +681,9 @@
     <ClInclude Include="include\ui\FocusController.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsContext.h">
+      <Filter>Graphics\Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -769,6 +775,9 @@
     </Filter>
     <Filter Include="UI\Widgets">
       <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Interfaces">
+      <UniqueIdentifier>{b4cbad0b-3072-4b64-9669-d140b55dab51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

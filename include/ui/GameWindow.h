@@ -68,6 +68,17 @@ namespace vorb {
             USE_VALUE_CAP = 4 ///< Do not use monitor synchronization, but FPS cap and high resolution timer.
         };
         
+        /* 
+         */
+        struct GraphicsContextProperties {
+        public:
+            ui32 major; ///< Major version for the graphics context (ex. GL:4, DX:11).
+            ui32 minor; ///< Minor version for the graphics context (ex. GL:4, DX:0).
+            bool core; ///< True if the graphics context should disable compatibility with lower versions.
+            bool debugging; ///< True if the graphics context should enable debugging features.
+            ui32 swapChainSize; ///< Number of framebuffers in the swap chain.
+        };
+
         /*! @brief Window properties that additionally define graphics usage.
          */
         struct GameDisplayMode {
@@ -82,9 +93,7 @@ namespace vorb {
             GameSwapInterval swapInterval; ///< Synchronization value for the system's refresh rate.
             f32 maxFPS; ///< Maximum desired FPS with if the FPS limiter is used.
 
-            ui32 major; ///< Major version for the graphics context (ex. GL:4, DX:11).
-            ui32 minor; ///< Minor version for the graphics context (ex. GL:4, DX:0).
-            bool core; ///< True if the graphics context should disable compatability with lower versions.
+            GraphicsContextProperties context; ///< Properties related to the creation of the graphics context.
         };
         
         class GameWindow {
@@ -223,6 +232,7 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 KEG_ENUM_DECL(GameSwapInterval);
+KEG_TYPE_DECL(GraphicsContextProperties);
 KEG_TYPE_DECL(GameDisplayMode);
 
 

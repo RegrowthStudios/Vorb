@@ -4,6 +4,7 @@
 #if defined(VORB_IMPL_UI_SDL)
 #if defined(OS_WINDOWS)
 #include <SDL/SDL.h>
+#include <SDL/SDL_syswm.h>
 #else
 #include <SDL2/SDL.h>
 #endif
@@ -36,6 +37,14 @@ KEG_ENUM_DEF(GameSwapInterval, vui::GameSwapInterval, ke) {
     ke.addValue("PowerSaver", vui::GameSwapInterval::POWER_SAVER);
     ke.addValue("ValueCap", vui::GameSwapInterval::USE_VALUE_CAP);
 }
+KEG_TYPE_DEF(GraphicsContextProperties, vui::GraphicsContextProperties, kt) {
+    using namespace keg;
+    kt.addValue("Major", Value::value(&vui::GraphicsContextProperties::major));
+    kt.addValue("Minor", Value::value(&vui::GraphicsContextProperties::minor));
+    kt.addValue("Core", Value::value(&vui::GraphicsContextProperties::core));
+    kt.addValue("Debugging", Value::value(&vui::GraphicsContextProperties::debugging));
+    kt.addValue("SwapChainSize", Value::value(&vui::GraphicsContextProperties::swapChainSize));
+}
 KEG_TYPE_DEF(GameDisplayMode, vui::GameDisplayMode, kt) {
     using namespace keg;
     kt.addValue("ScreenWidth", Value::value(&vui::GameDisplayMode::screenWidth));
@@ -44,9 +53,7 @@ KEG_TYPE_DEF(GameDisplayMode, vui::GameDisplayMode, kt) {
     kt.addValue("IsBorderless", Value::value(&vui::GameDisplayMode::isBorderless));
     kt.addValue("SwapInterval", Value::custom(offsetof(vui::GameDisplayMode, swapInterval), "GameSwapInterval", true));
     kt.addValue("MaxFPS", Value::value(&vui::GameDisplayMode::maxFPS));
-    kt.addValue("GraphicsMajor", Value::value(&vui::GameDisplayMode::major));
-    kt.addValue("GraphicsMinor", Value::value(&vui::GameDisplayMode::minor));
-    kt.addValue("GraphicsCore", Value::value(&vui::GameDisplayMode::core));
+    kt.addValue("GraphicsContext", Value::custom(offsetof(vui::GameDisplayMode, context), "GraphicsContextProperties", false));
 }
 
 vui::GameWindow::GameWindow() :
@@ -79,6 +86,17 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
     if (m_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
     if (m_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
     m_window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_displayMode.screenWidth, m_displayMode.screenHeight, flags);
+    
+    // Obtain the native OS handle to the window
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(VUI_WINDOW_HANDLE(m_window), &wmInfo);
+#if defined(OS_WINDOWS)
+    HWND hWnd = wmInfo.info.win.window;
+#else
+#error Plug'n'play your OS here
+#endif
+
 #elif defined(VORB_IMPL_UI_GLFW)
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_RESIZABLE, 0);
@@ -163,20 +181,26 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
     sd.SampleDesc.Quality = 0;
     sd.Windowed = TRUE;
 
-    const D3D_FEATURE_LEVEL lvl[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
-        D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 };
+    const D3D_FEATURE_LEVEL lvl[7] = {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2, 
+        D3D_FEATURE_LEVEL_9_1 
+    };
 
     UINT createDeviceFlags = 0;
 #ifdef DEBUG
-    // createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
     D3D_FEATURE_LEVEL  featureLevelsSupported;
     ID3D11Device* device = nullptr;
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, lvl, _countof(lvl), D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, lvl, 7, D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
     if (hr != S_OK) {
-        hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, &lvl[1], _countof(lvl) - 1, D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, &lvl[1], 6, D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
     }
 
     // Get a pointer to the back buffer and set it
@@ -313,15 +337,20 @@ void vui::GameWindow::setDefaultSettings(GameDisplayMode* mode) {
     mode->isResizable = true;
     mode->maxFPS = DEFAULT_MAX_FPS;
     mode->swapInterval = DEFAULT_SWAP_INTERVAL;
+
+    // Set up default graphics context properties
 #if defined(VORB_IMPL_GRAPHICS_D3D)
-    mode->major = 9;
-    mode->minor = 0;
+    mode->context.major = 9;
+    mode->context.minor = 0;
 #elif defined(VORB_IMPL_GRAPHICS_OPENGL)
-    mode->major = 3;
-    mode->minor = 2;
+    mode->context.major = 3;
+    mode->context.minor = 2;
 #endif
-    mode->core = false;
+    mode->context.core = false;
+    mode->context.debugging = true;
+    mode->context.swapChainSize = 2;
 }
+
 void vui::GameWindow::readSettings() {
     vio::IOManager iom;
     cString data = iom.readFileToString(DEFAULT_APP_CONFIG_FILE);

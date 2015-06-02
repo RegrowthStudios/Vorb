@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_D3D;VORB_DX_11;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -123,7 +123,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_D3D;VORB_DX_11;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -149,7 +149,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_D3D;VORB_DX_11;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -179,7 +179,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_OPENGL;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VORB_USING_PCH;VORB_USING_SCRIPT;SFML_STATIC;VORB_IMPL_FONT_SDL;VORB_IMPL_UI_SDL;VORB_IMPL_GRAPHICS_D3D;VORB_DX_11;VORB_IMPL_SOUND_FMOD;FREEIMAGE_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)deps/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -260,6 +260,7 @@
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
+    <ClCompile Include="src\graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src/graphics/IRenderStage.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
@@ -380,6 +381,7 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
+    <ClInclude Include="include\graphics\GraphicsContext.h" />
     <ClInclude Include="include\graphics\RenderPipeline.h" />
     <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />

@@ -20,13 +20,21 @@
 /************************************************************************/
 /* Common                                                               */
 /************************************************************************/
-#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL )
 #pragma message("VORB LIB: Linking GRAPHICS=OPENGL")
 #pragma message("Linking against <opengl32.lib>")
 #pragma comment(lib, "opengl32.lib")
 #pragma message("Linking against <glew32.lib>")
 #pragma comment(lib, "glew32.lib")
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
+// TODO(Cristian): Remove once graphics is fully independent
+#pragma message("VORB LIB: Linking GRAPHICS=OPENGL")
+#pragma message("Linking against <opengl32.lib>")
+#pragma comment(lib, "opengl32.lib")
+#pragma message("Linking against <glew32.lib>")
+#pragma comment(lib, "glew32.lib")
+
+
 #ifndef OS_WINDOWS
 #error DirectX is Windows-only
 #endif // !OS_WINDOWS

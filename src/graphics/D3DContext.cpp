@@ -6,15 +6,15 @@
 #include "D3DDescCompile.h"
 #include "D3DResource.h"
 
-vg::IBuffer* vg::D3DContext::createBuffer(const BufferDescription& desc) {
+vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc) {
     // Create the D3D buffer description on the stack
     CBufferDescription cDesc = {};
     fill(cDesc, desc);
 
     // Generate buffer
-    return createBuffer(&cDesc);
+    return create(&cDesc);
 }
-vg::IBuffer* vg::D3DContext::createBuffer(const CBufferDescription* desc) {
+vg::IBuffer* vg::D3DContext::create(const CBufferDescription* desc) {
     // Allocate buffer instance
     D3DBuffer* buffer = new D3DBuffer(this);
     buffer->size = desc->ByteWidth;

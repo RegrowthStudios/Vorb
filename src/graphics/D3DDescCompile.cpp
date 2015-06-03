@@ -40,18 +40,19 @@ void vg::fill(CBufferDescription& v, const BufferDescription& desc) {
     case BufferUsageHint::DYNAMIC_COPY:
     case BufferUsageHint::STATIC_COPY:
     case BufferUsageHint::STREAM_COPY:
-        v.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        v.CPUAccessFlags = 0; // Sucks don't it
         break;
     case BufferUsageHint::DYNAMIC_READ:
     case BufferUsageHint::STATIC_READ:
     case BufferUsageHint::STREAM_READ:
-        v.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        v.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
         break;
     case BufferUsageHint::DYNAMIC_DRAW:
     case BufferUsageHint::STATIC_DRAW:
     case BufferUsageHint::STREAM_DRAW:
-        v.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        v.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         break;
+        // TODO(Cristian): Add RW capability
     default:
         break;
     }

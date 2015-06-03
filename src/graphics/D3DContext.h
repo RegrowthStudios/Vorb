@@ -30,8 +30,8 @@ namespace vorb {
     namespace graphics {
         class D3DContext : public IContext {
         public:
-            virtual IBuffer* createBuffer(const BufferDescription& desc) override;
-            virtual IBuffer* createBuffer(const CBufferDescription* desc) override;
+            virtual IBuffer* create(const BufferDescription& desc) override;
+            virtual IBuffer* create(const CBufferDescription* desc) override;
 
 
         private:

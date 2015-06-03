@@ -33,8 +33,8 @@ namespace vorb {
         class IContext {
             friend class IResource;
         public:
-            virtual IBuffer* createBuffer(const BufferDescription& desc) = 0;
-            virtual IBuffer* createBuffer(const CBufferDescription* desc) = 0;
+            virtual IBuffer* create(const BufferDescription& desc) = 0;
+            virtual IBuffer* create(const CBufferDescription* desc) = 0;
 
         protected:
             void add(IResource* resource);

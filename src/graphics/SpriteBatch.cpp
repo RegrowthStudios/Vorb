@@ -297,7 +297,7 @@ void vg::SpriteBatch::render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs
     glUniformMatrix4fv(shader->getUniform("World"), 1, false, &mWorld[0][0]);
     glUniformMatrix4fv(shader->getUniform("VP"), 1, false, &mCamera[0][0]);
 
-    glBindVertexArray(m_vao); // TODO(Ben): This wont work with custom shaders!
+    glBindVertexArray(m_vao); // TODO(Ben): This wont work with all custom shaders!
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(shader->getUniform("SBTex"), 0);

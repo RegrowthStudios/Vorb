@@ -96,7 +96,7 @@ void vg::Mesh::draw() {
     // Need to have uploaded our data
     assert(_isUploaded);
     // A shader needs to be bound
-    assert(vg::GLProgram::getCurrentProgram() != nullptr);
+    assert(vg::GLProgram::getCurrentProgram() != 0);
 
     // Bind the VAO
     glBindVertexArray(_vao);

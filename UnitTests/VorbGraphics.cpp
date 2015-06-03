@@ -5,7 +5,6 @@
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
 #include <glm/gtx/transform.hpp>
-#include <random>
 #include <include/MeshGenerators.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -16,6 +15,7 @@
 #include <include/graphics/ImageIO.h>
 #include <include/graphics/ModelIO.h>
 #include <include/graphics/RenderPipeline.h>
+#include <include/graphics/ShaderManager.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
 #include <include/graphics/Texture.h>
@@ -24,6 +24,7 @@
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
 #include <include/ui/ScreenList.h>
+#include <random>
 
 struct ImageTestFormats {
 public:
@@ -724,27 +725,22 @@ public:
     class QuadRenderStage : public vg::IRenderStage {
     public:
         void render() override {
-            if (!m_program) {
+            if (!m_program.isCreated()) {
                 printf("Building shader\n");
-                m_program = new vg::GLProgram(true);
-                m_program->addShader(vg::ShaderType::VERTEX_SHADER, R"(
+                m_program = vg::ShaderManager::createProgram(R"(
 uniform vec2 unOffset;
 in vec4 vPosition;
 void main() {
     gl_Position = vPosition + vec4(unOffset, 0.0, 0.0);
 }
-)");
-                m_program->addShader(vg::ShaderType::FRAGMENT_SHADER, R"(
+)", R"(
 uniform vec4 unColor;
 out vec4 pColor;
 void main() {
     pColor = unColor;
 }
 )");
-                m_program->link();
-                m_program->initAttributes();
-                m_program->initUniforms();
-                if (!m_program->getIsLinked()) throw 123;
+                if (!m_program.isLinked()) throw 123;
             }
             if (!m_verts) {
                 printf("Building vbo\n");
@@ -754,16 +750,16 @@ void main() {
                 glBindBuffer(GL_ARRAY_BUFFER, m_verts);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
             }
-            m_program->use();
-            m_program->enableVertexAttribArrays();
-            glUniform4fv(m_program->getUniform("unColor"), 1, &m_color[0]);
-            glUniform2fv(m_program->getUniform("unOffset"), 1, &m_offset[0]);
+            m_program.use();
+            m_program.enableVertexAttribArrays();
+            glUniform4fv(m_program.getUniform("unColor"), 1, &m_color[0]);
+            glUniform2fv(m_program.getUniform("unOffset"), 1, &m_offset[0]);
             glBindBuffer(GL_ARRAY_BUFFER, m_verts);
-            glVertexAttribPointer(m_program->getAttribute("vPosition"), 2, GL_FLOAT, GL_FALSE, 0, 0);
+            glVertexAttribPointer(m_program.getAttribute("vPosition"), 2, GL_FLOAT, GL_FALSE, 0, 0);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            m_program->disableVertexAttribArrays();
-            m_program->unuse();
+            m_program.disableVertexAttribArrays();
+            m_program.unuse();
         }
         void dispose() override {
             IRenderStage::dispose();

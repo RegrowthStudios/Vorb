@@ -15,13 +15,12 @@
 #ifndef IRenderStage_h_
 #define IRenderStage_h_
 
+#include "GLProgram.h"
+
 class Camera; // TODO: We need to implement one
 
 namespace vorb {
     namespace graphics {
-
-        // Forward Decl
-        class GLProgram;
 
         class IRenderStage {
         public:
@@ -65,7 +64,7 @@ namespace vorb {
             virtual const nString& getName() const { return m_name; }
 
         protected:
-            GLProgram* m_program = nullptr; ///< Optional shader program
+            GLProgram m_program; ///< Optional shader program
             const Camera* m_camera = nullptr; ///< Optional Camera, not needed for post processing stages
             bool m_isVisible = true; ///< Determines if the stage should be rendered
             nString m_name = ""; ///< Display name of the stage

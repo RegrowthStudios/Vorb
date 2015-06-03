@@ -14,18 +14,10 @@ vg::IRenderStage::~IRenderStage() {
 }
 
 void vorb::graphics::IRenderStage::reloadShader() {
-    if (m_program) {
-        m_program->dispose();
-        delete m_program;
-        m_program = nullptr;
-    }
+    if (m_program.isCreated()) m_program.dispose();
 }
 
 void vorb::graphics::IRenderStage::dispose() {
-    if (m_program) {
-        m_program->dispose();
-        delete m_program;
-        m_program = nullptr;
-    }
+    if (m_program.isCreated()) m_program.dispose();
     m_isVisible = false;
 }

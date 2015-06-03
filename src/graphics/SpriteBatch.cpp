@@ -13,7 +13,7 @@
 #define VERTS_PER_QUAD 4
 #define INDICES_PER_QUAD 6
 
-vg::GLProgram* vg::SpriteBatch::m_program = nullptr;
+vg::GLProgram vg::SpriteBatch::m_program = nullptr;
 
 vg::SpriteBatch::Vertex::Vertex(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const ColorRGBA8& color) :
     position(pos),
@@ -64,7 +64,7 @@ vg::SpriteBatch::~SpriteBatch() {
 
 void vg::SpriteBatch::init() {
     // Create program if it's not cached
-    if (!m_program) m_program = vg::ShaderManager::createProgram(impl::SPRITEBATCH_VS_SRC, impl::SPRITEBATCH_FS_SRC);
+    if (!m_program.isCreated()) m_program = vg::ShaderManager::createProgram(impl::SPRITEBATCH_VS_SRC, impl::SPRITEBATCH_FS_SRC);
 
     { // Create VAO
         glGenVertexArrays(1, &m_vao);
@@ -76,11 +76,11 @@ void vg::SpriteBatch::init() {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 
-        m_program->enableVertexAttribArrays();
-        glVertexAttribPointer(m_program->getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
-        glVertexAttribPointer(m_program->getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
-        glVertexAttribPointer(m_program->getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-        glVertexAttribPointer(m_program->getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
+        m_program.enableVertexAttribArrays();
+        glVertexAttribPointer(m_program.getAttribute("vPosition"), 3, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, position));
+        glVertexAttribPointer(m_program.getAttribute("vTint"), 4, GL_UNSIGNED_BYTE, true, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glVertexAttribPointer(m_program.getAttribute("vUV"), 2, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+        glVertexAttribPointer(m_program.getAttribute("vUVRect"), 4, GL_FLOAT, false, sizeof(Vertex), (void*)offsetof(Vertex, uvRect));
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -285,7 +285,7 @@ void vg::SpriteBatch::render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs
     if (ds == nullptr) ds = &DepthState::NONE;
     if (rs == nullptr) rs = &RasterizerState::CULL_NONE;
     if (ss == nullptr) ss = &SamplerState::LINEAR_WRAP;
-    if (shader == nullptr) shader = m_program;
+    if (shader == nullptr) shader = &m_program;
 
     // Setup The Shader
     //bs->set();
@@ -415,10 +415,8 @@ void vg::SpriteBatch::generateBatches() {
 }
 
 void vg::SpriteBatch::disposeProgram() {
-    if (m_program) {
-        m_program->dispose();
-        delete m_program;
-        m_program = nullptr;
+    if (m_program.isCreated()) {
+        m_program.dispose();
     }
 }
 

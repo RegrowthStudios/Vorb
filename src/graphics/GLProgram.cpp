@@ -14,14 +14,14 @@ const vg::ShaderLanguageVersion vg::DEFAULT_SHADING_LANGUAGE_VERSION = vg::Shade
     GL_PROGRAM_DEFAULT_SHADER_VERSION_REVISION
 );
 
-vg::GLProgram* vg::GLProgram::m_programInUse = nullptr;
+VGProgram vg::GLProgram::m_programInUse = 0;
 
 vg::GLProgram::GLProgram(bool init /*= false*/) {
     if (init) this->init();
 }
 
 void vg::GLProgram::init() {
-    if (getIsCreated()) return;
+    if (isCreated()) return;
     m_isLinked = false;
     m_id = glCreateProgram();
 }
@@ -38,18 +38,19 @@ void vg::GLProgram::dispose() {
 
     // Delete the program
     if (m_id) {
-        m_attributes.clear();
-        m_uniforms.clear();
-        m_semanticBinding.clear();
+     
         glDeleteProgram(m_id);
         m_id = 0;
         m_isLinked = false;
     }
+    AttributeMap().swap(m_attributes);
+    UniformMap().swap(m_uniforms);
+    AttributeSemBinding().swap(m_semanticBinding);
 }
 
 bool vg::GLProgram::addShader(const ShaderSource& data) {
     // Check current state
-    if (getIsLinked() || !getIsCreated()) {
+    if (isLinked() || !isCreated()) {
         onShaderCompilationError("Cannot add a shader to a fully created or non-existent program");
         return false;
     }
@@ -128,7 +129,7 @@ bool vg::GLProgram::addShader(const ShaderType& type, const cString code, const 
 
 void vg::GLProgram::setAttribute(nString name, VGAttribute index) {
     // Adding attributes to a linked program does nothing
-    if (getIsLinked() || !getIsCreated()) return;
+    if (isLinked() || !isCreated()) return;
 
     // Set the custom attribute
     glBindAttribLocation(m_id, index, name.c_str());
@@ -136,7 +137,7 @@ void vg::GLProgram::setAttribute(nString name, VGAttribute index) {
 }
 void vg::GLProgram::setAttributes(const std::map<nString, VGAttribute>& attr) {
     // Adding attributes to a linked program does nothing
-    if (getIsLinked() || !getIsCreated()) return;
+    if (isLinked() || !isCreated()) return;
 
     // Set the custom attributes
     for (auto& binding : attr) {
@@ -146,7 +147,7 @@ void vg::GLProgram::setAttributes(const std::map<nString, VGAttribute>& attr) {
 }
 void vg::GLProgram::setAttributes(const std::vector<AttributeBinding>& attr) {
     // Adding attributes to a linked program does nothing
-    if (getIsLinked() || !getIsCreated()) return;
+    if (isLinked() || !isCreated()) return;
 
     // Set the custom attributes
     for (auto& binding : attr) {
@@ -156,7 +157,7 @@ void vg::GLProgram::setAttributes(const std::vector<AttributeBinding>& attr) {
 }
 void vg::GLProgram::setAttributes(const std::vector<nString>& attr) {
     // Adding attributes to a linked program does nothing
-    if (getIsLinked() || !getIsCreated()) return;
+    if (isLinked() || !isCreated()) return;
 
     // Set the custom attributes
     for (ui32 i = 0; i < attr.size(); i++) {
@@ -177,7 +178,7 @@ void vg::GLProgram::setAttributes(const std::vector<nString>& attr, const std::v
 
 bool vg::GLProgram::link() {
     // Check internal state
-    if (getIsLinked() || !getIsCreated()) {
+    if (isLinked() || !isCreated()) {
         linkError("Cannot link a fully created or non-existent program");
         return false;
     }
@@ -213,7 +214,7 @@ bool vg::GLProgram::link() {
 }
 
 void vg::GLProgram::initAttributes() {
-    if (!getIsLinked()) return;
+    if (!isLinked()) return;
 
     // Obtain attribute count
     i32 count;
@@ -239,7 +240,7 @@ void vg::GLProgram::initAttributes() {
     }
 }
 void vg::GLProgram::initUniforms() {
-    if (!getIsLinked()) return;
+    if (!isLinked()) return;
 
     // Obtain uniform count
     i32 count;
@@ -282,15 +283,15 @@ void vg::GLProgram::disableVertexAttribArrays() const {
 }
 
 void vg::GLProgram::use() {
-    if (!getIsInUse()) {
-        m_programInUse = this;
+    if (!isInUse()) {
+        m_programInUse = m_id;
         glUseProgram(m_id);
     }
 }
 
 void vg::GLProgram::unuse() {
     if (m_programInUse) {
-        m_programInUse = nullptr;
+        m_programInUse = 0;
         glUseProgram(0);
     }
 }

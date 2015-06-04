@@ -807,10 +807,10 @@ void main() {
         std::shared_ptr<QuadRenderStage> s4 = std::make_shared<QuadRenderStage>();
         s4->setColor(f32v4(0.0f, 0.0f, 1.0f, 1.0f));
         s4->setOffset(f32v2(1.0f, 1.0f));
-        m_pipeline.addStage(s1);
-        m_pipeline.addStage(s2);
-        m_pipeline.addStage(s3);
-        m_pipeline.addStage(s4);
+        m_pipeline.registerStage(s1.get());
+        m_pipeline.registerStage(s2.get());
+        m_pipeline.registerStage(s3.get());
+        m_pipeline.registerStage(s4.get());
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         m_pipeline.destroy(true);

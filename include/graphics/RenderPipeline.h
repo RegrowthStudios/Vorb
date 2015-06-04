@@ -35,18 +35,19 @@ namespace vorb {
             RenderPipeline();
             virtual ~RenderPipeline();
 
-            typedef std::shared_ptr<IRenderStage> StagePtr;
-
             /// Sets the camera for the render stages.
             /// Overwrites any existing cameras for tracked stages.
             /// @param Camera: Camera to set
             virtual void setCamera(Camera* camera);
 
+            /// Gets the current camera
+            virtual const Camera* getCamera() const { return m_camera; }
+
             /// Adds a stage to the internal stack of stages
             /// Also sets its camera if the render pipeline has a camera
             /// @param stage: The render stage to add
             /// @return handle to the stage
-            IRenderStage* addStage(StagePtr stage);
+            void registerStage(IRenderStage* stage);
 
             /// Renders the pipeline
             virtual void render();
@@ -64,7 +65,7 @@ namespace vorb {
             virtual void reloadShaders();
         protected:
             Camera* m_camera = nullptr; ///< Optional camera for rendering.
-            std::vector <StagePtr> m_stages; ///< List of all stages
+            std::vector<IRenderStage*> m_stages; ///< List of all stages
         };
     }
 }

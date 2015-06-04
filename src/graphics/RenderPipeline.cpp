@@ -17,9 +17,8 @@ void vorb::graphics::RenderPipeline::setCamera(Camera* camera) {
     }
 }
 
-vg::IRenderStage* vorb::graphics::RenderPipeline::addStage(StagePtr stage) {
+void vorb::graphics::RenderPipeline::registerStage(IRenderStage* stage) {
     m_stages.push_back(stage);
-    return stage.get();
 }
 
 void vorb::graphics::RenderPipeline::render() {
@@ -32,10 +31,7 @@ void vorb::graphics::RenderPipeline::destroy(bool shouldDisposeStages) {
     if (shouldDisposeStages) {
         disposeStages();
     }
-    for (auto& stage : m_stages) {
-        stage.reset();
-    }
-    std::vector <StagePtr>().swap(m_stages);
+    std::vector <IRenderStage*>().swap(m_stages);
 }
 
 void vorb::graphics::RenderPipeline::disposeStages() {

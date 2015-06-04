@@ -25,17 +25,34 @@
 #include "graphics/IContext.h"
 
 struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct IDXGIAdapter;
+struct IDXGIDevice;
+struct IDXGIFactory;
+struct IDXGISwapChain;
 
 namespace vorb {
     namespace graphics {
+        class D3DDevice;
+
         class D3DContext : public IContext {
+            friend class D3DAdapter;
         public:
             virtual IBuffer* create(const BufferDescription& desc) override;
             virtual IBuffer* create(const CBufferDescription* desc) override;
 
-
+            virtual void present() override;
         private:
-            ID3D11Device* device;
+            ID3D11Device* m_device;
+            ID3D11DeviceContext* m_immediateContext;
+            D3DDevice* m_defaultDevice;
+
+            struct {
+                IDXGIAdapter* adapter;
+                IDXGIDevice* device;
+                IDXGIFactory* factory;
+                IDXGISwapChain* swapChain;
+            } m_dxgi;
         };
     }
 }

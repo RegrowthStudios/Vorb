@@ -20,8 +20,12 @@ vg::IBuffer* vg::D3DContext::create(const CBufferDescription* desc) {
     buffer->size = desc->ByteWidth;
 
     // Create the buffer on the GPU
-    device->CreateBuffer(desc, nullptr, &buffer->data);
+    m_device->CreateBuffer(desc, nullptr, &buffer->data);
 
     // Return handle
     return buffer;
+}
+
+void vg::D3DContext::present() {
+    m_dxgi.swapChain->Present(1, 0);
 }

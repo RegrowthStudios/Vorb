@@ -291,6 +291,12 @@
     <ClCompile Include="src\graphics\IResource.cpp">
       <Filter>Graphics\Interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\D3DDevice.cpp">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\D3DAdapter.cpp">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -715,6 +721,18 @@
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\D3DResource.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DDevice.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Enums.h">
+      <Filter>Graphics\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\IAdapter.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DAdapter.h">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
   </ItemGroup>

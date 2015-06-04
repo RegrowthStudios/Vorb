@@ -262,6 +262,8 @@
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
     <ClCompile Include="src\graphics\D3DContext.cpp" />
     <ClCompile Include="src\graphics\D3DDescCompile.cpp" />
+    <ClCompile Include="src\graphics\D3DDevice.cpp" />
+    <ClCompile Include="src\graphics\D3DAdapter.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\graphics\IResource.cpp" />
     <ClCompile Include="src\graphics\RenderPipeline.cpp" />
@@ -384,7 +386,9 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
+    <ClInclude Include="include\graphics\Enums.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
+    <ClInclude Include="include\graphics\IAdapter.h" />
     <ClInclude Include="include\graphics\IObject.h" />
     <ClInclude Include="include\graphics\IResource.h" />
     <ClInclude Include="include\graphics\IContext.h" />
@@ -485,6 +489,8 @@
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\graphics\D3DContext.h" />
     <ClInclude Include="src\graphics\D3DDescCompile.h" />
+    <ClInclude Include="src\graphics\D3DDevice.h" />
+    <ClInclude Include="src\graphics\D3DAdapter.h" />
     <ClInclude Include="src\graphics\D3DResource.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />

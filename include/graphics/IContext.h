@@ -36,6 +36,7 @@ namespace vorb {
             virtual IBuffer* create(const BufferDescription& desc) = 0;
             virtual IBuffer* create(const CBufferDescription* desc) = 0;
 
+            virtual void present() = 0;
         protected:
             void add(IResource* resource);
             void remove(IResource* resource);

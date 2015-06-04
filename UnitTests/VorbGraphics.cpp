@@ -24,6 +24,9 @@
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
 #include <include/ui/ScreenList.h>
+#include <include/graphics/IAdapter.h>
+#include <include/graphics/IContext.h>
+#include <include/graphics/IDevice.h>
 
 struct ImageTestFormats {
 public:
@@ -900,6 +903,49 @@ TEST(SpriteBatch) {
 TEST(PipelineViewer) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new PipelineViewer).run(); }
+    vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(D3DContext) {
+    vorb::init(vorb::InitParam::ALL);
+
+    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IDevice* device = nullptr;
+    vg::IContext* context = adapter->createContext(&device);
+    HWND window = (HWND)adapter->createWindow(context);
+
+
+    bool running = true;
+
+    // Graphics thread
+    std::thread tRender([&] () {
+        f64 v = 0;
+        LARGE_INTEGER freq, value, lastValue;
+        QueryPerformanceFrequency(&freq);
+        QueryPerformanceCounter(&lastValue);
+        while (running) {
+            v = glm::fract(v + 0.01);
+            device->setClearColor(f64v4(v, 0.0, 1 - v, 1.0));
+            device->clear(vg::ClearBits::COLOR | vg::ClearBits::DEPTH);
+
+            context->present();
+
+            QueryPerformanceCounter(&value);
+            printf("Present Time: %f\n", (f32)(value.QuadPart - lastValue.QuadPart) / freq.QuadPart);
+            lastValue = value;
+        }
+    });
+
+    // Event loop
+    MSG msg = {};
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+    running = false;
+    tRender.join();
+
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

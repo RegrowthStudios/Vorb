@@ -22,12 +22,18 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "Enums.h"
+
 namespace vorb {
     namespace graphics {
         /* @brief
          */
         class IDevice {
         public:
+            virtual void setClearColor(const f64v4& v) = 0;
+            virtual void setClearDepth(f64 v) = 0;
+            virtual void setClearStencil(ui32 v) = 0;
+            virtual void clear(ClearBits bits) = 0;
         };
     }
 }

@@ -24,52 +24,25 @@ namespace vorb {
 
         class IRenderStage {
         public:
-            IRenderStage(const nString& displayName = "", const Camera* camera = nullptr);
-            virtual ~IRenderStage();
-
             /// Renders the stage
-            virtual void render() = 0;
+            virtual void render(const Camera* camera) = 0;
 
-            /// Reloads the shader. By default, it simply
-            /// disposes the shader and allows a lazy init at next draw
-            virtual void reloadShader();
+            virtual void init() = 0;
 
-            /// Disposes and deletes the shader and turns off visibility
-            /// If stage does lazy init, shader will reload at next draw
-            virtual void dispose();
+            virtual void dispose() = 0;
 
             /// Sets the visibility of the stage
             /// @param isVisible: The visibility
-            virtual void setIsVisible(bool isVisible) {
-                m_isVisible = isVisible;
-            }
+            virtual void setActive(bool isVisible) { m_isActive = isVisible; }
 
             /// Toggles the isVisible field
-            virtual void toggleVisible() {
-                m_isVisible = !m_isVisible;
-            }
+            virtual void toggleActive() { m_isActive = !m_isActive; }
 
             /// Check if the stage is visible
-            virtual const bool& isVisible() const {
-                return m_isVisible;
-            }
-
-            /// Sets the camera
-            /// @param camera: Camera to be used in rendering.
-            virtual void setCamera(const Camera* camera) {
-                m_camera = camera;
-            }
-
-            /// Gets the name
-            virtual const nString& getName() const { return m_name; }
-
+            virtual const bool& isActive() const { return m_isActive; }
         protected:
-            GLProgram m_program; ///< Optional shader program
-            const Camera* m_camera = nullptr; ///< Optional Camera, not needed for post processing stages
-            bool m_isVisible = true; ///< Determines if the stage should be rendered
-            nString m_name = ""; ///< Display name of the stage
+            bool m_isActive = true; ///< Determines if the stage should be rendered
         };
-
     }
 }
 namespace vg = vorb::graphics;

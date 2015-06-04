@@ -14,9 +14,6 @@
     <ClCompile Include="src/graphics/Mesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src/graphics/IRenderStage.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src/io/IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
@@ -278,6 +275,9 @@
     </ClCompile>
     <ClCompile Include="src\ui\FocusController.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\Frustum.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -683,6 +683,12 @@
     </ClInclude>
     <ClInclude Include="include\AssetLoader.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\Frustum.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Camera.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

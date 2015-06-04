@@ -2,46 +2,30 @@
 #include "graphics/RenderPipeline.h"
 #include "graphics/IRenderStage.h"
 
-vg::RenderPipeline::RenderPipeline() {
-    // Empty
-}
-
-vg::RenderPipeline::~RenderPipeline() {
-    // Empty
-}
-
-void vorb::graphics::RenderPipeline::setCamera(Camera* camera) {
-    m_camera = camera;
+void vg::RenderPipeline::init(vui::GameWindow* window) {
+    m_window = window;
     for (auto& stage : m_stages) {
-        stage->setCamera(camera);
+        stage->init();
     }
 }
 
-void vorb::graphics::RenderPipeline::registerStage(IRenderStage* stage) {
-    m_stages.push_back(stage);
-}
-
-void vorb::graphics::RenderPipeline::render() {
+void vg::RenderPipeline::dispose() {
     for (auto& stage : m_stages) {
-        if (stage->isVisible()) stage->render();
-    }
-}
-
-void vorb::graphics::RenderPipeline::destroy(bool shouldDisposeStages) {
-    if (shouldDisposeStages) {
-        disposeStages();
+        stage->dispose();
     }
     std::vector <IRenderStage*>().swap(m_stages);
 }
 
-void vorb::graphics::RenderPipeline::disposeStages() {
+void vg::RenderPipeline::render() {
     for (auto& stage : m_stages) {
-        stage->dispose();
+        if (stage->isActive()) stage->render(m_camera);
     }
 }
 
-void vorb::graphics::RenderPipeline::reloadShaders() {
-    for (auto& stage : m_stages) {
-        stage->reloadShader();
-    }
+void vg::RenderPipeline::registerStage(IRenderStage* stage) {
+    m_stages.push_back(stage);
+}
+
+void vg::RenderPipeline::setCamera(Camera* camera) {
+    m_camera = camera;
 }

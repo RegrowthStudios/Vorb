@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <memory>
+#include "../ui/GameWindow.h"
 
 class Camera;
 
@@ -32,8 +33,18 @@ namespace vorb {
         /// adding things such as post processing.
         class RenderPipeline {
         public:
-            RenderPipeline();
-            virtual ~RenderPipeline();
+            virtual void init(vui::GameWindow* window);
+            /// Frees all resources and disposes all render stages
+            virtual void dispose();
+
+            /// Renders the pipeline
+            virtual void render();
+
+            /// Adds a stage to the internal stack of stages
+            /// Also sets its camera if the render pipeline has a camera
+            /// @param stage: The render stage to add
+            /// @return handle to the stage
+            void registerStage(IRenderStage* stage);
 
             /// Sets the camera for the render stages.
             /// Overwrites any existing cameras for tracked stages.
@@ -42,28 +53,8 @@ namespace vorb {
 
             /// Gets the current camera
             virtual const Camera* getCamera() const { return m_camera; }
-
-            /// Adds a stage to the internal stack of stages
-            /// Also sets its camera if the render pipeline has a camera
-            /// @param stage: The render stage to add
-            /// @return handle to the stage
-            void registerStage(IRenderStage* stage);
-
-            /// Renders the pipeline
-            virtual void render();
-
-            /// Frees all resources and disposes all render stages
-            /// @param shouldDisposeStages: Set to true when you want to
-            /// dispose managed stages as well.
-            virtual void destroy(bool shouldDisposeStages);
-
-            /// Disposes all render stages
-            /// Call before destroy
-            virtual void disposeStages();
-
-            /// Reloads all shaders
-            virtual void reloadShaders();
         protected:
+            vui::GameWindow* m_window = nullptr;
             Camera* m_camera = nullptr; ///< Optional camera for rendering.
             std::vector<IRenderStage*> m_stages; ///< List of all stages
         };

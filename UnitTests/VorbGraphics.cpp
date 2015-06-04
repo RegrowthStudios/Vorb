@@ -724,7 +724,10 @@ public:
 
     class QuadRenderStage : public vg::IRenderStage {
     public:
-        void render() override {
+        void init() override {
+            // Empty
+        }
+        void render(const Camera* camera) override {
             if (!m_program.isCreated()) {
                 printf("Building shader\n");
                 m_program = vg::ShaderManager::createProgram(R"(
@@ -762,7 +765,7 @@ void main() {
             m_program.unuse();
         }
         void dispose() override {
-            IRenderStage::dispose();
+            m_program.dispose();
             if (m_verts) {
                 glDeleteBuffers(1, &m_verts);
                 m_verts = 0;
@@ -772,6 +775,7 @@ void main() {
         void setColor(f32v4 colr) { m_color = colr; }
         void setOffset(f32v2 offset) { m_offset = offset; }
     private:
+        vg::GLProgram m_program;
         VGVertexBuffer m_verts = 0;
         f32v4 m_color = f32v4(1.0f, 1.0f, 1.0f, 1.0f);
         f32v2 m_offset = f32v2(0.0f, 0.0f);
@@ -787,7 +791,7 @@ void main() {
     virtual void build() {
     }
     virtual void destroy(const vui::GameTime& gameTime) {
-        m_pipeline.destroy(true);
+        m_pipeline.dispose();
     }
 
     virtual void onEntry(const vui::GameTime& gameTime) {
@@ -813,13 +817,14 @@ void main() {
         m_pipeline.registerStage(s4.get());
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        m_pipeline.destroy(true);
+        m_pipeline.dispose();
     }
 
     virtual void update(const vui::GameTime& gameTime) {
         if (m_reloadShaders) {
             printf("Reloading shaders\n");
-            m_pipeline.reloadShaders();
+            m_pipeline.dispose();
+            m_pipeline.init(nullptr);
             m_reloadShaders = false;
         }
     }

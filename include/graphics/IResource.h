@@ -22,6 +22,8 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "GLEnums.h"
+
 namespace vorb {
     namespace graphics {
         class IContext;
@@ -75,12 +77,98 @@ namespace vorb {
          */
         class IShader : public IResource {
         public:
-
+            virtual ShaderType getType() = 0;
         protected:
             IShader(IContext* owner) : IResource(owner) {
                 // Empty
             }
         };
+
+
+        /* @brief
+         */
+        class IVertexShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::VERTEX_SHADER;
+            }
+
+        protected:
+            IVertexShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class IPixelShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::FRAGMENT_SHADER;
+            }
+
+        protected:
+            IPixelShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class IGeometryShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::GEOMETRY_SHADER;
+            }
+
+        protected:
+            IGeometryShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class ITessGenShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::TESS_CONTROL_SHADER;
+            }
+
+        protected:
+            ITessGenShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class ITessEvalShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::TESS_EVALUATION_SHADER;
+            }
+
+        protected:
+            ITessEvalShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class IComputeShader : public IShader {
+        public:
+            virtual ShaderType getType() override {
+                return ShaderType::COMPUTE_SHADER;
+            }
+
+        protected:
+            IComputeShader(IContext* owner) : IShader(owner) {
+                // Empty
+            }
+        };
+
     }
 }
 namespace vg = vorb::graphics;

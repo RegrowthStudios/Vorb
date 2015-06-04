@@ -37,15 +37,15 @@ namespace vorb {
             class Plane {
             public:
                 void setNormalAndPoint(const f32v3 &normal, const f32v3 &point);
-                void setCoefficients(float a, float b, float c, float d);
-                float distance(const f32v3 &p) const;
+                void setCoefficients(f32 a, f32 b, f32 c, f32 d);
+                f32 distance(const f32v3 &p) const;
 
                 f32v3 normal;
-                float d;
+                f32 d;
             };
 
             /// Sets internal camera properties. Needed for update()
-            void setCamInternals(float fov, float aspectRatio, float znear, float zfar);
+            void setCamInternals(f32 fov, f32 aspectRatio, f32 znear, f32 zfar);
 
             /// Updates the frustum with the projection and view matrix
             /// @param MVP: World-View-Projection matrix of camera
@@ -63,16 +63,16 @@ namespace vorb {
             /// @param pos: Center position of the sphere
             /// @param radius: Radius of the sphere
             /// @return true if it is in the frustum
-            bool sphereInFrustum(const f32v3& pos, float radius) const;
+            bool sphereInFrustum(const f32v3& pos, f32 radius) const;
         private:
-            float m_fov = 0.0f; ///< Vertical field of view in degrees
-            float m_aspectRatio = 0.0f; ///< Screen aspect ratio
-            float m_znear = 0.0f; ///< Near clipping plane
-            float m_zfar = 0.0f; ///< Far clipping plane
-            float m_nh = 0.0f; ///< Near plane height
-            float m_nw = 0.0f; ///< Near plane Width
-            float m_fh = 0.0f; ///< Far plane height
-            float m_fw = 0.0f; ///< Far plane Width
+            f32 m_fov = 0.0f; ///< Vertical field of view in degrees
+            f32 m_aspectRatio = 0.0f; ///< Screen aspect ratio
+            f32 m_znear = 0.0f; ///< Near clipping plane
+            f32 m_zfar = 0.0f; ///< Far clipping plane
+            f32 m_nh = 0.0f; ///< Near plane height
+            f32 m_nw = 0.0f; ///< Near plane Width
+            f32 m_fh = 0.0f; ///< Far plane height
+            f32 m_fw = 0.0f; ///< Far plane Width
             Plane m_planes[6]; ///< The actual frustum data
         };
     }

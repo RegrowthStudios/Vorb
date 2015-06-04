@@ -261,7 +261,6 @@
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
     <ClCompile Include="src\graphics\Frustum.cpp" />
-    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
     <ClCompile Include="src/graphics/TextureCache.cpp" />
@@ -383,8 +382,7 @@
     <ClInclude Include="include\Asset.h" />
     <ClInclude Include="include\AssetLoader.h" />
     <ClInclude Include="include\graphics\Camera.h" />
-    <ClInclude Include="include\graphics\RenderPipeline.h" />
-    <ClInclude Include="include/graphics/IRenderStage.h" />
+    <ClInclude Include="include\graphics\Frustum.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
     <ClInclude Include="include/ui/MainGame.h" />
@@ -476,7 +474,6 @@
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
-    <ClInclude Include="src\graphics\Frustum.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />
   </ItemGroup>

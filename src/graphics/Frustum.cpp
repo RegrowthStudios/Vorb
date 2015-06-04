@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Frustum.h"
+#include "graphics/Frustum.h"
 
 #include "Constants.h"
 
@@ -8,21 +8,21 @@ void vg::Frustum::Plane::setNormalAndPoint(const f32v3 &normal, const f32v3 &poi
     d = -(glm::dot(this->normal, point));
 }
 
-void vg::Frustum::Plane::setCoefficients(float a, float b, float c, float d) {
+void vg::Frustum::Plane::setCoefficients(f32 a, f32 b, f32 c, f32 d) {
     //compute the length of the vector
-    float l = glm::length(f32v3(a, b, c));
+    f32 l = glm::length(f32v3(a, b, c));
     // normalize the vector
     normal = f32v3(a / l, b / l, c / l);
     // and divide d by th length as well
     this->d = d / l;
 }
 
-float vg::Frustum::Plane::distance(const f32v3 &p) const {
+f32 vg::Frustum::Plane::distance(const f32v3 &p) const {
     return (d + glm::dot(normal, p));
 }
 
-void vg::Frustum::setCamInternals(float fov, float aspectRatio, float znear, float zfar) {
-#define RADIANS_PER_DEGREE M_PI / 180.0f
+void vg::Frustum::setCamInternals(f32 fov, f32 aspectRatio, f32 znear, f32 zfar) {
+#define RADIANS_PER_DEGREE 0.01745329251994329576923690768489
     // store the information
     m_fov = fov;
     m_aspectRatio = aspectRatio;
@@ -30,7 +30,7 @@ void vg::Frustum::setCamInternals(float fov, float aspectRatio, float znear, flo
     m_zfar = zfar;
 
     // compute width and height of the near and far plane sections
-    float tang = (float)tan(RADIANS_PER_DEGREE * fov * 0.5f);
+    f32 tang = (f32)tan(RADIANS_PER_DEGREE * (f64)fov * 0.5);
     m_nh = m_znear * tang;
     m_nw = m_nh * m_aspectRatio;
     m_fh = m_zfar  * tang;
@@ -118,7 +118,7 @@ bool vg::Frustum::pointInFrustum(const f32v3& pos) const {
     return true;
 }
 
-bool vg::Frustum::sphereInFrustum(const f32v3& pos, float radius) const {
+bool vg::Frustum::sphereInFrustum(const f32v3& pos, f32 radius) const {
     for (int p = 0; p < 4; p++) { //*************************************** IGNORING FAR AND NEAR CLIPPING PLANE
         if (m_planes[p].distance(pos) <= -radius) return false;
     }

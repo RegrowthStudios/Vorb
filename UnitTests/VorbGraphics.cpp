@@ -11,10 +11,8 @@
 #include <include/colors.h>
 #include <include/graphics/GLProgram.h>
 #include <include/graphics/GLStates.h>
-#include <include/graphics/IRenderStage.h>
 #include <include/graphics/ImageIO.h>
 #include <include/graphics/ModelIO.h>
-#include <include/graphics/RenderPipeline.h>
 #include <include/graphics/ShaderManager.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
@@ -719,128 +717,6 @@ void main() {
     f32m4* mRestInv;
 };
 
-class PipelineViewer : public vui::IGameScreen {
-public:
-
-    class QuadRenderStage : public vg::IRenderStage {
-    public:
-        void init() override {
-            // Empty
-        }
-        void render(const Camera* camera) override {
-            if (!m_program.isCreated()) {
-                printf("Building shader\n");
-                m_program = vg::ShaderManager::createProgram(R"(
-uniform vec2 unOffset;
-in vec4 vPosition;
-void main() {
-    gl_Position = vPosition + vec4(unOffset, 0.0, 0.0);
-}
-)", R"(
-uniform vec4 unColor;
-out vec4 pColor;
-void main() {
-    pColor = unColor;
-}
-)");
-                if (!m_program.isLinked()) throw 123;
-            }
-            if (!m_verts) {
-                printf("Building vbo\n");
-                glGenBuffers(1, &m_verts);
-                float verts[12] = { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-                    1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f };
-                glBindBuffer(GL_ARRAY_BUFFER, m_verts);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-            }
-            m_program.use();
-            m_program.enableVertexAttribArrays();
-            glUniform4fv(m_program.getUniform("unColor"), 1, &m_color[0]);
-            glUniform2fv(m_program.getUniform("unOffset"), 1, &m_offset[0]);
-            glBindBuffer(GL_ARRAY_BUFFER, m_verts);
-            glVertexAttribPointer(m_program.getAttribute("vPosition"), 2, GL_FLOAT, GL_FALSE, 0, 0);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            m_program.disableVertexAttribArrays();
-            m_program.unuse();
-        }
-        void dispose() override {
-            m_program.dispose();
-            if (m_verts) {
-                glDeleteBuffers(1, &m_verts);
-                m_verts = 0;
-            }
-        }
-
-        void setColor(f32v4 colr) { m_color = colr; }
-        void setOffset(f32v2 offset) { m_offset = offset; }
-    private:
-        vg::GLProgram m_program;
-        VGVertexBuffer m_verts = 0;
-        f32v4 m_color = f32v4(1.0f, 1.0f, 1.0f, 1.0f);
-        f32v2 m_offset = f32v2(0.0f, 0.0f);
-    };
-
-    virtual i32 getNextScreen() const {
-        return SCREEN_INDEX_NO_SCREEN;
-    }
-    virtual i32 getPreviousScreen() const {
-        return SCREEN_INDEX_NO_SCREEN;
-    }
-
-    virtual void build() {
-    }
-    virtual void destroy(const vui::GameTime& gameTime) {
-        m_pipeline.dispose();
-    }
-
-    virtual void onEntry(const vui::GameTime& gameTime) {
-        printf(" *** Press 1 to reload shaders. ***\n");
-        m_hooks.addAutoHook(vui::InputDispatcher::key.onKeyUp, [&](Sender, const vui::KeyEvent& e) {
-            switch (e.keyCode) {
-                case VKEY_1: m_reloadShaders = true; break;
-            }
-        });
-        std::shared_ptr<QuadRenderStage> s1 = std::make_shared<QuadRenderStage>();
-        std::shared_ptr<QuadRenderStage> s2 = std::make_shared<QuadRenderStage>();
-        s2->setColor(f32v4(1.0f, 0.0f, 0.0f, 1.0f));
-        s2->setOffset(f32v2(1.0f, 0.0f));
-        std::shared_ptr<QuadRenderStage> s3 = std::make_shared<QuadRenderStage>();
-        s3->setColor(f32v4(0.0f, 1.0f, 0.0f, 1.0f));
-        s3->setOffset(f32v2(0.0f, 1.0f));
-        std::shared_ptr<QuadRenderStage> s4 = std::make_shared<QuadRenderStage>();
-        s4->setColor(f32v4(0.0f, 0.0f, 1.0f, 1.0f));
-        s4->setOffset(f32v2(1.0f, 1.0f));
-        m_pipeline.registerStage(s1.get());
-        m_pipeline.registerStage(s2.get());
-        m_pipeline.registerStage(s3.get());
-        m_pipeline.registerStage(s4.get());
-    }
-    virtual void onExit(const vui::GameTime& gameTime) {
-        m_pipeline.dispose();
-    }
-
-    virtual void update(const vui::GameTime& gameTime) {
-        if (m_reloadShaders) {
-            printf("Reloading shaders\n");
-            m_pipeline.dispose();
-            m_pipeline.init(nullptr);
-            m_reloadShaders = false;
-        }
-    }
-    virtual void draw(const vui::GameTime& gameTime) {
-        vg::DepthState::NONE.set();
-        glDisable(GL_CULL_FACE);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        m_pipeline.render();
-        vg::DepthState::FULL.set();
-    }
-private:
-    vg::RenderPipeline m_pipeline;
-    AutoDelegatePool m_hooks;
-    bool m_reloadShaders = false;
-};
-
 class VGTestApp : public vui::MainGame {
 public:
     VGTestApp(vui::IGameScreen* s) :
@@ -894,13 +770,6 @@ TEST(AnimViewer) {
 TEST(SpriteBatch) {
     vorb::init(vorb::InitParam::ALL);
     { VGTestApp(new SpriteBatchTester).run(); }
-    vorb::dispose(vorb::InitParam::ALL);
-    return true;
-}
-
-TEST(PipelineViewer) {
-    vorb::init(vorb::InitParam::ALL);
-    { VGTestApp(new PipelineViewer).run(); }
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

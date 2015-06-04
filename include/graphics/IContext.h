@@ -22,9 +22,10 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "IResource.h"
+
 namespace vorb {
     namespace graphics {
-        class IBuffer;
         struct BufferDescription;
         struct CBufferDescription;
 
@@ -35,6 +36,35 @@ namespace vorb {
         public:
             virtual IBuffer* create(const BufferDescription& desc) = 0;
             virtual IBuffer* create(const CBufferDescription* desc) = 0;
+
+
+            virtual IShaderCode* createFromPrecompiled(const void* data, size_t length) = 0;
+            virtual IShaderCode* createFromCode(const cString data, size_t length) = 0;
+
+            IShader* create(vg::ShaderType type, const IShaderCode* code) {
+                switch (type) {
+                case ShaderType::VERTEX_SHADER:
+                    return createVertexShader(code);
+                case ShaderType::GEOMETRY_SHADER:
+                    return createGeometryShader(code);
+                case ShaderType::TESS_CONTROL_SHADER:
+                    return createTessGenShader(code);
+                case ShaderType::TESS_EVALUATION_SHADER:
+                    return createTessEvalShader(code);
+                case ShaderType::FRAGMENT_SHADER:
+                    return createPixelShader(code);
+                case ShaderType::COMPUTE_SHADER:
+                    return createComputeShader(code);
+                default:
+                    return nullptr;
+                }
+            }
+            virtual IVertexShader* createVertexShader(const IShaderCode* code) = 0;
+            virtual IGeometryShader* createGeometryShader(const IShaderCode* code) = 0;
+            virtual ITessGenShader* createTessGenShader(const IShaderCode* code) = 0;
+            virtual ITessEvalShader* createTessEvalShader(const IShaderCode* code) = 0;
+            virtual IPixelShader* createPixelShader(const IShaderCode* code) = 0;
+            virtual IComputeShader* createComputeShader(const IShaderCode* code) = 0;
 
             virtual void present() = 0;
         protected:

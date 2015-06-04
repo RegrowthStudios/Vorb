@@ -39,13 +39,22 @@ namespace vorb {
                 data->Release();
             }
 
-            virtual size_t getMemoryUsed() override {
+            virtual size_t getMemoryUsed() const override {
                 return size;
             }
 
 
             ID3D11Buffer* data = nullptr;
             size_t size = 0;
+        };
+
+        class D3DVertexShader : public IVertexShader {
+        public:
+            D3DVertexShader(IContext* owner) : IVertexShader(owner) {
+                // Empty
+            }
+
+            ID3D11VertexShader* shader;
         };
     }
 }

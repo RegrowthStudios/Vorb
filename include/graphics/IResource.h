@@ -39,7 +39,7 @@ namespace vorb {
 
             void dispose();
 
-            virtual size_t getMemoryUsed() = 0;
+            virtual size_t getMemoryUsed() const = 0;
         protected:
             IResource(IContext* owner) : 
                 m_owner(owner) {
@@ -73,11 +73,21 @@ namespace vorb {
             }
         };
 
+        class IShaderCode : public IResource {
+        public:
+            virtual const void* getCode() const = 0;
+            virtual size_t getLength() const = 0;
+        protected:
+            IShaderCode(IContext* owner) : IResource(owner) {
+                // Empty
+            }
+        };
+
         /* @brief
          */
         class IShader : public IResource {
         public:
-            virtual ShaderType getType() = 0;
+            virtual ShaderType getType() const = 0;
         protected:
             IShader(IContext* owner) : IResource(owner) {
                 // Empty
@@ -89,7 +99,7 @@ namespace vorb {
          */
         class IVertexShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::VERTEX_SHADER;
             }
 
@@ -103,7 +113,7 @@ namespace vorb {
          */
         class IPixelShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::FRAGMENT_SHADER;
             }
 
@@ -117,7 +127,7 @@ namespace vorb {
          */
         class IGeometryShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::GEOMETRY_SHADER;
             }
 
@@ -131,7 +141,7 @@ namespace vorb {
          */
         class ITessGenShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::TESS_CONTROL_SHADER;
             }
 
@@ -145,7 +155,7 @@ namespace vorb {
          */
         class ITessEvalShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::TESS_EVALUATION_SHADER;
             }
 
@@ -159,7 +169,7 @@ namespace vorb {
          */
         class IComputeShader : public IShader {
         public:
-            virtual ShaderType getType() override {
+            virtual ShaderType getType() const override {
                 return ShaderType::COMPUTE_SHADER;
             }
 

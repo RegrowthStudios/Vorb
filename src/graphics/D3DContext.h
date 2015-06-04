@@ -42,6 +42,16 @@ namespace vorb {
             virtual IBuffer* create(const CBufferDescription* desc) override;
 
             virtual void present() override;
+
+            virtual IShaderCode* createFromPrecompiled(const void* data, size_t length);
+            virtual IShaderCode* createFromCode(const cString data, size_t length);
+
+            virtual IVertexShader* createVertexShader(const IShaderCode* code);
+            virtual IGeometryShader* createGeometryShader(const IShaderCode* code);
+            virtual ITessGenShader* createTessGenShader(const IShaderCode* code);
+            virtual ITessEvalShader* createTessEvalShader(const IShaderCode* code);
+            virtual IPixelShader* createPixelShader(const IShaderCode* code);
+            virtual IComputeShader* createComputeShader(const IShaderCode* code);
         private:
             ID3D11Device* m_device;
             ID3D11DeviceContext* m_immediateContext;

@@ -184,7 +184,6 @@ void vui::MainGame::run() {
         exitGame();
     }
 
-
 #if defined(VORB_IMPL_UI_SDL)
     SDL_Quit();
 #elif defined(VORB_IMPL_UI_GLFW)

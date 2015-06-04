@@ -678,6 +678,12 @@
     <ClInclude Include="include\ui\FocusController.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="include\Asset.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AssetLoader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -742,12 +748,6 @@
     </Filter>
     <Filter Include="Graphics\IO">
       <UniqueIdentifier>{b9ab0e0b-8d58-4d9f-a735-2c317be88687}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Blister">
-      <UniqueIdentifier>{44c48ac6-5ba2-41a5-b328-798aa182701f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Blister\Widgets">
-      <UniqueIdentifier>{0c718b86-a7e8-48a3-88ba-9d7d863be1d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net">
       <UniqueIdentifier>{08ae98f0-3d08-453a-9236-e213da5e47e0}</UniqueIdentifier>
@@ -814,6 +814,9 @@
     <None Include="src\ImplGraphicsH.inl" />
     <None Include="src\io\YAMLInternal.inl">
       <Filter>IO\YAML</Filter>
+    </None>
+    <None Include="include\AssetLoader.inl">
+      <Filter>Core\ADT</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

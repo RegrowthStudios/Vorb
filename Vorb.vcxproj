@@ -380,6 +380,8 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
+    <ClInclude Include="include\Asset.h" />
+    <ClInclude Include="include\AssetLoader.h" />
     <ClInclude Include="include\graphics\RenderPipeline.h" />
     <ClInclude Include="include/graphics/IRenderStage.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
@@ -489,6 +491,7 @@
     <None Include="include/RingBuffer.inl" />
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
+    <None Include="include\AssetLoader.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />

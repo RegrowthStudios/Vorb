@@ -675,9 +675,6 @@
     <ClInclude Include="include\AssetLoader.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\Camera.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\graphics\Frustum.h">
       <Filter>Graphics</Filter>
     </ClInclude>

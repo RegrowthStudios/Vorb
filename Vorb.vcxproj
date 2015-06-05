@@ -381,7 +381,6 @@
     <ClInclude Include="include/io/IOManager.h" />
     <ClInclude Include="include\Asset.h" />
     <ClInclude Include="include\AssetLoader.h" />
-    <ClInclude Include="include\graphics\Camera.h" />
     <ClInclude Include="include\graphics\Frustum.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />

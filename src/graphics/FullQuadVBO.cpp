@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "graphics/FullQuadVBO.h"
 
-vg::FullQuadVBO::FullQuadVBO() {
-    m_vb = 0;
-    m_ib = 0;
-}
-
 void vg::FullQuadVBO::init(i32 attrLocation /*= 0*/) {
     glGenBuffers(2, m_buffers);
 

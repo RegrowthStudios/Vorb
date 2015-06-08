@@ -38,32 +38,32 @@ void vg::Frustum::setCamInternals(f32 fov, f32 aspectRatio, f32 znear, f32 zfar)
 }
 
 void vg::Frustum::updateFromWVP(const f32m4& WVP) {
-    m_planes[NEARP].setCoefficients(
+    m_planes[P_NEAR].setCoefficients(
         WVP[0][2] + WVP[0][3],
         WVP[1][2] + WVP[1][3],
         WVP[2][2] + WVP[2][3],
         WVP[3][2] + WVP[3][3]);
-    m_planes[FARP].setCoefficients(
+    m_planes[P_FAR].setCoefficients(
         -WVP[0][2] + WVP[0][3],
         -WVP[1][2] + WVP[1][3],
         -WVP[2][2] + WVP[2][3],
         -WVP[3][2] + WVP[3][3]);
-    m_planes[BOTTOMP].setCoefficients(
+    m_planes[P_BOTTOM].setCoefficients(
         WVP[0][1] + WVP[0][3],
         WVP[1][1] + WVP[1][3],
         WVP[2][1] + WVP[2][3],
         WVP[3][1] + WVP[3][3]);
-    m_planes[TOPP].setCoefficients(
+    m_planes[P_TOP].setCoefficients(
         -WVP[0][1] + WVP[0][3],
         -WVP[1][1] + WVP[1][3],
         -WVP[2][1] + WVP[2][3],
         -WVP[3][1] + WVP[3][3]);
-    m_planes[LEFTP].setCoefficients(
+    m_planes[P_LEFT].setCoefficients(
         WVP[0][0] + WVP[0][3],
         WVP[1][0] + WVP[1][3],
         WVP[2][0] + WVP[2][3],
         WVP[3][0] + WVP[3][3]);
-    m_planes[RIGHTP].setCoefficients(
+    m_planes[P_RIGHT].setCoefficients(
         -WVP[0][0] + WVP[0][3],
         -WVP[1][0] + WVP[1][3],
         -WVP[2][0] + WVP[2][3],
@@ -89,26 +89,26 @@ void vg::Frustum::update(const f32v3& position, const f32v3& dir, const f32v3& u
     nc = position - Z * m_znear;
     fc = position - Z * m_zfar;
 
-    m_planes[NEARP].setNormalAndPoint(-Z, nc);
-    m_planes[FARP].setNormalAndPoint(Z, fc);
+    m_planes[P_NEAR].setNormalAndPoint(-Z, nc);
+    m_planes[P_FAR].setNormalAndPoint(Z, fc);
 
     f32v3 aux, normal;
 
     aux = glm::normalize((nc + Y * m_nh) - position);
     normal = glm::cross(aux, X);
-    m_planes[TOPP].setNormalAndPoint(normal, nc + Y * m_nh);
+    m_planes[P_TOP].setNormalAndPoint(normal, nc + Y * m_nh);
 
     aux = glm::normalize((nc - Y * m_nh) - position);
     normal = glm::cross(X, aux);
-    m_planes[BOTTOMP].setNormalAndPoint(normal, nc - Y * m_nh);
+    m_planes[P_BOTTOM].setNormalAndPoint(normal, nc - Y * m_nh);
 
     aux = glm::normalize((nc - X * m_nw) - position);
     normal = glm::cross(aux, Y);
-    m_planes[LEFTP].setNormalAndPoint(normal, nc - X * m_nw);
+    m_planes[P_LEFT].setNormalAndPoint(normal, nc - X * m_nw);
 
     aux = glm::normalize((nc + X * m_nw) - position);
     normal = glm::cross(Y, aux);
-    m_planes[RIGHTP].setNormalAndPoint(normal, nc + X * m_nw);
+    m_planes[P_RIGHT].setNormalAndPoint(normal, nc + X * m_nw);
 }
 
 bool vg::Frustum::pointInFrustum(const f32v3& pos) const {

@@ -30,8 +30,8 @@ namespace vorb {
         public:
 
             enum Planes {
-                RIGHTP = 0, LEFTP, BOTTOMP,
-                TOPP, FARP, NEARP
+                P_RIGHT = 0, P_LEFT, P_BOTTOM,
+                P_TOP, P_FAR, P_NEAR
             };
 
             class Plane {

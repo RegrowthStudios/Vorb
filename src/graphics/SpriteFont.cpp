@@ -317,37 +317,64 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
             rightEdges.push_back(0.0f);
             rows.emplace_back();
             gx = 0.0f;
-        } else {        
+        } else {
+            bool useGlyph = true;
             // Check For Correct Glyph
             size_t gi = c - m_regStart;
             if (gi >= m_regLength) gi = m_regLength;
+
             // Get glyph width
             f32 gWidth = m_glyphs[gi].size.x * scaling.x;
-            if (shouldWrap) { // Check for wrapping
-                bool didWrap;
+
+            // Check for wrapping
+            if (shouldWrap) { 
+                bool isOut;
                 switch (align) {
                     case vg::TextAlign::TOP:
                     case vg::TextAlign::CENTER:
                     case vg::TextAlign::BOTTOM:
-                        didWrap = ((pos.x + (gx + gWidth) / 2.0f > clipRect.x + clipRect.z)); break;
+                        isOut = ((pos.x + (gx + gWidth) / 2.0f > clipRect.x + clipRect.z)); break;
                     case vg::TextAlign::TOP_RIGHT:
                     case vg::TextAlign::RIGHT:
                     case vg::TextAlign::BOTTOM_RIGHT:
-                        didWrap = ((pos.x - gx - gWidth < clipRect.x)); break;
+                        isOut = ((pos.x - gx - gWidth < clipRect.x)); break;
                     default:
-                        didWrap = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
+                        isOut = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
                 }
-                // If we clipped, go to new row
-                if (didWrap) {
-                    rightEdges.back() = gx;
+         
+                // If the glyph is out of the clip rect, may need to go to new row
+                if (isOut) {
+                    // TODO(Ben): Check input clipping characters
+                    if (c == ' ') {
+                        useGlyph = false;
+                    } else {
+                        // Count the word size
+                        int numChars = 0;
+                        while (s[si - numChars] != ' ' && si - numChars != 0) numChars++;
+
+                        if (si - numChars > 0) {
+                            for (int i = 0; i < numChars; i++) {
+                                gx -= m_glyphs[si - i].size.x * scaling.x;
+                            }
+                            si -= (numChars + 1); // -1 to counter ++ later.
+                            rightEdges.back() = gx;
+                            gx = 0.0f;
+                            useGlyph = false; // TODO(Ben): Is this right?
+                        } else {
+                            rightEdges.back() = gx;
+                        }
+                    }
+                    // Go to new row
                     rightEdges.push_back(0.0f);
                     rows.emplace_back();
                     gx = 0.0f;
                 }
             }
             // Add glyph to the row
-            rows.back().emplace_back(gi, gx);
-            gx += gWidth;
+            if (useGlyph) {
+                rows.back().emplace_back(gi, gx);
+                gx += gWidth;
+            }
         }
     }
     rightEdges.back() = gx;

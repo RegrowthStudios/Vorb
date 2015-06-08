@@ -79,7 +79,7 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 
     // Attempt to read custom settings
     readSettings();
-
+    // TODO(Ben): Needs comments or functions
 #if defined(VORB_IMPL_UI_SDL)
     SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
     if (m_displayMode.isResizable) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_RESIZABLE);
@@ -140,7 +140,6 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     D3DContext* d3dContext = new D3DContext;
     m_glc = d3dContext;
-
 #if defined(VORB_DX_9)
     // Make COM object for D3D initialization
     VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
@@ -195,19 +194,19 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 #ifdef DEBUG
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-
-    D3D_FEATURE_LEVEL  featureLevelsSupported;
+        
+    D3D_FEATURE_LEVEL featureLevelsSupported;
     ID3D11Device* device = nullptr;
     HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, lvl, 7, D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
     if (hr != S_OK) {
         hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, &lvl[1], 6, D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
     }
-
+    
     // Get a pointer to the back buffer and set it
     d3dContext->dxgi->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&d3dContext->backBufferTexture);
     d3dContext->device->CreateRenderTargetView(d3dContext->backBufferTexture, NULL, &d3dContext->backBufferRenderTargetView);
     d3dContext->immediateContext->OMSetRenderTargets(1, &d3dContext->backBufferRenderTargetView, NULL);
-
+    
     // Setup the viewport
     D3D11_VIEWPORT vp;
     vp.Width = 640;
@@ -267,6 +266,8 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
             }
         }
     }
+#else
+    throw 84;
 #endif
 
     // Set More Display Settings
@@ -391,7 +392,7 @@ void vui::GameWindow::setFullscreen(bool useFullscreen, bool overrideCheck /*= f
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowFullscreen(VUI_WINDOW_HANDLE(m_window), m_displayMode.isFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 #elif defined(VORB_IMPL_UI_GLFW)
-        // TODO: GLFW Impl
+        throw 84; // TODO: GLFW Impl
 #elif defined(VORB_IMPL_UI_SFML)
         ui32 flags = sf::Style::None;
         if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
@@ -406,7 +407,7 @@ void vui::GameWindow::setBorderless(bool useBorderless, bool overrideCheck /*= f
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowBordered((SDL_Window*)m_window, m_displayMode.isBorderless ? SDL_FALSE : SDL_TRUE);
 #elif defined(VORB_IMPL_UI_GLFW)
-        // TODO: GLFW Impl
+        throw 84; // TODO: GLFW Impl
 #elif defined(VORB_IMPL_UI_SFML)
         ui32 flags = sf::Style::None;
         if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
@@ -431,10 +432,10 @@ void vui::GameWindow::setSwapInterval(GameSwapInterval mode, bool overrideCheck 
             break;
         }
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
-        // TODO(Cristian): Swap interval
+        throw 84; // TODO(Cristian): Swap interval
 #endif
 #elif defined(VORB_IMPL_UI_GLFW)
-        // TODO: GLFW Impl
+        throw 84; // TODO: GLFW Impl
 #elif defined(VORB_IMPL_UI_SFML)
         switch (m_displayMode.swapInterval) {
         case GameSwapInterval::UNLIMITED_FPS:
@@ -468,9 +469,9 @@ void vui::GameWindow::setPosition(int x, int y) {
 #if defined(VORB_IMPL_UI_SDL)
     SDL_SetWindowPosition((SDL_Window*)m_window, x, y);
 #elif defined(VORB_IMPL_UI_GLFW)
-    // TODO(Ben): Implement
+    throw 84; // TODO(Ben): Implement
 #elif defined(VORB_IMPL_UI_SFML)
-    // TODO(Ben): Implement
+    throw 84; // TODO(Ben): Implement
 #endif
 }
 

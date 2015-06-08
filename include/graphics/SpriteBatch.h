@@ -153,7 +153,7 @@ namespace vorb {
             ui32 m_indexCapacity = 0; ///< Current capacity of the m_ibo
             std::vector<Batch> m_batches; ///< Vector of batches for rendering
 
-            static vg::GLProgram* m_program; ///< Shader handle
+            static vg::GLProgram m_program; ///< Shader handle
 
             ui32 m_texPixel; ///< Default White Pixel Texture
         };

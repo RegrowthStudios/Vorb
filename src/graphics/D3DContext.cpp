@@ -47,8 +47,8 @@ vg::IShaderCode* vorb::graphics::D3DContext::createFromCode(const cString data, 
 }
 
 vg::IVertexShader* vorb::graphics::D3DContext::createVertexShader(const IShaderCode* code) {
-    D3DVertexShader* shader = new D3DVertexShader(this);
-    m_device->CreateVertexShader();
+    //D3DVertexShader* shader = new D3DVertexShader(this);
+    //m_device->CreateVertexShader();
     return nullptr;
 }
 vg::IGeometryShader* vorb::graphics::D3DContext::createGeometryShader(const IShaderCode* code) {

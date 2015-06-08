@@ -64,40 +64,40 @@ public:
     }
     virtual void destroy(const vui::GameTime& gameTime) {
     }
-    virtual void onEntry(const vui::GameTime& gameTime) {       
+    virtual void onEntry(const vui::GameTime& gameTime) {
         font.init("Data/chintzy.ttf", 32);
-        form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), &font);
+        form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y));
 
         // Load textures
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
-        if (bmp.data == nullptr) {
-            std::cerr << "Error: Failed to load data/button_test.jpg\n";
-        }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
-        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        /* glGenTextures(1, &texture);
+         glBindTexture(GL_TEXTURE_2D, texture);
+         vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+         if (bmp.data == nullptr) {
+         std::cerr << "Error: Failed to load data/button_test.jpg\n";
+         }
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
+         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
 
-        glGenTextures(1, &checkedTexture);
-        glBindTexture(GL_TEXTURE_2D, checkedTexture);
-        vg::ScopedBitmapResource bmp2 = vg::ImageIO().load("data/checked_test.jpg", vg::ImageIOFormat::RGBA_UI8);
-        if (bmp.data == nullptr) {
-            std::cerr << "Error: Failed to load data/checked_test.jpg\n";
-        }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp2.data);
-        vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, 0);
+         glGenTextures(1, &checkedTexture);
+         glBindTexture(GL_TEXTURE_2D, checkedTexture);
+         vg::ScopedBitmapResource bmp2 = vg::ImageIO().load("data/checked_test.jpg", vg::ImageIOFormat::RGBA_UI8);
+         if (bmp.data == nullptr) {
+         std::cerr << "Error: Failed to load data/checked_test.jpg\n";
+         }
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp2.data);
+         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+         glBindTexture(GL_TEXTURE_2D, 0);*/
 
         // Load script file and init
-        env.init(&form, &m_game->getWindow());
-        env.loadForm("data/scripts/Form1.lua");
+     //   env.init(&form, &m_game->getWindow());
+     //   env.loadForm("data/scripts/Form1.lua");
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         form.dispose();
-        font.dispose();
+       // font.dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
-        form.update();
+      //  form.update();
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

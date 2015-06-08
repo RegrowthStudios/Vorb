@@ -266,8 +266,7 @@
     <ClCompile Include="src\graphics\D3DAdapter.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\graphics\IResource.cpp" />
-    <ClCompile Include="src\graphics\RenderPipeline.cpp" />
-    <ClCompile Include="src/graphics/IRenderStage.cpp" />
+    <ClCompile Include="src\graphics\Frustum.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
     <ClCompile Include="src/graphics/TextureCache.cpp" />
@@ -393,8 +392,9 @@
     <ClInclude Include="include\graphics\IResource.h" />
     <ClInclude Include="include\graphics\IContext.h" />
     <ClInclude Include="include\graphics\IDevice.h" />
-    <ClInclude Include="include\graphics\RenderPipeline.h" />
-    <ClInclude Include="include/graphics/IRenderStage.h" />
+    <ClInclude Include="include\Asset.h" />
+    <ClInclude Include="include\AssetLoader.h" />
+    <ClInclude Include="include\graphics\Frustum.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
     <ClInclude Include="include/ui/MainGame.h" />
@@ -508,6 +508,7 @@
     <None Include="include/RingBuffer.inl" />
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
+    <None Include="include\AssetLoader.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />

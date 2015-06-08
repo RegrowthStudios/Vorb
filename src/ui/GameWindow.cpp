@@ -72,132 +72,132 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 
     // Attempt to read custom settings
     readSettings();
-     // TODO(Ben): Needs comments or functions
-    #if defined(VORB_IMPL_UI_SDL)
-        SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
-        if (m_displayMode.isResizable) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_RESIZABLE);
-        if (m_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
-        if (m_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
-        m_window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_displayMode.screenWidth, m_displayMode.screenHeight, flags);
-    #elif defined(VORB_IMPL_UI_GLFW)
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_RESIZABLE, 0);
-        if (m_displayMode.isBorderless) glfwWindowHint(GLFW_DECORATED, 0);
+    // TODO(Ben): Needs comments or functions
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_WindowFlags flags = (SDL_WindowFlags)DEFAULT_WINDOW_FLAGS;
+    if (m_displayMode.isResizable) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_RESIZABLE);
+    if (m_displayMode.isBorderless) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_BORDERLESS);
+    if (m_displayMode.isFullscreen) flags = (SDL_WindowFlags)(flags | SDL_WINDOW_FULLSCREEN);
+    m_window = SDL_CreateWindow(DEFAULT_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_displayMode.screenWidth, m_displayMode.screenHeight, flags);
+#elif defined(VORB_IMPL_UI_GLFW)
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_RESIZABLE, 0);
+    if (m_displayMode.isBorderless) glfwWindowHint(GLFW_DECORATED, 0);
 
-        GLFWmonitor* monitor = m_displayMode.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
-        m_window = glfwCreateWindow(m_displayMode.screenWidth, m_displayMode.screenHeight, DEFAULT_TITLE, monitor, nullptr);
-    #elif defined(VORB_IMPL_UI_SFML)
-        sf::ContextSettings context;
-        context.depthBits = 24;
-        context.stencilBits = 8;
-        context.majorVersion = 3;
-        context.minorVersion = 2;
-        context.antialiasingLevel = 0;
+    GLFWmonitor* monitor = m_displayMode.isFullscreen ? glfwGetPrimaryMonitor() : nullptr;
+    m_window = glfwCreateWindow(m_displayMode.screenWidth, m_displayMode.screenHeight, DEFAULT_TITLE, monitor, nullptr);
+#elif defined(VORB_IMPL_UI_SFML)
+    sf::ContextSettings context;
+    context.depthBits = 24;
+    context.stencilBits = 8;
+    context.majorVersion = 3;
+    context.minorVersion = 2;
+    context.antialiasingLevel = 0;
 
-        ui32 flags = sf::Style::None;
-        if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
-        if (m_displayMode.isFullscreen) flags |= sf::Style::Fullscreen;
-        m_window = new sf::RenderWindow(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags, context);
-        VUI_WINDOW_HANDLE(m_window)->setFramerateLimit(0);
-    #endif
+    ui32 flags = sf::Style::None;
+    if (!m_displayMode.isBorderless) flags |= sf::Style::Close;
+    if (m_displayMode.isFullscreen) flags |= sf::Style::Fullscreen;
+    m_window = new sf::RenderWindow(sf::VideoMode(m_displayMode.screenWidth, m_displayMode.screenHeight), DEFAULT_TITLE, flags, context);
+    VUI_WINDOW_HANDLE(m_window)->setFramerateLimit(0);
+#endif
 
-        // Create The Window
-        if (m_window == nullptr) {
-            printf("Window Creation Failed\r\n");
-            return false;
-        }
+    // Create The Window
+    if (m_window == nullptr) {
+        printf("Window Creation Failed\r\n");
+        return false;
+    }
 
-    #if defined(VORB_IMPL_UI_SDL)
-    #if defined(VORB_IMPL_GRAPHICS_OPENGL)
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, (int)m_displayMode.major);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, (int)m_displayMode.minor);
-        if (m_displayMode.core) {
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        } else {
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-        }
-        m_glc = SDL_GL_CreateContext(VUI_WINDOW_HANDLE(m_window));
-        SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
-    #elif defined(VORB_IMPL_GRAPHICS_D3D)
-        m_glc = new D3DContext;
+#if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, (int)m_displayMode.major);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, (int)m_displayMode.minor);
+    if (m_displayMode.core) {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    } else {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    }
+    m_glc = SDL_GL_CreateContext(VUI_WINDOW_HANDLE(m_window));
+    SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    m_glc = new D3DContext;
 
-        // Make COM object for D3D initialization
-        VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
+    // Make COM object for D3D initialization
+    VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
 
-        { // Create D3D device context
-            D3DPRESENT_PARAMETERS pp = {};
-            pp.hDeviceWindow = GetActiveWindow();
-            pp.Windowed = TRUE;
-            pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-            pp.EnableAutoDepthStencil = true;
-            pp.AutoDepthStencilFormat = D3DFMT_D16;
-            pp.BackBufferWidth = 800;
-            pp.BackBufferHeight = 600;
-            pp.BackBufferFormat = D3DFMT_R5G6B5;
-            pp.MultiSampleType = D3DMULTISAMPLE_NONE;
+    { // Create D3D device context
+        D3DPRESENT_PARAMETERS pp = {};
+        pp.hDeviceWindow = GetActiveWindow();
+        pp.Windowed = TRUE;
+        pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+        pp.EnableAutoDepthStencil = true;
+        pp.AutoDepthStencilFormat = D3DFMT_D16;
+        pp.BackBufferWidth = 800;
+        pp.BackBufferHeight = 600;
+        pp.BackBufferFormat = D3DFMT_R5G6B5;
+        pp.MultiSampleType = D3DMULTISAMPLE_NONE;
 
-            VUI_COM(m_glc)->CreateDevice(
-                D3DADAPTER_DEFAULT,
-                D3DDEVTYPE_HAL,
-                pp.hDeviceWindow,
-                D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                &pp,
-                &(VUI_CONTEXT(m_glc))
-                );
-        }
-    #endif
+        VUI_COM(m_glc)->CreateDevice(
+            D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL,
+            pp.hDeviceWindow,
+            D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+            &pp,
+            &(VUI_CONTEXT(m_glc))
+            );
+    }
+#endif
 
-    #elif defined(VORB_IMPL_UI_GLFW)
-        // Initialize OpenGL
-        glfwMakeContextCurrent(VUI_WINDOW_HANDLE(m_window));
-        m_glc = m_window;
-    #elif defined(VORB_IMPL_UI_SFML)
-        VUI_WINDOW_HANDLE(m_window)->setActive(true);
-        m_glc = m_window;
-    #endif
+#elif defined(VORB_IMPL_UI_GLFW)
+    // Initialize OpenGL
+    glfwMakeContextCurrent(VUI_WINDOW_HANDLE(m_window));
+    m_glc = m_window;
+#elif defined(VORB_IMPL_UI_SFML)
+    VUI_WINDOW_HANDLE(m_window)->setActive(true);
+    m_glc = m_window;
+#endif
 
-        // Check for a valid context
-        if (m_glc == nullptr) {
-            printf("Could Not Create OpenGL Context");
-            return false;
-        }
+    // Check for a valid context
+    if (m_glc == nullptr) {
+        printf("Could Not Create OpenGL Context");
+        return false;
+    }
 
-    #if defined(VORB_IMPL_GRAPHICS_OPENGL)
-        // Initialize GLEW
-        if (glewInit() != GLEW_OK) {
-            printf("Glew failed to initialize. Your graphics card is probably WAY too old. Or you forgot to extract the .zip. It might be time for an upgrade :)");
-            return false;
-        }
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+    // Initialize GLEW
+    if (glewInit() != GLEW_OK) {
+        printf("Glew failed to initialize. Your graphics card is probably WAY too old. Or you forgot to extract the .zip. It might be time for an upgrade :)");
+        return false;
+    }
 
-        // Create default clear values
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClearDepth(1.0f);
+    // Create default clear values
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearDepth(1.0f);
 
-        // Initialize Frame Buffer
-        glViewport(0, 0, getWidth(), getHeight());
-    #elif defined(VORB_IMPL_GRAPHICS_D3D)
-        // TODO(Cristian): Place some defaults?
-    #endif
+    // Initialize Frame Buffer
+    glViewport(0, 0, getWidth(), getHeight());
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+    // TODO(Cristian): Place some defaults?
+#endif
 
-        // TODO(Ben): Handle for other IMPLs.
-    #if defined(VORB_IMPL_UI_SDL)
-        { // Get supported window resolutions
-                SDL_DisplayMode mode;
-            // TODO(Ben): Handle other displays indices.
-            int displayIndex = 0;
-            int numDisplayModes = SDL_GetNumDisplayModes(displayIndex);
-            for (int i = 0; i < numDisplayModes; i++) {
-                SDL_GetDisplayMode(displayIndex, i, &mode);
-                ui32v2 res(mode.w, mode.h);
-                if (i == 0 || m_supportedResolutions.back() != res) {
-                    m_supportedResolutions.push_back(res);
-                }
+    // TODO(Ben): Handle for other IMPLs.
+#if defined(VORB_IMPL_UI_SDL)
+    { // Get supported window resolutions
+            SDL_DisplayMode mode;
+        // TODO(Ben): Handle other displays indices.
+        int displayIndex = 0;
+        int numDisplayModes = SDL_GetNumDisplayModes(displayIndex);
+        for (int i = 0; i < numDisplayModes; i++) {
+            SDL_GetDisplayMode(displayIndex, i, &mode);
+            ui32v2 res(mode.w, mode.h);
+            if (i == 0 || m_supportedResolutions.back() != res) {
+                m_supportedResolutions.push_back(res);
             }
         }
-    #else
-        throw 84;
-    #endif
+    }
+#else
+    throw 84;
+#endif
 
     // Set More Display Settings
     setSwapInterval(m_displayMode.swapInterval, true);

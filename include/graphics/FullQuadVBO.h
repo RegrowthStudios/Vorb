@@ -34,9 +34,9 @@ namespace vorb {
                     ui32 m_vb; ///< Vertex buffer ID
                     ui32 m_ib; ///< Index buffer ID
                 };
-                ui32 m_buffers[2] {}; ///< Storage for both buffers used by this mesh
+                ui32 m_buffers[2]; ///< Storage for both buffers used by this mesh
             };
-            ui32 m_vao = 0; ///< VAO with vertex attribute pointing to 0
+            ui32 m_vao; ///< VAO with vertex attribute pointing to 0
         };
     }
 }

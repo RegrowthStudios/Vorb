@@ -48,6 +48,53 @@ namespace vorb {
             size_t size = 0;
         };
 
+        class D3DShaderCode : public IShaderCode {
+        public:
+            D3DShaderCode(IContext* owner) : IShaderCode(owner) {
+                // Empty
+            }
+
+            virtual const void* getCode() const override {
+                return data;
+            }
+            virtual size_t getLength() const override {
+                return size;
+            }
+
+            virtual size_t getMemoryUsed() const override {
+                return 0;
+            }
+
+            virtual void disposeInternal() override {
+                delete(data);
+            }
+
+            void* data = nullptr;
+            size_t size = 0;
+        };
+        class D3DShaderCodeBlob : public IShaderCode {
+        public:
+            D3DShaderCodeBlob(IContext* owner) : IShaderCode(owner) {
+                // Empty
+            }
+
+            virtual const void* getCode() const override {
+                return shaderBlob->GetBufferPointer();
+            }
+            virtual size_t getLength() const override {
+                return shaderBlob->GetBufferSize();
+            }
+
+            virtual size_t getMemoryUsed() const override {
+                return shaderBlob->GetBufferSize();
+            }
+
+            virtual void disposeInternal() override {
+                shaderBlob->Release();
+            }
+
+            ID3DBlob* shaderBlob = nullptr;
+        };
         class D3DVertexShader : public IVertexShader {
         public:
             D3DVertexShader(IContext* owner) : IVertexShader(owner) {

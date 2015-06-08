@@ -2,6 +2,7 @@
 #include "D3DContext.h"
 
 #include <d3d11.h>
+#include <d3dcompiler.h>
 
 #include "D3DDescCompile.h"
 #include "D3DResource.h"
@@ -32,13 +33,22 @@ void vg::D3DContext::present() {
 
 // TODO(Cristian): Implement
 vg::IShaderCode* vorb::graphics::D3DContext::createFromPrecompiled(const void* data, size_t length) {
-    return nullptr;
+    D3DShaderCode* code = new D3DShaderCode(this);
+    code->data = operator new(length);
+    memcpy(code->data, data, length);
+    return code;
 }
 vg::IShaderCode* vorb::graphics::D3DContext::createFromCode(const cString data, size_t length) {
-    return nullptr;
+    D3DShaderCodeBlob* blob = new D3DShaderCodeBlob(this);
+    ID3DBlob* error;
+    D3DCompile(data, length, NULL, NULL, NULL, NULL, "vs_4_0", 0, 0,&blob->shaderBlob, &error);
+    error->Release();
+    return blob;
 }
 
 vg::IVertexShader* vorb::graphics::D3DContext::createVertexShader(const IShaderCode* code) {
+    D3DVertexShader* shader = new D3DVertexShader(this);
+    m_device->CreateVertexShader();
     return nullptr;
 }
 vg::IGeometryShader* vorb::graphics::D3DContext::createGeometryShader(const IShaderCode* code) {

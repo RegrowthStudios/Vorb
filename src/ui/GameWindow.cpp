@@ -121,7 +121,7 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
     SDL_GL_MakeCurrent(VUI_WINDOW_HANDLE(m_window), (SDL_GLContext)m_glc);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     m_glc = new D3DContext;
-
+#if defined(VORB_DX_9)
     // Make COM object for D3D initialization
     VUI_COM(m_glc) = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -146,6 +146,53 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
             &(VUI_CONTEXT(m_glc))
             );
     }
+#else
+     DXGI_SWAP_CHAIN_DESC sd;
+        ZeroMemory(&sd, sizeof(sd));
+        sd.BufferCount = 1;
+        sd.BufferDesc.Width = 800;
+        sd.BufferDesc.Height = 600;
+    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    sd.BufferDesc.RefreshRate.Numerator = 60;
+    sd.BufferDesc.RefreshRate.Denominator = 1;
+    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    sd.OutputWindow = GetActiveWindow();
+    sd.SampleDesc.Count = 1;
+    sd.SampleDesc.Quality = 0;
+    sd.Windowed = TRUE;
+    
+        const D3D_FEATURE_LEVEL lvl[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 };
+    
+        UINT createDeviceFlags = 0;
+#ifdef DEBUG
+        // createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+        
+        D3D_FEATURE_LEVEL  featureLevelsSupported;
+    ID3D11Device* device = nullptr;
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, lvl, _countof(lvl), D3D11_SDK_VERSION, &sd, &d3dContext>dxgi, &d3dContext>device, &featureLevelsSupported, &d3dContext>immediateContext);
+    if (hr != S_OK) {
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, &lvl[1], _countof(lvl)  1, D3D11_SDK_VERSION, &sd, &d3dContext>dxgi, &d3dContext>device, &featureLevelsSupported, &d3dContext>immediateContext);
+        
+    }
+    
+            // Get a pointer to the back buffer and set it
+        d3dContext>dxgi>GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&d3dContext>backBufferTexture);
+    d3dContext>device>CreateRenderTargetView(d3dContext>backBufferTexture, NULL, &d3dContext>backBufferRenderTargetView);
+    d3dContext>immediateContext>OMSetRenderTargets(1, &d3dContext>backBufferRenderTargetView, NULL);
+    
+            // Setup the viewport
+        D3D11_VIEWPORT vp;
+    vp.Width = 640;
+    vp.Height = 480;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    d3dContext>immediateContext>RSSetViewports(1, &vp);
+#endif
 #endif
 
 #elif defined(VORB_IMPL_UI_GLFW)

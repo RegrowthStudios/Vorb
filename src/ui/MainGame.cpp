@@ -223,14 +223,18 @@ void vui::MainGame::onRenderFrame() {
         VG_DX_DEVICE(m_window.getContext())->SetViewport(&vp);
 #endif
     }
+#if defined(VORB_DX_9)
     VG_DX_DEVICE(m_window.getContext())->BeginScene();
+#endif
 #endif
 
     // Draw the screen
     m_screen->draw(m_curTime);
 
 #if defined(VORB_IMPL_GRAPHICS_D3D)
+#if defined(VORB_DX_9)
     VG_DX_DEVICE(m_window.getContext())->EndScene();
+#endif
 #endif
 }
 

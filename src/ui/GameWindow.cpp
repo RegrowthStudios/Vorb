@@ -227,8 +227,16 @@ void vui::GameWindow::dispose() {
     }
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     if (m_glc) {
-        VUI_CONTEXT(m_glc)->Release();
+        D3DContext* d3dContext = ((D3DContext*)m_glc);
+        d3dContext->device->Release();
+#if defined(VORB_DX_9)
         VUI_COM(m_glc)->Release();
+#else
+        d3dContext->backBufferRenderTargetView->Release();
+        d3dContext->backBufferTexture->Release();
+        d3dContext->immediateContext->Release();
+        d3dContext->dxgi->Release();
+#endif
         delete m_glc;
     }
 #endif
@@ -398,7 +406,12 @@ void vui::GameWindow::sync(ui32 frameTime) {
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
     SDL_GL_SwapWindow(VUI_WINDOW_HANDLE(m_window));
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
+    // TODO(Cristian): All-around improvements to D3D commands everywhere
+#if defined(VORB_DX_9)
     VUI_CONTEXT(m_glc)->Present(nullptr, nullptr, nullptr, nullptr);
+#else
+    ((D3DContext*)m_glc)->dxgi->Present(1, 0);
+#endif
 #endif
 #elif defined(VORB_IMPL_UI_GLFW)
     glfwSwapBuffers(VUI_WINDOW_HANDLE(m_window));
@@ -422,6 +435,11 @@ vui::GraphicsContext vui::GameWindow::getContext() const {
     return VUI_CONTEXT(m_glc);
 #endif
 }
+#if defined(VORB_DX_11)
+ID3D11RenderTargetView* vui::GameWindow::getMainRenderTargetView() const {
+    return ((D3DContext*)m_glc)->backBufferRenderTargetView;
+}
+#endif
 i32 vui::GameWindow::getX() const {
     i32 v;
 #if defined(VORB_IMPL_UI_SDL)

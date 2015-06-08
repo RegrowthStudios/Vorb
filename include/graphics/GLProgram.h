@@ -74,16 +74,16 @@ namespace vorb {
                 return m_id;
             }
             /// @return True if the program was created
-            bool getIsCreated() const {
+            bool isCreated() const {
                 return m_id != 0;
             }
             /// @return True if the program is linked
-            bool getIsLinked() const {
+            bool isLinked() const {
                 return m_isLinked;
             }
             /// @return True if the program is in use
-            bool getIsInUse() const {
-                return m_programInUse == this;
+            bool isInUse() const {
+                return m_programInUse == m_id;
             }
 
             /// Attaches shader to the build information
@@ -156,7 +156,7 @@ namespace vorb {
             static void unuse();
 
             /// @return The current program that is in use
-            static GLProgram* getCurrentProgram() {
+            static VGProgram getCurrentProgram() {
                 return m_programInUse;
             }
 
@@ -175,7 +175,7 @@ namespace vorb {
             UniformMap m_uniforms; ///< Dictionary of uniforms
             AttributeSemBinding m_semanticBinding; ///< Dictionary of attributes for semantics
 
-            static GLProgram* m_programInUse; ///< The current program in use
+            static VGProgram m_programInUse; ///< The current program in use
         };
     }
 }

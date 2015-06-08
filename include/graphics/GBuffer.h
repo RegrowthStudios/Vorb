@@ -110,6 +110,12 @@ namespace vorb {
                 return m_size.y;
             }
 
+            const VGFramebuffer& getGeometryID() const {
+                return m_fboGeom;
+            }
+            const VGTexture& getDepthTexture() const {
+                return m_texDepth;
+            }
         private:
             ui32v2 m_size; ///< The width and height of the GBuffer
 

@@ -26,7 +26,7 @@ namespace vorb {
     namespace graphics {
 
         class GLProgram;
-        typedef std::map<nString, GLProgram*> GLProgramMap;
+        typedef std::map<nString, GLProgram> GLProgramMap;
 
         /// Static class that handles caching, creation, and destruction of GLPrograms
         class ShaderManager {
@@ -40,10 +40,10 @@ namespace vorb {
             /// @param fragIOM: Optional IOManager for frag #include lookups
             /// @param defines: #defines for the program
             /// @return the created program.
-            static CALLER_DELETE GLProgram* createProgram(const cString vertSrc, const cString fragSrc,
-                                                          vio::IOManager* vertIOM = nullptr,
-                                                          vio::IOManager* fragIOM = nullptr,
-                                                          cString defines = nullptr);
+            static GLProgram createProgram(const cString vertSrc, const cString fragSrc,
+                                           vio::IOManager* vertIOM = nullptr,
+                                           vio::IOManager* fragIOM = nullptr,
+                                           cString defines = nullptr);
             /// Creates a GLProgram from files.
             /// Does not register to global cache.
             /// @param vertPath: Path to vertex shader
@@ -51,38 +51,33 @@ namespace vorb {
             /// @param iom: Optional IOManager for loading
             /// @param defines: #defines for the program
             /// @return the created program.
-            static CALLER_DELETE GLProgram* createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
-                                                                  vio::IOManager* iom = nullptr, cString defines = nullptr);
-
-            /// Disposes and deallocates a program and sets handle to nullptr
-            /// @param program: Pointer to a GLProgram pointer
-            /// @post: program gets set to nullptr
-            static void destroyProgram(CALLEE_DELETE GLProgram** program);
+            static GLProgram createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
+                                                   vio::IOManager* iom = nullptr, cString defines = nullptr);
 
             /// Disposes and deallocates all globally cached programs and clears the cache
-            static void destroyAllPrograms();
+            static void disposeAllPrograms();
 
             /// Adds a program to the global cache
             /// @param name: String identifier for the program
             /// @param program: The GLProgram to cache
             /// @return false if a program is already cached on that name
-            static bool registerProgram(const nString& name, GLProgram* program);
+            static bool registerProgram(const nString& name, const GLProgram& program);
 
             /// Removes a program from the global cache and returns it
             /// @param name: String identifier for the program
             /// @return the GLProgram that was unregistered
-            static CALLER_DELETE GLProgram* unregisterProgram(const nString& name);
+            static GLProgram unregisterProgram(const nString& name);
             /// Removes a program from the global cache and returns it
             /// WARNING: Is slower than the nString version - O(n) lookup
             /// instead of O(log(n))
             /// @param program: The GLProgram to unregister
             /// @return false if it was not cached
-            static bool unregisterProgram(const GLProgram* program);
+            static bool unregisterProgram(const GLProgram& program);
 
             /// Gets a program from the cache.
             /// @param name: String identifier for the program
             /// @return nullptr on failure or the program
-            static GLProgram* getProgram(const nString& name);
+            static GLProgram& getProgram(const nString& name);
 
             /// Gets size of program cache
             static GLProgramMap::size_type getNumCachedPrograms() { return m_programMap.size(); };
@@ -97,6 +92,7 @@ namespace vorb {
             static void triggerShaderCompilationError(Sender s, const nString& n); ///< Fires the onShaderCompilationError event
             static void triggerProgramLinkError(Sender s, const nString& n); ///< Fires the onProgramLinkError event
             static GLProgramMap m_programMap; ///< For globally caching programs
+            static GLProgram m_nilProgram;
         };
     }
 }

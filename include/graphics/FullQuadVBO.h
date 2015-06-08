@@ -20,6 +20,7 @@ namespace vorb {
         /// Wrapper over common functionality to draw a quad across the entire screen
         class FullQuadVBO {
         public:
+            FullQuadVBO();
             /// Initialize all OpenGL resources
             /// @param attrLocation: Position attribute location for VAO
             void init(i32 attrLocation = 0);
@@ -31,8 +32,8 @@ namespace vorb {
         private:
             union {
                 struct {
-                    ui32 m_vb = 0; ///< Vertex buffer ID
-                    ui32 m_ib = 0; ///< Index buffer ID
+                    ui32 m_vb; ///< Vertex buffer ID
+                    ui32 m_ib; ///< Index buffer ID
                 };
                 ui32 m_buffers[2]; ///< Storage for both buffers used by this mesh
             };

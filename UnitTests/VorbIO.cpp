@@ -250,3 +250,24 @@ TEST(ImageIO) {
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
+
+TEST(CopyProgress) {
+    vorb::init(vorb::InitParam::IO);
+
+    // Create a function handle for displaying the current output
+    vio::CopyFileProgressCallback r = makeRDelegate<bool, ui64, ui64>([&] (ui64 current, ui64 total) {
+        printf("%12llu out of %12llu bytes copied\n", current, total);
+        return false;
+    });
+
+    // Attempt a bad copy
+    bool success = !vio::copyWithProgress("data/models/WaveOBJ/horse_norms100k.obj", "data/copytest.txt", r);
+    if (!success) goto CopyProgressEnd;
+
+    // Attempt a good copy
+    success &= vio::copyWithProgress("data/models/WaveOBJ/horse_norms.obj", "data/copytest.txt", r);
+
+CopyProgressEnd:
+    vorb::dispose(vorb::InitParam::IO);
+    return success;
+}

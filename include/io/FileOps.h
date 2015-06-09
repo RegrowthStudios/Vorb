@@ -19,7 +19,11 @@
 
 namespace vorb {
     namespace io {
+        typedef RDelegate<bool, ui64, ui64> CopyFileProgressCallback;
+
         bool buildDirectoryTree(const Path& path, bool omitEnd = false);
+        
+        bool copyWithProgress(const Path& src, const Path& dest, CopyFileProgressCallback f);
     }
 }
 namespace vio = vorb::io;

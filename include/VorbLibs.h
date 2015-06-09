@@ -38,7 +38,10 @@
 #ifndef OS_WINDOWS
 #error DirectX is Windows-only
 #endif // !OS_WINDOWS
+
 #pragma message("VORB LIB: Linking GRAPHICS=D3D")
+#pragma message("Linking against <d3dcompiler.lib>")
+#pragma comment(lib, "d3dcompiler.lib")
 #if defined(VORB_DX_9)
 #pragma message("Linking against <d3d9.lib>")
 #pragma comment(lib, "d3d9.lib")

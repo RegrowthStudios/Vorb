@@ -185,3 +185,4 @@ FakesAssemblies/
 docs/
 *.dox.txt
 UnitTester/app.config
+UnitTester/data/copytest.txt

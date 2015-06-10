@@ -21,6 +21,7 @@
 #include <condition_variable>
 
 #include "concurrentqueue.h"
+#include "blockingconcurrentqueue.h"
 #include "IThreadPoolTask.h"
 
 class CAEngine;
@@ -37,7 +38,6 @@ namespace vorb {
         template<typename T>
         class ThreadPool {
         public:
-            ThreadPool();
             ~ThreadPool();
 
             /// Initializes the threadpool
@@ -53,23 +53,14 @@ namespace vorb {
             /// Adds a task to the task queue
             /// @param task: The task to add
             void addTask(IThreadPoolTask<T>* task) {
-                _tasks.enqueue(task);
-                _cond.notify_one();
+                m_tasks.enqueue(task);
             }
 
             /// Add an array of tasks to the task queue
             /// @param tasks: The array of tasks to add
             /// @param size: The size of the array
             void addTasks(IThreadPoolTask<T>* tasks[], size_t size) {
-                _tasks.enqueue_bulk(tasks, size);
-                _cond.notify_all();
-            }
-
-            /// Adds a vector of tasks to the task queue
-            /// @param tasks: The vector of tasks to add
-            void addTasks(std::vector<IThreadPoolTask<T>*> tasks) {
-                _tasks.enqueue_bulk(tasks.data(), tasks.size());
-                _cond.notify_all();
+                m_tasks.enqueue_bulk(tasks, size);
             }
 
             /// Gets a bulk of tasks from the finished tasks
@@ -77,18 +68,15 @@ namespace vorb {
             /// @param maxSize: Max tasks to deque
             /// @return: The number of dequeued tasks
             size_t getFinishedTasks(IThreadPoolTask<T>** taskBuffer, size_t maxSize) {
-                return _finishedTasks.try_dequeue_bulk(taskBuffer, maxSize);
+                return m_finishedTasks.try_dequeue_bulk(taskBuffer, maxSize);
             }
 
-            /// Checks if the threadpool is finished with all it's work
-            /// @return true when all threads are sleeping and all work is done
-            bool isFinished();
-
             /// Getters
-            i32 getSize() const { return _workers.size(); }
-            size_t getTasksSizeApprox() const { return _tasks.size_approx(); }
-            size_t getFinishedTasksSizeApprox() const { return _finishedTasks.size_approx(); }
+            i32 getNumWorkers() const { return m_workers.size(); }
+            size_t getTasksSizeApprox() const { return m_tasks.size_approx(); }
+            size_t getFinishedTasksSizeApprox() const { return m_finishedTasks.size_approx(); }
         private:
+            VORB_NON_COPYABLE(ThreadPool);
             // Typedef for func ptr
             typedef void (ThreadPool<T>::*workerFunc)(T*);
 
@@ -115,16 +103,19 @@ namespace vorb {
             void workerThreadFunc(T* data);
 
             /// Lock free task queues
-            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _tasks; ///< Holds tasks to execute
-            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _finishedTasks; ///< Holds finished tasks
+            moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*> m_tasks; ///< Holds tasks to execute
+            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> m_finishedTasks; ///< Holds finished tasks
 
-            std::mutex _condMutex; ///< Mutex for the conditional variable
-            std::condition_variable _cond; ///< Conditional variable that workers block on
-
-            bool _isInitialized = false; ///< true when the pool has been initialized
-            std::vector<WorkerThread*> _workers; ///< All the worker threads
+            bool m_isInitialized = false; ///< true when the pool has been initialized
+            std::vector<WorkerThread*> m_workers; ///< All the worker threads
         };
 
+        template<typename T>
+        class QuitThreadPoolTask : public IThreadPoolTask<T> {
+            virtual void execute(T* workerData) override {
+                workerData->
+            }
+        };
     }
 }
 namespace vcore = vorb::core;

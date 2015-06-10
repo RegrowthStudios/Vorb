@@ -27,7 +27,6 @@
 /// Stores Information About An Atlas Page For Construction Purposes
 class BlockAtlasPage;
 
-// TODO(Ben): Bitfield for smaller mem usage
 /*! @brief Maps textures into a texture atlas
 */
 namespace vorb {
@@ -64,15 +63,19 @@ namespace vorb {
                 return m_pages.size();
             }
 
+            const ui32& getTilesPerRow() const { return m_tilesPerRow; }
+            const ui32& getTilesPerPage() const { return m_tilesPerPage; }
+
             void dispose();
         private:
             VORB_NON_COPYABLE(VoxelTextureStitcher);
             void addPage();
 
+            // TODO(Ben): Bitfield for smaller mem usage
             std::vector<bool*> m_pages; ///< list of pages. A page is just an array of bools.
             ui32 m_oldestFreeSlot; ///< The left-most free slot in the atlas array
-            ui32 m_tilesPerPage;
             ui32 m_tilesPerRow;
+            ui32 m_tilesPerPage;
         };
     }
 }

@@ -38,6 +38,7 @@ namespace vorb {
         template<typename T>
         class ThreadPool {
         public:
+            ThreadPool() {};
             ~ThreadPool();
 
             /// Initializes the threadpool
@@ -113,7 +114,7 @@ namespace vorb {
         template<typename T>
         class QuitThreadPoolTask : public IThreadPoolTask<T> {
             virtual void execute(T* workerData) override {
-                workerData->
+                workerData->stop = true;
             }
         };
     }

@@ -30,7 +30,7 @@ void vcore::ThreadPool<T>::destroy() {
     if (!m_isInitialized) return;
 
     // Tell threads to quit
-    std::vector<QuitThreadPoolTask> quitTasks(m_workers.size());
+    std::vector<QuitThreadPoolTask<T> > quitTasks(m_workers.size());
     for (size_t i = 0; i < m_workers.size(); i++) {
         m_workers[i]->data.stop = true;
         m_tasks.enqueue(&quitTasks[i]);

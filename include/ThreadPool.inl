@@ -8,12 +8,8 @@ void vcore::ThreadPool<T>::clearTasks() {
     #define BATCH_SIZE 50
     IThreadPoolTask<T>* tasks[BATCH_SIZE];
     int size;
-    // Grab and kill tasks in batches
-    while ((size = m_tasks.try_dequeue_bulk(tasks, BATCH_SIZE))) {
-        for (int i = 0; i < size; i++) {
-            delete tasks[i];
-        }
-    }
+    // Grab tasks in batches
+    while ((size = m_tasks.try_dequeue_bulk(tasks, BATCH_SIZE)));
 }
 
 template<typename T>

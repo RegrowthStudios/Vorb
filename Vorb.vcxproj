@@ -335,6 +335,7 @@
     <ClCompile Include="src\ui\WidgetList.cpp" />
     <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp" />
     <ClCompile Include="src\ui\WidgetScriptFuncs.cpp" />
+    <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -472,6 +473,7 @@
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
+    <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />

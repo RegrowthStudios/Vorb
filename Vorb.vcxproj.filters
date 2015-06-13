@@ -276,6 +276,9 @@
     <ClCompile Include="src\graphics\Frustum.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp">
+      <Filter>Voxel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -677,6 +680,9 @@
     </ClInclude>
     <ClInclude Include="include\graphics\Frustum.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\voxel\VoxelTextureStitcher.h">
+      <Filter>Voxel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -170,7 +170,7 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
         // createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
         
-        D3D_FEATURE_LEVEL  featureLevelsSupported;
+    D3D_FEATURE_LEVEL  featureLevelsSupported;
     ID3D11Device* device = nullptr;
     HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, lvl, _countof(lvl), D3D11_SDK_VERSION, &sd, &d3dContext->dxgi, &d3dContext->device, &featureLevelsSupported, &d3dContext->immediateContext);
     if (hr != S_OK) {
@@ -178,13 +178,13 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
         
     }
     
-            // Get a pointer to the back buffer and set it
-        d3dContext->dxgi->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&d3dContext->backBufferTexture);
+    // Get a pointer to the back buffer and set it
+    d3dContext->dxgi->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&d3dContext->backBufferTexture);
     d3dContext->device->CreateRenderTargetView(d3dContext->backBufferTexture, NULL, &d3dContext->backBufferRenderTargetView);
     d3dContext->immediateContext->OMSetRenderTargets(1, &d3dContext->backBufferRenderTargetView, NULL);
     
             // Setup the viewport
-        D3D11_VIEWPORT vp;
+    D3D11_VIEWPORT vp;
     vp.Width = 640;
     vp.Height = 480;
     vp.MinDepth = 0.0f;

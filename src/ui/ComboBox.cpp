@@ -4,7 +4,7 @@
 #include "ui/UIRenderer.h"
 #include "utils.h"
 
-vui::ComboBox::ComboBox() : Widget() {
+vui::ComboBox::ComboBox(InputDispatcher* dispatcher) : Widget(dispatcher), m_mainButton(dispatcher), m_dropPanel(dispatcher) {
     ValueChange.setSender(this);
     addWidget(&m_mainButton);
     addWidget(&m_dropPanel);
@@ -13,14 +13,14 @@ vui::ComboBox::ComboBox() : Widget() {
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
+vui::ComboBox::ComboBox(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     m_mainButton.setDimensions(m_dimensions);
     updatePosition();
 }
 
-vui::ComboBox::ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
+vui::ComboBox::ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
 }
 
@@ -76,7 +76,7 @@ void vui::ComboBox::updatePosition() {
 
 void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
-    m_buttons.push_back(new Button);
+    m_buttons.push_back(new Button(m_dispatcher));
     auto b = m_buttons.back();
     b->addDrawables(m_renderer); // TODO(Ben): This only works consistently in LUA
     m_dropPanel.addWidget(b);

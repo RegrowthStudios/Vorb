@@ -33,6 +33,7 @@ namespace vorb {
     namespace ui {
 
         // Forward declarations
+        class InputDispatcher;
         class FormScriptEnvironment;
         class IGameScreen;
         class Form;
@@ -45,7 +46,7 @@ namespace vorb {
             ScriptedUI();
             virtual ~ScriptedUI();
             virtual void init(const nString& startFormPath, IGameScreen* ownerScreen,
-                              const GameWindow* window, const f32v4& destRect,
+                              GameWindow* window, const f32v4& destRect,
                               vg::SpriteFont* defaultFont = nullptr);
             virtual void draw();
             virtual void update(f32 dt = 1.0f);
@@ -54,7 +55,7 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions);
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
-            virtual Form* makeForm(nString name, nString filePath);
+            virtual Form* makeForm(InputDispatcher* dispatcher, nString name, nString filePath);
             virtual void registerScriptValues(FormScriptEnvironment* newFormEnv);
             virtual Form* enableForm(nString name);
             virtual Form* disableForm(nString name);

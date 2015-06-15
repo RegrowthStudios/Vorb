@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "ui/WidgetList.h"
 
-vui::WidgetList::WidgetList() : Widget() {
+vui::WidgetList::WidgetList(InputDispatcher* dispatcher) : Widget(dispatcher), m_panel(dispatcher) {
     addWidget(&m_panel);
 }
 
-vui::WidgetList::WidgetList(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList() {
+vui::WidgetList::WidgetList(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     m_panel.setDimensions(m_dimensions);
     updatePosition();
 }
 
-vui::WidgetList::WidgetList(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
+vui::WidgetList::WidgetList(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
 }
 

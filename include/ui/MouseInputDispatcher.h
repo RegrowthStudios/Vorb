@@ -103,8 +103,8 @@ namespace vorb {
             void setRelative(bool v);
             void setHidden(bool v);
 
-            i32v2 m_lastPos; ///< The last tracked position of the mouse
-            i32v2 m_fullScroll; ///< The accumulated values of the scroll wheel
+            i64v2 m_lastPos; ///< The last tracked position of the mouse
+            i64v2 m_fullScroll; ///< The accumulated values of the scroll wheel
 
             std::atomic<i32> m_x = ATOMIC_VAR_INIT(0); ///< The last known x-position of the mouse
             std::atomic<i32> m_y = ATOMIC_VAR_INIT(0); ///< The last known y-position of the mouse

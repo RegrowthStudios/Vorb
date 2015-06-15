@@ -24,6 +24,8 @@
 #include <include/ui/ScreenList.h>
 #include <include/ui/Slider.h>
 #include <include/ui/UIRenderer.h>
+#include <include/ui/OSWindow.h>
+
 
 struct Vertex {
     f32v3 position;
@@ -39,8 +41,50 @@ public:
         return SCREEN_INDEX_NO_SCREEN;
     }
     virtual void build() {
+        auto& dispatcher = m_game->getWindow().getDispatcher();
+        pool.addAutoHook(dispatcher.key.onFocusGained, [] (Sender) {
+            puts("Key focus gained");
+        });
+        pool.addAutoHook(dispatcher.key.onFocusLost, [] (Sender) {
+            puts("Key focus lost");
+        });
+        pool.addAutoHook(dispatcher.key.onKeyDown, [] (Sender, const vui::KeyEvent& e) {
+            printf("Key: %d-%d was pressed\n", e.keyCode, e.scanCode);
+        });
+        pool.addAutoHook(dispatcher.key.onKeyUp, [] (Sender, const vui::KeyEvent& e) {
+            printf("Key: %d-%d was released\n", e.keyCode, e.scanCode);
+        });
+        pool.addAutoHook(dispatcher.key.onText, [] (Sender, const vui::TextEvent& e) {
+            char c[2] = { e.text[0], 0 };
+            printf("Text: %s\n", c);
+        });
+        pool.addAutoHook(dispatcher.mouse.onButtonDown, [] (Sender, const vui::MouseButtonEvent& e) {
+            printf("Mouse: %d was pressed at (%d,%d)\n", e.button, e.x, e.y);
+        });
+        pool.addAutoHook(dispatcher.mouse.onButtonUp, [] (Sender, const vui::MouseButtonEvent& e) {
+            printf("Mouse: %d was released at (%d,%d)\n", e.button, e.x, e.y);
+        });
+        pool.addAutoHook(dispatcher.mouse.onFocusGained, [] (Sender, const vui::MouseEvent& e) {
+            printf("Mouse: gained at (%d,%d)\n", e.x, e.y);
+        });
+        pool.addAutoHook(dispatcher.mouse.onFocusLost, [] (Sender, const vui::MouseEvent& e) {
+            printf("Mouse: lost at (%d,%d)\n", e.x, e.y);
+        });
+        pool.addAutoHook(dispatcher.mouse.onMotion, [] (Sender, const vui::MouseMotionEvent& e) {
+            printf("Mouse: motion (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
+        });
+        pool.addAutoHook(dispatcher.mouse.onWheel, [] (Sender, const vui::MouseWheelEvent& e) {
+            printf("Mouse: scroll (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
+        });
+        pool.addAutoHook(vui::InputDispatcher::onDragDrop, [] (Sender, const vui::DragDropEvent& e) {
+            printf("File: %s\n", e.file);
+        });
+        pool.addAutoHook(dispatcher.window.onResize, [] (Sender, const vui::WindowResizeEvent& e) {
+            printf("Resize: (%d,%d)\n", e.w, e.h);
+        });
     }
     virtual void destroy(const vui::GameTime& gameTime) {
+        pool.dispose();
     }
     virtual void onEntry(const vui::GameTime& gameTime) {
     }
@@ -50,6 +94,8 @@ public:
     }
     virtual void draw(const vui::GameTime& gameTime) {
     }
+
+    AutoDelegatePool pool;
 };
 
 class WidgetTestScreen : public vui::IGameScreen {
@@ -65,8 +111,8 @@ public:
     virtual void destroy(const vui::GameTime& gameTime) {
     }
     virtual void onEntry(const vui::GameTime& gameTime) {
-        font.init("Data/chintzy.ttf", 32);
-        form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y));
+        //font.init("Data/chintzy.ttf", 32);
+        //form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y));
 
         // Load textures
         /* glGenTextures(1, &texture);
@@ -93,7 +139,7 @@ public:
      //   env.loadForm("data/scripts/Form1.lua");
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        form.dispose();
+        //form.dispose();
        // font.dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
@@ -101,12 +147,12 @@ public:
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        form.draw();
+        //form.draw();
     }
 
     ui32v2 m_viewportDims = ui32v2(800, 600);
     vui::FormScriptEnvironment env;
-    vui::Form form;
+    //vui::Form form;
     vg::SpriteFont font;
     VGTexture texture, checkedTexture;
 };
@@ -149,54 +195,7 @@ TEST(Widgets) {
 
 TEST(InputFuncs) {
     vorb::init(vorb::InitParam::ALL);
-
-    AutoDelegatePool pool;
-    pool.addAutoHook(vui::InputDispatcher::key.onFocusGained, [] (Sender) {
-        puts("Key focus gained");
-    });
-    pool.addAutoHook(vui::InputDispatcher::key.onFocusLost, [] (Sender) {
-        puts("Key focus lost");
-    });
-    pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [] (Sender, const vui::KeyEvent& e) {
-        printf("Key: %d-%d was pressed\n", e.keyCode, e.scanCode);
-    });
-    pool.addAutoHook(vui::InputDispatcher::key.onKeyUp, [] (Sender, const vui::KeyEvent& e) {
-        printf("Key: %d-%d was released\n", e.keyCode, e.scanCode);
-    });
-    pool.addAutoHook(vui::InputDispatcher::key.onText, [] (Sender, const vui::TextEvent& e) {
-        char c[2] = { e.text[0], 0 };
-        printf("Text: %s\n", c);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonDown, [] (Sender, const vui::MouseButtonEvent& e) {
-        printf("Mouse: %d was pressed at (%d,%d)\n", e.button, e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonUp, [] (Sender, const vui::MouseButtonEvent& e) {
-        printf("Mouse: %d was released at (%d,%d)\n", e.button, e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusGained, [] (Sender, const vui::MouseEvent& e) {
-        printf("Mouse: gained at (%d,%d)\n", e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusLost, [] (Sender, const vui::MouseEvent& e) {
-        printf("Mouse: lost at (%d,%d)\n", e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onMotion, [] (Sender, const vui::MouseMotionEvent& e) {
-        printf("Mouse: motion (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onWheel, [] (Sender, const vui::MouseWheelEvent& e) {
-        printf("Mouse: scroll (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
-    });
-    pool.addAutoHook(vui::InputDispatcher::window.onFile, [] (Sender, const vui::WindowFileEvent& e) {
-        printf("File: %s\n", e.file);
-    });
-    pool.addAutoHook(vui::InputDispatcher::window.onResize, [] (Sender, const vui::WindowResizeEvent& e) {
-        printf("Resize: (%d,%d)\n", e.w, e.h);
-    });
-
-
     { VGTestApp(new TestScreen).run(); }
-
-    pool.dispose();
-
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
@@ -321,5 +320,28 @@ float4 main(PSInput input) : SV_TARGET {
     window.dispose();
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
+    return true;
+}
+
+TEST(OSWindow) {
+    vorb::init(vorb::InitParam::ALL);
+
+    {
+        vui::OSWindow window {};
+        vui::OSWindowSettings settings {};
+        settings.width = 800;
+        settings.height = 600;
+        settings.isBorderless = false;
+        settings.isFullscreen = false;
+        settings.isResizable = false;
+        vui::OSWindow::create(window, settings);
+
+        for (size_t i = 0; i < 20; i++) {
+
+            Sleep(100);
+        }
+    }
+
+    vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

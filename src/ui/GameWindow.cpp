@@ -274,10 +274,9 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
     setSwapInterval(m_displayMode.swapInterval, true);
 
     // Push input from this window and receive quit signals
-    vui::InputDispatcher::init(this);
-    vui::InputDispatcher::window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
+    m_dispatcher->window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
     vui::InputDispatcher::onQuit += makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onResize += makeDelegate(*this, &GameWindow::onResize);
+    m_dispatcher->window.onResize += makeDelegate(*this, &GameWindow::onResize);
     m_quitSignal = false;
 
     return true;
@@ -286,9 +285,8 @@ void vui::GameWindow::dispose() {
     if (!isInitialized()) return;
 
     vui::InputDispatcher::onQuit -= makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onResize -= makeDelegate(*this, &GameWindow::onResize);
-    vui::InputDispatcher::dispose();
+    m_dispatcher->window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
+    m_dispatcher->window.onResize -= makeDelegate(*this, &GameWindow::onResize);
     saveSettings();
 
 #if defined(VORB_IMPL_UI_SDL)
@@ -378,7 +376,7 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
-        InputDispatcher::window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
+        m_dispatcher->window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
 #elif defined(VORB_IMPL_UI_SDL)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)

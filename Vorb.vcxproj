@@ -325,9 +325,11 @@
     <ClCompile Include="src\ui\Button.cpp" />
     <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\GameWindowScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\ImplUISDL.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
     <ClCompile Include="src\ui\Label.cpp" />
     <ClCompile Include="src\ui\LabelScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\OSWindow.cpp" />
     <ClCompile Include="src\ui\Panel.cpp" />
     <ClCompile Include="src\ui\PanelScriptFuncs.cpp" />
     <ClCompile Include="src\ui\ScriptedUI.cpp" />
@@ -473,6 +475,7 @@
     <ClInclude Include="include\ui\IWidgetContainer.h" />
     <ClInclude Include="include\ui\Label.h" />
     <ClInclude Include="include\ui\LabelScriptFuncs.h" />
+    <ClInclude Include="include\ui\OSWindow.h" />
     <ClInclude Include="include\ui\Panel.h" />
     <ClInclude Include="include\ui\PanelScriptFuncs.h" />
     <ClInclude Include="include\ui\ScriptedUI.h" />
@@ -493,6 +496,7 @@
     <ClInclude Include="src\graphics\D3DAdapter.h" />
     <ClInclude Include="src\graphics\D3DResource.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
+    <ClInclude Include="src\ui\ImplUISDL.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />
   </ItemGroup>
   <ItemGroup>

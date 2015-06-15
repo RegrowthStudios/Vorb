@@ -3,27 +3,26 @@
 
 #include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
+#include "ui/OSWindow.h"
+#include "ImplUISDL.h"
 #include "KeyMappings.inl"
 
 #if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
 #endif
 
-vui::MouseEventDispatcher vui::InputDispatcher::mouse;
-vui::KeyboardEventDispatcher vui::InputDispatcher::key;
-vui::WindowEventDispatcher vui::InputDispatcher::window;
 volatile bool vui::InputDispatcher::m_isInit = false;
-vui::GameWindow* vui::InputDispatcher::m_window = nullptr;
+Event<const vui::DragDropEvent&> vui::InputDispatcher::onDragDrop(nullptr);
 Event<> vui::InputDispatcher::onQuit(nullptr);
 
-void vui::InputDispatcher::init(GameWindow* w) {
+void vui::InputDispatcher::init() {
     if (m_isInit) throw std::runtime_error("Input dispatcher is already initialized");
     m_isInit = true;
-    m_window = w;
 
 #if defined(VORB_IMPL_UI_SDL)
     SDL_SetEventFilter(impl::InputDispatcherEventCatcher::onSDLEvent, nullptr);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+    SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
     SDL_StartTextInput();
 #elif defined(VORB_IMPL_UI_GLFW)
     GLFWwindow* window = (GLFWwindow*)m_window->getHandle();
@@ -42,11 +41,6 @@ void vui::InputDispatcher::init(GameWindow* w) {
     glfwSetWindowPosCallback(window, impl::InputDispatcherEventCatcher::onWindowPosEvent);
     glfwSetWindowSizeCallback(window, impl::InputDispatcherEventCatcher::onWindowSizeEvent);
 #endif
-
-    // Clear values
-    memset(key.m_state, 0, sizeof(key.m_state));
-    mouse.m_fullScroll = i32v2(0, 0);
-    mouse.m_lastPos = i32v2(0, 0);
 }
 void vui::InputDispatcher::dispose() {
     if (!m_isInit) return;
@@ -71,7 +65,6 @@ void vui::InputDispatcher::dispose() {
     glfwSetWindowPosCallback(window, nullptr);
     glfwSetWindowSizeCallback(window, nullptr);
 #endif
-    m_window = nullptr;
 }
 
 #if defined(VORB_IMPL_UI_SDL) || defined(VORB_IMPL_UI_SFML)
@@ -84,7 +77,7 @@ typedef union {
     vui::KeyEvent key;
     vui::TextEvent text;
     vui::WindowResizeEvent windowResize;
-    vui::WindowFileEvent windowFile;
+    vui::DragDropEvent dragDrop;
 } InputEvent;
 #endif
 
@@ -128,78 +121,92 @@ void convert(vui::MouseButton& mb, const ui8& sb) {
 
 i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     InputEvent ie;
+    InputDispatcher* dispatcher = nullptr;
+    std::unordered_map<ui32, InputDispatcher*>::iterator kvp;
+#define GET_DISPATCHER(EVENT) \
+    kvp = dispatchers.find(e->## EVENT ##.windowID); \
+    if (kvp == dispatchers.end()) return 0; \
+    dispatcher = kvp->second
+
 
     switch (e->type) {
     case SDL_KEYDOWN:
+        GET_DISPATCHER(key);
         convert(ie.key.mod, e->key.keysym.mod);
         ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
-        vui::InputDispatcher::key.m_state[ie.key.keyCode] = true;
-        vui::InputDispatcher::key.onKeyDown(ie.key);
-        vui::InputDispatcher::key.onEvent();
+        dispatcher->key.m_state[ie.key.keyCode] = true;
+        dispatcher->key.onKeyDown(ie.key);
+        dispatcher->key.onEvent();
         break;
     case SDL_KEYUP:
+        GET_DISPATCHER(key);
         convert(ie.key.mod, e->key.keysym.mod);
         ie.key.keyCode = vui::impl::mapping[SDL_GetScancodeFromKey(e->key.keysym.sym) + 1];
         ie.key.scanCode = e->key.keysym.scancode;
         ie.key.repeatCount = e->key.repeat;
-        vui::InputDispatcher::key.m_state[ie.key.keyCode] = false;
-        vui::InputDispatcher::key.onKeyUp(ie.key);
-        vui::InputDispatcher::key.onEvent();
+        dispatcher->key.m_state[ie.key.keyCode] = false;
+        dispatcher->key.onKeyUp(ie.key);
+        dispatcher->key.onEvent();
         break;
     case SDL_MOUSEMOTION:
+        GET_DISPATCHER(motion);
         ie.mouseMotion.x = e->motion.x;
         ie.mouseMotion.y = e->motion.y;
         ie.mouseMotion.dx = e->motion.xrel;
         ie.mouseMotion.dy = e->motion.yrel;
-        vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
-        vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
-        vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
-        vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
+        dispatcher->mouse.m_lastPos.x = ie.mouseMotion.x;
+        dispatcher->mouse.m_lastPos.y = ie.mouseMotion.y;
+        dispatcher->mouse.onMotion(ie.mouseMotion);
+        dispatcher->mouse.onEvent(ie.mouseMotion);
         break;
     case SDL_MOUSEBUTTONDOWN:
+        GET_DISPATCHER(button);
         convert(ie.mouseButton.button, e->button.button);
         ie.mouseButton.x = e->button.x;
         ie.mouseButton.y = e->button.y;
         ie.mouseButton.clicks = e->button.clicks;
-        vui::InputDispatcher::mouse.onButtonDown(ie.mouseButton);
-        vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
+        dispatcher->mouse.onButtonDown(ie.mouseButton);
+        dispatcher->mouse.onEvent(ie.mouseMotion);
         break;
     case SDL_MOUSEBUTTONUP:
+        GET_DISPATCHER(button);
         convert(ie.mouseButton.button, e->button.button);
         ie.mouseButton.x = e->button.x;
         ie.mouseButton.y = e->button.y;
         ie.mouseButton.clicks = e->button.clicks;
-        vui::InputDispatcher::mouse.onButtonUp(ie.mouseButton);
-        vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
+        dispatcher->mouse.onButtonUp(ie.mouseButton);
+        dispatcher->mouse.onEvent(ie.mouseMotion);
         break;
     case SDL_MOUSEWHEEL:
-        ie.mouseWheel.x = vui::InputDispatcher::mouse.m_lastPos.x;
-        ie.mouseWheel.y = vui::InputDispatcher::mouse.m_lastPos.y;
+        GET_DISPATCHER(wheel);
+        ie.mouseWheel.x = dispatcher->mouse.m_lastPos.x;
+        ie.mouseWheel.y = dispatcher->mouse.m_lastPos.y;
         ie.mouseWheel.dx = e->wheel.x;
         ie.mouseWheel.dy = e->wheel.y;
-        vui::InputDispatcher::mouse.m_fullScroll.x += ie.mouseWheel.dx;
-        vui::InputDispatcher::mouse.m_fullScroll.y += ie.mouseWheel.dy;
-        ie.mouseWheel.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
-        ie.mouseWheel.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
-        vui::InputDispatcher::mouse.onWheel(ie.mouseWheel);
-        vui::InputDispatcher::mouse.onEvent(ie.mouseWheel);
+        dispatcher->mouse.m_fullScroll.x += ie.mouseWheel.dx;
+        dispatcher->mouse.m_fullScroll.y += ie.mouseWheel.dy;
+        ie.mouseWheel.sx = dispatcher->mouse.m_fullScroll.x;
+        ie.mouseWheel.sy = dispatcher->mouse.m_fullScroll.y;
+        dispatcher->mouse.onWheel(ie.mouseWheel);
+        dispatcher->mouse.onEvent(ie.mouseWheel);
         break;
     case SDL_QUIT:
         InputDispatcher::onQuit();
         break;
     case SDL_WINDOWEVENT:
+        GET_DISPATCHER(window);
         switch (e->window.event) {
         case SDL_WINDOWEVENT_CLOSE:
-            vui::InputDispatcher::window.onClose();
-            vui::InputDispatcher::window.onEvent();
+            dispatcher->window.onClose();
+            dispatcher->window.onEvent();
             break;
         case SDL_WINDOWEVENT_RESIZED:
             ie.windowResize.w = e->window.data1;
             ie.windowResize.h = e->window.data2;
-            vui::InputDispatcher::window.onResize(ie.windowResize);
-            vui::InputDispatcher::window.onEvent();
+            dispatcher->window.onResize(ie.windowResize);
+            dispatcher->window.onEvent();
             break;
         case SDL_WINDOWEVENT_ENTER:
             // We must poll this one instance
@@ -207,32 +214,32 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
             {
                 POINT mp;
                 GetCursorPos(&mp);
-                i32v2 wp = vui::InputDispatcher::m_window->getPosition();
-                vui::InputDispatcher::mouse.m_lastPos.x = mp.x - wp.x;
-                vui::InputDispatcher::mouse.m_lastPos.y = mp.y - wp.y;
+                i64v2 wp = dispatcher->m_window->getPosition();
+                dispatcher->mouse.m_lastPos.x = mp.x - wp.x;
+                dispatcher->mouse.m_lastPos.y = mp.y - wp.y;
             }
 #else
             // TODO: This is currently not working
-            SDL_GetMouseState(&vui::InputDispatcher::mouse.m_lastPos.x, &vui::InputDispatcher::mouse.m_lastPos.y);
+            SDL_GetMouseState(&dispatcher->mouse.m_lastPos.x, &dispatcher->mouse.m_lastPos.y);
 #endif
-            ie.mouse.x = vui::InputDispatcher::mouse.m_lastPos.x;
-            ie.mouse.y = vui::InputDispatcher::mouse.m_lastPos.y;
-            vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
-            vui::InputDispatcher::mouse.onEvent(ie.mouse);
+            ie.mouse.x = dispatcher->mouse.m_lastPos.x;
+            ie.mouse.y = dispatcher->mouse.m_lastPos.y;
+            dispatcher->mouse.onFocusGained(ie.mouse);
+            dispatcher->mouse.onEvent(ie.mouse);
             break;
         case SDL_WINDOWEVENT_LEAVE:
-            ie.mouse.x = vui::InputDispatcher::mouse.m_lastPos.x;
-            ie.mouse.y = vui::InputDispatcher::mouse.m_lastPos.y;
-            vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
-            vui::InputDispatcher::mouse.onEvent(ie.mouse);
+            ie.mouse.x = dispatcher->mouse.m_lastPos.x;
+            ie.mouse.y = dispatcher->mouse.m_lastPos.y;
+            dispatcher->mouse.onFocusLost(ie.mouse);
+            dispatcher->mouse.onEvent(ie.mouse);
             break;
         case SDL_WINDOWEVENT_FOCUS_GAINED:
-            vui::InputDispatcher::key.onFocusGained();
-            vui::InputDispatcher::key.onEvent();
+            dispatcher->key.onFocusGained();
+            dispatcher->key.onEvent();
             break;
         case SDL_WINDOWEVENT_FOCUS_LOST:
-            vui::InputDispatcher::key.onFocusLost();
-            vui::InputDispatcher::key.onEvent();
+            dispatcher->key.onFocusLost();
+            dispatcher->key.onEvent();
             break;
         default:
             // Unrecognized window event
@@ -240,16 +247,38 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         }
         break;
     case SDL_TEXTINPUT:
+        GET_DISPATCHER(text);
         memcpy(ie.text.text, e->text.text, 32);
         mbstowcs(ie.text.wtext, ie.text.text, 16);
-        vui::InputDispatcher::key.onText(ie.text);
-        vui::InputDispatcher::key.onEvent();
+        dispatcher->key.onText(ie.text);
+        dispatcher->key.onEvent();
         break;
     case SDL_DROPFILE:
-        ie.windowFile.file = e->drop.file;
-        vui::InputDispatcher::window.onFile(ie.windowFile);
-        vui::InputDispatcher::window.onEvent();
+        ie.dragDrop.file = e->drop.file;
+        vui::InputDispatcher::onDragDrop(ie.dragDrop);
         SDL_free(e->drop.file);
+        break;
+    case SDL_SYSWMEVENT:
+        switch (e->syswm.msg->msg.win.msg) {
+        case WM_NCCALCSIZE:
+            if (e->syswm.msg->msg.win.wParam) {
+                NCCALCSIZE_PARAMS* rect = (NCCALCSIZE_PARAMS*)e->syswm.msg->msg.win.lParam;
+                rect->lppos->cx = 800;
+                rect->lppos->cy = 600;
+                rect->rgrc[1].right = rect->rgrc[1].left + 800;
+                rect->rgrc[1].bottom = rect->rgrc[1].top + 600;
+                rect->rgrc[2].right = rect->rgrc[2].left + 800;
+                rect->rgrc[2].bottom = rect->rgrc[2].top + 600;
+                return WVR_ALIGNTOP | WVR_ALIGNRIGHT;
+            } else {
+                RECT* rect = (RECT*)e->syswm.msg->msg.win.lParam;
+                //rect->right = rect->left + 800;
+                //rect->bottom = rect->top + 600;
+                return 0;
+            }
+            break;
+        }
+        break;
     default:
         // Unrecognized event
         return 1;

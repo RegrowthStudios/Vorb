@@ -54,13 +54,13 @@ namespace vorb {
             friend class IWidgetContainer;
         public:
             /*! @brief Default constructor. */
-            Widget();
+            Widget(InputDispatcher* dispatcher);
             /*! @brief Constructor that sets name, position, and dimensions.
              *
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            Widget(const nString& name, const f32v4& destRect = f32v4(0));
+            Widget(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
              *
              * The widget will be made a child of parent.

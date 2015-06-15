@@ -28,25 +28,34 @@ namespace vorb {
             VORB_INTERNAL class InputDispatcherEventCatcher;
         }
 
+        struct DragDropEvent {
+        public:
+            const cString file;
+        };
+
         /// Handles receiving and dispatching important events
         class InputDispatcher {
             friend class impl::InputDispatcherEventCatcher;
+            friend class OSWindow;
         public:
             /// Adds an event listening hook
             /// @param w: The window where events will be generated
             /// @pre: SDL is initialized
             /// @throws std::runtime_error: When this is already initialized
-            static void init(GameWindow* w);
+            static void init();
             /// Removes the event listener from SDL
             static void dispose();
 
-            static MouseEventDispatcher mouse; ///< Dispatches mouse events
-            static KeyboardEventDispatcher key; ///< Dispatches keyboard events
-            static WindowEventDispatcher window; ///< Dispatches window events
+            static Event<const DragDropEvent&> onDragDrop; ///< Signaled when application should quit
             static Event<> onQuit; ///< Signaled when application should quit
+
+            MouseEventDispatcher mouse; ///< Dispatches mouse events
+            KeyboardEventDispatcher key; ///< Dispatches keyboard events
+            WindowEventDispatcher window; ///< Dispatches window events
         private:
-            static GameWindow* m_window; ///< Active window
             volatile static bool m_isInit; ///< Keeps track of initialization status
+
+            OSWindow* m_window; ///< Parent window
         };
     }
 }

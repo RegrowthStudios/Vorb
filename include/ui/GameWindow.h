@@ -24,6 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "../io/Keg.h"
+#include "OSWindow.h"
 
 #if defined(VORB_DX_11)
 struct ID3D11RenderTargetView;
@@ -96,7 +97,7 @@ namespace vorb {
             GraphicsContextProperties context; ///< Properties related to the creation of the graphics context.
         };
         
-        class GameWindow {
+        class GameWindow : public OSWindow {
         public:
             /*! @brief Initializes window with default application settings.
              * 

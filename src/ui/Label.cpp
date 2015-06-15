@@ -3,17 +3,17 @@
 #include "ui/UIRenderer.h"
 #include "utils.h"
 
-vui::Label::Label() : Widget() {
+vui::Label::Label(InputDispatcher* dispatcher) : Widget(dispatcher) {
     refreshDrawables();
 }
 
-vui::Label::Label(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label() {
+vui::Label::Label(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     updateTextPosition();
 }
 
-vui::Label::Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
+vui::Label::Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
 }
 

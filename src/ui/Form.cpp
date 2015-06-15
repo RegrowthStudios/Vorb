@@ -3,7 +3,7 @@
 #include "ui/Widget.h"
 #include "ui/GameWindow.h"
 
-vui::Form::Form() : IWidgetContainer() {
+vui::Form::Form(InputDispatcher* dispatcher) : IWidgetContainer(dispatcher) {
     // Empty
 }
 

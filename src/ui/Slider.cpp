@@ -4,21 +4,21 @@
 #include "ui/UIRenderer.h"
 #include "utils.h"
 
-vui::Slider::Slider() : Widget() {
+vui::Slider::Slider(InputDispatcher* dispatcher) : Widget(dispatcher) {
     ValueChange.setSender(this);
     updateColor();
     m_drawableSlide.setDimensions(f32v2(30.0f, 30.0f));
 }
 
-vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
+vui::Slider::Slider(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(dispatcher) {
     m_name = name;
-    setDestRect(destRect); 
+    setDestRect(destRect);
     updatePosition();
     m_drawableBar.setDimensions(getDimensions());
     m_drawableBar.setPosition(getPosition());
 }
 
-vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
 }
 

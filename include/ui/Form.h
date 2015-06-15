@@ -40,7 +40,7 @@ namespace vorb {
         // Template is the screen type
         class Form : public IWidgetContainer {
         public:
-            Form();
+            Form(InputDispatcher* dispatcher);
             virtual ~Form();
             /*! @brief Initializes the Form and it's renderer.
              * 

@@ -58,6 +58,48 @@ vg::IDevice* vg::D3DAdapter::createDevice(IContext* c) {
     return device;
 }
 
+void vorb::graphics::D3DAdapter::attachToWindow(IContext* c, void* h) {
+    HWND hWnd = (HWND)h;
+    D3DContext* context = (D3DContext*)c;
+
+    RECT wRect;
+    GetWindowRect(hWnd, &wRect);
+    UINT width = wRect.right - wRect.left;
+    UINT height = wRect.bottom - wRect.top;
+
+    DXGI_SWAP_CHAIN_DESC sd;
+    ZeroMemory(&sd, sizeof(sd));
+    sd.BufferCount = 1;
+    sd.BufferDesc.Width = width;
+    sd.BufferDesc.Height = height;
+    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    sd.BufferDesc.RefreshRate.Numerator = 60;
+    sd.BufferDesc.RefreshRate.Denominator = 1;
+    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    sd.OutputWindow = hWnd;
+    sd.SampleDesc.Count = 1;
+    sd.SampleDesc.Quality = 0;
+    sd.Windowed = TRUE;
+    context->m_dxgi.factory->CreateSwapChain(context->m_device, &sd, &context->m_dxgi.swapChain);
+
+    // Get a pointer to the back buffer and set it
+    ID3D11Resource* backTexture;
+    context->m_dxgi.swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backTexture);
+    context->m_device->CreateRenderTargetView(backTexture, NULL, &context->m_defaultDevice->m_target.color);
+    context->m_device->CreateDepthStencilView(backTexture, NULL, &context->m_defaultDevice->m_target.depthStencil);
+    context->m_immediateContext->OMSetRenderTargets(1, &context->m_defaultDevice->m_target.color, context->m_defaultDevice->m_target.depthStencil);
+
+    // Setup the viewport
+    D3D11_VIEWPORT vp;
+    vp.Width = width;
+    vp.Height = height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    context->m_immediateContext->RSSetViewports(1, &vp);
+}
+
 namespace {
     LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         if (message == WM_CLOSE) {
@@ -152,3 +194,4 @@ namespace {
 vg::IAdapter* vg::getD3DAdapter() {
     return &adapter;
 }
+

@@ -294,6 +294,10 @@
     <ClCompile Include="src\graphics\Frustum.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\OSWindow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ImplUISDL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -734,6 +738,12 @@
     </ClInclude>
     <ClInclude Include="include\graphics\Frustum.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\OSWindow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\ImplUISDL.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,13 +3,13 @@
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 
-vui::CheckBox::CheckBox() : Widget() {
+vui::CheckBox::CheckBox(InputDispatcher* dispatcher) : Widget(dispatcher) {
     ValueChange.setSender(this);
     updateColor();
     setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::CheckBox::CheckBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox() {
+vui::CheckBox::CheckBox(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
@@ -17,7 +17,7 @@ vui::CheckBox::CheckBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
     updateTextPosition();
 }
 
-vui::CheckBox::CheckBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
+vui::CheckBox::CheckBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
     m_parent = parent;
 }

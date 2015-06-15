@@ -1,18 +1,20 @@
+m_dispatcher
+m_dispatcher
 #include "stdafx.h"
 #include "UI/Widget.h"
 #include "UI/InputDispatcher.h"
 #include "UI/UIRenderer.h"
 
-vui::Widget::Widget() : IWidgetContainer() {
+vui::Widget::Widget(InputDispatcher* dispatcher) : IWidgetContainer(dispatcher) {
     enable();
     m_anchor = {};
 }
 
-vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect) {
+vui::Widget::Widget(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(dispatcher, name, destRect) {
     enable();
 }
 
-vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(parent->getInputDispatcher(), name, destRect) {
     setParent(parent);
 }
 

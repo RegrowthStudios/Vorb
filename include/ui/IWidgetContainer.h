@@ -32,6 +32,7 @@ namespace vorb {
     namespace ui {
 
         // Forward Declarations
+        class InputDispatcher;
         struct MouseButtonEvent;
         struct MouseMotionEvent;
         struct MouseEvent;
@@ -58,13 +59,13 @@ namespace vorb {
         class IWidgetContainer {
         public:
             /*! @brief Default constructor. */
-            IWidgetContainer();
+            IWidgetContainer(InputDispatcher* dispatcher);
             /*! @brief Constructor that sets name, position, and dimensions.
              *
              * @param name: Name of the container.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            IWidgetContainer(const nString& name, const f32v4& destRect = f32v4(0));     
+            IWidgetContainer(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~IWidgetContainer();
             /*! @brief Releases all resources used by the Widget.
@@ -124,6 +125,9 @@ namespace vorb {
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual f32v4 getClipRect() const { return m_clipRect; }
             virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
+            InputDispatcher* getInputDispatcher() const {
+                return m_dispatcher;
+            }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -141,6 +145,9 @@ namespace vorb {
             virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
             virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
+            virtual void setInputDispatcher(InputDispatcher* dispatcher) {
+                m_dispatcher = dispatcher;
+            }
 
             /************************************************************************/
             /* Events                                                               */
@@ -201,6 +208,7 @@ namespace vorb {
             bool m_isClicking = false; ///< Used for click event tracking.
             bool m_isEnabled = false; ///< True when events are enabled.
             bool m_isMouseIn = false; ///< Used for motion event tracking.
+            InputDispatcher* m_dispatcher; ///< The input dispatcher used for events.
         };
     }
 }

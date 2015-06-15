@@ -6,7 +6,9 @@
 
 const int SLIDER_VAL_MAX = 10000;
 
-vui::Panel::Panel() : Widget() {
+vui::Panel::Panel(InputDispatcher* dispatcher) : Widget(dispatcher) {
+    m_sliders[0].setInputDispatcher(dispatcher);
+    m_sliders[1].setInputDispatcher(dispatcher);
     updateColor();
     addWidget(&m_sliders[0]);
     addWidget(&m_sliders[1]);
@@ -15,14 +17,14 @@ vui::Panel::Panel() : Widget() {
     updateSliders();
 }
 
-vui::Panel::Panel(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel() {
+vui::Panel::Panel(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
 }
 
-vui::Panel::Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
+vui::Panel::Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
 }
 

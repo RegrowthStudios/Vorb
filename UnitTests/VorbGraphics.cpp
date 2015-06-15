@@ -7,6 +7,7 @@
 #include <random>
 
 #include <glm/gtx/transform.hpp>
+#include <SDL/SDL_events.h> // TODO(Cristian): remove
 #include <include/MeshGenerators.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -27,6 +28,7 @@
 #include <include/graphics/IAdapter.h>
 #include <include/graphics/IContext.h>
 #include <include/graphics/IDevice.h>
+#include <include/ui/OSWindow.h>
 
 struct ImageTestFormats {
 public:
@@ -52,11 +54,12 @@ public:
 
     virtual void onEntry(const vui::GameTime& gameTime) {
         m_imageFormat = m_testFormats[0];
-        m_hooks.addAutoHook(vui::InputDispatcher::window.onFile, [&] (Sender, const vui::WindowFileEvent& e) {
+        auto& dispatcher = m_game->getWindow().getDispatcher();
+        m_hooks.addAutoHook(dispatcher.onDragDrop, [&] (Sender, const vui::DragDropEvent& e) {
             auto bmp = vg::ImageIO().load(e.file, m_imageFormat.format);
             this->m_bmp = bmp;
         });
-        m_hooks.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+        m_hooks.addAutoHook(dispatcher.key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
             switch (e.keyCode) {
             case VKEY_1:
             case VKEY_2:
@@ -232,7 +235,8 @@ public:
     virtual void build() {
         pitchInput = 0;
         yawInput = 0;
-        pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
+        auto& dispatcher = m_game->getWindow().getDispatcher();
+        pool.addAutoHook(dispatcher.key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
             if (e.repeatCount > 0) return;
             switch (e.keyCode) {
             case VKEY_W: pitchInput += 1; break;
@@ -241,7 +245,7 @@ public:
             case VKEY_D: yawInput += 1; break;
             }
         });
-        pool.addAutoHook(vui::InputDispatcher::key.onKeyUp, [&] (Sender, const vui::KeyEvent& e) {
+        pool.addAutoHook(dispatcher.key.onKeyUp, [&] (Sender, const vui::KeyEvent& e) {
             switch (e.keyCode) {
             case VKEY_W: pitchInput -= 1; break;
             case VKEY_S: pitchInput += 1; break;
@@ -781,15 +785,26 @@ TEST(SpriteBatch) {
 TEST(D3DContext) {
     vorb::init(vorb::InitParam::ALL);
 
+    // Create a graphics context
     vg::IAdapter* adapter = vg::getD3DAdapter();
     vg::IDevice* device = nullptr;
     vg::IContext* context = adapter->createContext(&device);
-    HWND window = (HWND)adapter->createWindow(context);
 
+    // Create a window
+    vui::OSWindow window {};
+    vui::OSWindowSettings settings {};
+    settings.width = 800;
+    settings.height = 600;
+    settings.isBorderless = false;
+    settings.isFullscreen = false;
+    settings.isResizable = false;
+    vui::OSWindow::create(window, settings);
 
-    bool running = true;
+    // Bind the graphics context to the window
+    adapter->attachToWindow(context, window.getWindowHandle());
 
     // Graphics thread
+    bool running = true;
     std::thread tRender([&] () {
         f64 v = 0;
         LARGE_INTEGER freq, value, lastValue;
@@ -803,20 +818,73 @@ TEST(D3DContext) {
             context->present();
 
             QueryPerformanceCounter(&value);
-            printf("Present Time: %f\n", (f32)(value.QuadPart - lastValue.QuadPart) / freq.QuadPart);
+            // printf("Present Time: %f\n", (f32)(value.QuadPart - lastValue.QuadPart) / freq.QuadPart);
             lastValue = value;
         }
     });
 
-    // Event loop
-    MSG msg = {};
-    while (GetMessage(&msg, NULL, 0, 0)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+    vui::InputDispatcher::init();
+    window.getDispatcher().key.onKeyDown.addFunctor([&] (Sender, const vui::KeyEvent& e) {
+        switch (e.keyCode) {
+        case VKEY_Q:
+            window.setBorderless(true);
+            break;
+        case VKEY_A:
+            window.setBorderless(false);
+            break;
+        case VKEY_W:
+            window.setFullscreen(true);
+            break;
+        case VKEY_S:
+            window.setFullscreen(false);
+            break;
+        case VKEY_E:
+            window.setResizable(true);
+            break;
+        case VKEY_D:
+            window.setResizable(false);
+            break;
+        default:
+            break;
+        }
+    });
+    vui::InputDispatcher::onQuit.addFunctor([&] (Sender) {
+        running = false;
+    });
+
+    // TODO(Cristian): Event loop
+    while (running) {
+        window.update();
+
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            switch (e.type) {
+            default:
+                break;
+            }
+            if (e.type == SDL_QUIT) {
+                running = false;
+                break;
+            }
+        }
     }
-    running = false;
+
+    // Stop the application
     tRender.join();
+    vui::InputDispatcher::dispose();
 
     vorb::dispose(vorb::InitParam::ALL);
     return true;
 }
+
+//DEVMODE newSettings {};
+//// now fill the DEVMODE with standard settings, mainly monitor frequency
+//EnumDisplaySettings(NULL, 0, &newSettings);
+//// set desired screen size and resolution	
+//newSettings.dmPelsWidth = 800;
+//newSettings.dmPelsHeight = 600;
+//newSettings.dmBitsPerPel = 16;
+//// set those flags to let the next function know what we want to change
+//newSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+//// and apply the new settings
+//if (ChangeDisplaySettings(&newSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) return false;

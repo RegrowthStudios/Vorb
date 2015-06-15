@@ -3,11 +3,11 @@
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 
-vui::Button::Button() : Widget() {
+vui::Button::Button(InputDispatcher* dispatcher) : Widget(dispatcher) {
     updateColor();
 }
 
-vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button() {
+vui::Button::Button(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(dispatcher) {
     m_name = name;
     setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
@@ -15,7 +15,7 @@ vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     updateTextPosition();
 }
 
-vui::Button::Button(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
+vui::Button::Button(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(parent->getInputDispatcher(), name, destRect) {
     parent->addWidget(this);
     m_parent = parent;
 }

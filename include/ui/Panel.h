@@ -37,13 +37,13 @@ namespace vorb {
         class Panel : public Widget {
         public:
             /*! @brief Default constructor. */
-            Panel();
+            Panel(InputDispatcher* dispatcher);
             /*! @brief Constructor that sets name, position, and dimensions.
             *
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Panel(const nString& name, const f32v4& destRect = f32v4(0));
+            Panel(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.

@@ -12,14 +12,14 @@ vui::ScriptedUI::~ScriptedUI() {
 }
 
 void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScreen,
-                           const GameWindow* window, const f32v4& destRect,
+                           GameWindow* window, const f32v4& destRect,
                            vg::SpriteFont* defaultFont /*= nullptr*/) {
     // Set up the first form
     m_ownerScreen = ownerScreen;
     m_window = window;
     m_destRect = destRect;
     m_defaultFont = defaultFont;
-    makeForm("main", startFormPath);
+    makeForm(&window->getDispatcher(), "main", startFormPath);
 }
 
 void vui::ScriptedUI::draw() {
@@ -56,9 +56,9 @@ void vui::ScriptedUI::setDimensions(const f32v2& dimensions) {
 }
 
 // TODO(Ben): use name
-vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
+vui::Form* vui::ScriptedUI::makeForm(InputDispatcher* dispatcher, nString name, nString filePath) {
     // Make the form
-    Form* newForm = new Form;
+    Form* newForm = new Form(dispatcher);
     newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);
     FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
     newFormEnv->init(newForm, m_window);

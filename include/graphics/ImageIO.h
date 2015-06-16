@@ -89,6 +89,8 @@ namespace vorb {
                 memcpy(this, &rs, sizeof(BitmapResource));
                 return *this;
             }
+        private:
+            VORB_NON_COPYABLE(ScopedBitmapResource);
         };
     }
 }

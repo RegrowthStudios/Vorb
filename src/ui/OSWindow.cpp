@@ -46,9 +46,6 @@ void vui::OSWindow::moveValues(OSWindow& dest, OSWindow&& src) {
     dest.m_dispatcher->m_window = &dest;
 }
 
-vui::OSWindow::OSWindow() {
-    // Empty
-}
 vui::OSWindow::~OSWindow() {
     if (m_apiHandle) {
         // Get window ID
@@ -134,4 +131,8 @@ bool vui::OSWindow::setTitle(const cString value) {
     SDL_SetWindowTitle((SDL_Window*)m_apiHandle, value);
     return true;
 }
+#elif defined(VORB_IMPL_UI_GLFW)
+#error TODO(Cristian): Implement
+#elif defined(VORB_IMPL_UI_SFML)
+#error Fuck you... really... grab your right hand and do it.
 #endif

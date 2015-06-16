@@ -57,7 +57,7 @@ namespace vorb {
             static bool create(OSWindow& outWindow, OSWindowSettings& settings);
             static void moveValues(OSWindow& dest, OSWindow&& src);
 
-            OSWindow();
+            OSWindow() = default;
             OSWindow(OSWindow&& other) {
                 moveValues(*this, std::move(other));
             }
@@ -92,17 +92,17 @@ namespace vorb {
             bool setSize(UNIT_SPACE(PIXEL) i64 w, UNIT_SPACE(PIXEL) i64 h);
             bool setTitle(const cString value);
         protected:
-            /*! @brief Typeless window handle.
+            /*! @brief Typeless UI API handle.
              * <br/>
              * GLFW - GLFWwindow* <br/>
              * SDL - SDL_Window* <br/>
              * SFML - sf::RenderWindow* <br/>
              */
             void* m_apiHandle;
-            OSWindowHandle m_hWnd;
-            InputDispatcher* m_dispatcher;
+            OSWindowHandle m_hWnd; ///< A handle to the OS's representation of the window.
+            InputDispatcher* m_dispatcher; ///< The input dispatcher that forwards this window's events.
         private:
-            VORB_NON_COPYABLE(OSWindow);
+            VORB_NON_COPYABLE(OSWindow); ///< You shalt not make shallow copies of windows.
         };
     }
 }

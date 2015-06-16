@@ -56,7 +56,7 @@ public:
         m_imageFormat = m_testFormats[0];
         auto& dispatcher = m_game->getWindow().getDispatcher();
         m_hooks.addAutoHook(dispatcher.onDragDrop, [&] (Sender, const vui::DragDropEvent& e) {
-            auto bmp = vg::ImageIO().load(e.file, m_imageFormat.format);
+            auto bmp = vg::ImageIO().load(e.path, m_imageFormat.format);
             this->m_bmp = bmp;
         });
         m_hooks.addAutoHook(dispatcher.key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {

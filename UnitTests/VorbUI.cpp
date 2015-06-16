@@ -77,7 +77,7 @@ public:
             printf("Mouse: scroll (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
         });
         pool.addAutoHook(vui::InputDispatcher::onDragDrop, [] (Sender, const vui::DragDropEvent& e) {
-            printf("File: %s\n", e.file);
+            printf("File: %s\n", e.path);
         });
         pool.addAutoHook(dispatcher.window.onResize, [] (Sender, const vui::WindowResizeEvent& e) {
             printf("Resize: (%d,%d)\n", e.w, e.h);

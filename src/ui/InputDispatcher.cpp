@@ -254,7 +254,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         dispatcher->key.onEvent();
         break;
     case SDL_DROPFILE:
-        ie.dragDrop.file = e->drop.file;
+        ie.dragDrop.path = e->drop.file;
         vui::InputDispatcher::onDragDrop(ie.dragDrop);
         SDL_free(e->drop.file);
         break;

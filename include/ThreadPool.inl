@@ -5,11 +5,8 @@ vcore::ThreadPool<T>::~ThreadPool() {
 
 template<typename T>
 void vcore::ThreadPool<T>::clearTasks() {
-    #define BATCH_SIZE 50
-    IThreadPoolTask<T>* tasks[BATCH_SIZE];
-    int size;
-    // Grab tasks in batches
-    while ((size = m_tasks.try_dequeue_bulk(tasks, BATCH_SIZE)));
+    // TODO(Ben): I hope this doesn't cause a crash when threads are dequeuing
+    moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*>().swap(m_tasks);
 }
 
 template<typename T>

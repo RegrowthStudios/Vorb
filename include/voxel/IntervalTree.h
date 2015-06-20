@@ -27,10 +27,13 @@
 #pragma once
 #include <map>
 
-//Implementation of a specialized interval tree based on a red-black tree
-//Red black tree: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+// Implementation of a specialized interval tree based on a red-black tree
+// Red black tree: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 
-// NOTE: Currently only works for lengths 32768 and below // TODO(Ben): More templatey
+// NOTE: Currently only works for lengths 32768 and below
+// TODO(Ben): More templatey
+// TODO(Ben): Recombination
+// TODO(Ben): Refactor
 template <typename T>
 class IntervalTree {
 public:
@@ -116,50 +119,41 @@ public:
     bool checkTreeValidity() const {
         int tot = 0;
         for (size_t i = 0; i < m_tree.size(); i++) {
-            if (m_tree[i].length > CHUNK_SIZE) {
-                std::cout << "AHA";
-                fflush(stdout);
+            if (m_tree[i].length > 32768) {
+                return false;
             }
             tot += m_tree[i].length;
         }
-        if (tot != CHUNK_SIZE) {
-            pError("Invalid Tree! Total size is not 32768, it is " + std::to_string(tot));
-            fflush(stdout);
+        if (tot != 32768) {
+            return false;
         }
 
         if (m_tree[m_root].isRed()) {
-            std::cout << "ROOT IS RED!\n";
-            fflush(stdout);
+            return false;
         }
-        checkValidRB();
-        return true;
+        return checkValidRB();
     }
 
     bool checkValidRB() const {
         if (m_tree[m_root].parent != -1) {
-            std::cout << "ROOT HAS A PARENT!\n";
-            fflush(stdout);
+            return false;
         }
         for (int i = 0; i < size(); i++) {
             if (m_tree[i].parent == i) {
-                std::cout << "Node is own parent!";
-            }
-            if (m_tree[i].parent == i) {
-                std::cout << "Node is own parent!";
+                return false;
             }
             if (m_tree[i].left == i) {
-                std::cout << "Node is own left!";
+                return false;
             }
             if (m_tree[i].right == i) {
-                std::cout << "Node is own right!";
+                return false;
             }
             if (m_tree[i].parent != -1) {
                 if (m_tree[m_tree[i].parent].left != i && m_tree[m_tree[i].parent].right != i) {
-                    std::cout << "Node is disconnected from parent!\n";
+                    return false;
                 }
             }
         }
-
         return true;
     }
 

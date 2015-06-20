@@ -48,11 +48,9 @@ i16 IntervalTree<typename T>::getInterval(size_t index) const {
     i32 interval = m_root;
     while (true) {
 
-        //Error checking. Ideally we can remove this when we are certain this condition can never happen
+        // TODO(Ben): Error checking. Ideally we can remove this when we are certain this condition can never happen
         if (interval < 0 || interval >= (i32)m_tree.size()) {
             std::cout << "getInterval failed! Looking for index: " << index << " Interval is " << interval << std::endl;
-            checkTreeValidity();
-            pError("getInterval error! Check the command prompt!\n");
             int a;
             std::cin >> a;
         }
@@ -421,14 +419,12 @@ typename IntervalTree<typename T>::Node* IntervalTree<typename T>::insert(size_t
                 nn->length = n.length;
             }
         }
-
     }
 
     return &m_tree[nodeIndex];
 }
 
 // Iterators
-
 template <typename T>
 IntervalTree<typename T>::iterator::iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
     if (m_ptr == nullptr) return;

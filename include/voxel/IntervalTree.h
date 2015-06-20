@@ -55,7 +55,7 @@ public:
 
     class Node {
     public:
-        Node() {}
+        Node() : left(-1), right(-1), parent(-2) {}
         Node(T Data, ui16 start, ui16 Length) : data(Data), m_start(start | COLOR_BIT), length(Length), left(-1), right(-1), parent(-1) {}
 
         inline void incrementStart() { ++m_start; }
@@ -74,6 +74,39 @@ public:
         ui16 m_start; //also stores color
     public:
         T data;
+    };
+
+    class iterator {
+    public:
+        typedef iterator self_type;
+        typedef Node value_type;
+        typedef Node& reference;
+        typedef Node* pointer;
+        iterator(pointer ptr, std::vector <Node>* tree);
+        self_type operator++();
+        reference operator*() { return *m_ptr; }
+        pointer operator->() { return m_ptr; }
+        bool operator==(const self_type& rhs) { return m_ptr == rhs.m_ptr; }
+        bool operator!=(const self_type& rhs) { return m_ptr != rhs.m_ptr; }
+    private:
+        pointer m_ptr;
+        std::vector <Node>* m_tree;
+    };
+    class const_iterator {
+    public:
+        typedef const_iterator self_type;
+        typedef Node value_type;
+        typedef Node& reference;
+        typedef Node* pointer;
+        const_iterator(pointer ptr, std::vector <Node>* tree);
+        self_type operator++();
+        const reference operator*() { return *m_ptr; }
+        const pointer operator->() { return m_ptr; }
+        bool operator==(const self_type& rhs) { return m_ptr == rhs.m_ptr; }
+        bool operator!=(const self_type& rhs) { return m_ptr != rhs.m_ptr; }
+    private:
+        pointer m_ptr;
+        std::vector <Node>* m_tree;
     };
 
     void initSingle(T data, size_t length);
@@ -139,6 +172,18 @@ public:
     Node* insert(size_t index, T data);
 
     void uncompressIntoBuffer(T* buffer);
+
+    iterator begin() { 
+        if (m_root == -1) return iterator(nullptr, nullptr);
+        return iterator(&m_tree[m_root], &m_tree);
+    }
+    iterator end() { return iterator(nullptr, nullptr); }
+
+    const_iterator begin() const {
+        if (m_root == -1) return const_iterator(nullptr, nullptr);
+        return iterator(&m_tree[m_root], &m_tree);
+    }
+    const_iterator end() const { return const_iterator(nullptr, nullptr); }
 
     inline Node& operator[](int index) { return m_tree[index]; }
     inline int size() const { return m_tree.size(); }

@@ -16,13 +16,14 @@ TEST(IntervalTree) {
     for (int i = 0; i < 32768; i++) {
         tree.insert(i, i);
     }
-    for (int i = 0; i < 32768; i++) {
-
-        if (tree[i].data != i) {
-            std::cout << tree[i].data << " != " << i << std::endl;
+    int i = 0;
+    for (auto& it : tree) {
+        if (it.data != i) {
+            std::cout << it.data << " != " << i << std::endl;
             return false;
         }
-        assert(tree[i].length == 1);
+        assert(it.length == 1);
+        i++;
     }
 
     return true;

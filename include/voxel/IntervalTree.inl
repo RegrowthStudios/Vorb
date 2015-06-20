@@ -426,3 +426,71 @@ typename IntervalTree<typename T>::Node* IntervalTree<typename T>::insert(size_t
 
     return &m_tree[nodeIndex];
 }
+
+// Iterators
+
+template <typename T>
+IntervalTree<typename T>::iterator::iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
+    if (m_ptr == nullptr) return;
+    while (m_ptr->left != -1) m_ptr = &m_tree->operator[](m_ptr->left);
+}
+
+template <typename T>
+typename IntervalTree<typename T>::iterator::self_type IntervalTree<typename T>::iterator::operator++() {
+    if (m_ptr == nullptr) throw std::runtime_error("Attempted to increment iterator at end.");
+    self_type i = *this;
+    pointer r = m_ptr;
+    // if you can walk right, walk right, then fully left.
+    // otherwise, walk up until you come from left.
+    if (m_ptr->right != -1) {
+        m_ptr = &m_tree->operator[](m_ptr->right);
+        while (m_ptr->left != -1)
+            m_ptr = &m_tree->operator[](m_ptr->left);
+        return self_type(r, m_tree);
+    } else while (true) {
+        if (m_ptr->parent == -1) {
+            m_ptr = nullptr;
+            return self_type(r, m_tree);
+        }
+        Node* p = &m_tree->operator[](m_ptr->parent);
+        if (&m_tree->operator[](p->left) == m_ptr) {
+            m_ptr = p;
+            return self_type(r, m_tree);
+        }
+        m_ptr = &m_tree->operator[](m_ptr->parent);
+    }
+    return i;
+}
+
+template <typename T>
+IntervalTree<typename T>::const_iterator::const_iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
+    if (m_ptr == nullptr) return;
+    while (m_ptr->left != -1) m_ptr = &m_tree->operator[](m_ptr->left);
+}
+
+template <typename T>
+typename IntervalTree<typename T>::const_iterator::self_type IntervalTree<typename T>::const_iterator::operator++() {
+    if (m_ptr == nullptr) throw std::runtime_error("Attempted to increment const_iterator at end.");
+    self_type i = *this;
+    pointer r = m_ptr;
+    // if you can walk right, walk right, then fully left.
+    // otherwise, walk up until you come from left.
+    if (m_ptr->right != -1) {
+        m_ptr = &m_tree->operator[](m_ptr->right);
+        while (m_ptr->left != -1)
+            m_ptr = &m_tree->operator[](m_ptr->left);
+        return self_type(r, m_tree);
+    } else while (true) {
+        if (m_ptr->parent == -1) {
+            m_ptr = nullptr;
+            return self_type(r, m_tree);
+        }
+        Node* p = &m_tree->operator[](m_ptr->parent);
+        if (&m_tree->operator[](p->left) == m_ptr) {
+            m_ptr = p;
+            return self_type(r, m_tree);
+        }
+        m_ptr = &m_tree->operator[](m_ptr->parent);
+    }
+    return i;
+}

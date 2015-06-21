@@ -33,7 +33,11 @@ void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& 
 
 vio::FileStream vio::IOManager::openFile(const Path& path, const FileOpenFlags& flags) const {
     Path filePath;
-    if (!assurePath(path, filePath, IOManagerDirectory::SEARCH, true)) return FileStream();
+    if ((flags & FileOpenFlags::CREATE) != FileOpenFlags::NONE) {
+        if (!assurePath(path, filePath, IOManagerDirectory::SEARCH, true)) return FileStream();
+    } else {
+        if (!resolvePath(path, filePath)) return FileStream();
+    }
 
     File f;
     if (!filePath.asFile(&f)) return FileStream();

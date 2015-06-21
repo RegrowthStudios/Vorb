@@ -182,13 +182,13 @@ bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, 
         }
         pSearch.makeAbsolute();
 
-        if (!vio::buildDirectoryTree(path, isFile)) return false;
+        if (!vio::buildDirectoryTree(pSearch, isFile)) return false;
         if (isFile) {
             vio::File f;
-            path.asFile(&f);
+            pSearch.asFile(&f);
             f.create(true);
         }
-        resultAbsolutePath = path;
+        resultAbsolutePath = pSearch;
         return true;
     }
 

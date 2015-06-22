@@ -78,6 +78,9 @@ namespace vorb {
         class ScopedBitmapResource : public BitmapResource {
         public:
             ScopedBitmapResource() {};
+            ScopedBitmapResource(const BitmapResource& rs) {
+                memcpy(this, &rs, sizeof(BitmapResource));
+            }
             virtual ~ScopedBitmapResource() {
                 ImageIO::free(*this);
             }

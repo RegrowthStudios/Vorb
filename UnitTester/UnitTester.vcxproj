@@ -97,7 +97,6 @@
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
 robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
-robocopy /XO /E  "$(OutDir) " "\\CZALOJ-TS10\f$\Vorb\ " *
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -125,7 +124,6 @@ EXIT 0</Command>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
 robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
-robocopy /XO /E  "$(OutDir) " "\\CZALOJ-TS10\f$\Vorb\ " *
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -157,7 +155,6 @@ EXIT 0</Command>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
 robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
-robocopy /XO /E  "$(OutDir) " "\\CZALOJ-TS10\f$\Vorb\ " *
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -189,7 +186,6 @@ EXIT 0</Command>
     <PostBuildEvent>
       <Command>robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\$(Configuration)\ " "$(OutDir) " * /XD ".git"
 robocopy /XO /E "$(SolutionDir)deps\dll\$(PlatformName)\ " "$(OutDir) " * /XD ".git"
-robocopy /XO /E  "$(OutDir) " "\\CZALOJ-TS10\f$\Vorb\ " *
 EXIT 0</Command>
     </PostBuildEvent>
     <PreBuildEvent>

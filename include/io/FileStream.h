@@ -75,8 +75,16 @@ namespace vorb {
             /// @param count: Number of elements
             /// @param size: Size of an element (in bytes)
             /// @param data: Pointer to data buffer
-            size_t read(size_t count, size_t size, void* data) {
+            size_t read(size_t count, size_t size, void* data) const {
                 return fread(data, size, count, m_fileCached);
+            }
+
+            /// Read a formatted string
+            /// @param format: String format
+            /// @param args: Format arguments
+            template<typename... Args>
+            void read(const cString format, Args... args) const {
+                fscanf(m_fileCached, format, args...);
             }
 
             /// Move the read/write head to a certain place

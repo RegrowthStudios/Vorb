@@ -24,8 +24,8 @@ namespace vorb {
             /// Constructor
             /// @param taskId: Optional unique identifier for task type.
             IThreadPoolTask(bool shouldAddToFinishedTasks = false, i32 taskId = -1) :
-                _shouldAddToFinishedTasks(shouldAddToFinishedTasks),
-                _taskId(taskId) {
+                m_shouldAddToFinishedTasks(shouldAddToFinishedTasks),
+                m_taskId(taskId) {
                 /* Empty */
             }
 
@@ -35,20 +35,20 @@ namespace vorb {
             virtual void execute(T* workerData) = 0;
 
             /// Checks if this should be stored in a finished tasks queue
-            virtual const bool& shouldAddToFinishedTasks() const { return _shouldAddToFinishedTasks; }
+            virtual const bool& shouldAddToFinishedTasks() const { return m_shouldAddToFinishedTasks; }
 
             /// Setters
-            void setIsFinished(bool isFinished) { _isFinished = isFinished; }
-            void setShouldAddToFinishedtasks(bool shouldAdd) { _shouldAddToFinishedTasks = shouldAdd; }
+            void setIsFinished(bool isFinished) { m_isFinished = isFinished; }
+            void setShouldAddToFinishedtasks(bool shouldAdd) { m_shouldAddToFinishedTasks = shouldAdd; }
 
             /// Getters
-            const i32& getTaskId() const { return _taskId; }
-            const bool& getIsFinished() const { return _isFinished; }
+            const i32& getTaskId() const { return m_taskId; }
+            const volatile bool& getIsFinished() const { return m_isFinished; }
 
         protected:
-            i32 _taskId;
-            bool _isFinished = false;
-            bool _shouldAddToFinishedTasks; ///< SHould it be stored in a finished tasks queue
+            i32 m_taskId;
+            volatile bool m_isFinished = false;
+            bool m_shouldAddToFinishedTasks; ///< SHould it be stored in a finished tasks queue
         };
     }
 }

@@ -292,7 +292,6 @@
     <ClCompile Include="src\graphics\SpriteBatch.cpp" />
     <ClCompile Include="src/graphics/SpriteFont.cpp" />
     <ClCompile Include="src/Vorb.cpp" />
-    <ClCompile Include="src/voxel/VoxCommon.cpp" />
     <ClCompile Include="src/stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -343,6 +342,8 @@
     <ClCompile Include="src\ui\WidgetList.cpp" />
     <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp" />
     <ClCompile Include="src\ui\WidgetScriptFuncs.cpp" />
+    <ClCompile Include="src\voxel\VoxCommon.cpp" />
+    <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
@@ -489,6 +490,8 @@
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
+    <ClInclude Include="include\voxel\IntervalTree.h" />
+    <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\graphics\D3DContext.h" />
     <ClInclude Include="src\graphics\D3DDescCompile.h" />
@@ -513,6 +516,7 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
+    <None Include="include\voxel\IntervalTree.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />

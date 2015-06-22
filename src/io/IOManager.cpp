@@ -24,12 +24,6 @@ void vio::IOManager::setExecutableDirectory(const Path& s) {
     m_pathExec = s;
 }
 
-vio::Path vio::IOManager::getDirectory(const Path& path) {
-    Path pDir = --path.asAbsolute();
-    pDir--;
-    return pDir;
-}
-
 void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& entries) const {
     Directory dir;
     if (dirPath.asDirectory(&dir)) {
@@ -39,7 +33,11 @@ void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& 
 
 vio::FileStream vio::IOManager::openFile(const Path& path, const FileOpenFlags& flags) const {
     Path filePath;
-    if (!resolvePath(path, filePath)) return FileStream();
+    if ((flags & FileOpenFlags::CREATE) != FileOpenFlags::NONE) {
+        if (!assurePath(path, filePath, IOManagerDirectory::SEARCH, true)) return FileStream();
+    } else {
+        if (!resolvePath(path, filePath)) return FileStream();
+    }
 
     File f;
     if (!filePath.asFile(&f)) return FileStream();
@@ -117,6 +115,89 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
 
     return false;
 }
+bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, IOManagerDirectory creationDirectory, bool isFile, OPT bool* wasExisting) const {
+    // Guilty until proven innocent
+    if (wasExisting) *wasExisting = false;
+
+    // Special case if the path is already an absolute path
+    if (path.isAbsolute()) {
+        if (path.isValid()) {
+            resultAbsolutePath = path;
+            if (wasExisting) *wasExisting = true;
+            return true;
+        } else {
+            if (path.isNice()) {
+                if (!vio::buildDirectoryTree(path, isFile)) return false;
+                if (isFile) {
+                    vio::File f;
+                    path.asFile(&f);
+                    f.create(true);
+                }
+                resultAbsolutePath = path;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    // Search in order
+    Path pSearch;
+
+    if (m_pathSearch.isValid()) {
+        pSearch = m_pathSearch / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = pSearch;
+            if (wasExisting) *wasExisting = true;
+            return true;
+        }
+    }
+
+    if (m_pathCWD.isValid()) {
+        pSearch = m_pathCWD / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = pSearch;
+            if (wasExisting) *wasExisting = true;
+            return true;
+        }
+    }
+
+    if (m_pathExec.isValid()) {
+        pSearch = m_pathExec / path;
+        if (pSearch.isValid()) {
+            resultAbsolutePath = pSearch;
+            if (wasExisting) *wasExisting = true;
+            return true;
+        }
+    }
+
+    if (path.isNice()) {
+        switch (creationDirectory) {
+        case IOManagerDirectory::SEARCH:
+            pSearch = m_pathSearch / path;
+            break;
+        case IOManagerDirectory::CURRENT_WORKING:
+            pSearch = m_pathCWD / path;
+            break;
+        case IOManagerDirectory::EXECUTABLE:
+            pSearch = m_pathExec / path;
+            break;
+        default:
+            return false;
+        }
+        pSearch.makeAbsolute();
+
+        if (!vio::buildDirectoryTree(pSearch, isFile)) return false;
+        if (isFile) {
+            vio::File f;
+            pSearch.asFile(&f);
+            f.create(true);
+        }
+        resultAbsolutePath = pSearch;
+        return true;
+    }
+
+    return false;
+}
 
 bool vio::IOManager::writeStringToFile(const Path& path, const nString& data) const {
     Path fPath = m_pathSearch / path;
@@ -145,3 +226,4 @@ bool vio::IOManager::directoryExists(const Path& path) const {
 
 vio::Path vio::IOManager::m_pathExec = "";
 vio::Path vio::IOManager::m_pathCWD = "";
+

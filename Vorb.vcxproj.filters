@@ -84,9 +84,6 @@
     <ClCompile Include="src/graphics/ConnectedTextures.cpp">
       <Filter>Graphics\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src/voxel/VoxCommon.cpp">
-      <Filter>Voxel</Filter>
-    </ClCompile>
     <ClCompile Include="src/graphics/TextureCache.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
@@ -298,6 +295,12 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\ImplUISDL.cpp" />
+    <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp">
+      <Filter>Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\voxel\VoxCommon.cpp">
+      <Filter>Voxel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -745,6 +748,12 @@
     <ClInclude Include="src\ui\ImplUISDL.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="include\voxel\VoxelTextureStitcher.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\voxel\IntervalTree.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -887,6 +896,9 @@
     </None>
     <None Include="include\AssetLoader.inl">
       <Filter>Core\ADT</Filter>
+    </None>
+    <None Include="include\voxel\IntervalTree.inl">
+      <Filter>Voxel</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

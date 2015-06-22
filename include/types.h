@@ -48,6 +48,9 @@ typedef uint8_t ubyte; ///< 8-bit unsigned integer
 typedef uint16_t ui16; ///< 16-bit unsigned integer
 typedef uint32_t ui32; ///< 32-bit unsigned integer
 typedef uint64_t ui64; ///< 64-bit unsigned integer
+typedef unsigned int uint; ///< unsigned integer
+typedef unsigned long ulong; ///< unsigned long
+typedef unsigned long long ulong2; ///< unsigned long long
 
 /************************************************************************/
 /* Floating point values                                                */

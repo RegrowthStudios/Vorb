@@ -153,7 +153,7 @@ public:
      *
      * The RGBA value of the color is (0, 0, 0, 255)
      */
-    ColorRGBA8() : ColorRGBA8(0, 0, 0) {
+    ColorRGBA8() : r(0), g(0), b(0), a(255) {
         // Empty
     }
 

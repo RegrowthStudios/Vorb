@@ -28,7 +28,7 @@ namespace vorb {
     namespace graphics {
         class IContext;
 
-        /* @brief
+        /* @brief This is a GPU resource that must be manually managed
          */
         class IResource {
             friend class IContext;
@@ -73,6 +73,8 @@ namespace vorb {
             }
         };
 
+        /* @brief The compiled bytecode of a shader
+         */
         class IShaderCode : public IResource {
         public:
             virtual const void* getCode() const = 0;

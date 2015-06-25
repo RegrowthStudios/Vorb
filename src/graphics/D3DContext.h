@@ -43,8 +43,8 @@ namespace vorb {
 
             virtual void present() override;
 
-            virtual IShaderCode* createFromPrecompiled(const void* data, size_t length);
-            virtual IShaderCode* createFromCode(const cString data, size_t length);
+            virtual ShaderBytecode compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo);
+            virtual IShaderCode* loadCompiledShader(ShaderBytecode code) = 0;
 
             virtual IVertexShader* createVertexShader(const IShaderCode* code);
             virtual IGeometryShader* createGeometryShader(const IShaderCode* code);

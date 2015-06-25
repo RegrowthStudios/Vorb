@@ -33,12 +33,13 @@ namespace vorb {
 
             virtual IContext* createContext(OUT OPT IDevice** defaultDevice) = 0;
             virtual IDevice* createDevice(IContext* context) = 0;
-            virtual WindowHandle createWindow(IContext* context) = 0;
 
             virtual void attachToWindow(IContext* context, void* hWnd) = 0;
         };
 
         IAdapter* getD3DAdapter();
+
+
     }
 }
 namespace vg = vorb::graphics;

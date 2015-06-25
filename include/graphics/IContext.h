@@ -23,12 +23,10 @@
 #endif // !VORB_USING_PCH
 
 #include "IResource.h"
+#include "ResourceDescriptions.h"
 
 namespace vorb {
     namespace graphics {
-        struct BufferDescription;
-        struct CBufferDescription;
-
         /* @brief
          */
         class IContext {
@@ -37,9 +35,8 @@ namespace vorb {
             virtual IBuffer* create(const BufferDescription& desc) = 0;
             virtual IBuffer* create(const CBufferDescription* desc) = 0;
 
-
-            virtual IShaderCode* createFromPrecompiled(const void* data, size_t length) = 0;
-            virtual IShaderCode* createFromCode(const cString data, size_t length) = 0;
+            virtual ShaderBytecode compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) = 0;
+            virtual IShaderCode* loadCompiledShader(ShaderBytecode code) = 0;
 
             IShader* create(vg::ShaderType type, const IShaderCode* code) {
                 switch (type) {

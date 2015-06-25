@@ -101,6 +101,14 @@ namespace vorb {
                 // Empty
             }
 
+            virtual size_t getMemoryUsed() const {
+                throw std::logic_error("The method or operation is not implemented.");
+            }
+
+            virtual void disposeInternal() {
+                shader->Release();
+            }
+
             ID3D11VertexShader* shader;
         };
     }

@@ -34,10 +34,8 @@ namespace vorb {
         public:
             virtual IContext* createContext(OUT OPT IDevice** defaultDevice) override;
             virtual IDevice* createDevice(IContext* context) override;
-            virtual WindowHandle createWindow(IContext* context) override;
 
             virtual void attachToWindow(IContext* context, void* hWnd) override;
-
         private:
         };
     }

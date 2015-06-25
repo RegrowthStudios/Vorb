@@ -26,6 +26,31 @@
 
 namespace vorb {
     namespace graphics {
+        struct ShaderCompilerInfo {
+        public:
+            struct {
+                ui32 major;
+                ui32 minor;
+            } version;
+            
+
+            // TODO(Cristian): Add other compilation options
+        };
+
+        struct ShaderBytecode {
+        public:
+            ShaderType type;
+            void* code;
+            size_t length;
+
+            void alloc(size_t l) {
+                code = malloc(l);
+            }
+            void free() {
+                ::free(code);
+            }
+        };
+
         struct BufferDescription {
         public:
             vg::BufferTarget type;

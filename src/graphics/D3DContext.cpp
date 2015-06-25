@@ -32,23 +32,47 @@ void vg::D3DContext::present() {
 }
 
 // TODO(Cristian): Implement
-vg::IShaderCode* vorb::graphics::D3DContext::createFromPrecompiled(const void* data, size_t length) {
-    D3DShaderCode* code = new D3DShaderCode(this);
-    code->data = operator new(length);
-    memcpy(code->data, data, length);
-    return code;
-}
-vg::IShaderCode* vorb::graphics::D3DContext::createFromCode(const cString data, size_t length) {
-    D3DShaderCodeBlob* blob = new D3DShaderCodeBlob(this);
+vorb::graphics::ShaderBytecode vorb::graphics::D3DContext::compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) {
+    ID3DBlob* blob;
     ID3DBlob* error;
-    D3DCompile(data, length, NULL, NULL, NULL, NULL, "vs_4_0", 0, 0,&blob->shaderBlob, &error);
+    char buf[32];
+    switch (type) {
+    case ShaderType::VERTEX_SHADER:
+        sprintf(buf, "vs_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    case ShaderType::TESS_CONTROL_SHADER:
+        sprintf(buf, "hs_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    case ShaderType::TESS_EVALUATION_SHADER:
+        sprintf(buf, "ds_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    case ShaderType::GEOMETRY_SHADER:
+        sprintf(buf, "gs_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    case ShaderType::FRAGMENT_SHADER:
+        sprintf(buf, "ps_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    case ShaderType::COMPUTE_SHADER:
+        sprintf(buf, "cs_%d_%d", headerInfo.version.major, headerInfo.version.minor);
+        break;
+    default:
+        break;
+    }
+    D3DCompile(data, length, NULL, NULL, NULL, NULL, buf, 0, 0, &blob, &error);
     error->Release();
-    return blob;
+
+    // Copy compiled code to own buffer
+    ShaderBytecode code;
+    code.type = type;
+    code.length = blob->GetBufferSize();
+    code.alloc(code.length);
+    memcpy(code.code, blob->GetBufferPointer(), code.length);
+    blob->Release();
 }
 
 vg::IVertexShader* vorb::graphics::D3DContext::createVertexShader(const IShaderCode* code) {
-    //D3DVertexShader* shader = new D3DVertexShader(this);
-    //m_device->CreateVertexShader();
+    D3DVertexShader* shader = new D3DVertexShader(this);
+    m_device->CreateVertexShader(code->getCode(), code->getLength(), nullptr, &shader->shader);
     return nullptr;
 }
 vg::IGeometryShader* vorb::graphics::D3DContext::createGeometryShader(const IShaderCode* code) {

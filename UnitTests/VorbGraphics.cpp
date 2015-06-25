@@ -449,7 +449,7 @@ public:
         f64 totalTime = drawTime + endTime + renderTime;
         printf("Draw: %5.2lf End: %5.2lf Render %5.2lf Total %5.2lf\n", drawTime, endTime, renderTime, totalTime);
     }
-    PreciseTimer timer;
+    vorb::PreciseTimer timer;
     f32 angle = 0.0f;
     f32v2 size = f32v2(30.0f);
     const int NUM_SPRITES = 100000;

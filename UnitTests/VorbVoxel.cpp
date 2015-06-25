@@ -46,7 +46,7 @@ TEST(IntervalTree) {
     // Time lookups
     const int LOOKUPS = 100000;
     int a = 0;
-    PreciseTimer timer;
+    vorb::PreciseTimer timer;
     for (int i = 0; i < LOOKUPS; i++) {
         a += tree.getData(i % 32768);
     }

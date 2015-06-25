@@ -17,21 +17,34 @@
 
 #include <chrono>
 
-class PreciseTimer {
-public:
-    PreciseTimer() {
-        start();
-    }
-    void start();
-    f64 stop();
+namespace vorb {
+#if defined (OS_WINDOWS)
+    typedef LARGE_INTEGER HighPrecisionTime;
+#else
+    typedef std::chrono::time_point<std::chrono::high_resolution_clock> HighPrecisionTime;
+#endif
 
-    const bool& isRunning() const {
-        return m_timerRunning;
-    }
-private:
-    bool m_timerRunning = false;
-    std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
-};
+
+    HighPrecisionTime getTimePrecise();
+
+    f64 toSeconds(HighPrecisionTime time);
+
+    class PreciseTimer {
+    public:
+        void start();
+        f64 stop();
+
+        const bool& isRunning() const {
+            return m_timerRunning;
+        }
+    private:
+        bool m_timerRunning;
+        HighPrecisionTime m_start;
+    };
+}
+vorb::HighPrecisionTime operator- (vorb::HighPrecisionTime lhs, vorb::HighPrecisionTime rhs);
+vorb::HighPrecisionTime operator+ (vorb::HighPrecisionTime lhs, vorb::HighPrecisionTime rhs);
+
 
 class AccumulationTimer {
 public:
@@ -81,7 +94,7 @@ private:
     i32 m_samples = 0;
     i32 m_desiredSamples = 1;
     ui32 m_index = 0;
-    PreciseTimer m_timer;
+    vorb::PreciseTimer m_timer;
     std::vector<Interval> m_intervals;
 };
 

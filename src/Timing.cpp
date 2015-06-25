@@ -11,16 +11,16 @@ typedef std::chrono::milliseconds ms;
 
 const f64 MS_PER_SECOND = 1000.0;
 
-void PreciseTimer::start() {
+void vorb::PreciseTimer::start() {
     m_timerRunning = true;
-    m_start = std::chrono::high_resolution_clock::now();
+    m_start = getTimePrecise();
 }
 
 // Returns time in ms
-f64 PreciseTimer::stop() {
+f64 vorb::PreciseTimer::stop() {
     m_timerRunning = false;
-    std::chrono::duration<f64> duration = std::chrono::high_resolution_clock::now() - m_start;
-    return duration.count() * MS_PER_SECOND;
+    HighPrecisionTime duration = getTimePrecise() - m_start;
+    return toSeconds(duration) * MS_PER_SECOND;
 }
 
 void AccumulationTimer::start(const nString& tag) {
@@ -132,3 +132,41 @@ f32 FpsLimiter::endFrame() {
 
     return m_fps;
 }
+
+#if defined(OS_WINDOWS)
+namespace {
+    LARGE_INTEGER getClockFrequency() {
+        LARGE_INTEGER f;
+        QueryPerformanceFrequency(&f);
+        return f;
+    }
+}
+vorb::HighPrecisionTime vorb::getTimePrecise() {
+    LARGE_INTEGER i;
+    QueryPerformanceCounter(&i);
+    return i;
+}
+vorb::HighPrecisionTime operator- (vorb::HighPrecisionTime lhs, vorb::HighPrecisionTime rhs) {
+    vorb::HighPrecisionTime diff;
+    diff.QuadPart = { lhs.QuadPart - rhs.QuadPart };
+    return diff;
+
+    std::chrono::high_resolution_clock::now().time_since_epoch() - std::chrono::high_resolution_clock::now().time_since_epoch();
+}
+
+f64 vorb::toSeconds(HighPrecisionTime time) {
+    static LARGE_INTEGER frequency = getClockFrequency();
+    return (f64)time.QuadPart / (f64)frequency.QuadPart;
+}
+#else
+vorb::HighPrecisionTime vorb::getTimePrecise() {
+    return std::chrono::high_resolution_clock::now();
+}
+vorb::HighPrecisionTime operator- (vorb::HighPrecisionTime lhs, vorb::HighPrecisionTime rhs) {
+
+}
+
+f64 vorb::toSeconds(HighPrecisionTime time) {
+    return time.time_since_epoch().count();
+}
+#endif

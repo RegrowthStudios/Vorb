@@ -290,7 +290,7 @@ float4 main(PSInput input) : SV_TARGET {
 
 #endif
 
-    PreciseTimer timer;
+    vorb::PreciseTimer timer;
     timer.start();
     while (!window.shouldQuit()) {
         // Do something here

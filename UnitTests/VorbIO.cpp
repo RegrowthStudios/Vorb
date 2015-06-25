@@ -105,7 +105,7 @@ TEST(ModelIO) {
     path.asDirectory(&dir);
 
     dir.forEachEntry([] (Sender s, const vpath& path) {
-        PreciseTimer timer;
+        vorb::PreciseTimer timer;
 
         vfile file;
         if (!path.asFile(&file)) return;
@@ -139,7 +139,7 @@ TEST(VRAW) {
     path.asDirectory(&dir);
 
     dir.forEachEntry([] (Sender s, const vpath& path) {
-        PreciseTimer timer;
+        vorb::PreciseTimer timer;
 
         vfile file;
         if (!path.asFile(&file)) return;
@@ -178,7 +178,7 @@ TEST(TINYOBJ) {
     path.asDirectory(&dir);
 
     dir.forEachEntry([] (Sender s, const vpath& path) {
-        PreciseTimer timer;
+        vorb::PreciseTimer timer;
 
         vfile file;
         if (!path.asFile(&file)) return;
@@ -214,7 +214,7 @@ TEST(Animation) {
     path.asDirectory(&dir);
 
     dir.forEachEntry([] (Sender s, const vpath& path) {
-        PreciseTimer timer;
+        vorb::PreciseTimer timer;
 
         vfile file;
         if (!path.asFile(&file)) return;

@@ -596,6 +596,53 @@ typedef glm::highp_mat4 f64m4;
     inline CLASS& operator <<= (CLASS& a, const size_t& b) { a = a << b; return a; } \
     inline CLASS operator >> (const CLASS& a, const size_t& b) { return (CLASS)((PROXY_TYPE)a >> b); } \
     inline CLASS& operator >>= (CLASS& a, const size_t& b) { a = a >> b; return a; }
+
+/*! @brief A simple wrapper class over an enum to 
+ *
+ *
+ */
+template<typename T>
+class EBox {
+    typedef typename std::underlying_type<T>::type Integral; ///< The integer sub-type of the enum.
+public:
+    /*! @brief Default zero-value constructor.
+    */
+    EBox() : m_value({}) {
+        // Empty
+    }
+    /*! @brief Box-wrap an existing value.
+     */
+    EBox(T v) :
+        m_value(v) {
+        // Empty
+    }
+
+    /*! @brief Underlying value access.
+     */
+    operator T()const {
+        return m_value;
+    }
+    /*! @brief Convert the underlying value into its integer representation.
+     */
+    explicit operator Integral() const {
+        return static_cast<Integral>(m_value);
+    }
+    /*! @brief Test the value against zero.
+     */
+    operator bool() const {
+        return static_cast<Integral>(m_value) != 0;
+    }
+private:
+    T m_value; ///< Wrapped enum value.
+};
+
+/*! @brief Helper method to wrap values without having to write the type.
+ */
+template<typename T>
+EBox<T> eBox(T v) {
+    return EBox<T>(v);
+}
+
 /*! \example "Enum Class Proxy Operators"
  *
  * When using enum classes, it may be useful to
@@ -629,5 +676,7 @@ template<typename T, typename U>
 size_t offsetMember(U T::*member) {
     return (const volatile char*)&((T*)nullptr->*member) - (const volatile char*)nullptr;
 }
+
+
 
 #endif // !Vorb_types_h__

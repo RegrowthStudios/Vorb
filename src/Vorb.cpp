@@ -20,6 +20,7 @@
 #include "sound/SoundEngine.h"
 #include "utils.h"
 #include "VorbLibs.h"
+#include "graphics/D3DMap.h"
 
 namespace vorb {
     // Current system settings
@@ -47,6 +48,7 @@ namespace vorb {
 #endif
         FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
+        vg::fillDXGIMAP(vg::formatMapDXGI);
         return InitParam::GRAPHICS;
     }
     InitParam initIO() {

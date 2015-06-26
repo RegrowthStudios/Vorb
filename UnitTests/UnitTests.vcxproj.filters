@@ -13,6 +13,12 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="Tests\Graphics">
+      <UniqueIdentifier>{651fcdde-35aa-4032-b609-3c5725d62f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Graphics\D3D">
+      <UniqueIdentifier>{7224e1fb-73a8-470f-b898-b90e9763f503}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="macros.h">
@@ -78,6 +84,9 @@
     <ClCompile Include="tiny_obj_loader.cpp" />
     <ClCompile Include="VorbVoxel.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DGraphics.cpp">
+      <Filter>Tests\Graphics\D3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

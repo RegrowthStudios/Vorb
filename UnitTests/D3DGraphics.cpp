@@ -62,9 +62,13 @@ TEST(CreateShader) {
 
     vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
     testAssert(__FILE__, __LINE__, shaderCode != nullptr, "Shader code load failed");
+    byteCode.free();
 
     vg::IPixelShader* pixelShader = ctx->createPixelShader(shaderCode);
     testAssert(__FILE__, __LINE__, pixelShader != nullptr, "Shader creation failed");
+    shaderCode->dispose();
+
+    pixelShader->dispose();
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
@@ -86,9 +90,35 @@ TEST(CreateComputeShader) {
 
     vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
     testAssert(__FILE__, __LINE__, shaderCode != nullptr, "Shader code load failed");
+    byteCode.free();
 
     vg::IComputeShader* computeShader = ctx->createComputeShader(shaderCode);
     testAssert(__FILE__, __LINE__, computeShader != nullptr, "Shader creation failed");
+    shaderCode->dispose();
+
+    computeShader->dispose();
+
+    vorb::dispose(vorb::InitParam::GRAPHICS);
+    return true;
+}
+
+TEST(CreateTexture) {
+    vorb::init(vorb::InitParam::GRAPHICS);
+
+    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IContext* ctx = nullptr;
+    vg::IDevice* defaultDevice = nullptr;
+    ctx = adapter->createContext(&defaultDevice);
+
+    // Create the rendering output
+    vg::Texture2DDescription textureDesc {};
+    textureDesc.width = 1024;
+    textureDesc.height = 1024;
+    vg::ITexture2D* texture = ctx->create(textureDesc);
+    testAssert(__FILE__, __LINE__, texture != nullptr, "Texture creation failed");
+
+    vg::IRenderTarget* rtCompute = defaultDevice->create(texture);
+    testAssert(__FILE__, __LINE__, rtCompute != nullptr, "Render target creation failed");
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
@@ -102,15 +132,32 @@ TEST(ComputeOutput) {
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
 
+    // Create the compute shader
     vg::ShaderCompilerInfo info {};
     info.version.major = 5;
     info.version.minor = 0;
     vg::ShaderBytecode byteCode = ctx->compileShaderSource(srcCompute, sizeof(srcCompute), vg::ShaderType::COMPUTE_SHADER, info);
     vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
+    byteCode.free();
     vg::IComputeShader* computeShader = ctx->createComputeShader(shaderCode);
+    shaderCode->dispose();
 
+    // Create the rendering output
+    vg::Texture2DDescription textureDesc {};
+    textureDesc.width = 1024;
+    textureDesc.height = 1024;
+    vg::ITexture2D* texture = ctx->create(textureDesc);
+    vg::IComputeResourceView* rtCompute = ctx->makeComputeView(texture);
+
+    // Render to output
     defaultDevice->computeUse(computeShader);
+    defaultDevice->computeUse(0, rtCompute);
     defaultDevice->dispatchThreads(1024, 1024, 1);
+
+    // Destroy all resources
+    rtCompute->dispose();
+    texture->dispose();
+    computeShader->dispose();
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;

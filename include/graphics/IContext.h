@@ -78,6 +78,11 @@ namespace vorb {
             virtual ITexture1DView* makeView(ITexture1D* res) = 0;
             virtual ITexture2DView* makeView(ITexture2D* res) = 0;
             virtual ITexture3DView* makeView(ITexture3D* res) = 0;
+            virtual IComputeResourceView* makeComputeView(IBuffer* res) = 0;
+            virtual IComputeResourceView* makeComputeView(ITexture1D* res) = 0;
+            virtual IComputeResourceView* makeComputeView(ITexture2D* res) = 0;
+            virtual IComputeResourceView* makeComputeView(ITexture3D* res) = 0;
+
 #pragma endregion
 
             virtual ShaderBytecode compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) = 0;

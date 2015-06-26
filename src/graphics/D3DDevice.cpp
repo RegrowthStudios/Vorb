@@ -17,9 +17,18 @@ void vorb::graphics::D3DDevice::clear(ClearBits bits) {
     m_context->ClearDepthStencilView(m_target.depthStencil, flags, m_clearValues.depth, m_clearValues.stencil);
 }
 
+void vorb::graphics::D3DDevice::use(IRenderTarget* renderTarget) {
+    D3DRenderTarget* rt = static_cast<D3DRenderTarget*>(renderTarget);
+    m_context->OMSetRenderTargets(1, &rt->view, nullptr);
+}
+
 void vorb::graphics::D3DDevice::computeUse(IComputeShader* shader) {
     auto* s = static_cast<D3DComputeShader*>(shader);
     m_context->CSSetShader(s->shader, nullptr, 0);
+}
+
+void vorb::graphics::D3DDevice::computeUse(ui32 slot, IComputeResourceView* v) {
+
 }
 
 void vorb::graphics::D3DDevice::dispatchThreads(ui32 x, ui32 y, ui32 z) {
@@ -40,4 +49,6 @@ vorb::graphics::IRenderTarget* vorb::graphics::D3DDevice::create(ITexture2D* res
         desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
         desc.Texture2D.MipSlice = 0;
     }
+
+    return rt;
 }

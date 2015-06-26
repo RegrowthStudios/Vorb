@@ -39,7 +39,10 @@ namespace vorb {
 
             virtual IRenderTarget* create(ITexture2D* res) = 0;
 
+            virtual void use(IRenderTarget* renderTarget) = 0;
+
             virtual void computeUse(IComputeShader* shader) = 0;
+            virtual void computeUse(ui32 slot, IComputeResourceView* v) = 0;
 
             virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) = 0;
         };

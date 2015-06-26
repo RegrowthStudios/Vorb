@@ -51,7 +51,10 @@ namespace vorb {
 
             virtual IRenderTarget* create(ITexture2D* res) override;
 
+            virtual void use(IRenderTarget* renderTarget) override;
+
             virtual void computeUse(IComputeShader* shader) override;
+            virtual void computeUse(ui32 slot, IComputeResourceView* v) override;
 
             virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) override;
 

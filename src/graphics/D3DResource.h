@@ -30,6 +30,7 @@ namespace vorb {
     namespace graphics {
 
         class D3DBuffer : public IBuffer {
+            friend class D3DContext;
         public:
             D3DBuffer(IContext* owner) : IBuffer(owner) {
                 // Empty
@@ -48,6 +49,7 @@ namespace vorb {
         };
 
         class D3DConstantBlock : public IConstantBlock {
+            friend class D3DContext;
         public:
             D3DConstantBlock(IContext* owner) : IConstantBlock(owner) {
                 // Empty
@@ -66,6 +68,7 @@ namespace vorb {
         };
 
         class D3DTexture1D : public ITexture1D {
+            friend class D3DContext;
         public:
             D3DTexture1D(IContext* owner) : ITexture1D(owner) {
                 // Empty
@@ -85,6 +88,7 @@ namespace vorb {
         };
 
         class D3DTexture2D : public ITexture2D {
+            friend class D3DContext;
         public:
             D3DTexture2D(IContext* owner) : ITexture2D(owner) {
                 // Empty
@@ -104,6 +108,7 @@ namespace vorb {
         };
 
         class D3DTexture3D : public ITexture3D {
+            friend class D3DContext;
         public:
             D3DTexture3D(IContext* owner) : ITexture3D(owner) {
                 // Empty
@@ -187,7 +192,7 @@ namespace vorb {
                 shader->Release();
             }
 
-            ID3D11VertexShader* shader;
+            ID3D11VertexShader* shader = nullptr;
         };
         class D3DGeometryShader : public IGeometryShader {
         public:
@@ -203,7 +208,7 @@ namespace vorb {
                 shader->Release();
             }
 
-            ID3D11GeometryShader* shader;
+            ID3D11GeometryShader* shader = nullptr;
         };
         class D3DTessGenShader : public ITessGenShader {
         public:
@@ -219,7 +224,7 @@ namespace vorb {
                 shader->Release();
             }
 
-            ID3D11HullShader* shader;
+            ID3D11HullShader* shader = nullptr;
         };
         class D3DTessEvalShader : public ITessEvalShader {
         public:
@@ -235,7 +240,7 @@ namespace vorb {
                 shader->Release();
             }
 
-            ID3D11DomainShader* shader;
+            ID3D11DomainShader* shader = nullptr;
         };
         class D3DPixelShader : public IPixelShader {
         public:
@@ -251,7 +256,7 @@ namespace vorb {
                 if (shader) shader->Release();
             }
 
-            ID3D11PixelShader* shader;
+            ID3D11PixelShader* shader = nullptr;
         };
         class D3DComputeShader : public IComputeShader {
         public:
@@ -267,7 +272,7 @@ namespace vorb {
                 shader->Release();
             }
 
-            ID3D11ComputeShader* shader;
+            ID3D11ComputeShader* shader = nullptr;
         };
         class D3DShaderResourceView : public IBufferView, public IConstantBlockView, public ITexture1DView, public ITexture2DView, public ITexture3DView {
         public:
@@ -276,10 +281,23 @@ namespace vorb {
             }
 
             virtual void disposeInternal() {
-                view->Release();
+                if (view) view->Release();
             }
 
-            ID3D11ShaderResourceView* view;
+            ID3D11ShaderResourceView* view = nullptr;
+        };
+
+        class D3DComputeResourceView : public IComputeResourceView {
+        public:
+            D3DComputeResourceView(IContext* owner) : IComputeResourceView(owner) {
+                // Empty
+            }
+
+            virtual void disposeInternal() {
+                if (view) view->Release();
+            }
+
+            ID3D11UnorderedAccessView* view = nullptr;
         };
     }
 }

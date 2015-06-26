@@ -22,6 +22,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "ResourceDescriptions.h"
 #include "GLEnums.h"
 
 namespace vorb {
@@ -52,20 +53,28 @@ namespace vorb {
          */
         class IBuffer : public IResource {
         public:
-
+            const BufferDescription& getDescription() const {
+                return m_desc;
+            }
         protected:
             IBuffer(IContext* owner) : IResource(owner) {
                 // Empty
             }
+
+            BufferDescription m_desc;
         };
 
         class IConstantBlock : public IResource {
         public:
-
+            const ConstantBlockDescription& getDescription() const {
+                return m_desc;
+            }
         protected:
             IConstantBlock(IContext* owner) : IResource(owner) {
                 // Empty
             }
+
+            ConstantBlockDescription m_desc;
         };
 
 
@@ -85,33 +94,45 @@ namespace vorb {
          */
         class ITexture1D : public ITexture {
         public:
-
+            const Texture1DDescription& getDescription() const {
+                return m_desc;
+            }
         protected:
             ITexture1D(IContext* owner) : ITexture(owner) {
                 // Empty
             }
+
+            Texture1DDescription m_desc;
         };
 
         /* @brief
          */
         class ITexture2D : public ITexture {
         public:
-
+            const Texture2DDescription& getDescription() const {
+                return m_desc;
+            }
         protected:
             ITexture2D(IContext* owner) : ITexture(owner) {
                 // Empty
             }
+
+            Texture2DDescription m_desc;
         };
 
         /* @brief
          */
         class ITexture3D : public ITexture {
         public:
-
+            const Texture3DDescription& getDescription() const {
+                return m_desc;
+            }
         protected:
             ITexture3D(IContext* owner) : ITexture(owner) {
                 // Empty
             }
+
+            Texture3DDescription m_desc;
         };
 
         /* @brief The compiled bytecode of a shader
@@ -275,6 +296,15 @@ namespace vorb {
 
         protected:
             ITexture3DView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
+
+        class IComputeResourceView : public IResourceView {
+        public:
+
+        protected:
+            IComputeResourceView(IContext* owner) : IResourceView(owner) {
                 // Empty
             }
         };

@@ -56,6 +56,10 @@ namespace vorb {
             virtual ITexture1DView* makeView(ITexture1D* res) override;
             virtual ITexture2DView* makeView(ITexture2D* res) override;
             virtual ITexture3DView* makeView(ITexture3D* res) override;
+            virtual IComputeResourceView* makeComputeView(IBuffer* res) override;
+            virtual IComputeResourceView* makeComputeView(ITexture1D* res) override;
+            virtual IComputeResourceView* makeComputeView(ITexture2D* res) override;
+            virtual IComputeResourceView* makeComputeView(ITexture3D* res) override;
 
             virtual void present() override;
 

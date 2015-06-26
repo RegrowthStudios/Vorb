@@ -6,6 +6,7 @@
 
 #include "D3DDescCompile.h"
 #include "D3DResource.h"
+#include "D3DMap.h"
 
 vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc) {
     // Create the D3D buffer description on the stack
@@ -52,12 +53,19 @@ vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const Constan
     // Return handle
     return buffer;
 }
+namespace {
+    DXGI_FORMAT convert(vg::MemoryFormat f) {
+        return vg::formatMapDXGI[(size_t)f];
+    }
+}
 vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDescription& desc) {
     D3DTexture1D* texture = new D3DTexture1D(this);
+    texture->m_desc = desc;
 
     D3D11_TEXTURE1D_DESC cdesc {};
     cdesc.Width = desc.width;
     cdesc.ArraySize = desc.atlasPages;
+    cdesc.Format = convert(desc.format);
 
     m_device->CreateTexture1D(&cdesc, nullptr, &texture->data);
 
@@ -67,6 +75,7 @@ vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDe
 }
 vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDescription& desc) {
     D3DTexture2D* texture = new D3DTexture2D(this);
+    texture->m_desc = desc;
 
     D3D11_TEXTURE2D_DESC cdesc {};
     cdesc.Width = desc.width;
@@ -81,11 +90,13 @@ vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDe
 }
 vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDescription& desc) {
     D3DTexture3D* texture = new D3DTexture3D(this);
+    texture->m_desc = desc;
 
     D3D11_TEXTURE3D_DESC cdesc {};
     cdesc.Width = desc.width;
     cdesc.Height = desc.height;
     cdesc.Depth = desc.depth;
+    
     
     m_device->CreateTexture3D(&cdesc, nullptr, &texture->data);
 
@@ -285,5 +296,73 @@ vorb::graphics::ITexture3DView* vorb::graphics::D3DContext::makeView(ITexture3D*
     
     m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
     return srv;
+}
+
+vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(IBuffer* res) {
+    D3DBuffer* cres = static_cast<D3DBuffer*>(res);
+    D3DComputeResourceView* crv = new D3DComputeResourceView(this);
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC desc {};
+    desc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    desc.Buffer.FirstElement = 0;
+    desc.Buffer.NumElements = 0; // TODO(Cristian): Properly fill in
+    desc.Buffer.Flags = 0; // TODO(Cristian): Properly fill in
+    desc.Format = convert(cres->getDescription().format);
+
+    m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
+    return crv;
+}
+
+vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture1D* res) {
+    D3DTexture1D* cres = static_cast<D3DTexture1D*>(res);
+    D3DComputeResourceView* crv = new D3DComputeResourceView(this);
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC desc {};
+    if (cres->arraySlices > 0) {
+        desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1DARRAY;
+        desc.Texture1DArray.FirstArraySlice = 0;
+        desc.Texture1DArray.ArraySize = cres->arraySlices;
+    } else {
+        desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1D;
+    }
+    desc.Texture1D.MipSlice = 0;
+    desc.Format = convert(cres->getDescription().format);
+
+    m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
+    return crv;
+}
+
+vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture2D* res) {
+    D3DTexture2D* cres = static_cast<D3DTexture2D*>(res);
+    D3DComputeResourceView* crv = new D3DComputeResourceView(this);
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC desc {};
+    if (cres->arraySlices > 0) {
+        desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+        desc.Texture2DArray.FirstArraySlice = 0;
+        desc.Texture2DArray.ArraySize = cres->arraySlices;
+    } else {
+        desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+    }
+    desc.Texture2D.MipSlice = 0;
+    desc.Format = convert(cres->getDescription().format);
+
+    m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
+    return crv;
+}
+
+vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture3D* res) {
+    D3DTexture3D* cres = static_cast<D3DTexture3D*>(res);
+    D3DComputeResourceView* crv = new D3DComputeResourceView(this);
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC desc {};
+    desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE3D;
+    desc.Texture3D.MipSlice = 0;
+    desc.Texture3D.FirstWSlice = 0;
+    desc.Texture3D.WSize = 0; // TODO(Cristian): Fill in with the correct size
+    desc.Format = convert(cres->getDescription().format);
+
+    m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
+    return crv;
 }
 

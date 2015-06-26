@@ -264,6 +264,7 @@
     <ClCompile Include="src\graphics\D3DDescCompile.cpp" />
     <ClCompile Include="src\graphics\D3DDevice.cpp" />
     <ClCompile Include="src\graphics\D3DAdapter.cpp" />
+    <ClCompile Include="src\graphics\D3DMap.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\graphics\IContext.cpp" />
     <ClCompile Include="src\graphics\IObject.cpp" />
@@ -431,6 +432,7 @@
     <ClInclude Include="include/types.h" />
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
+    <ClInclude Include="include\graphics\VGEnums.h" />
     <ClInclude Include="include\io\KegBasic.h" />
     <ClInclude Include="include\io\KegEnum.h" />
     <ClInclude Include="include\io\KegEnvironment.h" />
@@ -499,6 +501,7 @@
     <ClInclude Include="src\graphics\D3DDescCompile.h" />
     <ClInclude Include="src\graphics\D3DDevice.h" />
     <ClInclude Include="src\graphics\D3DAdapter.h" />
+    <ClInclude Include="src\graphics\D3DMap.h" />
     <ClInclude Include="src\graphics\D3DObject.h" />
     <ClInclude Include="src\graphics\D3DResource.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />

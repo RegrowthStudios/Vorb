@@ -307,6 +307,9 @@
     <ClCompile Include="src\graphics\IContext.cpp">
       <Filter>Graphics\Interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\D3DMap.cpp">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -761,6 +764,12 @@
       <Filter>Voxel</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\D3DObject.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\VGEnums.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DMap.h">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
   </ItemGroup>

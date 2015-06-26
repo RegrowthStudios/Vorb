@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
+#include "VGEnums.h"
 
 namespace vorb {
     namespace graphics {
@@ -55,6 +56,7 @@ namespace vorb {
         public:
             vg::BufferTarget type;
             vg::BufferUsageHint usage;
+            vg::MemoryFormat format;
             size_t size;
         };
 
@@ -72,6 +74,7 @@ namespace vorb {
                 };
             };
             size_t atlasPages;
+            vg::MemoryFormat format;
         };
 
         struct Texture2DDescription {
@@ -84,6 +87,7 @@ namespace vorb {
                 };
             };
             size_t atlasPages;
+            vg::MemoryFormat format;
         };
 
         struct Texture3DDescription {
@@ -96,6 +100,7 @@ namespace vorb {
                     size_t depth;
                 };
             };
+            vg::MemoryFormat format;
         };
 
         struct CBufferDescription;

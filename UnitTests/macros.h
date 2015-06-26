@@ -22,4 +22,23 @@ bool UnitTestsFuncs::UT_##B##N()
 
 #define UNIT_TEST_BATCH General_
 
+template<typename... Params>
+void testAssert(bool expr, const cString errorMessage, Params... args) {
+    if (expr) return;
+
+    printf(errorMessage, args...);
+    putchar('\n');
+    throw std::exception("ASSERTION ERROR");
+}
+template<typename... Params>
+void testAssert(const cString file, ui32 line, bool expr, const cString errorMessage, Params... args) {
+    if (expr) return;
+
+    printf("%-32s : %8d\n", file, line);
+    printf(errorMessage, args...);
+    putchar('\n');
+    throw std::exception("ASSERTION ERROR");
+
+}
+
 #endif // macros_h__

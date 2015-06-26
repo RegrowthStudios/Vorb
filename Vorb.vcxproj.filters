@@ -301,6 +301,12 @@
     <ClCompile Include="src\voxel\VoxCommon.cpp">
       <Filter>Voxel</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\IObject.cpp">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\IContext.cpp">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -753,6 +759,9 @@
     </ClInclude>
     <ClInclude Include="include\voxel\IntervalTree.h">
       <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\D3DObject.h">
+      <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

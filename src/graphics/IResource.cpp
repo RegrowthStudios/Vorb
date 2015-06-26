@@ -8,3 +8,9 @@ void vg::IResource::dispose() {
     disposeInternal();
     m_owner->free(this);
 }
+
+vorb::graphics::IResource::IResource(IContext* owner) :
+    m_owner(owner) {
+    // The owner is notified of this new resource
+    owner->add(this);
+}

@@ -23,6 +23,8 @@
 #endif // !VORB_USING_PCH
 
 #include "Enums.h"
+#include "IResource.h"
+#include "IObject.h"
 
 namespace vorb {
     namespace graphics {
@@ -34,6 +36,12 @@ namespace vorb {
             virtual void setClearDepth(f64 v) = 0;
             virtual void setClearStencil(ui32 v) = 0;
             virtual void clear(ClearBits bits) = 0;
+
+            virtual IRenderTarget* create(ITexture2D* res) = 0;
+
+            virtual void computeUse(IComputeShader* shader) = 0;
+
+            virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) = 0;
         };
     }
 }

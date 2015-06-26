@@ -37,10 +37,10 @@ namespace vorb {
             virtual void clear(ClearBits bits) override;
 
             virtual void setClearColor(const f64v4& v) override {
-                m_clearValues.color.r = v.r;
-                m_clearValues.color.g = v.g;
-                m_clearValues.color.b = v.b;
-                m_clearValues.color.a = v.a;
+                m_clearValues.color.r = (f32)v.r;
+                m_clearValues.color.g = (f32)v.g;
+                m_clearValues.color.b = (f32)v.b;
+                m_clearValues.color.a = (f32)v.a;
             }
             virtual void setClearDepth(f64 v) override {
                 m_clearValues.depth = static_cast<f32>(v);
@@ -48,6 +48,14 @@ namespace vorb {
             virtual void setClearStencil(ui32 v) override {
                 m_clearValues.depth = static_cast<ui8>(v & 0x000000ffu);
             }
+
+            virtual IRenderTarget* create(ITexture2D* res) override;
+
+            virtual void computeUse(IComputeShader* shader) override;
+
+            virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) override;
+
+
         private:
             ID3D11Device* m_device;
             ID3D11DeviceContext* m_context;

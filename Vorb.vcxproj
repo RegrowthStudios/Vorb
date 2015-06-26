@@ -265,6 +265,8 @@
     <ClCompile Include="src\graphics\D3DDevice.cpp" />
     <ClCompile Include="src\graphics\D3DAdapter.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
+    <ClCompile Include="src\graphics\IContext.cpp" />
+    <ClCompile Include="src\graphics\IObject.cpp" />
     <ClCompile Include="src\graphics\IResource.cpp" />
     <ClCompile Include="src\graphics\Frustum.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
@@ -497,6 +499,7 @@
     <ClInclude Include="src\graphics\D3DDescCompile.h" />
     <ClInclude Include="src\graphics\D3DDevice.h" />
     <ClInclude Include="src\graphics\D3DAdapter.h" />
+    <ClInclude Include="src\graphics\D3DObject.h" />
     <ClInclude Include="src\graphics\D3DResource.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\ImplUISDL.h" />

@@ -58,6 +58,46 @@ namespace vorb {
             size_t size;
         };
 
+        struct ConstantBlockDescription {
+        public:
+            size_t size;
+        };
+
+        struct Texture1DDescription {
+        public:
+            union {
+                size_t dimensions[1];
+                struct {
+                    size_t width;
+                };
+            };
+            size_t atlasPages;
+        };
+
+        struct Texture2DDescription {
+        public:
+            union {
+                size_t dimensions[2];
+                struct {
+                    size_t width;
+                    size_t height;
+                };
+            };
+            size_t atlasPages;
+        };
+
+        struct Texture3DDescription {
+        public:
+            union {
+                size_t dimensions[3];
+                struct {
+                    size_t width;
+                    size_t height;
+                    size_t depth;
+                };
+            };
+        };
+
         struct CBufferDescription;
         CBufferDescription* compile(const BufferDescription& desc);
         void free(CBufferDescription* desc);

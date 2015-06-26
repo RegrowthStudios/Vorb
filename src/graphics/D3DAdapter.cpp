@@ -91,8 +91,8 @@ void vorb::graphics::D3DAdapter::attachToWindow(IContext* c, void* h) {
 
     // Setup the viewport
     D3D11_VIEWPORT vp;
-    vp.Width = width;
-    vp.Height = height;
+    vp.Width = (f32)width;
+    vp.Height = (f32)height;
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;

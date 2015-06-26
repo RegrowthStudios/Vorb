@@ -35,14 +35,19 @@ namespace vorb {
                 // Empty
             }
 
+            void dispose();
         protected:
             IObject(IDevice* owner) :
                 m_owner(owner) {
                 // Empty
             }
+            
+            virtual void disposeInternal() = 0;
 
             IDevice* m_owner; ///< The state view that owns this object.
         };
+
+        
 
         /* @brief
          */
@@ -50,7 +55,9 @@ namespace vorb {
         public:
 
         protected:
-            IVertexDeclaration(IDevice* owner);
+            IVertexDeclaration(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
         };
 
         /* @brief
@@ -59,7 +66,18 @@ namespace vorb {
         public:
 
         protected:
-            IEffect(IDevice* owner);
+            IEffect(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        class IRenderTarget : public IObject {
+        public:
+
+        protected:
+            IRenderTarget(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
         };
     }
 }

@@ -41,10 +41,7 @@ namespace vorb {
 
             virtual size_t getMemoryUsed() const = 0;
         protected:
-            IResource(IContext* owner) : 
-                m_owner(owner) {
-                // Empty
-            }
+            IResource(IContext* owner);
 
             virtual void disposeInternal() = 0;
 
@@ -62,6 +59,17 @@ namespace vorb {
             }
         };
 
+        class IConstantBlock : public IResource {
+        public:
+
+        protected:
+            IConstantBlock(IContext* owner) : IResource(owner) {
+                // Empty
+            }
+        };
+
+
+
         /* @brief
          */
         class ITexture : public IResource {
@@ -73,10 +81,44 @@ namespace vorb {
             }
         };
 
+        /* @brief
+         */
+        class ITexture1D : public ITexture {
+        public:
+
+        protected:
+            ITexture1D(IContext* owner) : ITexture(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class ITexture2D : public ITexture {
+        public:
+
+        protected:
+            ITexture2D(IContext* owner) : ITexture(owner) {
+                // Empty
+            }
+        };
+
+        /* @brief
+         */
+        class ITexture3D : public ITexture {
+        public:
+
+        protected:
+            ITexture3D(IContext* owner) : ITexture(owner) {
+                // Empty
+            }
+        };
+
         /* @brief The compiled bytecode of a shader
          */
         class IShaderCode : public IResource {
         public:
+            virtual vg::ShaderType getType() const = 0;
             virtual const void* getCode() const = 0;
             virtual size_t getLength() const = 0;
         protected:
@@ -181,6 +223,61 @@ namespace vorb {
             }
         };
 
+        class IResourceView : public IResource {
+        public:
+            virtual size_t getMemoryUsed() const override {
+                throw std::logic_error("You're asking the wrong questions");
+            }
+        protected:
+            IResourceView(IContext* owner) : IResource(owner) {
+                // Empty
+            }
+        };
+
+        class IBufferView : public IResourceView {
+        public:
+
+        protected:
+            IBufferView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
+
+        class IConstantBlockView : public IResourceView {
+        public:
+
+        protected:
+            IConstantBlockView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
+
+        class ITexture1DView : public IResourceView {
+        public:
+
+        protected:
+            ITexture1DView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
+
+        class ITexture2DView : public IResourceView {
+        public:
+
+        protected:
+            ITexture2DView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
+
+        class ITexture3DView : public IResourceView {
+        public:
+
+        protected:
+            ITexture3DView(IContext* owner) : IResourceView(owner) {
+                // Empty
+            }
+        };
     }
 }
 namespace vg = vorb::graphics;

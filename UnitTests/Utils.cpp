@@ -12,6 +12,7 @@
 #include <include/Timing.h>
 #include <include/ScopedTiming.hpp>
 #include <include/PtrRecycler.hpp>
+#include <include/Endian.h>
 
 TEST(MersenneTwister) {
     f32 v1 = 0.0f, v2 = 0.0f;
@@ -298,5 +299,17 @@ TEST(DelegateSpeed) {
         std::cout << val << " Accum. Time: " << context.getAccumulatedSeconds() << std::endl;
     }
 
+    return true;
+}
+
+TEST(Endianness) {
+    ui16 v1 = 1;
+    ui32 v2 = 1;
+    ui64 v3 = 1;
+    f32 v4 = 1.0f;
+    v1 = vorb::endianSwapS(v1);
+    v2 = vorb::endianSwapS(v2);
+    v3 = vorb::endianSwapS(v3);
+    v4 = vorb::endianSwapS(v4);
     return true;
 }

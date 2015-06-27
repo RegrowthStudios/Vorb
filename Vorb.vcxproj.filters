@@ -772,6 +772,9 @@
     <ClInclude Include="src\graphics\D3DMap.h">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
+    <ClInclude Include="include\Endian.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

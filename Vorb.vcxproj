@@ -391,6 +391,7 @@
     <ClInclude Include="include/ui/IGameScreen.h" />
     <ClInclude Include="include/graphics/ImageIO.h" />
     <ClInclude Include="include/io/IOManager.h" />
+    <ClInclude Include="include\Endian.h" />
     <ClInclude Include="include\graphics\Enums.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
     <ClInclude Include="include\graphics\IAdapter.h" />

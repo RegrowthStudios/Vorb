@@ -10,6 +10,8 @@
  * used since no constructors or destructors are called.
  */
 class ArrayBase {
+    template <typename T> friend class Array;
+
 public:
     /*! @brief Default array constructor with no data
      */
@@ -148,6 +150,7 @@ public:
         return ((T*)m_data)[i];
     }
 
+protected:
     std::shared_ptr<ui8> m_sharedData; ///< Shared data pointer to allow for automatic memory management
     void* m_data = nullptr; ///< Cached pointer from the shared data
     size_t m_elementSize = 0; ///< The size of the elements in bytes
@@ -160,6 +163,7 @@ public:
  */
 template<typename T>
 class Array : public ArrayBase {
+
 public:
     /*! @brief Empty array constructor.
      *

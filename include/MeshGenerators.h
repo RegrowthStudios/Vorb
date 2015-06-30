@@ -15,6 +15,11 @@
 #ifndef MeshGenerators_h__
 #define MeshGenerators_h__
 
+#include <vector>
+#include "types.h"
+
+using namespace std;
+
 namespace vorb {
     namespace core {
         namespace mesh {

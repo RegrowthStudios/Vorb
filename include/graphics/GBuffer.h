@@ -97,6 +97,15 @@ namespace vorb {
                 return m_textures[m_textures.size() - 1];
             }
 
+            void setSize(ui32 width, ui32 height) {
+                m_size.x = width;
+                m_size.y = height;
+            }
+
+            void setSize(const ui32v2& size) {
+                m_size = size;
+            }
+
             /// @return Size of the GBuffer in pixels (W,H)
             const ui32v2& getSize() const {
                 return m_size;

@@ -84,9 +84,6 @@
     <ClCompile Include="src/graphics/ConnectedTextures.cpp">
       <Filter>Graphics\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src/voxel/VoxCommon.cpp">
-      <Filter>Voxel</Filter>
-    </ClCompile>
     <ClCompile Include="src/graphics/TextureCache.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
@@ -275,6 +272,12 @@
     </ClCompile>
     <ClCompile Include="src\graphics\Frustum.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp">
+      <Filter>Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\voxel\VoxCommon.cpp">
+      <Filter>Voxel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -678,6 +681,12 @@
     <ClInclude Include="include\graphics\Frustum.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\voxel\VoxelTextureStitcher.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\voxel\IntervalTree.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -811,6 +820,9 @@
     </None>
     <None Include="include\AssetLoader.inl">
       <Filter>Core\ADT</Filter>
+    </None>
+    <None Include="include\voxel\IntervalTree.inl">
+      <Filter>Voxel</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

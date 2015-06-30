@@ -28,6 +28,10 @@
 
 #define UNIT_SPACE(SPACE_TYPE) /*!< The decorated value is found in <SPACE_TYPE> space */
 
+/*! @brief Encloses M in an unnamed struct so it can be used inside a union.
+*/
+#define UNIONIZE(M) struct { M; }
+
 /*! @brief This class may not be copied, so all copy and assignment constructors are hidden.
  */
 #define VORB_NON_COPYABLE(CLASS) \

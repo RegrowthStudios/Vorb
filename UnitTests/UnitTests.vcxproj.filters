@@ -76,6 +76,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="tiny_obj_loader.cpp" />
+    <ClCompile Include="VorbVoxel.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

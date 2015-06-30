@@ -1,114 +1,69 @@
 template<typename T>
-vcore::ThreadPool<T>::ThreadPool() {
-    // Empty
-}
-
-template<typename T>
 vcore::ThreadPool<T>::~ThreadPool() {
     destroy();
 }
 
 template<typename T>
 void vcore::ThreadPool<T>::clearTasks() {
-    #define BATCH_SIZE 50
-    IThreadPoolTask<T>* tasks[BATCH_SIZE];
-    int size;
-    // Grab and kill tasks in batches
-    while ((size = _tasks.try_dequeue_bulk(tasks, BATCH_SIZE))) {
-        for (int i = 0; i < size; i++) {
-            delete tasks[i];
-        }
-    }
+    // TODO(Ben): I hope this doesn't cause a crash when threads are dequeuing
+    moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*>().swap(m_tasks);
 }
 
 template<typename T>
 void vcore::ThreadPool<T>::init(ui32 size) {
     // Check if its already initialized
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    std::cout << "THREADPOOL SIZE: " << size << std::endl;
+    if (m_isInitialized) return;
+    m_isInitialized = true;
 
     /// Allocate all threads
-    _workers.resize(size);
+    m_workers.resize(size);
     for (ui32 i = 0; i < size; i++) {
-        _workers[i] = new WorkerThread(&ThreadPool::workerThreadFunc, this);
+        m_workers[i] = new WorkerThread(&ThreadPool::workerThreadFunc, this);
     }
 }
 
 template<typename T>
 void vcore::ThreadPool<T>::destroy() {
-    if (!_isInitialized) return;
+    if (!m_isInitialized) return;
+
+    // Tell threads to quit
+    std::vector<QuitThreadPoolTask<T> > quitTasks(m_workers.size());
+    for (size_t i = 0; i < m_workers.size(); i++) {
+        m_workers[i]->data.stop = true;
+        m_tasks.enqueue(&quitTasks[i]);
+    }
+    
+    // Join all threads
+    for (size_t i = 0; i < m_workers.size(); i++) {
+        m_workers[i]->join();
+        delete m_workers[i];
+    }
+
+    // Free memory
+    std::vector<WorkerThread*>().swap(m_workers);
+
     // Clear all tasks
     clearTasks();
-    // Wait for threads to all wait
-    while (!(isFinished()));
-
-    // Scope for lock_guard
-    {
-        // Lock the mutex
-        std::lock_guard<std::mutex> lock(_condMutex);
-        // Tell threads to quit
-        for (size_t i = 0; i < _workers.size(); i++) {
-            _workers[i]->data.stop = true;
-        }
-    }
-    // Wake all threads so they can quit
-    _cond.notify_all();
-    // Join all threads
-    for (size_t i = 0; i < _workers.size(); i++) {
-        _workers[i]->join();
-        delete _workers[i];
-    }
-    // Free memory
-    std::vector<WorkerThread*>().swap(_workers);
 
     // We are no longer initialized
-    _isInitialized = false;
-}
-
-template<typename T>
-bool vcore::ThreadPool<T>::isFinished() {
-    // Lock the mutex
-    std::lock_guard<std::mutex> lock(_condMutex);
-    // Check that the queue is empty
-    if (_tasks.size_approx() != 0) return false;
-    // Check that all workers are asleep
-    for (size_t i = 0; i < _workers.size(); i++) {
-        if (_workers[i]->data.waiting == false) {
-            return false;
-        }
-    }
-    return true;
+    m_isInitialized = false;
 }
 
 template<typename T>
 void vcore::ThreadPool<T>::workerThreadFunc(T* data) {
-    data->waiting = false;
     data->stop = false;
     IThreadPoolTask<T>* task;
 
-    std::unique_lock<std::mutex> lock(_condMutex);
-    lock.unlock();
     while (true) {
         // Check for exit
-        if (data->stop) {
-            return;
-        }
-        // Grab a task if one exists
-        if (_tasks.try_dequeue(task)) {
-            task->execute(data);
-            task->setIsFinished(true);
-            // Store result if needed
-            if (task->shouldAddToFinishedTasks()) {
-                _finishedTasks.enqueue(task);
-            }
-        } else {
-            // Wait for work
-            lock.lock();
-            data->waiting = true;
-            _cond.wait(lock);
-            lock.unlock();
+        if (data->stop) return;
+
+        m_tasks.wait_dequeue(task);
+        task->execute(data);
+        task->setIsFinished(true);
+        // Store result if needed
+        if (task->shouldAddToFinishedTasks()) {
+            m_finishedTasks.enqueue(task);
         }
     }
 }

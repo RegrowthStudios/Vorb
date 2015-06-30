@@ -90,6 +90,10 @@ public:
         b = (ui8)(invRatio * ca.b + ratio * cb.b);
     }
 
+    bool operator==(const ColorRGB8& rhs) const {
+        return (r == rhs.r && g == rhs.g && b == rhs.b);
+    }
+
     union {
         struct {
             ui8 r; ///< Red value
@@ -149,7 +153,7 @@ public:
      *
      * The RGBA value of the color is (0, 0, 0, 255)
      */
-    ColorRGBA8() : ColorRGBA8(0, 0, 0) {
+    ColorRGBA8() : r(0), g(0), b(0), a(255) {
         // Empty
     }
 
@@ -192,6 +196,10 @@ public:
         g = (ui8)(invRatio * ca.g + ratio * cb.g);
         b = (ui8)(invRatio * ca.b + ratio * cb.b);
         a = (ui8)(invRatio * ca.r + ratio * cb.a);
+    }
+
+    bool operator==(const ColorRGBA8& rhs) const {
+        return (r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a);
     }
 
     union {

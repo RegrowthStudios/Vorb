@@ -19,7 +19,7 @@ void IntervalTree<typename T>::initFromSortedArray(const std::vector <LNode>& da
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::initFromSortedArray(LNode data[], size_t size) {
+inline void IntervalTree<typename T>::initFromSortedArray(const LNode data[], size_t size) {
     m_tree.resize(size);
     for (size_t i = 0; i < size; i++) {
         m_tree[i].setStart(data[i].start);

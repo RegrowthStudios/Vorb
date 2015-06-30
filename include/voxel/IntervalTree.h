@@ -114,7 +114,7 @@ public:
 
     void initSingle(T data, size_t length);
     void initFromSortedArray(const std::vector <LNode>& data);
-    void initFromSortedArray(LNode data[], size_t size);
+    void initFromSortedArray(const LNode data[], size_t size);
 
     bool checkTreeValidity() const {
         int tot = 0;

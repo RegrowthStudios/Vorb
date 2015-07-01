@@ -307,9 +307,9 @@ TEST(Endianness) {
     ui32 v2 = 1;
     ui64 v3 = 1;
     f32 v4 = 1.0f;
-    v1 = vorb::endianSwapS(v1);
-    v2 = vorb::endianSwapS(v2);
-    v3 = vorb::endianSwapS(v3);
-    v4 = vorb::endianSwapS(v4);
+    v1 = vorb::endianSwap(v1);
+    v2 = vorb::endianSwap(v2);
+    v3 = vorb::endianSwap(v3);
+    v4 = vorb::endianSwap(v4);
     return true;
 }

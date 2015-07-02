@@ -179,8 +179,8 @@ public:
     }
     const_iterator end() const { return const_iterator(nullptr, nullptr); }
 
-    inline Node& operator[](int index) { return m_tree[index]; }
-    inline int size() const { return m_tree.size(); }
+    inline const Node& operator[](int index) const { return m_tree[index]; }
+    inline size_t size() const { return m_tree.size(); }
 
 private:
     void uncompressTraversal(int index, int& bufferIndex, T* buffer);

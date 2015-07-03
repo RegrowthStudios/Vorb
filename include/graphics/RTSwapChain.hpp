@@ -76,6 +76,13 @@ namespace vorb {
                 getCurrent().use();
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
 
+                bindPreviousTexture(textureUnit);
+            }
+            /*! @brief Binds the texture from the previous swapchain stage
+             * 
+             * @param textureUnit: Texture unit to bind the texture to 
+             */
+            void bindPreviousTexture(ui32 textureUnit) {
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
                 getPrevious().bindTexture();
             }

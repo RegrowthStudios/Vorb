@@ -78,6 +78,12 @@ namespace vorb {
 
                 bindPreviousTexture(textureUnit);
             }
+			/// Unuse SwapChain and bind default framebuffer
+			/// @param w: Width for setting viewport
+			/// @param h: Height for setting viewport
+			const void unuse(ui32 w, ui32 h) {
+				getCurrent().unuse(w, h);
+			}
             /*! @brief Binds the texture from the previous swapchain stage
              * 
              * @param textureUnit: Texture unit to bind the texture to 
@@ -86,7 +92,6 @@ namespace vorb {
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
                 getPrevious().bindTexture();
             }
-
             /// @return The current FBO (output)
             const GLRenderTarget& getCurrent() {
                 return _fbos[_current];

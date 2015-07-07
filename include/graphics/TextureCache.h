@@ -162,7 +162,7 @@ namespace vorb {
 
             /// We store two maps here so that users can free textures using either the ID or filePath
             std::unordered_map <vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename
-            std::map <ui32, std::unordered_map <vio::Path, Texture>::iterator> _textureIdMap; ///< Textures are stored here keyed on ID
+            std::map <ui32, vio::Path> _textureIdMap; ///< Textures are stored here keyed on ID
         };
     }
 }

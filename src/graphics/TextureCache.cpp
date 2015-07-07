@@ -32,7 +32,7 @@ vg::Texture vg::TextureCache::findTexture(const vio::Path& filePath) {
 vio::Path vg::TextureCache::getTexturePath(ui32 textureID) {
     auto it = _textureIdMap.find(textureID);
     if (it != _textureIdMap.end()) {
-        return it->second->first;
+        return it->second;
     }
     return "";
 }
@@ -241,7 +241,8 @@ void vg::TextureCache::scriptFreeTexture(VGTexture texture) {
 void vg::TextureCache::insertTexture(const vio::Path& filePath, const Texture& texture) {
     // We store an iterator to the map node in the _textureIdMap
     // so that we can quickly remove textures from the cache
-    _textureIdMap[texture.id] = _textureStringMap.insert(std::make_pair(filePath, texture)).first;
+    _textureStringMap.insert(std::make_pair(filePath, texture));
+    _textureIdMap[texture.id] = filePath;
 }
 
 void vg::TextureCache::resolvePath(const vio::Path& path, OUT vio::Path& fullPath) {

@@ -5,8 +5,10 @@ vcore::ThreadPool<T>::~ThreadPool() {
 
 template<typename T>
 void vcore::ThreadPool<T>::clearTasks() {
-    // TODO(Ben): I hope this doesn't cause a crash when threads are dequeuing
-    moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*>().swap(m_tasks);
+    // Dequeue all tasks
+    IThreadPoolTask<T>* task;
+    while (m_tasks.try_dequeue(task));
+    while (m_tasks.try_dequeue(task));
 }
 
 template<typename T>
@@ -27,9 +29,15 @@ void vcore::ThreadPool<T>::destroy() {
     if (!m_isInitialized) return;
 
     // Tell threads to quit
-    std::vector<QuitThreadPoolTask<T> > quitTasks(m_workers.size());
     for (size_t i = 0; i < m_workers.size(); i++) {
         m_workers[i]->data.stop = true;
+    }
+
+    clearTasks();
+
+    // Run quit tasks
+    std::vector<QuitThreadPoolTask<T> > quitTasks(m_workers.size() * 2); // Extra tasks just in case
+    for (size_t i = 0; i < quitTasks.size(); i++) {
         m_tasks.enqueue(&quitTasks[i]);
     }
     
@@ -39,11 +47,10 @@ void vcore::ThreadPool<T>::destroy() {
         delete m_workers[i];
     }
 
+    clearTasks();
+
     // Free memory
     std::vector<WorkerThread*>().swap(m_workers);
-
-    // Clear all tasks
-    clearTasks();
 
     // We are no longer initialized
     m_isInitialized = false;

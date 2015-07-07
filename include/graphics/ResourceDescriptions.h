@@ -52,6 +52,23 @@ namespace vorb {
             }
         };
 
+        struct VertexElementDescription {
+        public:
+            ui32 slot;
+            vg::Semantic semantic;
+            ui32 semanticIndex;
+            ui32 offset;
+            i32 size;
+            vg::MemoryFormat type;
+        };
+
+        struct VertexDescription {
+        private:
+            VertexElementDescription* m_elements;
+            size_t m_numElements;
+            ui32 m_id;
+        };
+
         struct BufferDescription {
         public:
             vg::BufferTarget type;
@@ -101,6 +118,65 @@ namespace vorb {
                 };
             };
             vg::MemoryFormat format;
+        };
+
+        struct BlendStateDescription {
+        public:
+
+        };
+
+        struct DepthStencilStateDescription {
+        public:
+
+        };
+
+        struct RasterizerStateDescription {
+        public:
+
+        };
+
+        struct SamplerStateDescription {
+        public:
+            union {
+                struct {
+                    TextureAddressMode u;
+                    TextureAddressMode v;
+                    TextureAddressMode w;
+                } addressMode;
+                TextureAddressMode addressModes[3];
+            };
+
+            TextureFilterMode minificationFilter;
+            TextureFilterMode magnificationFilter;
+            bool shouldFilterMipmaps;
+            ui32 maxAnisotropySamples;
+
+            ComparisonMode comparison;
+            f32v4 borderColor;
+
+            f32 minLOD;
+            f32 maxLOD;
+            f32 lodBias;
+        };
+
+        struct QueryDescription {
+        public:
+
+        };
+
+        struct PredicateDescription {
+        public:
+
+        };
+
+        struct SyncFenceDescription {
+        public:
+
+        };
+
+        struct Viewport {
+        public:
+
         };
 
         struct CBufferDescription;

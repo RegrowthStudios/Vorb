@@ -662,7 +662,8 @@ namespace vorb {
             TRIANGLES = GL_TRIANGLES,
             TRIANGLES_ADJACENCY = GL_TRIANGLES_ADJACENCY,
             TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
-            TRIANGLE_STRIP_ADJACENCY = GL_TRIANGLE_STRIP_ADJACENCY
+            TRIANGLE_STRIP_ADJACENCY = GL_TRIANGLE_STRIP_ADJACENCY,
+            MAX_VALUE = 32
         };
 
         enum Semantic : VGSemantic {

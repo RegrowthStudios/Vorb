@@ -434,6 +434,7 @@
     <ClInclude Include="include/utils.h" />
     <ClInclude Include="include/Vorb.h" />
     <ClInclude Include="include\graphics\VGEnums.h" />
+    <ClInclude Include="include\graphics\Wrappers.h" />
     <ClInclude Include="include\io\KegBasic.h" />
     <ClInclude Include="include\io\KegEnum.h" />
     <ClInclude Include="include\io\KegEnvironment.h" />

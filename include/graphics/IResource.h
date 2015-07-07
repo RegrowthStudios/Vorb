@@ -29,7 +29,7 @@ namespace vorb {
     namespace graphics {
         class IContext;
 
-        /* @brief This is a GPU resource that must be manually managed
+        /*! @brief This is a GPU resource that must be manually managed
          */
         class IResource {
             friend class IContext;
@@ -49,7 +49,7 @@ namespace vorb {
             IContext* m_owner; ///< The context that created this resource
         };
 
-        /* @brief
+        /*! @brief
          */
         class IBuffer : public IResource {
         public:
@@ -64,6 +64,8 @@ namespace vorb {
             BufferDescription m_desc;
         };
 
+        /*! @brief
+         */
         class IConstantBlock : public IResource {
         public:
             const ConstantBlockDescription& getDescription() const {
@@ -77,8 +79,18 @@ namespace vorb {
             ConstantBlockDescription m_desc;
         };
 
+        /*! @brief
+         */
+        class IVertexDeclaration : public IResource {
+        public:
 
+        protected:
+            IVertexDeclaration(IContext* owner) : IResource(owner) {
+                // Empty
+            }
+        };
 
+#pragma region Textures
         /* @brief
          */
         class ITexture : public IResource {
@@ -134,7 +146,9 @@ namespace vorb {
 
             Texture3DDescription m_desc;
         };
+#pragma endregion
 
+#pragma region Shaders
         /* @brief The compiled bytecode of a shader
          */
         class IShaderCode : public IResource {
@@ -202,7 +216,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /*! @brief
          */
         class ITessGenShader : public IShader {
         public:
@@ -216,7 +230,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /*! @brief
          */
         class ITessEvalShader : public IShader {
         public:
@@ -230,7 +244,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /*! @brief
          */
         class IComputeShader : public IShader {
         public:
@@ -243,7 +257,11 @@ namespace vorb {
                 // Empty
             }
         };
+#pragma endregion
 
+#pragma region Resource Views
+        /*! @brief 
+         */
         class IResourceView : public IResource {
         public:
             virtual size_t getMemoryUsed() const override {
@@ -308,6 +326,7 @@ namespace vorb {
                 // Empty
             }
         };
+#pragma endregion
     }
 }
 namespace vg = vorb::graphics;

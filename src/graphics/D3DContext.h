@@ -51,6 +51,9 @@ namespace vorb {
             virtual ITexture1D* create(const Texture1DDescription& desc) override;
             virtual ITexture2D* create(const Texture2DDescription& desc) override;
             virtual ITexture3D* create(const Texture3DDescription& desc) override;
+
+            virtual IVertexDeclaration* create(VertexElementDescription* desc, size_t numElements);
+
             virtual IBufferView* makeView(IBuffer* res) override;
             virtual IConstantBlockView* makeView(IConstantBlock* res) override;
             virtual ITexture1DView* makeView(ITexture1D* res) override;
@@ -76,6 +79,8 @@ namespace vorb {
             virtual void add(IResource* resource);
             virtual void remove(IResource* resource);
             virtual void free(IResource* resource);
+
+            virtual void dispose();
 
 
         private:

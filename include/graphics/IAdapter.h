@@ -22,6 +22,8 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+// https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/gdc12/Efficient_Buffer_Management_McDonald.pdf
+
 namespace vorb {
     namespace graphics {
         class IContext;

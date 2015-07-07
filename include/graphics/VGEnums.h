@@ -26,6 +26,18 @@
 
 namespace vorb {
     namespace graphics {
+        enum class ComparisonMode {
+            NEVER         = 0x00,
+            EQUAL         = 0x01,
+            GREATER       = 0x02,
+            LESS          = 0x04,
+            NOT_EQUAL     = LESS | GREATER,
+            LESS_EQUAL    = LESS | EQUAL,
+            GREATER_EQUAL = GREATER | EQUAL,
+            ALWAYS        = LESS | GREATER | EQUAL,
+        };
+        ENUM_CLASS_OPS_INL(ComparisonMode, std::underlying_type<ComparisonMode>::type);
+
         enum class MemoryFormat {
             UNKNOWN = 0,
             A8_UNORM,
@@ -80,6 +92,18 @@ namespace vorb {
             R8G8B8A8_UINT,
             R8G8B8A8_UNORM_SRGB,
             MAX_VALUE
+        };
+
+        enum class TextureAddressMode {
+            WRAP,
+            CLAMP,
+            CLAMP_ABSOLUTE,
+            BORDER,
+            MIRROR
+        };
+        enum class TextureFilterMode {
+            POINT,
+            LINEAR
         };
     }
 }

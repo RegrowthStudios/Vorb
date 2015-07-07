@@ -775,6 +775,9 @@
     <ClInclude Include="include\Endian.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\Wrappers.h">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -8,6 +8,7 @@
 #include <include/graphics/IAdapter.h>
 #include <include/graphics/IContext.h>
 #include <include/graphics/IDevice.h>
+#include <include/ui/OSWindow.h>
 
 const char srcPixel[] = R"(
 struct PSOut {
@@ -21,12 +22,18 @@ PSOut main() {
 }
 )";
 const char srcCompute[] = R"(
-RWTexture2D<float4> DataOut : register(u0);
+RWTexture2D<float> DataIn : register(u0);
+RWTexture2D<float4> DataOut : register(u2);
 
 [numthreads(16, 8, 1)]
 void main(uint3 input : SV_DispatchThreadID) {
     uint index = input.y * 1024 + input.x;
-    DataOut[input.xy] = float4(float(input.x) / 1023.0, float(input.y) / 1023.0, float(index) / (1024.0 * 1024.0 - 1), 1.0);
+    float4 tint;
+    tint.r = DataIn[input.xy];
+    tint.g = DataIn[input.xy + uint2(1, 0)];
+    tint.b = DataIn[input.xy + uint2(0, 1)];
+    tint.a = DataIn[input.xy + uint2(1, 1)];
+    DataOut[input.xy] = float4(float(input.x) / 1023.0, float(input.y) / 1023.0, float(index) / (1024.0 * 1024.0 - 1), 1.0) * tint;
 }
 )";
 
@@ -158,6 +165,53 @@ TEST(ComputeOutput) {
     rtCompute->dispose();
     texture->dispose();
     computeShader->dispose();
+
+    vorb::dispose(vorb::InitParam::GRAPHICS);
+    return true;
+}
+
+TEST(DrawTriangle) {
+    vorb::init(vorb::InitParam::GRAPHICS);
+
+    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IContext* ctx = nullptr;
+    vg::IDevice* defaultDevice = nullptr;
+    ctx = adapter->createContext(&defaultDevice);
+
+    vg::IBuffer* vertData = nullptr;
+    vg::IBufferView* vertView = nullptr;
+    vg::IVertexDeclaration* decl = nullptr;
+    vg::IVertexShader* vertexShader = nullptr;
+    vg::IPixelShader* pixelShader = nullptr;
+
+    { // Create the vertex shader
+        vg::ShaderCompilerInfo info {};
+        info.version.major = 3;
+        info.version.minor = 0;
+        vg::ShaderBytecode byteCode = ctx->compileShaderSource(srcCompute, sizeof(srcCompute), vg::ShaderType::VERTEX_SHADER, info);
+        vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
+        byteCode.free();
+        vertexShader = ctx->createVertexShader(shaderCode);
+        shaderCode->dispose();
+    }
+    { // Create the pixel shader
+        vg::ShaderCompilerInfo info {};
+        info.version.major = 3;
+        info.version.minor = 0;
+        vg::ShaderBytecode byteCode = ctx->compileShaderSource(srcCompute, sizeof(srcCompute), vg::ShaderType::FRAGMENT_SHADER, info);
+        vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
+        byteCode.free();
+        pixelShader = ctx->createPixelShader(shaderCode);
+        shaderCode->dispose();
+    }
+
+    // Render to output
+    defaultDevice->setTopology(vg::PrimitiveType::TRIANGLES);
+    defaultDevice->vertexUse(vertexShader);
+    defaultDevice->pixelUse(pixelShader);
+
+    // Destroy all resources
+    vertexShader->dispose();
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;

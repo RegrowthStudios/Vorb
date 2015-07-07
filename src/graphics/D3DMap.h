@@ -27,11 +27,16 @@
 #include <d3d11.h>
 
 #include "graphics/VGEnums.h"
+#include "graphics/GLEnums.h"
 
 namespace vorb {
     namespace graphics {
         extern DXGI_FORMAT formatMapDXGI[(size_t)MemoryFormat::MAX_VALUE];
+        extern D3D11_PRIMITIVE_TOPOLOGY topologyMapD3D[(size_t)PrimitiveType::MAX_VALUE];
+
+        void fillMaps();
         void fillDXGIMAP(DXGI_FORMAT* f);
+        void fillTopologyMap(D3D11_PRIMITIVE_TOPOLOGY* f);
     }
 }
 

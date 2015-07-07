@@ -40,13 +40,14 @@ namespace vorb {
             void branchThread(OUT ResourceAllocator* allocator);
 
 #pragma region Resource creation methods
-            virtual IBuffer* create(const BufferDescription& desc) = 0;
-            virtual IBuffer* create(const CBufferDescription* desc) = 0;
-            virtual IConstantBlock* create(const ConstantBlockDescription& desc) = 0;
-            virtual ITexture1D* create(const Texture1DDescription& desc) = 0;
-            virtual ITexture2D* create(const Texture2DDescription& desc) = 0;
-            virtual ITexture3D* create(const Texture3DDescription& desc) = 0;
-            IShader* create(const IShaderCode* code) {
+            virtual vorb::graphics::IBuffer* create(const BufferDescription& desc) = 0;
+            virtual vorb::graphics::IBuffer* create(const CBufferDescription* desc) = 0;
+            virtual vorb::graphics::IConstantBlock* create(const ConstantBlockDescription& desc) = 0;
+            virtual vorb::graphics::ITexture1D* create(const Texture1DDescription& desc) = 0;
+            virtual vorb::graphics::ITexture2D* create(const Texture2DDescription& desc) = 0;
+            virtual vorb::graphics::ITexture3D* create(const Texture3DDescription& desc) = 0;
+            virtual vorb::graphics::IVertexDeclaration* create(VertexElementDescription* desc, IShaderCode* vertexShaderCode, size_t numElements) = 0;
+            vorb::graphics::IShader* create(const IShaderCode* code) {
                 switch (code->getType()) {
                 case ShaderType::VERTEX_SHADER:
                     return createVertexShader(code);
@@ -64,33 +65,34 @@ namespace vorb {
                     return nullptr;
                 }
             }
-            virtual IVertexShader* createVertexShader(const IShaderCode* code) = 0;
-            virtual ITessGenShader* createTessGenShader(const IShaderCode* code) = 0;
-            virtual ITessEvalShader* createTessEvalShader(const IShaderCode* code) = 0;
-            virtual IGeometryShader* createGeometryShader(const IShaderCode* code) = 0;
-            virtual IPixelShader* createPixelShader(const IShaderCode* code) = 0;
-            virtual IComputeShader* createComputeShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::IVertexShader* createVertexShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::ITessGenShader* createTessGenShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::ITessEvalShader* createTessEvalShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::IGeometryShader* createGeometryShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::IPixelShader* createPixelShader(const IShaderCode* code) = 0;
+            virtual vorb::graphics::IComputeShader* createComputeShader(const IShaderCode* code) = 0;
 #pragma endregion
 
 #pragma region Resource view creation methods
-            virtual IBufferView* makeView(IBuffer* res) = 0;
-            virtual IConstantBlockView* makeView(IConstantBlock* res) = 0;
-            virtual ITexture1DView* makeView(ITexture1D* res) = 0;
-            virtual ITexture2DView* makeView(ITexture2D* res) = 0;
-            virtual ITexture3DView* makeView(ITexture3D* res) = 0;
-            virtual IComputeResourceView* makeComputeView(IBuffer* res) = 0;
-            virtual IComputeResourceView* makeComputeView(ITexture1D* res) = 0;
-            virtual IComputeResourceView* makeComputeView(ITexture2D* res) = 0;
-            virtual IComputeResourceView* makeComputeView(ITexture3D* res) = 0;
-
+            virtual vorb::graphics::IBufferView* makeView(IBuffer* res) = 0;
+            virtual vorb::graphics::IConstantBlockView* makeView(IConstantBlock* res) = 0;
+            virtual vorb::graphics::ITexture1DView* makeView(ITexture1D* res) = 0;
+            virtual vorb::graphics::ITexture2DView* makeView(ITexture2D* res) = 0;
+            virtual vorb::graphics::ITexture3DView* makeView(ITexture3D* res) = 0;
+            virtual vorb::graphics::IComputeResourceView* makeComputeView(IBuffer* res) = 0;
+            virtual vorb::graphics::IComputeResourceView* makeComputeView(ITexture1D* res) = 0;
+            virtual vorb::graphics::IComputeResourceView* makeComputeView(ITexture2D* res) = 0;
+            virtual vorb::graphics::IComputeResourceView* makeComputeView(ITexture3D* res) = 0;
 #pragma endregion
 
-            virtual ShaderBytecode compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) = 0;
-            virtual IShaderCode* loadCompiledShader(ShaderBytecode code) = 0;
+            virtual vorb::graphics::ShaderBytecode compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) = 0;
+            virtual vorb::graphics::IShaderCode* loadCompiledShader(ShaderBytecode code) = 0;
 
             virtual void present() = 0;
+
+            virtual void dispose() = 0;
         protected:
-            virtual IContext* getResourceBuilderContext() = 0;
+            virtual vorb::graphics::IContext* getResourceBuilderContext() = 0;
 
             virtual void add(IResource* resource) = 0;
             virtual void remove(IResource* resource) = 0;
@@ -100,59 +102,71 @@ namespace vorb {
         class ResourceAllocator {
             friend class IContext;
         public:
-            IBuffer* create(const BufferDescription& desc) {
+            vorb::graphics::IBuffer* create(const BufferDescription& desc) {
                 return m_context->create(desc);
             }
-            IBuffer* create(const CBufferDescription* desc) {
+            vorb::graphics::IBuffer* create(const CBufferDescription* desc) {
                 return m_context->create(desc);
             }
-            IConstantBlock* create(const ConstantBlockDescription& desc) {
+            vorb::graphics::IConstantBlock* create(const ConstantBlockDescription& desc) {
                 return m_context->create(desc);
             }
-            ITexture1D* create(const Texture1DDescription& desc) {
+            vorb::graphics::ITexture1D* create(const Texture1DDescription& desc) {
                 return m_context->create(desc);
             }
-            ITexture2D* create(const Texture2DDescription& desc) {
+            vorb::graphics::ITexture2D* create(const Texture2DDescription& desc) {
                 return m_context->create(desc);
             }
-            ITexture3D* create(const Texture3DDescription& desc) {
+            vorb::graphics::ITexture3D* create(const Texture3DDescription& desc) {
                 return m_context->create(desc);
             }
-            IShader* create(const IShaderCode* code) {
+            vorb::graphics::IShader* create(const IShaderCode* code) {
                 return m_context->create(code);
             }
-            IVertexShader* createVertexShader(const IShaderCode* code) {
+            vorb::graphics::IVertexShader* createVertexShader(const IShaderCode* code) {
                 return m_context->createVertexShader(code);
             }
-            ITessGenShader* createTessGenShader(const IShaderCode* code) {
+            vorb::graphics::ITessGenShader* createTessGenShader(const IShaderCode* code) {
                 return m_context->createTessGenShader(code);
             }
-            ITessEvalShader* createTessEvalShader(const IShaderCode* code) {
+            vorb::graphics::ITessEvalShader* createTessEvalShader(const IShaderCode* code) {
                 return m_context->createTessEvalShader(code);
             }
-            IGeometryShader* createGeometryShader(const IShaderCode* code) {
+            vorb::graphics::IGeometryShader* createGeometryShader(const IShaderCode* code) {
                 return m_context->createGeometryShader(code);
             }
-            IPixelShader* createPixelShader(const IShaderCode* code) {
+            vorb::graphics::IPixelShader* createPixelShader(const IShaderCode* code) {
                 return m_context->createPixelShader(code);
             }
-            IComputeShader* createComputeShader(const IShaderCode* code) {
+            vorb::graphics::IComputeShader* createComputeShader(const IShaderCode* code) {
                 return m_context->createComputeShader(code);
             }
-            IBufferView* makeView(IBuffer* res) {
+            vorb::graphics::IBufferView* makeView(IBuffer* res) {
                 return m_context->makeView(res);
             }
-            IConstantBlockView* makeView(IConstantBlock* res) {
+            vorb::graphics::IConstantBlockView* makeView(IConstantBlock* res) {
                 return m_context->makeView(res);
             }
-            ITexture1DView* makeView(ITexture1D* res) {
+            vorb::graphics::ITexture1DView* makeView(ITexture1D* res) {
                 return m_context->makeView(res);
             }
-            ITexture2DView* makeView(ITexture2D* res) {
+            vorb::graphics::ITexture2DView* makeView(ITexture2D* res) {
                 return m_context->makeView(res);
             }
-            ITexture3DView* makeView(ITexture3D* res) {
+            vorb::graphics::ITexture3DView* makeView(ITexture3D* res) {
                 return m_context->makeView(res);
+            }
+            vorb::graphics::IComputeResourceView* makeComputeView(IBuffer* res) {
+                return m_context->makeComputeView(res);
+            }
+            vorb::graphics::IComputeResourceView* makeComputeView(ITexture1D* res) {
+                return m_context->makeComputeView(res);
+            }
+            vorb::graphics::IComputeResourceView* makeComputeView(ITexture2D* res) {
+                return m_context->makeComputeView(res);
+            }
+            vorb::graphics::IComputeResourceView* makeComputeView(ITexture3D* res) {
+                return m_context->makeComputeView(res);
             }
         private:
             ResourceAllocator(IContext* parent) :

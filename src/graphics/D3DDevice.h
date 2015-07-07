@@ -51,12 +51,36 @@ namespace vorb {
 
             virtual IRenderTarget* create(ITexture2D* res) override;
 
+            virtual IVertexStateBind* create(IVertexDeclaration* decl, const BufferBindings& bindings);
+
             virtual void use(IRenderTarget* renderTarget) override;
+
+            virtual void use(IVertexDeclaration* decl);
 
             virtual void computeUse(IComputeShader* shader) override;
             virtual void computeUse(ui32 slot, IComputeResourceView* v) override;
 
             virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) override;
+
+            virtual void vertexUse(IVertexShader* shader);
+
+            virtual void tessGenUse(ITessGenShader* shader);
+
+            virtual void tessEvalUse(ITessEvalShader* shader);
+
+            virtual void pixelUse(IPixelShader* shader);
+
+            virtual void setTopology(vg::PrimitiveType type);
+
+            virtual void drawIndexed(size_t indices, size_t indexOff = 0, size_t vertexOff = 0);
+
+            virtual void setVertexBuffers(vg::IBuffer** verts, ui32 startSlot, size_t numBuffers, ui32* offsets, ui32* strides);
+
+            virtual void setVertexBuffers(const BufferBindings& bindings);
+
+            virtual void setIndexBuffer(vg::IBuffer* ind, vg::MemoryFormat format, ui32 offset = 0);
+
+            virtual void dispose();
 
 
         private:

@@ -783,6 +783,22 @@ TEST(SpriteBatch) {
 }
 
 TEST(D3DContext) {
+    const char srcCompute[] = R"(
+RWTexture2D<float> DataIn : register(u0);
+RWTexture2D<float4> DataOut : register(u2);
+
+[numthreads(16, 8, 1)]
+void main(uint3 input : SV_DispatchThreadID) {
+    uint index = input.y * 1024 + input.x;
+    float4 tint;
+    tint.r = DataIn[input.xy];
+    tint.g = DataIn[input.xy + uint2(1, 0)];
+    tint.b = DataIn[input.xy + uint2(0, 1)];
+    tint.a = DataIn[input.xy + uint2(1, 1)];
+    DataOut[input.xy] = float4(float(input.x) / 1023.0, float(input.y) / 1023.0, float(index) / (1024.0 * 1024.0 - 1), 1.0) * tint;
+}
+)";
+
     vorb::init(vorb::InitParam::ALL);
 
     // Create a graphics context
@@ -802,6 +818,16 @@ TEST(D3DContext) {
 
     // Bind the graphics context to the window
     adapter->attachToWindow(context, window.getWindowHandle());
+
+    vg::ShaderCompilerInfo info {};
+    info.version.major = 5;
+    info.version.minor = 0;
+    vg::ShaderBytecode byteCode = context->compileShaderSource(srcCompute, sizeof(srcCompute), vg::ShaderType::COMPUTE_SHADER, info);
+    vg::IShaderCode* shaderCode = context->loadCompiledShader(byteCode);
+    byteCode.free();
+    vg::IComputeShader* computeShader = context->createComputeShader(shaderCode);
+    shaderCode->dispose();
+    computeShader->dispose();
 
     // Graphics thread
     bool running = true;
@@ -872,6 +898,8 @@ TEST(D3DContext) {
     // Stop the application
     tRender.join();
     vui::InputDispatcher::dispose();
+    device->dispose();
+    context->dispose();
 
     vorb::dispose(vorb::InitParam::ALL);
     return true;

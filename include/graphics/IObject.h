@@ -26,7 +26,7 @@ namespace vorb {
     namespace graphics {
         class IDevice;
 
-        /* @brief
+        /*! @brief
          */
         class IObject {
             friend class IDevice;
@@ -47,20 +47,18 @@ namespace vorb {
             IDevice* m_owner; ///< The state view that owns this object.
         };
 
-        
-
-        /* @brief
+        /*! @brief
          */
-        class IVertexDeclaration : public IObject {
+        class IVertexStateBind : public IObject {
         public:
 
         protected:
-            IVertexDeclaration(IDevice* owner) : IObject(owner) {
+            IVertexStateBind(IDevice* owner) : IObject(owner) {
                 // Empty
             }
         };
 
-        /* @brief
+        /*! @brief
          */
         class IEffect : public IObject {
         public:
@@ -71,11 +69,91 @@ namespace vorb {
             }
         };
 
+        /*! @brief
+         */
         class IRenderTarget : public IObject {
         public:
 
         protected:
             IRenderTarget(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class IBlendState : public IObject {
+        public:
+
+        protected:
+            IBlendState(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class IDepthStencilState : public IObject {
+        public:
+
+        protected:
+            IDepthStencilState(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class IRasterizerState : public IObject {
+        public:
+
+        protected:
+            IRasterizerState(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class ISamplerState : public IObject {
+        public:
+
+        protected:
+            ISamplerState(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+
+        /*! @brief
+          */
+        class IQuery : public IObject {
+        public:
+
+        protected:
+            IQuery(IDevice* owner) : IObject(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class IPredicate : public IQuery {
+        public:
+
+        protected:
+            IPredicate(IDevice* owner) : IQuery(owner) {
+                // Empty
+            }
+        };
+
+        /*! @brief
+         */
+        class ISyncFence : public IObject {
+        public:
+
+        protected:
+            ISyncFence(IDevice* owner) : IObject(owner) {
                 // Empty
             }
         };

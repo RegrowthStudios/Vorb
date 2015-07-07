@@ -105,6 +105,10 @@ vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDe
     return texture;
 }
 
+vorb::graphics::IVertexDeclaration* vorb::graphics::D3DContext::create(VertexElementDescription* desc, size_t numElements) {
+    throw std::logic_error("The method or operation is not implemented.");
+}
+
 void vg::D3DContext::present() {
     m_dxgi.swapChain->Present(1, 0);
 }
@@ -364,5 +368,9 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
+}
+
+void vorb::graphics::D3DContext::dispose() {
+    m_device->Release();
 }
 

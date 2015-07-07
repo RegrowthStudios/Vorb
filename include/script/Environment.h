@@ -44,6 +44,8 @@ namespace vorb {
 
         class Environment {
         public:
+            typedef void (*ErrorHandler)(Environment*, const cString);
+
             Environment();
             ~Environment();
 
@@ -93,6 +95,8 @@ namespace vorb {
 
             Function& operator[] (const nString& name);
             const Function& operator[] (const nString& name) const;
+
+            ErrorHandler errorHandler = nullptr;
         private:
             VORB_NON_COPYABLE(Environment);
             static int registration(lua_State* L);

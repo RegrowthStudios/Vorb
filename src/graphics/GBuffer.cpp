@@ -12,7 +12,8 @@ void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::G
     glBindTexture(GL_TEXTURE_2D, texID);
     if (glTexStorage2D) {
         glTexStorage2D(GL_TEXTURE_2D, 1, (VGEnum)attachment.format, _size.x, _size.y);
-    } else {
+    }
+    else {
         glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)attachment.format, _size.x, _size.y, 0, (VGEnum)attachment.pixelFormat, (VGEnum)attachment.pixelType, nullptr);
     }
     SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
@@ -121,4 +122,13 @@ void vg::GBuffer::useGeometry() {
 void vg::GBuffer::useLight() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
     glViewport(0, 0, m_size.x, m_size.y);
+}
+void vg::GBuffer::bindGeometryTexture(size_t i) {
+    glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+}
+void vg::GBuffer::bindDepthTexture() {
+    glBindTexture(GL_TEXTURE_2D, m_texDepth);
+}
+void vg::GBuffer::bindLightTexture() {
+    glBindTexture(GL_TEXTURE_2D, getLightTexture());
 }

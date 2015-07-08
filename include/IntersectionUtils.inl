@@ -73,12 +73,12 @@ namespace IntersectionUtils {
         if (D < 0) {
             return false;
         }
-        D = sqrtf(D);
+        D = sqrt(D);
 
         // Ray can intersect the sphere, solve the closer hitpoint
         f64 t = (-0.5)*(b + D) / a;
         if (t > 0.0) {
-            distance = sqrtf(a)*t;
+            distance = sqrt(a)*t;
             hitpoint = rayorig + t*raydir;
             normal = (hitpoint - pos) / rad;
         } else {

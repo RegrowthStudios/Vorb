@@ -15,22 +15,49 @@ extern "C" {
 
 vscript::Function vscript::Function::nil;
 
+namespace {
+    int errFunc(lua_State* s) {
+        // Obtain the offending environment
+        lua_pushglobaltable(s);
+        vscript::impl::pushNamespace(s, "Vorb");
+        lua_getfield(s, -1, "env");
+        vscript::Environment* env = (vscript::Environment*)lua_touserdata(s, -1);
+        lua_pop(s, 3);
+
+        // Execute the error handler
+        if (env->errorHandler) {
+            const cString errorMessage = lua_tostring(s, -1);
+            env->errorHandler(env, errorMessage);
+        }
+
+        // Cleanup
+        lua_pop(s, 1);
+        return 0;
+    }
+}
+
 vscript::Environment::Environment() {
     // Create Lua environment
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
     lua_register(m_state, "register", vscript::Environment::registration);
 
+    // Add error handler
+    lua_pushlightuserdata(m_state, this);
+    lua_pushcclosure(m_state, errFunc, 1);
+
     // Create our special function table
     lua_newtable(m_state);
     lua_setfield(m_state, LUA_REGISTRYINDEX, VORB_SCRIPT_FUNCTION_TABLE);
-    
+
     // Add registration function
     lua_pushglobaltable(m_state);
     impl::pushNamespace(m_state, "Vorb");
     lua_pushlightuserdata(m_state, this);
     lua_pushcclosure(m_state, vscript::Environment::registration, 1);
     lua_setfield(m_state, -2, "register");
+    lua_pushlightuserdata(m_state, this);
+    lua_setfield(m_state, -2, "env");
     lua_pop(m_state, 1);
 }
 vscript::Environment::~Environment() {

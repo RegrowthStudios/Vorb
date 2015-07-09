@@ -89,13 +89,17 @@ namespace vorb {
             void useLight();
 
             /// Bind Geometry Texture
-            void bindGeometryTexture(size_t i);
+            /// @param i: Which Geometry texture to bind
+            /// @param texture_slot Position to bind texture
+            void bindGeometryTexture(size_t i, GLenum texture_slot);
 
             /// Bind Depth Texture
-            void bindDepthTexture();
+            /// @param texture_slot Position to bind texture
+            void bindDepthTexture(GLenum texture_slot);
             
             /// Bind Light Texture
-            void bindLightTexture();
+            /// @param texture_slot Position to bind texture
+            void bindLightTexture(GLenum texture_slot);
 
             /// @return OpenGL texture IDs
             const VGTexture& getGeometryTexture(size_t i) const {

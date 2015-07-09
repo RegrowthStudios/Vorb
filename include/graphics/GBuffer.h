@@ -88,6 +88,19 @@ namespace vorb {
             /// Set up the light target to be active
             void useLight();
 
+            /// Bind Geometry Texture
+            /// @param i: Which Geometry texture to bind
+            /// @param textureUnit Position to bind texture
+            void bindGeometryTexture(size_t i, ui32 textureUnit);
+
+            /// Bind Depth Texture
+            /// @param textureUnit Position to bind texture
+            void bindDepthTexture(ui32 textureUnit);
+            
+            /// Bind Light Texture
+            /// @param textureUnit Position to bind texture
+            void bindLightTexture(ui32 textureUnit);
+
             /// @return OpenGL texture IDs
             const VGTexture& getGeometryTexture(size_t i) const {
                 return m_textures[i];

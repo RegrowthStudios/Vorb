@@ -122,3 +122,15 @@ void vg::GBuffer::useLight() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
     glViewport(0, 0, m_size.x, m_size.y);
 }
+void vg::GBuffer::bindGeometryTexture(size_t i, ui32 textureUnit) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+}
+void vg::GBuffer::bindDepthTexture(ui32 textureUnit) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(GL_TEXTURE_2D, m_texDepth);
+}
+void vg::GBuffer::bindLightTexture(ui32 textureUnit) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(GL_TEXTURE_2D, getLightTexture());
+}

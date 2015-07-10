@@ -40,7 +40,7 @@ void main(uint3 input : SV_DispatchThreadID) {
 TEST(CreateContext) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     testAssert(__FILE__, __LINE__, adapter != nullptr, "Null Adapter");
 
     vg::IContext* context = nullptr;
@@ -56,7 +56,7 @@ TEST(CreateContext) {
 TEST(CreateShader) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
@@ -84,7 +84,7 @@ TEST(CreateShader) {
 TEST(CreateComputeShader) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
@@ -112,7 +112,7 @@ TEST(CreateComputeShader) {
 TEST(CreateTexture) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
@@ -134,7 +134,7 @@ TEST(CreateTexture) {
 TEST(ComputeOutput) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
@@ -158,7 +158,6 @@ TEST(ComputeOutput) {
 
     // Render to output
     defaultDevice->computeUse(computeShader);
-    defaultDevice->computeUse(0, rtCompute);
     defaultDevice->dispatchThreads(1024, 1024, 1);
 
     // Destroy all resources
@@ -173,7 +172,7 @@ TEST(ComputeOutput) {
 TEST(DrawTriangle) {
     vorb::init(vorb::InitParam::GRAPHICS);
 
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);

@@ -22,6 +22,8 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include <d3d11.h>
+
 #include "graphics/IAdapter.h"
 
 struct IDXGIAdapter;
@@ -32,11 +34,17 @@ namespace vorb {
     namespace graphics {
         class D3DAdapter : public IAdapter {
         public:
+            D3DAdapter(APIVersion v, D3D_FEATURE_LEVEL l) : IAdapter(v),
+                requestedFeatureLevel(l) {
+                // Empty
+            }
+
             virtual IContext* createContext(OUT OPT IDevice** defaultDevice) override;
             virtual IDevice* createDevice(IContext* context) override;
 
             virtual void attachToWindow(IContext* context, void* hWnd) override;
-        private:
+
+            D3D_FEATURE_LEVEL requestedFeatureLevel;
         };
     }
 }

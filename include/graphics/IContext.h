@@ -24,6 +24,7 @@
 
 #include "IResource.h"
 #include "ResourceDescriptions.h"
+#include "IAdapter.h"
 
 namespace vorb {
     namespace graphics {
@@ -32,8 +33,13 @@ namespace vorb {
         /* @brief
          */
         class IContext {
+            friend class IAdapter;
             friend class IResource;
         public:
+            const APIVersion& getAPIVersion() const {
+                return m_api;
+            }
+
             /*! @brief Signal that this thread will be used by the context
              * 
              */
@@ -97,6 +103,8 @@ namespace vorb {
             virtual void add(IResource* resource) = 0;
             virtual void remove(IResource* resource) = 0;
             virtual void free(IResource* resource) = 0;
+
+            APIVersion m_api;
         };
 
         class ResourceAllocator {

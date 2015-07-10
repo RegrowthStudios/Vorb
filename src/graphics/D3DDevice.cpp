@@ -79,10 +79,6 @@ void vorb::graphics::D3DDevice::computeUse(IComputeShader* shader) {
     m_context->CSSetShader(s->shader, nullptr, 0);
 }
 
-void vorb::graphics::D3DDevice::computeUse(ui32 slot, IComputeResourceView* v) {
-
-}
-
 void vorb::graphics::D3DDevice::dispatchThreads(ui32 x, ui32 y, ui32 z) {
     m_context->Dispatch(x, y, z);
 }

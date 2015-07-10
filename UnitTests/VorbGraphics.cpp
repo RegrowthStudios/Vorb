@@ -802,7 +802,7 @@ void main(uint3 input : SV_DispatchThreadID) {
     vorb::init(vorb::InitParam::ALL);
 
     // Create a graphics context
-    vg::IAdapter* adapter = vg::getD3DAdapter();
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IDevice* device = nullptr;
     vg::IContext* context = adapter->createContext(&device);
 
@@ -902,6 +902,30 @@ void main(uint3 input : SV_DispatchThreadID) {
     context->dispose();
 
     vorb::dispose(vorb::InitParam::ALL);
+    return true;
+}
+
+TEST(GetAPIs) {
+    vorb::init(vorb::InitParam::GRAPHICS);
+
+    std::vector<vg::APIVersion> apis;
+    vg::IAdapter::listAdapterTypes(apis);
+
+    for (auto it : apis) {
+        switch (it.api) {
+        case vg::API::DIRECT_3D:
+            printf("D3D ");
+            break;
+        case vg::API::OPENGL:
+            printf("OGL ");
+            break;
+        default:
+            break;
+        }
+        printf("%3d %3d\n", it.version.major, it.version.minor);
+    }
+
+    vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;
 }
 

@@ -310,6 +310,9 @@
     <ClCompile Include="src\graphics\D3DMap.cpp">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\IAdapter.cpp">
+      <Filter>Graphics\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />

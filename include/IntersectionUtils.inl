@@ -22,7 +22,10 @@
 namespace IntersectionUtils {
 
     /// Sums the 3 components of an f32v3
-    inline float vecsum(const f32v3& v) {
+    inline f32 vecsum(const f32v3& v) {
+        return v.x + v.y + v.z;
+    }
+    inline f64 vecsum(const f64v3& v) {
         return v.x + v.y + v.z;
     }
 
@@ -36,12 +39,11 @@ namespace IntersectionUtils {
     /// @param normal: returned normal of collision
     /// @return true on collision
     inline bool sphereIntersect(const f32v3& raydir, const f32v3& rayorig, const f32v3& pos,
-                                const float& rad, OUT f32v3& hitpoint, OUT float& distance, OUT f32v3& normal) {
-
-        float a = vecsum(raydir*raydir);
-        float b = vecsum(raydir * (2.0f * (rayorig - pos)));
-        float c = vecsum(pos*pos) + vecsum(rayorig*rayorig) - 2.0f*vecsum(rayorig*pos) - rad*rad;
-        float D = b*b + (-4.0f)*a*c;
+                                const f32& rad, OUT f32v3& hitpoint, OUT f32& distance, OUT f32v3& normal) {
+        f32 a = vecsum(raydir*raydir);
+        f32 b = vecsum(raydir * (2.0f * (rayorig - pos)));
+        f32 c = vecsum(pos*pos) + vecsum(rayorig*rayorig) - 2.0f*vecsum(rayorig*pos) - rad*rad;
+        f32 D = b*b + (-4.0f)*a*c;
 
         // If ray can not intersect then stop
         if (D < 0) {
@@ -50,9 +52,33 @@ namespace IntersectionUtils {
         D = sqrtf(D);
 
         // Ray can intersect the sphere, solve the closer hitpoint
-        float t = (-0.5f)*(b + D) / a;
+        f32 t = (-0.5f)*(b + D) / a;
         if (t > 0.0f) {
             distance = sqrtf(a)*t;
+            hitpoint = rayorig + t*raydir;
+            normal = (hitpoint - pos) / rad;
+        } else {
+            return false;
+        }
+        return true;
+    }
+    inline bool sphereIntersect(const f64v3& raydir, const f64v3& rayorig, const f64v3& pos,
+                                const f64& rad, OUT f64v3& hitpoint, OUT f64& distance, OUT f64v3& normal) {
+        f64 a = vecsum(raydir*raydir);
+        f64 b = vecsum(raydir * (2.0 * (rayorig - pos)));
+        f64 c = vecsum(pos*pos) + vecsum(rayorig*rayorig) - 2.0*vecsum(rayorig*pos) - rad*rad;
+        f64 D = b*b + (-4.0)*a*c;
+
+        // If ray can not intersect then stop
+        if (D < 0) {
+            return false;
+        }
+        D = sqrt(D);
+
+        // Ray can intersect the sphere, solve the closer hitpoint
+        f64 t = (-0.5)*(b + D) / a;
+        if (t > 0.0) {
+            distance = sqrt(a)*t;
             hitpoint = rayorig + t*raydir;
             normal = (hitpoint - pos) / rad;
         } else {
@@ -75,10 +101,39 @@ namespace IntersectionUtils {
     /// @param start: origin of ray
     /// @param tmin: distance along ray for collision
     /// @return true on collision
-    inline bool boxIntersect(const f32v3 corners[2], const f32v3& dir, const f32v3& start, OUT float& tmin) {
-        float tmax, tymin, tymax, tzmin, tzmax;
+    inline bool boxIntersect(const f32v3 corners[2], const f32v3& dir, const f32v3& start, OUT f32& tmin) {
+        f32 tmax, tymin, tymax, tzmin, tzmax;
 
         f32v3 invdir = 1.0f / dir;
+        i32v3 sign;
+        sign.x = (invdir.x) < 0;
+        sign.y = (invdir.y) < 0;
+        sign.z = (invdir.z) < 0;
+
+        tmin = (corners[sign[0]].x - start.x) * invdir.x;
+        tmax = (corners[1 - sign[0]].x - start.x) * invdir.x;
+        tymin = (corners[sign[1]].y - start.y) * invdir.y;
+        tymax = (corners[1 - sign[1]].y - start.y) * invdir.y;
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
+        if (tymin > tmin)
+            tmin = tymin;
+        if (tymax < tmax)
+            tmax = tymax;
+        tzmin = (corners[sign[2]].z - start.z) * invdir.z;
+        tzmax = (corners[1 - sign[2]].z - start.z) * invdir.z;
+        if ((tmin > tzmax) || (tzmin > tmax))
+            return false;
+        if (tzmin > tmin)
+            tmin = tzmin;
+        if (tzmax < tmax)
+            tmax = tzmax;
+        return true;
+    }
+    inline bool boxIntersect(const f64v3 corners[2], const f64v3& dir, const f64v3& start, OUT f64& tmin) {
+        f64 tmax, tymin, tymax, tzmin, tzmax;
+
+        f64v3 invdir = 1.0 / dir;
         i32v3 sign;
         sign.x = (invdir.x) < 0;
         sign.y = (invdir.y) < 0;

@@ -63,11 +63,13 @@ namespace vorb {
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
                 glBindTexture(GL_TEXTURE_2D, rt);
+                m_previousTexture = rt;
             }
             /// Move pointer to the next FBO on the chain
             void swap() {
                 _current++;
                 _current %= N;
+                m_previousTexture = getPrevious().getTextureID();
             }
             /// Setup FBO IO via a designated texture unit
             /// @param textureUnit: Texture unit placement for previous FBO [0, MaxTextureUnits)
@@ -90,7 +92,7 @@ namespace vorb {
              */
             void bindPreviousTexture(ui32 textureUnit) {
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
-                getPrevious().bindTexture();
+                glBindTexture(GL_TEXTURE_2D, m_previousTexture);
             }
             /// @return The current FBO (output)
             const GLRenderTarget& getCurrent() {
@@ -102,6 +104,7 @@ namespace vorb {
             }
         private:
             GLRenderTarget _fbos[N]; ///< A ring buffer of FBOs
+            VGTexture m_previousTexture = 0;
             i32 _current = 0; ///< Pointer to the current output
         };
     }

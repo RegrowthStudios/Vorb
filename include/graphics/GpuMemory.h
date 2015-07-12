@@ -1,19 +1,28 @@
-// 
-//  GpuMemory.h
-//  Vorb Engine
 //
-//  Created by Ben Arnold on 20 Oct 2014
-//  Copyright 2014 Regrowth Studios
-//  All Rights Reserved
-//  
-//  This file provides a wrapper around VRAM and
-//  openGL object uploads.
+// GpuMemory.h
+// Vorb Engine
 //
+// Created by Ben Arnold on 20 Oct 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GpuMemory.h
+ * @brief This file provides a wrapper around VRAM and openGL object uploads.
+ */
 
 #pragma once
 
-#ifndef GpuMemory_h__
-#define GpuMemory_h__
+#ifndef Vorb_GpuMemory_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GpuMemory_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 #include "gtypes.h"
@@ -203,4 +212,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // GpuMemory_h__
+#endif // !Vorb_GpuMemory_h__

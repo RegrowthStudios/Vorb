@@ -118,7 +118,7 @@ void vg::GLRenderTarget::setSize(const ui32& w, const ui32& h) {
     if (_fbo != 0) {
         // "Silent failure"
 #ifdef DEBUG
-        std::cerr << "Cannot Change Size Of An FBO That Is Already Initialized" << std::endl;
+        fputs("Cannot change size of an FBO that is already initialized.\n", stderr);
 #endif // DEBUG
     } else {
         _size.x = w;

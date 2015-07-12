@@ -1,20 +1,29 @@
-// 
-//  TextureCache.h
-//  Vorb Engine
 //
-//  Created by Ben Arnold on 20 Oct 2014
-//  Copyright 2014 Regrowth Studios
-//  All Rights Reserved
-//  
-//  Summary:
-//  This file provides an implementation of a TextureCache
-//  which handles loading and cacheing of textures.
+// TextureCache.h
+// Vorb Engine
 //
+// Created by Ben Arnold on 20 Oct 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file TextureCache.h
+ * @brief Provides an implementation of a class which handles loading and caching of textures.
+ */
 
 #pragma once
 
-#ifndef TEXTURECACHE_H_
-#define TEXTURECACHE_H_
+#ifndef Vorb_TextureCache_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_TextureCache_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "ImageIO.h"
 #include "SamplerState.h"
@@ -161,12 +170,11 @@ namespace vorb {
             vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
             /// We store two maps here so that users can free textures using either the ID or filePath
-            std::unordered_map <vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename
-            std::map <ui32, vio::Path> _textureIdMap; ///< Textures are stored here keyed on ID
+            std::unordered_map<vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename
+            std::map<ui32, vio::Path> _textureIdMap; ///< Textures are stored here keyed on ID
         };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // TEXTURECACHE_H_
-
+#endif // !Vorb_TextureCache_h__

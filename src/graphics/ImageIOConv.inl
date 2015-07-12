@@ -1,3 +1,7 @@
+#ifndef VORB_USING_PCH
+#include "compat.h"
+#endif // !VORB_USING_PCH
+
 namespace vorb {
     namespace graphics {
         namespace impl {

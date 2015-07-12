@@ -1,19 +1,26 @@
-///
-/// FullQuadVBO.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 6 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A mesh for a fullscreen quad
-///
+//
+// FullQuadVBO.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 6 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file FullQuadVBO.h
+ * @brief A mesh for a fullscreen quad.
+ */
 
 #pragma once
 
-#ifndef FullQuadVBO_h__
-#define FullQuadVBO_h__
+#ifndef Vorb_FullQuadVBO_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_FullQuadVBO_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace graphics {
@@ -42,4 +49,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // FullQuadVBO_h__
+#endif // !Vorb_FullQuadVBO_h__

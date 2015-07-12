@@ -1,19 +1,26 @@
-///
-/// Events.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// C#-style events
-///
+//
+// Events.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Events.hpp
+ * @brief C#-style events.
+ */
 
 #pragma once
 
-#ifndef Events_h__
-#define Events_h__
+#ifndef Vorb_Events_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Events_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+#endif // !VORB_USING_PCH
 
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
@@ -363,4 +370,4 @@ private:
     DeleterList m_deletionFunctions; ///< List of delegates to be deleted
 };
 
-#endif // Events_h__
+#endif // !Vorb_Events_hpp__

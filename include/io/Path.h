@@ -1,19 +1,26 @@
-///
-/// Path.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A wrapper for a path utility
-///
+//
+// Path.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 29 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Path.h
+ * @brief A wrapper for a path utility.
+ */
 
 #pragma once
 
-#ifndef Path_h__
-#define Path_h__
+#ifndef Vorb_Path_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Path_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace io {
@@ -176,4 +183,4 @@ namespace std {
     };
 }
 
-#endif // Path_h__
+#endif // !Vorb_Path_h__

@@ -1,19 +1,26 @@
-///
-/// BitTable.hpp
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 15 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// An M x N bit table for storing bools
-///
+//
+// BitTable.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 15 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file BitTable.hpp
+ * @brief An M x N bit table for storing bools.
+ */
 
 #pragma once
 
-#ifndef BitTable_hpp__
-#define BitTable_hpp__
+#ifndef Vorb_BitTable_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_BitTable_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace ecs {
@@ -182,4 +189,4 @@ namespace vorb {
 }
 namespace vecs = vorb::ecs;
 
-#endif // BitTable_hpp__
+#endif // !Vorb_BitTable_hpp__

@@ -34,8 +34,9 @@ namespace vorb {
         class TextureCache {
         public:
             TextureCache();
-            TextureCache(vio::IOManager* ioManager);
             ~TextureCache();
+
+            void init(vio::IOManager* ioManager);
 
             /// Finds a texture if it exists in the cache
             /// @param filePath: The path of the texture
@@ -147,6 +148,7 @@ namespace vorb {
             void scriptFreeTexture(VGTexture texture);
 #endif
         private:
+            VORB_NON_COPYABLE(TextureCache);
             /// Inserts a texture into the cache
             /// @param filePath: The path of the texture to insert
             /// #param texture: The texture to insert

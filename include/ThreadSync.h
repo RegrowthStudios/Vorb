@@ -1,19 +1,29 @@
-///
-/// ThreadSync.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Handles synchronization barriers between threads via token consumption
-///
+//
+// ThreadSync.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ThreadSync.h
+ * @brief Handles synchronization barriers between threads via token consumption.
+ */
 
 #pragma once
 
-#ifndef ThreadSync_h__
-#define ThreadSync_h__
+#ifndef Vorb_ThreadSync_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ThreadSync_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <mutex>
+#include <thread>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <condition_variable>
 
@@ -72,4 +82,4 @@ private:
     moodycamel::ConcurrentQueue<ThreadSyncObject*> m_queue; ///< Queue of objects to be consumed
 };
 
-#endif // ThreadSync_h__
+#endif // !Vorb_ThreadSync_h__

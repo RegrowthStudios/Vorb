@@ -1,19 +1,26 @@
-///
-/// RPC.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Handles cross-thread function invocation and synchronization
-///
+//
+// RPC.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file RPC.h
+ * @brief Handles cross-thread function invocation and synchronization.
+ */
 
 #pragma once
 
-#ifndef RPC_h__
-#define RPC_h__
+#ifndef Vorb_RPC_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_RPC_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <queue>
 
@@ -52,4 +59,4 @@ namespace vorb {
 }
 namespace vcore = vorb::core;
 
-#endif // RPC_h__
+#endif // !Vorb_RPC_h__

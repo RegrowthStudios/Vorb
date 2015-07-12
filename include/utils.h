@@ -148,8 +148,8 @@ inline T upSampleArray(size_t i1, size_t i2, size_t i3, T (&data)[N1][N2][N3]) {
 }
 
 /// Simple hermite interpolater for smoothing the range 0-1
-inline float hermite(float f) { return 3.0f * (f * f) - 2.0f * (f * f * f); }
-inline double hermite(double f) { return 3.0 * (f * f) - 2.0 * (f * f * f); }
+template<typename T>
+inline T hermite(T v) { return static_cast<T>(3.0) * (v * v) - static_cast<T>(2.0) * (v * v * v); }
 
 /************************************************************************/
 /* Quaternion Utilities                                                 */

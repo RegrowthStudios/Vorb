@@ -11,13 +11,13 @@
 vg::TextureCache::TextureCache() {
     // Empty
 }
-vg::TextureCache::TextureCache(vio::IOManager* ioManager) :
-m_ioManager(ioManager) {
-    // Empty
-}
 
 vg::TextureCache::~TextureCache() {
     dispose();
+}
+
+void vg::TextureCache::init(vio::IOManager* ioManager) {
+    m_ioManager = ioManager;
 }
 
 vg::Texture vg::TextureCache::findTexture(const vio::Path& filePath) {

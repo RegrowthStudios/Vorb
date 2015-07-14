@@ -8,7 +8,7 @@
 #include "D3DResource.h"
 #include "D3DMap.h"
 
-vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc) {
+vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc, OPT InitalResourceData* data) {
     // Create the D3D buffer description on the stack
     CBufferDescription cDesc = {};
     fill(cDesc, desc);
@@ -16,18 +16,23 @@ vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc) {
     // Generate buffer
     return create(&cDesc);
 }
-vg::IBuffer* vg::D3DContext::create(const CBufferDescription* desc) {
+vg::IBuffer* vg::D3DContext::create(const CBufferDescription* desc, OPT InitalResourceData* data) {
     // Allocate buffer instance
     D3DBuffer* buffer = new D3DBuffer(this);
     buffer->size = desc->ByteWidth;
 
-    // Create the buffer on the GPU
-    m_device->CreateBuffer(desc, nullptr, &buffer->data);
+    if (data) {
+        D3D11_SUBRESOURCE_DATA cdata {};
+        cdata.pSysMem = data->data;
+        m_device->CreateBuffer(desc, &cdata, &buffer->data);
+    } else {
+        m_device->CreateBuffer(desc, nullptr, &buffer->data);
+    }
 
     // Return handle
     return buffer;
 }
-vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const ConstantBlockDescription& desc) {
+vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const ConstantBlockDescription& desc, OPT InitalResourceData* data) {
     // Allocate buffer instance
     D3DConstantBlock* buffer = new D3DConstantBlock(this);
 
@@ -47,8 +52,13 @@ vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const Constan
 
     buffer->size = cdesc.ByteWidth;
 
-    // Create the buffer on the GPU
-    m_device->CreateBuffer(&cdesc, nullptr, &buffer->data);
+    if (data) {
+        D3D11_SUBRESOURCE_DATA cdata {};
+        cdata.pSysMem = data->data;
+        m_device->CreateBuffer(&cdesc, &cdata, &buffer->data);
+    } else {
+        m_device->CreateBuffer(&cdesc, nullptr, &buffer->data);
+    }
 
     // Return handle
     return buffer;
@@ -58,7 +68,7 @@ namespace {
         return vg::formatMapDXGI[(size_t)f];
     }
 }
-vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDescription& desc) {
+vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDescription& desc, OPT InitalResourceData* data) {
     D3DTexture1D* texture = new D3DTexture1D(this);
     texture->m_desc = desc;
 
@@ -67,13 +77,19 @@ vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDe
     cdesc.ArraySize = desc.atlasPages;
     cdesc.Format = convert(desc.format);
 
-    m_device->CreateTexture1D(&cdesc, nullptr, &texture->data);
+    if (data) {
+        D3D11_SUBRESOURCE_DATA cdata {};
+        cdata.pSysMem = data->data;
+        m_device->CreateTexture1D(&cdesc, &cdata, &texture->data);
+    } else {
+        m_device->CreateTexture1D(&cdesc, nullptr, &texture->data);
+    }
 
     // TODO(Cristian): Compute texture size
 
     return texture;
 }
-vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDescription& desc) {
+vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDescription& desc, OPT InitalResourceData* data) {
     D3DTexture2D* texture = new D3DTexture2D(this);
     texture->m_desc = desc;
 
@@ -82,13 +98,20 @@ vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDe
     cdesc.Height = desc.height;
     cdesc.ArraySize = desc.atlasPages;
 
-    m_device->CreateTexture2D(&cdesc, nullptr, &texture->data);
+    if (data) {
+        D3D11_SUBRESOURCE_DATA cdata {};
+        cdata.pSysMem = data->data;
+        cdata.SysMemPitch = data->stride.texture2DRow;
+        m_device->CreateTexture2D(&cdesc, &cdata, &texture->data);
+    } else {
+        m_device->CreateTexture2D(&cdesc, nullptr, &texture->data);
+    }
 
     // TODO(Cristian): Compute texture size
 
     return texture;
 }
-vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDescription& desc) {
+vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDescription& desc, OPT InitalResourceData* data) {
     D3DTexture3D* texture = new D3DTexture3D(this);
     texture->m_desc = desc;
 
@@ -97,8 +120,15 @@ vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDe
     cdesc.Height = desc.height;
     cdesc.Depth = desc.depth;
     
-    
-    m_device->CreateTexture3D(&cdesc, nullptr, &texture->data);
+    if (data) {
+        D3D11_SUBRESOURCE_DATA cdata {};
+        cdata.pSysMem = data->data;
+        cdata.SysMemPitch = data->stride.texture2DRow;
+        cdata.SysMemSlicePitch = data->stride.texture3DSlice;
+        m_device->CreateTexture3D(&cdesc, &cdata, &texture->data);
+    } else {
+        m_device->CreateTexture3D(&cdesc, nullptr, &texture->data);
+    }
 
     // TODO(Cristian): Compute texture size
 

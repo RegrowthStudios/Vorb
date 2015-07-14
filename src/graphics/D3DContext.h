@@ -45,12 +45,12 @@ namespace vorb {
             // TODO: This needs to be expanded
             void getFeatureSupport();
 
-            virtual IBuffer* create(const BufferDescription& desc) override;
-            virtual IBuffer* create(const CBufferDescription* desc) override;
-            virtual IConstantBlock* create(const ConstantBlockDescription& desc) override;
-            virtual ITexture1D* create(const Texture1DDescription& desc) override;
-            virtual ITexture2D* create(const Texture2DDescription& desc) override;
-            virtual ITexture3D* create(const Texture3DDescription& desc) override;
+            virtual IBuffer* create(const BufferDescription& desc, OPT InitalResourceData* data = nullptr) override;
+            virtual IBuffer* create(const CBufferDescription* desc, OPT InitalResourceData* data = nullptr) override;
+            virtual IConstantBlock* create(const ConstantBlockDescription& desc, OPT InitalResourceData* data = nullptr) override;
+            virtual ITexture1D* create(const Texture1DDescription& desc, OPT InitalResourceData* data = nullptr) override;
+            virtual ITexture2D* create(const Texture2DDescription& desc, OPT InitalResourceData* data = nullptr) override;
+            virtual ITexture3D* create(const Texture3DDescription& desc, OPT InitalResourceData* data = nullptr) override;
 
             virtual IVertexDeclaration* create(VertexElementDescription* desc, size_t numElements);
 

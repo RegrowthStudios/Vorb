@@ -9,6 +9,8 @@
 #include <include/graphics/IContext.h>
 #include <include/graphics/IDevice.h>
 #include <include/ui/OSWindow.h>
+#include <include/io/IOManager.h>
+#include <include/graphics/ImageIO.h>
 
 const char srcPixel[] = R"(
 struct PSOut {
@@ -36,6 +38,8 @@ void main(uint3 input : SV_DispatchThreadID) {
     DataOut[input.xy] = float4(float(input.x) / 1023.0, float(input.y) / 1023.0, float(index) / (1024.0 * 1024.0 - 1), 1.0) * tint;
 }
 )";
+
+
 
 TEST(CreateContext) {
     vorb::init(vorb::InitParam::GRAPHICS);
@@ -211,6 +215,128 @@ TEST(DrawTriangle) {
 
     // Destroy all resources
     vertexShader->dispose();
+
+    vorb::dispose(vorb::InitParam::GRAPHICS);
+    return true;
+}
+
+struct VertexPosUV {
+public:
+    f32v3 pos;
+    f32v2 uv;
+};
+
+vg::IShaderCode* compileShader(vg::IContext* ctx, const vpath& file, vg::ShaderType type) {
+    // Read code
+    vio::IOManager iom;
+    const cString src = iom.readFileToString(file);
+    size_t srcLength = strlen(src);
+
+    // Create compiler info
+    vg::ShaderCompilerInfo info {};
+    info.version.major = 3;
+    info.version.minor = 0;
+
+    // Compile source
+    vg::ShaderBytecode byteCode = ctx->compileShaderSource(src, srcLength, type, info);
+    delete[] src;
+
+    // Load to custom type
+    vg::IShaderCode* shaderCode = ctx->loadCompiledShader(byteCode);
+    byteCode.free();
+
+    return shaderCode;
+}
+
+TEST(DrawImage) {
+    vorb::init(vorb::InitParam::GRAPHICS);
+
+    // Create context and device
+    vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
+    vg::IContext* ctx = nullptr;
+    vg::IDevice* defaultDevice = nullptr;
+    ctx = adapter->createContext(&defaultDevice);
+
+    vg::IBuffer* vertData = nullptr;
+    vg::IVertexDeclaration* decl = nullptr;
+    vg::ITexture2D* texture = nullptr;
+    vg::IShaderCode* code = nullptr;
+
+    // Load vertex shader and description
+    vg::IVertexShader* vertexShader =  nullptr;
+    {
+        vg::VertexElementDescription desc[] = {
+            { 0, vg::Semantic::SEM_POSITION, 0, offsetof(VertexPosUV, pos), sizeof(f32v3), vg::MemoryFormat::R32G32B32_FLOAT },
+            { 0, vg::Semantic::SEM_TEXCOORD, 0, offsetof(VertexPosUV, uv), sizeof(f32v2), vg::MemoryFormat::R32G32_FLOAT }
+        };
+
+        code = compileShader(ctx, "data/shaders/d3d/VSImage.hlsl", vg::ShaderType::VERTEX_SHADER);
+        vertexShader = ctx->createVertexShader(code);
+        decl = ctx->create(desc, code, 2);
+        code->dispose();
+    }
+
+    // Load pixel shader
+    code = compileShader(ctx, "data/shaders/d3d/PSImage.hlsl", vg::ShaderType::FRAGMENT_SHADER);
+    vg::IPixelShader* pixelShader = ctx->createPixelShader(code);
+    code->dispose();
+
+    { // Create texture
+        vg::Texture2DDescription desc {};
+        desc.format = vg::MemoryFormat::R8G8B8A8_UNORM_SRGB;
+        vg::ImageIO iio;
+        vg::ScopedBitmapResource bmp = iio.load("data/BigImage.png", vg::ImageIOFormat::RGBA_UI8, false);
+        vg::InitalResourceData data {};
+        data.data = bmp.data;
+        texture = ctx->create(desc, &data);
+    }
+
+    { // Create triangle
+        vg::BufferDescription desc {};
+        desc.format = vg::MemoryFormat::R8G8B8A8_UNORM_SRGB;
+        VertexPosUV verts[3] = {
+            { f32v3(-1, -1, 0), f32v2(0, 0) },
+            { f32v3(1, -1, 0), f32v2(1, 0) },
+            { f32v3(-1, 1, 0), f32v2(0, 1) }
+        };
+        vg::InitalResourceData data {};
+        data.data = verts;
+        vertData = ctx->create(desc, &data);
+    }
+
+    // Create views
+    vg::ITexture2DView* textureView = ctx->makeView(texture);
+
+    // Setup shaders
+    defaultDevice->vertexUse(vertexShader);
+    defaultDevice->pixelUse(pixelShader);
+    defaultDevice->pixelUse(0, 1, (vg::IResourceView**)&textureView);
+
+    { // Set vertex buffer
+        ui32 off = 0;
+        ui32 stride = sizeof(VertexPosUV);
+        vg::BufferBindings bb = { &vertData, 0, 1, &off, &stride };
+        defaultDevice->setVertexBuffers(bb);
+    }
+
+    // Use correct topology and vertex layout
+    defaultDevice->use(decl);
+    defaultDevice->setTopology(vg::PrimitiveType::TRIANGLES);
+
+    // Draw a triangle
+    defaultDevice->draw(3, 0);
+
+    // Destroy all resources
+    vertexShader->dispose();
+    pixelShader->dispose();
+    textureView->dispose();
+    texture->dispose();
+    decl->dispose();
+    vertData->dispose();
+
+    // Destroy graphics API
+    defaultDevice->dispose();
+    ctx->dispose();
 
     vorb::dispose(vorb::InitParam::GRAPHICS);
     return true;

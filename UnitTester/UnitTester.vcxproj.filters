@@ -5,5 +5,22 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Simple.hlsl" />
+    <FxCompile Include="data\shaders\d3d\VSImage.hlsl">
+      <Filter>data\shaders\d3d</Filter>
+    </FxCompile>
+    <FxCompile Include="data\shaders\d3d\PSImage.hlsl">
+      <Filter>data\shaders\d3d</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="data">
+      <UniqueIdentifier>{9f018dff-f630-4495-b635-448b4780c111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\shaders">
+      <UniqueIdentifier>{a62625b4-bad8-46c3-9d5a-750b3376fa0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\shaders\d3d">
+      <UniqueIdentifier>{af1c388c-9a92-4825-840b-d5d3fe558d45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

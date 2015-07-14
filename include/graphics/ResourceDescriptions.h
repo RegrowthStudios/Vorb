@@ -69,6 +69,15 @@ namespace vorb {
             ui32 m_id;
         };
 
+        struct InitalResourceData {
+        public:
+            void* data;
+            struct {
+                UNIT_SPACE(BYTES) size_t texture2DRow; ///< The distance of the first two pixels between rows (y) in a 2D and 3D texture
+                UNIT_SPACE(BYTES) size_t texture3DSlice; ///< The distance of the first two pixels between slices (z) in a 3D texture
+            } stride; ///< Pixel stride information for variable-packed texture data (leave values as 0 if it is tightly packed)
+        };
+
         struct BufferDescription {
         public:
             vg::BufferTarget type;

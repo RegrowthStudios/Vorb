@@ -1,19 +1,26 @@
-///
-/// ImageIO.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// 
-///
+//
+// ImageIO.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ImageIO.h
+ * @brief 
+ */
 
 #pragma once
 
-#ifndef ImageIO_h__
-#define ImageIO_h__
+#ifndef Vorb_ImageIO_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ImageIO_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../Events.hpp"
 #include "../io/Path.h"
@@ -95,4 +102,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // ImageIO_h__
+#endif // !Vorb_ImageIO_h__

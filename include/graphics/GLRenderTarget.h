@@ -1,20 +1,26 @@
-///
-/// GLRenderTarget.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 6 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// An OpenGL FBO object that contains minimum functionality
-///
+//
+// GLRenderTarget.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 6 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GLRenderTarget.h
+ * @brief An OpenGL FBO object that contains minimum functionality.
+ */
 
 #pragma once
 
-#ifndef GLRenderTarget_h__
-#define GLRenderTarget_h__
+#ifndef Vorb_GLRenderTarget_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GLRenderTarget_h__
+//! @endcond
 
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 #include "gtypes.h"
@@ -120,4 +126,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // GLRenderTarget_h__
+#endif // !Vorb_GLRenderTarget_h__

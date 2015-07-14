@@ -1,19 +1,26 @@
-///
-/// SamplerState.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Changes GPU texture sampling state
-///
+//
+// SamplerState.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SamplerState.h
+ * @brief Changes GPU texture sampling state.
+ */
 
 #pragma once
 
-#ifndef SamplerState_h__
-#define SamplerState_h__
+#ifndef Vorb_SamplerState_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SamplerState_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 #include "gtypes.h"
@@ -80,4 +87,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // SamplerState_h__
+#endif // !Vorb_SamplerState_h__

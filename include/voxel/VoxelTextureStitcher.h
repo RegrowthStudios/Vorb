@@ -8,10 +8,8 @@
 //
 
 /*! \file VoxelTextureStitcher.h
-* @brief Maps voxel tile textures to an atlas.
-*
-*
-*/
+ * @brief Maps voxel tile textures to an atlas.
+ */
 
 #pragma once
 
@@ -21,7 +19,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 /// Stores Information About An Atlas Page For Construction Purposes

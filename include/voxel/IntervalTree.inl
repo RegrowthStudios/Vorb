@@ -1,5 +1,3 @@
-#pragma once
-
 template <typename T>
 inline void IntervalTree<typename T>::initSingle(T data, size_t length) {
     m_root = 0;

@@ -9,8 +9,6 @@
 
 /*! \file ScriptImpl.h
  * @brief 
- * 
- * 
  */
 
 #pragma once

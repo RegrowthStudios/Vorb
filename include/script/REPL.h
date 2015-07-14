@@ -9,8 +9,6 @@
 
 /*! \file REPL.h
  * @brief 
- * 
- * 
  */
 
 #pragma once
@@ -62,6 +60,5 @@ namespace vorb {
     }
 }
 namespace vscript = vorb::script;
-
 
 #endif // !Vorb_REPL_h__

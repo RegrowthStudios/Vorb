@@ -9,8 +9,6 @@
 
 /*! \file KegValue.h
  * @brief 
- * 
- * 
  */
 
 #pragma once
@@ -22,7 +20,8 @@
 
 #ifndef VORB_USING_PCH
 #include <memory>
-#include "types.h"
+
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 #include <typeindex>

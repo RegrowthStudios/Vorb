@@ -8,7 +8,7 @@
 //
 
 /*! \file GLStates.h
- * @brief Utility access to all the state objects.
+ * @brief State headers.
  */
 
 #pragma once

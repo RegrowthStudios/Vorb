@@ -19,8 +19,8 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "compat.h"
-#include "types.h"
+#include "../compat.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 #ifdef OS_WINDOWS

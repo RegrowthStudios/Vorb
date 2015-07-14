@@ -9,8 +9,6 @@
 
 /*! \file KegFuncs.h
  * @brief 
- * 
- * 
  */
 
 #pragma once
@@ -21,7 +19,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 #include "YAML.h"

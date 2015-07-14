@@ -1,19 +1,29 @@
-///
-/// ComponentTable.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Common abstract implementation of ComponentTableBase for any component type
-///
+//
+// ComponentTable.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ComponentTable.hpp
+ * @brief Common abstract implementation of ComponentTableBase for any component type.
+ */
 
 #pragma once
 
-#ifndef ComponentTable_h__
-#define ComponentTable_h__
+#ifndef Vorb_ComponentTable_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ComponentTable_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <utility>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "ComponentTableBase.h"
 
@@ -117,4 +127,4 @@ namespace vorb {
 }
 namespace vecs = vorb::ecs;
 
-#endif // ComponentTable_h__
+#endif // !Vorb_ComponentTable_hpp__

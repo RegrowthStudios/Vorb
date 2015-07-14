@@ -339,9 +339,6 @@
     <ClInclude Include="include/ecs/ECS.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="include/ecs/ECSSimpleUpdater.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
     <ClInclude Include="include/ecs/Entity.h">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -796,9 +793,6 @@
     <None Include="src\graphics\SpriteBatchShader.inl">
       <Filter>Graphics\Utils</Filter>
     </None>
-    <None Include="include/IntersectionUtils.inl">
-      <Filter>Utils</Filter>
-    </None>
     <None Include="src\graphics\ImageIOConv.inl">
       <Filter>Graphics\IO</Filter>
     </None>
@@ -817,6 +811,9 @@
     </None>
     <None Include="include\voxel\IntervalTree.inl">
       <Filter>Voxel</Filter>
+    </None>
+    <None Include="include\IntersectionUtils.hpp">
+      <Filter>Utils</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

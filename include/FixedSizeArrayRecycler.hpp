@@ -1,19 +1,26 @@
-///
-/// FixedSizeArrayRecycler.hpp
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 14 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// This class will recycle fixed sized arrays of a specific type.
-/// This is very useful for chunk data but may have other uses.
+//
+// FixedSizeArrayRecycler.hpp
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 14 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file FixedSizeArrayRecycler.hpp
+ * @brief This class will recycle fixed sized arrays of a specific type.
+ */
 
 #pragma once
 
-#ifndef FixedSizeArrayRecycler_h__
-#define FixedSizeArrayRecycler_h__
+#ifndef Vorb_FixedSizeArrayRecycler_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_FixedSizeArrayRecycler_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <mutex>
 
@@ -76,4 +83,4 @@ namespace vorb {
 }
 namespace vcore = vorb::core;
 
-#endif // FixedSizeArrayRecycler_h__
+#endif // !Vorb_FixedSizeArrayRecycler_hpp__

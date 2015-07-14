@@ -1,24 +1,30 @@
-///
-/// IntersectionUtils.inl
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 11 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Intersection functions
-///
+//
+// IntersectionUtils.hpp
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 11 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file IntersectionUtils.hpp
+ * @brief Intersection functions.
+ */
 
 #pragma once
 
-#ifndef IntersectionUtils_inl__
-#define IntersectionUtils_inl__
+#ifndef Vorb_IntersectionUtils_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_IntersectionUtils_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 /************************************************************************/
 /* Intersection functions                                               */
 /************************************************************************/
-
 namespace IntersectionUtils {
 
     /// Sums the 3 components of an f32v3
@@ -161,4 +167,4 @@ namespace IntersectionUtils {
     }
 }
 
-#endif // IntersectionUtils_inl__
+#endif // !Vorb_IntersectionUtils_hpp__

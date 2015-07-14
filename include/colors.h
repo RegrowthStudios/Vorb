@@ -8,7 +8,7 @@
 //
 
 /*! \file colors.h
- * @brief Large list of colors and color space conversion functions
+ * @brief Large list of colors and color space conversion functions.
  */
 
 #pragma once
@@ -22,7 +22,7 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-/** @brief Collection of named colors.
+/*! @brief Collection of named colors.
  * 
  * Provides the definition of 141 named
  * colors. Values taken from XNA.

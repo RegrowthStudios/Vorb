@@ -1,19 +1,22 @@
-///
-/// VorbLibs.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 3 Feb 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Controls library linkage
-///
+//
+// VorbLibs.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 3 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file VorbLibs.h
+ * @brief Controls library linkage.
+ */
 
 #pragma once
 
 #ifndef Vorb_VorbLibs_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_VorbLibs_h__
+//! @endcond
 
 #include "compat.h"
 

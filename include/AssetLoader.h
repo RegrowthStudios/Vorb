@@ -9,10 +9,8 @@
 //
 
 /*! \file AssetLoader.h
-* @brief 
-* Handles loading assets 
-*
-*/
+ * @brief Handles loading assets.
+ */
 
 #pragma once
 

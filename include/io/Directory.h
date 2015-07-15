@@ -1,19 +1,28 @@
-///
-/// Directory.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A directory wrapper
-///
+//
+// Directory.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 29 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Directory.h
+ * @brief A directory wrapper.
+ */
 
 #pragma once
 
-#ifndef Directory_h__
-#define Directory_h__
+#ifndef Vorb_Directory_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Directory_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../Events.hpp"
 #include "Path.h"
@@ -70,4 +79,4 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::Directory vdir; ///< Directory shorthand
 
-#endif // Directory_h__
+#endif // !Vorb_Directory_h__

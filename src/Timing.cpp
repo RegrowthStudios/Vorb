@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "Timing.h"
 
-#if defined(WIN32) || defined(WIN64)
+#ifndef VORB_USING_PCH
+#include "compat.h"
+#endif // !VORB_USING_PCH
+
+#if defined(OS_WINDOWS)
 #include <SDL/SDL.h>
 #else
 #include <SDL2/SDL.h>

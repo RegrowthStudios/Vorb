@@ -1,5 +1,10 @@
 #include "stdafx.h"
 #include "ui/ComboBox.h"
+
+#ifndef VORB_USING_PCH
+#undef min
+#endif // !VORB_USING_PCH
+
 #include "ui/MouseInputDispatcher.h"
 #include "ui/UIRenderer.h"
 #include "utils.h"
@@ -65,7 +70,7 @@ void vui::ComboBox::updatePosition() {
     if (m_isDropped) {
         m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
         f32v2 dims = getDimensions() * f32v2(1.0f, m_items.size());
-        dims.y = glm::min(dims.y, m_maxDropHeight);
+        dims.y = std::min(dims.y, m_maxDropHeight);
         m_dropPanel.setDimensions(dims);
     } else {
         m_dropPanel.setDimensions(f32v2(0.0f));

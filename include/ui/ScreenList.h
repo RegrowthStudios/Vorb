@@ -1,19 +1,28 @@
-///
-/// ScreenList.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Indexed screen container
-///
+//
+// ScreenList.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ScreenList.h
+ * @brief Indexed screen container.
+ */
 
 #pragma once
 
-#ifndef ScreenList_h__
-#define ScreenList_h__
+#ifndef Vorb_ScreenList_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ScreenList_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace ui {
@@ -51,4 +60,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-#endif // ScreenList_h__
+#endif // !Vorb_ScreenList_h__

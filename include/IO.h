@@ -8,7 +8,7 @@
 //
 
 /*! \file IO.h
- * @brief Collection of commonly used Vorb IO headers
+ * @brief IO headers.
  */
 
 #pragma once

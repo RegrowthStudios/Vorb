@@ -1,19 +1,27 @@
-///
-/// MemFile.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 12 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// 
-///
+//
+// MemFile.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 12 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MemFile.h
+ * @brief A memory-mapped file.
+ */
 
 #pragma once
 
-#ifndef MemFile_h__
-#define MemFile_h__
+#ifndef Vorb_MemFile_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MemFile_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../compat.h"
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #ifdef OS_WINDOWS
 #include <Windows.h>
@@ -37,4 +45,4 @@ private:
     cString m_buffer;
 };
 
-#endif // MemFile_h__
+#endif // !Vorb_MemFile_h__

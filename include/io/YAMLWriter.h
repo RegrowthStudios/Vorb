@@ -1,19 +1,26 @@
-///
-/// YAMLWriter.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 21 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// API for writing YAML data
-///
+//
+// YAMLWriter.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 21 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file YAMLWriter.h
+ * @brief API for writing YAML data.
+ */
 
 #pragma once
 
-#ifndef YAMLWriter_h__
-#define YAMLWriter_h__
+#ifndef Vorb_YAMLWriter_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_YAMLWriter_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "YAMLNode.h"
 #include "YAMLConverters.h"
@@ -58,4 +65,4 @@ namespace keg {
     };
 }
 
-#endif // YAMLWriter_h__
+#endif // !Vorb_YAMLWriter_h__

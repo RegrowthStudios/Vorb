@@ -1,19 +1,28 @@
-///
-/// ModelIO.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 18 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Handles loading models into indexed-interleaved-vertex meshes
-///
+//
+// ModelIO.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 18 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ModelIO.h
+ * @brief Handles loading models into indexed-interleaved-vertex meshes.
+ */
 
 #pragma once
 
-#ifndef ModelIO_h__
-#define ModelIO_h__
+#ifndef Vorb_ModelIO_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ModelIO_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "MeshData.h"
 #include "AnimationData.h"
@@ -47,4 +56,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // ModelIO_h__
+#endif // !Vorb_ModelIO_h__

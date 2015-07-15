@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "colors.h"
 
+#ifndef VORB_USING_PCH
+#undef min
+#include <cmath>
+#endif // !VORB_USING_PCH
+
 // All Color Names And Values Are From The C# XNA Framework
 const color4 color::Transparent = color4(0, 0, 0, 0);
 const color4 color::AliceBlue = color4(240, 248, 255, 255);

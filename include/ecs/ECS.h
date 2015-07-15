@@ -1,19 +1,29 @@
-///
-/// ECS.h
-/// Seed of Andromeda
-///
-/// Created by Cristian Zaloj on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// The main ECS class
-///
+//
+// ECS.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ECS.h
+ * @brief The main ECS class.
+ */
 
 #pragma once
 
-#ifndef ECS_h__
-#define ECS_h__
+#ifndef Vorb_ECS_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ECS_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "BitTable.hpp"
@@ -118,4 +128,4 @@ namespace vorb {
 }
 namespace vecs = vorb::ecs;
 
-#endif // ECS_h__
+#endif // !Vorb_ECS_h__

@@ -1,20 +1,29 @@
-// 
-//  TextureCache.h
-//  Vorb Engine
 //
-//  Created by Ben Arnold on 20 Oct 2014
-//  Copyright 2014 Regrowth Studios
-//  All Rights Reserved
-//  
-//  Summary:
-//  This file provides an implementation of a TextureCache
-//  which handles loading and cacheing of textures.
+// TextureCache.h
+// Vorb Engine
 //
+// Created by Ben Arnold on 20 Oct 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file TextureCache.h
+ * @brief Provides an implementation of a class which handles loading and caching of textures.
+ */
 
 #pragma once
 
-#ifndef TEXTURECACHE_H_
-#define TEXTURECACHE_H_
+#ifndef Vorb_TextureCache_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_TextureCache_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "ImageIO.h"
 #include "SamplerState.h"
@@ -34,8 +43,9 @@ namespace vorb {
         class TextureCache {
         public:
             TextureCache();
-            TextureCache(vio::IOManager* ioManager);
             ~TextureCache();
+
+            void init(vio::IOManager* ioManager);
 
             /// Finds a texture if it exists in the cache
             /// @param filePath: The path of the texture
@@ -55,13 +65,15 @@ namespace vorb {
             /// @param internalFormat: Internal format of the pixel data
             /// @param textureFormat: Format of uploaded pixels
             /// @param mipmapLevels: The max number of mipmap levels
+            /// @param flipV: When true, texture will flip across horizontal.
             /// @return The texture.
             Texture addTexture(const vio::Path& filePath,
                                vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D,
                                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
                                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
                                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                               i32 mipmapLevels = INT_MAX);
+                               i32 mipmapLevels = INT_MAX,
+                               bool flipV = false);
 
             /// Loads and uploads a png texture and adds it to the cache or returns
             /// an existing texture ID if it already exists in the cache. Also
@@ -74,6 +86,7 @@ namespace vorb {
             /// @param internalFormat: Internal format of the pixel data
             /// @param textureFormat: Format of uploaded pixels
             /// @param mipmapLevels: The max number of mipmap levels
+            /// @param flipV: When true, texture will flip across horizontal.
             /// @return The texture.
             Texture addTexture(const vio::Path& filePath,
                                OUT vg::BitmapResource& rvBitmap,
@@ -82,7 +95,8 @@ namespace vorb {
                                SamplerState* samplingParameters = &SamplerState::LINEAR_CLAMP_MIPMAP,
                                vg::TextureInternalFormat internalFormat = vg::TextureInternalFormat::RGBA,
                                vg::TextureFormat textureFormat = vg::TextureFormat::RGBA,
-                               i32 mipmapLevels = INT_MAX);
+                               i32 mipmapLevels = INT_MAX,
+                               bool flipV = false);
 
             /// Uploads a png texture and adds it to the cache
             /// an existing texture ID if it already exists in the cache
@@ -93,7 +107,6 @@ namespace vorb {
             /// @param samplingParameters: The texture sampler parameters
             /// @param internalFormat : Internal format of the pixel data
             /// @param textureFormat: Format of uploaded pixels
-            /// @param mipmapLevels: The max number of mipmap levels
             /// @return The texture.
             Texture addTexture(const vio::Path& filePath,
                                const vg::BitmapResource* rs,
@@ -144,6 +157,7 @@ namespace vorb {
             void scriptFreeTexture(VGTexture texture);
 #endif
         private:
+            VORB_NON_COPYABLE(TextureCache);
             /// Inserts a texture into the cache
             /// @param filePath: The path of the texture to insert
             /// #param texture: The texture to insert
@@ -158,12 +172,11 @@ namespace vorb {
             vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
             /// We store two maps here so that users can free textures using either the ID or filePath
-            std::unordered_map <vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename
-            std::map <ui32, std::unordered_map <vio::Path, Texture>::iterator> _textureIdMap; ///< Textures are stored here keyed on ID
+            std::unordered_map<vio::Path, Texture> _textureStringMap; ///< Textures store here keyed on filename
+            std::map<ui32, vio::Path> _textureIdMap; ///< Textures are stored here keyed on ID
         };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // TEXTURECACHE_H_
-
+#endif // !Vorb_TextureCache_h__

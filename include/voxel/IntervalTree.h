@@ -8,10 +8,8 @@
 //
 
 /*! \file IntervalTree.h
-* @brief Interval tree data structure for storing
-* RLE compressed data in a contiguous buffer with
-* O(log(n)) lookup and insertion speed.
-*/
+ * @brief Interval tree data structure for storing RLE compressed data in a contiguous buffer with O(log(n)) lookup and insertion speed.
+ */
 
 #pragma once
 
@@ -21,11 +19,10 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
-
-#pragma once
 #include <map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 // Implementation of a specialized interval tree based on a red-black tree
 // Red black tree: http://en.wikipedia.org/wiki/Red%E2%80%93black_tree
@@ -179,8 +176,8 @@ public:
     }
     const_iterator end() const { return const_iterator(nullptr, nullptr); }
 
-    inline Node& operator[](int index) { return m_tree[index]; }
-    inline int size() const { return m_tree.size(); }
+    inline const Node& operator[](int index) const { return m_tree[index]; }
+    inline size_t size() const { return m_tree.size(); }
 
 private:
     void uncompressTraversal(int index, int& bufferIndex, T* buffer);

@@ -1,19 +1,26 @@
-///
-/// IDGenerator.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 30 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Unique ID generator and recycler
-///
+//
+// IDGenerator.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 30 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file IDGenerator.h
+ * @brief Unique ID generator and recycler.
+ */
 
 #pragma once
 
-#ifndef IDGenerator_h__
-#define IDGenerator_h__
+#ifndef Vorb_IDGenerator_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_IDGenerator_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace core {
@@ -65,4 +72,4 @@ namespace vorb {
 }
 namespace vcore = vorb::core;
 
-#endif // IDGenerator_h__
+#endif // !Vorb_IDGenerator_h__

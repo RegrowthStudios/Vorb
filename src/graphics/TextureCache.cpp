@@ -11,13 +11,13 @@
 vg::TextureCache::TextureCache() {
     // Empty
 }
-vg::TextureCache::TextureCache(vio::IOManager* ioManager) :
-m_ioManager(ioManager) {
-    // Empty
-}
 
 vg::TextureCache::~TextureCache() {
     dispose();
+}
+
+void vg::TextureCache::init(vio::IOManager* ioManager) {
+    m_ioManager = ioManager;
 }
 
 vg::Texture vg::TextureCache::findTexture(const vio::Path& filePath) {
@@ -32,7 +32,7 @@ vg::Texture vg::TextureCache::findTexture(const vio::Path& filePath) {
 vio::Path vg::TextureCache::getTexturePath(ui32 textureID) {
     auto it = _textureIdMap.find(textureID);
     if (it != _textureIdMap.end()) {
-        return it->second->first;
+        return it->second;
     }
     return "";
 }
@@ -42,7 +42,8 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                                          SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
                                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
                                          vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-                                         i32 mipmapLevels /* = INT_MAX */) {
+                                         i32 mipmapLevels /* = INT_MAX */,
+                                         bool flipV /*= false*/) {
     // Get absolute path
     vio::Path texPath; 
     resolvePath(filePath, texPath);
@@ -52,7 +53,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Load the pixel data
-    vg::ScopedBitmapResource rs = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8);
+    vg::ScopedBitmapResource rs = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8, flipV);
     if (!rs.data) return Texture();
     texture.width = rs.width;
     texture.height = rs.height;
@@ -79,7 +80,8 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
                                          SamplerState* samplingParameters /* = &SamplerState::LINEAR_CLAMP_MIPMAP */,
                                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA */,
                                          vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-                                         i32 mipmapLevels /* = INT_MAX */) {
+                                         i32 mipmapLevels /* = INT_MAX */,
+                                         bool flipV /*= false*/) {
     // Get absolute path
     vio::Path texPath;
     resolvePath(filePath, texPath);
@@ -89,7 +91,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Load the pixel data
-    rvBitmap = vg::ImageIO().load(texPath.getString(), rvFormat);
+    rvBitmap = vg::ImageIO().load(texPath.getString(), rvFormat, flipV);
     if (!rvBitmap.data) return Texture();
     texture.width = rvBitmap.width;
     texture.height = rvBitmap.height;
@@ -239,7 +241,8 @@ void vg::TextureCache::scriptFreeTexture(VGTexture texture) {
 void vg::TextureCache::insertTexture(const vio::Path& filePath, const Texture& texture) {
     // We store an iterator to the map node in the _textureIdMap
     // so that we can quickly remove textures from the cache
-    _textureIdMap[texture.id] = _textureStringMap.insert(std::make_pair(filePath, texture)).first;
+    _textureStringMap.insert(std::make_pair(filePath, texture));
+    _textureIdMap[texture.id] = filePath;
 }
 
 void vg::TextureCache::resolvePath(const vio::Path& path, OUT vio::Path& fullPath) {

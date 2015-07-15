@@ -1,19 +1,29 @@
-///
-/// Entity.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 9 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Basic ECS types
-///
+//
+// Entity.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 9 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Entity.h
+ * @brief Basic ECS types.
+ */
 
 #pragma once
 
-#ifndef Entity_h__
-#define Entity_h__
+#ifndef Vorb_Entity_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Entity_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_set>
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace ecs {
@@ -56,5 +66,4 @@ private:
     std::hash<vecs::EntityID> _internal;
 };
 
-
-#endif // Entity_h__
+#endif // !Vorb_Entity_h__

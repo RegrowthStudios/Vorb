@@ -364,7 +364,6 @@
     <ClCompile Include="src/colors.cpp" />
     <ClCompile Include="src/ecs/ComponentTableBase.cpp" />
     <ClCompile Include="src/ecs/ECS.cpp" />
-    <ClCompile Include="src/graphics/Mesh.cpp" />
     <ClCompile Include="src/ecs/MultipleComponentSet.cpp" />
     <ClCompile Include="src/RPC.cpp" />
     <ClCompile Include="src/ui/GameWindow.cpp" />
@@ -480,7 +479,6 @@
     <ClInclude Include="include/graphics/DepthState.h" />
     <ClInclude Include="include/io/Directory.h" />
     <ClInclude Include="include/ecs/ECS.h" />
-    <ClInclude Include="include/ecs/ECSSimpleUpdater.h" />
     <ClInclude Include="include/ecs/Entity.h" />
     <ClInclude Include="include/Events.hpp" />
     <ClInclude Include="include/io/File.h" />
@@ -525,7 +523,6 @@
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
     <ClInclude Include="include/ui/MainGame.h" />
-    <ClInclude Include="include/graphics/Mesh.h" />
     <ClInclude Include="include/ecs/MultiComponentTracker.hpp" />
     <ClInclude Include="include/ecs/MultipleComponentSet.h" />
     <ClInclude Include="include/PtrRecycler.hpp" />
@@ -651,7 +648,7 @@
     <None Include="src\graphics\SpriteBatchShader.inl" />
     <None Include="src\ImplGraphicsH.inl" />
     <None Include="src\io\YAMLInternal.inl" />
-    <None Include="include/IntersectionUtils.inl" />
+    <None Include="include\IntersectionUtils.hpp" />
     <None Include="src\ui\KeyMappings.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)/Microsoft.Cpp.targets" />

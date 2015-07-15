@@ -1,19 +1,26 @@
-///
-/// RingBuffer.hpp
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 5 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A ring buffer with a maximum number of elements
-/// 
+//
+// RingBuffer.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 5 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file RingBuffer.hpp
+ * @brief A ring buffer with a maximum number of elements.
+ */
 
 #pragma once
 
-#ifndef RingBuffer_hpp__
-#define RingBuffer_hpp__
+#ifndef Vorb_RingBuffer_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_RingBuffer_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     /// A constant-sized non-overwriting circular queue
@@ -51,4 +58,4 @@ namespace vorb {
 
 #include "RingBuffer.inl"
 
-#endif // RingBuffer_hpp__
+#endif // !Vorb_RingBuffer_hpp__

@@ -1,21 +1,29 @@
-///
-/// ShaderManager.h
-/// Vorb
-///
-/// Created by Benjamin Arnold on 29 Mar 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Implements ShaderManager, which handles caching, creation, and destruction of GLPrograms
-///
+//
+// ShaderManager.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 29 Mar 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ShaderManager.h
+ * @brief Handles caching, creation, and destruction of programs.
+ */
 
 #pragma once
 
-#ifndef ShaderManager_h__
-#define ShaderManager_h__
+#ifndef Vorb_ShaderManager_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ShaderManager_h__
+//! @endcond
 
+#ifndef VORB_USING_PCH
 #include <map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
+
 #include "../Events.hpp"
 #include "../VorbPreDecl.inl"
 #include "../io/Path.h"
@@ -98,4 +106,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // ShaderManager_h__
+#endif // !Vorb_ShaderManager_h__

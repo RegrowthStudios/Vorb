@@ -1,19 +1,26 @@
-///
-/// utils.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 7 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Simple utility functions
-///
+//
+// utils.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 7 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file utils.h
+ * @brief Simple utility functions.
+ */
 
 #pragma once
 
-#ifndef utils_h__
-#define utils_h__
+#ifndef Vorb_utils_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_utils_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 // Used for excluding complex utilities
 #ifdef UTIL_SIMPLE
@@ -33,7 +40,7 @@
 #include "BufferUtils.inl"
 #endif
 #ifndef NO_UTIL_INTERSECTION
-#include "IntersectionUtils.inl"
+#include "IntersectionUtils.hpp"
 #endif
 
 // Inlined math functions
@@ -148,8 +155,8 @@ inline T upSampleArray(size_t i1, size_t i2, size_t i3, T (&data)[N1][N2][N3]) {
 }
 
 /// Simple hermite interpolater for smoothing the range 0-1
-inline float hermite(float f) { return 3.0f * (f * f) - 2.0f * (f * f * f); }
-inline double hermite(double f) { return 3.0 * (f * f) - 2.0 * (f * f * f); }
+template<typename T>
+inline T hermite(const T& v) { return static_cast<T>(3.0) * (v * v) - static_cast<T>(2.0) * (v * v * v); }
 
 /************************************************************************/
 /* Quaternion Utilities                                                 */
@@ -316,4 +323,4 @@ struct std::hash<ui32v2> {
     }
 };
 
-#endif // utils_h__
+#endif // !Vorb_utils_h__

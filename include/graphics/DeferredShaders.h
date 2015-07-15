@@ -1,19 +1,28 @@
-///
-/// DeferredShaders.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 18 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A container for deferred shading shaders
-///
+//
+// DeferredShaders.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 18 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file DeferredShaders.h
+ * @brief A container for deferred shading shaders.
+ */
 
 #pragma once
 
-#ifndef DeferredShaders_h__
-#define DeferredShaders_h__
+#ifndef Vorb_DeferredShaders_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_DeferredShaders_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLProgram.h"
 
@@ -37,4 +46,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // DeferredShaders_h__
+#endif // !Vorb_DeferredShaders_h__

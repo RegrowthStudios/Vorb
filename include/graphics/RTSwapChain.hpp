@@ -1,19 +1,28 @@
-///
-/// RTSwapChain.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 6 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A series of FBOs that are swapped
-///
+//
+// RTSwapChain.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 6 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file RTSwapChain.hpp
+ * @brief A series of FBOs that are swapped.
+ */
 
 #pragma once
 
-#ifndef RTSwapChain_h__
-#define RTSwapChain_h__
+#ifndef Vorb_RTSwapChain_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_RTSwapChain_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLRenderTarget.h"
 
@@ -63,11 +72,13 @@ namespace vorb {
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
                 glBindTexture(GL_TEXTURE_2D, rt);
+                m_previousTexture = rt;
             }
             /// Move pointer to the next FBO on the chain
             void swap() {
                 _current++;
                 _current %= N;
+                m_previousTexture = getPrevious().getTextureID();
             }
             /// Setup FBO IO via a designated texture unit
             /// @param textureUnit: Texture unit placement for previous FBO [0, MaxTextureUnits)
@@ -76,10 +87,22 @@ namespace vorb {
                 getCurrent().use();
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
 
-                glActiveTexture(GL_TEXTURE0 + textureUnit);
-                getPrevious().bindTexture();
+                bindPreviousTexture(textureUnit);
             }
-
+            /// Unuse SwapChain and bind default framebuffer
+            /// @param w: Width for setting viewport
+            /// @param h: Height for setting viewport
+            const void unuse(ui32 w, ui32 h) {
+                getCurrent().unuse(w, h);
+            }
+            /*! @brief Binds the texture from the previous swapchain stage
+             * 
+             * @param textureUnit: Texture unit to bind the texture to 
+             */
+            void bindPreviousTexture(ui32 textureUnit) {
+                glActiveTexture(GL_TEXTURE0 + textureUnit);
+                glBindTexture(GL_TEXTURE_2D, m_previousTexture);
+            }
             /// @return The current FBO (output)
             const GLRenderTarget& getCurrent() {
                 return _fbos[_current];
@@ -90,10 +113,11 @@ namespace vorb {
             }
         private:
             GLRenderTarget _fbos[N]; ///< A ring buffer of FBOs
+            VGTexture m_previousTexture = 0;
             i32 _current = 0; ///< Pointer to the current output
         };
     }
 }
 namespace vg = vorb::graphics;
 
-#endif // RTSwapChain_h__
+#endif // !Vorb_RTSwapChain_hpp__

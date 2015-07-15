@@ -1,19 +1,29 @@
-///
-/// ShaderParser.h
-/// Vorb
-///
-/// Created by Benjamin Arnold on 29 Mar 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Handles parsing of semantics and includes for shaders
-///
+//
+// ShaderParser.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 29 Mar 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ShaderParser.h
+ * @brief Handles parsing of semantics and includes for shaders.
+ */
 
 #pragma once
 
-#ifndef ShaderParser_h__
-#define ShaderParser_h__
+#ifndef Vorb_ShaderParser_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ShaderParser_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <set>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../Events.hpp"
 #include "../Vorb.h"
@@ -80,4 +90,4 @@ namespace vorb {
     }
 }
 
-#endif // ShaderParser_h__
+#endif // !Vorb_ShaderParser_h__

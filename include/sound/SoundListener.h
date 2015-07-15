@@ -1,19 +1,26 @@
-///
-/// SoundListener.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 3 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Positional information for a listener to a sound engine
-///
+//
+// SoundListener.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 3 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SoundListener.h
+ * @brief Positional information for a listener to a sound engine.
+ */
 
 #pragma once
 
-#ifndef SoundListener_h__
-#define SoundListener_h__
+#ifndef Vorb_SoundListener_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SoundListener_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace sound {
@@ -29,4 +36,4 @@ namespace vorb {
 }
 namespace vsound = vorb::sound;
 
-#endif // SoundListener_h__
+#endif // !Vorb_SoundListener_h__

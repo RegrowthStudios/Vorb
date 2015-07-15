@@ -8,7 +8,7 @@
 //
 
 /*! \file IOManager.h
- * @brief A simpler utility class used for easy call to manipulate IO
+ * @brief A simpler utility class used for easy call to manipulate IO.
  */
 
 #pragma once

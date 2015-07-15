@@ -1,19 +1,26 @@
-///
-/// VoxCommon.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 27 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Common code in voxel environments
-///
+//
+// VoxCommon.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 27 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file VoxCommon.h
+ * @brief Common code in voxel environments.
+ */
 
 #pragma once
 
-#ifndef VoxCommon_h__
-#define VoxCommon_h__
+#ifndef Vorb_VoxCommon_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_VoxCommon_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace voxel {
@@ -55,4 +62,4 @@ namespace vorb {
 }
 namespace vvox = vorb::voxel;
 
-#endif // VoxCommon_h__
+#endif // !Vorb_VoxCommon_h__

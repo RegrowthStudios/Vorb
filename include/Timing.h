@@ -1,19 +1,29 @@
-///
-/// Timing.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Different timers
-///
+//
+// Timing.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Timing.h
+ * @brief Different timers.
+ */
 
 #pragma once
 
-#ifndef Timing_h__
-#define Timing_h__
+#ifndef Vorb_Timing_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Timing_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <chrono>
 
@@ -139,4 +149,4 @@ private:
     f32 m_maxFPS = DEFAULT_MAX_FPS;
 };
 
-#endif // Timing_h__
+#endif // !Vorb_Timing_h__

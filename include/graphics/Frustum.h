@@ -8,10 +8,8 @@
 //
 
 /*! \file Frustum.h
-* @brief 
-* Defines a Frustum, helpful in culling and
-* view detection.
-*/
+ * @brief Defines a Frustum, helpful in culling and view detection.
+ */
 
 #pragma once
 
@@ -21,8 +19,9 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
+
 namespace vorb {
     namespace graphics {
 

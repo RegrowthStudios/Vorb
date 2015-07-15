@@ -1,19 +1,26 @@
-///
-/// YAMLConverters.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 21 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Declarations of types supported for node conversion
-///
+//
+// YAMLConverters.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 21 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file YAMLConverters.h
+ * @brief Declarations of types supported for node conversion.
+ */
 
 #pragma once
 
-#ifndef YAMLConverters_h__
-#define YAMLConverters_h__
+#ifndef Vorb_YAMLConverters_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_YAMLConverters_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "YAMLNode.h"
 
@@ -61,4 +68,4 @@ namespace keg {
     KEG_NODE_CONVERTER(cString);
 }
 
-#endif // YAMLConverters_h__
+#endif // !Vorb_YAMLConverters_h__

@@ -1,19 +1,26 @@
-///
-/// utils.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 7 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Simple utility functions
-///
+//
+// utils.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 7 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file utils.h
+ * @brief Simple utility functions.
+ */
 
 #pragma once
 
-#ifndef utils_h__
-#define utils_h__
+#ifndef Vorb_utils_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_utils_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 // Used for excluding complex utilities
 #ifdef UTIL_SIMPLE
@@ -33,7 +40,7 @@
 #include "BufferUtils.inl"
 #endif
 #ifndef NO_UTIL_INTERSECTION
-#include "IntersectionUtils.inl"
+#include "IntersectionUtils.hpp"
 #endif
 
 // Inlined math functions
@@ -316,4 +323,4 @@ struct std::hash<ui32v2> {
     }
 };
 
-#endif // utils_h__
+#endif // !Vorb_utils_h__

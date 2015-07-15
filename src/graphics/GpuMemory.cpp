@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "graphics/GpuMemory.h"
 
+#ifndef VORB_USING_PCH
 #include <GL/glew.h>
+#endif // !VORB_USING_PCH
 
 #include "graphics/ImageIO.h"
 #include "graphics/SamplerState.h"

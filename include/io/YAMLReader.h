@@ -1,19 +1,28 @@
-///
-/// YAMLReader.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 21 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// API for reading YAML data
-///
+//
+// YAMLReader.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 21 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file YAMLReader.h
+ * @brief API for reading YAML data.
+ */
 
 #pragma once
 
-#ifndef YAMLReader_h__
-#define YAMLReader_h__
+#ifndef Vorb_YAMLReader_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_YAMLReader_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_set>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../PtrRecycler.hpp"
 #include "../Events.hpp"
@@ -65,4 +74,4 @@ namespace keg {
     };
 }
 
-#endif // YAMLReader_h__
+#endif // !Vorb_YAMLReader_h__

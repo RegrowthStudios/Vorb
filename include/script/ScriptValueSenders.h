@@ -9,8 +9,6 @@
 
 /*! \file ScriptValueSenders.h
  * @brief Defines a preset number of scripting conversion methods.
- * 
- * 
  */
 
 #pragma once

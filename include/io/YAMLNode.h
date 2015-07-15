@@ -1,19 +1,26 @@
-///
-/// YAMLNode.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 21 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// YAML node type and utilities
-///
+//
+// YAMLNode.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 21 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file YAMLNode.h
+ * @brief YAML node type and utilities.
+ */
 
 #pragma once
 
-#ifndef YAMLNode_h__
-#define YAMLNode_h__
+#ifndef Vorb_YAMLNode_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_YAMLNode_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace keg {
     struct YAMLNode; ///< A node in a YAML document (hidden)
@@ -66,4 +73,4 @@ namespace keg {
     }
 }
 
-#endif // YAMLNode_h__
+#endif // !Vorb_YAMLNode_h__

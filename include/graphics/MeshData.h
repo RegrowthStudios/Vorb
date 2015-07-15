@@ -1,19 +1,26 @@
-///
-/// MeshData.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 18 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-///
-///
+//
+// MeshData.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 18 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MeshData.h
+ * @brief 
+ */
 
 #pragma once
 
-#ifndef MeshData_h__
-#define MeshData_h__
+#ifndef Vorb_MeshData_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MeshData_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 
@@ -115,4 +122,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // MeshData_h__
+#endif // !Vorb_MeshData_h__

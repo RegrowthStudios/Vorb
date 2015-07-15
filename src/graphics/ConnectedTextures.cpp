@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "graphics/ConnectedTextures.h"
 
+#ifndef VORB_USING_PCH
+#include <memory>
+#endif // !VORB_USING_PCH
 
 const size_t& vg::ConnectedTextureHelper::getOffsetFull(const size_t& neighbors) {
     return offsetsFull[neighbors];

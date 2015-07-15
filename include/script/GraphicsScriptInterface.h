@@ -8,10 +8,8 @@
 //
 
 /*! \file GraphicsScriptInterface.h
-* @brief
-* Scripting functions and registration for vorb::graphics
-*
-*/
+ * @brief Scripting functions and registration for vorb::graphics.
+ */
 
 #pragma once
 
@@ -21,7 +19,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 #include "Environment.h"

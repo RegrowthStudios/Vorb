@@ -1,23 +1,31 @@
-///
-/// ShaderInterface.h
-/// Vorb
-///
-/// Created by Benjamin Arnold on 29 Mar 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Interface for communicating semantic information between programs and vertex buffer.
-///
+//
+// ShaderInterface.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 29 Mar 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ShaderInterface.h
+ * @brief Interface for communicating semantic information between programs and vertex buffer.
+ */
 
 #pragma once
 
-#ifndef ShaderInterface_h__
-#define ShaderInterface_h__
+#ifndef Vorb_ShaderInterface_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ShaderInterface_h__
+//! @endcond
 
-#include "../Vorb.h"
-#include "GLEnums.h"
+#ifndef VORB_USING_PCH
 #include <vector>
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
+
+#include "GLEnums.h"
 
 namespace vorb {
     namespace graphics {
@@ -69,4 +77,6 @@ namespace vorb {
         };
     }
 }
-#endif // ShaderInterface_h__
+namespace vg = vorb::graphics;
+
+#endif // !Vorb_ShaderInterface_h__

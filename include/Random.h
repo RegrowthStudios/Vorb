@@ -1,19 +1,26 @@
-///
-/// Random.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A simple random number generator
-///
+//
+// Random.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Random.h
+ * @brief A simple random number generator.
+ */
 
 #pragma once
 
-#ifndef Random_h__
-#define Random_h__
+#ifndef Vorb_Random_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Random_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 // Like Goldilocks, Just Right
 #define MERSENNE_ARRAY_SIZE 624
@@ -49,4 +56,4 @@ private:
     i32 m_mhKey; ///< An updating key for murmur hash
 };
 
-#endif // Random_h__
+#endif // !Vorb_Random_h__

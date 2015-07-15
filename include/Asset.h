@@ -8,10 +8,10 @@
 //
 
 /*! \file Asset.h
-* @brief 
-* Generic asset class. Custom assets should
-* derive from it.
-*/
+ * @brief Generic asset class.
+ *
+ * Custom assets should derive from this class.
+ */
 
 #pragma once
 

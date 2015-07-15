@@ -9,8 +9,6 @@
 
 /*! \file KegEnum.h
  * @brief 
- * 
- * 
  */
 
 #pragma once
@@ -22,7 +20,8 @@
 
 #ifndef VORB_USING_PCH
 #include <map>
-#include "types.h"
+
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
 namespace keg {

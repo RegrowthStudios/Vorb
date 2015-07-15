@@ -1,19 +1,28 @@
-///
-/// MeshGenerators.h
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 31 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Header file with definitions for mesh generation
-///
+//
+// MeshGenerators.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 31 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MeshGenerators.h
+ * @brief Header file with definitions for mesh generation.
+ */
 
 #pragma once
 
-#ifndef MeshGenerators_h__
-#define MeshGenerators_h__
+#ifndef Vorb_MeshGenerators_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MeshGenerators_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace core {
@@ -29,4 +38,4 @@ namespace vorb {
 namespace vcore = vorb::core;
 namespace vmesh = vcore::mesh;
 
-#endif // MeshGenerators_h__
+#endif // !Vorb_MeshGenerators_h__

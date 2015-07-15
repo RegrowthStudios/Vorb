@@ -1,13 +1,22 @@
 //
 // Graphics.h
+// Vorb Engine
 //
 // Created by Cristian Zaloj on 13 Mar 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
 //
+
+/*! \file Graphics.h
+ * @brief Graphics headers from API detection.
+ */
 
 #pragma once
 
-#ifndef Graphics_h__
-#define Graphics_h__
+#ifndef Vorb_Graphics_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Graphics_h__
+//! @endcond
 
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #include <GL/gl.h>
@@ -25,4 +34,4 @@
 #define VG_DX_DEVICE(V) ((VORB_DX_DEVICE*)V)
 #endif
 
-#endif // !Graphics_h__
+#endif // !Vorb_Graphics_h__

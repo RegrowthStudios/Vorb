@@ -1,19 +1,28 @@
-///
-/// GLEnums.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Enums for virtualizing the current graphics implementation
-/// 
+//
+// GLEnums.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GLEnums.h
+ * @brief Enums for virtualizing the current graphics implementation.
+ */
 
 #pragma once
 
-#ifndef GLEnums_h__
-#define GLEnums_h__
+#ifndef Vorb_GLEnums_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GLEnums_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "gtypes.h"
 
@@ -684,4 +693,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // GLEnums_h__
+#endif // !Vorb_GLEnums_h__

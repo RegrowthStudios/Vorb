@@ -1,19 +1,26 @@
-///
-/// KeyboardEventDispatcher.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 10 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Dispatches keyboard events
-///
+//
+// KeyboardEventDispatcher.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 10 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file KeyboardEventDispatcher.h
+ * @brief Dispatches keyboard events.
+ */
 
 #pragma once
 
-#ifndef KeyboardEventDispatcher_h__
-#define KeyboardEventDispatcher_h__
+#ifndef Vorb_KeyboardEventDispatcher_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_KeyboardEventDispatcher_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include <array>
 #include <atomic>
@@ -100,5 +107,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-
-#endif // KeyboardEventDispatcher_h__
+#endif // !Vorb_KeyboardEventDispatcher_h__

@@ -1,19 +1,26 @@
-///
-/// SoundResource.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 3 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A wrapper for sound data container
-///
+//
+// SoundResource.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 3 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SoundResource.h
+ * @brief A wrapper for sound data container.
+ */
 
 #pragma once
 
-#ifndef SoundResource_h__
-#define SoundResource_h__
+#ifndef Vorb_SoundResource_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SoundResource_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../IDGenerator.h"
 #include "ISoundImpl.h"
@@ -39,4 +46,4 @@ namespace vorb {
 }
 namespace vsound = vorb::sound;
 
-#endif // SoundResource_h__
+#endif // !Vorb_SoundResource_h__

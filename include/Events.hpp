@@ -7,6 +7,26 @@
 // All Rights Reserved
 //
 
+/************************************************************************/
+/*                                                                      */
+/* Reader beware, this is not for the faint of heart.                   */
+/*                                                                      */
+/*      ... but for those brave adventurers, who delve into the         */
+/*          deep abysses ...                                            */
+/*                                                                      */
+/*                          ... once you have discovered how            */
+/*                              terrifying is the monstrosity           */
+/*                              below, mark your name here.             */
+/*                                                                      */
+/*   So that future readers                                             */
+/*           near and far                                               */
+/*                     will understand your agony                       */
+/*                              and mail you a cherry pie               */
+/*                                                                      */
+/*  Ben Arnold                                                          */
+/*                                                                      */
+/************************************************************************/
+
 /*! \file Events.hpp
  * @brief C#-style events.
  */

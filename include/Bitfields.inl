@@ -26,7 +26,7 @@ namespace vorb {
         }
         UncheckedBitfield& operator -= (T v) {
             // Allows for overflows
-            value += (v << BITOFF);
+            value -= (v << BITOFF);
             return *this;
         }
         UncheckedBitfield& operator *= (T v) {

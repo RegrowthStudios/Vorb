@@ -22,4 +22,13 @@ bool UnitTestsFuncs::UT_##B##N()
 
 #define UNIT_TEST_BATCH General_
 
+#define DO_2X(EX) EX; EX
+#define DO_4X(EX) DO_2X(EX); DO_2X(EX)
+#define DO_8X(EX) DO_4X(EX); DO_4X(EX)
+#define DO_16X(EX) DO_8X(EX); DO_8X(EX)
+#define DO_32X(EX) DO_16X(EX); DO_16X(EX)
+#define DO_64X(EX) DO_32X(EX); DO_32X(EX)
+#define DO_128X(EX) DO_64X(EX); DO_64X(EX)
+#define DO_256X(EX) DO_128X(EX); DO_128X(EX)
+
 #endif // macros_h__

@@ -490,6 +490,7 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
+    <None Include="include\Bitfields.inl" />
     <None Include="include\voxel\IntervalTree.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />

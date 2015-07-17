@@ -815,6 +815,9 @@
     <None Include="include\IntersectionUtils.hpp">
       <Filter>Utils</Filter>
     </None>
+    <None Include="include\Bitfields.inl">
+      <Filter>Utils</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="KEG.txt">

@@ -31,12 +31,16 @@
 
 namespace vorb {
     namespace graphics {
-        extern DXGI_FORMAT formatMapDXGI[(size_t)MemoryFormat::MAX_VALUE];
-        extern D3D11_PRIMITIVE_TOPOLOGY topologyMapD3D[(size_t)PrimitiveType::MAX_VALUE];
+        namespace mapD3D {
+            extern DXGI_FORMAT format[(size_t)MemoryFormat::MAX_VALUE];
+            extern D3D11_PRIMITIVE_TOPOLOGY topology[(size_t)PrimitiveType::MAX_VALUE];
+            extern const cString semanticName[(size_t)Semantic::MAX_VALUE];
 
-        void fillMaps();
-        void fillDXGIMAP(DXGI_FORMAT* f);
-        void fillTopologyMap(D3D11_PRIMITIVE_TOPOLOGY* f);
+            void fill();
+            void fillFormat(DXGI_FORMAT* f);
+            void fillTopology(D3D11_PRIMITIVE_TOPOLOGY* f);
+            void fillSemanticName(const cString* f);
+        }
     }
 }
 

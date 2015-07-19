@@ -115,7 +115,7 @@ vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDe
     D3D11_TEXTURE1D_DESC cdesc {};
     cdesc.Width = desc.width;
     cdesc.ArraySize = desc.atlasPages;
-    cdesc.Format = vg::formatMapDXGI[(size_t)desc.format];
+    cdesc.Format = vg::mapD3D::format[(size_t)desc.format];
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};
@@ -175,15 +175,29 @@ vorb::graphics::ITexture3D* vorb::graphics::D3DContext::create(const Texture3DDe
     return texture;
 }
 
-vorb::graphics::IVertexDeclaration* vorb::graphics::D3DContext::create(VertexElementDescription* desc, size_t numElements) {
-    throw std::logic_error("The method or operation is not implemented.");
+vorb::graphics::IVertexDeclaration* vorb::graphics::D3DContext::create(VertexElementDescription* desc, IShaderCode* vertexShaderCode, size_t numElements) {
+    D3DShaderCode* code = (D3DShaderCode*)vertexShaderCode;
+    D3DVertexDeclaration* decl = new D3DVertexDeclaration(this);
+
+    D3D11_INPUT_ELEMENT_DESC* cdesc = (D3D11_INPUT_ELEMENT_DESC*)alloca(numElements * sizeof(D3D11_INPUT_ELEMENT_DESC));
+    for (size_t i = 0; i < numElements; i++) {
+        cdesc[i].AlignedByteOffset = desc[i].offset;
+        cdesc[i].Format = mapD3D::format[(size_t)desc[i].type];
+        cdesc[i].InputSlot = desc[i].slot;
+        cdesc[i].SemanticIndex = desc[i].semanticIndex;
+        cdesc[i].SemanticName = mapD3D::semanticName[(size_t)desc[i].semantic];
+        cdesc[i].InputSlotClass = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA;
+        cdesc[i].InstanceDataStepRate = 0;
+    }
+    m_device->CreateInputLayout(cdesc, numElements, code->data, code->size, &decl->layout);
+    return decl;
 }
 
 void vg::D3DContext::present() {
     m_dxgi.swapChain->Present(1, 0);
 }
 
-// TODO(Cristian): Implement
+// TODO(Cristian): Add a move method
 vorb::graphics::ShaderBytecode vorb::graphics::D3DContext::compileShaderSource(const cString data, size_t length, ShaderType type, ShaderCompilerInfo headerInfo) {
     ID3DBlob* blob = nullptr;
     ID3DBlob* error = nullptr;
@@ -381,7 +395,7 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
     desc.Buffer.FirstElement = 0;
     desc.Buffer.NumElements = 0; // TODO(Cristian): Properly fill in
     desc.Buffer.Flags = 0; // TODO(Cristian): Properly fill in
-    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
+    desc.Format = vg::mapD3D::format[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
@@ -399,7 +413,7 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
         desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1D;
     }
     desc.Texture1D.MipSlice = 0;
-    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
+    desc.Format = vg::mapD3D::format[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
@@ -417,7 +431,7 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
         desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
     }
     desc.Texture2D.MipSlice = 0;
-    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
+    desc.Format = vg::mapD3D::format[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
@@ -431,7 +445,7 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
     desc.Texture3D.MipSlice = 0;
     desc.Texture3D.FirstWSlice = 0;
     desc.Texture3D.WSize = 0; // TODO(Cristian): Fill in with the correct size
-    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
+    desc.Format = vg::mapD3D::format[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;

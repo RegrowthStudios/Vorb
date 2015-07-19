@@ -51,7 +51,7 @@ namespace vorb {
             virtual ITexture2D* create(const Texture2DDescription& desc, OPT InitalResourceData* data = nullptr) override;
             virtual ITexture3D* create(const Texture3DDescription& desc, OPT InitalResourceData* data = nullptr) override;
 
-            virtual IVertexDeclaration* create(VertexElementDescription* desc, size_t numElements);
+            virtual IVertexDeclaration* create(VertexElementDescription* desc, IShaderCode* vertexShaderCode, size_t numElements) override;
 
             virtual IBufferView* makeView(IBuffer* res) override;
             virtual IConstantBlockView* makeView(IConstantBlock* res) override;

@@ -49,7 +49,7 @@ void vorb::graphics::D3DDevice::pixelUse(IPixelShader* shader) {
 }
 
 void vorb::graphics::D3DDevice::setTopology(vg::PrimitiveType type) {
-    m_context->IASetPrimitiveTopology(vg::topologyMapD3D[(size_t)type]);
+    m_context->IASetPrimitiveTopology(vg::mapD3D::topology[(size_t)type]);
 }
 
 void vorb::graphics::D3DDevice::drawIndexed(size_t indices, size_t indexOff, size_t vertexOff) {
@@ -71,7 +71,7 @@ void vorb::graphics::D3DDevice::setVertexBuffers(const BufferBindings& bindings)
 
 void vorb::graphics::D3DDevice::setIndexBuffer(vg::IBuffer* ind, vg::MemoryFormat format, ui32 offset /*= 0*/) {
     auto* v = static_cast<D3DBuffer*>(ind);
-    m_context->IASetIndexBuffer(v->data, vg::formatMapDXGI[(size_t)format], offset);
+    m_context->IASetIndexBuffer(v->data, vg::mapD3D::format[(size_t)format], offset);
 }
 
 void vorb::graphics::D3DDevice::computeUse(IComputeShader* shader) {

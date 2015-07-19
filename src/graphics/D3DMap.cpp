@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "graphics/D3DMap.h"
 
-DXGI_FORMAT vg::formatMapDXGI[(size_t)vg::MemoryFormat::MAX_VALUE] {};
-D3D11_PRIMITIVE_TOPOLOGY vg::topologyMapD3D[(size_t)vg::PrimitiveType::MAX_VALUE] {};
+DXGI_FORMAT vg::mapD3D::format[(size_t)vg::MemoryFormat::MAX_VALUE] {};
+D3D11_PRIMITIVE_TOPOLOGY vg::mapD3D::topology[(size_t)vg::PrimitiveType::MAX_VALUE] {};
 
-void vorb::graphics::fillMaps() {
-    fillDXGIMAP(formatMapDXGI);
-    fillTopologyMap(topologyMapD3D);
+void vorb::graphics::mapD3D::fill() {
+    fillFormat(format);
+    fillTopology(topology);
 }
-void vorb::graphics::fillDXGIMAP(DXGI_FORMAT* f) {
+void vorb::graphics::mapD3D::fillFormat(DXGI_FORMAT* f) {
     f[(size_t)vg::MemoryFormat::UNKNOWN]                     = DXGI_FORMAT_UNKNOWN;
     f[(size_t)vg::MemoryFormat::A8_UNORM]                    = DXGI_FORMAT_A8_UNORM;
     f[(size_t)vg::MemoryFormat::DEPTH24_UNORM_STENCIL8_UINT] = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -62,7 +62,7 @@ void vorb::graphics::fillDXGIMAP(DXGI_FORMAT* f) {
     f[(size_t)vg::MemoryFormat::R8G8B8A8_UINT]               = DXGI_FORMAT_R8G8B8A8_UINT;
     f[(size_t)vg::MemoryFormat::R8G8B8A8_UNORM_SRGB]         = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 }
-void vorb::graphics::fillTopologyMap(D3D11_PRIMITIVE_TOPOLOGY* f) {
+void vorb::graphics::mapD3D::fillTopology(D3D11_PRIMITIVE_TOPOLOGY* f) {
     f[(size_t)vg::PrimitiveType::LINES]                      = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
     f[(size_t)vg::PrimitiveType::LINES_ADJACENCY]            = D3D11_PRIMITIVE_TOPOLOGY_LINELIST_ADJ;
     f[(size_t)vg::PrimitiveType::LINE_STRIP]                 = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;

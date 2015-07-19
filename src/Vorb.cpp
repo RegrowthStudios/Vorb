@@ -48,7 +48,7 @@ namespace vorb {
 #endif
         FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
-        vg::fillMaps();
+        vg::mapD3D::fill();
         return InitParam::GRAPHICS;
     }
     InitParam initIO() {

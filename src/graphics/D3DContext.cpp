@@ -63,11 +63,6 @@ vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const Constan
     // Return handle
     return buffer;
 }
-namespace {
-    DXGI_FORMAT convert(vg::MemoryFormat f) {
-        return vg::formatMapDXGI[(size_t)f];
-    }
-}
 vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDescription& desc, OPT InitalResourceData* data) {
     D3DTexture1D* texture = new D3DTexture1D(this);
     texture->m_desc = desc;
@@ -75,7 +70,7 @@ vorb::graphics::ITexture1D* vorb::graphics::D3DContext::create(const Texture1DDe
     D3D11_TEXTURE1D_DESC cdesc {};
     cdesc.Width = desc.width;
     cdesc.ArraySize = desc.atlasPages;
-    cdesc.Format = convert(desc.format);
+    cdesc.Format = vg::formatMapDXGI[(size_t)desc.format];
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};
@@ -341,12 +336,11 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
     desc.Buffer.FirstElement = 0;
     desc.Buffer.NumElements = 0; // TODO(Cristian): Properly fill in
     desc.Buffer.Flags = 0; // TODO(Cristian): Properly fill in
-    desc.Format = convert(cres->getDescription().format);
+    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
 }
-
 vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture1D* res) {
     D3DTexture1D* cres = static_cast<D3DTexture1D*>(res);
     D3DComputeResourceView* crv = new D3DComputeResourceView(this);
@@ -360,12 +354,11 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
         desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE1D;
     }
     desc.Texture1D.MipSlice = 0;
-    desc.Format = convert(cres->getDescription().format);
+    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
 }
-
 vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture2D* res) {
     D3DTexture2D* cres = static_cast<D3DTexture2D*>(res);
     D3DComputeResourceView* crv = new D3DComputeResourceView(this);
@@ -379,12 +372,11 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
         desc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
     }
     desc.Texture2D.MipSlice = 0;
-    desc.Format = convert(cres->getDescription().format);
+    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;
 }
-
 vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(ITexture3D* res) {
     D3DTexture3D* cres = static_cast<D3DTexture3D*>(res);
     D3DComputeResourceView* crv = new D3DComputeResourceView(this);
@@ -394,7 +386,7 @@ vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeVie
     desc.Texture3D.MipSlice = 0;
     desc.Texture3D.FirstWSlice = 0;
     desc.Texture3D.WSize = 0; // TODO(Cristian): Fill in with the correct size
-    desc.Format = convert(cres->getDescription().format);
+    desc.Format = vg::formatMapDXGI[(size_t)cres->getDescription().format];
 
     m_device->CreateUnorderedAccessView(cres->data, &desc, &crv->view);
     return crv;

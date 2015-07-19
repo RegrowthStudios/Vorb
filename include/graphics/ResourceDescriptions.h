@@ -187,10 +187,6 @@ namespace vorb {
         public:
 
         };
-
-        struct CBufferDescription;
-        CBufferDescription* compile(const BufferDescription& desc);
-        void free(CBufferDescription* desc);
     }
 }
 namespace vg = vorb::graphics;

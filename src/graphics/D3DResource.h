@@ -40,12 +40,7 @@ namespace vorb {
                 if(data) data->Release();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return size;
-            }
-
             ID3D11Buffer* data = nullptr;
-            size_t size = 0;
         };
 
         class D3DConstantBlock : public IConstantBlock {
@@ -59,12 +54,7 @@ namespace vorb {
                 if (data) data->Release();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return size;
-            }
-
             ID3D11Buffer* data = nullptr;
-            size_t size = 0;
         };
 
         class D3DTexture1D : public ITexture1D {
@@ -78,13 +68,8 @@ namespace vorb {
                 if (data) data->Release();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return size;
-            }
-
             ui32 arraySlices = 0;
             ID3D11Texture1D* data = nullptr;
-            size_t size = 0;
         };
 
         class D3DTexture2D : public ITexture2D {
@@ -98,13 +83,8 @@ namespace vorb {
                 if (data) data->Release();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return size;
-            }
-
             ui32 arraySlices = 0;
             ID3D11Texture2D* data = nullptr;
-            size_t size = 0;
         };
 
         class D3DTexture3D : public ITexture3D {
@@ -118,12 +98,7 @@ namespace vorb {
                 if (data) data->Release();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return size;
-            }
-
             ID3D11Texture3D* data = nullptr;
-            size_t size = 0;
         };
 
         class D3DShaderCode : public IShaderCode {
@@ -137,10 +112,6 @@ namespace vorb {
             }
             virtual size_t getLength() const override {
                 return size;
-            }
-
-            virtual size_t getMemoryUsed() const override {
-                return 0;
             }
 
             virtual void disposeInternal() override {
@@ -168,10 +139,6 @@ namespace vorb {
                 return shaderBlob->GetBufferSize();
             }
 
-            virtual size_t getMemoryUsed() const override {
-                return shaderBlob->GetBufferSize();
-            }
-
             virtual void disposeInternal() override {
                 shaderBlob->Release();
             }
@@ -182,10 +149,6 @@ namespace vorb {
         public:
             D3DVertexShader(IContext* owner) : IVertexShader(owner) {
                 // Empty
-            }
-
-            virtual size_t getMemoryUsed() const {
-                throw std::logic_error("The method or operation is not implemented.");
             }
 
             virtual void disposeInternal() {
@@ -200,10 +163,6 @@ namespace vorb {
                 // Empty
             }
 
-            virtual size_t getMemoryUsed() const {
-                throw std::logic_error("The method or operation is not implemented.");
-            }
-
             virtual void disposeInternal() {
                 shader->Release();
             }
@@ -214,10 +173,6 @@ namespace vorb {
         public:
             D3DTessGenShader(IContext* owner) : ITessGenShader(owner) {
                 // Empty
-            }
-
-            virtual size_t getMemoryUsed() const {
-                throw std::logic_error("The method or operation is not implemented.");
             }
 
             virtual void disposeInternal() {
@@ -232,10 +187,6 @@ namespace vorb {
                 // Empty
             }
 
-            virtual size_t getMemoryUsed() const {
-                throw std::logic_error("The method or operation is not implemented.");
-            }
-
             virtual void disposeInternal() {
                 shader->Release();
             }
@@ -248,10 +199,6 @@ namespace vorb {
                 // Empty
             }
 
-            virtual size_t getMemoryUsed() const override {
-                throw std::logic_error("The method or operation is not implemented.");
-            }
-
             virtual void disposeInternal() override {
                 if (shader) shader->Release();
             }
@@ -262,10 +209,6 @@ namespace vorb {
         public:
             D3DComputeShader(IContext* owner) : IComputeShader(owner) {
                 // Empty
-            }
-
-            virtual size_t getMemoryUsed() const {
-                throw std::logic_error("The method or operation is not implemented.");
             }
 
             virtual void disposeInternal() {

@@ -39,8 +39,6 @@ namespace vorb {
             }
 
             void dispose();
-
-            virtual size_t getMemoryUsed() const = 0;
         protected:
             IResource(IContext* owner);
 
@@ -264,9 +262,7 @@ namespace vorb {
          */
         class IResourceView : public IResource {
         public:
-            virtual size_t getMemoryUsed() const override {
-                throw std::logic_error("You're asking the wrong questions");
-            }
+
         protected:
             IResourceView(IContext* owner) : IResource(owner) {
                 // Empty

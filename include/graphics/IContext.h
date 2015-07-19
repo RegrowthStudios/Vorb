@@ -47,7 +47,6 @@ namespace vorb {
 
 #pragma region Resource creation methods
             virtual vorb::graphics::IBuffer* create(const BufferDescription& desc, OPT InitalResourceData* data = nullptr) = 0;
-            virtual vorb::graphics::IBuffer* create(const CBufferDescription* desc, OPT InitalResourceData* data = nullptr) = 0;
             virtual vorb::graphics::IConstantBlock* create(const ConstantBlockDescription& desc, OPT InitalResourceData* data = nullptr) = 0;
             virtual vorb::graphics::ITexture1D* create(const Texture1DDescription& desc, OPT InitalResourceData* data = nullptr) = 0;
             virtual vorb::graphics::ITexture2D* create(const Texture2DDescription& desc, OPT InitalResourceData* data = nullptr) = 0;
@@ -111,9 +110,6 @@ namespace vorb {
             friend class IContext;
         public:
             vorb::graphics::IBuffer* create(const BufferDescription& desc) {
-                return m_context->create(desc);
-            }
-            vorb::graphics::IBuffer* create(const CBufferDescription* desc) {
                 return m_context->create(desc);
             }
             vorb::graphics::IConstantBlock* create(const ConstantBlockDescription& desc) {

@@ -46,7 +46,6 @@ namespace vorb {
             void getFeatureSupport();
 
             virtual IBuffer* create(const BufferDescription& desc, OPT InitalResourceData* data = nullptr) override;
-            virtual IBuffer* create(const CBufferDescription* desc, OPT InitalResourceData* data = nullptr) override;
             virtual IConstantBlock* create(const ConstantBlockDescription& desc, OPT InitalResourceData* data = nullptr) override;
             virtual ITexture1D* create(const Texture1DDescription& desc, OPT InitalResourceData* data = nullptr) override;
             virtual ITexture2D* create(const Texture2DDescription& desc, OPT InitalResourceData* data = nullptr) override;

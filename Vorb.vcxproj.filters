@@ -273,9 +273,6 @@
     <ClCompile Include="src\graphics\D3DContext.cpp">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\D3DDescCompile.cpp">
-      <Filter>Graphics\Interfaces\D3D</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\IResource.cpp">
       <Filter>Graphics\Interfaces</Filter>
     </ClCompile>
@@ -716,9 +713,6 @@
       <Filter>Graphics\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\D3DContext.h">
-      <Filter>Graphics\Interfaces\D3D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\graphics\D3DDescCompile.h">
       <Filter>Graphics\Interfaces\D3D</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\D3DResource.h">

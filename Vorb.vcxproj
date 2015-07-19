@@ -377,7 +377,6 @@
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
     <ClCompile Include="src\graphics\D3DContext.cpp" />
-    <ClCompile Include="src\graphics\D3DDescCompile.cpp" />
     <ClCompile Include="src\graphics\D3DDevice.cpp" />
     <ClCompile Include="src\graphics\D3DAdapter.cpp" />
     <ClCompile Include="src\graphics\D3DMap.cpp" />
@@ -617,7 +616,6 @@
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\graphics\D3DContext.h" />
-    <ClInclude Include="src\graphics\D3DDescCompile.h" />
     <ClInclude Include="src\graphics\D3DDevice.h" />
     <ClInclude Include="src\graphics\D3DAdapter.h" />
     <ClInclude Include="src\graphics\D3DMap.h" />

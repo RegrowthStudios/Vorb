@@ -4,29 +4,76 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
-#include "D3DDescCompile.h"
 #include "D3DResource.h"
 #include "D3DMap.h"
 
 vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc, OPT InitalResourceData* data) {
-    // Create the D3D buffer description on the stack
-    CBufferDescription cDesc = {};
-    fill(cDesc, desc);
-
-    // Generate buffer
-    return create(&cDesc);
-}
-vg::IBuffer* vg::D3DContext::create(const CBufferDescription* desc, OPT InitalResourceData* data) {
     // Allocate buffer instance
     D3DBuffer* buffer = new D3DBuffer(this);
-    buffer->size = desc->ByteWidth;
+
+    D3D11_BUFFER_DESC cdesc;
+    switch (desc.type) {
+    case BufferTarget::ELEMENT_ARRAY_BUFFER:
+        cdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    case BufferTarget::ARRAY_BUFFER:
+        cdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    default:
+        // TODO(Cristian): Add other buffer types
+        break;
+    }
+
+    // TODO(Cristian): Change usage member of description
+    switch (desc.usage) {
+    case BufferUsageHint::DYNAMIC_COPY:
+    case BufferUsageHint::DYNAMIC_READ:
+    case BufferUsageHint::DYNAMIC_DRAW:
+        cdesc.Usage = D3D11_USAGE_DYNAMIC;
+        break;
+    case BufferUsageHint::STATIC_COPY:
+    case BufferUsageHint::STATIC_READ:
+    case BufferUsageHint::STATIC_DRAW:
+        cdesc.Usage = D3D11_USAGE_IMMUTABLE;
+        break;
+    case BufferUsageHint::STREAM_COPY:
+    case BufferUsageHint::STREAM_READ:
+    case BufferUsageHint::STREAM_DRAW:
+        cdesc.Usage = D3D11_USAGE_STAGING;
+        break;
+        // TODO(Cristian): Look for D3D11_USAGE_DEFAULT
+    default:
+        break;
+    }
+
+    switch (desc.usage) {
+    case BufferUsageHint::DYNAMIC_COPY:
+    case BufferUsageHint::STATIC_COPY:
+    case BufferUsageHint::STREAM_COPY:
+        cdesc.CPUAccessFlags = 0; // Sucks don't it
+        break;
+    case BufferUsageHint::DYNAMIC_READ:
+    case BufferUsageHint::STATIC_READ:
+    case BufferUsageHint::STREAM_READ:
+        cdesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        break;
+    case BufferUsageHint::DYNAMIC_DRAW:
+    case BufferUsageHint::STATIC_DRAW:
+    case BufferUsageHint::STREAM_DRAW:
+        cdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        break;
+        // TODO(Cristian): Add RW capability
+    default:
+        break;
+    }
+    cdesc.ByteWidth = desc.size; // TODO(Cristian): This should work?
+    cdesc.MiscFlags = 0; // TODO(Cristian): Add other options?
+
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};
         cdata.pSysMem = data->data;
-        m_device->CreateBuffer(desc, &cdata, &buffer->data);
+        m_device->CreateBuffer(&cdesc, &cdata, &buffer->data);
     } else {
-        m_device->CreateBuffer(desc, nullptr, &buffer->data);
+        m_device->CreateBuffer(&cdesc, nullptr, &buffer->data);
     }
 
     // Return handle
@@ -49,8 +96,6 @@ vorb::graphics::IConstantBlock* vorb::graphics::D3DContext::create(const Constan
     }
     cdesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     cdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-    buffer->size = cdesc.ByteWidth;
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};

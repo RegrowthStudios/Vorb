@@ -266,8 +266,8 @@ TEST(DrawImage) {
     vg::IVertexShader* vertexShader =  nullptr;
     {
         vg::VertexElementDescription desc[] = {
-            { 0, vg::Semantic::SEM_POSITION, 0, offsetof(VertexPosUV, pos), sizeof(f32v3), vg::MemoryFormat::R32G32B32_FLOAT },
-            { 0, vg::Semantic::SEM_TEXCOORD, 0, offsetof(VertexPosUV, uv), sizeof(f32v2), vg::MemoryFormat::R32G32_FLOAT }
+            { 0, vg::Semantic::POSITION, 0, offsetof(VertexPosUV, pos), sizeof(f32v3), vg::MemoryFormat::R32G32B32_FLOAT },
+            { 0, vg::Semantic::TEXCOORD, 0, offsetof(VertexPosUV, uv), sizeof(f32v2), vg::MemoryFormat::R32G32_FLOAT }
         };
 
         code = compileShader(ctx, "data/shaders/d3d/VSImage.hlsl", vg::ShaderType::VERTEX_SHADER);

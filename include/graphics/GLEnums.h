@@ -675,21 +675,23 @@ namespace vorb {
             MAX_VALUE = 32
         };
 
-        enum Semantic : VGSemantic {
-            SEM_INVALID = 0,
-            SEM_COLOR,
-            SEM_POSITION,
-            SEM_TEXCOORD,
-            SEM_NORMAL,
-            SEM_BINORMAL,
-            SEM_TANGENT,
-            SEM_FOG,
-            SEM_BLENDINDICES,
-            SEM_BLENDWEIGHT,
-            SEM_PSIZE,
-            SEM_TESSFACTOR,
-            SEM_NUM_SEMANTICS = SEM_TESSFACTOR
+        enum class Semantic : VGSemantic {
+            INVALID = 0,
+            COLOR,
+            POSITION,
+            TEXCOORD,
+            NORMAL,
+            BINORMAL,
+            TANGENT,
+            FOG,
+            BLENDINDICES,
+            BLENDWEIGHT,
+            PSIZE,
+            TESSFACTOR,
+            NUM_SEMANTICS = TESSFACTOR,
+            MAX_VALUE
         };
+        ENUM_CLASS_OPS_INL(Semantic, VGSemantic);
     }
 }
 namespace vg = vorb::graphics;

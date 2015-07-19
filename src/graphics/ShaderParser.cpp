@@ -104,17 +104,17 @@ void vg::ShaderParser::parseFragmentShader(const cString inputCode, OUT nString&
 }
 
 void vorb::graphics::ShaderParser::initSemantics() {
-    m_semantics["COLOR"] = SEM_COLOR;
-    m_semantics["POSITION"] = SEM_POSITION;
-    m_semantics["TEXCOORD"] = SEM_TEXCOORD;
-    m_semantics["NORMAL"] = SEM_NORMAL;
-    m_semantics["BINORMAL"] = SEM_BINORMAL;
-    m_semantics["TANGENT"] = SEM_TANGENT;
-    m_semantics["FOG"] = SEM_FOG;
-    m_semantics["BLENDINDICES"] = SEM_BLENDINDICES;
-    m_semantics["BLENDWEIGHT"] = SEM_BLENDWEIGHT;
-    m_semantics["PSIZE"] = SEM_PSIZE;
-    m_semantics["TESSFACTOR"] = SEM_TESSFACTOR;
+    m_semantics["COLOR"]        = Semantic::COLOR;
+    m_semantics["POSITION"]     = Semantic::POSITION;
+    m_semantics["TEXCOORD"]     = Semantic::TEXCOORD;
+    m_semantics["NORMAL"]       = Semantic::NORMAL;
+    m_semantics["BINORMAL"]     = Semantic::BINORMAL;
+    m_semantics["TANGENT"]      = Semantic::TANGENT;
+    m_semantics["FOG"]          = Semantic::FOG;
+    m_semantics["BLENDINDICES"] = Semantic::BLENDINDICES;
+    m_semantics["BLENDWEIGHT"]  = Semantic::BLENDWEIGHT;
+    m_semantics["PSIZE"]        = Semantic::PSIZE;
+    m_semantics["TESSFACTOR"]   = Semantic::TESSFACTOR;
 }
 
 bool vg::ShaderParser::checkForComment(const cString s, size_t i) {
@@ -184,7 +184,7 @@ bool vg::ShaderParser::tryParseInclude(nString& s, size_t i) {
 nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, OUT VGSemantic& semantic) {
     static const char IN_STR[4] = "in ";
     static const char SEM_STR[5] = "SEM ";
-    semantic = vg::Semantic::SEM_INVALID;
+    semantic = (VGSemantic)vg::Semantic::INVALID;
     // Check that in is correct
     for (int j = 0; IN_STR[j] != '\0'; j++) {
         if (s[i] == '\0') return "";
@@ -257,6 +257,6 @@ nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, OUT VGSem
     }
 
     // Calculate the semantic ID
-    semantic = (VGSemantic)it->second + number * Semantic::SEM_NUM_SEMANTICS + 1;
+    semantic = (VGSemantic)it->second + number * (VGSemantic)Semantic::NUM_SEMANTICS + 1;
     return name;
 }

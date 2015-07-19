@@ -170,7 +170,7 @@ void vg::GLProgram::setAttributes(const std::vector<nString>& attr, const std::v
     setAttributes(attr);
     for (int i = 0; i < (int)sem.size(); i++) {
         VGSemantic s = sem[i];
-        if (s != Semantic::SEM_INVALID) {
+        if (s != (VGSemantic)Semantic::INVALID) {
             m_semanticBinding[s] = static_cast<VGAttribute>(i);
         }
     }

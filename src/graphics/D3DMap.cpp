@@ -3,10 +3,12 @@
 
 DXGI_FORMAT vg::mapD3D::format[(size_t)vg::MemoryFormat::MAX_VALUE] {};
 D3D11_PRIMITIVE_TOPOLOGY vg::mapD3D::topology[(size_t)vg::PrimitiveType::MAX_VALUE] {};
+const cString vg::mapD3D::semanticName[(size_t)vg::Semantic::MAX_VALUE] {};
 
 void vorb::graphics::mapD3D::fill() {
     fillFormat(format);
     fillTopology(topology);
+    fillSemanticName(semanticName);
 }
 void vorb::graphics::mapD3D::fillFormat(DXGI_FORMAT* f) {
     f[(size_t)vg::MemoryFormat::UNKNOWN]                     = DXGI_FORMAT_UNKNOWN;
@@ -72,5 +74,19 @@ void vorb::graphics::mapD3D::fillTopology(D3D11_PRIMITIVE_TOPOLOGY* f) {
     f[(size_t)vg::PrimitiveType::TRIANGLES_ADJACENCY]        = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ;
     f[(size_t)vg::PrimitiveType::TRIANGLE_STRIP]             = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
     f[(size_t)vg::PrimitiveType::TRIANGLE_STRIP_ADJACENCY]   = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ;
+}
+void vorb::graphics::mapD3D::fillSemanticName(const cString* f) {
+    f[(size_t)vg::Semantic::INVALID]                         = "INVALID";
+    f[(size_t)vg::Semantic::COLOR]                           = "COLOR";
+    f[(size_t)vg::Semantic::POSITION]                        = "POSITION";
+    f[(size_t)vg::Semantic::TEXCOORD]                        = "TEXCOORD";
+    f[(size_t)vg::Semantic::NORMAL]                          = "NORMAL";
+    f[(size_t)vg::Semantic::BINORMAL]                        = "BINORMAL";
+    f[(size_t)vg::Semantic::TANGENT]                         = "TANGENT";
+    f[(size_t)vg::Semantic::FOG]                             = "FOG";
+    f[(size_t)vg::Semantic::BLENDINDICES]                    = "BLENDINDICES";
+    f[(size_t)vg::Semantic::BLENDWEIGHT]                     = "BLENDWEIGHT";
+    f[(size_t)vg::Semantic::PSIZE]                           = "PSIZE";
+    f[(size_t)vg::Semantic::TESSFACTOR]                      = "TESSFACTOR";
 }
 

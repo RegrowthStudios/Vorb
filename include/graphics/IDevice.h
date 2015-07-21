@@ -33,20 +33,7 @@ namespace vorb {
          */
         class IDevice {
         public:
-            virtual void setClearColor(const f64v4& v) = 0;
-            virtual void setClearDepth(f64 v) = 0;
-            virtual void setClearStencil(ui32 v) = 0;
-            virtual void clear(ClearBits bits) = 0;
-            virtual void clear(IComputeResourceView* res, const f32(&data)[4]) = 0;
-            virtual void clear(IComputeResourceView* res, const ui32(&data)[4]) = 0;
-            virtual void setViewports(ui32 count, const Viewport* viewports) = 0;
-
-            virtual void begin(IQuery* query) = 0;
-            virtual void end(IQuery* query) = 0;
-
-            virtual void generateMipmaps(IResourceView* v) = 0;
-
-            virtual void flush() = 0;
+            virtual void dispose() = 0;
 
             virtual vorb::graphics::IVertexStateBind* create(IVertexDeclaration* decl, const BufferBindings& bindings) = 0;
             virtual vorb::graphics::IRenderTarget* create(ITexture2D* res) = 0;
@@ -58,8 +45,23 @@ namespace vorb {
             virtual vorb::graphics::IPredicate* create(const PredicateDescription& desc) = 0;
             virtual vorb::graphics::ISyncFence* create(const SyncFenceDescription& desc) = 0;
 
-            virtual void use(IVertexDeclaration* decl) = 0;
+            virtual void generateMipmaps(IResourceView* v) = 0;
+
+            /************************************************************************/
+            /* 3D mode                                                              */
+            /************************************************************************/
+
             virtual void use(IRenderTarget* renderTarget) = 0;
+            virtual void setViewports(ui32 count, const Viewport* viewports) = 0;
+
+            virtual void setClearColor(const f64v4& v) = 0;
+            virtual void setClearDepth(f64 v) = 0;
+            virtual void setClearStencil(ui32 v) = 0;
+            virtual void clear(ClearBits bits) = 0;
+
+            virtual void begin(IQuery* query) = 0;
+            virtual void end(IQuery* query) = 0;
+
             virtual void use(IBlendState* state) = 0;
             virtual void use(IDepthStencilState* state) = 0;
             virtual void use(IRasterizerState* state) = 0;
@@ -86,6 +88,7 @@ namespace vorb {
             virtual void pixelUse(ui32 slot, ui32 count, IResourceView** v) = 0;
 
             virtual void setTopology(vg::PrimitiveType type) = 0;
+            virtual void use(IVertexDeclaration* decl) = 0;
             virtual void setVertexBuffers(const BufferBindings& bindings) = 0;
             virtual void setIndexBuffer(vg::IBuffer* ind, vg::MemoryFormat format, ui32 offset = 0) = 0;
 
@@ -94,6 +97,16 @@ namespace vorb {
             virtual void drawIndexed(size_t indexCount, size_t indexOff = 0, size_t vertexOff = 0) = 0;
             virtual void drawInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t vertexOff = 0, size_t instanceOff = 0) = 0;
             virtual void drawIndexedInstanced(size_t indexCountPerInstance, size_t instanceCount, size_t indexOff = 0, size_t vertexOff = 0, size_t instanceOff = 0) = 0;
+
+            virtual void flush() = 0;
+          
+            /************************************************************************/
+            /* Compute mode                                                         */
+            /************************************************************************/
+
+            virtual void clear(IComputeResourceView* res, const f32(&data)[4]) = 0;
+            virtual void clear(IComputeResourceView* res, const ui32(&data)[4]) = 0;
+
             virtual void computeUse(IComputeShader* shader) = 0;
             virtual void computeUse(ui32 slot, ui32 count, IComputeResourceView** v) = 0;
             virtual void computeUse(ui32 slot, ui32 count, IConstantBlockView** v) = 0;
@@ -101,8 +114,6 @@ namespace vorb {
             virtual void computeUse(ui32 slot, ui32 count, IResourceView** v) = 0;
 
             virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) = 0;
-
-            virtual void dispose() = 0;
         };
     }
 }

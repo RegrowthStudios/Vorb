@@ -34,8 +34,24 @@ namespace vorb {
         class D3DDevice : public IDevice {
             friend class D3DAdapter;
         public:
-            virtual void clear(ClearBits bits) override;
+            virtual void dispose();
+      
+            virtual IRenderTarget* create(ITexture2D* res) override;
+            virtual IVertexStateBind* create(IVertexDeclaration* decl, const BufferBindings& bindings);
+            virtual vorb::graphics::IBlendState* create(const BlendStateDescription& desc);
+            virtual vorb::graphics::IDepthStencilState* create(const DepthStencilStateDescription& desc);
+            virtual vorb::graphics::IRasterizerState* create(const RasterizerStateDescription& desc);
+            virtual vorb::graphics::ISamplerState* create(const SamplerStateDescription& desc);
+            virtual vorb::graphics::IQuery* create(const QueryDescription& desc);
+            virtual vorb::graphics::IPredicate* create(const PredicateDescription& desc);
+            virtual vorb::graphics::ISyncFence* create(const SyncFenceDescription& desc);
 
+            virtual void generateMipmaps(IResourceView* v);
+
+            virtual void use(IRenderTarget* renderTarget) override;
+            virtual void setViewports(ui32 count, const Viewport* viewports);
+
+            virtual void clear(ClearBits bits) override;
             virtual void setClearColor(const f64v4& v) override {
                 m_clearValues.color.r = (f32)v.r;
                 m_clearValues.color.g = (f32)v.g;
@@ -49,39 +65,58 @@ namespace vorb {
                 m_clearValues.depth = static_cast<ui8>(v & 0x000000ffu);
             }
 
-            virtual IRenderTarget* create(ITexture2D* res) override;
-
-            virtual IVertexStateBind* create(IVertexDeclaration* decl, const BufferBindings& bindings);
-
-            virtual void use(IRenderTarget* renderTarget) override;
-
-            virtual void use(IVertexDeclaration* decl);
-
-            virtual void computeUse(IComputeShader* shader) override;
-
-            virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) override;
+            virtual void begin(IQuery* query);
+            virtual void end(IQuery* query);
+           
+            virtual void use(IBlendState* state);
+            virtual void use(IDepthStencilState* state);
+            virtual void use(IRasterizerState* state);
 
             virtual void vertexUse(IVertexShader* shader);
-
+            virtual void vertexUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void vertexUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void vertexUse(ui32 slot, ui32 count, IResourceView** v);
             virtual void tessGenUse(ITessGenShader* shader);
-
+            virtual void tessGenUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void tessGenUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void tessGenUse(ui32 slot, ui32 count, IResourceView** v);
             virtual void tessEvalUse(ITessEvalShader* shader);
-
+            virtual void tessEvalUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void tessEvalUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void tessEvalUse(ui32 slot, ui32 count, IResourceView** v);
+            virtual void geometryUse(ITessEvalShader* shader);
+            virtual void geometryUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void geometryUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void geometryUse(ui32 slot, ui32 count, IResourceView** v);
             virtual void pixelUse(IPixelShader* shader);
+            virtual void pixelUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void pixelUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void pixelUse(ui32 slot, ui32 count, IResourceView** v);
 
             virtual void setTopology(vg::PrimitiveType type);
-
-            virtual void drawIndexed(size_t indices, size_t indexOff = 0, size_t vertexOff = 0);
-
-            virtual void setVertexBuffers(vg::IBuffer** verts, ui32 startSlot, size_t numBuffers, ui32* offsets, ui32* strides);
-
+            virtual void use(IVertexDeclaration* decl);
+            void setVertexBuffers(vg::IBuffer** verts, ui32 startSlot, size_t numBuffers, ui32* offsets, ui32* strides);
             virtual void setVertexBuffers(const BufferBindings& bindings);
-
             virtual void setIndexBuffer(vg::IBuffer* ind, vg::MemoryFormat format, ui32 offset = 0);
 
-            virtual void dispose();
+            virtual void draw(size_t vertexCount, size_t vertexOff = 0);
+            virtual void drawAutomatic();
+            virtual void drawIndexed(size_t indices, size_t indexOff = 0, size_t vertexOff = 0);
+            virtual void drawInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t vertexOff = 0, size_t instanceOff = 0);
+            virtual void drawIndexedInstanced(size_t indexCountPerInstance, size_t instanceCount, size_t indexOff = 0, size_t vertexOff = 0, size_t instanceOff = 0);
 
+            virtual void flush();
 
+            virtual void clear(IComputeResourceView* res, const f32(&data)[4]);
+            virtual void clear(IComputeResourceView* res, const ui32(&data)[4]);
+
+            virtual void computeUse(IComputeShader* shader) override;
+            virtual void computeUse(ui32 slot, ui32 count, IComputeResourceView** v);
+            virtual void computeUse(ui32 slot, ui32 count, IConstantBlockView** v);
+            virtual void computeUse(ui32 slot, ui32 count, ISamplerState** v);
+            virtual void computeUse(ui32 slot, ui32 count, IResourceView** v);
+
+            virtual void dispatchThreads(ui32 x, ui32 y, ui32 z) override;
         private:
             ID3D11Device* m_device;
             ID3D11DeviceContext* m_context;

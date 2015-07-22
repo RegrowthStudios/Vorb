@@ -234,7 +234,7 @@ vg::IShaderCode* compileShader(vg::IContext* ctx, const vpath& file, vg::ShaderT
 
     // Create compiler info
     vg::ShaderCompilerInfo info {};
-    info.version.major = 3;
+    info.version.major = 4;
     info.version.minor = 0;
 
     // Compile source
@@ -249,7 +249,7 @@ vg::IShaderCode* compileShader(vg::IContext* ctx, const vpath& file, vg::ShaderT
 }
 
 TEST(DrawImage) {
-    vorb::init(vorb::InitParam::GRAPHICS);
+    vorb::init(vorb::InitParam::GRAPHICS | vorb::InitParam::IO);
 
     // Create context and device
     vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
@@ -299,6 +299,9 @@ TEST(DrawImage) {
             { f32v3(1, -1, 0), f32v2(1, 0) },
             { f32v3(-1, 1, 0), f32v2(0, 1) }
         };
+        desc.type = vg::BufferTarget::ARRAY_BUFFER;
+        desc.usage = vg::BufferUsageHint::STATIC_DRAW;
+        desc.size = sizeof(verts);
         vg::InitalResourceData data {};
         data.data = verts;
         vertData = ctx->create(desc, &data);
@@ -338,6 +341,6 @@ TEST(DrawImage) {
     defaultDevice->dispose();
     ctx->dispose();
 
-    vorb::dispose(vorb::InitParam::GRAPHICS);
+    vorb::dispose(vorb::InitParam::GRAPHICS | vorb::InitParam::IO);
     return true;
 }

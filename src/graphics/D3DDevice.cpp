@@ -167,7 +167,7 @@ void vorb::graphics::D3DDevice::setVertexBuffers(vg::IBuffer** verts, ui32 start
     m_context->IASetVertexBuffers(startSlot, (UINT)numBuffers, buffers, strides, offsets);
 }
 void vorb::graphics::D3DDevice::setVertexBuffers(const BufferBindings& bindings) {
-    throw std::logic_error("The method or operation is not implemented.");
+    setVertexBuffers(bindings.buffers, bindings.startSlot, bindings.numBuffers, bindings.offsets, bindings.strides);
 }
 void vorb::graphics::D3DDevice::setIndexBuffer(vg::IBuffer* ind, vg::MemoryFormat format, ui32 offset /*= 0*/) {
     auto* v = static_cast<D3DBuffer*>(ind);

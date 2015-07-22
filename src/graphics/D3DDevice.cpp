@@ -182,23 +182,23 @@ void vorb::graphics::D3DDevice::end(IQuery* query) {
 }
 
 void vorb::graphics::D3DDevice::draw(size_t vertexCount, size_t vertexOff /*= 0*/) {
-    throw std::logic_error("The method or operation is not implemented.");
+    m_context->Draw((UINT)vertexCount, (UINT)vertexOff);
 }
 void vorb::graphics::D3DDevice::drawAutomatic() {
-    throw std::logic_error("The method or operation is not implemented.");
+    m_context->DrawAuto();
 }
 void vorb::graphics::D3DDevice::drawIndexed(size_t indices, size_t indexOff, size_t vertexOff) {
     m_context->DrawIndexed((UINT)indices, (UINT)indexOff, (INT)vertexOff);
 }
 void vorb::graphics::D3DDevice::drawInstanced(size_t vertexCountPerInstance, size_t instanceCount, size_t vertexOff /*= 0*/, size_t instanceOff /*= 0*/) {
-    throw std::logic_error("The method or operation is not implemented.");
+    m_context->DrawInstanced((UINT)vertexCountPerInstance, (UINT)instanceCount, (UINT)vertexOff, (UINT)instanceOff);
 }
 void vorb::graphics::D3DDevice::drawIndexedInstanced(size_t indexCountPerInstance, size_t instanceCount, size_t indexOff /*= 0*/, size_t vertexOff /*= 0*/, size_t instanceOff /*= 0*/) {
-    throw std::logic_error("The method or operation is not implemented.");
+    m_context->DrawIndexedInstanced((UINT)indexCountPerInstance, (UINT)instanceCount, (UINT)indexOff, (INT)vertexOff, (UINT)instanceOff);
 }
 
 void vorb::graphics::D3DDevice::flush() {
-    throw std::logic_error("The method or operation is not implemented.");
+    m_context->Flush();
 }
 
 void vorb::graphics::D3DDevice::clear(IComputeResourceView* res, const f32(&data)[4]) {

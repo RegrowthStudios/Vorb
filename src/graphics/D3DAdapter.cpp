@@ -7,7 +7,7 @@
 #include "D3DDevice.h"
 
 vg::IContext* vg::D3DAdapter::createContext(OUT OPT IDevice** defaultDevice) {
-    D3DContext* context = nullptr;// new D3DContext({});
+    D3DContext* context = new D3DContext({});
 
     D3D_FEATURE_LEVEL versions[] = {
         requestedFeatureLevel,
@@ -30,7 +30,7 @@ vg::IContext* vg::D3DAdapter::createContext(OUT OPT IDevice** defaultDevice) {
     }
 
     // Output default rendering device
-    //context->m_defaultDevice = new D3DDevice({});
+    context->m_defaultDevice = new D3DDevice({});
     context->m_defaultDevice->m_device = context->m_device;
     context->m_defaultDevice->m_context = context->m_immediateContext;
     if (defaultDevice) {
@@ -71,7 +71,7 @@ vg::IContext* vg::D3DAdapter::createContext(OUT OPT IDevice** defaultDevice) {
 }
 
 vg::IDevice* vg::D3DAdapter::createDevice(IContext* c) {
-    D3DDevice* device = nullptr;// new D3DDevice({});
+    D3DDevice* device = new D3DDevice({});
     D3DContext* context = reinterpret_cast<D3DContext*>(c);
 
     HRESULT hr = context->m_device->CreateDeferredContext(0, &device->m_context);

@@ -337,12 +337,8 @@ vorb::graphics::IBufferView* vorb::graphics::D3DContext::makeView(IBuffer* res) 
 }
 vorb::graphics::IConstantBlockView* vorb::graphics::D3DContext::makeView(IConstantBlock* res) {
     D3DConstantBlock* cres = static_cast<D3DConstantBlock*>(res);
-    D3DShaderResourceView* srv = new D3DShaderResourceView(this);
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-    
-    
-    m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
+    D3DConstantBlockView* srv = new D3DConstantBlockView(this);
+    srv->buffer = cres->data;
     return srv;
 }
 vorb::graphics::ITexture1DView* vorb::graphics::D3DContext::makeView(ITexture1D* res) {

@@ -4,11 +4,15 @@
 DXGI_FORMAT vg::mapD3D::format[(size_t)vg::MemoryFormat::MAX_VALUE] {};
 D3D11_PRIMITIVE_TOPOLOGY vg::mapD3D::topology[(size_t)vg::PrimitiveType::MAX_VALUE] {};
 const cString vg::mapD3D::semanticName[(size_t)vg::Semantic::MAX_VALUE] {};
+D3D11_TEXTURE_ADDRESS_MODE vg::mapD3D::addressMode[(size_t)TextureAddressMode::MAX_VALUE] {};
+D3D11_COMPARISON_FUNC vg::mapD3D::comparisonMode[(size_t)ComparisonMode::MAX_VALUE] {};
 
 void vorb::graphics::mapD3D::fill() {
     fillFormat(format);
     fillTopology(topology);
     fillSemanticName(semanticName);
+    fillAddressMode(addressMode);
+    fillComparisonMode(comparisonMode);
 }
 void vorb::graphics::mapD3D::fillFormat(DXGI_FORMAT* f) {
     f[(size_t)vg::MemoryFormat::UNKNOWN]                     = DXGI_FORMAT_UNKNOWN;
@@ -88,5 +92,22 @@ void vorb::graphics::mapD3D::fillSemanticName(const cString* f) {
     f[(size_t)vg::Semantic::BLENDWEIGHT]                     = "BLENDWEIGHT";
     f[(size_t)vg::Semantic::PSIZE]                           = "PSIZE";
     f[(size_t)vg::Semantic::TESSFACTOR]                      = "TESSFACTOR";
+}
+void vorb::graphics::mapD3D::fillAddressMode(D3D11_TEXTURE_ADDRESS_MODE* f) {
+    f[(size_t)vg::TextureAddressMode::WRAP]                  = D3D11_TEXTURE_ADDRESS_WRAP;
+    f[(size_t)vg::TextureAddressMode::CLAMP]                 = D3D11_TEXTURE_ADDRESS_CLAMP;
+    f[(size_t)vg::TextureAddressMode::CLAMP_ABSOLUTE]        = D3D11_TEXTURE_ADDRESS_MIRROR_ONCE;
+    f[(size_t)vg::TextureAddressMode::BORDER]                = D3D11_TEXTURE_ADDRESS_BORDER;
+    f[(size_t)vg::TextureAddressMode::MIRROR]                = D3D11_TEXTURE_ADDRESS_MIRROR;
+}
+void vorb::graphics::mapD3D::fillComparisonMode(D3D11_COMPARISON_FUNC* f) {
+    f[(size_t)vg::ComparisonMode::NEVER]                     = D3D11_COMPARISON_NEVER;
+    f[(size_t)vg::ComparisonMode::EQUAL]                     = D3D11_COMPARISON_EQUAL;
+    f[(size_t)vg::ComparisonMode::GREATER]                   = D3D11_COMPARISON_GREATER;
+    f[(size_t)vg::ComparisonMode::LESS]                      = D3D11_COMPARISON_LESS;
+    f[(size_t)vg::ComparisonMode::NOT_EQUAL]                 = D3D11_COMPARISON_NOT_EQUAL;
+    f[(size_t)vg::ComparisonMode::LESS_EQUAL]                = D3D11_COMPARISON_LESS_EQUAL;
+    f[(size_t)vg::ComparisonMode::GREATER_EQUAL]             = D3D11_COMPARISON_GREATER_EQUAL;
+    f[(size_t)vg::ComparisonMode::ALWAYS]                    = D3D11_COMPARISON_ALWAYS;
 }
 

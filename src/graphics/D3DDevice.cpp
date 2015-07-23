@@ -41,7 +41,104 @@ vorb::graphics::IRasterizerState* vorb::graphics::D3DDevice::create(const Raster
     throw std::logic_error("The method or operation is not implemented.");
 }
 vorb::graphics::ISamplerState* vorb::graphics::D3DDevice::create(const SamplerStateDescription& desc) {
-    throw std::logic_error("The method or operation is not implemented.");
+    D3DSamplerState* state = new D3DSamplerState(this);
+
+    D3D11_SAMPLER_DESC cdesc {};
+    cdesc.AddressU = vg::mapD3D::addressMode[(size_t)desc.addressMode.u];
+    cdesc.AddressV = vg::mapD3D::addressMode[(size_t)desc.addressMode.v];
+    cdesc.AddressW = vg::mapD3D::addressMode[(size_t)desc.addressMode.w];
+    memcpy(cdesc.BorderColor, &desc.borderColor, sizeof(f32v4));
+    cdesc.ComparisonFunc = vg::mapD3D::comparisonMode[(size_t)desc.comparison];
+    cdesc.MaxAnisotropy = desc.maxAnisotropySamples;
+    cdesc.MaxLOD = desc.maxLOD;
+    cdesc.MinLOD = desc.minLOD;
+    if (desc.maxAnisotropySamples > 0) {
+        // We are doing anisotropic filtering
+        switch (desc.samplingMode) {
+        case TextureSampleMode::NORMAL:
+            cdesc.Filter = D3D11_FILTER_ANISOTROPIC;
+        case TextureSampleMode::COMPARISON:
+            cdesc.Filter = D3D11_FILTER_COMPARISON_ANISOTROPIC;
+        case TextureSampleMode::MINIMUM:
+            cdesc.Filter = D3D11_FILTER_MINIMUM_ANISOTROPIC;
+        case TextureSampleMode::MAXIMUM:
+            cdesc.Filter = D3D11_FILTER_MAXIMUM_ANISOTROPIC;
+        default:
+            break;
+        }
+    } else {
+        // No anisotropy
+        switch (desc.minificationFilter) {
+        case TextureFilterMode::POINT:
+            switch (desc.magnificationFilter) {
+            case TextureFilterMode::POINT:
+                switch (desc.samplingMode) {
+                case TextureSampleMode::NORMAL:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
+                case TextureSampleMode::COMPARISON:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_COMPARISON_MIN_MAG_POINT_MIP_LINEAR : D3D11_FILTER_COMPARISON_MIN_MAG_MIP_POINT;
+                case TextureSampleMode::MINIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MINIMUM_MIN_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MINIMUM_MIN_MAG_MIP_POINT;
+                case TextureSampleMode::MAXIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MAXIMUM_MIN_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MAXIMUM_MIN_MAG_MIP_POINT;
+                default:
+                    break;
+                }
+            case TextureFilterMode::LINEAR:
+                switch (desc.samplingMode) {
+                case TextureSampleMode::NORMAL:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR : D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::COMPARISON:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_COMPARISON_MIN_POINT_MAG_MIP_LINEAR : D3D11_FILTER_COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::MINIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MINIMUM_MIN_POINT_MAG_MIP_LINEAR : D3D11_FILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::MAXIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MAXIMUM_MIN_POINT_MAG_MIP_LINEAR : D3D11_FILTER_MAXIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                default:
+                    break;
+                }
+            default:
+                break;
+            }
+        case TextureFilterMode::LINEAR:
+            switch (desc.magnificationFilter) {
+            case TextureFilterMode::POINT:
+                switch (desc.samplingMode) {
+                case TextureSampleMode::NORMAL:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+                case TextureSampleMode::COMPARISON:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR : D3D11_FILTER_COMPARISON_MIN_LINEAR_MAG_MIP_POINT;
+                case TextureSampleMode::MINIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MINIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MINIMUM_MIN_LINEAR_MAG_MIP_POINT;
+                case TextureSampleMode::MAXIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MAXIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR : D3D11_FILTER_MAXIMUM_MIN_LINEAR_MAG_MIP_POINT;
+                default:
+                    break;
+                }
+            case TextureFilterMode::LINEAR:
+                switch (desc.samplingMode) {
+                case TextureSampleMode::NORMAL:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::COMPARISON:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR : D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::MINIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MINIMUM_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MINIMUM_MIN_MAG_LINEAR_MIP_POINT;
+                case TextureSampleMode::MAXIMUM:
+                    cdesc.Filter = desc.shouldFilterMipmaps ? D3D11_FILTER_MAXIMUM_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MAXIMUM_MIN_MAG_LINEAR_MIP_POINT;
+                default:
+                    break;
+                }
+            default:
+                break;
+            }
+        default:
+            break;
+        }
+    }
+    cdesc.MipLODBias = 0.0f; // TODO(Cristian): Add a parameter to desc?
+
+    m_device->CreateSamplerState(&cdesc, &state->state);
+    return state;
 }
 vorb::graphics::IQuery* vorb::graphics::D3DDevice::create(const QueryDescription& desc) {
     throw std::logic_error("The method or operation is not implemented.");

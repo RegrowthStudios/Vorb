@@ -35,11 +35,15 @@ namespace vorb {
             extern DXGI_FORMAT format[(size_t)MemoryFormat::MAX_VALUE];
             extern D3D11_PRIMITIVE_TOPOLOGY topology[(size_t)PrimitiveType::MAX_VALUE];
             extern const cString semanticName[(size_t)Semantic::MAX_VALUE];
+            extern D3D11_TEXTURE_ADDRESS_MODE addressMode[(size_t)TextureAddressMode::MAX_VALUE];
+            extern D3D11_COMPARISON_FUNC comparisonMode[(size_t)ComparisonMode::MAX_VALUE];
 
             void fill();
             void fillFormat(DXGI_FORMAT* f);
             void fillTopology(D3D11_PRIMITIVE_TOPOLOGY* f);
             void fillSemanticName(const cString* f);
+            void fillAddressMode(D3D11_TEXTURE_ADDRESS_MODE* f);
+            void fillComparisonMode(D3D11_COMPARISON_FUNC* f);
         }
     }
 }

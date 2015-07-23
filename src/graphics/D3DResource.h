@@ -217,9 +217,9 @@ namespace vorb {
 
             ID3D11ComputeShader* shader = nullptr;
         };
-        class D3DShaderResourceView : public IBufferView, public IConstantBlockView, public ITexture1DView, public ITexture2DView, public ITexture3DView {
+        class D3DShaderResourceView : public IBufferView, public ITexture1DView, public ITexture2DView, public ITexture3DView {
         public:
-            D3DShaderResourceView(IContext* owner) : IBufferView(owner), IConstantBlockView(owner), ITexture1DView(owner), ITexture2DView(owner), ITexture3DView(owner) {
+            D3DShaderResourceView(IContext* owner) : IBufferView(owner), ITexture1DView(owner), ITexture2DView(owner), ITexture3DView(owner) {
                 // Empty
             }
 

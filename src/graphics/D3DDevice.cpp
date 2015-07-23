@@ -100,7 +100,8 @@ void vorb::graphics::D3DDevice::vertexUse(ui32 slot, ui32 count, IConstantBlockV
     m_context->VSSetConstantBuffers(slot, count, d3dViews);
 }
 void vorb::graphics::D3DDevice::vertexUse(ui32 slot, ui32 count, ISamplerState** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11SamplerState*, d3dStates, D3DSamplerState*, v, count, ->state);
+    m_context->VSSetSamplers(slot, count, d3dStates);
 }
 void vorb::graphics::D3DDevice::vertexUse(ui32 slot, ui32 count, IResourceView** v) {
     REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);
@@ -115,7 +116,8 @@ void vorb::graphics::D3DDevice::tessGenUse(ui32 slot, ui32 count, IConstantBlock
     m_context->HSSetConstantBuffers(slot, count, d3dViews);
 }
 void vorb::graphics::D3DDevice::tessGenUse(ui32 slot, ui32 count, ISamplerState** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11SamplerState*, d3dStates, D3DSamplerState*, v, count, ->state);
+    m_context->HSSetSamplers(slot, count, d3dStates);
 }
 void vorb::graphics::D3DDevice::tessGenUse(ui32 slot, ui32 count, IResourceView** v) {
     REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);
@@ -130,7 +132,8 @@ void vorb::graphics::D3DDevice::tessEvalUse(ui32 slot, ui32 count, IConstantBloc
     m_context->DSSetConstantBuffers(slot, count, d3dViews);
 }
 void vorb::graphics::D3DDevice::tessEvalUse(ui32 slot, ui32 count, ISamplerState** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11SamplerState*, d3dStates, D3DSamplerState*, v, count, ->state);
+    m_context->DSSetSamplers(slot, count, d3dStates);
 }
 void vorb::graphics::D3DDevice::tessEvalUse(ui32 slot, ui32 count, IResourceView** v) {
     REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);
@@ -144,7 +147,8 @@ void vorb::graphics::D3DDevice::geometryUse(ui32 slot, ui32 count, IConstantBloc
     m_context->GSSetConstantBuffers(slot, count, d3dViews);
 }
 void vorb::graphics::D3DDevice::geometryUse(ui32 slot, ui32 count, ISamplerState** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11SamplerState*, d3dStates, D3DSamplerState*, v, count, ->state);
+    m_context->GSSetSamplers(slot, count, d3dStates);
 }
 void vorb::graphics::D3DDevice::geometryUse(ui32 slot, ui32 count, IResourceView** v) {
     REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);
@@ -159,7 +163,8 @@ void vorb::graphics::D3DDevice::pixelUse(ui32 slot, ui32 count, IConstantBlockVi
     m_context->PSSetConstantBuffers(slot, count, d3dViews);
 }
 void vorb::graphics::D3DDevice::pixelUse(ui32 slot, ui32 count, ISamplerState** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11SamplerState*, d3dStates, D3DSamplerState*, v, count, ->state);
+    m_context->PSSetSamplers(slot, count, d3dStates);
 }
 void vorb::graphics::D3DDevice::pixelUse(ui32 slot, ui32 count, IResourceView** v) {
     REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);

@@ -42,6 +42,19 @@ namespace vorb {
 
             ID3D11RenderTargetView* view = nullptr;
         };
+
+        class D3DSamplerState : public ISamplerState {
+        public:
+            D3DSamplerState(IDevice* owner) : ISamplerState(owner) {
+                // Empty
+            }
+
+            virtual void disposeInternal() override {
+                if (state) state->Release();
+            }
+
+            ID3D11SamplerState* state = nullptr;
+        };
     }
 }
 

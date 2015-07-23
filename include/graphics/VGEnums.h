@@ -35,6 +35,7 @@ namespace vorb {
             LESS_EQUAL    = LESS | EQUAL,
             GREATER_EQUAL = GREATER | EQUAL,
             ALWAYS        = LESS | GREATER | EQUAL,
+            MAX_VALUE
         };
         ENUM_CLASS_OPS_INL(ComparisonMode, std::underlying_type<ComparisonMode>::type);
 
@@ -99,11 +100,20 @@ namespace vorb {
             CLAMP,
             CLAMP_ABSOLUTE,
             BORDER,
-            MIRROR
+            MIRROR,
+            MAX_VALUE
         };
         enum class TextureFilterMode {
             POINT,
-            LINEAR
+            LINEAR,
+            MAX_VALUE
+        };
+        enum class TextureSampleMode {
+            NORMAL,
+            COMPARISON,
+            MINIMUM,
+            MAXIMUM,
+            MAX_VALUE
         };
     }
 }

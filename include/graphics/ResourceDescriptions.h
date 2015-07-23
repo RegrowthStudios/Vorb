@@ -157,6 +157,7 @@ namespace vorb {
 
             TextureFilterMode minificationFilter;
             TextureFilterMode magnificationFilter;
+            TextureSampleMode samplingMode;
             bool shouldFilterMipmaps;
             ui32 maxAnisotropySamples;
 

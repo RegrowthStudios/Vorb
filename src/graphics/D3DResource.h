@@ -229,6 +229,19 @@ namespace vorb {
 
             ID3D11ShaderResourceView* view = nullptr;
         };
+        class D3DConstantBlockView : public IConstantBlockView {
+        public:
+            D3DConstantBlockView(IContext* owner) : IConstantBlockView(owner) {
+                // Empty
+            }
+
+            virtual void disposeInternal() {
+                buffer = nullptr;
+            }
+
+            ID3D11Buffer* buffer = nullptr;
+        };
+
 
         class D3DComputeResourceView : public IComputeResourceView {
         public:

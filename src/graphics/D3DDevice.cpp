@@ -86,12 +86,18 @@ void vorb::graphics::D3DDevice::use(IRasterizerState* state) {
     throw std::logic_error("The method or operation is not implemented.");
 }
 
+#define REDIRECT_ARRAY(TYPEOUT, VOUT, TRUETYPEIN, VIN, N, OP) \
+    TRUETYPEIN* tmpTrueArray = (TRUETYPEIN*)VIN; \
+    TYPEOUT* VOUT = (TYPEOUT*)alloca(N * sizeof(TYPEOUT)); \
+    for (size_t i = 0; i < N; i++) VOUT[i] = (TYPEOUT)tmpTrueArray[i]##OP
+
 void vorb::graphics::D3DDevice::vertexUse(IVertexShader* shader) {
     auto* sh = static_cast<D3DVertexShader*>(shader);
     m_context->VSSetShader(sh->shader, nullptr, 0);
 }
 void vorb::graphics::D3DDevice::vertexUse(ui32 slot, ui32 count, IConstantBlockView** v) {
-    throw std::logic_error("The method or operation is not implemented.");
+    REDIRECT_ARRAY(ID3D11ShaderResourceView*, d3dViews, D3DShaderResourceView*, v, count, ->view);
+    //m_context->VSSetConstantBuffers(slot, count, )
 }
 void vorb::graphics::D3DDevice::vertexUse(ui32 slot, ui32 count, ISamplerState** v) {
     throw std::logic_error("The method or operation is not implemented.");

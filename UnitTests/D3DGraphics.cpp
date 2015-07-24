@@ -251,11 +251,18 @@ vg::IShaderCode* compileShader(vg::IContext* ctx, const vpath& file, vg::ShaderT
 TEST(DrawImage) {
     vorb::init(vorb::InitParam::GRAPHICS | vorb::InitParam::IO);
 
+    vui::OSWindow window = {};
+    vui::OSWindowSettings ws = {};
+    ws.width = 640;
+    ws.height = 640;
+    vui::OSWindow::create(window, ws);
+
     // Create context and device
     vg::IAdapter* adapter = vg::getAdapter(vg::API::DIRECT_3D, 11, 0);
     vg::IContext* ctx = nullptr;
     vg::IDevice* defaultDevice = nullptr;
     ctx = adapter->createContext(&defaultDevice);
+    adapter->attachToWindow(ctx, window.getWindowHandle());
 
     vg::IBuffer* vertData = nullptr;
     vg::IVertexDeclaration* decl = nullptr;
@@ -284,10 +291,14 @@ TEST(DrawImage) {
     { // Create texture
         vg::Texture2DDescription desc {};
         desc.format = vg::MemoryFormat::R8G8B8A8_UNORM_SRGB;
+        desc.atlasPages = 0;
         vg::ImageIO iio;
         vg::ScopedBitmapResource bmp = iio.load("data/BigImage.png", vg::ImageIOFormat::RGBA_UI8, false);
         vg::InitalResourceData data {};
         data.data = bmp.data;
+        desc.width = bmp.width;
+        desc.height = bmp.height;
+        data.stride.texture2DRow = bmp.width * sizeof(color4);
         texture = ctx->create(desc, &data);
     }
 
@@ -295,16 +306,28 @@ TEST(DrawImage) {
         vg::BufferDescription desc {};
         desc.format = vg::MemoryFormat::R8G8B8A8_UNORM_SRGB;
         VertexPosUV verts[3] = {
-            { f32v3(-1, -1, 0), f32v2(0, 0) },
             { f32v3(1, -1, 0), f32v2(1, 0) },
+            { f32v3(-1, -1, 0), f32v2(0, 0) },
             { f32v3(-1, 1, 0), f32v2(0, 1) }
         };
         desc.type = vg::BufferTarget::ARRAY_BUFFER;
-        desc.usage = vg::BufferUsageHint::STATIC_DRAW;
+        desc.usage = vg::BufferUsageHint::DYNAMIC_DRAW;
         desc.size = sizeof(verts);
+        desc.structSize = 5 * sizeof(f32);
         vg::InitalResourceData data {};
         data.data = verts;
         vertData = ctx->create(desc, &data);
+    }
+
+    vg::ISamplerState* ss;
+    {
+        vg::SamplerStateDescription desc = {};
+        desc.addressMode.u = vg::TextureAddressMode::BORDER;
+        desc.addressMode.v = vg::TextureAddressMode::BORDER;
+        desc.addressMode.w = vg::TextureAddressMode::BORDER;
+        desc.magnificationFilter = vg::TextureFilterMode::POINT;
+        desc.minificationFilter = vg::TextureFilterMode::POINT;
+        ss = defaultDevice->create(desc);
     }
 
     // Create views
@@ -314,6 +337,7 @@ TEST(DrawImage) {
     defaultDevice->vertexUse(vertexShader);
     defaultDevice->pixelUse(pixelShader);
     defaultDevice->pixelUse(0, 1, (vg::IResourceView**)&textureView);
+    defaultDevice->pixelUse(0, 1, &ss);
 
     { // Set vertex buffer
         ui32 off = 0;
@@ -326,8 +350,28 @@ TEST(DrawImage) {
     defaultDevice->use(decl);
     defaultDevice->setTopology(vg::PrimitiveType::TRIANGLES);
 
+    vg::Viewport vp {};
+    vp.min = f32v2(0.0f);
+    vp.size = f32v2(640.0f, 480.0f);
+    vp.depth.min = 0.0f;
+    vp.depth.max = 1.0f;
+    defaultDevice->setViewports(1, &vp);
+
     // Draw a triangle
-    defaultDevice->draw(3, 0);
+    puts("Begin");
+    bool running = true;
+    window.getDispatcher().init();
+    window.getDispatcher().onQuit.addFunctor([&] (Sender) {
+        running = false;
+    });
+    while (running) {
+        for (size_t i = 0; i < 25; i++) {
+            defaultDevice->draw(3, 0);
+        }
+        puts("Present");
+        window.update();
+        ctx->present();
+    }
 
     // Destroy all resources
     vertexShader->dispose();

@@ -15,7 +15,7 @@ vorb::graphics::IRenderTarget* vorb::graphics::D3DDevice::create(ITexture2D* res
     D3DTexture2D* texture = static_cast<D3DTexture2D*>(res);
     D3DRenderTarget* rt = new D3DRenderTarget(this);
 
-    D3D11_RENDER_TARGET_VIEW_DESC desc;
+    D3D11_RENDER_TARGET_VIEW_DESC desc = {};
     if (texture->arraySlices) {
         desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
         desc.Texture2DArray.FirstArraySlice = 0;
@@ -26,19 +26,83 @@ vorb::graphics::IRenderTarget* vorb::graphics::D3DDevice::create(ITexture2D* res
         desc.Texture2D.MipSlice = 0;
     }
 
+    m_device->CreateRenderTargetView(texture->data, &desc, &rt->view);
     return rt;
 }
 vorb::graphics::IVertexStateBind* vorb::graphics::D3DDevice::create(IVertexDeclaration* decl, const BufferBindings& bindings) {
     throw std::logic_error("The method or operation is not implemented.");
 }
 vorb::graphics::IBlendState* vorb::graphics::D3DDevice::create(const BlendStateDescription& desc) {
-    throw std::logic_error("The method or operation is not implemented.");
+    D3DBlendState* state = new D3DBlendState(this);
+
+    D3D11_BLEND_DESC cdesc = {};
+    cdesc.AlphaToCoverageEnable = (BOOL)desc.useAlphaCoverage;
+    cdesc.IndependentBlendEnable = (BOOL)desc.useMultipleBlending;
+    if (desc.useMultipleBlending) {
+        for (size_t i = 0; i < 8; i++) {
+            cdesc.RenderTarget[i].BlendEnable = (BOOL)desc.renderTargetOps[i].enableBlending;
+            cdesc.RenderTarget[i].RenderTargetWriteMask = desc.renderTargetOps[i].write.mask; // TODO(Cristian): This needs to be unit-tested against channels
+            cdesc.RenderTarget[i].BlendOp = vg::mapD3D::blendOp[(size_t)desc.renderTargetOps[i].color.operation];
+            cdesc.RenderTarget[i].SrcBlend = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOps[i].color.source];
+            cdesc.RenderTarget[i].DestBlend = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOps[i].color.destination];
+            cdesc.RenderTarget[i].BlendOpAlpha = vg::mapD3D::blendOp[(size_t)desc.renderTargetOps[i].alpha.operation];
+            cdesc.RenderTarget[i].SrcBlendAlpha = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOps[i].alpha.source];
+            cdesc.RenderTarget[i].DestBlendAlpha = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOps[i].alpha.destination];
+        }
+    } else {
+        cdesc.RenderTarget[0].BlendEnable = (BOOL)desc.renderTargetOp.enableBlending;
+        cdesc.RenderTarget[0].RenderTargetWriteMask = desc.renderTargetOp.write.mask; // TODO(Cristian): This needs to be unit-tested against channels
+        cdesc.RenderTarget[0].BlendOp = vg::mapD3D::blendOp[(size_t)desc.renderTargetOp.color.operation];
+        cdesc.RenderTarget[0].SrcBlend = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOp.color.source];
+        cdesc.RenderTarget[0].DestBlend = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOp.color.destination];
+        cdesc.RenderTarget[0].BlendOpAlpha = vg::mapD3D::blendOp[(size_t)desc.renderTargetOp.alpha.operation];
+        cdesc.RenderTarget[0].SrcBlendAlpha = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOp.alpha.source];
+        cdesc.RenderTarget[0].DestBlendAlpha = vg::mapD3D::blendMultiplier[(size_t)desc.renderTargetOp.alpha.destination];
+    }
+
+    m_device->CreateBlendState(&cdesc, &state->state);
+    return state;
 }
 vorb::graphics::IDepthStencilState* vorb::graphics::D3DDevice::create(const DepthStencilStateDescription& desc) {
-    throw std::logic_error("The method or operation is not implemented.");
+    D3DDepthStencilState* state = new D3DDepthStencilState(this);
+
+    D3D11_DEPTH_STENCIL_DESC cdesc = {};
+    cdesc.DepthEnable = (BOOL)desc.enableDepth;
+    cdesc.DepthWriteMask = desc.writeDepth ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+    cdesc.DepthFunc = vg::mapD3D::comparisonMode[(size_t)desc.depthFunction];
+
+    cdesc.StencilEnable = (BOOL)desc.enableStencil;
+    cdesc.StencilReadMask = desc.stencilReadMask;
+    cdesc.StencilWriteMask = desc.stencilWriteMask;
+    cdesc.FrontFace.StencilFunc = vg::mapD3D::comparisonMode[(size_t)desc.faceOps.front.comparisonFunction];
+    cdesc.FrontFace.StencilFailOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.front.stencilFail];
+    cdesc.FrontFace.StencilDepthFailOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.front.stencilPassDepthFail];
+    cdesc.FrontFace.StencilPassOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.front.pass];
+    cdesc.BackFace.StencilFunc = vg::mapD3D::comparisonMode[(size_t)desc.faceOps.back.comparisonFunction];
+    cdesc.BackFace.StencilFailOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.back.stencilFail];
+    cdesc.BackFace.StencilDepthFailOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.back.stencilPassDepthFail];
+    cdesc.BackFace.StencilPassOp = vg::mapD3D::stencilOp[(size_t)desc.faceOps.back.pass];
+
+    m_device->CreateDepthStencilState(&cdesc, &state->state);
+    return state;
 }
 vorb::graphics::IRasterizerState* vorb::graphics::D3DDevice::create(const RasterizerStateDescription& desc) {
-    throw std::logic_error("The method or operation is not implemented.");
+    D3DRasterizerState* state = new D3DRasterizerState(this);
+
+    D3D11_RASTERIZER_DESC cdesc = {};
+    cdesc.FillMode = desc.renderWireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+    cdesc.CullMode = vg::mapD3D::cullMode[(size_t)desc.culling];
+    cdesc.FrontCounterClockwise = (BOOL)desc.frontCCW;
+    cdesc.MultisampleEnable = (BOOL)desc.useMultisampling;
+    cdesc.AntialiasedLineEnable = (BOOL)desc.useAntialiasing;
+    cdesc.ScissorEnable = (BOOL)desc.useScissoring;
+    cdesc.DepthClipEnable = (BOOL)desc.useDepthClipping;
+    cdesc.DepthBias = desc.depthBias;
+    cdesc.DepthBiasClamp = desc.depthBiasClamping;
+    cdesc.SlopeScaledDepthBias = desc.slopeScaledDepthBias;
+
+    m_device->CreateRasterizerState(&cdesc, &state->state);
+    return state;
 }
 vorb::graphics::ISamplerState* vorb::graphics::D3DDevice::create(const SamplerStateDescription& desc) {
     D3DSamplerState* state = new D3DSamplerState(this);

@@ -133,17 +133,73 @@ namespace vorb {
 
         struct BlendStateDescription {
         public:
+            struct Function {
+                BlendOperation operation;
+                BlendMultiplier source;
+                BlendMultiplier destination;
+            };
+            struct TargetOp {
+                bool enableBlending;
+                Function color;
+                Function alpha;
+                union {
+                    struct {
+                        bool red : 1;
+                        bool green : 1;
+                        bool blue : 1;
+                        bool alpha : 1;
+                    } channel;
+                    ui8 mask;
+                } write;
+            };
 
+            bool useAlphaCoverage;
+            bool useMultipleBlending;
+            union {
+                struct {
+                    TargetOp renderTargetOp;
+                    TargetOp auxiliaryTargets[7];
+                };
+                TargetOp renderTargetOps[8];
+            };
         };
 
         struct DepthStencilStateDescription {
         public:
+            struct FaceOps {
+                ComparisonMode comparisonFunction;
+                StencilOperation stencilFail;
+                StencilOperation stencilPassDepthFail;
+                StencilOperation pass;
+            };
 
+            bool enableDepth;
+            bool writeDepth;
+            ComparisonMode depthFunction;
+
+            bool enableStencil;
+            struct {
+                FaceOps front;
+                FaceOps back;
+            } faceOps;
+            ui8 stencilReadMask;
+            ui8 stencilWriteMask;
         };
 
         struct RasterizerStateDescription {
         public:
+            bool frontCCW;
+            FaceCulling culling;
 
+            i32 depthBias;
+            f32 depthBiasClamping;
+            f32 slopeScaledDepthBias;
+
+            bool renderWireframe;
+            bool useDepthClipping;
+            bool useAntialiasing;
+            bool useMultisampling;
+            bool useScissoring;
         };
 
         struct SamplerStateDescription {

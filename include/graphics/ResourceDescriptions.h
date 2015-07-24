@@ -24,6 +24,7 @@
 
 #include "GLEnums.h"
 #include "VGEnums.h"
+#include "../utils.h"
 
 namespace vorb {
     namespace graphics {
@@ -83,6 +84,7 @@ namespace vorb {
             vg::BufferTarget type;
             vg::BufferUsageHint usage;
             vg::MemoryFormat format;
+            size_t structSize;
             size_t size;
         };
 
@@ -186,7 +188,9 @@ namespace vorb {
 
         struct Viewport {
         public:
-
+            f32v2 min;
+            f32v2 size;
+            F32Range depth;
         };
     }
 }

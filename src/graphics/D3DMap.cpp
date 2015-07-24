@@ -6,6 +6,10 @@ D3D11_PRIMITIVE_TOPOLOGY vg::mapD3D::topology[(size_t)vg::PrimitiveType::MAX_VAL
 const cString vg::mapD3D::semanticName[(size_t)vg::Semantic::MAX_VALUE] {};
 D3D11_TEXTURE_ADDRESS_MODE vg::mapD3D::addressMode[(size_t)TextureAddressMode::MAX_VALUE] {};
 D3D11_COMPARISON_FUNC vg::mapD3D::comparisonMode[(size_t)ComparisonMode::MAX_VALUE] {};
+D3D11_STENCIL_OP vg::mapD3D::stencilOp[(size_t)StencilOperation::MAX_VALUE] {};
+D3D11_BLEND vg::mapD3D::blendMultiplier[(size_t)BlendMultiplier::MAX_VALUE] {};
+D3D11_BLEND_OP vg::mapD3D::blendOp[(size_t)BlendOperation::MAX_VALUE] {};
+D3D11_CULL_MODE vg::mapD3D::cullMode[(size_t)FaceCulling::MAX_VALUE] {};
 
 void vorb::graphics::mapD3D::fill() {
     fillFormat(format);
@@ -13,6 +17,10 @@ void vorb::graphics::mapD3D::fill() {
     fillSemanticName(semanticName);
     fillAddressMode(addressMode);
     fillComparisonMode(comparisonMode);
+    fillStencilOp(stencilOp);
+    fillBlendMultiplier(blendMultiplier);
+    fillBlendOp(blendOp);
+    fillCullMode(cullMode);
 }
 void vorb::graphics::mapD3D::fillFormat(DXGI_FORMAT* f) {
     f[(size_t)vg::MemoryFormat::UNKNOWN]                     = DXGI_FORMAT_UNKNOWN;
@@ -111,3 +119,27 @@ void vorb::graphics::mapD3D::fillComparisonMode(D3D11_COMPARISON_FUNC* f) {
     f[(size_t)vg::ComparisonMode::ALWAYS]                    = D3D11_COMPARISON_ALWAYS;
 }
 
+void vorb::graphics::mapD3D::fillStencilOp(D3D11_STENCIL_OP* f) {
+    f[(size_t)vg::StencilOperation::KEEP]                    = D3D11_STENCIL_OP_KEEP;
+    f[(size_t)vg::StencilOperation::ZERO]                    = D3D11_STENCIL_OP_ZERO;
+    f[(size_t)vg::StencilOperation::REPLACE]                 = D3D11_STENCIL_OP_REPLACE;
+    f[(size_t)vg::StencilOperation::INCREMENT]               = D3D11_STENCIL_OP_INCR;
+    f[(size_t)vg::StencilOperation::DECREMENT]               = D3D11_STENCIL_OP_DECR;
+    f[(size_t)vg::StencilOperation::INCREMENT_SATURATED]     = D3D11_STENCIL_OP_INCR_SAT;
+    f[(size_t)vg::StencilOperation::DECREMENT_SATURATED]     = D3D11_STENCIL_OP_DECR_SAT;
+    f[(size_t)vg::StencilOperation::INVERT]                  = D3D11_STENCIL_OP_INVERT;
+}
+
+void vorb::graphics::mapD3D::fillBlendMultiplier(D3D11_BLEND* f) {
+    // TODO(Cristian): Fill in map
+}
+
+void vorb::graphics::mapD3D::fillBlendOp(D3D11_BLEND_OP* f) {
+    // TODO(Cristian): Fill in map
+}
+
+void vorb::graphics::mapD3D::fillCullMode(D3D11_CULL_MODE* f) {
+    f[(size_t)vg::FaceCulling::NONE] = D3D11_CULL_NONE;
+    f[(size_t)vg::FaceCulling::FRONT] = D3D11_CULL_FRONT;
+    f[(size_t)vg::FaceCulling::BACK] = D3D11_CULL_BACK;
+}

@@ -115,6 +115,37 @@ namespace vorb {
             MAXIMUM,
             MAX_VALUE
         };
+
+        enum class StencilOperation {
+            KEEP,
+            ZERO,
+            REPLACE,
+            INCREMENT,
+            DECREMENT,
+            INCREMENT_SATURATED,
+            DECREMENT_SATURATED,
+            INVERT,
+            MAX_VALUE
+        };
+
+        enum class BlendMultiplier {
+            // TODO(Cristian): Fill in enum
+            SRC_ALPHA,
+            MAX_VALUE
+        };
+
+        enum class BlendOperation {
+            // TODO(Cristian): Fill in enum
+            ADD,
+            MAX_VALUE
+        };
+
+        enum class FaceCulling {
+            NONE,
+            FRONT,
+            BACK,
+            MAX_VALUE
+        };
     }
 }
 namespace vg = vorb::graphics;

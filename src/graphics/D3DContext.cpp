@@ -66,7 +66,8 @@ vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc, OPT InitalRes
     }
     cdesc.ByteWidth = desc.size; // TODO(Cristian): This should work?
     cdesc.MiscFlags = 0; // TODO(Cristian): Add other options?
-
+    cdesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+    cdesc.StructureByteStride = desc.structSize;
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};
@@ -136,7 +137,14 @@ vorb::graphics::ITexture2D* vorb::graphics::D3DContext::create(const Texture2DDe
     D3D11_TEXTURE2D_DESC cdesc {};
     cdesc.Width = desc.width;
     cdesc.Height = desc.height;
-    cdesc.ArraySize = desc.atlasPages;
+    cdesc.ArraySize = std::max(1u, (UINT)desc.atlasPages);
+    cdesc.Format = vg::mapD3D::format[(size_t)desc.format];
+    cdesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    cdesc.CPUAccessFlags = 0;
+    cdesc.MipLevels = 1;
+    cdesc.SampleDesc.Count = 1;
+    cdesc.SampleDesc.Quality = 0;
+    cdesc.Usage = D3D11_USAGE_DEFAULT;
 
     if (data) {
         D3D11_SUBRESOURCE_DATA cdata {};
@@ -333,7 +341,7 @@ vorb::graphics::IBufferView* vorb::graphics::D3DContext::makeView(IBuffer* res) 
 
 
     m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
-    return srv;
+    return (IBufferView*)srv;
 }
 vorb::graphics::IConstantBlockView* vorb::graphics::D3DContext::makeView(IConstantBlock* res) {
     D3DConstantBlock* cres = static_cast<D3DConstantBlock*>(res);
@@ -359,17 +367,28 @@ vorb::graphics::ITexture1DView* vorb::graphics::D3DContext::makeView(ITexture1D*
     }
 
     m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
-    return srv;
+    return (ITexture1DView*)srv;
 }
 vorb::graphics::ITexture2DView* vorb::graphics::D3DContext::makeView(ITexture2D* res) {
     D3DTexture2D* cres = static_cast<D3DTexture2D*>(res);
     D3DShaderResourceView* srv = new D3DShaderResourceView(this);
 
-    D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-
+    D3D11_SHADER_RESOURCE_VIEW_DESC desc {};
+    if (cres->arraySlices != 0) {
+        desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+        desc.Texture2DArray.FirstArraySlice = 0;
+        desc.Texture2DArray.ArraySize = cres->arraySlices;
+        desc.Texture2DArray.MipLevels = 1;
+        desc.Texture2DArray.MostDetailedMip = 0;
+    } else {
+        desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        desc.Texture2D.MipLevels = 1;
+        desc.Texture2D.MostDetailedMip = 0;
+    }
+    desc.Format = vg::mapD3D::format[(size_t)cres->m_desc.format];
 
     m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
-    return srv;
+    return (ITexture2DView*)srv;
 }
 vorb::graphics::ITexture3DView* vorb::graphics::D3DContext::makeView(ITexture3D* res) {
     D3DTexture3D* cres = static_cast<D3DTexture3D*>(res);
@@ -379,7 +398,7 @@ vorb::graphics::ITexture3DView* vorb::graphics::D3DContext::makeView(ITexture3D*
     
     
     m_device->CreateShaderResourceView(cres->data, &desc, &srv->view);
-    return srv;
+    return (ITexture3DView*)srv;
 }
 
 vorb::graphics::IComputeResourceView* vorb::graphics::D3DContext::makeComputeView(IBuffer* res) {

@@ -129,14 +129,32 @@ namespace vorb {
         };
 
         enum class BlendMultiplier {
-            // TODO(Cristian): Fill in enum
+            ZERO,
+            ONE,
+            SRC_COLOR,
             SRC_ALPHA,
+            ONE_MINUS_SRC_COLOR,
+            ONE_MINUS_SRC_ALPHA,
+            DEST_COLOR,
+            DEST_ALPHA,
+            ONE_MINUS_DEST_COLOR,
+            ONE_MINUS_DEST_ALPHA,
+            SRC_ALPHA_SATURATED,
+            BLEND_VALUE,
+            ONE_MINUS_BLEND_VALUE,
+            SHADER_SECOND_SRC_COLOR,
+            SHADER_SECOND_SRC_ALPHA,
+            ONE_MINUS_SHADER_SECOND_SRC_COLOR,
+            ONE_MINUS_SHADER_SECOND_SRC_ALPHA,
             MAX_VALUE
         };
 
         enum class BlendOperation {
-            // TODO(Cristian): Fill in enum
             ADD,
+            SUBTRACT,
+            REVERSE_SUBTRACT,
+            MINIMUM,
+            MAXIMUM,
             MAX_VALUE
         };
 

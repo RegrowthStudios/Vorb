@@ -38,7 +38,7 @@ void vscript::REPL::invokeCommand(const nString& c) {
     //ResetEvent(mtxCompletion);
     std::thread tReader([&] () {
         while (true) {
-            switch (WaitForSingleObject(mtxIO, 100)) {
+            switch (WaitForSingleObject(mtxIO, 5)) {
             case WAIT_OBJECT_0:
                 // Time to exit
                 SetEvent(mtxCompletion);
@@ -56,6 +56,7 @@ void vscript::REPL::invokeCommand(const nString& c) {
                         fread(s, 1, fs, m_streams[i]);
                         s[fs] = '\0';
                         onStream[i](s);
+                        fflush(i == 0 ? stdout : stderr);
                         delete[] s;
                         rewind(m_streams[i]);
                     }
@@ -66,6 +67,7 @@ void vscript::REPL::invokeCommand(const nString& c) {
             }
         }
     });
+    tReader.detach();
 
     // Execute command
     luaL_dostring(m_vm->getHandle(), c.c_str());
@@ -94,6 +96,9 @@ void vscript::REPL::invokeCommand(const nString& c) {
             rewind(m_streams[i]);
         }
     }
+
+    CloseHandle(mtxIO);
+    CloseHandle(mtxCompletion);
 }
 const nString& vscript::REPL::getCommand(size_t i) const {
     return m_storedCommands.at(i);

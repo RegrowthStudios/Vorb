@@ -1,19 +1,26 @@
-///
-/// ComponentTableBase.h
-/// Seed of Andromeda
-///
-/// Created by Cristian Zaloj on 9 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Base class for storing entity-component mappings
-///
+//
+// ComponentTableBase.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 9 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ComponentTableBase.h
+ * @brief Base class for storing entity-component mappings.
+ */
 
 #pragma once
 
-#ifndef ComponentTableBase_h__
-#define ComponentTableBase_h__
+#ifndef Vorb_ComponentTableBase_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ComponentTableBase_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "../Events.hpp"
@@ -93,5 +100,4 @@ namespace vorb {
 }
 namespace vecs = vorb::ecs;
 
-#endif // ComponentTableBase_h__
-
+#endif // !Vorb_ComponentTableBase_h__

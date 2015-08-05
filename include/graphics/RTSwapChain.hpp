@@ -1,19 +1,28 @@
-///
-/// RTSwapChain.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 6 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A series of FBOs that are swapped
-///
+//
+// RTSwapChain.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 6 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file RTSwapChain.hpp
+ * @brief A series of FBOs that are swapped.
+ */
 
 #pragma once
 
-#ifndef RTSwapChain_h__
-#define RTSwapChain_h__
+#ifndef Vorb_RTSwapChain_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_RTSwapChain_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLRenderTarget.h"
 
@@ -111,4 +120,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // RTSwapChain_h__
+#endif // !Vorb_RTSwapChain_hpp__

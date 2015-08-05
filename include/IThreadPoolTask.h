@@ -1,19 +1,26 @@
-///
-/// IThreadPoolTask.h
-/// Seed of Andromeda
-///
-/// Created by Benjamin Arnold on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// This file provides a thread pool task interface
-///
+//
+// IThreadPoolTask.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file IThreadPoolTask.h
+ * @brief This file provides a thread pool task interface.
+ */
 
 #pragma once
 
-#ifndef ThreadPoolTask_h__
-#define ThreadPoolTask_h__
+#ifndef Vorb_IThreadPoolTask_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_IThreadPoolTask_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace core {
@@ -52,8 +59,6 @@ namespace vorb {
         };
     }
 }
-
-// Namespace alias
 namespace vcore = vorb::core;
 
-#endif // ThreadPoolTask_h__
+#endif // !Vorb_IThreadPoolTask_h__

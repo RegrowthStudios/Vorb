@@ -1,27 +1,35 @@
-///
-/// ThreadPool.h
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 13 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Provides a general threadpool implementation for
-/// distributing work.
-///
+//
+// ThreadPool.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 13 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ThreadPool.h
+ * @brief Provides a general threadpool implementation for distributing work.
+ */
 
 #pragma once
 
-#ifndef ThreadPool_h__
-#define ThreadPool_h__
+#ifndef Vorb_ThreadPool_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ThreadPool_h__
+//! @endcond
 
+#ifndef VORB_USING_PCH
 #include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
+
 #include <thread>
 #include <condition_variable>
 
-#include "concurrentqueue.h"
-#include "blockingconcurrentqueue.h"
+#include <concurrentqueue.h>
+#include <blockingconcurrentqueue.h>
+
 #include "IThreadPoolTask.h"
 
 class CAEngine;
@@ -123,4 +131,4 @@ namespace vcore = vorb::core;
 
 #include "ThreadPool.inl"
 
-#endif // ThreadPool_h__
+#endif // !Vorb_ThreadPool_h__

@@ -11,9 +11,6 @@
     <ClCompile Include="src/ui/GameWindow.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src/graphics/Mesh.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src/io/IOManager.cpp">
       <Filter>IO</Filter>
     </ClCompile>
@@ -117,23 +114,8 @@
     <ClCompile Include="src\graphics\SpriteBatch.cpp">
       <Filter>Graphics\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbInit.cpp">
-      <Filter>Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="include\examples\VorbKeg.cpp">
-      <Filter>Examples</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\InputDispatcher.cpp">
       <Filter>UI\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="include\examples\VorbEnumOps.cpp">
-      <Filter>Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="include\examples\VorbArray.cpp">
-      <Filter>Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="include\examples\VorbArrayKeg.cpp">
-      <Filter>Examples</Filter>
     </ClCompile>
     <ClCompile Include="src/MeshGenIcosphere.cpp">
       <Filter>Graphics\Utils</Filter>
@@ -146,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp">
       <Filter>UI\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
-      <Filter>Examples</Filter>
     </ClCompile>
     <ClCompile Include="src\io\KegEnum.cpp">
       <Filter>IO\Keg</Filter>
@@ -279,6 +258,27 @@
     <ClCompile Include="src\voxel\VoxCommon.cpp">
       <Filter>Voxel</Filter>
     </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbArray.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbArrayKeg.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbEnumOps.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbInit.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbKeg.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbLibs.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -302,9 +302,6 @@
     </ClInclude>
     <ClInclude Include="include/ui/GameWindow.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="include/graphics/Mesh.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="include/io/IOManager.h">
       <Filter>IO</Filter>
@@ -343,9 +340,6 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="include/ecs/ECS.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="include/ecs/ECSSimpleUpdater.h">
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="include/ecs/Entity.h">
@@ -512,9 +506,6 @@
       <Filter>Graphics\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\VorbLibs.h" />
-    <ClInclude Include="include\examples\VorbKeg.h">
-      <Filter>Examples</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h">
       <Filter>UI\Input</Filter>
     </ClInclude>
@@ -687,6 +678,9 @@
     <ClInclude Include="include\voxel\IntervalTree.h">
       <Filter>Voxel</Filter>
     </ClInclude>
+    <ClInclude Include="doxygen\examples\VorbKeg.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -802,9 +796,6 @@
     <None Include="src\graphics\SpriteBatchShader.inl">
       <Filter>Graphics\Utils</Filter>
     </None>
-    <None Include="include/IntersectionUtils.inl">
-      <Filter>Utils</Filter>
-    </None>
     <None Include="src\graphics\ImageIOConv.inl">
       <Filter>Graphics\IO</Filter>
     </None>
@@ -823,6 +814,9 @@
     </None>
     <None Include="include\voxel\IntervalTree.inl">
       <Filter>Voxel</Filter>
+    </None>
+    <None Include="include\IntersectionUtils.hpp">
+      <Filter>Utils</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -208,37 +208,43 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbArray.cpp">
+    <ClCompile Include="doxygen\examples\VorbArray.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbArrayKeg.cpp">
+    <ClCompile Include="doxygen\examples\VorbArrayKeg.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbEnumOps.cpp">
+    <ClCompile Include="doxygen\examples\VorbEnumOps.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbInit.cpp">
+    <ClCompile Include="doxygen\examples\VorbInit.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbKeg.cpp">
+    <ClCompile Include="doxygen\examples\VorbKeg.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
+    <ClCompile Include="doxygen\examples\VorbLibs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -247,7 +253,6 @@
     <ClCompile Include="src/colors.cpp" />
     <ClCompile Include="src/ecs/ComponentTableBase.cpp" />
     <ClCompile Include="src/ecs/ECS.cpp" />
-    <ClCompile Include="src/graphics/Mesh.cpp" />
     <ClCompile Include="src/ecs/MultipleComponentSet.cpp" />
     <ClCompile Include="src/RPC.cpp" />
     <ClCompile Include="src/ui/GameWindow.cpp" />
@@ -339,6 +344,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
+    <ClInclude Include="doxygen\examples\VorbKeg.h" />
     <ClInclude Include="include/colors.h" />
     <ClInclude Include="include/compat.h" />
     <ClInclude Include="include/ecs/ComponentTable.hpp" />
@@ -349,7 +355,6 @@
     <ClInclude Include="include/graphics/DepthState.h" />
     <ClInclude Include="include/io/Directory.h" />
     <ClInclude Include="include/ecs/ECS.h" />
-    <ClInclude Include="include/ecs/ECSSimpleUpdater.h" />
     <ClInclude Include="include/ecs/Entity.h" />
     <ClInclude Include="include/Events.hpp" />
     <ClInclude Include="include/io/File.h" />
@@ -386,7 +391,6 @@
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
     <ClInclude Include="include/ui/MainGame.h" />
-    <ClInclude Include="include/graphics/Mesh.h" />
     <ClInclude Include="include/ecs/MultiComponentTracker.hpp" />
     <ClInclude Include="include/ecs/MultipleComponentSet.h" />
     <ClInclude Include="include/PtrRecycler.hpp" />
@@ -395,7 +399,6 @@
     <ClInclude Include="include/graphics/RTSwapChain.hpp" />
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
-    <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
     <ClInclude Include="include\graphics\ShaderInterface.h" />
@@ -500,7 +503,7 @@
     <None Include="src\graphics\SpriteBatchShader.inl" />
     <None Include="src\ImplGraphicsH.inl" />
     <None Include="src\io\YAMLInternal.inl" />
-    <None Include="include/IntersectionUtils.inl" />
+    <None Include="include\IntersectionUtils.hpp" />
     <None Include="src\ui\KeyMappings.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)/Microsoft.Cpp.targets" />

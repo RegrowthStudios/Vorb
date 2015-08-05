@@ -1,21 +1,26 @@
-///
-/// FileStream.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 31 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// An opened file stream for I/O operations
-///
+//
+// FileStream.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 31 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file FileStream.h
+ * @brief An opened file stream for I/O operations.
+ */
 
 #pragma once
 
-#ifndef FileStream_h__
-#define FileStream_h__
+#ifndef Vorb_FileStream_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_FileStream_h__
+//! @endcond
 
-#include <memory>
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "File.h"
 
@@ -146,4 +151,4 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::FileStream vfstream; /// FileStream shorthand
 
-#endif // FileStream_h__
+#endif // !Vorb_FileStream_h__

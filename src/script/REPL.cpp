@@ -26,17 +26,61 @@ void vscript::REPL::invokeCommand(const nString& c) {
     };
 
     // Redirect standard output
-    FILE old1 = *stdout;
-    FILE old2 = *stderr;
-    *stdout = *m_streams[VORB_REPL_STREAM_OUT];
-    *stderr = *m_streams[VORB_REPL_STREAM_ERR];
+    int old1 = _dup(1);
+    int old2 = _dup(2);
+    _dup2(_fileno(m_streams[VORB_REPL_STREAM_OUT]), 1);
+    _dup2(_fileno(m_streams[VORB_REPL_STREAM_ERR]), 2);
 
+    // Create a reader thread
+    HANDLE mtxIO = CreateEvent(nullptr, TRUE, FALSE, "VORB REPL IO Lock");
+    //ResetEvent(mtxIO);
+    HANDLE mtxCompletion = CreateEvent(nullptr, TRUE, FALSE, "VORB REPL Completion Lock");
+    //ResetEvent(mtxCompletion);
+    std::thread tReader([&] () {
+        while (true) {
+            switch (WaitForSingleObject(mtxIO, 5)) {
+            case WAIT_OBJECT_0:
+                // Time to exit
+                SetEvent(mtxCompletion);
+                return;
+            case WAIT_TIMEOUT:
+                // Try to read some IO
+                _dup2(old1, 1);
+                _dup2(old2, 2);
+                for (size_t i = 0; i < 2; i++) {
+                    size_t fs = (size_t)(ftell(m_streams[i]) - fpos[i]);
+                    if (fs != 0) {
+                        // Output was modified
+                        char* s = new char[fs + 1];
+                        fseek(m_streams[i], 0, SEEK_SET);
+                        fread(s, 1, fs, m_streams[i]);
+                        s[fs] = '\0';
+                        onStream[i](s);
+                        fflush(i == 0 ? stdout : stderr);
+                        delete[] s;
+                        rewind(m_streams[i]);
+                    }
+                }
+                _dup2(_fileno(m_streams[VORB_REPL_STREAM_OUT]), 1);
+                _dup2(_fileno(m_streams[VORB_REPL_STREAM_ERR]), 2);
+                break;
+            }
+        }
+    });
+    tReader.detach();
+
+    // Execute command
     luaL_dostring(m_vm->getHandle(), c.c_str());
     m_storedCommands.push(c);
 
+    // Signal and wait for reader to exit
+    SignalObjectAndWait(mtxIO, mtxCompletion, INFINITE, FALSE);
+
     // Reset standard output
-    *stdout = old1;
-    *stderr = old2;
+    fflush(stdout);
+    fflush(stderr);
+    _dup2(old1, 1);
+    _dup2(old2, 2);
 
     // Send data from output (if any)
     for (size_t i = 0; i < 2; i++) {
@@ -52,6 +96,9 @@ void vscript::REPL::invokeCommand(const nString& c) {
             rewind(m_streams[i]);
         }
     }
+
+    CloseHandle(mtxIO);
+    CloseHandle(mtxCompletion);
 }
 const nString& vscript::REPL::getCommand(size_t i) const {
     return m_storedCommands.at(i);

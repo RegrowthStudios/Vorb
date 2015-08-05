@@ -1,19 +1,29 @@
-///
-/// MultipleComponentSet.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 30 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Tracks entities with similar components
-///
+//
+// MultipleComponentSet.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 30 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MultipleComponentSet.h
+ * @brief Tracks entities with similar components
+ */
 
 #pragma once
 
-#ifndef MultipleComponentSet_h__
-#define MultipleComponentSet_h__
+#ifndef Vorb_MultipleComponentSet_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MultipleComponentSet_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <memory>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "../Events.hpp"
@@ -65,4 +75,4 @@ namespace vorb {
 }
 namespace vecs = vorb::ecs;
 
-#endif // MultipleComponentSet_h__
+#endif // !Vorb_MultipleComponentSet_h__

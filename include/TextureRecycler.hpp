@@ -1,21 +1,31 @@
-///
-/// TextureRecycler.hpp
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 24 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// TextureRecycler will recycle a specific type and size of texture.
-/// It is useful for terrain rendering for instance, when all textures are
-/// the same format and type.
-///
+//
+// TextureRecycler.hpp
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 24 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file TextureRecycler.hpp
+ * @brief TextureRecycler will recycle a specific type and size of texture.
+ *
+ * It is useful for terrain rendering for instance, when all textures are the same format and type.
+ */
 
 #pragma once
 
-#ifndef TextureRecycler_hpp__
-#define TextureRecycler_hpp__
+#ifndef Vorb_TextureRecycler_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_TextureRecycler_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <set>
+#include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include "graphics/gtypes.h"
 #include "graphics/GpuMemory.h"
@@ -108,7 +118,7 @@ namespace vorb {
 
             std::set<VGTexture> m_recycled; ///< To check if a texture is already recycled
 
-            std::vector <VGTexture> m_textures; ///< Cached textures
+            std::vector<VGTexture> m_textures; ///< Cached textures
 
             vg::TextureInternalFormat m_internalFormat; ///< Internal pixel format for textures
 
@@ -118,4 +128,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // TextureRecycler_hpp__
+#endif // !Vorb_TextureRecycler_hpp__

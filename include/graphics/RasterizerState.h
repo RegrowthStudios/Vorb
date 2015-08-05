@@ -1,19 +1,26 @@
-///
-/// RasterizerState.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Changes GPU polygon drawing and fill ops
-///
+//
+// RasterizerState.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file RasterizerState.h
+ * @brief Changes GPU polygon drawing and fill ops.
+ */
 
 #pragma once
 
-#ifndef RasterizerState_h__
-#define RasterizerState_h__
+#ifndef Vorb_RasterizerState_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_RasterizerState_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 
@@ -40,4 +47,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // RasterizerState_h__
+#endif // !Vorb_RasterizerState_h__

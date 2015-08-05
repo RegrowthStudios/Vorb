@@ -1,19 +1,26 @@
-///
-/// DepthState.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 22 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Changes GPU depth functionality
-///
+//
+// DepthState.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file DepthState.h
+ * @brief Changes GPU depth functionality.
+ */
 
 #pragma once
 
-#ifndef DepthState_h__
-#define DepthState_h__
+#ifndef Vorb_DepthState_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_DepthState_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "GLEnums.h"
 
@@ -49,4 +56,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // DepthState_h__
+#endif // !Vorb_DepthState_h__

@@ -1,21 +1,24 @@
-///
-/// YAML.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 19 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Includes all YAML files
-///
+//
+// YAML.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 14 Jul 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file YAML.h
+ * @brief YAML headers.
+ */
 
 #pragma once
 
-#ifndef YAML_h__
-#define YAML_h__
+#ifndef Vorb_YAML_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_YAML_h__
+//! @endcond
 
 #include "YAMLReader.h"
 #include "YAMLWriter.h"
 
-#endif // YAML_h__
+#endif // !Vorb_YAML_h__

@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "graphics/FullQuadVBO.h"
 
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+#endif // !VORB_USING_PCH
+
 void vg::FullQuadVBO::init(i32 attrLocation /*= 0*/) {
     glGenBuffers(2, m_buffers);
 

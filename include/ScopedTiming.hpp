@@ -1,19 +1,26 @@
-///
-/// ScopedTiming.hpp
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 16 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Simple implementation of an lifetime-based timer
-///
+//
+// ScopedTiming.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 16 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ScopedTiming.hpp
+ * @brief Simple implementation of an lifetime-based timer.
+ */
 
 #pragma once
 
-#ifndef ScopedTiming_hpp__
-#define ScopedTiming_hpp__
+#ifndef Vorb_ScopedTiming_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ScopedTiming_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <atomic>
 #include <chrono>
@@ -312,5 +319,4 @@ namespace vorb {
 #define VORB_COMBINE(X,Y) VORB_COMBINE1(X,Y)
 #define VORB_SAMPLE_SCOPE(VALUE) auto VORB_COMBINE(__vorb_scopedTimer_ , __LINE__) = vorb::getInferredScopedSampler(VALUE);
 
-
-#endif // ScopedTiming_hpp__
+#endif // !Vorb_ScopedTiming_hpp__

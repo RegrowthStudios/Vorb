@@ -9,11 +9,8 @@
 //
 
 /*! \file SpriteBatch.h
-* @brief 
-* Defines the SpriteBatch for easy and efficient
-* 2D rendering of Sprites.
-*
-*/
+ * @brief Defines the SpriteBatch for easy and efficient 2D rendering of Sprites.
+ */
 
 #pragma once
 
@@ -23,15 +20,15 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include "../types.h"
 #endif // !VORB_USING_PCH
+
+#include <cfloat>
 
 #include "../PtrRecycler.hpp"
 #include "../VorbPreDecl.inl"
 #include "SpriteFont.h"
 #include "gtypes.h"
-
-#include <cfloat> // For FTL_MAX
 
 #define CLIP_RECT_DEFAULT f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)
 

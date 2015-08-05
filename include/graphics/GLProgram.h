@@ -1,21 +1,28 @@
-﻿// 
-//  GLProgram.h
-//  Vorb Engine
+﻿//
+// GLProgram.h
+// Vorb Engine
 //
-//  Created by Cristian Zaloj in 2014
-//  Modified by Ben Arnold on 16 Oct 2014
-//  Copyright 2014 Regrowth Studios
-//  All Rights Reserved
-//  
-//  Summary:
-//  This file provides a GLProgram class that 
-//  provides a wrapper around an openGL shader program
+// Created by Ben Arnold on 16 Oct 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
 //
+
+/*! \file GLProgram.h
+ * @brief This file provides a wrapper around an OpenGL shader program.
+ */
 
 #pragma once
 
-#ifndef GlProgram_h__
-#define GlProgram_h__
+#ifndef Vorb_GLProgram_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GLProgram_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../Events.hpp"
 #include "../Vorb.h"
@@ -126,7 +133,7 @@ namespace vorb {
 
             /// Binds fragment shader outputs to color numbers.
             /// @pre program is not yet linked.
-            void bindFragDataLocation(ui32 colorNumber​, const char * name​);
+            void bindFragDataLocation(ui32 colorNumber, const cString name);
 
             /// Gets an attribute index
             /// @param name: The attribute's name
@@ -181,4 +188,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // GlProgram_h__
+#endif // !Vorb_GLProgram_h__

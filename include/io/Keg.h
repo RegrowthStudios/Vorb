@@ -1,19 +1,26 @@
-///
-/// Keg.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 9 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Keg YAML utility
-///
+//
+// Keg.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 9 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Keg.h
+ * @brief Keg YAML utility.
+ */
 
 #pragma once
 
-#ifndef Keg_h__
-#define Keg_h__
+#ifndef Vorb_Keg_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Keg_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "KegBasic.h"
 #include "KegEnum.h"
@@ -25,7 +32,7 @@
 #define KEG_DOC_TYPE_ID "__TYPE__"
 #define KEG_DOC_DATA_ID "__DATA__"
 
-/** @brief Vorb extension for YAML parsing.
+/*! @brief Vorb extension for YAML parsing.
  * 
  * Provides utility classes for parsing YAML files as well
  * as basic user-defined reflection capabilities.
@@ -142,7 +149,7 @@ namespace keg {
 #define KEG_TYPE_INIT_ADD_MEMBER(VAR_NAME, TYPENAME, MEMBER, TYPE_ENUM) \
     VAR_NAME.addValue(#MEMBER, keg::Value::basic(offsetof(TYPENAME, MEMBER), keg::BasicType::TYPE_ENUM))
 
-#endif // Keg_h__
+#endif // !Vorb_Keg_h__
 
 /*! \example "Keg Usage"
  * 

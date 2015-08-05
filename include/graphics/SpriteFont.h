@@ -1,19 +1,29 @@
-///
-/// SpriteFont.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 15 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Bitmap glyph font container
-///
+//
+// SpriteFont.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 15 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SpriteFont.h
+ * @brief Bitmap glyph font container.
+ */
 
 #pragma once
 
-#ifndef SpriteFont_h__
-#define SpriteFont_h__
+#ifndef Vorb_SpriteFont_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SpriteFont_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "gtypes.h"
 
@@ -78,4 +88,4 @@ namespace vorb {
 }
 namespace vg = vorb::graphics;
 
-#endif // SpriteFont_h__
+#endif // !Vorb_SpriteFont_h__

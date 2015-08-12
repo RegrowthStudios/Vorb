@@ -200,6 +200,24 @@ public:
     }
 };
 
+template <typename T>
+struct DelegateType : public DelegateType < decltype(&T::operator()) > {};
+
+template<typename F, typename Ret, typename... Args>
+struct DelegateType < Ret(F::*)(Args...) const > {
+public:
+    typedef Delegate<Args...> type;
+};
+
+template <typename T>
+struct RDelegateType : public RDelegateType < decltype(&T::operator()) > {};
+
+template<typename F, typename Ret, typename... Args>
+struct RDelegateType < Ret(F::*)(Args...) const > {
+public:
+    typedef RDelegate<Ret, Args...> type;
+};
+
 template<typename Ret, typename... Args>
 RDelegate<Ret, Args...> makeRDelegate(Ret(*f)(Args...)) {
     return RDelegate<Ret, Args...>::create(f);
@@ -219,11 +237,9 @@ RDelegate<Ret, Args...> makeRDelegate(F& obj) {
     return RDelegate<Ret, Args...>::create<F>(&obj, f);
 }
 
-template<typename Ret, typename... Args, typename F>
-RDelegate<Ret, Args...>* makeRFunctor(F& obj) {
-    typedef Ret(F::*fType)(Args...) const;
-    fType f = &F::operator();
-    return RDelegate<Ret, Args...>::createCopy<F>(&obj, f);
+template<typename F>
+typename RDelegateType<F>::type* makeRFunctor(F& obj) {
+    return RDelegateType<F>::type::createCopy<F>(&obj, &F::operator());
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)const) {
@@ -253,11 +269,9 @@ Delegate<Args...> makeDelegate(F& obj) {
     return Delegate<Args...>::create<F>(&obj, f);
 }
 
-template<typename... Args, typename F>
-Delegate<Args...>* makeFunctor(F& obj) {
-    typedef void(F::*fType)(Args...) const;
-    fType f = &F::operator();
-    return Delegate<Args...>::createCopy<F>(&obj, f);
+template<typename F>
+typename DelegateType<F>::type* makeFunctor(F& obj) {
+    return DelegateType<F>::type::createCopy<F>(&obj, &F::operator());
 }
 template<typename T, typename... Args>
 Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)const) {
@@ -320,7 +334,7 @@ public:
     /// @return The newly made delegate (CALLER DELETE)
     template<typename F>
     Listener* addFunctor(F f) {
-        Listener* functor = makeRFunctor<void, Sender, Params...>(f);
+        Listener* functor = makeRFunctor(f);
         this->add(*functor);
         return functor;
     }

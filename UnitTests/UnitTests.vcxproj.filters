@@ -79,6 +79,9 @@
     <ClCompile Include="VorbVoxel.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="DelegateEvents.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

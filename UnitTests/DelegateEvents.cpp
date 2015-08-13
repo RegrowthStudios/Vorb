@@ -14,11 +14,6 @@ public:
 };
 
 
-class BlankTemplate {
-    template<typename Ret, typename... Params>
-    Ret function(Params... args);
-};
-
 TEST(BlankFunctionAccess) {
     A value = {};
 

@@ -42,8 +42,77 @@
 #include <vector>
 #endif // !VORB_USING_PCH
 
+/*! @brief Calling conventions 
+ * 
+ * 1. Static function
+ *      Requires:
+ *          - Function pointer
+ * 2. Reference member function
+ *      Requires:
+ *          - Function pointer
+ *          - Object reference
+ * 3. Copied member function
+ *      Requires:
+ *          - Function pointer
+ *          - Copied object pointer
+ *          - Destructor
+ * 4. Zero-state functor object (converts to function pointer, some lambdas)
+ *      Requires:
+ *          - Function pointer
+ *          - Object reference
+ * 5. Captured-state reference functor object
+ *      Requires:
+ *          - Function pointer
+ *          - Functor object
+ * 6. Captured-state copied functor object
+ *      Requires:
+ *          - Function pointer
+ *          - Copied functor object pointer
+ *          - Destructor
+ */
+
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
+
+template<typename T>
+union PointerCast {
+    static_assert(sizeof(T) == sizeof(void*), "Value is not same size as a pointer");
+
+    PointerCast(T v) {
+        value = v;
+    }
+    PointerCast(void* v) {
+        ptr = v;
+    }
+
+    T value;
+    void* ptr;
+};
+
+class BlankTemplate {
+    template<typename Ret, typename... Params>
+    Ret function(Params... args);
+};
+
+template<size_t A1, size_t BITS>
+struct MinEvenAlignment {
+public:
+    static const size_t bitmask = (1 << BITS) - 1;
+    static const size_t value = (A1 & bitmask) ? ((A1 | bitmask) + 1) : A1;
+};
+
+template<typename T, size_t BITS>
+void* copyObjectAligned(T& reference) {
+    void* storage = new std::aligned_storage<sizeof(T), MinEvenAlignment<std::alignment_of<T>::value, BITS>::value>();
+    new (storage)T(reference);
+    return storage;
+}
+template<typename T, size_t BITS>
+void* copyObjectAligned(T&& reference) {
+    void* storage = new std::aligned_storage<sizeof(T), MinEvenAlignment<std::alignment_of<T>::value, BITS>::value>();
+    new (storage)T(std::move(reference));
+    return storage;
+}
 
 class DelegateBase {
 public:
@@ -51,6 +120,8 @@ public:
     typedef void* Function;
     typedef void(*Deleter)(Caller);
     typedef void* UnknownStub;
+
+    static_assert(sizeof(Caller) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
 
     DelegateBase(Caller c, Function f, UnknownStub s, Deleter d) :
         m_caller(c),
@@ -70,7 +141,14 @@ public:
         m_deletion(m_caller);
     }
 
-    Caller m_caller;
+    union {
+        Caller m_caller;
+        struct {
+            ptrdiff_t m_callerHigh : (sizeof(Caller) * 8 - 1);
+            ptrdiff_t m_callerFlag1 : 1;
+            ptrdiff_t m_callerFlag2 : 1;
+        };
+    };
     Function m_func;
 protected:
     static void doNothing(Caller c) {

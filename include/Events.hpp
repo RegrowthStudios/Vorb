@@ -101,19 +101,6 @@ public:
     static const size_t value = (A1 & bitmask) ? ((A1 | bitmask) + 1) : A1;
 };
 
-template<typename T, size_t BITS>
-void* copyObjectAligned(T& reference) {
-    void* storage = new std::aligned_storage<sizeof(T), MinEvenAlignment<std::alignment_of<T>::value, BITS>::value>();
-    new (storage)T(reference);
-    return storage;
-}
-template<typename T, size_t BITS>
-void* copyObjectAligned(T&& reference) {
-    void* storage = new std::aligned_storage<sizeof(T), MinEvenAlignment<std::alignment_of<T>::value, BITS>::value>();
-    new (storage)T(std::move(reference));
-    return storage;
-}
-
 class DelegateBase {
 public:
     typedef void* Caller;
@@ -121,56 +108,47 @@ public:
     typedef void(*Deleter)(Caller);
     typedef void* UnknownStub;
 
-    static_assert(sizeof(Caller) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
+    static_assert(sizeof(Deleter) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
 
-    DelegateBase(Caller c, Function f, UnknownStub s, Deleter d) :
-        m_caller(c),
-        m_func(f),
-        m_stub(s),
-        m_deletion(d) {
-        // Empty
-    }
-    DelegateBase() :
-        m_caller(nullptr),
-        m_func(nullptr),
-        m_stub(nullptr),
-        m_deletion(doNothing) {
-        // Empty
-    }
     ~DelegateBase() {
-        m_deletion(m_caller);
+        if (m_flagRequiresDeletion != 0) {
+            ((Deleter)m_deleters[m_deleter])(m_caller);
+        }
     }
 
-    union {
-        Caller m_caller;
-        struct {
-            ptrdiff_t m_callerHigh : (sizeof(Caller) * 8 - 1);
-            ptrdiff_t m_callerFlag1 : 1;
-            ptrdiff_t m_callerFlag2 : 1;
-        };
-    };
+    Caller m_caller;
     Function m_func;
 protected:
-    static void doNothing(Caller c) {
-        // Empty
+    static std::vector<Deleter> m_deleters;
+    static size_t grabDeleter(Deleter f) {
+        size_t i = m_deleters.size();
+        m_deleters.push_back(f);
+        return i;
     }
     template<typename T>
+    static size_t deleterID() {
+        static size_t id = grabDeleter(freeObject<T>);
+        return id;
+    }
+
+    template<typename T>
     static void freeObject(Caller c) {
-        T* obj = (T*)c;
-        obj->~T();
-        operator delete(c);
+        delete (T*)c;
     }
 
     void neuter() {
-        m_deletion = doNothing;
+        m_deleter = 0;
     }
     template<typename T>
     void engorge() {
-        m_deletion = freeObject<T>;
+        m_deleter = deleterID<T>;
     }
 
-    Deleter m_deletion;
-    UnknownStub m_stub;
+    struct {
+        size_t m_deleter : (sizeof(size_t) * 8 - 2);
+        size_t m_flagIsObject : 1;
+        size_t m_flagRequiresDeletion : 1;
+    };
 };
 
 template<typename Ret, typename... Args>
@@ -179,42 +157,69 @@ class RDelegate : public DelegateBase {
 public:
     typedef Ret(*CallStub)(Caller, Function, Args...); ///< Function type for a stub
 
-    RDelegate(Caller c, Function f, CallStub s, Deleter d) : DelegateBase(c, f, s, d) {
-        // Empty
+    static RDelegate create(Ret(*f)(Args...)) {
+        RDelegate value = {};
+        value.m_func = f;
+        value.m_caller = nullptr;
+        value.m_deleter = 0;
+        return value;
     }
-    RDelegate() : DelegateBase(nullptr, nullptr, simpleCall, doNothing) {
-        // Empty
-    }
-
     template<typename T>
     static RDelegate create(const T* o, Ret(T::*f)(Args...) const) {
-        return RDelegate(const_cast<T*>(o), *(Function*)&f, objectCall<T>, doNothing);
+        RDelegate value = {};
+        value.m_func = *(Function*)&f;
+        value.m_caller = const_cast<T*>(o);
+        value.m_deleter = 0;
+        value.m_flagIsObject = true;
+        value.m_flagRequiresDeletion = false;
+        return value;
     }
     template<typename T>
     static RDelegate* createCopy(const T* o, Ret(T::*f)(Args...) const) {
-        T* no = (T*)operator new(sizeof(T));
-        new (no)T(*o);
-        return new RDelegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+        RDelegate* value = new RDelegate();
+        value->m_func = *(Function*)&f;
+        value->m_caller = new T(*const_cast<T*>(o));
+        value->m_deleter = deleterID<T>();
+        value->m_flagIsObject = true;
+        value->m_flagRequiresDeletion = true;
+        return value;
     }
     template<typename T>
     static RDelegate create(T* o, Ret(T::*f)(Args...)) {
-        return RDelegate(o, *(Function*)&f, objectCall<T>, doNothing);
+        RDelegate value = {};
+        value.m_func = *(Function*)&f;
+        value.m_caller = o;
+        value.m_deleter = 0;
+        value.m_flagIsObject = true;
+        value.m_flagRequiresDeletion = false;
+        return value;
     }
     template<typename T>
     static RDelegate* createCopy(T* o, Ret(T::*f)(Args...)) {
-        T* no = (T*)operator new(sizeof(T));
-        new (no) T(*o);
-        return new RDelegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
-    }
-    static RDelegate create(Ret(*f)(Args...)) {
-        return RDelegate(nullptr, f, simpleCall, doNothing);
+        RDelegate* value = new RDelegate();
+        value->m_func = *(Function*)&f;
+        value->m_caller = new T(*o);
+        value->m_deleter = deleterID<T>();
+        value->m_flagIsObject = true;
+        value->m_flagRequiresDeletion = true;
+        return value;
     }
 
     Ret invoke(Args... args) const {
-        return ((CallStub)m_stub)(m_caller, m_func, args...);
+        if (m_flagIsObject == 0) {
+            return ((Ret(*)(Args...))m_func)(args...);
+        } else {
+            PointerCast<Ret (BlankTemplate::*)(Args...)> blankedFunction = { m_func };
+            return (((BlankTemplate*)m_caller)->*blankedFunction.value)(args...);
+        }
     }
     Ret operator()(Args... args) const {
-        return ((CallStub)m_stub)(m_caller, m_func, args...);
+        if (m_flagIsObject == 0) {
+            return ((Ret(*)(Args...))m_func)(args...);
+        } else {
+            PointerCast<Ret(BlankTemplate::*)(Args...)> blankedFunction = { m_func };
+            return (((BlankTemplate*)m_caller)->*blankedFunction.value)(args...);
+        }
     }
 
     bool operator==(const RDelegate& other) const {
@@ -246,35 +251,52 @@ protected:
 template<typename... Args>
 class Delegate : public RDelegate<void, Args...> {
 public:
-    Delegate(Caller c, Function f, CallStub s, Deleter d) : RDelegate<void, Args...>(c, f, s, d) {
-        // Empty
+    static Delegate create(void(*f)(Args...)) {
+        Delegate value = {};
+        value.m_func = f;
+        value.m_caller = nullptr;
+        value.m_deleter = 0;
+        return value;
     }
-    Delegate() : RDelegate<void, Args...>() {
-        // Empty
-    }
-
     template<typename T>
     static Delegate create(const T* o, void(T::*f)(Args...) const) {
-        return Delegate(const_cast<T*>(o), *(Function*)&f, objectCall<T>, doNothing);
+        Delegate value = {};
+        value.m_func = *(Function*)&f;
+        value.m_caller = const_cast<T*>(o);
+        value.m_deleter = 0;
+        value.m_flagIsObject = true;
+        value.m_flagRequiresDeletion = false;
+        return value;
     }
     template<typename T>
     static Delegate* createCopy(const T* o, void(T::*f)(Args...) const) {
-        T* no = (T*)operator new(sizeof(T));
-        new (no)T(*o);
-        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+        Delegate* value = new Delegate();
+        value->m_func = *(Function*)&f;
+        value->m_caller = new T(*const_cast<T*>(o));
+        value->m_deleter = deleterID<T>();
+        value->m_flagIsObject = true;
+        value->m_flagRequiresDeletion = true;
+        return value;
     }
     template<typename T>
     static Delegate create(T* o, void(T::*f)(Args...)) {
-        return Delegate(o, *(Function*)&f, objectCall<T>, doNothing);
+        Delegate value = {};
+        value.m_func = *(Function*)&f;
+        value.m_caller = o;
+        value.m_deleter = 0;
+        value.m_flagIsObject = true;
+        value.m_flagRequiresDeletion = false;
+        return value;
     }
     template<typename T>
     static Delegate* createCopy(T* o, void(T::*f)(Args...)) {
-        T* no = (T*)operator new(sizeof(T));
-        new (no)T(*o);
-        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
-    }
-    static Delegate create(void(*f)(Args...)) {
-        return Delegate(nullptr, f, simpleCall, doNothing);
+        Delegate* value = new Delegate();
+        value->m_func = *(Function*)&f;
+        value->m_caller = new T(*o);
+        value->m_deleter = deleterID<T>();
+        value->m_flagIsObject = true;
+        value->m_flagRequiresDeletion = true;
+        return value;
     }
 };
 

@@ -216,6 +216,7 @@ TEST(DelegateSpeed) {
         vorb::MTDetailedSamplerContext context;
         OValue ovalue(3);
         auto f = makeRDelegate(ovalue, &OValue::add);
+        printf("Delegate: %d\n", sizeof(f));
 
         i32 val = 0;
         {
@@ -259,6 +260,7 @@ TEST(DelegateSpeed) {
         vorb::MTDetailedSamplerContext context;
         OValue ovalue(3);
         std::function<i32(i32,i32)> f = std::bind(&OValue::add, &ovalue, std::placeholders::_1, std::placeholders::_2);
+        printf("Function: %d\n", sizeof(f));
 
         i32 val = 0;
         {

@@ -60,7 +60,7 @@ namespace vorb {
             void forEachEntry(DirectoryEntryCallback* f) const;
             template<typename F>
             void forEachEntry(F f) const {
-                DirectoryEntryCallback* fDel = makeFunctor<Sender, const Path&>(f);
+                DirectoryEntryCallback* fDel = makeFunctor(f);
                 forEachEntry(fDel);
                 delete fDel;
             }

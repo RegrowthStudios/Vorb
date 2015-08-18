@@ -188,7 +188,7 @@ namespace keg {
             dest->ownData(type->allocArray(seqLen), seqLen, type->getDeallocator());
             ui8* newDest = &dest->at<ui8>(0);
 
-            auto f = makeFunctor<Sender, size_t, keg::Node>([&] (Sender, size_t, keg::Node node) {
+            auto f = makeFunctor([&] (Sender, size_t, keg::Node node) {
                 evalData(newDest, decl->interiorValue.get(), node, context);
                 context.reader.free(node);
                 newDest += type->getSizeInBytes();

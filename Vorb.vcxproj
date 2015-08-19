@@ -422,6 +422,7 @@
     <ClInclude Include="include\io\KegEnvironment.h" />
     <ClInclude Include="include\io\KegFuncs.h" />
     <ClInclude Include="include\io\KegType.h" />
+    <ClInclude Include="include\io\KegTypes.h" />
     <ClInclude Include="include\io\KegValue.h" />
     <ClInclude Include="include\io\YAMLConverters.h" />
     <ClInclude Include="include\io\YAMLNode.h" />

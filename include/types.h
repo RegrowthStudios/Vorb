@@ -28,13 +28,6 @@
 #include "decorators.h"
 #include "compat.h"
 
-// Use the correct glm private namespace
-#if defined(OS_WINDOWS)
-namespace glm_d = glm::detail;
-#else
-namespace glm_d = glm;
-#endif
-
 /************************************************************************/
 /* Integer values                                                       */
 /************************************************************************/
@@ -71,7 +64,7 @@ typedef double f64; ///< 64-bit floating point value (double)
  *  s  ,  t
  * </pre>
  */
-typedef glm_d::tvec2<i8> i8v2;
+typedef glm::tvec2<i8> i8v2;
 /*! @brief 16-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -115,7 +108,7 @@ typedef glm::highp_ivec2 i64v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm_d::tvec2<ui8> ui8v2;
+typedef glm::tvec2<ui8> ui8v2;
 /*! @brief 16-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -170,7 +163,7 @@ typedef glm::mediump_vec2 f32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::highp_vec2 f64v2;
+typedef glm::highp_dvec2 f64v2;
 /*! @brief 8-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -181,7 +174,7 @@ typedef glm::highp_vec2 f64v2;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm_d::tvec3<i8> i8v3;
+typedef glm::tvec3<i8> i8v3;
 /*! @brief 16-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -225,7 +218,7 @@ typedef glm::highp_ivec3 i64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm_d::tvec3<ui8> ui8v3;
+typedef glm::tvec3<ui8> ui8v3;
 /*! @brief 16-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -280,7 +273,7 @@ typedef glm::mediump_vec3 f32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::highp_vec3 f64v3;
+typedef glm::highp_dvec3 f64v3;
 /*! @brief 8-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -291,7 +284,7 @@ typedef glm::highp_vec3 f64v3;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm_d::tvec4<i8> i8v4;
+typedef glm::tvec4<i8> i8v4;
 /*! @brief 16-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -335,7 +328,7 @@ typedef glm::highp_ivec4 i64v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm_d::tvec4<ui8> ui8v4;
+typedef glm::tvec4<ui8> ui8v4;
 /*! @brief 16-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -390,7 +383,7 @@ typedef glm::mediump_vec4 f32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::highp_vec4 f64v4;
+typedef glm::highp_dvec4 f64v4;
 /*! @brief 32-bit floating point (single) quaternion.
  *
  * Elements can be accessed via: @n
@@ -408,7 +401,7 @@ typedef glm::mediump_quat f32q;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef glm::highp_quat f64q;
+typedef glm::highp_dquat f64q;
 /*! @brief 32-bit floating point (single) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -446,7 +439,7 @@ typedef glm::mediump_mat2 f32m2;
  * M[1][1] = Y.y
  * </pre>
  */
-typedef glm::highp_mat2 f64m2;
+typedef glm::highp_dmat2 f64m2;
 /*! @brief 32-bit floating point (single) 3x3 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -496,7 +489,7 @@ typedef glm::mediump_mat3 f32m3;
  * M[2][2] = Z.z
  * </pre>
  */
-typedef glm::highp_mat3 f64m3;
+typedef glm::highp_dmat3 f64m3;
 /*! @brief 32-bit floating point (single) 4x4 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -562,7 +555,7 @@ typedef glm::mediump_mat4 f32m4;
  * M[3][3] = 1
  * </pre>
  */
-typedef glm::highp_mat4 f64m4;
+typedef glm::highp_dmat4 f64m4;
 
 // Colors
 #include "typesColor.inl"

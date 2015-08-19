@@ -100,13 +100,13 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setAnchor(Widget* w, int anchor) const;
-            virtual void setDestRect(Widget* w, f32v4 destRect) const;
-            virtual void setDimensions(Widget* w, f32v2 dims) const;
+            virtual void setDestRect(Widget* w, const f32v4& destRect) const;
+            virtual void setDimensions(Widget* w, const f32v2& dims) const;
             virtual void setDock(Widget* w, DockStyle dock) const;
             virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
             virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;
-            virtual void setPosition(Widget* w, f32v2 pos) const;
+            virtual void setPosition(Widget* w, const f32v2& pos) const;
             virtual void setSelectable(Widget* w, bool selectable) const;
             virtual void setStyle(Widget* w, int style) const;
             virtual void setWidth(Widget* w, f32 width) const;
@@ -114,10 +114,10 @@ namespace vorb {
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
             virtual void setParent(Widget* w, IWidgetContainer* parent) const;
-            virtual void setMinSize(Widget* w, f32v2 minSize) const;
-            virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
-            virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
-            virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
+            virtual void setMinSize(Widget* w, const f32v2& minSize) const;
+            virtual void setMaxSize(Widget* w, const f32v2& maxSize) const;
+            virtual void setPositionPercentage(Widget* w, const f32v2& positionPercentage) const;
+            virtual void setDimensionsPercentage(Widget* w, const f32v2& dimensionsPercentage) const;
             virtual void setXPercentage(Widget* w, f32 xPercentage) const;
             virtual void setYPercentage(Widget* w, f32 yPercentage) const;
             virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;

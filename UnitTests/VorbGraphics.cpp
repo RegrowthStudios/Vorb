@@ -330,7 +330,7 @@ void main() {
         eye.z = (f32)(sin(yaw) * cos(pitch));
         eye.y = (f32)(sin(pitch));
         eye *= 3.0f;
-        f32m4 wvp = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
+        f32m4 wvp = f32m4(glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f)) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
 
         program.use();
         glActiveTexture(GL_TEXTURE0);
@@ -659,7 +659,7 @@ void main() {
             }
         }
 
-        mVP = glm::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
+        mVP = f32m4(glm::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f)) *
             glm::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
         frame = 0;
 

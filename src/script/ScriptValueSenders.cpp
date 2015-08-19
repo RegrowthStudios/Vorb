@@ -101,7 +101,7 @@ nString vscript::ScriptValueSender<nString, void>::defaultValue() {
 i32 vscript::ScriptValueSender<nString, void>::getNumValues() {
     return 1;
 }
-i32 vscript::ScriptValueSender<nString, void>::push(EnvironmentHandle h, nString v) {
+i32 vscript::ScriptValueSender<nString, void>::push(EnvironmentHandle h, const nString& v) {
     lua_pushstring(h, v.c_str());
     return 1;
 }
@@ -152,7 +152,7 @@ color4 vscript::ScriptValueSender<color4, void>::defaultValue() {
 i32 vscript::ScriptValueSender<color4, void>::getNumValues() {
     return 4;
 }
-i32 vscript::ScriptValueSender<color4, void>::push(EnvironmentHandle h, color4 v) {
+i32 vscript::ScriptValueSender<color4, void>::push(EnvironmentHandle h, const color4& v) {
     ScriptValueSender<ui8>::push(h, v.r);
     ScriptValueSender<ui8>::push(h, v.g);
     ScriptValueSender<ui8>::push(h, v.b);
@@ -175,7 +175,7 @@ color4 vscript::ScriptValueSender<color4, void>::pop(EnvironmentHandle h) {
     i32 vscript::ScriptValueSender<TYPE##v2, void>::getNumValues() { \
         return 2; \
     } \
-    i32 vscript::ScriptValueSender<TYPE##v2, void>::push(EnvironmentHandle h, TYPE##v2 v) { \
+    i32 vscript::ScriptValueSender<TYPE##v2, void>::push(EnvironmentHandle h, const TYPE##v2& v) { \
         ScriptValueSender<TYPE>::push(h, v[0]); \
         ScriptValueSender<TYPE>::push(h, v[1]); \
         return 2; \
@@ -193,7 +193,7 @@ color4 vscript::ScriptValueSender<color4, void>::pop(EnvironmentHandle h) {
     i32 vscript::ScriptValueSender<TYPE##v3, void>::getNumValues() { \
         return 3; \
     } \
-    i32 vscript::ScriptValueSender<TYPE##v3, void>::push(EnvironmentHandle h, TYPE##v3 v) { \
+    i32 vscript::ScriptValueSender<TYPE##v3, void>::push(EnvironmentHandle h, const TYPE##v3& v) { \
         ScriptValueSender<TYPE>::push(h, v[0]); \
         ScriptValueSender<TYPE>::push(h, v[1]); \
         ScriptValueSender<TYPE>::push(h, v[2]); \
@@ -213,7 +213,7 @@ color4 vscript::ScriptValueSender<color4, void>::pop(EnvironmentHandle h) {
     i32 vscript::ScriptValueSender<TYPE##v4, void>::getNumValues() { \
         return 4; \
     } \
-    i32 vscript::ScriptValueSender<TYPE##v4, void>::push(EnvironmentHandle h, TYPE##v4 v) { \
+    i32 vscript::ScriptValueSender<TYPE##v4, void>::push(EnvironmentHandle h, const TYPE##v4& v) { \
         ScriptValueSender<TYPE>::push(h, v[0]); \
         ScriptValueSender<TYPE>::push(h, v[1]); \
         ScriptValueSender<TYPE>::push(h, v[2]); \

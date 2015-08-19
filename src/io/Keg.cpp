@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "io/Keg.h"
 
-#include "io/YAML.h"
 #include "io/KegFuncs.h"
+#include "io/KegTypes.h"
+#include "io/YAML.h"
 
 namespace keg {
 #define KEG_BASIC_NUM_MAP(TYPE) \
@@ -29,9 +30,9 @@ namespace keg {
 
 #define KEG_SIMPLE_EVAL(TYPE) \
     evaluate<TYPE>, \
-    evaluate<TYPE##v2>, \
-    evaluate<TYPE##v3>, \
-    evaluate<TYPE##v4>
+    evaluate<keg::keg##TYPE##v2>, \
+    evaluate<keg::keg##TYPE##v3>, \
+    evaluate<keg::keg##TYPE##v4>
     Evaluator simpleEvaluators[(size_t)keg::BasicType::COUNT] = {
         KEG_SIMPLE_EVAL(i8),
         KEG_SIMPLE_EVAL(i16),
@@ -54,9 +55,9 @@ namespace keg {
 #undef KEG_SIMPLE_EVAL
 #define KEG_SIMPLE_OUT(TYPE) \
     output<TYPE>, \
-    output<TYPE##v2>, \
-    output<TYPE##v3>, \
-    output<TYPE##v4>
+    output<keg::keg##TYPE##v2>, \
+    output<keg::keg##TYPE##v3>, \
+    output<keg::keg##TYPE##v4>
     Outputter simpleOutputters[(size_t)keg::BasicType::COUNT] = {
         KEG_SIMPLE_OUT(i8),
         KEG_SIMPLE_OUT(i16),

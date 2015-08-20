@@ -684,6 +684,9 @@
     <ClInclude Include="include\io\KegTypes.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
+    <ClInclude Include="include\VorbMemory.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -769,6 +772,9 @@
     </Filter>
     <Filter Include="UI\Widgets">
       <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{fffbb386-7c57-462d-bb4d-672f2f7f9b54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

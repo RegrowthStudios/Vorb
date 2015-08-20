@@ -687,6 +687,12 @@
     <ClInclude Include="include\VorbMemory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="include\script\MathScriptInterface.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -826,6 +832,9 @@
     </None>
     <None Include="include\IntersectionUtils.hpp">
       <Filter>Utils</Filter>
+    </None>
+    <None Include="include\Vector.inl">
+      <Filter>Core</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

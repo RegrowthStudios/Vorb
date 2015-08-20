@@ -32,8 +32,9 @@
 #include "../IDGenerator.h"
 #include "../io/Path.h"
 #include "Function.h"
-#include "ScriptValueSenders.h"
+#include "MathScriptInterface.h"
 #include "Script.h"
+#include "ScriptValueSenders.h"
 
 struct lua_State;
 
@@ -108,6 +109,8 @@ namespace vorb {
             std::unordered_map<nString, Function> m_functions;
             EnvironmentHandle m_state;
             vcore::IDGenerator<i32> m_idGen;
+
+            MathScriptInterface m_mathInterface;
 
             size_t namespaceCount = 0;
             std::vector<std::unique_ptr<DelegateBase>> m_cFuncs;

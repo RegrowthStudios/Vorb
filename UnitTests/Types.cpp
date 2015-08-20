@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "macros.h"
 
+#include "include/Vector.h"
+
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH System_
 
@@ -18,5 +20,21 @@ TEST(TypeSizes) {
     SA(i64v3, 24);
     SA(f32v3, 12);
     SA(f64v3, 24);
+    return true;
+}
+
+TEST(TypeOperations) {
+#define SA(T, S) assert(sizeof(T) == S)
+    vorb::Vector2<f32> va(2.0f);
+    vorb::Vector2<f32> vb(glm::tvec2<f32>(1.0f));
+    va += vb;
+    if (va.y != 3.0f) return false;
+    va += -1.0f;
+    if (va.x != 2.0f) return false;
+    vorb::Vector2<f32> vc = vb / va;
+    if (vc.x != 0.5f) return false;
+    va = vc;
+    if (va != vc) return false;
+    if (!(va == vc)) return false;
     return true;
 }

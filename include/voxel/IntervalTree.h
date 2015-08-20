@@ -35,8 +35,8 @@ template <typename T>
 class IntervalTree {
 public:
 
-#define COLOR_BIT 0x8000
-#define START_MASK 0x7FFF
+#define COLOR_BIT 0x8000u
+#define START_MASK 0x7FFFu
 
     // Lightweight node for initialization
     class LNode {

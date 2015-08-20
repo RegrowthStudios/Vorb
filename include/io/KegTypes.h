@@ -26,11 +26,11 @@ namespace keg {
 
     template <typename T, typename GLMCONV>
     struct KegVec2 {
-        KegVec2() : x(0), y(0) {};
+        KegVec2() : x(0), y(0) {}
         KegVec2(const ui8* data) :
             x(static_cast<T>(data[0])),
-            y(static_cast<T>(data[1])) {
-        }
+            y(static_cast<T>(data[1])) {}
+        KegVec2(const GLMCONV& v) : x(v.x), y(v.y) {}
 
         union {
             struct {
@@ -65,12 +65,12 @@ namespace keg {
 
     template <typename T, typename GLMCONV>
     struct KegVec3 {
-        KegVec3() : x(0), y(0), z(0) {};
+        KegVec3() : x(0), y(0), z(0) {}
         KegVec3(const ui8* data) :
             x(static_cast<T>(data[0])),
             y(static_cast<T>(data[1])),
-            z(static_cast<T>(data[2])) {
-        }
+            z(static_cast<T>(data[2])) {}
+        KegVec3(const GLMCONV& v) : x(v.x), y(v.y), z(v.z) {}
 
         union {
             struct {
@@ -109,13 +109,13 @@ namespace keg {
 
     template <typename T, typename GLMCONV>
     struct KegVec4 {
-        KegVec4() : x(0), y(0), z(0), w(0) {};
+        KegVec4() : x(0), y(0), z(0), w(0) {}
         KegVec4(const ui8* data) :
             x(static_cast<T>(data[0])),
             y(static_cast<T>(data[1])),
             z(static_cast<T>(data[2])),
-            w(static_cast<T>(data[3])) {
-        }
+            w(static_cast<T>(data[3])) {}
+        KegVec4(const GLMCONV& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 
         union {
             struct {

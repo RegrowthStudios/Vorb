@@ -166,7 +166,7 @@ inline T hermite(const T& v) { return static_cast<T>(3.0) * (v * v) - static_cas
 /// @param v2: End direction
 /// @pre: v1 and v2 are normalized
 /// @pre: v1 != -v2
-inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
+inline f64q quatBetweenVectors(const af64v3& v1, const af64v3& v2) {
     f64q q;
     f64v3 a = glm::cross(v1, v2);
     q.x = a.x;
@@ -180,9 +180,9 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
 /// @param v2: End direction
 /// @pre: v1 and v2 are normalized
 /// @pre: v1 != -v2
-inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
+inline f32q quatBetweenVectors(const af32v3& v1, const af32v3& v2) {
     f32q q;
-    f32v3 a = glm::cross(v1, v2);
+    af32v3 a = glm::cross(v1, v2);
     q.x = a.x;
     q.y = a.y;
     q.z = a.z;

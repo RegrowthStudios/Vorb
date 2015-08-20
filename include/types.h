@@ -27,6 +27,7 @@
 
 #include "decorators.h"
 #include "compat.h"
+#include "Vector.h"
 
 /************************************************************************/
 /* Integer values                                                       */
@@ -64,7 +65,8 @@ typedef double f64; ///< 64-bit floating point value (double)
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<i8> i8v2;
+typedef vorb::Vector2<i8> i8v2;
+typedef glm::tvec2<i8>   ai8v2; ///< Aligned version.
 /*! @brief 16-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -75,7 +77,8 @@ typedef glm::tvec2<i8> i8v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<i16> i16v2;
+typedef vorb::Vector2<i16> i16v2;
+typedef glm::tvec2<i16>   ai16v2; ///< Aligned version.
 /*! @brief 32-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -86,7 +89,8 @@ typedef glm::tvec2<i16> i16v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<i32> i32v2;
+typedef vorb::Vector2<i32> i32v2;
+typedef glm::tvec2<i32>   ai32v2; ///< Aligned version.
 /*! @brief 64-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -97,7 +101,8 @@ typedef glm::tvec2<i32> i32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<i64> i64v2;
+typedef vorb::Vector2<i64> i64v2;
+typedef glm::tvec2<i64>   ai64v2; ///< Aligned version.
 /*! @brief 8-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -108,7 +113,8 @@ typedef glm::tvec2<i64> i64v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<ui8> ui8v2;
+typedef vorb::Vector2<ui8> ui8v2;
+typedef glm::tvec2<ui8>   aui8v2; ///< Aligned version.
 /*! @brief 16-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -119,7 +125,8 @@ typedef glm::tvec2<ui8> ui8v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<ui16> ui16v2;
+typedef vorb::Vector2<ui16> ui16v2;
+typedef glm::tvec2<ui16>   aui16v2; ///< Aligned version.
 /*! @brief 32-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -130,7 +137,8 @@ typedef glm::tvec2<ui16> ui16v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<ui32> ui32v2;
+typedef vorb::Vector2<ui32> ui32v2;
+typedef glm::tvec2<ui32>   aui32v2; ///< Aligned version.
 /*! @brief 64-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -141,7 +149,8 @@ typedef glm::tvec2<ui32> ui32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<ui64> ui64v2;
+typedef vorb::Vector2<ui64> ui64v2;
+typedef glm::tvec2<ui64>   aui64v2; ///< Aligned version.
 /*! @brief 32-bit floating point (single) 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -152,7 +161,8 @@ typedef glm::tvec2<ui64> ui64v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<f32> f32v2;
+typedef vorb::Vector2<f32> f32v2;
+typedef glm::tvec2<f32>   af32v2; ///< Aligned version.
 /*! @brief 64-bit floating point (double) 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -163,7 +173,8 @@ typedef glm::tvec2<f32> f32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::tvec2<f64> f64v2;
+typedef vorb::Vector2<f64> f64v2;
+typedef glm::tvec2<f64>   af64v2; ///< Aligned version.
 /*! @brief 8-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -174,7 +185,8 @@ typedef glm::tvec2<f64> f64v2;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<i8> i8v3;
+typedef vorb::Vector3<i8> i8v3;
+typedef glm::tvec3<i8>   ai8v3; ///< Aligned version.
 /*! @brief 16-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -185,7 +197,8 @@ typedef glm::tvec3<i8> i8v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<i16> i16v3;
+typedef vorb::Vector3<i16> i16v3;
+typedef glm::tvec3<i16>   ai16v3; ///< Aligned version.
 /*! @brief 32-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -196,7 +209,8 @@ typedef glm::tvec3<i16> i16v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<i32> i32v3;
+typedef vorb::Vector3<i32> i32v3;
+typedef glm::tvec3<i32>   ai32v3; ///< Aligned version.
 /*! @brief 64-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -207,7 +221,8 @@ typedef glm::tvec3<i32> i32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<i64> i64v3;
+typedef vorb::Vector3<i64> i64v3;
+typedef glm::tvec3<i64>   ai64v3; ///< Aligned version.
 /*! @brief 8-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -218,7 +233,8 @@ typedef glm::tvec3<i64> i64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<ui8> ui8v3;
+typedef vorb::Vector3<ui8> ui8v3;
+typedef glm::tvec3<ui8>   aui8v3; ///< Aligned version.
 /*! @brief 16-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -229,7 +245,8 @@ typedef glm::tvec3<ui8> ui8v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<ui16> ui16v3;
+typedef vorb::Vector3<ui16> ui16v3;
+typedef glm::tvec3<ui16>   aui16v3; ///< Aligned version.
 /*! @brief 32-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -240,7 +257,8 @@ typedef glm::tvec3<ui16> ui16v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<ui32> ui32v3;
+typedef vorb::Vector3<ui32> ui32v3;
+typedef glm::tvec3<ui32>   aui32v3; ///< Aligned version.
 /*! @brief 64-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -251,7 +269,8 @@ typedef glm::tvec3<ui32> ui32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<ui64> ui64v3;
+typedef vorb::Vector3<ui64> ui64v3;
+typedef glm::tvec3<ui64>   aui64v3; ///< Aligned version.
 /*! @brief 32-bit floating point (single) 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -262,7 +281,8 @@ typedef glm::tvec3<ui64> ui64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<f32> f32v3;
+typedef vorb::Vector3<f32> f32v3;
+typedef glm::tvec3<f32>   af32v3; ///< Aligned version.
 /*! @brief 64-bit floating point (double) 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -273,7 +293,8 @@ typedef glm::tvec3<f32> f32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::tvec3<f64> f64v3;
+typedef vorb::Vector3<f64> f64v3;
+typedef glm::tvec3<f64>   af64v3; ///< Aligned version.
 /*! @brief 8-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -284,7 +305,8 @@ typedef glm::tvec3<f64> f64v3;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<i8> i8v4;
+typedef vorb::Vector4<i8> i8v4;
+typedef glm::tvec4<i8>   ai8v4; ///< Aligned version.
 /*! @brief 16-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -295,7 +317,8 @@ typedef glm::tvec4<i8> i8v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<i16> i16v4;
+typedef vorb::Vector4<i16> i16v4;
+typedef glm::tvec4<i16>   ai16v4; ///< Aligned version.
 /*! @brief 32-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -306,7 +329,8 @@ typedef glm::tvec4<i16> i16v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<i32> i32v4;
+typedef vorb::Vector4<i32> i32v4;
+typedef glm::tvec4<i32>   ai32v4; ///< Aligned version.
 /*! @brief 64-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -317,7 +341,8 @@ typedef glm::tvec4<i32> i32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<i64> i64v4;
+typedef vorb::Vector4<i64> i64v4;
+typedef glm::tvec4<i64>   ai64v4; ///< Aligned version.
 /*! @brief 8-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -328,7 +353,8 @@ typedef glm::tvec4<i64> i64v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<ui8> ui8v4;
+typedef vorb::Vector4<ui8> ui8v4;
+typedef glm::tvec4<ui8>   aui8v4; ///< Aligned version.
 /*! @brief 16-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -339,7 +365,8 @@ typedef glm::tvec4<ui8> ui8v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<ui16> ui16v4;
+typedef vorb::Vector4<ui16> ui16v4;
+typedef glm::tvec4<ui16>   aui16v4; ///< Aligned version.
 /*! @brief 32-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -350,7 +377,8 @@ typedef glm::tvec4<ui16> ui16v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<ui32> ui32v4;
+typedef vorb::Vector4<ui32> ui32v4;
+typedef glm::tvec4<ui32>   aui32v4; ///< Aligned version.
 /*! @brief 64-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -361,7 +389,8 @@ typedef glm::tvec4<ui32> ui32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<ui64> ui64v4;
+typedef vorb::Vector4<ui64> ui64v4;
+typedef glm::tvec4<ui64>   aui64v4; ///< Aligned version.
 /*! @brief 32-bit floating point (single) 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -372,7 +401,8 @@ typedef glm::tvec4<ui64> ui64v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<f32> f32v4;
+typedef vorb::Vector4<f32> f32v4;
+typedef glm::tvec4<f32>   af32v4; ///< Aligned version.
 /*! @brief 64-bit floating point (double) 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -383,7 +413,8 @@ typedef glm::tvec4<f32> f32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::tvec4<f64> f64v4;
+typedef vorb::Vector4<f64> f64v4;
+typedef glm::tvec4<f64>   af64v4; ///< Aligned version.
 /*! @brief 32-bit floating point (single) quaternion.
  *
  * Elements can be accessed via: @n

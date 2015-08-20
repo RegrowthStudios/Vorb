@@ -64,7 +64,7 @@ keg::NodeType keg::getType(Node node) {
     }
 }
 bool keg::hasInterior(Node node, const cString value) {
-    return node->data[value];
+    return (bool)node->data[value];
 }
 size_t keg::getSequenceSize(Node node) {
     return node->data.size();

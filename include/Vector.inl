@@ -43,7 +43,7 @@ inline const T& Vector2<T>::operator[](int i) const {
 }
 
 template<typename T>
-inline Vector2<T>::operator glm::tvec2<T>() {
+inline Vector2<T>::operator glm::tvec2<T>() const {
     return glm::tvec2<T>(x, y);
 }
 
@@ -137,7 +137,7 @@ inline const T& Vector3<T>::operator[](int i) const {
 }
 
 template<typename T>
-inline Vector3<T>::operator glm::tvec3<T>() {
+inline Vector3<T>::operator glm::tvec3<T>() const {
     return glm::tvec3<T>(x, y, z);
 }
 
@@ -235,7 +235,7 @@ inline const T& Vector4<T>::operator[](int i) const {
 }
 
 template<typename T>
-inline Vector4<T>::operator glm::tvec4<T>() {
+inline Vector4<T>::operator glm::tvec4<T>() const {
     return glm::tvec4<T>(x, y, z, w);
 }
 
@@ -319,3 +319,6 @@ inline Vector4<T> operator~(const Vector4<T>& v) {
 #undef GLOBAL_OPERATOR
 
 #pragma endregion Vector4
+
+#undef ADD_COMPOUND_ASSIGNMENT_OPERATORS
+#undef ADD_GLOBAL_OPERATORS

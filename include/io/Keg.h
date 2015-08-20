@@ -26,6 +26,7 @@
 #include "KegEnum.h"
 #include "KegEnvironment.h"
 #include "KegType.h"
+#include "KegTypes.h"
 #include "KegValue.h"
 #include "YAML.h"
 

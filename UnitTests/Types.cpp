@@ -25,16 +25,50 @@ TEST(TypeSizes) {
 
 TEST(TypeOperations) {
 #define SA(T, S) assert(sizeof(T) == S)
-    vorb::Vector2<f32> va(2.0f);
-    vorb::Vector2<f32> vb(glm::tvec2<f32>(1.0f));
-    va += vb;
-    if (va.y != 3.0f) return false;
-    va += -1.0f;
-    if (va.x != 2.0f) return false;
-    vorb::Vector2<f32> vc = vb / va;
-    if (vc.x != 0.5f) return false;
-    va = vc;
-    if (va != vc) return false;
-    if (!(va == vc)) return false;
+    { // Vec2
+        vorb::Vector2<f32> va(2.0f);
+        vorb::Vector2<f32> vb(glm::tvec2<f32>(1.0f));
+        va += vb;
+        if (va.y != 3.0f) return false;
+        va += -1.0f;
+        if (va.x != 2.0f) return false;
+        vorb::Vector2<f32> vc = vb / va;
+        if (vc.x != 0.5f) return false;
+        va = vc;
+        if (va != vc) return false;
+        if (!(va == vc)) return false;
+        va += vorb::Vector2<i32>(1);
+        if (va.x != 1.5f) return false;
+    }
+    { // Vec3
+        vorb::Vector3<f32> va(2.0f);
+        vorb::Vector3<f32> vb(glm::tvec3<f32>(1.0f));
+        va += vb;
+        if (va.y != 3.0f) return false;
+        va += -1.0f;
+        if (va.x != 2.0f) return false;
+        vorb::Vector3<f32> vc = vb / va;
+        if (vc.x != 0.5f) return false;
+        va = vc;
+        if (va != vc) return false;
+        if (!(va == vc)) return false;
+        va += vorb::Vector3<i32>(1);
+        if (va.x != 1.5f) return false;
+    }
+    { // Vec4
+        vorb::Vector4<f32> va(2.0f);
+        vorb::Vector4<f32> vb(glm::tvec4<f32>(1.0f));
+        va += vb;
+        if (va.y != 3.0f) return false;
+        va += -1.0f;
+        if (va.x != 2.0f) return false;
+        vorb::Vector4<f32> vc = vb / va;
+        if (vc.x != 0.5f) return false;
+        va = vc;
+        if (va != vc) return false;
+        if (!(va == vc)) return false;
+        va += vorb::Vector4<i32>(1);
+        if (va.x != 1.5f) return false;
+    }
     return true;
 }

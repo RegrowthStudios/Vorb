@@ -42,6 +42,8 @@
 #include <vector>
 #endif // !VORB_USING_PCH
 
+#include "TypeManip.hpp"
+
 /*! @brief Calling conventions 
  * 
  * 1. Static function
@@ -73,26 +75,6 @@
 
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
-
-template<typename T>
-union PointerCast {
-    static_assert(sizeof(T) == sizeof(void*), "Value is not same size as a pointer");
-
-    PointerCast(T v) {
-        value = v;
-    }
-    PointerCast(void* v) {
-        ptr = v;
-    }
-
-    T value;
-    void* ptr;
-};
-
-class BlankTemplate {
-    template<typename Ret, typename... Params>
-    Ret function(Params... args);
-};
 
 class DelegateBase {
 public:
@@ -202,16 +184,16 @@ public:
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            PointerCast<Ret (BlankTemplate::*)(Args...)> blankedFunction = { m_func };
-            return (((BlankTemplate*)m_caller)->*blankedFunction.value)(args...);
+            PointerCast<Ret (TypelessMember::*)(Args...)> blankedFunction = { m_func };
+            return (((TypelessMember*)m_caller)->*blankedFunction.value)(args...);
         }
     }
     Ret operator()(Args... args) const {
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            PointerCast<Ret(BlankTemplate::*)(Args...)> blankedFunction = { m_func };
-            return (((BlankTemplate*)m_caller)->*blankedFunction.value)(args...);
+            PointerCast<Ret(TypelessMember::*)(Args...)> blankedFunction = { m_func };
+            return (((TypelessMember*)m_caller)->*blankedFunction.value)(args...);
         }
     }
 

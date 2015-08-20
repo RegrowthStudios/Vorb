@@ -681,6 +681,9 @@
     <ClInclude Include="doxygen\examples\VorbKeg.h">
       <Filter>Examples</Filter>
     </ClInclude>
+    <ClInclude Include="include\TypeManip.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

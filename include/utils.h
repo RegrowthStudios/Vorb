@@ -49,6 +49,13 @@
 #define ABS(a) (((a) < 0) ?(-(a)):(a))
 #define INTERPOLATE(a, min, max) (((max)-(min))*(a)+(min))
 
+#ifdef CONSTEXPR
+constexpr minEvenAlignment(size_t minSize, size_t bits) {
+    size_t bitmask = (1 << bits) - 1;
+    return (minSize & bitmask) ? ((minSize | bitmask) + 1) : minSize;
+}
+#endif
+
 /************************************************************************/
 /* Type Ranges                                                          */
 /************************************************************************/

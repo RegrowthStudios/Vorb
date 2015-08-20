@@ -94,13 +94,6 @@ class BlankTemplate {
     Ret function(Params... args);
 };
 
-template<size_t A1, size_t BITS>
-struct MinEvenAlignment {
-public:
-    static const size_t bitmask = (1 << BITS) - 1;
-    static const size_t value = (A1 & bitmask) ? ((A1 | bitmask) + 1) : A1;
-};
-
 class DelegateBase {
 public:
     typedef void* Caller;

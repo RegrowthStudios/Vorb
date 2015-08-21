@@ -428,6 +428,8 @@
     <ClInclude Include="include\io\YAMLNode.h" />
     <ClInclude Include="include\io\YAMLReader.h" />
     <ClInclude Include="include\io\YAMLWriter.h" />
+    <ClInclude Include="include\math\Matrix.h" />
+    <ClInclude Include="include\math\Quaternion.h" />
     <ClInclude Include="include\VorbMath.h" />
     <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
@@ -503,6 +505,7 @@
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
+    <None Include="include\math\Matrix.inl" />
     <None Include="include\Vector.inl" />
     <None Include="include\voxel\IntervalTree.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />

@@ -34,6 +34,8 @@ namespace vorb {
         Vector2(T x, T y) : x(x), y(y) {}
         template <typename U>
         Vector2(const glm::tvec2<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
+        template <typename U>
+        Vector2(const Vector2<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -126,6 +128,9 @@ namespace vorb {
         Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
         template <typename U>
         Vector3(const glm::tvec3<U>& v) :
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
+        template <typename U>
+        Vector3(const Vector3<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
 
         /************************************************************************/
@@ -221,6 +226,10 @@ namespace vorb {
         Vector4(const glm::tvec4<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
             z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {}
+        template <typename U>
+        Vector4(const Vector4<U>& v) :
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
+            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -230,7 +239,7 @@ namespace vorb {
 
         operator glm::tvec4<T>() const;
         glm::tvec4<T> getAligned() const {
-            return glm::tvec3<T>(x, y, z, w);
+            return glm::tvec4<T>(x, y, z, w);
         }
 
         template<typename U>

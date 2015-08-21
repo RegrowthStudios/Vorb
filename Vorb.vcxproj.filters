@@ -690,14 +690,20 @@
     <ClInclude Include="include\script\MathScriptInterface.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vector.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="include\VorbMath.h">
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="include\VectorMath.inl">
-      <Filter>Core</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\VorbMath.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="include\Vector.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Quaternion.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Matrix.h">
+      <Filter>Core\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -788,6 +794,9 @@
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{fffbb386-7c57-462d-bb4d-672f2f7f9b54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{e575dcfd-fb79-4e39-b4be-6d177ad7ed42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">
@@ -840,7 +849,10 @@
       <Filter>Utils</Filter>
     </None>
     <None Include="include\Vector.inl">
-      <Filter>Core</Filter>
+      <Filter>Core\Math</Filter>
+    </None>
+    <None Include="include\math\Matrix.inl">
+      <Filter>Core\Math</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

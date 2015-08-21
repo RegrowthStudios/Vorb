@@ -330,7 +330,7 @@ void main() {
         eye.z = (f32)(sin(yaw) * cos(pitch));
         eye.y = (f32)(sin(pitch));
         eye *= 3.0f;
-        f32m4 wvp = f32m4(glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f)) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
+        f32m4 wvp = f32m4(glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f)) * glm::lookAt(af32v3(0.0f, 0.0f, 2.1f), af32v3(0.0f), af32v3(0.0f, 1.0f, 0.0f));
 
         program.use();
         glActiveTexture(GL_TEXTURE0);
@@ -479,7 +479,7 @@ public:
         printf("Rest Bone %d\n", bone.index);
         
         // Add inverse of rest pose
-        f32m4 mRest = glm::translate(bone.rest.translation) * fromQuat(bone.rest.rotation);
+        f32m4 mRest = glm::translate(bone.rest.translation.getAligned()) * fromQuat(bone.rest.rotation);
         mRest = parent * mRest;
 
         // Loop children
@@ -498,7 +498,7 @@ public:
 
         if (nfi == pfi) {
             // Compute world transform
-            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation) * fromQuat(bone.keyframes[pfi].transform.rotation);
+            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation.getAligned()) * fromQuat(bone.keyframes[pfi].transform.rotation);
             mWorld[bone.index] = parent * local;
         } else {
             // Lerp
@@ -508,7 +508,7 @@ public:
             f32v3 translation = lerp(bone.keyframes[pfi].transform.translation, bone.keyframes[nfi].transform.translation, r);
 
             // Compute world transforms
-            f32m4 local = glm::translate(translation) * fromQuat(rotation);
+            f32m4 local = glm::translate(translation.getAligned()) * fromQuat(rotation);
             mWorld[bone.index] = parent * local;
         }
 
@@ -660,7 +660,7 @@ void main() {
         }
 
         mVP = f32m4(glm::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f)) *
-            glm::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
+            glm::lookAt(af32v3(-1, 5, 1), af32v3(0, 0, 0.5f), af32v3(0, 0, 1));
         frame = 0;
 
         glClearColor(1, 1, 1, 1);

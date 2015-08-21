@@ -693,6 +693,12 @@
     <ClInclude Include="include\Vector.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\VectorMath.inl">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VorbMath.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

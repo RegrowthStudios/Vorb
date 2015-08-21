@@ -428,6 +428,7 @@
     <ClInclude Include="include\io\YAMLNode.h" />
     <ClInclude Include="include\io\YAMLReader.h" />
     <ClInclude Include="include\io\YAMLWriter.h" />
+    <ClInclude Include="include\VorbMath.h" />
     <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
     <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
@@ -479,6 +480,7 @@
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\Vector.h" />
+    <ClInclude Include="include\VectorMath.inl" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="include\VorbMemory.h" />
     <ClInclude Include="include\voxel\IntervalTree.h" />

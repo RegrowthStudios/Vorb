@@ -116,6 +116,11 @@ inline Vector2<T> operator~(const Vector2<T>& v) {
     return Vector2<T>(~v.x, ~v.y); 
 }
 
+template<typename T>
+inline Vector2<T> operator-(const Vector2<T>& v) {
+    return Vector2<T>(-v.x, -v.y);
+}
+
 #undef GLOBAL_OPERATOR
 
 #pragma endregion Vector2
@@ -212,6 +217,11 @@ ADD_GLOBAL_OPERATORS;
 template<typename T>
 inline Vector3<T> operator~(const Vector3<T>& v) {
     return Vector3<T>(~v.x, ~v.y, ~v.z);
+}
+
+template<typename T>
+inline Vector3<T> operator-(const Vector3<T>& v) {
+    return Vector3<T>(-v.x, -v.y, -v.z);
 }
 
 #undef GLOBAL_OPERATOR
@@ -314,6 +324,11 @@ ADD_GLOBAL_OPERATORS;
 template<typename T>
 inline Vector4<T> operator~(const Vector4<T>& v) {
     return Vector4<T>(~v.x, ~v.y, ~v.z, ~v.w);
+}
+
+template<typename T>
+inline Vector4<T> operator-(const Vector4<T>& v) {
+    return Vector4<T>(-v.x, -v.y, -v.z, -v.w);
 }
 
 #undef GLOBAL_OPERATOR

@@ -100,7 +100,7 @@ inline Matrix2<T>& Matrix2<T>::operator/=(U a) {
 template<typename T>
 template<typename U>
 inline Matrix2<T>& Matrix2<T>::operator/=(const Matrix2<U>& m) {
-    return (*this = *this * vmath::computeInverse(m));
+    return (*this = *this * vmath::inverse(m));
 }
 
 #undef COMPOUND_ASSIGNMENT
@@ -159,15 +159,15 @@ inline Matrix2<T> operator/(T a, const Matrix2<T>& m) {
 } 
 template<typename T>
 inline Matrix2<T> operator/(const Matrix2<T>& m1, const Matrix2<T>& m2) {
-    return m1 * vmath::computeInverse(m2);
+    return m1 * vmath::inverse(m2);
 }
 template<typename T>
 inline typename Matrix2<T>::ColType operator/(const Matrix2<T>& m, typename const Matrix2<T>::RowType& v) {
-    return vmath::computeInverse(m) * v;
+    return vmath::inverse(m) * v;
 }
 template<typename T>
 inline typename Matrix2<T>::RowType operator/(typename const Matrix2<T>::ColType& v, const Matrix2<T>& m) {
-    return v * vmath::computeInverse(m);
+    return v * vmath::inverse(m);
 }
 
 #undef GLOBAL_OPERATOR
@@ -270,7 +270,7 @@ inline Matrix3<T>& Matrix3<T>::operator/=(U a) {
 template<typename T>
 template<typename U>
 inline Matrix3<T>& Matrix3<T>::operator/=(const Matrix3<U>& m) {
-    return (*this = *this * vmath::computeInverse(m));
+    return (*this = *this * vmath::inverse(m));
 }
 
 #undef COMPOUND_ASSIGNMENT
@@ -336,15 +336,15 @@ inline Matrix3<T> operator/(T a, const Matrix3<T>& m) {
 }
 template<typename T>
 inline Matrix3<T> operator/(const Matrix3<T>& m1, const Matrix3<T>& m2) {
-    return m1 * vmath::computeInverse(m2);
+    return m1 * vmath::inverse(m2);
 }
 template<typename T>
 inline typename Matrix3<T>::ColType operator/(const Matrix3<T>& m, typename const Matrix3<T>::RowType& v) {
-    return vmath::computeInverse(m) * v;
+    return vmath::inverse(m) * v;
 }
 template<typename T>
 inline typename Matrix3<T>::RowType operator/(typename const Matrix3<T>::ColType& v, const Matrix3<T>& m) {
-    return v * vmath::computeInverse(m);
+    return v * vmath::inverse(m);
 }
 
 #undef GLOBAL_OPERATOR
@@ -454,7 +454,7 @@ inline Matrix4<T>& Matrix4<T>::operator/=(U a) {
 template<typename T>
 template<typename U>
 inline Matrix4<T>& Matrix4<T>::operator/=(const Matrix4<U>& m) {
-    return (*this = *this * vmath::computeInverse(m));
+    return (*this = *this * vmath::inverse(m));
 }
 
 #undef COMPOUND_ASSIGNMENT
@@ -526,15 +526,15 @@ inline Matrix4<T> operator/(T a, const Matrix4<T>& m) {
 }
 template<typename T>
 inline Matrix4<T> operator/(const Matrix4<T>& m1, const Matrix4<T>& m2) {
-    return m1 * vmath::computeInverse(m2);
+    return m1 * vmath::inverse(m2);
 }
 template<typename T>
 inline typename Matrix4<T>::ColType operator/(const Matrix4<T>& m, typename const Matrix4<T>::RowType& v) {
-    return vmath::computeInverse(m) * v;
+    return vmath::inverse(m) * v;
 }
 template<typename T>
 inline typename Matrix4<T>::RowType operator/(typename const Matrix4<T>::ColType& v, const Matrix4<T>& m) {
-    return v * vmath::computeInverse(m);
+    return v * vmath::inverse(m);
 }
 
 #undef GLOBAL_OPERATOR

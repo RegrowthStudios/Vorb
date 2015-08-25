@@ -117,5 +117,7 @@ TEST(Utilities) {
         // if (glm::vec4(m1 * mv1) != m2 * mv2) return false;
         if (glm::vec4(mv1 * m1) != mv2 * m2) return false;
     }
+
+    glm::ortho()
     return true;
 }

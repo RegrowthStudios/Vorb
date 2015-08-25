@@ -22,10 +22,11 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+// TODO(Ben): Functions are right handed only.
 namespace vorb {
     namespace math {
         template<typename T>
-        inline Matrix2<T> computeInverse(const Matrix2<T>& m) {
+        inline Matrix2<T> inverse(const Matrix2<T>& m) {
             // Inverse of determinant
             const T invDet = static_cast<T>(1) / (
                 m[0][0] * m[1][1] - m[1][0] * m[0][1]);
@@ -36,7 +37,7 @@ namespace vorb {
                               m[0][0] * invDet);
         }
         template<typename T>
-        inline Matrix3<T> computeInverse(const Matrix3<T>& m) {
+        inline Matrix3<T> inverse(const Matrix3<T>& m) {
             // Inverse of determinant
             const T invDet = static_cast<T>(1) / (
                 m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
@@ -54,7 +55,7 @@ namespace vorb {
                                  (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invDet);
         }
         template<typename T>
-        inline Matrix4<T> computeInverse(const Matrix4<T>& m) {
+        inline Matrix4<T> inverse(const Matrix4<T>& m) {
             // Coefficients
             T c00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
             T c02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
@@ -99,16 +100,61 @@ namespace vorb {
 
             const Vector4<T> signA( 1, -1,  1, -1);
             const Vector4<T> signB(-1, 1, -1, 1);
-            Matrix4<T> inverse(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
+            Matrix4<T> invm(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
 
-            Vector4<T> r0(inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0]);
+            Vector4<T> r0(invm[0][0], invm[1][0], invm[2][0], invm[3][0]);
 
             Vector4<T> dot0(m[0] * r0);
             T dot1 = (dot0.x + dot0.y) + (dot0.z + dot0.w);
 
             T invDet = static_cast<T>(1) / dot1;
 
-            return inverse * invDet;
+            return invm * invDet;
+        }
+
+        template <typename T>
+        Matrix4<T> lookAt(Vector3<T> const & eye,
+                          Vector3<T> const & center) {
+            const Vector3<T> f(normalize(center - eye));
+            const Vector3<T> s(normalize(cross(f, up)));
+            const Vector3<T> u(cross(s, f));
+
+            Matrix4<T> rv(1);
+            rv[0][0] = s.x;
+            rv[1][0] = s.y;
+            rv[2][0] = s.z;
+            rv[0][1] = u.x;
+            rv[1][1] = u.y;
+            rv[2][1] = u.z;
+            rv[0][2] = -f.x;
+            rv[1][2] = -f.y;
+            rv[2][2] = -f.z;
+            rv[3][0] = -dot(s, eye);
+            rv[3][1] = -dot(u, eye);
+            rv[3][2] = dot(f, eye);
+            return rv;
+        }
+        template <typename T>
+        Matrix4<T> perspective(T yFOV, T aspect, T zNear, T zFar) {
+            assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+            T const tanHalfYFOV = tan(yFOV / static_cast<T>(2));
+            Matrix4<T> rv(static_cast<T>(0));
+            rv[0][0] = static_cast<T>(1) / (aspect * tanHalfYFOV);
+            rv[1][1] = static_cast<T>(1) / (tanHalfYFOV);
+            rv[2][2] = -(zFar + zNear) / (zFar - zNear);
+            rv[2][3] = -static_cast<T>(1);
+            rv[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+            return rv;
+        }
+        template <typename T>
+        Matrix4<T> ortho(T left, T right, T bottom, T top) {
+            Matrix4<T> rv(static_cast<T>(1);
+            rv[0][0] = static_cast<T>(2) / (right - left);
+            rv[1][1] = static_cast<T>(2) / (top - bottom);
+            rv[2][2] = -static_cast<T>(1);
+            rv[3][0] = -(right + left) / (right - left);
+            rv[3][1] = -(top + bottom) / (top - bottom);
+            return rv;
         }
     }
 }

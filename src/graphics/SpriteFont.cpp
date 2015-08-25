@@ -165,7 +165,7 @@ void vg::SpriteFont::init(const cString font, ui32 size, char cs, char ce) {
     m_glyphs = new CharGlyph[m_regLength + 1];
     for (i = 0; i < m_regLength; i++) {
         m_glyphs[i].character = (char)(cs + i);
-        m_glyphs[i].size = f32v2(glyphRects[i].z, glyphRects[i].w);
+        m_glyphs[i].size = f32v2((f32)glyphRects[i].z, (f32)glyphRects[i].w);
         m_glyphs[i].uvRect = f32v4(
             (f32)glyphRects[i].x / (f32)bestWidth,
             (f32)glyphRects[i].y / (f32)bestHeight,
@@ -280,7 +280,7 @@ std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui
 }
 
 f32v2 vg::SpriteFont::measure(const cString s) const {
-    f32v2 size(0, m_fontHeight);
+    f32v2 size((f32)0, (f32)m_fontHeight);
     float cw = 0;
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];

@@ -90,5 +90,32 @@ TEST(Utilities) {
         if (glm::vec3(m1 * mv1) != m2 * mv2) return false;
         if (glm::vec3(mv1 * m1) != mv2 * m2) return false;
     }
+    {
+        vorb::Matrix4<f32> m1;
+        f32m4 m2;
+        if (f32m4(m1) != m2) return false;
+        m1 *= 3.0f;
+        m2 *= 3.0f;
+        if (f32m4(m1) != m2) return false;
+        m1 += 1.0f;
+        m2 += 1.0f;
+        if (f32m4(m1) != m2) return false;
+        m1 -= 0.1f;
+        m2 -= 0.1f;
+        if (f32m4(m1) != m2) return false;
+        m1 /= 1.1f;
+        m2 /= 1.1f;
+        if (f32m4(m1) != m2) return false;
+        if (f32m4(vmath::computeInverse(m1)) != glm::detail::compute_inverse(m2)) return false;
+        if (f32m4(m1 * m1) != m2 * m2) return false;
+        if (f32m4(m1 + m1) != m2 + m2) return false;
+        if (f32m4(m1 / m1) != m2 / m2) return false;
+        if (f32m4(m1 - m1) != m2 - m2) return false;
+        f32v4 mv1(2.0f);
+        glm::vec4 mv2(2.0f);
+        // GLM's version of this is slightly unprecise.
+        // if (glm::vec4(m1 * mv1) != m2 * mv2) return false;
+        if (glm::vec4(mv1 * m1) != mv2 * m2) return false;
+    }
     return true;
 }

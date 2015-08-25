@@ -1,5 +1,5 @@
 //
-// VectorMath.inl
+// VectorMath.h
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 20 Aug 2015
@@ -7,9 +7,20 @@
 // All Rights Reserved
 //
 
-/*! \file VectorMath.inl
-* @brief Defines common vector math operations
+/*! \file VectorMath.h
+* @brief defines common vector math operations.
 */
+
+#pragma once
+
+#ifndef Vorb_VectorMath_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_VectorMath_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace math {
@@ -96,3 +107,6 @@ namespace vorb {
     }
 }
 namespace vmath = vorb::math;
+
+#endif // !Vorb_VectorMath_h__
+

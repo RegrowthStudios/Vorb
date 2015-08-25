@@ -3,13 +3,15 @@
 
 #include "include/Timing.h"
 
-#include "include/VorbMath.h"
+#include "include/math/VorbMath.h"
+#include "include/Matrix.h"
 #include <glm/gtc/quaternion.hpp>
 
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Math_
 
 TEST(Utilities) {
+    // Vectors
     {
         af32v2 g1(253.0f, 299632.0f);
         af32v2 g2(53626.0f, 24632.0f);
@@ -35,9 +37,38 @@ TEST(Utilities) {
         if (glm::length(g1) != vmath::length(v1)) return false;
         if (glm::dot(g1, g2) != vmath::dot(v1, v2)) return false;
     }
+    // Matrices
+    {
+        // Check identity
+        vorb::Matrix2<f32> m1;
+        f32m2 m2;
+        if (f32m2(m1) != m2) return false;
+        m1 *= 3.0f;
+        m2 *= 3.0f;
+        if (f32m2(m1) != m2) return false;
+        m1 += 1.0f;
+        m2 += 1.0f;
+        if (f32m2(m1) != m2) return false;
+        m1 -= 0.1f;
+        m2 -= 0.1f;
+        if (f32m2(m1) != m2) return false;
+        m1 /= 1.1f;
+        m2 /= 1.1f;
+        if (f32m2(m1) != m2) return false;
+        if (f32m2(vmath::computeInverse(m1)) != glm::detail::compute_inverse(m2)) return false;
+        if (f32m2(m1 * m1) != m2 * m2) return false;
+        if (f32m2(m1 + m1) != m2 + m2) return false;
+        if (f32m2(m1 / m1) != m2 / m2) return false;
+        if (f32m2(m1 - m1) != m2 - m2) return false;
+        f32v2 mv1(2.0f);
+        glm::vec2 mv2(2.0f);
+        if (glm::vec2(m1 * mv1) != m2 * mv2) return false;
+        if (glm::vec2(mv1 * m1) != mv2 * m2) return false;
+    }
     // UNIT TESTING ENDS HERE
 
     // PERFORMANCE BENCHMARKING STARTS HERE (Doesn't affect pass/fail)
+    puts("Vector timings:");
     const int N_TESTS = 10000000;
     f32 total = 0.0f;
     PreciseTimer timer;

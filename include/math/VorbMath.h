@@ -22,6 +22,9 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include "VectorMath.h"
+#include "MatrixMath.h"
+
 namespace vorb {
     namespace math {
         /*! @brief Computes the dot product of two values.
@@ -64,8 +67,7 @@ namespace vorb {
         }
     }
 }
-
-#include "VectorMath.inl"
+namespace vmath = vorb::math;
 
 #endif // !Vorb_VorbMath_h__
 

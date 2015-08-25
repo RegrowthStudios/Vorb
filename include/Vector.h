@@ -110,9 +110,9 @@ namespace vorb {
         /* Member Variables                                                     */
         /************************************************************************/
         union {
-            struct { T x; T y; };
-            struct { T r; T g; };
-            struct { T s; T t; };
+            UNIONIZE(T x; T y);
+            UNIONIZE(T r; T g);
+            UNIONIZE(T s; T t);
             T data[2];
         };
     };
@@ -206,9 +206,9 @@ namespace vorb {
         /* Member Variables                                                     */
         /************************************************************************/
         union {
-            struct { T x; T y; T z; };
-            struct { T r; T g; T b; };
-            struct { T s; T t; T p; };
+            UNIONIZE(T x; T y; T z);
+            UNIONIZE(T r; T g; T b);
+            UNIONIZE(T s; T t; T p);
             T data[3];
         };
     };
@@ -304,9 +304,9 @@ namespace vorb {
         /* Member Variables                                                     */
         /************************************************************************/
         union {
-            struct { T x; T y; T z; T w; };
-            struct { T r; T g; T b; T a; };
-            struct { T s; T t; T p; T q; };
+            UNIONIZE(T x; T y; T z; T w);
+            UNIONIZE(T r; T g; T b; T a);
+            UNIONIZE(T s; T t; T p; T q);
             T data[4];
         };
     };

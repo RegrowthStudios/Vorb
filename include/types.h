@@ -28,6 +28,7 @@
 #include "decorators.h"
 #include "compat.h"
 #include "Vector.h"
+#include "Matrix.h"
 
 /************************************************************************/
 /* Integer values                                                       */

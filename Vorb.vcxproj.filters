@@ -690,20 +690,20 @@
     <ClInclude Include="include\script\MathScriptInterface.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="include\VorbMath.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VectorMath.inl">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Vector.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\Quaternion.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\Matrix.h">
+    <ClInclude Include="include\math\VectorMath.h">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\VorbMath.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Matrix.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -848,11 +848,14 @@
     <None Include="include\IntersectionUtils.hpp">
       <Filter>Utils</Filter>
     </None>
-    <None Include="include\Vector.inl">
+    <None Include="include\math\MatrixMath.h">
       <Filter>Core\Math</Filter>
     </None>
-    <None Include="include\math\Matrix.inl">
-      <Filter>Core\Math</Filter>
+    <None Include="include\Matrix.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="include\Vector.inl">
+      <Filter>Core</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

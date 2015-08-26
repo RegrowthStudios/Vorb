@@ -130,6 +130,21 @@ inline Vector2<T> operator-(const Vector2<T>& v) {
 /************************************************************************/
 #pragma region Vector3
 
+/* Explicit conversions */
+template<typename T>
+template<typename A, typename B, typename C>
+inline Vector3<T>::Vector3(A a, B b, C c) :
+    x(static_cast<T>(a)), y(static_cast<T>(b)), z(static_cast<T>(c)){}
+template<typename T>
+template<typename A, typename B>
+inline Vector3<T>::Vector3(const Vector2<A>& a, B b) :
+    x(static_cast<T>(a.x)), y(static_cast<T>(a.y)), z(static_cast<T>(b)) {}
+template<typename T>
+template<typename A, typename B>
+inline Vector3<T>::Vector3(A a, const Vector2<B>& b) :
+    x(static_cast<T>(a)), y(static_cast<T>(b.x)), z(static_cast<T>(b.y)) {}
+
+/* Operators */
 template<typename T>
 inline T& Vector3<T>::operator[](int i) {
     assert(i >= 0 && i < 3);
@@ -233,6 +248,37 @@ inline Vector3<T> operator-(const Vector3<T>& v) {
 /************************************************************************/
 #pragma region Vector4
 
+/* Explicit conversions */
+template<typename T>
+template<typename A, typename B, typename C, typename D>
+inline Vector4<T>::Vector4(A a, B b, C c, D d) :
+    x(static_cast<T>(a)), y(static_cast<T>(b)), z(static_cast<T>(c)), w(static_cast<T>(d)) {}
+template<typename T>
+template<typename A, typename B, typename C>
+inline Vector4<T>::Vector4(const Vector2<A>& a, B b, C c) :
+    x(static_cast<T>(a.x)), y(static_cast<T>(a.y)), z(static_cast<T>(b)), w(static_cast<T>(c)) {}
+template<typename T>
+template<typename A, typename B, typename C>
+inline Vector4<T>::Vector4(A a, const Vector2<B>& b, C c) :
+    x(static_cast<T>(a)), y(static_cast<T>(b.x)), z(static_cast<T>(b.y)), w(static_cast<T>(c)) {}
+template<typename T>
+template<typename A, typename B, typename C>
+inline Vector4<T>::Vector4(A a, B b, const Vector2<C>& c) :
+    x(static_cast<T>(z)), y(static_cast<T>(b)), z(static_cast<T>(c.x)), w(static_cast<T>(c.y)) {}
+template<typename T>
+template<typename A, typename B>
+inline Vector4<T>::Vector4(const Vector3<A>& a, B b) :
+    x(static_cast<T>(a.x)), y(static_cast<T>(a.y)), z(static_cast<T>(a.z)), w(static_cast<T>(b)) {}
+template<typename T>
+template<typename A, typename B>
+inline Vector4<T>::Vector4(A a, const Vector3<B>& b) :
+    x(static_cast<T>(a)), y(static_cast<T>(b.x)), z(static_cast<T>(b.y)), w(static_cast<T>(b.z)) {}
+template<typename T>
+template<typename A, typename B>
+inline Vector4<T>::Vector4(const Vector2<A>& a, const Vector2<B>& b) :
+    x(static_cast<T>(a.x)), y(static_cast<T>(a.y)), z(static_cast<T>(b.x)), w(static_cast<T>(b.y)) {}
+
+/* Operators */
 template<typename T>
 inline T& Vector4<T>::operator[](int i) {
     assert(i >= 0 && i < 4);

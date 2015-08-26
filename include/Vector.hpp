@@ -133,6 +133,17 @@ namespace vorb {
         }
 
         /************************************************************************/
+        /* Explicit Conversions                                                 */
+        /************************************************************************/
+        template<typename A, typename B, typename C>
+        explicit Vector3(A a, B b, C c);
+        template<typename A, typename B>
+        explicit Vector3(const Vector2<A>& a, B b);
+        template<typename A, typename B>
+        explicit Vector3(A a, const Vector2<B>& b);
+
+
+        /************************************************************************/
         /* Operators                                                            */
         /************************************************************************/
         T& operator[](int i);
@@ -230,6 +241,24 @@ namespace vorb {
         }
 
         /************************************************************************/
+        /* Explicit Conversions                                                 */
+        /************************************************************************/
+        template<typename A, typename B, typename C, typename D>
+        explicit Vector4(A a, B b, C c, D d);
+        template<typename A, typename B, typename C>
+        explicit Vector4(const Vector2<A>& a, B b, C c);
+        template<typename A, typename B, typename C>
+        explicit Vector4(A a, const Vector2<B>& b, C c);
+        template<typename A, typename B, typename C>
+        explicit Vector4(A a, B b, const Vector2<C>& c);
+        template<typename A, typename B>
+        explicit Vector4(const Vector3<A>& a, B b);
+        template<typename A, typename B>
+        explicit Vector4(A a, const Vector3<B>& b);
+        template<typename A, typename B>
+        explicit Vector4(const Vector2<A>& a, const Vector2<B>& b);
+
+        /************************************************************************/
         /* Operators                                                            */
         /************************************************************************/
         T& operator[](int i);
@@ -293,7 +322,7 @@ namespace vorb {
         template<typename U>
         Vector4& operator>>=(U a);
         template<typename U>
-        Vector4& operator>>=(const Vector4<U>& v);
+        Vector4& operator>>=(const Vector4<U>& v);  
 
         /************************************************************************/
         /* Member Variables                                                     */

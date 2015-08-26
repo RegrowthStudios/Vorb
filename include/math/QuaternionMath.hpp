@@ -8,7 +8,7 @@
 //
 
 /*! \file QuaternionMath.hpp
-* @brief 
+* @brief Common quaternion mathematical functions.
 */
 
 #pragma once
@@ -181,7 +181,7 @@ namespace vorb {
         }
 
         template<typename T>
-        inline Quaternion<T> quat_cast(tmat3x3<T, P> const & m) {
+        inline Quaternion<T> quat_cast(const Matrix3<T>& m) {
             T fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
             T fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
             T fourZSquaredMinus1 = m[2][2] - m[0][0] - m[1][1];
@@ -259,7 +259,7 @@ namespace vorb {
         }
 
         template<typename T>
-        inline Quaternion<T> angleAxis(T const & angle, Vector3<T> const & v) {
+        inline Quaternion<T> angleAxis(const T& angle, const Vector3<T>& v) {
             Quaternion<T> rv(uninitialize);
 
             T const a(angle);

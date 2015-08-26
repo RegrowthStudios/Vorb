@@ -1,7 +1,7 @@
 /* This file implements all functions for Quaternion. */
 
 template<typename T>
-Quaternion(const Vector3<T>& euler) {
+Quaternion<T>::Quaternion(const Vector3<T>& euler) {
     const Vector3<T> c = vmath::cos(euler * static_cast<T>(0.5));
     const Vector3<T> s = vmath::sin(euler * static_cast<T>(0.5));
 
@@ -11,7 +11,7 @@ Quaternion(const Vector3<T>& euler) {
     z = c.x * c.y * s.z - s.x * s.y * c.z;
 }
 template<typename T>
-Quaternion(const glm::tvec3<T>& euler) {
+Quaternion<T>::Quaternion(const glm::tvec3<T>& euler) {
     const Vector3<T> e2(euler);
     const Vector3<T> c = vmath::cos(e2 * static_cast<T>(0.5));
     const Vector3<T> s = vmath::sin(e2 * static_cast<T>(0.5));
@@ -28,7 +28,7 @@ inline T& Quaternion<T>::operator[](int i) {
     return data[i];
 }
 template<typename T>
-inline const T& Quaternion<T>::operator[](int i) {
+inline const T& Quaternion<T>::operator[](int i) const {
     assert(i >= 0 && i < 3);
     return data[i];
 }
@@ -107,7 +107,7 @@ inline Quaternion<T>& Quaternion<T>::operator/=(U a) {
 
 template<typename T>
 inline Quaternion<T> operator-(const Quaternion<T>& q) {
-    return Quaternion<T>(-q.w, -q.x, -q.y, -q.z);
+    return Quaternion<T>(-q.x, -q.y, -q.z, - q.w);
 }
 
 template<typename T>
@@ -122,9 +122,9 @@ inline Quaternion<T> operator*(const Quaternion<T>& q, const Quaternion<T>& p) {
 
 template<typename T>
 inline Vector3<T> operator*(const Quaternion<T>& q, const Vector3<T>& v) {
-    const Quaternion<T> qv(q.x, q.y, q.z);
-    const Quaternion<T> uv(vmath::cross(qv, v));
-    const Quaternion<T>uuv(vmath::cross(qv, uv));
+    const Vector3<T> qv(q.x, q.y, q.z);
+    const Vector3<T> uv(vmath::cross(qv, v));
+    const Vector3<T>uuv(vmath::cross(qv, uv));
 
     return v + ((uv * q.w) + uuv) * static_cast<T>(2);
 }

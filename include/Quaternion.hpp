@@ -24,7 +24,7 @@
 
 #include "Vector.hpp"
 
-namespace Vorb {
+namespace vorb {
     template <typename T>
     class Quaternion {
     public:
@@ -40,7 +40,7 @@ namespace Vorb {
         Quaternion(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 
         T& operator[](int i);
-        const T& operator[](int i);
+        const T& operator[](int i) const;
 
         template<typename U>
         Quaternion& operator=(const Quaternion<U>& rhs);
@@ -67,6 +67,7 @@ namespace Vorb {
             T data[4];
         };
     };
+#include "Quaternion.inl"
 }
 
 #endif // !Vorb_Quaternion_hpp__

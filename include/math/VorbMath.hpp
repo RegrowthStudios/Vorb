@@ -24,6 +24,7 @@
 
 #include "VectorMath.hpp"
 #include "MatrixMath.hpp"
+#include "QuaternionMath.hpp"
 
 namespace vorb {
     namespace math {

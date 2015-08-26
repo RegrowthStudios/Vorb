@@ -5,6 +5,7 @@
 
 #include "include/math/VorbMath.hpp"
 #include "include/Matrix.hpp"
+#include "include/Quaternion.hpp"
 #include <glm/gtc/quaternion.hpp>
 
 #undef UNIT_TEST_BATCH
@@ -118,5 +119,8 @@ TEST(Utilities) {
         if (glm::vec4(mv1 * m1) != mv2 * m2) return false;
     }
 
+    // Quaternions
+    vorb::Quaternion<f32> q1(0, 0, 0, 1);
+  //  if (memcmp(&vmath::angleAxis(3.1f, f32v3(0.3f, 0.5f, 0.2f)), &glm::angleAxis(3.1f, glm::vec3(0.3f, 0.5f, 0.2f)), sizeof(glm::vec3)) != 0) return false;
     return true;
 }

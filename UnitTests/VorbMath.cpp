@@ -26,7 +26,7 @@ TEST(Utilities) {
         f32v3 v1(253.0f, 299632.0f, 42356.0f);
         f32v3 v2(53626.0f, 24632.0f, 2361.0f);
         if (glm::length(g1) != vmath::length(v1)) return false;
-        if (glm::cross(g1, g2) != vmath::cross(v1, v2).getAligned()) return false;
+        if (glm::cross(g1, g2) != glm::vec3(vmath::cross(v1, v2))) return false;
         if (glm::dot(g1, g2) != vmath::dot(v1, v2)) return false;
     }
     {

@@ -28,7 +28,7 @@
 namespace vorb {
     namespace math {
         /*! @brief Computes the dot product of two values.
-         */
+        */
         template <typename T>
         inline T dot(T x, T y) {
             static_assert(std::numeric_limits<T>::is_iec559, "'dot' only accept floating-point inputs.");
@@ -64,6 +64,35 @@ namespace vorb {
             y = *(f64*)&i;
             y = y * (1.5 - (x2 * y * y));
             return y;
+        }
+
+        template <typename T>
+        inline T sin(T a) {
+            return std::sin(a);
+        }
+        template <typename T>
+        inline T cos(T a) {
+            return std::cos(a);
+        }
+        template <typename T>
+        inline T tan(T a) {
+            return std::tan(a);
+        }
+        template <typename T>
+        inline T acos(T a) {
+            return std::acos(a);
+        }
+        template <typename T>
+        inline T asin(T a) {
+            return std::asin(a);
+        }
+        template <typename T>
+        inline T atan(T a) {
+            return std::atan(a);
+        }
+        template <typename T>
+        inline T atan2(T y, T x) {
+            return std::atan2(y, x);
         }
     }
 }

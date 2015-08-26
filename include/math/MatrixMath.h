@@ -32,8 +32,8 @@ namespace vorb {
                 m[0][0] * m[1][1] - m[1][0] * m[0][1]);
 
             return Matrix2<T>(m[1][1] * invDet,
-                             -m[0][1] * invDet,
-                             -m[1][0] * invDet,
+                              -m[0][1] * invDet,
+                              -m[1][0] * invDet,
                               m[0][0] * invDet);
         }
         template<typename T>
@@ -45,14 +45,14 @@ namespace vorb {
                 m[2][0] * (m[0][1] * m[1][2] - m[1][1] * m[0][2]));
 
             return Matrix3<T>((m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invDet,
-                                -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * invDet,
-                                 (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invDet,
-                                -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * invDet,
-                                 (m[0][0] * m[2][2] - m[2][0] * m[0][2]) * invDet,
-                                -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * invDet,
-                                 (m[0][1] * m[1][2] - m[1][1] * m[0][2]) * invDet,
-                                -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * invDet,
-                                 (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invDet);
+                              -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * invDet,
+                              (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invDet,
+                              -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * invDet,
+                              (m[0][0] * m[2][2] - m[2][0] * m[0][2]) * invDet,
+                              -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * invDet,
+                              (m[0][1] * m[1][2] - m[1][1] * m[0][2]) * invDet,
+                              -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * invDet,
+                              (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invDet);
         }
         template<typename T>
         inline Matrix4<T> inverse(const Matrix4<T>& m) {
@@ -98,7 +98,7 @@ namespace vorb {
             Vector4<T> inv2(v0 * fac1 - v1 * fac3 + v3 * fac5);
             Vector4<T> inv3(v0 * fac2 - v1 * fac4 + v2 * fac5);
 
-            const Vector4<T> signA( 1, -1,  1, -1);
+            const Vector4<T> signA(1, -1, 1, -1);
             const Vector4<T> signB(-1, 1, -1, 1);
             Matrix4<T> invm(inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB);
 
@@ -113,9 +113,9 @@ namespace vorb {
         }
 
         template <typename T>
-        Matrix4<T> lookAt(const Vector3<T>& eye,
-                          const Vector3<T>& center,
-                          const Vector3<T>& up) {
+        inline Matrix4<T> lookAt(const Vector3<T>& eye,
+                                 const Vector3<T>& center,
+                                 const Vector3<T>& up) {
             const Vector3<T> f(normalize(center - eye));
             const Vector3<T> s(normalize(cross(f, up)));
             const Vector3<T> u(cross(s, f));
@@ -136,7 +136,7 @@ namespace vorb {
             return rv;
         }
         template <typename T>
-        Matrix4<T> perspective(T yFOV, T aspect, T zNear, T zFar) {
+        inline Matrix4<T> perspective(T yFOV, T aspect, T zNear, T zFar) {
             assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
             T const tanHalfYFOV = tan(yFOV / static_cast<T>(2));
             Matrix4<T> rv(static_cast<T>(0));
@@ -148,7 +148,7 @@ namespace vorb {
             return rv;
         }
         template <typename T>
-        Matrix4<T> perspectiveFov(T fov, T width, T height, T zNear, T zFar) {
+        inline Matrix4<T> perspectiveFov(T fov, T width, T height, T zNear, T zFar) {
             assert(width > static_cast<T>(0));
             assert(height > static_cast<T>(0));
             assert(fov > static_cast<T>(0));
@@ -166,7 +166,7 @@ namespace vorb {
             return rv;
         }
         template <typename T>
-        Matrix4<T> ortho(T left, T right, T bottom, T top) {
+        inline Matrix4<T> ortho(T left, T right, T bottom, T top) {
             Matrix4<T> rv(static_cast<T>(1));
             rv[0][0] = static_cast<T>(2) / (right - left);
             rv[1][1] = static_cast<T>(2) / (top - bottom);
@@ -174,6 +174,50 @@ namespace vorb {
             rv[3][0] = -(right + left) / (right - left);
             rv[3][1] = -(top + bottom) / (top - bottom);
             return rv;
+        }
+
+        template <typename T>
+        inline Matrix4<T> translate(const Vector3<T>& v) {
+            return translate(Matrix4<T>(static_cast<T>(1)), v);
+        }
+        template <typename T>
+        inline Matrix4<T> translate(const Matrix4<T>& m, const Vector3<T>& v) {
+            Matrix4<T> rv(m);
+            rv[3] = m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3];
+            return rv;
+        }
+
+        template <typename T>
+        inline Matrix4<T> rotate(const Matrix4<T>& m, T angle, const Vector3<T>& v) {
+            const T a = angle;
+            const T c = cos(a);
+            const T s = sin(a);
+
+            const Vector3<T> axis(normalize(v));
+            const Vector3<T> temp((T(1) - c) * axis);
+
+            Matrix3<T> rotate(temp[0] * axis[0] + c,
+                              temp[0] * axis[1] + s * axis[2],
+                              temp[0] * axis[2] - s * axis[1],
+                              temp[1] * axis[0] - s * axis[2],
+                              temp[1] * axis[1] + c,
+                              temp[1] * axis[2] + s * axis[0],
+                              temp[2] * axis[0] + s * axis[1],
+                              temp[2] * axis[1] - s * axis[0],
+                              temp[2] * axis[2] + c);
+
+            return Matrix4<T>(m[0] * rotate[0][0] + m[1] * rotate[0][1] + m[2] * rotate[0][2],
+                              m[0] * rotate[1][0] + m[1] * rotate[1][1] + m[2] * rotate[1][2],
+                              m[0] * rotate[2][0] + m[1] * rotate[2][1] + m[2] * rotate[2][2],
+                              m[3]);
+        }
+
+        template<typename T>
+        inline Matrix4<T> scale(const Matrix4<T>& m, const Vector3<T>& v) {
+            return Matrix4<T>(m[0] * v[0],
+                              m[1] * v[1],
+                              m[2] * v[2],
+                              m[3]);
         }
     }
 }

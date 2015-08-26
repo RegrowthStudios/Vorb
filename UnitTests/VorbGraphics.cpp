@@ -454,12 +454,12 @@ public:
 class AnimViewer : public vui::IGameScreen {
 public:
     static f32m4 fromQuat(const f32q& q) {
-        return vmath::mat4_cast(q);
+        return glm::mat4_cast(q);
     }
 
     static f32q slerp(const f32q& q1, const f32q& q2, f32 t) { // TODO: I didn't write this
         f32q q3;
-        f32 dot = vmath::dot(q1, q2);
+        f32 dot = glm::dot(q1, q2);
         if (dot < 0) {
             dot = -dot;
             q3 = -q2;
@@ -480,7 +480,7 @@ public:
         printf("Rest Bone %d\n", bone.index);
         
         // Add inverse of rest pose
-        f32m4 mRest = vmath::translate(bone.rest.translation.getAligned()) * fromQuat(bone.rest.rotation);
+        f32m4 mRest = vmath::translate(bone.rest.translation) * fromQuat(bone.rest.rotation);
         mRest = parent * mRest;
 
         // Loop children
@@ -499,7 +499,7 @@ public:
 
         if (nfi == pfi) {
             // Compute world transform
-            f32m4 local = vmath::translate(bone.keyframes[pfi].transform.translation.getAligned()) * fromQuat(bone.keyframes[pfi].transform.rotation);
+            f32m4 local = vmath::translate(bone.keyframes[pfi].transform.translation) * fromQuat(bone.keyframes[pfi].transform.rotation);
             mWorld[bone.index] = parent * local;
         } else {
             // Lerp
@@ -509,7 +509,7 @@ public:
             f32v3 translation = lerp(bone.keyframes[pfi].transform.translation, bone.keyframes[nfi].transform.translation, r);
 
             // Compute world transforms
-            f32m4 local = vmath::translate(translation.getAligned()) * fromQuat(rotation);
+            f32m4 local = vmath::translate(translation) * fromQuat(rotation);
             mWorld[bone.index] = parent * local;
         }
 

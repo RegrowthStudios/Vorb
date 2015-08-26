@@ -44,9 +44,6 @@ namespace vorb {
         const T& operator[](int i) const;
 
         operator glm::tvec2<T>() const;
-        glm::tvec2<T> getAligned() const {
-            return glm::tvec2<T>(x, y);
-        }
 
         template<typename U>
         Vector2& operator=(const glm::tvec2<U>& rhs);
@@ -128,10 +125,12 @@ namespace vorb {
         Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
         template <typename U>
         Vector3(const glm::tvec3<U>& v) :
-            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {
+        }
         template <typename U>
         Vector3(const Vector3<U>& v) :
-            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {
+        }
 
         /************************************************************************/
         /* Operators                                                            */
@@ -140,9 +139,6 @@ namespace vorb {
         const T& operator[](int i) const;
 
         operator glm::tvec3<T>() const;
-        glm::tvec3<T> getAligned() const {
-            return glm::tvec3<T>(x, y, z);
-        }
 
         template<typename U>
         Vector3& operator=(const glm::tvec3<U>& rhs);
@@ -225,11 +221,13 @@ namespace vorb {
         template <typename U>
         Vector4(const glm::tvec4<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
-            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {}
+            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {
+        }
         template <typename U>
         Vector4(const Vector4<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
-            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {}
+            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {
+        }
 
         /************************************************************************/
         /* Operators                                                            */
@@ -238,9 +236,6 @@ namespace vorb {
         const T& operator[](int i) const;
 
         operator glm::tvec4<T>() const;
-        glm::tvec4<T> getAligned() const {
-            return glm::tvec4<T>(x, y, z, w);
-        }
 
         template<typename U>
         Vector4& operator=(const glm::tvec4<U>& rhs);

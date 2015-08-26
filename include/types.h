@@ -452,7 +452,7 @@ typedef glm::tquat<f64> f64q;
  * M[1][1] = Y.y
  * </pre>
  */
-typedef glm::tmat2x2<f32> f32m2;
+typedef vorb::Matrix2<f32> f32m2;
 /*! @brief 64-bit floating point (double) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -471,7 +471,7 @@ typedef glm::tmat2x2<f32> f32m2;
  * M[1][1] = Y.y
  * </pre>
  */
-typedef glm::tmat2x2<f64> f64m2;
+typedef vorb::Matrix2<f64> f64m2;
 /*! @brief 32-bit floating point (single) 3x3 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -496,7 +496,7 @@ typedef glm::tmat2x2<f64> f64m2;
  * M[2][2] = Z.z
  * </pre>
  */
-typedef glm::tmat3x3<f32> f32m3;
+typedef vorb::Matrix3<f32> f32m3;
 /*! @brief 64-bit floating point (double) 3x3 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -521,7 +521,7 @@ typedef glm::tmat3x3<f32> f32m3;
  * M[2][2] = Z.z
  * </pre>
  */
-typedef glm::tmat3x3<f64> f64m3;
+typedef vorb::Matrix3<f64> f64m3;
 /*! @brief 32-bit floating point (single) 4x4 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -554,7 +554,7 @@ typedef glm::tmat3x3<f64> f64m3;
  * M[3][3] = 1
  * </pre>
  */
-typedef glm::tmat4x4<f32> f32m4;
+typedef vorb::Matrix4<f32> f32m4;
 /*! @brief 64-bit floating point (double) 4x4 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -587,7 +587,7 @@ typedef glm::tmat4x4<f32> f32m4;
  * M[3][3] = 1
  * </pre>
  */
-typedef glm::tmat4x4<f64> f64m4;
+typedef vorb::Matrix4<f64> f64m4;
 
 // Colors
 #include "typesColor.inl"

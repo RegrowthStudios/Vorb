@@ -113,8 +113,9 @@ namespace vorb {
         }
 
         template <typename T>
-        Matrix4<T> lookAt(Vector3<T> const & eye,
-                          Vector3<T> const & center) {
+        Matrix4<T> lookAt(const Vector3<T>& eye,
+                          const Vector3<T>& center,
+                          const Vector3<T>& up) {
             const Vector3<T> f(normalize(center - eye));
             const Vector3<T> s(normalize(cross(f, up)));
             const Vector3<T> u(cross(s, f));
@@ -147,8 +148,26 @@ namespace vorb {
             return rv;
         }
         template <typename T>
+        Matrix4<T> perspectiveFov(T fov, T width, T height, T zNear, T zFar) {
+            assert(width > static_cast<T>(0));
+            assert(height > static_cast<T>(0));
+            assert(fov > static_cast<T>(0));
+
+            const T rad = fov;
+            const T h = vmath::cos(static_cast<T>(0.5) * rad) / vmath::sin(static_cast<T>(0.5) * rad);
+            const T w = h * height / width; // TODO(Ben): max(width , Height) / min(width , Height)?
+
+            Matrix4<T> rv(static_cast<T>(0));
+            rv[0][0] = w;
+            rv[1][1] = h;
+            rv[2][2] = -(zFar + zNear) / (zFar - zNear);
+            rv[2][3] = -static_cast<T>(1);
+            rv[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+            return rv;
+        }
+        template <typename T>
         Matrix4<T> ortho(T left, T right, T bottom, T top) {
-            Matrix4<T> rv(static_cast<T>(1);
+            Matrix4<T> rv(static_cast<T>(1));
             rv[0][0] = static_cast<T>(2) / (right - left);
             rv[1][1] = static_cast<T>(2) / (top - bottom);
             rv[2][2] = -static_cast<T>(1);

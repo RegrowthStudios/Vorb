@@ -163,7 +163,7 @@ namespace vorb {
         Matrix4() : c0(1, 0, 0, 0), c1(0, 1, 0, 0),
                     c2(0, 0, 1, 0), c3(0, 0, 0, 1) {}
         Matrix4(const Matrix4& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
-        Matrix4(const T& a) : c0(a, 0, 0, 0), c1(0, a, 0, 0), c2(0, 0, a, 0), c2(0, 0, 0, a) {}
+        Matrix4(const T& a) : c0(a, 0, 0, 0), c1(0, a, 0, 0), c2(0, 0, a, 0), c3(0, 0, 0, a) {}
         Matrix4(const T& x0, const T& y0, const T& z0, const T& w0,
                 const T& x1, const T& y1, const T& z1, const T& w1,
                 const T& x2, const T& y2, const T& z2, const T& w2,

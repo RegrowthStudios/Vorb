@@ -114,7 +114,7 @@ namespace vorb {
             Vector3<T> Tmp = v;
 
             // Axis of rotation must be normalized
-            T len = glm::length(Tmp);
+            T len = vmath::length(Tmp);
             if (abs(len - static_cast<T>(1)) > static_cast<T>(0.001)) {
                 T oneOverLen = static_cast<T>(1) / len;
                 Tmp.x *= oneOverLen;
@@ -135,12 +135,12 @@ namespace vorb {
 
         template<typename T>
         inline T roll(const Quaternion<T>& q) {
-            return T(atan(static_cast<T>(2) * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z));
+            return T(atan2(static_cast<T>(2) * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z));
         }
 
         template<typename T>
         inline T pitch(const Quaternion<T>& q) {
-            return T(atan(static_cast<T>(2) * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
+            return T(atan2(static_cast<T>(2) * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
         }
 
         template<typename T>
@@ -260,16 +260,11 @@ namespace vorb {
 
         template<typename T>
         inline Quaternion<T> angleAxis(const T& angle, const Vector3<T>& v) {
-            Quaternion<T> rv(uninitialize);
-
-            T const a(angle);
-            T const s = glm::sin(a * static_cast<T>(0.5));
-
-            rv.w = glm::cos(a * static_cast<T>(0.5));
-            rv.x = v.x * s;
-            rv.y = v.y * s;
-            rv.z = v.z * s;
-            return rv;
+            const T s = vmath::sin(angle * static_cast<T>(0.5));
+            return Quaternion<T>(v.x * s,
+                                 v.y * s,
+                                 v.z * s,
+                                 vmath::cos(angle * static_cast<T>(0.5)));
         }
     }
 }

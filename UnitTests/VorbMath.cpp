@@ -120,7 +120,14 @@ TEST(Utilities) {
     }
 
     // Quaternions
-    vorb::Quaternion<f32> q1(0, 0, 0, 1);
-  //  if (memcmp(&vmath::angleAxis(3.1f, f32v3(0.3f, 0.5f, 0.2f)), &glm::angleAxis(3.1f, glm::vec3(0.3f, 0.5f, 0.2f)), sizeof(glm::vec3)) != 0) return false;
+    vorb::Quaternion<f32> q1 = vmath::angleAxis(3.1f, f32v3(0.3f, 0.5f, 0.2f));
+    glm::tquat<f32> q2 = glm::angleAxis(3.1f, glm::vec3(0.3f, 0.5f, 0.2f));
+    if (memcmp(&q1, &q2, sizeof(q1)) != 0) return false;
+    if (memcmp(&vmath::mat4_cast(q1), &glm::mat4_cast(q2), sizeof(f32m4)) != 0) return false;
+    if (vmath::roll(q1) != glm::roll(q2)) return false;
+    if (vmath::pitch(q1) != glm::pitch(q2)) return false;
+    if (vmath::yaw(q1) != glm::yaw(q2)) return false;
+    if (memcmp(&vmath::rotate(q1, 1.12f, f32v3(0.2f, 0.4f, 0.5f)), &glm::rotate(q2, 1.12f, glm::vec3(0.2f, 0.4f, 0.5f)), sizeof(q1)) != 0) return false;
+
     return true;
 }

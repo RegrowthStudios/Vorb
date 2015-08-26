@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "macros.h"
 
-#include "include/Vector.h"
+#include "include/Vector.hpp"
 
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH System_

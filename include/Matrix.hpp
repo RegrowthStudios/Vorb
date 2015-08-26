@@ -7,22 +7,22 @@
 // All Rights Reserved
 //
 
-/*! \file Matrix.h
+/*! \file Matrix.hpp
 * @brief 
 */
 
 #pragma once
 
-#ifndef Vorb_Matrix_h__
+#ifndef Vorb_Matrix_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_Matrix_h__
+#define Vorb_Matrix_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vector.h"
+#include "Vector.hpp"
 
 namespace vorb {
     template <typename T>
@@ -162,7 +162,12 @@ namespace vorb {
         /************************************************************************/
         Matrix4() : c0(1, 0, 0, 0), c1(0, 1, 0, 0),
                     c2(0, 0, 1, 0), c3(0, 0, 0, 1) {}
-        Matrix4(const Matrix4& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
+        Matrix4(const Matrix3<T>& m) :
+            c0(m[0], 0),
+            c1(m[1], 0),
+            c2(m[2], 0),
+            c3(0, 0, 0, 1) {}
+        Matrix4(const Matrix4<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
         Matrix4(const T& a) : c0(a, 0, 0, 0), c1(0, a, 0, 0), c2(0, 0, a, 0), c3(0, 0, 0, a) {}
         Matrix4(const T& x0, const T& y0, const T& z0, const T& w0,
                 const T& x1, const T& y1, const T& z1, const T& w1,
@@ -174,6 +179,7 @@ namespace vorb {
                 const ColType& c2, const ColType& c3) :
             c0(c0), c1(c1), c2(c2), c3(c3) {}
         Matrix4(const glm::tmat4x4<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
+        
 
         /************************************************************************/
         /* Operators                                                            */
@@ -220,4 +226,4 @@ namespace vorb {
 #include "Matrix.inl"
 }
 
-#endif // !Vorb_Matrix_h__
+#endif // !Vorb_Matrix_hpp__

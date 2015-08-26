@@ -1,5 +1,5 @@
 //
-// Vector.h
+// Vector.hpp
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 20 Aug 2015
@@ -13,9 +13,9 @@
 
 #pragma once
 
-#ifndef Vorb_Vector_h__
+#ifndef Vorb_Vector_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_Vector_h__
+#define Vorb_Vector_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -309,4 +309,4 @@ namespace vorb {
 #include "Vector.inl"
 }
 
-#endif // !Vorb_Vector_h__
+#endif // !Vorb_Vector_hpp__

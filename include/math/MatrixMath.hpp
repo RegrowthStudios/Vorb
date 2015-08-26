@@ -1,5 +1,5 @@
 //
-// MatrixMath.h
+// MatrixMath.hpp
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 25 Aug 2015
@@ -7,15 +7,15 @@
 // All Rights Reserved
 //
 
-/*! \file MatrixMath.h
+/*! \file MatrixMath.hpp
 * @brief Defines common matrix math operations.
 */
 
 #pragma once
 
-#ifndef Vorb_MatrixMath_h__
+#ifndef Vorb_MatrixMath_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_MatrixMath_h__
+#define Vorb_MatrixMath_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -223,4 +223,4 @@ namespace vorb {
 }
 namespace vmath = vorb::math;
 
-#endif // !Vorb_MatrixMath_h__
+#endif // !Vorb_MatrixMath_hpp__

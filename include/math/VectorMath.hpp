@@ -1,5 +1,5 @@
 //
-// VectorMath.h
+// VectorMath.hpp
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 20 Aug 2015
@@ -7,15 +7,15 @@
 // All Rights Reserved
 //
 
-/*! \file VectorMath.h
+/*! \file VectorMath.hpp
 * @brief defines common vector math operations.
 */
 
 #pragma once
 
-#ifndef Vorb_VectorMath_h__
+#ifndef Vorb_VectorMath_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_VectorMath_h__
+#define Vorb_VectorMath_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -108,5 +108,5 @@ namespace vorb {
 }
 namespace vmath = vorb::math;
 
-#endif // !Vorb_VectorMath_h__
+#endif // !Vorb_VectorMath_hpp__
 

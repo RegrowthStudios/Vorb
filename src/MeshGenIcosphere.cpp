@@ -4,7 +4,7 @@
 
 #include "graphics/GpuMemory.h"
 
-#include "math/VorbMath.h"
+#include "math/VorbMath.hpp"
 
 const static float GOLDEN_RATIO = 1.61803398875f;
 

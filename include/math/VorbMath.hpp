@@ -22,8 +22,8 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-#include "VectorMath.h"
-#include "MatrixMath.h"
+#include "VectorMath.hpp"
+#include "MatrixMath.hpp"
 
 namespace vorb {
     namespace math {

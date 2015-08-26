@@ -3,8 +3,8 @@
 
 #include "include/Timing.h"
 
-#include "include/math/VorbMath.h"
-#include "include/Matrix.h"
+#include "include/math/VorbMath.hpp"
+#include "include/Matrix.hpp"
 #include <glm/gtc/quaternion.hpp>
 
 #undef UNIT_TEST_BATCH

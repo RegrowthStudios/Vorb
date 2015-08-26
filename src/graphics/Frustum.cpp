@@ -2,7 +2,7 @@
 #include "graphics/Frustum.h"
 
 #include "Constants.h"
-#include "math/VorbMath.h"
+#include "math/VorbMath.hpp"
 
 void vg::Frustum::Plane::setNormalAndPoint(const f32v3 &normal, const f32v3 &point) {
     this->normal = vmath::normalize(normal);

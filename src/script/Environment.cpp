@@ -85,7 +85,9 @@ bool vscript::Environment::load(const vio::Path& file) {
     bool success = luaL_dostring(m_state, scriptData) == 0;
     delete[] scriptData;
 
-    if (!success) return false;
+    if (!success) {
+        return false;
+    }
 
     return true;
 }

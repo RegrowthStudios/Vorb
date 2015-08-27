@@ -13,6 +13,12 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="Tests\UI">
+      <UniqueIdentifier>{d9c3c247-3d6a-4af9-bc1b-4f7deed2b418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\UI\Primitives">
+      <UniqueIdentifier>{5fae37c7-1f08-43b5-a513-694e57d8d6e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="macros.h">
@@ -25,6 +31,18 @@
       <Filter>Required Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="UIUtils.h">
+      <Filter>Tests\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetContainer.h">
+      <Filter>Tests\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -78,6 +96,15 @@
     <ClCompile Include="tiny_obj_loader.cpp" />
     <ClCompile Include="VorbVoxel.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetContainer.cpp">
+      <Filter>Tests\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Tests\UI\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

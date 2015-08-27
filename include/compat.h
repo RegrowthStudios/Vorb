@@ -45,6 +45,15 @@
 
 #if defined(WIN32) || defined(WIN64)
 #define OS_WINDOWS
+#define _WINSOCKAPI_
+#include "Windows.h"
+#endif
+
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
 #endif
 
 // register keyword creates a warning and is deprecated

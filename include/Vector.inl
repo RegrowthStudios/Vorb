@@ -33,12 +33,12 @@ GLOBAL_OPERATOR(>>);
 
 template<typename T>
 inline T& Vector2<T>::operator[](int i) {
-    assert(i >= 0 && i < 2);
+    vorb_assert(i >= 0 && i < 2, "Index out of range");
     return data[i];
 }
 template<typename T>
 inline const T& Vector2<T>::operator[](int i) const {
-    assert(i >= 0 && i < 2);
+    vorb_assert(i >= 0 && i < 2, "Index out of range");
     return data[i];
 }
 
@@ -135,12 +135,12 @@ inline Vector3<T>::Vector3(A a, const Vector2<B>& b) :
 /* Operators */
 template<typename T>
 inline T& Vector3<T>::operator[](int i) {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Index out of range");
     return data[i];
 }
 template<typename T>
 inline const T& Vector3<T>::operator[](int i) const {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Index out of range");
     return data[i];
 }
 
@@ -256,12 +256,12 @@ inline Vector4<T>::Vector4(const Vector2<A>& a, const Vector2<B>& b) :
 /* Operators */
 template<typename T>
 inline T& Vector4<T>::operator[](int i) {
-    assert(i >= 0 && i < 4);
+    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 template<typename T>
 inline const T& Vector4<T>::operator[](int i) const {
-    assert(i >= 0 && i < 4);
+    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 

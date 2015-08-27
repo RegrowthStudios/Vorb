@@ -18,13 +18,13 @@ GLOBAL_OPERATOR(-);
 
 template<typename T>
 inline typename Matrix2<T>::ColType& Matrix2<T>::operator[](int i) {
-    assert(i >= 0 && i < 2);
+    vorb_assert(i >= 0 && i < 2, "Index out of range");
     return data[i];
 }
 
 template<typename T>
 inline typename const Matrix2<T>::ColType& Matrix2<T>::operator[](int i) const {
-    assert(i >= 0 && i < 2);
+    vorb_assert(i >= 0 && i < 2, "Index out of range");
     return data[i];
 }
 
@@ -169,13 +169,13 @@ inline typename Matrix2<T>::RowType operator/(typename const Matrix2<T>::ColType
 
 template<typename T>
 inline typename Matrix3<T>::ColType& Matrix3<T>::operator[](int i) {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Index out of range");
     return data[i];
 }
 
 template<typename T>
 inline typename const Matrix3<T>::ColType& Matrix3<T>::operator[](int i) const {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Index out of range");
     return data[i];
 }
 
@@ -332,13 +332,13 @@ inline typename Matrix3<T>::RowType operator/(typename const Matrix3<T>::ColType
 
 template<typename T>
 inline typename Matrix4<T>::ColType& Matrix4<T>::operator[](int i) {
-    assert(i >= 0 && i < 4);
+    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 
 template<typename T>
 inline typename const Matrix4<T>::ColType& Matrix4<T>::operator[](int i) const {
-    assert(i >= 0 && i < 4);
+    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 

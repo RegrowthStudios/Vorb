@@ -705,6 +705,9 @@
     <ClInclude Include="include\math\QuaternionMath.hpp">
       <Filter>Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="include\VorbAssert.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

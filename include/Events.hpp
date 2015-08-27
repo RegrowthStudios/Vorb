@@ -42,8 +42,6 @@
 #include <vector>
 #endif // !VORB_USING_PCH
 
-#
-
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
 

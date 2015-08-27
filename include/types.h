@@ -623,7 +623,4 @@ size_t offsetMember(U T::*member) {
     return (const volatile char*)&((T*)nullptr->*member) - (const volatile char*)nullptr;
 }
 
-// Include math stuff last
-#include "math/VorbMath.hpp"
-
 #endif // !Vorb_types_h__

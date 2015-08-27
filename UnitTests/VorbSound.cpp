@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "macros.h"
 
-#ifdef OS_WINDOWS
-#include "Windows.h"
-#endif
-
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Sound_
 

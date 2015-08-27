@@ -23,7 +23,6 @@
 #include <string>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
 #include "decorators.h"
 #include "compat.h"
@@ -425,7 +424,7 @@ typedef glm::tvec4<f64>   af64v4; ///< Aligned version.
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef glm::tquat<f32> f32q;
+typedef vorb::Quaternion<f32> f32q;
 /*! @brief 64-bit floating point (double) quaternion.
  *
  * Elements can be accessed via: @n
@@ -434,7 +433,7 @@ typedef glm::tquat<f32> f32q;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef glm::tquat<f64> f64q;
+typedef vorb::Quaternion<f64> f64q;
 /*! @brief 32-bit floating point (single) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.

@@ -454,12 +454,12 @@ public:
 class AnimViewer : public vui::IGameScreen {
 public:
     static f32m4 fromQuat(const f32q& q) {
-        return glm::mat4_cast(q);
+        return vmath::mat4_cast(q);
     }
 
     static f32q slerp(const f32q& q1, const f32q& q2, f32 t) { // TODO: I didn't write this
         f32q q3;
-        f32 dot = glm::dot(q1, q2);
+        f32 dot = vmath::dot(q1, q2);
         if (dot < 0) {
             dot = -dot;
             q3 = -q2;

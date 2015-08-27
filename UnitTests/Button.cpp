@@ -20,11 +20,6 @@ vui::Button::~Button() {
 void vui::Button::addDrawables(UIRenderer* renderer) {
     Widget::addDrawables(renderer);
 
-    m_drawableRect.setColor1(color4(1, 1, 1));
-    m_drawableRect.setColor2(color4(1, 1, 1));
-    m_drawableRect.setGradientType(vg::GradientType::NONE);
-    m_drawableText.setColor(color4(0, 0, 0));
-
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
@@ -49,7 +44,7 @@ void vui::Button::update(int flags, f32 dt) {
 
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
+    m_drawableRect.setClipRect(f32v4(this->getPosition(), this->getDimensions()));
 
     updateTextPosition();
 }
@@ -57,49 +52,49 @@ void vui::Button::update(int flags, f32 dt) {
 void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
     m_font = font;
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setDimensions(const f32v2& dimensions) {
     Widget::setDimensions(dimensions);
     m_drawableRect.setDimensions(dimensions);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setWidth(f32 width) {
     Widget::setWidth(width);
     m_drawableRect.setWidth(width);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setHeight(f32 height) {
     Widget::setHeight(height);
     m_drawableRect.setHeight(height);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setPosition(const f32v2& position) {
     Widget::setPosition(position);
     m_drawableRect.setPosition(m_position);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setX(f32 x) {
     Widget::setX(x);
     m_drawableRect.setX(m_position.x);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setY(f32 y) {
     Widget::setY(y);
     m_drawableRect.setX(m_position.y);
 
-    update(0x00 | 0x01, 1.0);
+    update(0x01 | 0x02, 1.0);
 }
 
 void vui::Button::setText(const nString& text) {
@@ -169,6 +164,25 @@ void vui::Button::refreshDrawables() {
     }
     else {
         m_drawnText = m_drawableText;
+    }
+
+    if (UIUtils::checkFlag(&m_widgetFlags, WidgetFlags::CLICK)) {
+        m_drawableRect.setColor(color::GreenYellow);
+        m_drawableRect.setColor2(color::GreenYellow);
+        m_drawableRect.setGradientType(vg::GradientType::NONE);
+        m_drawableText.setColor(color4(0, 0, 0));
+    }
+    else if (UIUtils::checkFlag(&m_widgetFlags, WidgetFlags::HOVER)) {
+        m_drawableRect.setColor(color::Gray);
+        m_drawableRect.setColor2(color::Gray);
+        m_drawableRect.setGradientType(vg::GradientType::NONE);
+        m_drawableText.setColor(color4(0, 0, 0));
+    }
+    else {
+        m_drawableRect.setColor(color::White);
+        m_drawableRect.setColor2(color::White);
+        m_drawableRect.setGradientType(vg::GradientType::NONE);
+        m_drawableText.setColor(color4(0, 0, 0));
     }
 
     m_drawableRect.setClipRect(m_clipRect);

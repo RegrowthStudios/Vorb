@@ -315,6 +315,7 @@
     <ClCompile Include="src\ui\ButtonScriptFuncs.cpp" />
     <ClCompile Include="src\ui\CheckBoxScriptFuncs.cpp" />
     <ClCompile Include="src\ui\ComboBoxScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\FocusController.cpp" />
     <ClCompile Include="src\ui\GameWindowScriptFuncs.cpp" />
     <ClCompile Include="src\ui\LabelScriptFuncs.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="src\ui\KeyboardEventDispatcher.cpp" />
     <ClCompile Include="src\ui\MouseInputDispatcher.cpp" />
     <ClCompile Include="src\ui\UIRenderer.cpp" />
+    <ClCompile Include="src\ui\WidgetList.cpp" />
     <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp" />
     <ClCompile Include="src\ui\WidgetScriptFuncs.cpp" />
     <ClCompile Include="src\voxel\VoxCommon.cpp" />
@@ -440,6 +442,7 @@
     <ClInclude Include="include\ui\ButtonScriptFuncs.h" />
     <ClInclude Include="include\ui\CheckBoxScriptFuncs.h" />
     <ClInclude Include="include\ui\ComboBoxScriptFuncs.h" />
+    <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\FocusController.h" />
     <ClInclude Include="include\ui\GameWindowScriptFuncs.h" />
     <ClInclude Include="include\ui\LabelScriptFuncs.h" />
@@ -448,8 +451,10 @@
     <ClInclude Include="include\ui\SliderScriptFuncs.h" />
     <ClInclude Include="include\ui\KeyStrings.h" />
     <ClInclude Include="include\ui\UIRenderer.h" />
+    <ClInclude Include="include\ui\WidgetList.h" />
     <ClInclude Include="include\ui\WidgetListScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
+    <ClInclude Include="include\ui\WidgetStyle.h" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="include\voxel\IntervalTree.h" />
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />

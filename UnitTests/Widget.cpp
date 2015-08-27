@@ -77,7 +77,7 @@ f32v2 vui::Widget::getWidgetAlignOffset(WidgetAlign align, f32v2 dimensions) {
 
 void vui::Widget::update(int flags, f32 dt) {
     // Update relative positions
-    if (UIUtils::checkFlag(&flags, 0x00)) {
+    if (UIUtils::checkFlag(&flags, 0x01)) {
         f32v2 newPos = m_relativePosition;
 
         if (m_parent) {
@@ -90,7 +90,7 @@ void vui::Widget::update(int flags, f32 dt) {
     };
 
     // Update relative dimensions
-    if (UIUtils::checkFlag(&flags, 0x01)) {
+    if (UIUtils::checkFlag(&flags, 0x02)) {
         f32v2 newDims = m_dimensions;
 
         // Check min/max size
@@ -116,5 +116,5 @@ void vui::Widget::update(int flags, f32 dt) {
 
     if (m_parent) computeClipRect(m_parent->getClipRect());
 
-    updateChilds(0x00 | 0x01);
+    updateChilds(0x01 | 0x02);
 }

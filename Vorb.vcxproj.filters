@@ -243,6 +243,12 @@
     <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\Drawables.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\WidgetList.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -606,6 +612,15 @@
     <ClInclude Include="doxygen\examples\VorbKeg.h">
       <Filter>Examples</Filter>
     </ClInclude>
+    <ClInclude Include="include\ui\Drawables.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetList.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\WidgetStyle.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -688,6 +703,9 @@
     </Filter>
     <Filter Include="UI\Script">
       <UniqueIdentifier>{fdb66444-3703-44c0-8d58-c7904078ab4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{27d4552e-b855-47a5-9606-289ffc1ac0cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

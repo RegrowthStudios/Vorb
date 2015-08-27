@@ -58,7 +58,7 @@ void vui::WidgetContainer::dispose() {
 void vui::WidgetContainer::addWidget(Widget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
-    child->update(0x00, 1.0);
+    child->update(0x01, 1.0);
 }
 
 void vui::WidgetContainer::removeWidget(Widget* child) {
@@ -119,11 +119,11 @@ const bool vui::WidgetContainer::isClippingEnabled() {
 void vui::WidgetContainer::setClippingEnabled(bool enabled) {
     UIUtils::addFlag(&this->m_widgetFlags, WidgetFlags::CLIPPING_ENABLED);
 
-    update(0x00, 1.0);
+    update(0x01, 1.0);
 }
 
 void vui::WidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {
-    if (isEnabled()) return;
+    if (!isEnabled()) return;
 
     if (isMouseIn()) {
         UIUtils::addFlag(&this->m_widgetFlags, WidgetFlags::CLICK);
@@ -133,7 +133,7 @@ void vui::WidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::WidgetContainer::onMouseUp(Sender s, const MouseButtonEvent& e) {
-    if (isEnabled()) return;
+    if (!isEnabled()) return;
 
     if (isMouseIn()) {
         MouseUp(e);
@@ -145,7 +145,7 @@ void vui::WidgetContainer::onMouseUp(Sender s, const MouseButtonEvent& e) {
 }
 
 void vui::WidgetContainer::onMouseMove(Sender s, const MouseMotionEvent& e) {
-    if (isEnabled()) return;
+    if (!isEnabled()) return;
 
     if (UIUtils::isInBounds(f32v2(e.x, e.y), this->m_position, this->m_dimensions)) {
         if (!isMouseIn()) {
@@ -163,7 +163,7 @@ void vui::WidgetContainer::onMouseMove(Sender s, const MouseMotionEvent& e) {
 }
 
 void vui::WidgetContainer::onMouseFocusLost(Sender s, const MouseEvent& e) {
-    if (isEnabled()) return;
+    if (!isEnabled()) return;
 
     if (isMouseIn()) {
         UIUtils::removeFlag(&this->m_widgetFlags, WidgetFlags::HOVER);

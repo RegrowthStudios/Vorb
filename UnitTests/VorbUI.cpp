@@ -18,6 +18,11 @@
 #include <include/ui/ScreenList.h>
 #include <include/ui/UIRenderer.h>
 
+#include "Form.h"
+#include "Button.h"
+#include "UIStyle.h"
+#include "UIUtils.h"
+
 struct Vertex {
     f32v3 position;
     color4 color;
@@ -59,29 +64,57 @@ public:
     }
     virtual void onEntry(const vui::GameTime& gameTime) {
         font = new vg::SpriteFont();
+        font->init("chintzy.ttf", 32);
         batch = new vg::SpriteBatch();
-        font->init("data/chintzy.ttf", 16);
         batch->init();
-        //form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);
 
+        //form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);
         //env.init(&form, &m_game->getWindow());
         //env.loadForm("data/scripts/Form1.lua");
+
+        vui::UIStyle* style1 = new vui::UIStyle();
+        vui::UIStyle* style2 = new vui::UIStyle();
+        vui::UIStyle* style3 = new vui::UIStyle();
+
+        style3->setFlags(vui::StyleFlags::COLOR | vui::StyleFlags::RGB);
+
+        style1->color = color4(0, 255, 0, 255);
+        style2->color = color4(255, 0, 255, 255);
+
+        style3 = style1 + style2;
+
+        form = new vui::Form();
+        form->init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);
+        form->enable();
+        
+        button = new vui::Button();
+        button->setParent(form);
+        button->setPosition(f32v2(0, 0));
+        button->setDimensions(f32v2(200, 100));
+        button->setMinSize(f32v2(200, 100));
+        button->setMaxSize(f32v2(200, 100));
+        button->setName("TestButton");
+        button->setText("Test");
+        button->setTextAlign(vg::TextAlign::CENTER);
+        button->enable();
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        //form.dispose();
-        //font->dispose();
+        form->dispose();
+        font->dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
-        //form.update();
+        form->update(0x01 | 0x02 | 0x04, 1);
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //form.draw();
+        form->draw();
     }
 
     ui32v2 m_viewportDims = ui32v2(800, 600);
     //vui::FormScriptEnvironment env;
-    //vui::Form form;
+    vui::Button* button;
+    vui::Form* form;
+
     vg::SpriteFont* font;
     vg::SpriteBatch* batch;
 };

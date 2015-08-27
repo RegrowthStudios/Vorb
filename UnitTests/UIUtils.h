@@ -11,11 +11,28 @@
 namespace vorb {
     namespace ui {
         enum WidgetFlags {
-            ENABLED          = 0x00, // Widget Enabled
-            CLIPPING_ENABLED = 0x01, // Widget clipping Enabled
-            HOVER            = 0x02, // Mouse within the clip rect
-            CLICK            = 0x04,  // Mouse clicked
-            DRAWABLE_RELOAD  = 0x08 // Needs drawable reload
+            ENABLED          = 0x01, // Widget Enabled
+            CLIPPING_ENABLED = 0x02, // Widget clipping Enabled
+            HOVER            = 0x04, // Mouse within the clip rect
+            CLICK            = 0x08,  // Mouse clicked
+            DRAWABLE_RELOAD  = 0x10 // Needs drawable reload
+        };
+
+        enum StyleFlags {
+            COLOR = 0x01,
+            TEXTURE = 0x02,
+            R = 0x20,
+            G = 0x40,
+            B = 0x80,
+            A = 0x100,
+            RGB = 0x200,
+            RGBA = 0x400,
+        };
+
+        enum MergeFlags {
+            BLEND = 0x01,
+            HIGH = 0x02,
+            LOW = 0x04,
         };
 
         class UIUtils {

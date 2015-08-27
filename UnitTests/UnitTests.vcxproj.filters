@@ -43,6 +43,12 @@
     <ClInclude Include="Button.h">
       <Filter>Tests\UI\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Form.h">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="UIStyle.h">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -104,6 +110,12 @@
       <Filter>Tests\UI\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Form.cpp">
+      <Filter>Tests\UI\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="UIStyle.cpp">
       <Filter>Tests\UI\Primitives</Filter>
     </ClCompile>
   </ItemGroup>

@@ -104,6 +104,28 @@ namespace vorb {
             return v / vmath::length(v);
 #endif
         }
+
+        // Helper macro for function calls to be performed on each element of vector
+#define VEC_FCALL(name, func) \
+    template <typename T> \
+    inline Vector2<T> name(const Vector2<T>& v) { \
+        return Vector2<T>(func(v.x), func(v.y)); \
+    } \
+    template <typename T> \
+    inline Vector3<T> name(const Vector3<T>& v) { \
+        return Vector3<T>(func(v.x), func(v.y), func(v.z)); \
+    } \
+    template <typename T> \
+    inline Vector4<T> name(const Vector4<T>& v) { \
+        return Vector4<T>(func(v.x), func(v.y), func(v.z), func(v.w)); \
+    }
+
+        VEC_FCALL(sin, std::sin);
+        VEC_FCALL(cos, std::cos);
+        VEC_FCALL(tan, std::tan);
+        VEC_FCALL(acos, std::acos);
+        VEC_FCALL(asin, std::asin);
+        VEC_FCALL(atan, std::atan);
     }
 }
 namespace vmath = vorb::math;

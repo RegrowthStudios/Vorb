@@ -46,6 +46,11 @@ namespace vorb {
         }
 
         template <typename T>
+        inline T dot(const Quaternion<T>& q1, const Quaternion<T>& q2) {
+            return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+        }
+
+        template <typename T>
         inline Quaternion<T> conjugate(const Quaternion<T>& q) {
             return Quaternion<T>(-q.x, -q.y, -q.z, q.w);
         }
@@ -111,21 +116,20 @@ namespace vorb {
 
         template<typename T>
         inline Quaternion<T> rotate(const Quaternion<T>& q, const T& angle, const Vector3<T>& v) {
-            Vector3<T> Tmp = v;
+            Vector3<T> tmp = v;
 
             // Axis of rotation must be normalized
-            T len = vmath::length(Tmp);
+            T len = vmath::length(tmp);
             if (abs(len - static_cast<T>(1)) > static_cast<T>(0.001)) {
                 T oneOverLen = static_cast<T>(1) / len;
-                Tmp.x *= oneOverLen;
-                Tmp.y *= oneOverLen;
-                Tmp.z *= oneOverLen;
+                tmp.x *= oneOverLen;
+                tmp.y *= oneOverLen;
+                tmp.z *= oneOverLen;
             }
 
-            T const AngleRad(angle);
-            T const Sin = sin(AngleRad * static_cast<T>(0.5));
+            const T s = sin(angle * static_cast<T>(0.5));
 
-            return q * Quaternion<T>(cos(AngleRad * static_cast<T>(0.5)), Tmp.x * Sin, Tmp.y * Sin, Tmp.z * Sin);
+            return q * Quaternion<T>(tmp.x * s, tmp.y * s, tmp.z * s, cos(angle * static_cast<T>(0.5)));
         }
 
         template<typename T>

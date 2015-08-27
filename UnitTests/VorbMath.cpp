@@ -127,7 +127,25 @@ TEST(Utilities) {
     if (vmath::roll(q1) != glm::roll(q2)) return false;
     if (vmath::pitch(q1) != glm::pitch(q2)) return false;
     if (vmath::yaw(q1) != glm::yaw(q2)) return false;
-    if (memcmp(&vmath::rotate(q1, 1.12f, f32v3(0.2f, 0.4f, 0.5f)), &glm::rotate(q2, 1.12f, glm::vec3(0.2f, 0.4f, 0.5f)), sizeof(q1)) != 0) return false;
-
+    q1 = vmath::rotate(q1, 1.12f, f32v3(0.2f, 0.4f, 0.5f));
+    q2 = glm::rotate(q2, 1.12f, glm::vec3(0.2f, 0.4f, 0.5f));
+    if (memcmp(&q1, &q2, sizeof(q1)) != 0) return false;
+    if (glm::vec3(vmath::eulerAngles(q1)) != glm::eulerAngles(q2)) return false;
+    // W parameter is last in vorb
+    q1 = vorb::Quaternion<f32>(1.0f, 2.0f, 3.0f, 4.0f);
+    q2 = glm::tquat<f32>(4.0f, 1.0f, 2.0f, 3.0f);
+    if (memcmp(&q1, &q2, sizeof(q1)) != 0) return false;
+    q1 = vorb::Quaternion<f32>(f32v3(2.0f, 1.0f, 2.3f));
+    q2 = glm::tquat<f32>(glm::vec3(2.0f, 1.0f, 2.3f));
+    if (memcmp(&q1, &q2, sizeof(q1)) != 0) return false;
+    f32v3 v1;
+    glm::vec3 v2;
+    v1 = f32v3(1.0f, 2.0f, 3.0f) * q1;
+    v2 = glm::vec3(1.0f, 2.0f, 3.0f) * q2;
+    if (glm::vec3(v1) != v2) return false;
+    v1 = q1 * f32v3(1.0f, 2.0f, 3.0f);
+    v2 = q2 * glm::vec3(1.0f, 2.0f, 3.0f);
+    if (glm::vec3(v1) != v2) return false;
+    if (memcmp(&vmath::normalize(q1), &glm::normalize(q2), sizeof(q1)) != 0) return false;
     return true;
 }

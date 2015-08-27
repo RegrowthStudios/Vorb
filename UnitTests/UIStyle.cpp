@@ -18,12 +18,12 @@ void vui::UIStyle::setFlags(int flags) {
     this->flags = flags;
 }
 
-vui::UIStyle operator+(vui::UIStyle p, const vui::UIStyle &q) {
+vui::UIStyle operator+(const vui::UIStyle& p, const vui::UIStyle& q) {
     vui::UIStyle* a = new vui::UIStyle();
     color4 cThis = p.color;
     color4 cQ = q.color;
 
-    int flags = p.getFlags();
+    int flags = p.flags;
 
     if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::COLOR)) {
         if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::R)) {

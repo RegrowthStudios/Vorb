@@ -5,19 +5,16 @@
 #define Vorb_UIStyle_h__
 //! @endcond
 
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
+
 namespace vorb {
     namespace ui {
-        UIStyle& operator+(UIStyle p, const UIStyle &q);
-
         class UIStyle {
         public:
             UIStyle();
             ~UIStyle();
-
-            /************************************************************************/
-            /* Operators                                                            */
-            /************************************************************************/
-            //UIStyle& operator+(const UIStyle &q) const;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -33,13 +30,10 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             color4 color;
-
-        protected:
-            /************************************************************************/
-            /* Members                                                              */
-            /************************************************************************/       
             int flags = 0;
         };
+
+        UIStyle operator+(const UIStyle& p, const UIStyle& q);
     }
 }
 

@@ -72,16 +72,18 @@ public:
         //env.init(&form, &m_game->getWindow());
         //env.loadForm("data/scripts/Form1.lua");
 
-        vui::UIStyle* style1 = new vui::UIStyle();
-        vui::UIStyle* style2 = new vui::UIStyle();
-        vui::UIStyle* style3 = new vui::UIStyle();
+        vui::UIStyle style1;
+        vui::UIStyle style2;
+        vui::UIStyle style3;
 
-        style3->setFlags(vui::StyleFlags::COLOR | vui::StyleFlags::RGB);
+        style3.setFlags(vui::StyleFlags::COLOR | vui::StyleFlags::RGB);
 
-        style1->color = color4(0, 255, 0, 255);
-        style2->color = color4(255, 0, 255, 255);
+        style1.color = color4(0, 255, 0, 255);
+        style2.color = color4(255, 0, 255, 255);
 
         style3 = style1 + style2;
+
+        std::cout << (int)style3.color.r << ", " << (int)style3.color.g << ", " << (int)style3.color.b << std::endl;
 
         form = new vui::Form();
         form->init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);

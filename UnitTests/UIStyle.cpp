@@ -18,37 +18,37 @@ void vui::UIStyle::setFlags(int flags) {
     this->flags = flags;
 }
 
-vui::UIStyle& vui::UIStyle::operator+(const vui::UIStyle &q) const {
-    UIStyle* a = new UIStyle();
-    color4 cThis = this->color;
+vui::UIStyle operator+(vui::UIStyle p, const vui::UIStyle &q) {
+    vui::UIStyle* a = new vui::UIStyle();
+    color4 cThis = p.color;
     color4 cQ = q.color;
 
-    int flags = this->flags;
+    int flags = p.getFlags();
 
-    if (UIUtils::checkFlag(&flags, StyleFlags::COLOR)) {
-        if (UIUtils::checkFlag(&flags, StyleFlags::R)) {
+    if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::COLOR)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::R)) {
             a->color.r = (cThis.r + cQ.r) <= 255 ? (cThis.r + cQ.r) : 255;
         }
 
-        if (UIUtils::checkFlag(&flags, StyleFlags::G)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::G)) {
             a->color.g = (cThis.g + cQ.g) <= 255 ? (cThis.g + cQ.g) : 255;
         }
 
-        if (UIUtils::checkFlag(&flags, StyleFlags::B)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::B)) {
             a->color.b = (cThis.b + cQ.b) <= 255 ? (cThis.b + cQ.b) : 255;
         }
 
-        if (UIUtils::checkFlag(&flags, StyleFlags::A)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::A)) {
             a->color.a = (cThis.a + cQ.a) <= 255 ? (cThis.a + cQ.a) : 255;
         }
 
-        if (UIUtils::checkFlag(&flags, StyleFlags::RGB)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::RGB)) {
             a->color.r = (cThis.r + cQ.r) <= 255 ? (cThis.r + cQ.r) : 255;
             a->color.g = (cThis.g + cQ.g) <= 255 ? (cThis.g + cQ.g) : 255;
             a->color.b = (cThis.b + cQ.b) <= 255 ? (cThis.b + cQ.b) : 255;
         }
 
-        if (UIUtils::checkFlag(&flags, StyleFlags::RGBA)) {
+        if (vui::UIUtils::checkFlag(&flags, vui::StyleFlags::RGBA)) {
             a->color.r = (cThis.r + cQ.r) <= 255 ? (cThis.r + cQ.r) : 255;
             a->color.g = (cThis.g + cQ.g) <= 255 ? (cThis.g + cQ.g) : 255;
             a->color.b = (cThis.b + cQ.b) <= 255 ? (cThis.b + cQ.b) : 255;

@@ -7,7 +7,7 @@
 
 namespace vorb {
     namespace ui {
-        vui::UIStyle& operator+(const vui::UIStyle &p);
+        UIStyle& operator+(UIStyle p, const UIStyle &q);
 
         class UIStyle {
         public:

@@ -41,7 +41,6 @@ namespace vorb {
                 const T& x1, const T& y1) :
             c0(x0, y0), c1(x1, y1) {}
         Matrix2(const ColType& c0, const ColType& c1) : c0(c0), c1(c1) {}
-        Matrix2(const glm::tmat2x2<T>& m) : c0(m[0]), c1(m[1]) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -49,11 +48,6 @@ namespace vorb {
         ColType& operator[](int i);
         const ColType& operator[](int i) const;
 
-        operator glm::tmat2x2<T>() const;
-
-
-        template<typename U>
-        Matrix2& operator=(const glm::tmat2x2<U>& rhs);
         template<typename U>
         Matrix2& operator=(const Matrix2<U>& rhs);
 
@@ -105,7 +99,6 @@ namespace vorb {
                 c0(x0, y0, z0), c1(x1, y1, z1), c2(x2, y2, z2) {}
         Matrix3(const ColType& c0, const ColType& c1, const ColType& c2) :
                 c0(c0), c1(c1), c2(c2) {}
-        Matrix3(const glm::tmat3x3<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -113,11 +106,6 @@ namespace vorb {
         ColType& operator[](int i);
         const ColType& operator[](int i) const;
 
-        operator glm::tmat3x3<T>() const;
-
-
-        template<typename U>
-        Matrix3& operator=(const glm::tmat3x3<U>& rhs);
         template<typename U>
         Matrix3& operator=(const Matrix3<U>& rhs);
 
@@ -178,7 +166,6 @@ namespace vorb {
         Matrix4(const ColType& c0, const ColType& c1,
                 const ColType& c2, const ColType& c3) :
             c0(c0), c1(c1), c2(c2), c3(c3) {}
-        Matrix4(const glm::tmat4x4<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
         
 
         /************************************************************************/
@@ -187,10 +174,6 @@ namespace vorb {
         ColType& operator[](int i);
         const ColType& operator[](int i) const;
 
-        operator glm::tmat4x4<T>() const;
-
-        template<typename U>
-        Matrix4& operator=(const glm::tmat4x4<U>& rhs);
         template<typename U>
         Matrix4& operator=(const Matrix4<U>& rhs);
 

@@ -33,8 +33,6 @@ namespace vorb {
         Vector2(T a) : x(a), y(a) {}
         Vector2(T x, T y) : x(x), y(y) {}
         template <typename U>
-        Vector2(const glm::tvec2<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
-        template <typename U>
         Vector2(const Vector2<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
 
         /************************************************************************/
@@ -43,10 +41,6 @@ namespace vorb {
         T& operator[](int i);
         const T& operator[](int i) const;
 
-        operator glm::tvec2<T>() const;
-
-        template<typename U>
-        Vector2& operator=(const glm::tvec2<U>& rhs);
         template<typename U>
         Vector2& operator=(const Vector2<U>& rhs);
 
@@ -124,10 +118,6 @@ namespace vorb {
         Vector3(T a) : x(a), y(a), z(a) {}
         Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
         template <typename U>
-        Vector3(const glm::tvec3<U>& v) :
-            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {
-        }
-        template <typename U>
         Vector3(const Vector3<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {
         }
@@ -149,10 +139,6 @@ namespace vorb {
         T& operator[](int i);
         const T& operator[](int i) const;
 
-        operator glm::tvec3<T>() const;
-
-        template<typename U>
-        Vector3& operator=(const glm::tvec3<U>& rhs);
         template<typename U>
         Vector3& operator=(const Vector3<U>& rhs);
 
@@ -229,11 +215,7 @@ namespace vorb {
         Vector4() : x(0), y(0), z(0), w(0) {}
         Vector4(T a) : x(a), y(a), z(a), w(a) {}
         Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-        template <typename U>
-        Vector4(const glm::tvec4<U>& v) :
-            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
-            z(static_cast<T>(v.z)), w(static_cast<T>(v.w)) {
-        }
+
         template <typename U>
         Vector4(const Vector4<U>& v) :
             x(static_cast<T>(v.x)), y(static_cast<T>(v.y)),
@@ -264,10 +246,6 @@ namespace vorb {
         T& operator[](int i);
         const T& operator[](int i) const;
 
-        operator glm::tvec4<T>() const;
-
-        template<typename U>
-        Vector4& operator=(const glm::tvec4<U>& rhs);
         template<typename U>
         Vector4& operator=(const Vector4<U>& rhs);
 

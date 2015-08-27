@@ -30,7 +30,6 @@ namespace vorb {
     public:
         Quaternion() : x(0), y(0), z(0), w(1) {}
         Quaternion(const vorb::Vector3<T>& euler);
-        Quaternion(const glm::tvec3<T>& euler);
         template<typename U>
         Quaternion(Quaternion<U> q) :
             x(static_cast<T>(q.x)),

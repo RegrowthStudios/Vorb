@@ -18,10 +18,6 @@
 #define Vorb_MatrixMath_hpp__
 //! @endcond
 
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
-
 // TODO(Ben): Functions are right handed only.
 namespace vorb {
     namespace math {

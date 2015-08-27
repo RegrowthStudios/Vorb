@@ -10,17 +10,6 @@ Quaternion<T>::Quaternion(const Vector3<T>& euler) {
     y = c.x * s.y * c.z + s.x * c.y * s.z;
     z = c.x * c.y * s.z - s.x * s.y * c.z;
 }
-template<typename T>
-Quaternion<T>::Quaternion(const glm::tvec3<T>& euler) {
-    const Vector3<T> e2(euler);
-    const Vector3<T> c = vmath::cos(e2 * static_cast<T>(0.5));
-    const Vector3<T> s = vmath::sin(e2 * static_cast<T>(0.5));
-
-    w = c.x * c.y * c.z + s.x * s.y * s.z;
-    x = s.x * c.y * c.z - c.x * s.y * s.z;
-    y = c.x * s.y * c.z + s.x * c.y * s.z;
-    z = c.x * c.y * s.z - s.x * s.y * c.z;
-}
 
 template<typename T>
 inline T& Quaternion<T>::operator[](int i) {

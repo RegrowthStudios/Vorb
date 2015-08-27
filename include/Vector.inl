@@ -43,18 +43,6 @@ inline const T& Vector2<T>::operator[](int i) const {
 }
 
 template<typename T>
-inline Vector2<T>::operator glm::tvec2<T>() const {
-    return glm::tvec2<T>(x, y);
-}
-
-template<typename T>
-template<typename U>
-inline Vector2<T>& Vector2<T>::operator=(const glm::tvec2<U>& rhs) {
-    x = static_cast<T>(rhs.x);
-    y = static_cast<T>(rhs.y);
-    return *this;
-}
-template<typename T>
 template<typename U>
 inline Vector2<T>& Vector2<T>::operator=(const Vector2<U>& rhs) {
     x = static_cast<T>(rhs.x);
@@ -156,19 +144,6 @@ inline const T& Vector3<T>::operator[](int i) const {
     return data[i];
 }
 
-template<typename T>
-inline Vector3<T>::operator glm::tvec3<T>() const {
-    return glm::tvec3<T>(x, y, z);
-}
-
-template<typename T>
-template<typename U>
-inline Vector3<T>& Vector3<T>::operator=(const glm::tvec3<U>& rhs) {
-    x = static_cast<T>(rhs.x);
-    y = static_cast<T>(rhs.y);
-    z = static_cast<T>(rhs.z);
-    return *this;
-}
 template<typename T>
 template<typename U>
 inline Vector3<T>& Vector3<T>::operator=(const Vector3<U>& rhs) {
@@ -290,20 +265,6 @@ inline const T& Vector4<T>::operator[](int i) const {
     return data[i];
 }
 
-template<typename T>
-inline Vector4<T>::operator glm::tvec4<T>() const {
-    return glm::tvec4<T>(x, y, z, w);
-}
-
-template<typename T>
-template<typename U>
-inline Vector4<T>& Vector4<T>::operator=(const glm::tvec4<U>& rhs) {
-    x = static_cast<T>(rhs.x);
-    y = static_cast<T>(rhs.y);
-    z = static_cast<T>(rhs.z);
-    w = static_cast<T>(rhs.w);
-    return *this;
-}
 template<typename T>
 template<typename U>
 inline Vector4<T>& Vector4<T>::operator=(const Vector4<U>& rhs) {

@@ -29,18 +29,6 @@ inline typename const Matrix2<T>::ColType& Matrix2<T>::operator[](int i) const {
 }
 
 template<typename T>
-inline Matrix2<T>::operator glm::tmat2x2<T>() const {
-    return glm::tmat2x2<T>(c0[0], c0[1],
-                           c1[0], c1[1]);
-}
-
-template<typename T>
-template<typename U>
-inline Matrix2<T>& Matrix2<T>::operator=(const glm::tmat2x2<U>& rhs) {
-    c0 = rhs[0];
-    c1 = rhs[1];
-}
-template<typename T>
 template<typename U>
 inline Matrix2<T>& Matrix2<T>::operator=(const Matrix2<U>& rhs) {
     c0 = rhs.c0;
@@ -191,20 +179,6 @@ inline typename const Matrix3<T>::ColType& Matrix3<T>::operator[](int i) const {
     return data[i];
 }
 
-template<typename T>
-inline Matrix3<T>::operator glm::tmat3x3<T>() const {
-    return glm::tmat3x3<T>(c0[0], c0[1], c0[2],
-                           c1[0], c1[1], c1[2],
-                           c2[0], c2[1], c2[2]);
-}
-
-template<typename T>
-template<typename U>
-inline Matrix3<T>& Matrix3<T>::operator=(const glm::tmat3x3<U>& rhs) {
-    c0 = rhs[0];
-    c1 = rhs[1];
-    c2 = rhs[2];
-}
 template<typename T>
 template<typename U>
 inline Matrix3<T>& Matrix3<T>::operator=(const Matrix3<U>& rhs) {
@@ -368,22 +342,6 @@ inline typename const Matrix4<T>::ColType& Matrix4<T>::operator[](int i) const {
     return data[i];
 }
 
-template<typename T>
-inline Matrix4<T>::operator glm::tmat4x4<T>() const {
-    return glm::tmat4x4<T>(c0[0], c0[1], c0[2], c0[3],
-                           c1[0], c1[1], c1[2], c1[3],
-                           c2[0], c2[1], c2[2], c2[3],
-                           c3[0], c3[1], c3[2], c3[3]);
-}
-
-template<typename T>
-template<typename U>
-inline Matrix4<T>& Matrix4<T>::operator=(const glm::tmat4x4<U>& rhs) {
-    c0 = rhs[0];
-    c1 = rhs[1];
-    c2 = rhs[2];
-    c3 = rhs[3];
-}
 template<typename T>
 template<typename U>
 inline Matrix4<T>& Matrix4<T>::operator=(const Matrix4<U>& rhs) {

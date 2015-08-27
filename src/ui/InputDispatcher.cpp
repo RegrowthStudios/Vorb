@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
+#ifdef OS_WINDOWS
+#include "Windows.h"
+#endif
+
 #include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
 #include "KeyMappings.inl"

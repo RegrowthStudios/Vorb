@@ -448,7 +448,6 @@
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
     <ClInclude Include="include\script\GraphicsScriptInterface.h" />
-    <ClInclude Include="include\script\MathScriptInterface.h" />
     <ClInclude Include="include\script\REPL.h" />
     <ClInclude Include="include\script\Script.h" />
     <ClInclude Include="include\script\ScriptImpl.h" />

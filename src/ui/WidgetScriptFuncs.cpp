@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ui/WidgetScriptFuncs.h"
 #include "script/Environment.h"
-#include "VorbPreDecl.inl"
 #include "ui/MouseInputDispatcher.h"
 
 // Helper macros for smaller code
@@ -275,11 +274,11 @@ void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
 }
 
-void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4& destRect) const {
+void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) const {
     w->setDestRect(destRect);
 }
 
-void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2& dims) const {
+void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) const {
     w->setDimensions(dims);
 }
 
@@ -299,7 +298,7 @@ void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) const {
     w->setHeight(height);
 }
 
-void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2& pos) const {
+void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2 pos) const {
     w->setPosition(pos);
 }
 
@@ -331,19 +330,19 @@ void vui::WidgetScriptFuncs::setParent(Widget* w, IWidgetContainer* parent) cons
     w->setParent(parent);
 }
 
-void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2& minSize) const {
+void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2 minSize) const {
     w->setMinSize(minSize);
 }
 
-void vui::WidgetScriptFuncs::setMaxSize(Widget* w, f32v2& maxSize) const {
+void vui::WidgetScriptFuncs::setMaxSize(Widget* w, f32v2 maxSize) const {
     w->setMaxSize(maxSize);
 }
 
-void vui::WidgetScriptFuncs::setPositionPercentage(Widget* w, f32v2& positionPercentage) const {
+void vui::WidgetScriptFuncs::setPositionPercentage(Widget* w, f32v2 positionPercentage) const {
     w->setPositionPercentage(positionPercentage);
 }
 
-void vui::WidgetScriptFuncs::setDimensionsPercentage(Widget* w, f32v2& dimensionsPercentage) const {
+void vui::WidgetScriptFuncs::setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const {
     w->setDimensionsPercentage(dimensionsPercentage);
 }
 

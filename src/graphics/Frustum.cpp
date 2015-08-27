@@ -2,7 +2,6 @@
 #include "graphics/Frustum.h"
 
 #include "Constants.h"
-#include "math/VorbMath.hpp"
 
 void vg::Frustum::Plane::setNormalAndPoint(const f32v3 &normal, const f32v3 &point) {
     this->normal = vmath::normalize(normal);
@@ -11,14 +10,14 @@ void vg::Frustum::Plane::setNormalAndPoint(const f32v3 &normal, const f32v3 &poi
 
 void vg::Frustum::Plane::setCoefficients(f32 a, f32 b, f32 c, f32 d) {
     //compute the length of the vector
-    f32 l = glm::length(af32v3(a, b, c));
+    f32 l = vmath::length(f32v3(a, b, c));
     // normalize the vector
     normal = f32v3(a / l, b / l, c / l);
     // and divide d by th length as well
     this->d = d / l;
 }
 
-f32 vg::Frustum::Plane::distance(const f32v3 &p) const {
+f32 vg::Frustum::Plane::distance(const f32v3& p) const {
     return (d + vmath::dot(normal, p));
 }
 

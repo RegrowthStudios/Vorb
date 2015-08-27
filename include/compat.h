@@ -45,8 +45,6 @@
 
 #if defined(WIN32) || defined(WIN64)
 #define OS_WINDOWS
-#define _WINSOCKAPI_
-#include "Windows.h"
 #endif
 
 // register keyword creates a warning and is deprecated

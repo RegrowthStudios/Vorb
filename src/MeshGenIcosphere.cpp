@@ -4,8 +4,6 @@
 
 #include "graphics/GpuMemory.h"
 
-#include "math/VorbMath.hpp"
-
 const static float GOLDEN_RATIO = 1.61803398875f;
 
 const static int NUM_ICOSOHEDRON_VERTICES = 12;

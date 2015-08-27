@@ -1,6 +1,6 @@
 //
 // VorbMath.h
-// Vorb Engine
+// Vorb Engines/vo
 //
 // Created by Benjamin Arnold on 20 Aug 2015
 // Copyright 2014 Regrowth Studios
@@ -17,10 +17,6 @@
 //! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_VorbMath_h__
 //! @endcond
-
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
 
 #include "VectorMath.hpp"
 #include "MatrixMath.hpp"
@@ -94,6 +90,21 @@ namespace vorb {
         template <typename T>
         inline T atan2(T y, T x) {
             return std::atan2(y, x);
+        }
+
+        template <typename T>
+        inline T min(T a, T b) {
+            return a < b ? a : b;
+        }
+        template <typename T>
+        inline T max(T a, T b) {
+            return a > b ? a : b;
+        }
+        template <typename T>
+        inline T clamp(T a, T minVal, T maxVal) {
+            static_assert(std::numeric_limits<T>::is_iec559 || std::numeric_limits<T>::is_integer, "'clamp' only accept floating-point or integer inputs.");
+            T m = a > minVal ? a : minVal;
+            return m < maxVal ? m : maxVal;
         }
     }
 }

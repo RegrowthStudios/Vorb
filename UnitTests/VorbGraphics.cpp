@@ -9,7 +9,6 @@
 #include <include/Timing.h>
 #include <include/Vorb.h>
 #include <include/colors.h>
-#include <include/math/VorbMath.hpp>
 #include <include/graphics/GLProgram.h>
 #include <include/graphics/GLStates.h>
 #include <include/graphics/ImageIO.h>

@@ -687,9 +687,6 @@
     <ClInclude Include="include\VorbMemory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="include\script\MathScriptInterface.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="include\Quaternion.hpp">
       <Filter>Core</Filter>
     </ClInclude>

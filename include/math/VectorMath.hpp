@@ -16,11 +16,7 @@
 #ifndef Vorb_VectorMath_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_VectorMath_hpp__
-//! @endcond
-
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
+//! @endcondM
 
 namespace vorb {
     namespace math {
@@ -105,20 +101,20 @@ namespace vorb {
 #endif
         }
 
-        // Helper macro for function calls to be performed on each element of vector
+        // Trig calls
 #define VEC_FCALL(name, func) \
-    template <typename T> \
-    inline Vector2<T> name(const Vector2<T>& v) { \
-        return Vector2<T>(func(v.x), func(v.y)); \
-    } \
-    template <typename T> \
-    inline Vector3<T> name(const Vector3<T>& v) { \
-        return Vector3<T>(func(v.x), func(v.y), func(v.z)); \
-    } \
-    template <typename T> \
-    inline Vector4<T> name(const Vector4<T>& v) { \
-        return Vector4<T>(func(v.x), func(v.y), func(v.z), func(v.w)); \
-    }
+        template <typename T> \
+        inline Vector2<T> name(const Vector2<T>& v) { \
+            return Vector2<T>(func(v.x), func(v.y)); \
+        } \
+        template <typename T> \
+        inline Vector3<T> name(const Vector3<T>& v) { \
+            return Vector3<T>(func(v.x), func(v.y), func(v.z)); \
+        } \
+        template <typename T> \
+        inline Vector4<T> name(const Vector4<T>& v) { \
+            return Vector4<T>(func(v.x), func(v.y), func(v.z), func(v.w)); \
+        }
 
         VEC_FCALL(sin, std::sin);
         VEC_FCALL(cos, std::cos);
@@ -126,6 +122,45 @@ namespace vorb {
         VEC_FCALL(acos, std::acos);
         VEC_FCALL(asin, std::asin);
         VEC_FCALL(atan, std::atan);
+
+        template <typename T>
+        inline Vector2<T> min(const Vector2<T>& v1, const Vector2<T>& v2) {
+            return Vector2<T>(vmath::min(v1.x, v2.x), vmath::min(v1.y, v2.y));
+        }
+        template <typename T>
+        inline Vector3<T> min(const Vector3<T>& v1, const Vector3<T>& v2) {
+            return Vector3<T>(vmath::min(v1.x, v2.x), vmath::min(v1.y, v2.y), vmath::min(v1.z, v2.z));
+        }
+        template <typename T>
+        inline Vector4<T> min(const Vector4<T>& v1, const Vector4<T>& v2) {
+            return Vector4<T>(vmath::min(v1.x, v2.x), vmath::min(v1.y, v2.y), vmath::min(v1.z, v2.z), vmath::min(v1.w, v2.w));
+        }
+
+        template <typename T>
+        inline Vector2<T> max(const Vector2<T>& v1, const Vector2<T>& v2) {
+            return Vector2<T>(vmath::max(v1.x, v2.x), vmath::max(v1.y, v2.y));
+        }
+        template <typename T>
+        inline Vector3<T> max(const Vector3<T>& v1, const Vector3<T>& v2) {
+            return Vector3<T>(vmath::max(v1.x, v2.x), vmath::max(v1.y, v2.y), vmath::max(v1.z, v2.z));
+        }
+        template <typename T>
+        inline Vector4<T> max(const Vector4<T>& v1, const Vector4<T>& v2) {
+            return Vector4<T>(vmath::max(v1.x, v2.x), vmath::max(v1.y, v2.y), vmath::max(v1.z, v2.z), vmath::max(v1.w, v2.w));
+        }
+
+        template <typename T>
+        inline Vector2<T> clamp(const Vector2<T>& v, T minVal, T maxVal) {
+            return Vector2<T>(vmath::clamp(v.x, minVal, maxVal), vmath::clamp(v.y, minVal, maxVal));
+        }
+        template <typename T>
+        inline Vector3<T> clamp(const Vector3<T>& v, T minVal, T maxVal) {
+            return Vector3<T>(vmath::clamp(v.x, minVal, maxVal), vmath::clamp(v.y, minVal, maxVal), vmath::clamp(v.z, minVal, maxVal));
+        }
+        template <typename T>
+        inline Vector4<T> clamp(const Vector4<T>& v, T minVal, T maxVal) {
+            return Vector4<T>(vmath::clamp(v.x, minVal, maxVal), vmath::clamp(v.y, minVal, maxVal), vmath::clamp(v.z, minVal, maxVal), vmath::clamp(v.w, minVal, maxVal));
+        }
     }
 }
 namespace vmath = vorb::math;

@@ -18,10 +18,6 @@
 #define Vorb_QuaternionMath_hpp__
 //! @endcond
 
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
-
 namespace vorb {
     namespace math {
         template <typename T>

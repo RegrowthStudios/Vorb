@@ -44,7 +44,7 @@ namespace vorb {
 
             template<typename F>
             void set(F func) {
-                RPCFunction* f = makeFunctor<Sender, void*>(func);
+                RPCFunction* f = makeFunctor(func);
                 data.f = f;
                 m_func.reset(f);
             }

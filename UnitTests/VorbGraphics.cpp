@@ -4,7 +4,6 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
-#include <glm/gtx/transform.hpp>
 #include <include/MeshGenerators.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>

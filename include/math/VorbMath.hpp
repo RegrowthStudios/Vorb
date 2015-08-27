@@ -22,6 +22,9 @@
 #include "MatrixMath.hpp"
 #include "QuaternionMath.hpp"
 
+#include <stdint.h>
+#include "utils.h"
+
 namespace vorb {
     namespace math {
         /*! @brief Computes the dot product of two values.
@@ -105,6 +108,70 @@ namespace vorb {
             static_assert(std::numeric_limits<T>::is_iec559 || std::numeric_limits<T>::is_integer, "'clamp' only accept floating-point or integer inputs.");
             T m = a > minVal ? a : minVal;
             return m < maxVal ? m : maxVal;
+        }
+
+        template <typename T>
+        inline T abs(T a) {
+            static_assert(std::numeric_limits<T>::is_iec559 || std::numeric_limits<T>::is_signed,
+                          "'abs' only accept floating-point and integer scalar or vector inputs.");
+            return (a >= static_cast<T>(0) ? a : -a);
+        }
+        template<>
+        inline int32_t abs<int32_t>(int32_t a) {
+            // TODO(Ben): assembly?
+            const int32_t temp = a >> 31;
+            a ^= temp;
+            return temp & 1;
+        }
+        template<>
+        inline int64_t abs<int64_t>(int64_t a) {
+            const int64_t temp = a >> 63;
+            a ^= temp;
+            return temp & 1;
+        }
+        
+        template <typename T>
+        inline T floor(T a) {
+            return FastConversion<T, T>::floor(a);
+        }
+
+        template <typename T>
+        inline T ceil(T a) {
+            return FastConversion<T, T>::ceiling(a);
+        }
+
+        template <typename T>
+        inline T trunc(T a) {
+            return FastConversion<T, T>::trunc(a);
+        }
+
+        template <typename T>
+        inline T round(T a) {
+            return FastConversion<T, T>::round(a);
+        }
+
+        template <typename T>
+        inline T fract(T a) {
+            return a - FastConversion<T, T>::floor(a);
+        }
+        
+        template <typename T>
+        inline T mod(T a, T b) {
+            return a % b;
+        }
+        template<>
+        inline float mod<float>(float a, float b) {
+            a - b * FastConversion<float, float>::floor(a / b);
+        }
+        template<>
+        inline double mod<double>(double a, double b) {
+            a - b * FastConversion<double, double>::floor(a / b);
+        }
+        
+        template <typename T>
+        inline T modf(T a, T& b) {
+            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'modf' only accept floating-point inputs");
+            return std::modf(a, &b);
         }
     }
 }

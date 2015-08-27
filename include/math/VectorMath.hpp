@@ -101,7 +101,7 @@ namespace vorb {
 #endif
         }
 
-        // Trig calls
+        // Basic function calls
 #define VEC_FCALL(name, func) \
         template <typename T> \
         inline Vector2<T> name(const Vector2<T>& v) { \
@@ -122,6 +122,26 @@ namespace vorb {
         VEC_FCALL(acos, std::acos);
         VEC_FCALL(asin, std::asin);
         VEC_FCALL(atan, std::atan);
+        VEC_FCALL(abs, vmath::abs);
+        VEC_FCALL(floor, vmath::floor);
+        VEC_FCALL(ceil, vmath::ceil);
+        VEC_FCALL(trunc, vmath::trunc);
+        VEC_FCALL(round, vmath::round);
+        VEC_FCALL(fract, vmath::fract);
+#undef VEC_FCALL
+
+        template <typename T>
+        inline Vector2<T> mod(const Vector2<T>& v, T a) {
+            return Vector2<T>(vmath::mod(v.x, a), vmath::mod(v.y, a));
+        }
+        template <typename T>
+        inline Vector3<T> mod(const Vector3<T>& v, T a) {
+            return Vector3<T>(vmath::mod(v.x, a), vmath::mod(v.y, a), vmath::mod(v.z, a));
+        }
+        template <typename T>
+        inline Vector4<T> mod(const Vector4<T>& v, T a) {
+            return Vector4<T>(vmath::mod(v.x, a), vmath::mod(v.y, a), vmath::mod(v.z, a), vmath::mod(v.w, a));
+        }
 
         template <typename T>
         inline Vector2<T> min(const Vector2<T>& v1, const Vector2<T>& v2) {

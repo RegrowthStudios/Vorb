@@ -4,7 +4,6 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_UI_
 
-#include <glm/gtx/transform.hpp>
 #include <include/Graphics.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -210,7 +209,7 @@ TEST(SoloWindow) {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     auto dev = (IDirect3DDevice9*)window.getContext();
-    f32m4 mat = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
+    f32m4 mat = vmath::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
     dev->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&mat[0][0]);
     dev->SetRenderState(D3DRS_AMBIENT, RGB(255, 255, 255));
     dev->SetRenderState(D3DRS_LIGHTING, false);

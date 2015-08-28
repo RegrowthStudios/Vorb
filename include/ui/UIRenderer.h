@@ -79,8 +79,8 @@ namespace vorb {
             /*! @brief Frees resources used by renderer */
             virtual void dispose();
             /*! @brief Draws all IDrawables held by this renderer */
-            virtual void draw(f32m4 mWorld, f32m4 mCamera, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            virtual void draw(f32m4 mWorld, const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            virtual void draw(const f32m4& mWorld, const f32m4& mCamera, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            virtual void draw(const f32m4& mWorld, const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
             virtual void draw(const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
 
             /*! @brief Gets the default SpriteFont.

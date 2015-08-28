@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ui/WidgetScriptFuncs.h"
 #include "script/Environment.h"
-#include "VorbPreDecl.inl"
 #include "ui/MouseInputDispatcher.h"
 
 // Helper macros for smaller code

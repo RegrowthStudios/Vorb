@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "macros.h"
 
+#include "include/Vector.hpp"
+
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH System_
 
 TEST(TypeSizes) {
-#define SA(T, S) assert(sizeof(T) == S)
+#define SA(T, S) vorb_assert(sizeof(T) == S, "Improper size")
     SA(float, 4);
     SA(double, 8);
     SA(f32, 4);

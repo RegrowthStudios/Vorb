@@ -184,6 +184,10 @@ namespace vorb {
         }
 
         template <typename T>
+        inline Matrix4<T> rotate(T angle, const Vector3<T>& v) {
+            return rotate(Matrix4<T>(static_cast<T>(1)), angle, v);
+        }
+        template <typename T>
         inline Matrix4<T> rotate(const Matrix4<T>& m, T angle, const Vector3<T>& v) {
             const T a = angle;
             const T c = cos(a);
@@ -209,11 +213,34 @@ namespace vorb {
         }
 
         template<typename T>
+        inline Matrix4<T> scale(const Vector3<T>& v) {
+            return scale(Matrix4<T>(static_cast<T>(1)), v);
+        }
+        template<typename T>
         inline Matrix4<T> scale(const Matrix4<T>& m, const Vector3<T>& v) {
             return Matrix4<T>(m[0] * v[0],
                               m[1] * v[1],
                               m[2] * v[2],
                               m[3]);
+        }
+
+        template<typename T>
+        inline Matrix2<T> transpose(const Matrix2<T>& m) {
+            return Matrix2<T>(m[0][0], m[1][0], m[0][1], m[1][1]);
+        }
+
+        template<typename T>
+        inline Matrix3<T> transpose(const Matrix3<T>& m) {
+            return Matrix3<T>(m[0][0], m[1][0], m[2][0],
+                             m[0][1], m[1][1], m[2][1],
+                             m[0][2], m[1][2], m[2][2]);
+        }
+        template<typename T>
+        inline Matrix4<T> transpose(const Matrix4<T>& m) {
+            return Matrix4<T>(m[0][0], m[1][0], m[2][0], m[3][0],
+                             m[0][1], m[1][1], m[2][1], m[3][1],
+                             m[0][2], m[1][2], m[2][2], m[3][2],
+                             m[0][3], m[1][3], m[2][3], m[3][3]);
         }
     }
 }

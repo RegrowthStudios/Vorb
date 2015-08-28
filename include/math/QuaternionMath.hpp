@@ -266,6 +266,16 @@ namespace vorb {
                                  v.z * s,
                                  vmath::cos(angle * static_cast<T>(0.5)));
         }
+
+        template<typename T>
+        inline Matrix3<T> toMat3(const Quaternion<T>& q) {
+            return vmath::mat3_cast(q);
+        }
+
+        template<typename T>
+        inline Matrix4<T> toMat4(const Quaternion<T>& q) {
+            return vmath::mat4_cast(q);
+        }
     }
 }
 namespace vmath = vorb::math;

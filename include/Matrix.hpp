@@ -25,6 +25,12 @@
 #include "Vector.hpp"
 
 namespace vorb {
+    // Forward decl
+    template <typename T>
+    class Matrix3;
+    template <typename T>
+    class Matrix4;
+
     template <typename T>
     class Matrix2 {
     public:
@@ -41,6 +47,8 @@ namespace vorb {
                 const T& x1, const T& y1) :
             c0(x0, y0), c1(x1, y1) {}
         Matrix2(const ColType& c0, const ColType& c1) : c0(c0), c1(c1) {}
+        Matrix2(const Matrix3<T>& m) : c0(m[0]), c1(m[1]) {}
+        Matrix2(const Matrix4<T>& m) : c0(m[0]), c1(m[1]) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -99,6 +107,7 @@ namespace vorb {
                 c0(x0, y0, z0), c1(x1, y1, z1), c2(x2, y2, z2) {}
         Matrix3(const ColType& c0, const ColType& c1, const ColType& c2) :
                 c0(c0), c1(c1), c2(c2) {}
+        Matrix3(const Matrix4<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -155,7 +164,10 @@ namespace vorb {
             c1(m[1], 0),
             c2(m[2], 0),
             c3(0, 0, 0, 1) {}
-        Matrix4(const Matrix4<T>& m) : c0(m[0]), c1(m[1]), c2(m[2]), c3(m[3]) {}
+        template <typename U>
+        Matrix4(const Matrix4<U>& m) :
+            c0(m[0]), c1(m[1]),
+            c2(m[2]), c3(m[3]) {}
         Matrix4(const T& a) : c0(a, 0, 0, 0), c1(0, a, 0, 0), c2(0, 0, a, 0), c3(0, 0, 0, a) {}
         Matrix4(const T& x0, const T& y0, const T& z0, const T& w0,
                 const T& x1, const T& y1, const T& z1, const T& w1,
@@ -167,7 +179,6 @@ namespace vorb {
                 const ColType& c2, const ColType& c3) :
             c0(c0), c1(c1), c2(c2), c3(c3) {}
         
-
         /************************************************************************/
         /* Operators                                                            */
         /************************************************************************/

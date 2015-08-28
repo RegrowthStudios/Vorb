@@ -23,6 +23,12 @@
 #endif // !VORB_USING_PCH
 
 namespace vorb {
+    // Forward decl
+    template <typename T>
+    class Vector3;
+    template <typename T>
+    class Vector4;
+
     template <typename T>
     class Vector2 {
     public:
@@ -34,6 +40,10 @@ namespace vorb {
         Vector2(T x, T y) : x(x), y(y) {}
         template <typename U>
         Vector2(const Vector2<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
+        template <typename U>
+        Vector2(const Vector3<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
+        template <typename U>
+        Vector2(const Vector4<U>& v) : x(static_cast<T>(v.x)), y(static_cast<T>(v.y)) {}
 
         /************************************************************************/
         /* Operators                                                            */
@@ -119,8 +129,11 @@ namespace vorb {
         Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
         template <typename U>
         Vector3(const Vector3<U>& v) :
-            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {
-        }
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
+        template <typename U>
+        Vector3(const Vector4<U>& v) :
+            x(static_cast<T>(v.x)), y(static_cast<T>(v.y)), z(static_cast<T>(v.z)) {}
+
 
         /************************************************************************/
         /* Explicit Conversions                                                 */

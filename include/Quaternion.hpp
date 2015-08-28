@@ -28,6 +28,9 @@ namespace vorb {
     template <typename T>
     class Quaternion {
     public:
+        /************************************************************************/
+        /* Constructors                                                         */
+        /************************************************************************/
         Quaternion() : x(0), y(0), z(0), w(1) {}
         Quaternion(const vorb::Vector3<T>& euler);
         template<typename U>
@@ -38,6 +41,9 @@ namespace vorb {
             w(static_cast<T>(q.w)) {}
         Quaternion(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 
+        /************************************************************************/
+        /* Operators                                                            */
+        /************************************************************************/
         T& operator[](int i);
         const T& operator[](int i) const;
 

@@ -23,7 +23,41 @@
 #include "QuaternionMath.hpp"
 
 #include <stdint.h>
-#include "utils.h"
+#include "../utils.h"
+
+#ifndef M_PI
+#define M_PI   3.14159265358979323846264338327950288   /* pi */
+#endif
+#ifndef M_PIF
+#define M_PIF   3.14159265358979323846264338327950288f   /* pi */
+#endif
+#ifndef M_2_PI
+#define M_2_PI 6.283185307179586476925286766559 /* 2 * pi */
+#endif
+#ifndef M_2_PIF
+#define M_2_PIF 6.283185307179586476925286766559F /* 2 * pi */
+#endif
+#ifndef M_4_PI
+#define M_4_PI 12.566370614359172953850573533118 /* 4 * pi */
+#endif
+#ifndef M_4_PIF
+#define M_4_PIF 12.566370614359172953850573533118f /* 4 * pi */
+#endif
+#ifndef M_PI_2
+#define M_PI_2 1.5707963267948966192313216916398   /* pi / 2 */
+#endif
+#ifndef M_PI_2F
+#define M_PI_2F 1.5707963267948966192313216916398f   /* pi / 2 */
+#endif
+#ifndef M_PI_4
+#define M_PI_4 0.78539816339744830961566084581988   /* pi / 4 */
+#endif
+#ifndef M_PI_4F
+#define M_PI_4F 0.78539816339744830961566084581988f   /* pi / 4 */
+#endif
+#ifndef M_G
+#define M_G 0.0000000000667384
+#endif
 
 namespace vorb {
     namespace math {
@@ -175,17 +209,53 @@ namespace vorb {
         }
         template<>
         inline float mod<float>(float a, float b) {
-            a - b * FastConversion<float, float>::floor(a / b);
+            return a - b * FastConversion<float, float>::floor(a / b);
         }
         template<>
         inline double mod<double>(double a, double b) {
-            a - b * FastConversion<double, double>::floor(a / b);
+            return a - b * FastConversion<double, double>::floor(a / b);
         }
         
         template <typename T>
         inline T modf(T a, T& b) {
             GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'modf' only accept floating-point inputs");
             return std::modf(a, &b);
+        }
+
+        template <typename T>
+        inline T sign(T a) {
+            // TODO(Ben): Optimize
+            return static_cast<T>(a < 0 ? -1 : 1);
+        }
+
+        template <typename T>
+        inline T radians(T a) {
+            return a * static_cast<T>(M_PI / 180.0);
+        }
+
+        template <typename T>
+        inline T degrees(T a) {
+            return a * static_cast<T>(180.0 / M_PI);
+        }
+
+        template <typename T>
+        inline T exp(T a) {
+            return std::exp(a);
+        }
+
+        template <typename T>
+        inline T exp2(T a) {
+            return std::exp2(a);
+        }
+
+        template <typename T>
+        inline T log(T a) {
+            return std::log(a);
+        }
+
+        template <typename T>
+        inline T log2(T a) {
+            return std::log2(a);
         }
     }
 }

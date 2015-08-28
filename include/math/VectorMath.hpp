@@ -128,6 +128,14 @@ namespace vorb {
         VEC_FCALL(trunc, vmath::trunc);
         VEC_FCALL(round, vmath::round);
         VEC_FCALL(fract, vmath::fract);
+        VEC_FCALL(sign, vmath::sign);
+        VEC_FCALL(radians, vmath::radians);
+        VEC_FCALL(degrees, vmath::degrees);
+        VEC_FCALL(sqrt, vmath::sqrt);
+        VEC_FCALL(exp, vmath::exp);
+        VEC_FCALL(exp2, vmath::exp2);
+        VEC_FCALL(log, vmath::log);
+        VEC_FCALL(log2, vmath::log2);
 #undef VEC_FCALL
 
         template <typename T>

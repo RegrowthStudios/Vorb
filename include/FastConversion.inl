@@ -22,7 +22,7 @@ public:
         // slowest version
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
         output = static_cast<U>(std::floor(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32)
+#elif defined(OS_WINDOWS) && defined(ARCH_X86_32) && 0 
         __asm {
             fld x;
             fadd st, st(0);
@@ -44,7 +44,7 @@ public:
         U output = 0;
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
         output = static_cast<U>(std::ceil(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32)
+#elif defined(OS_WINDOWS) && defined(ARCH_X86_32) && 0 
         __asm {
             fld x;
             fadd st, st(0);

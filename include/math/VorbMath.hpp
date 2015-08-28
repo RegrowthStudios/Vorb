@@ -130,14 +130,24 @@ namespace vorb {
             return temp & 1;
         }
         
+#define FAST_EPSILON static_cast<T>(0.99999999999999)
+
         template <typename T>
         inline T floor(T a) {
             return FastConversion<T, T>::floor(a);
+        }
+        template <typename T>
+        inline T floorApprox(T a) {
+            return static_cast<T>(a < 0 ? (int)(a - FAST_EPSILON) : (int)a);
         }
 
         template <typename T>
         inline T ceil(T a) {
             return FastConversion<T, T>::ceiling(a);
+        }
+        template <typename T>
+        inline T ceilApprox(T a) {
+            return static_cast<T>(a <= 0 ? (int)a : (int)(a + FAST_EPSILON));
         }
 
         template <typename T>
@@ -148,6 +158,10 @@ namespace vorb {
         template <typename T>
         inline T round(T a) {
             return FastConversion<T, T>::round(a);
+        }
+        template <typename T>
+        inline T roundApprox(T a) {
+            return static_cast<T>(a <= 0 ? (int)(a - static_cast<T>(0.5)) : (int)(a + static_cast<T>(0.5)));
         }
 
         template <typename T>

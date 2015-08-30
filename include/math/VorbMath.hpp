@@ -218,7 +218,7 @@ namespace vorb {
         
         template <typename T>
         inline T modf(T a, T& b) {
-            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'modf' only accept floating-point inputs");
+            static_assert(std::numeric_limits<T>::is_iec559, "'modf' only accept floating-point inputs");
             return std::modf(a, &b);
         }
 

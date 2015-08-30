@@ -52,7 +52,7 @@ typedef float f32; ///< 32-bit floating point value (single)
 typedef double f64; ///< 64-bit floating point value (double)
 
 /************************************************************************/
-/* GLM types                                                            */
+/* Vorb types                                                            */
 /************************************************************************/
 /*! @brief 8-bit signed integer 2-value vector.
  *

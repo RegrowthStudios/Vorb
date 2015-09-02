@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "UI/UIRenderer.h"
+#include "ui/UIRenderer.h"
 
 #include "ui/GameWindow.h"
 

@@ -21,20 +21,18 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "types.h"
+#include <vector>
+
+#include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "../Events.hpp"
 #include "../VorbPreDecl.inl"
 #include "../graphics/SpriteBatch.h"
 #include "../graphics/GLRenderTarget.h"
 #include "Drawables.h"
-#include <vector>
 
-DECL_VG(class SpriteFont;
-        class DepthState;
-        class GLProgram;
-        class RasterizerState;
-        class SamplerState)
+DECL_VG(class SpriteFont; class DepthState; class GLProgram; class RasterizerState; class SamplerState)
 
 namespace vorb {
     namespace ui {

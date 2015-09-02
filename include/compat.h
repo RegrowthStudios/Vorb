@@ -47,15 +47,6 @@
 
 #if defined(WIN32) || defined(WIN64)
 #define OS_WINDOWS
-#define _WINSOCKAPI_
-#include "Windows.h"
-#endif
-
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
 #endif
 
 // Detect architecture
@@ -79,15 +70,16 @@
 
 #elif defined(_MSC_VER)
 /* Microsoft Visual Studio. --------------------------------- */
-#ifndef _M_ARM
 #ifdef _M_IX86
 #ifdef ARCH_32
 #define ARCH_X86_32
 #else
 #define ARCH_X86_64
 #endif
+#elif defined(_M_ARM)
+#error ARM 32-bit and 64-bit architectures must be defined
 #endif
-#endif
+
 #elif defined(__PGI)
 /* Portland Group PGCC/PGCPP. ------------------------------- */
 

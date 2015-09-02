@@ -24,7 +24,6 @@
 #endif // !VORB_USING_PCH
 
 #ifdef OS_WINDOWS
-#include <Windows.h>
 #include <io.h>
 #else
 #include <sys/mman.h>

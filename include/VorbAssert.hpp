@@ -18,14 +18,10 @@
 #define Vorb_VorbAssert_hpp__
 //! @endcond
 
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
-
+#include <cstring>
 #include <string>
 #include <iostream>
 #include <sstream>
-
 #include <exception>
 
 // https://www.softwariness.com/articles/assertions-in-cpp/

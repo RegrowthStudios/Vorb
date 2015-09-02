@@ -18,10 +18,6 @@
 #define Vorb_Quaternion_hpp__
 //! @endcond
 
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
-
 #include "Vector.hpp"
 
 namespace vorb {

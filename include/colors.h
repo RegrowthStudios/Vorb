@@ -19,6 +19,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
+#pragma comment Not using PCH
 #include "types.h"
 #endif // !VORB_USING_PCH
 

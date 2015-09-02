@@ -18,9 +18,8 @@
 #define Vorb_Vector_hpp__
 //! @endcond
 
-#ifndef VORB_USING_PCH
-#include "types.h"
-#endif // !VORB_USING_PCH
+#include "VorbAssert.hpp"
+#include "math/FuncPreDecl.hpp"
 
 namespace vorb {
     // Forward decl

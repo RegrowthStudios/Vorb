@@ -63,14 +63,14 @@ inline bool Vector2<T>::operator!=(const Vector2<T>& rhs) const {
 #define COMPOUND_ASSIGNMENT(OP) \
 template<typename T> \
 template<typename U> \
-inline Vector2<T>& Vector2<T>::operator##OP##(U a) { \
+inline Vector2<T>& Vector2<T>::operator OP (U a) { \
     x OP static_cast<T>(a); \
     y OP static_cast<T>(a); \
     return *this; \
 } \
 template<typename T> \
 template<typename U> \
-inline Vector2<T>& Vector2<T>::operator##OP##(const Vector2<U>& v) { \
+inline Vector2<T>& Vector2<T>::operator OP (const Vector2<U>& v) { \
     x OP static_cast<T>(v.x); \
     y OP static_cast<T>(v.y); \
     return *this; \
@@ -84,16 +84,16 @@ ADD_COMPOUND_ASSIGNMENT_OPERATORS;
 // Code reduction for bitwise and arithmetic operators.
 #define GLOBAL_OPERATOR(OP) \
 template<typename T> \
-inline Vector2<T> operator##OP##(const Vector2<T>& v, T a) { \
-    return Vector2<T>(v.x ##OP## a, v.y ##OP## a); \
+inline Vector2<T> operator OP (const Vector2<T>& v, T a) { \
+    return Vector2<T>(v.x OP a, v.y OP a); \
 } \
 template<typename T> \
-inline Vector2<T> operator##OP##(T a, const Vector2<T>& v) { \
-    return Vector2<T>(a ##OP## v.x, a ##OP## v.y); \
+inline Vector2<T> operator OP (T a, const Vector2<T>& v) { \
+    return Vector2<T>(a OP v.x, a OP v.y); \
 } \
 template<typename T> \
-inline Vector2<T> operator##OP##(const Vector2<T>& v1, const Vector2<T>& v2) { \
-    return Vector2<T>(v1.x ##OP## v2.x, v1.y ##OP## v2.y); \
+inline Vector2<T> operator OP (const Vector2<T>& v1, const Vector2<T>& v2) { \
+    return Vector2<T>(v1.x OP v2.x, v1.y OP v2.y); \
 }
 
 // Add global operator code for Vector2.
@@ -166,7 +166,7 @@ inline bool Vector3<T>::operator!=(const Vector3<T>& rhs) const {
 #define COMPOUND_ASSIGNMENT(OP) \
 template<typename T> \
 template<typename U> \
-inline Vector3<T>& Vector3<T>::operator##OP##(U a) { \
+inline Vector3<T>& Vector3<T>::operator OP (U a) { \
     x OP static_cast<T>(a); \
     y OP static_cast<T>(a); \
     z OP static_cast<T>(a); \
@@ -174,7 +174,7 @@ inline Vector3<T>& Vector3<T>::operator##OP##(U a) { \
 } \
 template<typename T> \
 template<typename U> \
-inline Vector3<T>& Vector3<T>::operator##OP##(const Vector3<U>& v) { \
+inline Vector3<T>& Vector3<T>::operator OP (const Vector3<U>& v) { \
     x OP static_cast<T>(v.x); \
     y OP static_cast<T>(v.y); \
     z OP static_cast<T>(v.z); \
@@ -189,16 +189,16 @@ ADD_COMPOUND_ASSIGNMENT_OPERATORS;
 // Code reduction for bitwise and arithmetic operators.
 #define GLOBAL_OPERATOR(OP) \
 template<typename T> \
-inline Vector3<T> operator##OP##(const Vector3<T>& v, T a) { \
-    return Vector3<T>(v.x ##OP## a, v.y ##OP## a, v.z ##OP## a); \
+inline Vector3<T> operator OP (const Vector3<T>& v, T a) { \
+    return Vector3<T>(v.x OP a, v.y OP a, v.z OP a); \
 } \
 template<typename T> \
-inline Vector3<T> operator##OP##(T a, const Vector3<T>& v) { \
-    return Vector3<T>(a ##OP## v.x, a ##OP## v.y, a ##OP## v.z); \
+inline Vector3<T> operator OP (T a, const Vector3<T>& v) { \
+    return Vector3<T>(a OP v.x, a OP v.y, a OP v.z); \
 } \
 template<typename T> \
-inline Vector3<T> operator##OP##(const Vector3<T>& v1, const Vector3<T>& v3) { \
-    return Vector3<T>(v1.x ##OP## v3.x, v1.y ##OP## v3.y, v1.z ##OP## v3.z); \
+inline Vector3<T> operator OP (const Vector3<T>& v1, const Vector3<T>& v3) { \
+    return Vector3<T>(v1.x OP v3.x, v1.y OP v3.y, v1.z OP v3.z); \
 }
 
 // Add global operator code for Vector3.
@@ -239,7 +239,7 @@ inline Vector4<T>::Vector4(A a, const Vector2<B>& b, C c) :
 template<typename T>
 template<typename A, typename B, typename C>
 inline Vector4<T>::Vector4(A a, B b, const Vector2<C>& c) :
-    x(static_cast<T>(z)), y(static_cast<T>(b)), z(static_cast<T>(c.x)), w(static_cast<T>(c.y)) {}
+    x(static_cast<T>(a)), y(static_cast<T>(b)), z(static_cast<T>(c.x)), w(static_cast<T>(c.y)) {}
 template<typename T>
 template<typename A, typename B>
 inline Vector4<T>::Vector4(const Vector3<A>& a, B b) :
@@ -288,7 +288,7 @@ inline bool Vector4<T>::operator!=(const Vector4<T>& rhs) const {
 #define COMPOUND_ASSIGNMENT(OP) \
 template<typename T> \
 template<typename U> \
-inline Vector4<T>& Vector4<T>::operator##OP##(U a) { \
+inline Vector4<T>& Vector4<T>::operator OP (U a) { \
     x OP static_cast<T>(a); \
     y OP static_cast<T>(a); \
     z OP static_cast<T>(a); \
@@ -297,7 +297,7 @@ inline Vector4<T>& Vector4<T>::operator##OP##(U a) { \
 } \
 template<typename T> \
 template<typename U> \
-inline Vector4<T>& Vector4<T>::operator##OP##(const Vector4<U>& v) { \
+inline Vector4<T>& Vector4<T>::operator OP (const Vector4<U>& v) { \
     x OP static_cast<T>(v.x); \
     y OP static_cast<T>(v.y); \
     z OP static_cast<T>(v.z); \
@@ -313,16 +313,16 @@ ADD_COMPOUND_ASSIGNMENT_OPERATORS;
 // Code reduction for bitwise and arithmetic operators.
 #define GLOBAL_OPERATOR(OP) \
 template<typename T> \
-inline Vector4<T> operator##OP##(const Vector4<T>& v, T a) { \
-    return Vector4<T>(v.x ##OP## a, v.y ##OP## a, v.z ##OP## a, v.w ##OP## a); \
+inline Vector4<T> operator OP (const Vector4<T>& v, T a) { \
+    return Vector4<T>(v.x OP a, v.y OP a, v.z OP a, v.w OP a); \
 } \
 template<typename T> \
-inline Vector4<T> operator##OP##(T a, const Vector4<T>& v) { \
-    return Vector4<T>(a ##OP## v.x, a ##OP## v.y, a ##OP## v.z, a ##OP## v.w); \
+inline Vector4<T> operator OP (T a, const Vector4<T>& v) { \
+    return Vector4<T>(a OP v.x, a OP v.y, a OP v.z, a OP v.w); \
 } \
 template<typename T> \
-inline Vector4<T> operator##OP##(const Vector4<T>& v1, const Vector4<T>& v4) { \
-    return Vector4<T>(v1.x ##OP## v4.x, v1.y ##OP## v4.y, v1.z ##OP## v4.z, v1.w ##OP## v4.w); \
+inline Vector4<T> operator OP (const Vector4<T>& v1, const Vector4<T>& v4) { \
+    return Vector4<T>(v1.x OP v4.x, v1.y OP v4.y, v1.z OP v4.z, v1.w OP v4.w); \
 }
 
 // Add global operator code for Vector4.

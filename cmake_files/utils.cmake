@@ -19,6 +19,8 @@ macro(initialize_for_platform)
 #   set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
 # endif(APPLE)
   # setup compilers
+
+
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       set(warnings "-Wall"
@@ -33,12 +35,26 @@ macro(initialize_for_platform)
                    # "-Wno-missing-braces"
                    "-Wno-unknown-pragmas"
                    )
-      ADD_DEFINITIONS(
-          -std=c++11
-          -stdlib=libc++
-          # Other flags
-          ${warnings}
-      )
+      IF (MSVC)
+        ADD_DEFINITIONS(
+            -std=c++11
+            # Other flags
+            ${warnings}
+        )
+      ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        ADD_DEFINITIONS(
+            -std=c++11
+            -stdlib=libc++
+            # Other flags
+            ${warnings}
+        )
+      ELSE()
+        ADD_DEFINITIONS(
+            -std=c++11
+            # Other flags
+            ${warnings}
+        )
+      ENDIF()
   elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
       set(warnings "/W4 /WX /EHsc")
   endif()

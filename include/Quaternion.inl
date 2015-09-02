@@ -13,12 +13,12 @@ Quaternion<T>::Quaternion(const Vector3<T>& euler) {
 
 template<typename T>
 inline T& Quaternion<T>::operator[](int i) {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Indexing values not within range [0,3]");
     return data[i];
 }
 template<typename T>
 inline const T& Quaternion<T>::operator[](int i) const {
-    assert(i >= 0 && i < 3);
+    vorb_assert(i >= 0 && i < 3, "Indexing values not within range [0,3]");
     return data[i];
 }
 

@@ -133,7 +133,7 @@ namespace vorb {
         }
         template <typename T>
         inline Matrix4<T> perspective(T yFOV, T aspect, T zNear, T zFar) {
-            assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+            vorb_assert(abs(aspect) > static_cast<T>(std::numeric_limits<T>::epsilon()), "Aspect ratio must not be zero");
             T const tanHalfYFOV = tan(yFOV / static_cast<T>(2));
             Matrix4<T> rv(static_cast<T>(0));
             rv[0][0] = static_cast<T>(1) / (aspect * tanHalfYFOV);
@@ -145,9 +145,9 @@ namespace vorb {
         }
         template <typename T>
         inline Matrix4<T> perspectiveFov(T fov, T width, T height, T zNear, T zFar) {
-            assert(width > static_cast<T>(0));
-            assert(height > static_cast<T>(0));
-            assert(fov > static_cast<T>(0));
+            vorb_assert(width > static_cast<T>(0), "Width must be positive non-zero");
+            vorb_assert(height > static_cast<T>(0), "Height must be positive non-zero");
+            vorb_assert(fov > static_cast<T>(0), "FoV must be positive non-zero");
 
             const T rad = fov;
             const T h = vmath::cos(static_cast<T>(0.5) * rad) / vmath::sin(static_cast<T>(0.5) * rad);

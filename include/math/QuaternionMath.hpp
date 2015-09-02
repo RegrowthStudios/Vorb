@@ -76,9 +76,8 @@ namespace vorb {
 
         template<typename T>
         inline Quaternion<T> lerp(const Quaternion<T>& x, const Quaternion<T>& y, T angle) {
-            // Lerp is only defined in [0, 1]
-            assert(angle >= static_cast<T>(0));
-            assert(angle <= static_cast<T>(1));
+            vorb_assert(angle >= static_cast<T>(0), "Lerp is only defined in [0, 1]");
+            vorb_assert(angle <= static_cast<T>(1), "Lerp is only defined in [0, 1]");
 
             return x * (static_cast<T>(1) - angle) + (y * angle);
         }
@@ -233,7 +232,7 @@ namespace vorb {
                     break;
 
                 default:					// Silence a -Wswitch-default warning in GCC. Should never actually get here. Assert is just for sanity.
-                    assert(false);
+                    vorb_assert(false, "Achievement Get: We have reached unreachable code");
                     break;
             }
             return rv;

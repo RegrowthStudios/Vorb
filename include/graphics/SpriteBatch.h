@@ -67,22 +67,22 @@ namespace vorb {
 
             void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
             void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
-            void draw(VGTexture t, f32v4* uvRect, const f32v2& position, const f32v2& size, const color4& tint, f32 depth = 0.0f);
-            void draw(VGTexture t, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
-            void draw(VGTexture t, const f32v2& position, const f32v2& size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth = 0.0f);
+            void draw(VGTexture t, f32v2 position, f32v2 size, const color4& tint, f32 depth = 0.0f);
 
-            void drawString(const SpriteFont* font, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
-            void drawString(const SpriteFont* font, const cString s, const f32v2& position, f32 desiredHeight, f32 scaleX, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
+            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
+            void drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const color4& tint, TextAlign textAlign = TextAlign::TOP_LEFT, f32 depth = 0.0f, const f32v4& clipRect = CLIP_RECT_DEFAULT, bool shouldWrap = true);
 
             void end(SpriteSortMode ssm = SpriteSortMode::TEXTURE);
 
-            void render(const f32m4& mWorld, const f32m4& mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            void render(const f32m4& mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            void render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            void render(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
             void render(const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss = nullptr, const DepthState* ds = nullptr, const RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
 
             void sortGlyphs(SpriteSortMode ssm);

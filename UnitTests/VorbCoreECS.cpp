@@ -15,7 +15,7 @@ TEST(Creation) {
 TEST(MakeEntity) {
     vecs::ECS ecs;
     vecs::EntityID e = ecs.addEntity();
-    vorb_assert(e == 1, "");
+    assert(e == 1);
     return true;
 }
 
@@ -33,12 +33,12 @@ TEST(MakeComponent) {
     vecs::ECS ecs;
     
     CTTest ct;
-    vorb_assert(ct.getDefaultData().x == 10, "");
+    assert(ct.getDefaultData().x == 10);
     
     ecs.addComponentTable("C1", &ct);
 
     auto table = ecs.getComponentTable("C1");
-    vorb_assert(table, "Missing C1 table.");
+    assert(table);
 
     return true;
 }

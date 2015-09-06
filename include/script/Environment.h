@@ -32,8 +32,8 @@
 #include "../IDGenerator.h"
 #include "../io/Path.h"
 #include "Function.h"
-#include "Script.h"
 #include "ScriptValueSenders.h"
+#include "Script.h"
 
 struct lua_State;
 

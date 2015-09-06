@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "script/REPL.h"
 
-#include "os.h"
 extern "C" {
 #include <OOLua/lua/lua.h>
 #include <OOLua/lua/lualib.h>

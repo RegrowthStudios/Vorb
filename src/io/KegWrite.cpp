@@ -124,15 +124,15 @@ namespace keg {
                     // For when we want to cast TYPE to C_TYPE
 #define EMIT_CAST(TYPE, C_TYPE) \
                 case BasicType::TYPE: e << (C_TYPE)*data; break; \
-                case BasicType::TYPE##_V2: e << keg##C_TYPE##v2(data); break; \
-                case BasicType::TYPE##_V3: e << keg##C_TYPE##v3(data); break; \
-                case BasicType::TYPE##_V4: e << keg##C_TYPE##v4(data); break
+                case BasicType::TYPE##_V2: e << C_TYPE##v2(*data); break; \
+                case BasicType::TYPE##_V3: e << C_TYPE##v3(*data); break; \
+                case BasicType::TYPE##_V4: e << C_TYPE##v4(*data); break
                     // For when we want to interpret TYPE as C_TYPE
 #define EMIT_NUM(TYPE, C_TYPE) \
                 case BasicType::TYPE: e << *(C_TYPE*)data; break; \
-                case BasicType::TYPE##_V2: e << *(keg##C_TYPE##v2*)data; break; \
-                case BasicType::TYPE##_V3: e << *(keg##C_TYPE##v3*)data; break; \
-                case BasicType::TYPE##_V4: e << *(keg##C_TYPE##v4*)data; break
+                case BasicType::TYPE##_V2: e << *(C_TYPE##v2*)data; break; \
+                case BasicType::TYPE##_V3: e << *(C_TYPE##v3*)data; break; \
+                case BasicType::TYPE##_V4: e << *(C_TYPE##v4*)data; break
                     EMIT_CAST(I8, i32); // Prints out bytes as ints
                     EMIT_NUM(I16, i16);
                     EMIT_NUM(I32, i32);

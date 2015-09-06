@@ -204,6 +204,7 @@ namespace vorb {
         };
     }
 }
+
 namespace vui = vorb::ui;
 
 #endif // !Vorb_IContainer_h__

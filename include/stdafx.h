@@ -63,9 +63,7 @@
 /* Vorb common files                                                    */
 /************************************************************************/
 #include "decorators.h"
-#include "VorbAssert.hpp"
 #include "types.h"
-#include "math/VorbMath.hpp"
 
 /************************************************************************/
 /* Graphics Implementation                                              */

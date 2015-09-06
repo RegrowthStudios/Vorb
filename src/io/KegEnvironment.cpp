@@ -2,7 +2,6 @@
 #include "io/KegEnvironment.h"
 
 #include "io/KegBasic.h"
-#include "io/KegTypes.h"
 
 keg::Environment::Environment() :
     _uuid(KEG_BAD_TYPE_ID) {
@@ -19,7 +18,7 @@ keg::Environment::Environment() :
     _internalTypes[(i32)BasicType::TYPE].addValue("0", kv); \
     addType(#TYPE, &_internalTypes[(i32)BasicType::TYPE]); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addSuper(&_internalTypes[(i32)BasicType::TYPE]); \
-    _internalTypes[(i32)BasicType::TYPE##_V2].setStructType<keg##C_TYPE##v2>(); \
+    _internalTypes[(i32)BasicType::TYPE##_V2].setStructType<C_TYPE##v2>(); \
     kv = Value::basic(sizeof(C_TYPE)* 1, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("value1", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("y", kv); \
@@ -28,7 +27,7 @@ keg::Environment::Environment() :
     _internalTypes[(i32)BasicType::TYPE##_V2].addValue("1", kv); \
     addType(#TYPE"_V2", &_internalTypes[(i32)BasicType::TYPE##_V2]); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V2]); \
-    _internalTypes[(i32)BasicType::TYPE##_V3].setStructType<keg##C_TYPE##v3>(); \
+    _internalTypes[(i32)BasicType::TYPE##_V3].setStructType<C_TYPE##v3>(); \
     kv = Value::basic(sizeof(C_TYPE)* 2, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("value2", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("z", kv); \
@@ -37,7 +36,7 @@ keg::Environment::Environment() :
     _internalTypes[(i32)BasicType::TYPE##_V3].addValue("2", kv); \
     addType(#TYPE"_V3", &_internalTypes[(i32)BasicType::TYPE##_V3]); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addSuper(&_internalTypes[(i32)BasicType::TYPE##_V3]); \
-    _internalTypes[(i32)BasicType::TYPE##_V4].setStructType<keg##C_TYPE##v4>(); \
+    _internalTypes[(i32)BasicType::TYPE##_V4].setStructType<C_TYPE##v4>(); \
     kv = Value::basic(sizeof(C_TYPE)* 3, BasicType::TYPE); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("value3", kv); \
     _internalTypes[(i32)BasicType::TYPE##_V4].addValue("w", kv); \

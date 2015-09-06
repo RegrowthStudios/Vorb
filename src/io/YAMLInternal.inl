@@ -67,7 +67,7 @@ namespace YAML {
     MACRO_PARAN_R
 
 
-#define KEG_DECL_CONV_VEC_COMP(TYPE, TC, COUNT) YAML_EMITTER_VEC(keg::keg##TYPE##v##COUNT, COUNT) template<> struct convert<keg::keg##TYPE##v##COUNT> : public convertVec<keg::keg##TYPE##v##COUNT, TYPE, TC, COUNT> {}
+#define KEG_DECL_CONV_VEC_COMP(TYPE, TC, COUNT) YAML_EMITTER_VEC(TYPE##v##COUNT, COUNT) template<> struct convert<TYPE##v##COUNT> : public convertVec<TYPE##v##COUNT, TYPE, TC, COUNT> {}
 #define KEG_DECL_CONV_VEC(TYPE, COUNT) KEG_DECL_CONV_VEC_COMP(TYPE, TYPE, COUNT)
     KEG_DECL_CONV_VEC_COMP(i8, i16, 2);
     KEG_DECL_CONV_VEC_COMP(i8, i16, 3);

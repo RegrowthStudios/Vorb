@@ -53,17 +53,17 @@ const static ui32 ICOSOHEDRON_INDICES[60] = {
 
 class Vec3KeyFuncs {
 public:
-    size_t operator()(const f32v3& k)const {
+    size_t operator()(const glm::vec3& k)const {
         return std::hash<float>()(k.x) ^ std::hash<float>()(k.y) ^ std::hash<float>()(k.z);
     }
 
-    bool operator()(const f32v3& a, const f32v3& b)const {
+    bool operator()(const glm::vec3& a, const glm::vec3& b)const {
         return a.x == b.x && a.y == b.y && a.z == b.z;
     }
 };
 
-inline f32v3 findMidpoint(const f32v3& vertex1, const f32v3& vertex2) {
-    return vmath::normalize(f32v3((vertex1.x + vertex2.x) / 2.0f, (vertex1.y + vertex2.y) / 2.0f, (vertex1.z + vertex2.z) / 2.0f));
+inline glm::vec3 findMidpoint(f32v3 vertex1, f32v3 vertex2) {
+    return glm::normalize(f32v3((vertex1.x + vertex2.x) / 2.0f, (vertex1.y + vertex2.y) / 2.0f, (vertex1.z + vertex2.z) / 2.0f));
 }
 
 void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vector<f32v3>& positions) {
@@ -78,8 +78,8 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
     }
     positions.resize(NUM_ICOSOHEDRON_VERTICES);
     for (ui32 i = 0; i < NUM_ICOSOHEDRON_VERTICES; i++) {
-        positions[i] = vmath::normalize(ICOSOHEDRON_VERTICES[i]);
-        vertexLookup[vmath::normalize(ICOSOHEDRON_VERTICES[i])] = i;
+        positions[i] = glm::normalize(ICOSOHEDRON_VERTICES[i]);
+        vertexLookup[glm::normalize(ICOSOHEDRON_VERTICES[i])] = i;
     }
 
     for (ui32 i = 0; i < (ui32)lod; i++) {

@@ -4,6 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_UI_
 
+#include <glm/gtx/transform.hpp>
 #include <include/Graphics.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -11,17 +12,16 @@
 #include <include/graphics/SamplerState.h>
 #include <include/graphics/SpriteBatch.h>
 #include <include/graphics/SpriteFont.h>
-#include <include/ui/CheckBox.h>
-#include <include/ui/ComboBox.h>
-#include <include/ui/Button.h>
-#include <include/ui/Form.h>
-#include <include/ui/FormScriptEnvironment.h>
 #include <include/ui/IGameScreen.h>
 #include <include/ui/InputDispatcher.h>
 #include <include/ui/MainGame.h>
 #include <include/ui/ScreenList.h>
-#include <include/ui/Slider.h>
 #include <include/ui/UIRenderer.h>
+
+#include "Form.h"
+#include "Button.h"
+#include "UIStyle.h"
+#include "UIUtils.h"
 
 struct Vertex {
     f32v3 position;
@@ -63,50 +63,62 @@ public:
     virtual void destroy(const vui::GameTime& gameTime) {
     }
     virtual void onEntry(const vui::GameTime& gameTime) {
-        font.init("Data/chintzy.ttf", 32);
-        form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y));
+        font = new vg::SpriteFont();
+        font->init("chintzy.ttf", 32);
+        batch = new vg::SpriteBatch();
+        batch->init();
 
-        // Load textures
-        /* glGenTextures(1, &texture);
-         glBindTexture(GL_TEXTURE_2D, texture);
-         vg::ScopedBitmapResource bmp = vg::ImageIO().load("data/button_test.jpg", vg::ImageIOFormat::RGBA_UI8);
-         if (bmp.data == nullptr) {
-         std::cerr << "Error: Failed to load data/button_test.jpg\n";
-         }
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp.data);
-         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
+        //form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);
+        //env.init(&form, &m_game->getWindow());
+        //env.loadForm("data/scripts/Form1.lua");
 
-         glGenTextures(1, &checkedTexture);
-         glBindTexture(GL_TEXTURE_2D, checkedTexture);
-         vg::ScopedBitmapResource bmp2 = vg::ImageIO().load("data/checked_test.jpg", vg::ImageIOFormat::RGBA_UI8);
-         if (bmp.data == nullptr) {
-         std::cerr << "Error: Failed to load data/checked_test.jpg\n";
-         }
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, bmp.width, bmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bmp2.data);
-         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
-         glBindTexture(GL_TEXTURE_2D, 0);*/
+        vui::UIStyle style1;
+        vui::UIStyle style2;
+        vui::UIStyle style3;
 
-        // Load script file and init
-     //   env.init(&form, &m_game->getWindow());
-     //   env.loadForm("data/scripts/Form1.lua");
+        style3.setFlags(vui::StyleFlags::COLOR | vui::StyleFlags::RGB);
+
+        style1.color = color4(0, 255, 0, 255);
+        style2.color = color4(255, 0, 255, 255);
+
+        style3 = style1 + style2;
+
+        std::cout << (int)style3.color.r << ", " << (int)style3.color.g << ", " << (int)style3.color.b << std::endl;
+
+        form = new vui::Form();
+        form->init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y), font, batch);
+        form->enable();
+        
+        button = new vui::Button();
+        button->setParent(form);
+        button->setPosition(f32v2(0, 0));
+        button->setDimensions(f32v2(200, 100));
+        button->setMinSize(f32v2(200, 100));
+        button->setMaxSize(f32v2(200, 100));
+        button->setName("TestButton");
+        button->setText("Test");
+        button->setTextAlign(vg::TextAlign::CENTER);
+        button->enable();
     }
     virtual void onExit(const vui::GameTime& gameTime) {
-        form.dispose();
-       // font.dispose();
+        form->dispose();
+        font->dispose();
     }
     virtual void update(const vui::GameTime& gameTime) {
-      //  form.update();
+        form->update(0x01 | 0x02 | 0x04, 1);
     }
     virtual void draw(const vui::GameTime& gameTime) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        form.draw();
+        form->draw();
     }
 
     ui32v2 m_viewportDims = ui32v2(800, 600);
-    vui::FormScriptEnvironment env;
-    vui::Form form;
-    vg::SpriteFont font;
-    VGTexture texture, checkedTexture;
+    //vui::FormScriptEnvironment env;
+    vui::Button* button;
+    vui::Form* form;
+
+    vg::SpriteFont* font;
+    vg::SpriteBatch* batch;
 };
 namespace {
     class VGTestApp : public vui::MainGame {
@@ -149,44 +161,44 @@ TEST(InputFuncs) {
     vorb::init(vorb::InitParam::ALL);
 
     AutoDelegatePool pool;
-    pool.addAutoHook(vui::InputDispatcher::key.onFocusGained, [] (Sender) {
+    pool.addAutoHook(vui::InputDispatcher::key.onFocusGained, [](Sender) {
         puts("Key focus gained");
     });
-    pool.addAutoHook(vui::InputDispatcher::key.onFocusLost, [] (Sender) {
+    pool.addAutoHook(vui::InputDispatcher::key.onFocusLost, [](Sender) {
         puts("Key focus lost");
     });
-    pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [] (Sender, const vui::KeyEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [](Sender, const vui::KeyEvent& e) {
         printf("Key: %d-%d was pressed\n", e.keyCode, e.scanCode);
     });
-    pool.addAutoHook(vui::InputDispatcher::key.onKeyUp, [] (Sender, const vui::KeyEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::key.onKeyUp, [](Sender, const vui::KeyEvent& e) {
         printf("Key: %d-%d was released\n", e.keyCode, e.scanCode);
     });
-    pool.addAutoHook(vui::InputDispatcher::key.onText, [] (Sender, const vui::TextEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::key.onText, [](Sender, const vui::TextEvent& e) {
         char c[2] = { e.text[0], 0 };
         printf("Text: %s\n", c);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonDown, [] (Sender, const vui::MouseButtonEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonDown, [](Sender, const vui::MouseButtonEvent& e) {
         printf("Mouse: %d was pressed at (%d,%d)\n", e.button, e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonUp, [] (Sender, const vui::MouseButtonEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onButtonUp, [](Sender, const vui::MouseButtonEvent& e) {
         printf("Mouse: %d was released at (%d,%d)\n", e.button, e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusGained, [] (Sender, const vui::MouseEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusGained, [](Sender, const vui::MouseEvent& e) {
         printf("Mouse: gained at (%d,%d)\n", e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusLost, [] (Sender, const vui::MouseEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onFocusLost, [](Sender, const vui::MouseEvent& e) {
         printf("Mouse: lost at (%d,%d)\n", e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onMotion, [] (Sender, const vui::MouseMotionEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onMotion, [](Sender, const vui::MouseMotionEvent& e) {
         printf("Mouse: motion (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::mouse.onWheel, [] (Sender, const vui::MouseWheelEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::mouse.onWheel, [](Sender, const vui::MouseWheelEvent& e) {
         printf("Mouse: scroll (%d,%d) at (%d,%d)\n", e.dx, e.dy, e.x, e.y);
     });
-    pool.addAutoHook(vui::InputDispatcher::window.onFile, [] (Sender, const vui::WindowFileEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::window.onFile, [](Sender, const vui::WindowFileEvent& e) {
         printf("File: %s\n", e.file);
     });
-    pool.addAutoHook(vui::InputDispatcher::window.onResize, [] (Sender, const vui::WindowResizeEvent& e) {
+    pool.addAutoHook(vui::InputDispatcher::window.onResize, [](Sender, const vui::WindowResizeEvent& e) {
         printf("Resize: (%d,%d)\n", e.w, e.h);
     });
 
@@ -209,7 +221,7 @@ TEST(SoloWindow) {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
     auto dev = (IDirect3DDevice9*)window.getContext();
-    f32m4 mat = vmath::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
+    f32m4 mat = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f);
     dev->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&mat[0][0]);
     dev->SetRenderState(D3DRS_AMBIENT, RGB(255, 255, 255));
     dev->SetRenderState(D3DRS_LIGHTING, false);

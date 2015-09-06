@@ -26,6 +26,7 @@ bool vui::Form::addWidget(Widget* widget) {
         if (!widget->getRenderer()) widget->addDrawables(&m_renderer);
         return true;
     }
+
     return false;
 }
 
@@ -33,6 +34,7 @@ bool vui::Form::removeWidget(Widget* widget) {
     if (IWidgetContainer::removeWidget(widget)) {
         return true;
     }
+
     return false;
 }
 

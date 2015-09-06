@@ -3,20 +3,8 @@
 #ifndef Tests_h__
 #define Tests_h__
 
-#define _WINSOCKAPI_
-#include <Windows.h>
-
 typedef std::map<nString, void*> TestLibrary; ///< Container type for tests
 __declspec(dllexport) TestLibrary& getLibrary(); ///< Member variable that stores tests
-
-#define assert(...) ut_assert(__VA_ARGS__, __FILE__, __LINE__)
-inline void ut_assert(bool v, const cString file, int line) {
-    if (!v) {
-        char s[1024];
-        sprintf(s, "Assertion failed at %s : %d\n", file, line);
-        throw std::exception(s);
-    }
-}
 
 namespace UnitTests {
     /// Implementation hiding

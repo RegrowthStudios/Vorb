@@ -31,6 +31,7 @@
 
 DECL_VSCRIPT(class Environment)
 
+
 namespace vorb {
     namespace ui {
 

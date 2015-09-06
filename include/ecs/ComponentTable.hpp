@@ -38,7 +38,7 @@ namespace vorb {
 
             /// Constructor that requires a blank component for reference
             /// @param defaultData: Blank component data
-            ComponentTable(const T& defaultData) : ComponentTableBase() {
+            ComponentTable(T defaultData) : ComponentTableBase() {
                 // Default data goes in the first slot
                 _components.emplace_back(ID_GENERATOR_NULL_ID, defaultData);
             }

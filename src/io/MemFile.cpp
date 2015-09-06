@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "io/MemFile.h"
-
-#include "os.h"
+#include <stdio.h>
 
 MemFile::MemFile() {
     m_file = tmpfile();

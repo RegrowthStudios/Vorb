@@ -4,6 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Graphics_
 
+#include <glm/gtx/transform.hpp>
 #include <include/MeshGenerators.h>
 #include <include/Timing.h>
 #include <include/Vorb.h>
@@ -329,7 +330,7 @@ void main() {
         eye.z = (f32)(sin(yaw) * cos(pitch));
         eye.y = (f32)(sin(pitch));
         eye *= 3.0f;
-        f32m4 wvp = f32m4(vmath::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f)) * vmath::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
+        f32m4 wvp = glm::perspectiveFov(90.0f, 800.0f, 600.0f, 0.01f, 100.0f) * glm::lookAt(f32v3(0.0f, 0.0f, 2.1f), f32v3(0.0f), f32v3(0.0f, 1.0f, 0.0f));
 
         program.use();
         glActiveTexture(GL_TEXTURE0);
@@ -452,12 +453,12 @@ public:
 class AnimViewer : public vui::IGameScreen {
 public:
     static f32m4 fromQuat(const f32q& q) {
-        return vmath::mat4_cast(q);
+        return glm::mat4_cast(q);
     }
 
     static f32q slerp(const f32q& q1, const f32q& q2, f32 t) { // TODO: I didn't write this
         f32q q3;
-        f32 dot = vmath::dot(q1, q2);
+        f32 dot = glm::dot(q1, q2);
         if (dot < 0) {
             dot = -dot;
             q3 = -q2;
@@ -478,7 +479,7 @@ public:
         printf("Rest Bone %d\n", bone.index);
         
         // Add inverse of rest pose
-        f32m4 mRest = vmath::translate(bone.rest.translation) * fromQuat(bone.rest.rotation);
+        f32m4 mRest = glm::translate(bone.rest.translation) * fromQuat(bone.rest.rotation);
         mRest = parent * mRest;
 
         // Loop children
@@ -486,7 +487,7 @@ public:
             rest(*bone.children[i], parent);
         }
 
-        mRestInv[bone.index] = vmath::inverse(mRest);
+        mRestInv[bone.index] = glm::inverse(mRest);
     }
     void walk(vg::Bone& bone, const f32m4& parent, i32 frame) {
         i32 pfi = 0, nfi = 0;
@@ -497,7 +498,7 @@ public:
 
         if (nfi == pfi) {
             // Compute world transform
-            f32m4 local = vmath::translate(bone.keyframes[pfi].transform.translation) * fromQuat(bone.keyframes[pfi].transform.rotation);
+            f32m4 local = glm::translate(bone.keyframes[pfi].transform.translation) * fromQuat(bone.keyframes[pfi].transform.rotation);
             mWorld[bone.index] = parent * local;
         } else {
             // Lerp
@@ -507,7 +508,7 @@ public:
             f32v3 translation = lerp(bone.keyframes[pfi].transform.translation, bone.keyframes[nfi].transform.translation, r);
 
             // Compute world transforms
-            f32m4 local = vmath::translate(translation) * fromQuat(rotation);
+            f32m4 local = glm::translate(translation) * fromQuat(rotation);
             mWorld[bone.index] = parent * local;
         }
 
@@ -658,8 +659,8 @@ void main() {
             }
         }
 
-        mVP = f32m4(vmath::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f)) *
-            vmath::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
+        mVP = glm::perspectiveFov(50.0f, 800.0f, 600.0f, 0.01f, 1000.0f) *
+            glm::lookAt(f32v3(-1, 5, 1), f32v3(0, 0, 0.5f), f32v3(0, 0, 1));
         frame = 0;
 
         glClearColor(1, 1, 1, 1);

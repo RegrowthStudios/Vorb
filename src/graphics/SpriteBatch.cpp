@@ -148,7 +148,7 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& 
                           tint,
                           depth);
 }
-void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuadOffset,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -163,7 +163,7 @@ void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f3
                           depth);
 }
 
-void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 offset, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuadOffset,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -176,7 +176,7 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& 
                           depth);
 }
 
-void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -191,7 +191,7 @@ void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2* uvTiling, const f3
                           depth);
 }
 
-void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& position, const f32v2& size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -204,7 +204,7 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2* uvTiling, const f32v2& 
                           depth);
 }
 
-void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -219,7 +219,7 @@ void vg::SpriteBatch::draw(VGTexture t, f32v4* uvRect, const f32v2& position, co
                           depth);
 }
 
-void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, const f32v2& position, const f32v2& size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           uvRect != nullptr ? *uvRect : f32v4(0, 0, 1, 1),
@@ -232,7 +232,7 @@ void vg::SpriteBatch::draw(ui32 t, f32v4* uvRect, const f32v2& position, const f
                           depth);
 }
 
-void vg::SpriteBatch::draw(VGTexture t, const f32v2& position, const f32v2& size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(VGTexture t, f32v2 position, f32v2 size, const color4& tint1, const color4& tint2, GradientType grad, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           f32v4(0, 0, 1, 1),
@@ -247,7 +247,7 @@ void vg::SpriteBatch::draw(VGTexture t, const f32v2& position, const f32v2& size
                           depth);
 }
 
-void vg::SpriteBatch::draw(ui32 t, const f32v2& position, const f32v2& size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
+void vg::SpriteBatch::draw(ui32 t, f32v2 position, f32v2 size, const ColorRGBA8& tint, f32 depth /*= 0.0f*/) {
     m_glyphs.emplace_back(&SpriteBatch::buildQuad,
                           t == 0 ? m_texPixel : t,
                           f32v4(0, 0, 1, 1),
@@ -260,11 +260,11 @@ void vg::SpriteBatch::draw(ui32 t, const f32v2& position, const f32v2& size, con
                           depth);
 }
 
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, const f32v2& position, const f32v2& scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32v2 scaling, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
     if (s == nullptr) s = "";
     font->draw(this, s, position, scaling, tint, textAlign, depth, clipRect, shouldWrap);
 }
-void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, const f32v2& position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
+void vg::SpriteBatch::drawString(const SpriteFont* font, const cString s, f32v2 position, f32 desiredHeight, f32 scaleX, const ColorRGBA8& tint, TextAlign textAlign /* = TextAlign::TOP_LEFT */, f32 depth /*= 0.0f*/, const f32v4& clipRect /* = CLIP_RECT_DEFAULT */, bool shouldWrap /* = true */) {
     if (s == nullptr) s = "";
     f32v2 scaling(desiredHeight / (f32)font->getFontHeight());
     scaling.x *= scaleX;
@@ -280,7 +280,7 @@ void vg::SpriteBatch::end(SpriteSortMode ssm /*= SpriteSortMode::Texture*/) {
     generateBatches();
 }
 
-void vg::SpriteBatch::render(const f32m4& mWorld, const f32m4& mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::render(f32m4 mWorld, f32m4 mCamera, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     //if (bs == nullptr) bs = BlendState::PremultipliedAlphaBlend;
     if (ds == nullptr) ds = &DepthState::NONE;
     if (rs == nullptr) rs = &RasterizerState::CULL_NONE;
@@ -314,7 +314,7 @@ void vg::SpriteBatch::render(const f32m4& mWorld, const f32m4& mCamera, /*const 
 
     shader->unuse();
 }
-void vg::SpriteBatch::render(const f32m4& mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
+void vg::SpriteBatch::render(f32m4 mWorld, const f32v2& screenSize, /*const BlendState* bs = nullptr,*/ const SamplerState* ss /*= nullptr*/, const DepthState* ds /*= nullptr*/, const RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/) {
     f32m4 mCamera(
         2.0f / screenSize.x, 0, 0, 0,
         0, -2.0f / screenSize.y, 0, 0,

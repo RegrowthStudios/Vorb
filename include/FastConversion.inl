@@ -21,8 +21,9 @@ public:
         U output = 0;
         // slowest version
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
-        output = static_cast<U>(std::floor(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32) && 0 
+        // std::floor expects a double
+        output = static_cast<U>(std::floor(static_cast<double>(x)));
+#elif defined(WT32)
         __asm {
             fld x;
             fadd st, st(0);
@@ -31,7 +32,8 @@ public:
             sar i, 1;
         };
 #else
-        output = static_cast<U>(std::floor(x));
+        // std::floor expects a double
+        output = static_cast<U>(std::floor(static_cast<double>(x)));
 #endif
         return output;
     }
@@ -43,8 +45,9 @@ public:
     inline static U ceiling(const T& x) {
         U output = 0;
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
-        output = static_cast<U>(std::ceil(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32) && 0 
+        // std::ceil expects a double
+        output = static_cast<U>(std::ceil(static_cast<double>(x)));
+#elif defined(WT32)
         __asm {
             fld x;
             fadd st, st(0);
@@ -53,7 +56,8 @@ public:
             sar i, 1;
         };
 #else
-        output = static_cast<U>(std::ceil(x));
+        // std::ceil expects a double
+        output = static_cast<U>(std::ceil(static_cast<double>(x)));
 #endif
         return output;
     }
@@ -65,11 +69,14 @@ public:
     inline static U trunc(const T& x) {
         U output = 0;
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
-        output = static_cast<U>(std::trunc(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32)
-        output = static_cast<U>(std::trunc(x));
+        // std::trunc expects a double
+        output = static_cast<U>(std::trunc(static_cast<double>(x)));
+#elif defined(WT32)
+        // std::trunc expects a double
+        output = static_cast<U>(std::trunc(static_cast<double>(x)));
 #else
-        output = static_cast<U>(std::trunc(x));
+        // std::trunc expects a double
+        output = static_cast<U>(std::trunc(static_cast<double>(x)));
 #endif
         return output;
     }
@@ -83,11 +90,14 @@ public:
     inline static U round(const T& x) {
         U output = 0;
 #if defined(__APPLE__) || defined(__linux__) || defined(WT64)
-        output = static_cast<U>(std::round(x));
-#elif defined(OS_WINDOWS) && defined(ARCH_X86_32)
-        output = static_cast<U>(std::round(x));
+        // std::round expects a double
+        output = static_cast<U>(std::round(static_cast<double>(x)));
+#elif defined(WT32)
+        // std::round expects a double
+        output = static_cast<U>(std::round(static_cast<double>(x)));
 #else
-        output = static_cast<U>(std::round(x));
+        // std::round expects a double
+        output = static_cast<U>(std::round(static_cast<double>(x)));
 #endif
         return output;
     }

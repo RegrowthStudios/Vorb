@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "ui/InputDispatcher.h"
 
-#include "os.h"
-
 #include "InputDispatcherEventCatcher.h"
 #include "ui/GameWindow.h"
 #include "KeyMappings.inl"

@@ -44,6 +44,9 @@ namespace vorb {
             /// Checks if this should be stored in a finished tasks queue
             virtual const bool& shouldAddToFinishedTasks() const { return m_shouldAddToFinishedTasks; }
 
+            /// Last thing that runs. Can delete or recycle the task here if you want.
+            virtual void cleanup() {};
+
             /// Setters
             void setIsFinished(bool isFinished) { m_isFinished = isFinished; }
             void setShouldAddToFinishedtasks(bool shouldAdd) { m_shouldAddToFinishedTasks = shouldAdd; }

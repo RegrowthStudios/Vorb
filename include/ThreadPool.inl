@@ -72,5 +72,6 @@ void vcore::ThreadPool<T>::workerThreadFunc(T* data) {
         if (task->shouldAddToFinishedTasks()) {
             m_finishedTasks.enqueue(task);
         }
+        task->cleanup();
     }
 }

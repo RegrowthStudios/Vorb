@@ -21,7 +21,7 @@
 #ifndef VORB_USING_PCH
 #include "../types.h"
 #endif // !VORB_USING_PCH
-
+#include "../types.h" // TODO(Ben): tmp
 struct lua_State;
 
 namespace vorb {
@@ -33,7 +33,16 @@ namespace vorb {
          */
         template<typename T, typename = void> struct ScriptValueSender;
 
-#define SCRIPT_SENDER(TYPE) \
+#define SCRIPT_SENDER_REF(TYPE) \
+        template<> \
+        struct ScriptValueSender<TYPE, void> { \
+        public: \
+            static TYPE defaultValue(); \
+            static i32 getNumValues(); \
+            static i32 push(EnvironmentHandle h, const TYPE& v); \
+            static TYPE pop(EnvironmentHandle h); \
+        }
+#define SCRIPT_SENDER_VAL(TYPE) \
         template<> \
         struct ScriptValueSender<TYPE, void> { \
         public: \
@@ -41,12 +50,12 @@ namespace vorb {
             static i32 getNumValues(); \
             static i32 push(EnvironmentHandle h, TYPE v); \
             static TYPE pop(EnvironmentHandle h); \
-        }
+                        }
 #define SCRIPT_SENDER_VEC(TYPE) \
-        SCRIPT_SENDER(TYPE); \
-        SCRIPT_SENDER(TYPE##v2); \
-        SCRIPT_SENDER(TYPE##v3); \
-        SCRIPT_SENDER(TYPE##v4)
+        SCRIPT_SENDER_VAL(TYPE); \
+        SCRIPT_SENDER_REF(TYPE##v2); \
+        SCRIPT_SENDER_REF(TYPE##v3); \
+        SCRIPT_SENDER_REF(TYPE##v4)
 
         SCRIPT_SENDER_VEC(i8);
         SCRIPT_SENDER_VEC(i16);
@@ -58,11 +67,11 @@ namespace vorb {
         SCRIPT_SENDER_VEC(ui64);
         SCRIPT_SENDER_VEC(f32);
         SCRIPT_SENDER_VEC(f64);
-        SCRIPT_SENDER(bool);
-        SCRIPT_SENDER(nString);
-        SCRIPT_SENDER(const cString);
-        SCRIPT_SENDER(void*);
-        SCRIPT_SENDER(color4);
+        SCRIPT_SENDER_VAL(bool);
+        SCRIPT_SENDER_REF(nString);
+        SCRIPT_SENDER_VAL(const cString);
+        SCRIPT_SENDER_VAL(void*);
+        SCRIPT_SENDER_REF(color4);
 
         template<typename T>
         struct ScriptValueSender<T, typename std::enable_if<std::is_enum<T>::value>::type> {

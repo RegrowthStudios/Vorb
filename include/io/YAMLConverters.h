@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "YAMLNode.h"
+#include "KegTypes.h"
 
 namespace keg {
     /// Interface for node conversion
@@ -41,28 +42,28 @@ namespace keg {
     KEG_NODE_CONVERTER(TYPE ## 16); \
     KEG_NODE_CONVERTER(TYPE ## 32); \
     KEG_NODE_CONVERTER(TYPE ## 64); \
-    KEG_NODE_CONVERTER(TYPE ## 8v2); \
-    KEG_NODE_CONVERTER(TYPE ## 16v2); \
-    KEG_NODE_CONVERTER(TYPE ## 32v2); \
-    KEG_NODE_CONVERTER(TYPE ## 64v2); \
-    KEG_NODE_CONVERTER(TYPE ## 8v3); \
-    KEG_NODE_CONVERTER(TYPE ## 16v3); \
-    KEG_NODE_CONVERTER(TYPE ## 32v3); \
-    KEG_NODE_CONVERTER(TYPE ## 64v3); \
-    KEG_NODE_CONVERTER(TYPE ## 8v4); \
-    KEG_NODE_CONVERTER(TYPE ## 16v4); \
-    KEG_NODE_CONVERTER(TYPE ## 32v4); \
-    KEG_NODE_CONVERTER(TYPE ## 64v4)
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 8v2); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 16v2); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 32v2); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 64v2); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 8v3); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 16v3); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 32v3); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 64v3); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 8v4); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 16v4); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 32v4); \
+    KEG_NODE_CONVERTER(keg::keg ## TYPE ## 64v4)
     KEG_NODE_CONVERTER_NUM(i);
     KEG_NODE_CONVERTER_NUM(ui);
     KEG_NODE_CONVERTER(f32);
-    KEG_NODE_CONVERTER(f32v2);
-    KEG_NODE_CONVERTER(f32v3);
-    KEG_NODE_CONVERTER(f32v4);
+    KEG_NODE_CONVERTER(keg::kegf32v2);
+    KEG_NODE_CONVERTER(keg::kegf32v3);
+    KEG_NODE_CONVERTER(keg::kegf32v4);
     KEG_NODE_CONVERTER(f64);
-    KEG_NODE_CONVERTER(f64v2);
-    KEG_NODE_CONVERTER(f64v3);
-    KEG_NODE_CONVERTER(f64v4);
+    KEG_NODE_CONVERTER(keg::kegf64v2);
+    KEG_NODE_CONVERTER(keg::kegf64v3);
+    KEG_NODE_CONVERTER(keg::kegf64v4);
     KEG_NODE_CONVERTER(bool);
     KEG_NODE_CONVERTER(nString);
     KEG_NODE_CONVERTER(cString);

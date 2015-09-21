@@ -684,6 +684,34 @@
     <ClInclude Include="include\TypeManip.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\io\KegTypes.h">
+      <Filter>IO\Keg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VorbMemory.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Quaternion.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Matrix.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\VorbMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\VectorMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\QuaternionMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VorbAssert.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\os.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -770,6 +798,12 @@
     <Filter Include="UI\Widgets">
       <UniqueIdentifier>{6831e976-cf70-4275-a381-a9c555561184}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{fffbb386-7c57-462d-bb4d-672f2f7f9b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{e575dcfd-fb79-4e39-b4be-6d177ad7ed42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include/Radix.inl">
@@ -820,6 +854,18 @@
     </None>
     <None Include="include\IntersectionUtils.hpp">
       <Filter>Utils</Filter>
+    </None>
+    <None Include="include\Matrix.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="include\Vector.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="include\Quaternion.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="include\math\MatrixMath.hpp">
+      <Filter>Core\Math</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

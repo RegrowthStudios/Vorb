@@ -88,7 +88,7 @@ namespace vorb {
             template<typename... Args>
             void setNamespaces(Args... v) {
                 if (namespaceCount > 0) {
-                    impl::popNamespaces(m_state, namespaceCount);
+                    impl::popNamespaces(m_state, (i32)namespaceCount);
                 }
                 impl::pushNamespaces(m_state, v...);
                 namespaceCount = sizeof...(Args);

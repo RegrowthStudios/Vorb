@@ -32,8 +32,8 @@
 #include "../IDGenerator.h"
 #include "../io/Path.h"
 #include "Function.h"
-#include "ScriptValueSenders.h"
 #include "Script.h"
+#include "ScriptValueSenders.h"
 
 struct lua_State;
 
@@ -88,7 +88,7 @@ namespace vorb {
             template<typename... Args>
             void setNamespaces(Args... v) {
                 if (namespaceCount > 0) {
-                    impl::popNamespaces(m_state, namespaceCount);
+                    impl::popNamespaces(m_state, (i32)namespaceCount);
                 }
                 impl::pushNamespaces(m_state, v...);
                 namespaceCount = sizeof...(Args);

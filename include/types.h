@@ -22,18 +22,11 @@
 #include <memory>
 #include <string>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
 #include "decorators.h"
 #include "compat.h"
-
-// Use the correct glm private namespace
-#if defined(OS_WINDOWS)
-namespace glm_d = glm::detail;
-#else
-namespace glm_d = glm;
-#endif
+#include "Vector.hpp"
+#include "Matrix.hpp"
+#include "Quaternion.hpp"
 
 /************************************************************************/
 /* Integer values                                                       */
@@ -59,7 +52,7 @@ typedef float f32; ///< 32-bit floating point value (single)
 typedef double f64; ///< 64-bit floating point value (double)
 
 /************************************************************************/
-/* GLM types                                                            */
+/* Vorb types                                                            */
 /************************************************************************/
 /*! @brief 8-bit signed integer 2-value vector.
  *
@@ -71,7 +64,7 @@ typedef double f64; ///< 64-bit floating point value (double)
  *  s  ,  t
  * </pre>
  */
-typedef glm_d::tvec2<i8> i8v2;
+typedef vorb::Vector2<i8> i8v2;
 /*! @brief 16-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -82,7 +75,7 @@ typedef glm_d::tvec2<i8> i8v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::lowp_ivec2 i16v2;
+typedef vorb::Vector2<i16> i16v2;
 /*! @brief 32-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -93,7 +86,7 @@ typedef glm::lowp_ivec2 i16v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::mediump_ivec2 i32v2;
+typedef vorb::Vector2<i32> i32v2;
 /*! @brief 64-bit signed integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -104,7 +97,7 @@ typedef glm::mediump_ivec2 i32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::highp_ivec2 i64v2;
+typedef vorb::Vector2<i64> i64v2;
 /*! @brief 8-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -115,7 +108,7 @@ typedef glm::highp_ivec2 i64v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm_d::tvec2<ui8> ui8v2;
+typedef vorb::Vector2<ui8> ui8v2;
 /*! @brief 16-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -126,7 +119,7 @@ typedef glm_d::tvec2<ui8> ui8v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::lowp_uvec2 ui16v2;
+typedef vorb::Vector2<ui16> ui16v2;
 /*! @brief 32-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -137,7 +130,7 @@ typedef glm::lowp_uvec2 ui16v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::mediump_uvec2 ui32v2;
+typedef vorb::Vector2<ui32> ui32v2;
 /*! @brief 64-bit unsigned integer 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -148,7 +141,7 @@ typedef glm::mediump_uvec2 ui32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::highp_uvec2 ui64v2;
+typedef vorb::Vector2<ui64> ui64v2;
 /*! @brief 32-bit floating point (single) 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -159,7 +152,7 @@ typedef glm::highp_uvec2 ui64v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::mediump_vec2 f32v2;
+typedef vorb::Vector2<f32> f32v2;
 /*! @brief 64-bit floating point (double) 2-value vector.
  *
  * Elements can be accessed via: @n
@@ -170,7 +163,7 @@ typedef glm::mediump_vec2 f32v2;
  *  s  ,  t
  * </pre>
  */
-typedef glm::highp_vec2 f64v2;
+typedef vorb::Vector2<f64> f64v2;
 /*! @brief 8-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -181,7 +174,7 @@ typedef glm::highp_vec2 f64v2;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm_d::tvec3<i8> i8v3;
+typedef vorb::Vector3<i8> i8v3;
 /*! @brief 16-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -192,7 +185,7 @@ typedef glm_d::tvec3<i8> i8v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::lowp_ivec3 i16v3;
+typedef vorb::Vector3<i16> i16v3;
 /*! @brief 32-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -203,7 +196,7 @@ typedef glm::lowp_ivec3 i16v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::mediump_ivec3 i32v3;
+typedef vorb::Vector3<i32> i32v3;
 /*! @brief 64-bit signed integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -214,7 +207,7 @@ typedef glm::mediump_ivec3 i32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::highp_ivec3 i64v3;
+typedef vorb::Vector3<i64> i64v3;
 /*! @brief 8-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -225,7 +218,7 @@ typedef glm::highp_ivec3 i64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm_d::tvec3<ui8> ui8v3;
+typedef vorb::Vector3<ui8> ui8v3;
 /*! @brief 16-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -236,7 +229,7 @@ typedef glm_d::tvec3<ui8> ui8v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::lowp_uvec3 ui16v3;
+typedef vorb::Vector3<ui16> ui16v3;
 /*! @brief 32-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -247,7 +240,7 @@ typedef glm::lowp_uvec3 ui16v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::mediump_uvec3 ui32v3;
+typedef vorb::Vector3<ui32> ui32v3;
 /*! @brief 64-bit unsigned integer 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -258,7 +251,7 @@ typedef glm::mediump_uvec3 ui32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::highp_uvec3 ui64v3;
+typedef vorb::Vector3<ui64> ui64v3;
 /*! @brief 32-bit floating point (single) 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -269,7 +262,7 @@ typedef glm::highp_uvec3 ui64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::mediump_vec3 f32v3;
+typedef vorb::Vector3<f32> f32v3;
 /*! @brief 64-bit floating point (double) 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -280,7 +273,7 @@ typedef glm::mediump_vec3 f32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef glm::highp_vec3 f64v3;
+typedef vorb::Vector3<f64> f64v3;
 /*! @brief 8-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -291,7 +284,7 @@ typedef glm::highp_vec3 f64v3;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm_d::tvec4<i8> i8v4;
+typedef vorb::Vector4<i8> i8v4;
 /*! @brief 16-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -302,7 +295,7 @@ typedef glm_d::tvec4<i8> i8v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::lowp_ivec4 i16v4;
+typedef vorb::Vector4<i16> i16v4;
 /*! @brief 32-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -313,7 +306,7 @@ typedef glm::lowp_ivec4 i16v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::mediump_ivec4 i32v4;
+typedef vorb::Vector4<i32> i32v4;
 /*! @brief 64-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -324,7 +317,7 @@ typedef glm::mediump_ivec4 i32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::highp_ivec4 i64v4;
+typedef vorb::Vector4<i64> i64v4;
 /*! @brief 8-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -335,7 +328,7 @@ typedef glm::highp_ivec4 i64v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm_d::tvec4<ui8> ui8v4;
+typedef vorb::Vector4<ui8> ui8v4;
 /*! @brief 16-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -346,7 +339,7 @@ typedef glm_d::tvec4<ui8> ui8v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::lowp_uvec4 ui16v4;
+typedef vorb::Vector4<ui16> ui16v4;
 /*! @brief 32-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -357,7 +350,7 @@ typedef glm::lowp_uvec4 ui16v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::mediump_uvec4 ui32v4;
+typedef vorb::Vector4<ui32> ui32v4;
 /*! @brief 64-bit unsigned integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -368,7 +361,7 @@ typedef glm::mediump_uvec4 ui32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::highp_uvec4 ui64v4;
+typedef vorb::Vector4<ui64> ui64v4;
 /*! @brief 32-bit floating point (single) 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -379,7 +372,7 @@ typedef glm::highp_uvec4 ui64v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::mediump_vec4 f32v4;
+typedef vorb::Vector4<f32> f32v4;
 /*! @brief 64-bit floating point (double) 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -390,7 +383,7 @@ typedef glm::mediump_vec4 f32v4;
  *  s  ,  t  ,  p  ,  q
  * </pre>
  */
-typedef glm::highp_vec4 f64v4;
+typedef vorb::Vector4<f64> f64v4;
 /*! @brief 32-bit floating point (single) quaternion.
  *
  * Elements can be accessed via: @n
@@ -399,7 +392,7 @@ typedef glm::highp_vec4 f64v4;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef glm::mediump_quat f32q;
+typedef vorb::Quaternion<f32> f32q;
 /*! @brief 64-bit floating point (double) quaternion.
  *
  * Elements can be accessed via: @n
@@ -408,7 +401,7 @@ typedef glm::mediump_quat f32q;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef glm::highp_quat f64q;
+typedef vorb::Quaternion<f64> f64q;
 /*! @brief 32-bit floating point (single) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -427,7 +420,7 @@ typedef glm::highp_quat f64q;
  * M[1][1] = Y.y
  * </pre>
  */
-typedef glm::mediump_mat2 f32m2;
+typedef vorb::Matrix2<f32> f32m2;
 /*! @brief 64-bit floating point (double) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -446,7 +439,7 @@ typedef glm::mediump_mat2 f32m2;
  * M[1][1] = Y.y
  * </pre>
  */
-typedef glm::highp_mat2 f64m2;
+typedef vorb::Matrix2<f64> f64m2;
 /*! @brief 32-bit floating point (single) 3x3 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -471,7 +464,7 @@ typedef glm::highp_mat2 f64m2;
  * M[2][2] = Z.z
  * </pre>
  */
-typedef glm::mediump_mat3 f32m3;
+typedef vorb::Matrix3<f32> f32m3;
 /*! @brief 64-bit floating point (double) 3x3 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -496,7 +489,7 @@ typedef glm::mediump_mat3 f32m3;
  * M[2][2] = Z.z
  * </pre>
  */
-typedef glm::highp_mat3 f64m3;
+typedef vorb::Matrix3<f64> f64m3;
 /*! @brief 32-bit floating point (single) 4x4 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -529,7 +522,7 @@ typedef glm::highp_mat3 f64m3;
  * M[3][3] = 1
  * </pre>
  */
-typedef glm::mediump_mat4 f32m4;
+typedef vorb::Matrix4<f32> f32m4;
 /*! @brief 64-bit floating point (double) 4x4 matrix.
  *
  * Elements are stored in column major order and column vector notation.
@@ -562,7 +555,7 @@ typedef glm::mediump_mat4 f32m4;
  * M[3][3] = 1
  * </pre>
  */
-typedef glm::highp_mat4 f64m4;
+typedef vorb::Matrix4<f64> f64m4;
 
 // Colors
 #include "typesColor.inl"

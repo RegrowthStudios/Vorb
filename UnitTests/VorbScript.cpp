@@ -6,6 +6,7 @@
 
 #include <include/script/Environment.h>
 #include <include/script/Script.h>
+#include <include/script/REPL.h>
 
 TEST(CreateEnvironment) {
     vscript::Environment env;
@@ -118,4 +119,60 @@ TEST(LoadScript) {
     value = f(1, 8);
     auto f2 = env["add2"].as<i32>();
     return value == 13 && to.x == 4 && f2(5, 7) == 12;
+}
+
+ui32 consoleColor = 0;
+HANDLE hndConsole = 0;
+void writeError(const cString msg) {
+    fputs(msg, stderr);
+}
+void luaSleep(ui32 ms) {
+    Sleep(ms);
+}
+void setColor(ui32 color) {
+    if (consoleColor != color) {
+        consoleColor = color;
+        fflush(stdout);
+        fflush(stderr);
+        SetConsoleTextAttribute(hndConsole, color);
+    }
+}
+void onREPLOut(Sender, const cString msg) {
+    setColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+    fputs(msg, stdout);
+}
+void onREPLErr(Sender, const cString msg) {
+    setColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    fputs(msg, stderr);
+}
+
+TEST(REPL) {
+    hndConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // Create REPL
+    vscript::Environment env = {};
+    env.addCDelegate("printErr", makeDelegate(writeError));
+    env.addCDelegate("sleep", makeDelegate(luaSleep));
+    vscript::REPL repl(&env);
+    repl.onStream[VORB_REPL_STREAM_OUT] += makeDelegate(onREPLOut);
+    repl.onStream[VORB_REPL_STREAM_ERR] += makeDelegate(onREPLErr);
+
+    char buf[1024];
+    while (true) {
+        // Show input prompt
+        setColor(FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+        fputs(">>> ", stdout);
+        fflush(stdout);
+
+        // Get input
+        setColor(FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
+        std::cin.getline(buf, 1024);
+
+        // Execute a command
+        if (strcmp(buf, "q") == 0) break;
+        repl.invokeCommand(buf);
+        onREPLOut(nullptr, "\n");
+    }
+
+    return true;
 }

@@ -35,8 +35,8 @@ template <typename T>
 class IntervalTree {
 public:
 
-#define COLOR_BIT 0x8000
-#define START_MASK 0x7FFF
+#define COLOR_BIT 0x8000u
+#define START_MASK 0x7FFFu
 
     // Lightweight node for initialization
     class LNode {
@@ -135,7 +135,7 @@ public:
         if (m_tree[m_root].parent != -1) {
             return false;
         }
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < (int)size(); i++) {
             if (m_tree[i].parent == i) {
                 return false;
             }

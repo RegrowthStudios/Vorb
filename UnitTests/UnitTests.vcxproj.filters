@@ -88,6 +88,9 @@
     <ClCompile Include="D3DGraphics.cpp">
       <Filter>Tests\Graphics\D3D</Filter>
     </ClCompile>
+    <ClCompile Include="VorbMath.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

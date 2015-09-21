@@ -19,8 +19,8 @@ void vui::GameWindowScriptFuncs::init(const cString nSpace, const GameWindow* ga
 #undef REGISTER_RDEL
 #undef REGISTER_DEL
 
-int vui::GameWindowScriptFuncs::getNumSupportedResolutions() const {
-    return m_window->getSupportedResolutions().size();
+i32 vui::GameWindowScriptFuncs::getNumSupportedResolutions() const {
+    return (i32)m_window->getSupportedResolutions().size();
 }
 
 ui32v2 vui::GameWindowScriptFuncs::getSupportedResolution(int resIndex) const {

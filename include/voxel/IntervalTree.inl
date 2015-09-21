@@ -57,7 +57,7 @@ i16 IntervalTree<typename T>::getInterval(size_t index) const {
 
         if (index < node.getStart()) { //check for go left
             interval = node.left;
-        } else if (index < node.getStart() + node.length) { //check for at interval
+        } else if (index < static_cast<size_t>(node.getStart() + node.length)) { //check for at interval
             return interval;
         } else { //go right
             interval = node.right;

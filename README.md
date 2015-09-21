@@ -171,7 +171,12 @@ cd ~/repos/soa
 git checkout develop
 git pull --recurse-submodules
 ```
-2. Run build script
+2. Make sure you have required development libraries
+    * Apt:
+    ```
+    sudo apt-get install libglew-dev libglfw-dev libglm-dev
+    ```
+3. Run build script
 ```
 ./build.sh
 ```

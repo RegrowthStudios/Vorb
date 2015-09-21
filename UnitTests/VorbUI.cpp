@@ -4,7 +4,6 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_UI_
 
-#include <glm/gtx/transform.hpp>
 #include <d3dcompiler.h>
 #include <include/Graphics.h>
 #include <include/Timing.h>

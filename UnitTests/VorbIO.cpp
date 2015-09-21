@@ -39,7 +39,7 @@ TEST(DirectoryEnum) {
     vdir dir;
     if (!path.asDirectory(&dir)) return false;
 
-    dir.forEachEntry(makeFunctor<Sender, const vpath&>([=] (Sender s, const vpath& e) {
+    dir.forEachEntry(makeFunctor([=] (Sender s, const vpath& e) {
         if (!e.isValid()) return;
         printf("Entry: %s\n", e.getCString());
     }));

@@ -1,5 +1,10 @@
 // Written by Frank McCoy
 #include "stdafx.h"
+
+#ifndef VORB_USING_PCH
+#include <cstdint>
+#endif // !VORB_USING_PCH
+
 #include "MeshGenerators.h"
 
 #include "graphics/GpuMemory.h"

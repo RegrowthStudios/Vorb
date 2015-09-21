@@ -20,14 +20,15 @@
 
 
 namespace vorb {
+    template<typename T> class Vector2;
+    template<typename T> class Vector3;
+    template<typename T> class Vector4;
+    template<typename T> class Matrix2;
+    template<typename T> class Matrix3;
+    template<typename T> class Matrix4;
+    template<typename T> class Quaternion;
+
     namespace math {
-        template<typename T> class Vector2;
-        template<typename T> class Vector3;
-        template<typename T> class Vector4;
-        template<typename T> class Matrix2;
-        template<typename T> class Matrix3;
-        template<typename T> class Matrix4;
-        template<typename T> class Quaternion;
 
         /*! @brief Computes the dot product of two values.
         */

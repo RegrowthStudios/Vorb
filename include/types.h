@@ -21,6 +21,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <limits.h>
 
 #include "decorators.h"
 #include "compat.h"

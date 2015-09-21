@@ -45,13 +45,15 @@
 typedef const void* Sender; ///< A pointer to an object that sent the event
 template<typename... Params> class Event;
 
-class DelegateBase {
-public:
+namespace {
     typedef void* Caller;
     typedef void* Function;
     typedef void(*Deleter)(Caller);
-    typedef void* UnknownStub;
+    typedef void* UnknownStub;    
+}
 
+class DelegateBase {
+public:
     DelegateBase(Caller c, Function f, UnknownStub s, Deleter d) :
         m_caller(c),
         m_func(f),
@@ -73,7 +75,7 @@ public:
     Caller m_caller;
     Function m_func;
 protected:
-    static void doNothing(Caller c) {
+    static void doNothing(Caller) {
         // Empty
     }
     template<typename T>
@@ -91,8 +93,8 @@ protected:
         m_deletion = freeObject<T>;
     }
 
-    Deleter m_deletion;
     UnknownStub m_stub;
+    Deleter m_deletion;
 };
 
 template<typename Ret, typename... Args>
@@ -157,7 +159,7 @@ protected:
         // Call function using object
         return (p->*f)(args...);
     }
-    static Ret simpleCall(Caller obj, Function func, Args... args) {
+    static Ret simpleCall(Caller, Function func, Args... args) {
         typedef Ret(*fType)(Args...);
 
         // Call function
@@ -168,6 +170,8 @@ protected:
 template<typename... Args>
 class Delegate : public RDelegate<void, Args...> {
 public:
+    typedef void(*CallStub)(Caller, Function, Args...); ///< Function type for a stub
+
     Delegate(Caller c, Function f, CallStub s, Deleter d) : RDelegate<void, Args...>(c, f, s, d) {
         // Empty
     }
@@ -177,26 +181,26 @@ public:
 
     template<typename T>
     static Delegate create(const T* o, void(T::*f)(Args...) const) {
-        return Delegate(const_cast<T*>(o), *(Function*)&f, objectCall<T>, doNothing);
+        return Delegate(const_cast<T*>(o), *(Function*)&f, RDelegate<void, Args...>::template objectCall<T>, RDelegate<void, Args...>::doNothing);
     }
     template<typename T>
     static Delegate* createCopy(const T* o, void(T::*f)(Args...) const) {
         T* no = (T*)operator new(sizeof(T));
         new (no)T(*o);
-        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+        return new Delegate(no, *(Function*)&f, RDelegate<void, Args...>::template objectCall<T>, RDelegate<void, Args...>::template freeObject<T>);
     }
     template<typename T>
     static Delegate create(T* o, void(T::*f)(Args...)) {
-        return Delegate(o, *(Function*)&f, objectCall<T>, doNothing);
+        return Delegate(o, *(Function*)&f, RDelegate<void, Args...>::template objectCall<T>, RDelegate<void, Args...>::doNothing);
     }
     template<typename T>
     static Delegate* createCopy(T* o, void(T::*f)(Args...)) {
         T* no = (T*)operator new(sizeof(T));
         new (no)T(*o);
-        return new Delegate(no, *(Function*)&f, objectCall<T>, freeObject<T>);
+        return new Delegate(no, *(Function*)&f, RDelegate<void, Args...>::template objectCall<T>, RDelegate<void, Args...>::template freeObject<T>);
     }
     static Delegate create(void(*f)(Args...)) {
-        return Delegate(nullptr, f, simpleCall, doNothing);
+        return Delegate(nullptr, f, RDelegate<void, Args...>::simpleCall, RDelegate<void, Args...>::doNothing);
     }
 };
 
@@ -220,66 +224,66 @@ public:
 
 template<typename Ret, typename... Args>
 RDelegate<Ret, Args...> makeRDelegate(Ret(*f)(Args...)) {
-    return RDelegate<Ret, Args...>::create(f);
+    return RDelegate<Ret, Args...>::template create(f);
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)const) {
-    return RDelegate<Ret, Args...>::create<T>(&obj, f);
+    return RDelegate<Ret, Args...>::template create<T>(&obj, f);
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)) {
-    return RDelegate<Ret, Args...>::create<T>(&obj, f);
+    return RDelegate<Ret, Args...>::template create<T>(&obj, f);
 }
 template<typename Ret, typename... Args, typename F>
 RDelegate<Ret, Args...> makeRDelegate(F& obj) {
     typedef Ret(F::*fType)(Args...) const;
     fType f = &F::operator();
-    return RDelegate<Ret, Args...>::create<F>(&obj, f);
+    return RDelegate<Ret, Args...>::template create<F>(&obj, f);
 }
 
 template<typename F>
 typename RDelegateType<F>::type* makeRFunctor(F& obj) {
-    return RDelegateType<F>::type::createCopy<F>(&obj, &F::operator());
+    return RDelegateType<F>::type::template createCopy<F>(&obj, &F::operator());
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)const) {
-    return RDelegate<Ret, Args...>::createCopy<T>(&obj, f);
+    return RDelegate<Ret, Args...>::template createCopy<T>(&obj, f);
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)) {
-    return RDelegate<Ret, Args...>::createCopy<T>(&obj, f);
+    return RDelegate<Ret, Args...>::template createCopy<T>(&obj, f);
 }
 
 template<typename... Args>
 Delegate<Args...> makeDelegate(void(*f)(Args...)) {
-    return Delegate<Args...>::create(f);
+    return Delegate<Args...>::template create(f);
 }
 template<typename T, typename... Args>
 Delegate<Args...> makeDelegate(T& obj, void(T::*f)(Args...)const) {
-    return Delegate<Args...>::create<T>(&obj, f);
+    return Delegate<Args...>::template create<T>(&obj, f);
 }
 template<typename T, typename... Args>
 Delegate<Args...> makeDelegate(T& obj, void(T::*f)(Args...)) {
-    return Delegate<Args...>::create<T>(&obj, f);
+    return Delegate<Args...>::template create<T>(&obj, f);
 }
 template<typename... Args, typename F>
 Delegate<Args...> makeDelegate(F& obj) {
     typedef void(F::*fType)(Args...) const;
     fType f = &F::operator();
-    return Delegate<Args...>::create<F>(&obj, f);
+    return Delegate<Args...>::template create<F>(&obj, f);
 }
 
 template<typename F>
 typename DelegateType<F>::type* makeFunctor(F& obj) {
-    return DelegateType<F>::type::createCopy<F>(&obj, &F::operator());
+    return DelegateType<F>::type::template createCopy<F>(&obj, &F::operator());
 }
 template<typename T, typename... Args>
 Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)const) {
-    return Delegate<Args...>::createCopy<T>(&obj, f);
+    return Delegate<Args...>::template createCopy<T>(&obj, f);
 }
 template<typename T, typename... Args>
 Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)) {
-    return Delegate<Args...>::createCopy<T>(&obj, f);
+    return Delegate<Args...>::template createCopy<T>(&obj, f);
 }
 
 /// An event that invokes methods taking certain arguments
@@ -383,7 +387,7 @@ public:
     /// @param f: Callback function
     template<typename F, typename... Params>
     void addAutoHook(Event<Params...>& e, F f) {
-        auto fd = e.addFunctor<F>(f);
+        auto fd = e.template addFunctor<F>(f);
 
         Deleter d = makeFunctor<>([fd, &e] () {
             e -= *fd;

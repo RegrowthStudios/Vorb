@@ -31,8 +31,8 @@ const f32 X_OFF_MULTS[9] = {
 
 // Used for alignment
 struct GlyphToRender {
-    GlyphToRender(int gi, f32 x) : gi(gi), x(x) {}
-    int gi;
+    GlyphToRender(size_t gi, f32 x) : gi(gi), x(x) {}
+    size_t gi;
     f32 x;
 };
 

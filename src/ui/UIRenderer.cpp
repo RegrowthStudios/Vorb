@@ -29,7 +29,7 @@ void vui::UIRenderer::add(const Widget* widget, const DrawFunc& drawFunc, const 
 bool vui::UIRenderer::remove(const Widget* widget) {
     bool rv = false;
     // Loop through and remove all // TODO(Ben): OPTIMIZE THIS CRAP
-    for (int i = m_drawableFuncs.size() - 1; i >= 0; i--) {
+    for (i32 i = (i32)m_drawableFuncs.size() - 1; i >= 0; i--) {
         if (m_drawableFuncs[i].owner == widget) {
             m_drawableFuncs.erase(m_drawableFuncs.begin() + i);
             rv = true;

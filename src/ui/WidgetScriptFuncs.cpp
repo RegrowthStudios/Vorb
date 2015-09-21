@@ -186,20 +186,20 @@ bool vui::WidgetScriptFuncs::isMouseIn(Widget* w) const {
     return w->isMouseIn();
 }
 
-int vui::WidgetScriptFuncs::getAnchor(Widget* w) const {
+i32 vui::WidgetScriptFuncs::getAnchor(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-int vui::WidgetScriptFuncs::getStyle(Widget* w) const {
+i32 vui::WidgetScriptFuncs::getStyle(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-int vui::WidgetScriptFuncs::getDock(Widget* w) const {
+i32 vui::WidgetScriptFuncs::getDock(Widget* w) const {
     return 0; // TODO(Ben): Implement
 }
 
-int vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
-    return w->getWidgets().size();
+i32 vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
+    return (i32)w->getWidgets().size();
 }
 
 bool vui::WidgetScriptFuncs::isEnabled(Widget* w) const {

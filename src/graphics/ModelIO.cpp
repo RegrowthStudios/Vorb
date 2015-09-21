@@ -190,7 +190,7 @@ ui32v2 vg::ModelIO::loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh)
         if (cs) cs = impl::moveToNewLine(cs);
     }
 
-    return ui32v2(mesh.vertices.size() - vertexCountInitial, indicesAdded);
+    return ui32v2((ui32)(mesh.vertices.size() - vertexCountInitial), indicesAdded);
 }
 
 CALLER_DELETE vg::MeshDataRaw vg::ModelIO::loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT ui32& indexSize) {

@@ -38,7 +38,7 @@ namespace vorb {
             virtual void init(const cString nSpace, const GameWindow* gameWindow, vscript::Environment* env);
 
         protected:
-            virtual int getNumSupportedResolutions() const;
+            virtual i32 getNumSupportedResolutions() const;
             virtual ui32v2 getSupportedResolution(int resIndex) const;
             virtual ui32v2 getCurrentResolution() const;
 

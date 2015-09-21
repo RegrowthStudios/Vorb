@@ -64,7 +64,7 @@ keg::NodeType keg::getType(Node node) {
     }
 }
 bool keg::hasInterior(Node node, const cString value) {
-    return node->data[value];
+    return static_cast<YAML::detail::unspecified_bool_type>(node->data[value]) == &YAML::detail::unspecified_bool::true_value;
 }
 size_t keg::getSequenceSize(Node node) {
     return node->data.size();

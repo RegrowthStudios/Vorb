@@ -21,11 +21,12 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
+#include <vector>
+
 #include "types.h"
 #endif // !VORB_USING_PCH
 
 #include "../VorbPreDecl.inl"
-#include <vector>
 
 DECL_VG(class SpriteFont)
 

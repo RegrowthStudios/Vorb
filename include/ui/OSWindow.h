@@ -8,7 +8,7 @@
 //
 
 /*! \file OSWindow.h
- * @brief 
+ * @brief
  *
  *
  */
@@ -23,6 +23,11 @@
 #ifndef VORB_USING_PCH
 #include "../types.h"
 #endif // !VORB_USING_PCH
+
+#if defined(OS_WINDOWS)
+#define _WINSOCKAPI_
+#include <Windows.h>
+#endif
 
 #include "InputDispatcher.h"
 

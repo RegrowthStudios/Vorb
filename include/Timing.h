@@ -27,8 +27,13 @@
 
 #include <chrono>
 
+#if defined(OS_WINDOWS)
+#define _WINSOCKAPI_
+#include <Windows.h>
+#endif
+
 namespace vorb {
-#if defined (OS_WINDOWS)
+#if defined(OS_WINDOWS)
     typedef LARGE_INTEGER HighPrecisionTime;
 #else
     typedef std::chrono::time_point<std::chrono::high_resolution_clock> HighPrecisionTime;

@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Path.h"
+#include "../Events.hpp"
 
 namespace vorb {
     namespace io {

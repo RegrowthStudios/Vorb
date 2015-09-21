@@ -7,6 +7,12 @@
 #include "D3DResource.h"
 #include "D3DMap.h"
 
+// Remove windows definitions of max and min... what noob sauces
+#if defined(max) && defined(min)
+#undef max
+#undef min
+#endif
+
 vg::IBuffer* vg::D3DContext::create(const BufferDescription& desc, OPT InitalResourceData* data) {
     // Allocate buffer instance
     D3DBuffer* buffer = new D3DBuffer(this);

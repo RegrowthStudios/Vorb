@@ -3,6 +3,8 @@
 
 #include <boost/filesystem.hpp>
 
+#include "os.h"
+
 namespace fs = boost::filesystem;
 
 bool vio::buildDirectoryTree(const Path& path, bool omitEnd /*= false*/) {

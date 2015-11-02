@@ -16,7 +16,7 @@
 #ifndef Vorb_VectorMath_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_VectorMath_hpp__
-//! @endcondM
+//! @endcond
 
 namespace vorb {
     namespace math {

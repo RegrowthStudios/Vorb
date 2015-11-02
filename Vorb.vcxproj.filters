@@ -708,7 +708,7 @@
     <ClInclude Include="include\VorbAssert.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\os.h" />
+    <ClInclude Include="include\os.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

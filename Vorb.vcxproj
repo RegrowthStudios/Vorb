@@ -444,6 +444,7 @@
     <ClInclude Include="include/sound/SoundListener.h" />
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\os.h" />
     <ClInclude Include="include\Quaternion.hpp" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
@@ -490,7 +491,6 @@
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />
-    <ClInclude Include="src\os.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />
   </ItemGroup>
   <ItemGroup>

@@ -136,6 +136,9 @@ namespace vorb {
         VEC_FCALL(exp2, vmath::exp2);
         VEC_FCALL(log, vmath::log);
         VEC_FCALL(log2, vmath::log2);
+        VEC_FCALL(pow, vmath::pow);
+        VEC_FCALL(pow2, vmath::pow2);
+        VEC_FCALL(pow3, vmath::pow3);
 #undef VEC_FCALL
 
         template <typename T>

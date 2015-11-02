@@ -9,6 +9,7 @@
 
 /*! \file TweeningMath.hpp
 * @brief Defines common tweening math operations. Based on the easing equations provided in jQuery: https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+*       Examples of each tween found here: http://hosted.zeh.com.br/mctween/animationtypes.html
 */
 
 #pragma once

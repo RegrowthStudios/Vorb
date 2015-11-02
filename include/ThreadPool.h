@@ -113,8 +113,7 @@ namespace vorb {
 
             /// Lock free task queues
             moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*> m_tasks; ///< Holds tasks to execute
-            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> m_finishedTasks; ///< Holds finished tasks
-
+           
             bool m_isInitialized = false; ///< true when the pool has been initialized
             std::vector<WorkerThread*> m_workers; ///< All the worker threads
         };

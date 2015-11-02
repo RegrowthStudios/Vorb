@@ -67,10 +67,7 @@ void vcore::ThreadPool<T>::workerThreadFunc(T* data) {
 
         m_tasks.wait_dequeue(task);
         task->execute(data);
-        task->setIsFinished(true);
-        // Store result if needed
-        if (task->shouldAddToFinishedTasks()) {
-            m_finishedTasks.enqueue(task);
-        }
+        task->isFinished = true;
+        task->cleanup();
     }
 }

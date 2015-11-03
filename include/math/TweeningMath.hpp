@@ -23,6 +23,8 @@
 
 namespace vorb {
     namespace math {
+        // TODO(Matthew): Ensure the checks for alpha being 0.0f or 1.0f in various locations actually fix possible precision issues - and if the possible performance hit is worthwhile.
+
         /*! @brief Computes a linear tweening.
         */
         template <typename T>

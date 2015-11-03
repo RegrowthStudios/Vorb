@@ -709,6 +709,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="include\os.h" />
+    <ClInclude Include="include\math\TweeningMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

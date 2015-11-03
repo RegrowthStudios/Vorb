@@ -429,6 +429,7 @@
     <ClInclude Include="include\io\YAMLReader.h" />
     <ClInclude Include="include\io\YAMLWriter.h" />
     <ClInclude Include="include\math\QuaternionMath.hpp" />
+    <ClInclude Include="include\math\TweeningMath.hpp" />
     <ClInclude Include="include\math\VectorMath.hpp" />
     <ClInclude Include="include\math\VorbMath.hpp" />
     <ClInclude Include="include\Matrix.hpp" />

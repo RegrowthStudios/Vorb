@@ -305,8 +305,8 @@ namespace vorb {
         inline T easeInOutExpo(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutExpo only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            if (alpha == (T)0.0f) return startVal;
-            if (alpha == (T)1.0f) return finalVal;
+            //if (alpha == (T)0.0f) return startVal;
+            //if (alpha == (T)1.0f) return finalVal;
             T alpha2 = alpha * (T)2.0f;
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * vmath::pow((T)2.0f, (T)10.0f * (alpha2 - (T)1.0f)) + startVal;
@@ -373,8 +373,8 @@ namespace vorb {
         inline T easeInElastic(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInElastic only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            if (alpha == (T)0.0f) return startVal;
-            if (alpha == (T)1.0f) return finalVal;
+            //if (alpha == (T)0.0f) return startVal;
+            //if (alpha == (T)1.0f) return finalVal;
             alphaMinus1 = alpha - 1;
             return (T)-1.0f * range * vmath::pow((T)2.0f, (T)10.0f * alphaMinus1) * vmath::sin(M_PIF * ((T)20.0f / (T)3.0f * alphaMinus1 - (T)0.5f)) + startVal;
         }
@@ -390,8 +390,8 @@ namespace vorb {
         inline T easeOutElastic(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeOutElastic only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            if (alpha == (T)0.0f) return startVal;
-            if (alpha == (T)1.0f) return finalVal;
+            //if (alpha == (T)0.0f) return startVal;
+            //if (alpha == (T)1.0f) return finalVal;
             return range * vmath::pow((T)2.0f, (T)-10.0f * alpha) * vmath::sin(M_PIF * ((T)20.0f / (T)3.0f * alpha - (T)0.5f)) * (T)0.5f + finalVal;
         }
         template <typename T>
@@ -405,8 +405,8 @@ namespace vorb {
         inline T easeInOutElastic(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutElastic only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            if (alpha == (T)0.0f) return startVal;
-            if (alpha == (T)1.0f) return finalVal;
+            //if (alpha == (T)0.0f) return startVal;
+            //if (alpha == (T)1.0f) return finalVal;
             alpha2 = (T)2.0f * alpha;
             alpha2Minus1 = alpha2 - (T)1.0f;
             if (alpha2 < (T)1.0f) {

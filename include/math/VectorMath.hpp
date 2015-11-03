@@ -136,10 +136,22 @@ namespace vorb {
         VEC_FCALL(exp2, vmath::exp2);
         VEC_FCALL(log, vmath::log);
         VEC_FCALL(log2, vmath::log2);
-        VEC_FCALL(pow, vmath::pow);
         VEC_FCALL(pow2, vmath::pow2);
         VEC_FCALL(pow3, vmath::pow3);
 #undef VEC_FCALL
+
+        template <typename T>
+        inline Vector2<T> pow(const Vector2<T>& v, T a) {
+            return Vector2<T>(std::pow(v.x, a), std::pow(v.y, a));
+        }
+        template <typename T>
+        inline Vector3<T> pow(const Vector3<T>& v, T a) {
+            return Vector3<T>(std::pow(v.x, a), std::pow(v.y, a), std::pow(v.z, a));
+        }
+        template <typename T>
+        inline Vector4<T> pow(const Vector4<T>& v, T a) {
+            return Vector4<T>(std::pow(v.x, a), std::pow(v.y, a), std::pow(v.z, a), std::pow(v.w, a));
+        }
 
         template <typename T>
         inline Vector2<T> mod(const Vector2<T>& v, T a) {

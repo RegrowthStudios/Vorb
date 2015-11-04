@@ -35,7 +35,7 @@ namespace vorb {
         }
         template <typename T>
         inline T linear(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return linear(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -49,7 +49,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -63,7 +63,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -82,6 +82,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -95,7 +96,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -110,7 +111,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -129,7 +130,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -143,7 +144,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -158,7 +159,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -177,7 +178,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -191,7 +192,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -206,7 +207,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -225,7 +226,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -239,7 +240,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -253,7 +254,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -267,7 +268,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -281,7 +282,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -295,7 +296,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -315,7 +316,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -329,7 +330,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -344,7 +345,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -363,7 +364,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -380,7 +381,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -396,6 +397,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -416,6 +418,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -429,7 +432,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
@@ -444,6 +447,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
@@ -463,6 +467,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
@@ -476,7 +481,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
-            if (stageCount == 0) return finalVal;
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -501,6 +506,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeOutBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
@@ -517,6 +523,7 @@ namespace vorb {
         }
         template <typename T>
         inline T easeInOutBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+            vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
     }

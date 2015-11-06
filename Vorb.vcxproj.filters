@@ -279,6 +279,9 @@
     <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -711,6 +714,9 @@
     <ClInclude Include="include\os.h" />
     <ClInclude Include="include\math\TweeningMath.hpp">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Camera.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

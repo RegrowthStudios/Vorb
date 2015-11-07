@@ -154,9 +154,9 @@ namespace vorb {
             fXX m_wobblePeriod = 0.0f;
             bool m_wobbleEnabled = false;
 
-            fXX m_pitchLimit = (T)M_PIF;
+            fXX m_pitchLimit = static_cast<T>(M_PIF);
             bool m_lockPitch = true;
-            fXX m_rollLimit = (T)0.0;
+            fXX m_rollLimit = static_cast<T>(0.0);
             bool m_lockRoll = true;
         };
     }

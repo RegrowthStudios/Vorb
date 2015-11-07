@@ -45,7 +45,7 @@ void vg::Camera3D<T>::update() {
 
 template <class T>
 void vg::Camera3D<T>::updateView() {
-    m_viewMatrix = vmath::lookAt(fXXv3(0.0f), getDirection(), getUp());
+    m_viewMatrix = vmath::lookAt(fXXv3(0.0), getDirection(), getUp());
 }
 
 template <class T>
@@ -109,8 +109,8 @@ fXXv3 vg::Camera3D<T>::worldToScreenPoint(const fXXv3& worldPoint) const {
     clipPoint.x /= clipPoint.w;
     clipPoint.y /= clipPoint.w;
     clipPoint.z /= clipPoint.w;
-    return fXXv3((clipPoint.x + 1.0) / 2.0,
-        (1.0 - clipPoint.y) / 2.0,
+    return fXXv3((clipPoint.x + (T)1.0) / (T)2.0,
+        ((T)1.0 - clipPoint.y) / (T)2.0,
         clipPoint.z);
 }
 
@@ -118,11 +118,11 @@ template <class T>
 fXXv3 vg::Camera3D<T>::worldToScreenPointLogZ(const fXXv3& worldPoint, fXX zFar) const {
     // Transform world to clipping coordinates
     fXXv4 clipPoint = m_viewProjectionMatrix * fXXv4(worldPoint, 1.0);
-    clipPoint.z = log2(vmath::max(0.0001, clipPoint.w + 1.0)) * 2.0 / log2(zFar + 1.0) - 1.0;
+    clipPoint.z = log2(vmath::max((T)0.0001, clipPoint.w + (T)1.0)) * (T)2.0 / log2(zFar + (T)1.0) - (T)1.0;
     clipPoint.x /= clipPoint.w;
     clipPoint.y /= clipPoint.w;
-    return fXXv3((clipPoint.x + 1.0) / 2.0,
-        (1.0 - clipPoint.y) / 2.0,
+    return fXXv3((clipPoint.x + (T)1.0) / (T)2.0,
+        ((T)1.0 - clipPoint.y) / (T)2.0,
         clipPoint.z);
 }
 

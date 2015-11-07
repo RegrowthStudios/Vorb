@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Frustum.h"
+#include "math/TweeningMath.hpp"
 
 namespace vorb {
     namespace graphics {
@@ -39,7 +40,7 @@ namespace vorb {
         public:
             Camera3D();
             void init(fXX aspectRatio, fXX fieldOfView);
-            void update();
+            virtual void update(fXX deltaTime);
 
             virtual void applyRotation(const fXXq& rot);
             virtual void applyRotation(fXX angle, const fXXv3& axis);
@@ -120,6 +121,7 @@ namespace vorb {
         template <class T>
         class CinematicCamera3D : public Camera3D<T> {
         public:
+            virtual void update(fXX deltaTime) override;
         private:
         };
 
@@ -128,18 +130,22 @@ namespace vorb {
         template <class T>
         class FPSCamera3D : public Camera3D<T> {
         public:
+            virtual void update(fXX deltaTime) override;
+
             virtual void applyRotation(const fXXq& rot) override;
 
             void stabiliseRoll();
 
             // Setters
-            void setWobbleMagnitude(fXX magnitude) { m_wobbleMagnitude = magnitude; }
+            void setWobbleAmplitude(fXX amplitude) { m_wobbleAplitude = amplitude; }
             void enableWobble(bool enable) {
                 m_wobbleEnabled = enable;
                 if (enable) {
                     m_lockRoll = false;
                 }
             }
+            void setWobbleTweening(fXX(*tweeningFunc)(fXX, fXX, fXX)) { m_wobbleTween = tweeningFunc; }
+            void resetWobble() { m_wobbleStage = (T)0.0; }
             void setPitchLimit(fXX magnitude) { m_pitchLimit = magnitude; }
             void lockPitch(bool lock) { m_lockPitch = lock; }
             void setRollLimit(fXX magnitude) { m_pitchLimit = magnitude; }
@@ -150,13 +156,17 @@ namespace vorb {
                 }
             }
         private:
-            fXX m_wobbleMagnitude = 0.0f;
-            fXX m_wobblePeriod = 0.0f;
+            void updateWobble(fXX deltaTime);
+
+            fXX m_wobbleAmplitude = (fXX)0.0;
+            fXX m_wobblePeriod = (fXX)0.0;
+            fXX m_wobbleStage = (fXX)0.0; ///< Goes between -m_wobblePeriod and m_wobblePeriod
+            fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutSine;
             bool m_wobbleEnabled = false;
 
-            fXX m_pitchLimit = static_cast<T>(M_PIF);
+            fXX m_pitchLimit = (fXX)M_PIF;
             bool m_lockPitch = true;
-            fXX m_rollLimit = static_cast<T>(0.0);
+            fXX m_rollLimit = (fXX)0.0;
             bool m_lockRoll = true;
         };
     }

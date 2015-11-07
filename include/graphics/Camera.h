@@ -28,139 +28,136 @@ namespace vorb {
     namespace graphics {
         /*! @brief Basic camera class, offering standard camera functionality.
         */
-        //template <class T>
+        template <class T>
         class Camera3D {
-            /*template <typename T> struct vec_2_s;
-            template <> struct vec_2_s<f32> {
-                typedef f32v2 type;
-            };
-            template <> struct vec_2_s<f64> {
-                typedef f64v2 type;
-            };
-            template <typename T> struct vec_3_s;
-            template <> struct vec_3_s<f32> {
-                typedef f32v3 type;
-            };
-            template <> struct vec_3_s<f64> {
-                typedef f64v3 type;
-            };
-            template <typename T> struct quat_s;
-            template <> struct quat_s<f32> {
-                typedef f32q type;
-            };
-            template <> struct quat_s<f64> {
-                typedef f64q type;
-            };
-            template <typename T> struct mat_4_s;
-            template <> struct mat_4_s<f32> {
-                typedef f32m4 type;
-            };
-            template <> struct mat_4_s<f64> {
-                typedef f64m4 type;
-            };*/
+            typedef T fXX;
+            typedef Vector2<T> fXXv2;
+            typedef Vector3<T> fXXv3;
+            typedef Vector4<T> fXXv4;
+            typedef Quaternion<T> fXXq;
+            typedef Matrix4<T> fXXm4;
         public:
-
             Camera3D();
-            void init(f64 aspectRatio, f64 fieldOfView);
+            void init(fXX aspectRatio, fXX fieldOfView);
             void update();
 
-            void offsetPosition(const f64v3& offset);
+            virtual void applyRotation(const fXXq& rot);
+            virtual void applyRotation(fXX angle, const fXXv3& axis);
+            virtual void applyRoll(fXX angle);
+            virtual void applyYaw(fXX angle);
+            virtual void applyPitch(fXX angle);
+            virtual void rotateFromMouse(fXX dx, fXX dy, fXX speed);
+            virtual void rollFromMouse(fXX dx, fXX speed);
 
-            virtual void applyRotation(const f64q& rot);
-            virtual void applyRotation(f64 angle, const f64v3& axis);
-            virtual void applyRoll(f64 angle);
-            virtual void applyYaw(f64 angle);
-            virtual void applyPitch(f64 angle);
-            virtual void rotateFromMouse(f64 dx, f64 dy, f64 speed);
-            virtual void rollFromMouse(f64 dx, f64 speed);
+            void offsetPosition(const fXXv3& offset);
 
             // Setters
-            void setOrientation(const f64q& orientation);
-            void setFocalPoint(const f64v3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = 1; }
-            void setPosition(const f64v3& position) { m_focalPoint = position; m_position = position; m_focalLength = 0;  m_viewChanged = 1; }
-            void setClippingPlane(f64 zNear, f64 zFar){ m_zNear = zNear; m_zFar = zFar; m_projectionChanged = 1; }
-            void setFieldOfView(f64 fieldOfView){ m_fieldOfView = fieldOfView; m_projectionChanged = 1; }
-            void setFocalLength(f64 focalLength) { m_focalLength = focalLength; m_viewChanged = 1; }
-            void setAspectRatio(f64 aspectRatio) { m_aspectRatio = aspectRatio; m_projectionChanged = 1; }
+            void setOrientation(const fXXq& orientation);
+            void setFocalPoint(const fXXv3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = 1; }
+            void setPosition(const fXXv3& position) { m_focalPoint = position; m_position = position; m_focalLength = 0;  m_viewChanged = 1; }
+            void setClippingPlane(fXX zNear, fXX zFar){ m_zNear = zNear; m_zFar = zFar; m_projectionChanged = 1; }
+            void setFieldOfView(fXX fieldOfView){ m_fieldOfView = fieldOfView; m_projectionChanged = 1; }
+            void setFocalLength(fXX focalLength) { m_focalLength = focalLength; m_viewChanged = 1; }
+            void setAspectRatio(fXX aspectRatio) { m_aspectRatio = aspectRatio; m_projectionChanged = 1; }
 
             // Getters
-            const f64v3& getPosition() const { return m_position; }
-            const f64v3& getDirection() const { return m_directionQuat * ORIG_DIRECTION; }
-            const f64v3& getRight() const { return m_directionQuat * ORIG_RIGHT; }
-            const f64v3& getUp() const { return m_directionQuat * ORIG_UP; }
+            const fXXv3& getPosition() const { return m_position; }
+            const fXXv3& getDirection() const { return m_directionQuat * ORIG_DIRECTION; }
+            const fXXv3& getRight() const { return m_directionQuat * ORIG_RIGHT; }
+            const fXXv3& getUp() const { return m_directionQuat * ORIG_UP; }
+            const fXX&   getRoll() const { return vmath::roll(m_directionQuat); }
+            const fXX&   getPitch() const { return vmath::pitch(m_directionQuat); }
+            const fXX&   getYaw() const { return vmath::yaw(m_directionQuat); }
 
-            const f64m4& getProjectionMatrix() const { return m_projectionMatrix; }
-            const f64m4& getViewMatrix() const { return m_viewMatrix; }
-            const f64m4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
+            const fXXm4& getProjectionMatrix() const { return m_projectionMatrix; }
+            const fXXm4& getViewMatrix() const { return m_viewMatrix; }
+            const fXXm4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
-            const f64& getNearClip() const { return m_zNear; }
-            const f64& getFarClip() const { return m_zFar; }
-            const f64& getFieldOfView() const { return m_fieldOfView; }
-            const f64& getAspectRatio() const { return m_aspectRatio; }
-            const f64& getFocalLength() const { return m_focalLength; }
+            const fXX& getNearClip() const { return m_zNear; }
+            const fXX& getFarClip() const { return m_zFar; }
+            const fXX& getFieldOfView() const { return m_fieldOfView; }
+            const fXX& getAspectRatio() const { return m_aspectRatio; }
+            const fXX& getFocalLength() const { return m_focalLength; }
 
             // Gets the position of a 3D point on the screen plane
-            f64v3 worldToScreenPoint(const f64v3& worldPoint) const;
-            f64v3 worldToScreenPointLogZ(const f64v3& worldPoint, f64 zFar) const;
-            f64v3 getPickRay(const f64v2& ndcScreenPos) const;
+            fXXv3 worldToScreenPoint(const fXXv3& worldPoint) const;
+            fXXv3 worldToScreenPointLogZ(const fXXv3& worldPoint, fXX zFar) const;
+            fXXv3 getPickRay(const fXXv2& ndcScreenPos) const;
 
             // Frustum wrappers
-            bool pointInFrustum(const f64v3& pos) const { return m_frustum.pointInFrustum(pos); }
-            bool sphereInFrustum(const f64v3& pos, f64 radius) const { return m_frustum.sphereInFrustum(pos, radius); }
+            bool pointInFrustum(const fXXv3& pos) const { return m_frustum.pointInFrustum(pos); }
+            bool sphereInFrustum(const fXXv3& pos, fXX radius) const { return m_frustum.sphereInFrustum(pos, radius); }
         protected:
             void updateView();
             void updateProjection();
 
-            f64 m_zNear = 0.1;
-            f64 m_zFar = 100000.0;
-            f64 m_fieldOfView = 75.0;
-            f64 m_aspectRatio = 4.0 / 3.0;
-            f64 m_focalLength = 0.0;
-            f64 m_maxFocalLength = 10000000000000000000000.0;
+            fXX m_zNear = 0.1;
+            fXX m_zFar = 100000.0;
+            fXX m_fieldOfView = 75.0;
+            fXX m_aspectRatio = 4.0 / 3.0;
+            fXX m_focalLength = 0.0;
+            fXX m_maxFocalLength = 10000000000000000000000.0;
             bool m_viewChanged = true;
             bool m_projectionChanged = true;
 
-            f64v3 m_focalPoint = f64v3(0.0);
-            f64v3 m_position = f64v3(0.0);
-            f64q m_directionQuat;
+            fXXv3 m_focalPoint = fXXv3(0.0);
+            fXXv3 m_position = fXXv3(0.0);
+            fXXq m_directionQuat;
 
-            static const f64v3 ORIG_DIRECTION;
-            static const f64v3 ORIG_RIGHT;
-            static const f64v3 ORIG_UP;
+            static const fXXv3 ORIG_DIRECTION;
+            static const fXXv3 ORIG_RIGHT;
+            static const fXXv3 ORIG_UP;
 
-            f64m4 m_projectionMatrix;
-            f64m4 m_viewMatrix;
-            f64m4 m_viewProjectionMatrix;
+            fXXm4 m_projectionMatrix;
+            fXXm4 m_viewMatrix;
+            fXXm4 m_viewProjectionMatrix;
 
             Frustum m_frustum; ///< For frustum culling
         };
 
         /*! @brief Cinematic camera class, offering various tools for cinematic camera shots.
         */
-        class CinematicCamera3D : public Camera3D {
+        template <class T>
+        class CinematicCamera3D : public Camera3D<T> {
         public:
         private:
         };
 
         /*! @brief FPS camera class, offering various tools for maintaining a FPS-style camera.
         */
-        class FPSCamera3D : public Camera3D {
+        template <class T>
+        class FPSCamera3D : public Camera3D<T> {
         public:
-            virtual void applyRotation(const f64q& rot) override;
-            virtual void applyRotation(f64 angle, const f64v3& axis) override;
-            virtual void applyRoll(f64 angle) override;
-            virtual void applyYaw(f64 angle) override;
-            virtual void applyPitch(f64 angle) override;
-            virtual void rotateFromMouse(f64 dx, f64 dy, f64 speed) override;
-            virtual void rollFromMouse(f64 dx, f64 speed) override;
+            virtual void applyRotation(const fXXq& rot) override;
+
+            void stabiliseRoll();
 
             // Setters
-            void setWobbleMagnitude(f64 magnitude) { m_wobbleMagnitude = magnitude; }
-            void enableWobble() { m_wobbleEnabled = true; }
-            void disableWobble() { m_wobbleEnabled = false; }
+            void setWobbleMagnitude(fXX magnitude) { m_wobbleMagnitude = magnitude; }
+            void enableWobble(bool enable) {
+                m_wobbleEnabled = enable;
+                if (enable) {
+                    m_lockRoll = false;
+                }
+            }
+            void setPitchLimit(fXX magnitude) { m_pitchLimit = magnitude; }
+            void lockPitch(bool lock) { m_lockPitch = lock; }
+            void setRollLimit(fXX magnitude) { m_pitchLimit = magnitude; }
+            void lockRoll(bool lock) {
+                m_lockRoll = lock;
+                if (lock) {
+                    m_wobbleEnabled = false;
+                }
+            }
         private:
-            f64 m_wobbleMagnitude = 0.0f;
+            fXX m_wobbleMagnitude = 0.0f;
+            fXX m_wobblePeriod = 0.0f;
             bool m_wobbleEnabled = false;
+
+            fXX m_pitchLimit = (T)M_PIF;
+            bool m_lockPitch = true;
+            fXX m_rollLimit = (T)0.0;
+            bool m_lockRoll = true;
         };
     }
 }

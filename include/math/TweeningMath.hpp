@@ -121,7 +121,7 @@ namespace vorb {
         inline T easeInOutCubic(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutCubic only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            T alpha2 = alpha * (T)2.0f);
+            T alpha2 = alpha * (T)2.0f;
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * alpha2 * alpha2 * alpha2 + startVal;
             }
@@ -169,7 +169,7 @@ namespace vorb {
         inline T easeInOutQuart(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutQuart only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            T alpha2 = alpha * (T)2.0f);
+            T alpha2 = alpha * (T)2.0f;
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * alpha2 * alpha2 * alpha2 * alpha2 + startVal;
             }
@@ -312,7 +312,7 @@ namespace vorb {
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * vmath::pow((T)2.0f, (T)10.0f * (alpha2 - (T)1.0f)) + startVal;
             }
-            return range / (T)2.0f * ((T)-1.0f * vmath::pow((T)2.0f, (T)-10.0f * (alpha2 - (T)1.0f) + (T)2.0f) + startVal;
+            return range / (T)2.0f * (T)-1.0f * vmath::pow((T)2.0f, (T)-10.0f * (alpha2 - (T)1.0f) + (T)2.0f) + startVal;
         }
         template <typename T>
         inline T easeInOutExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
@@ -341,7 +341,7 @@ namespace vorb {
             static_assert(std::numeric_limits<T>::is_iec559, "easeOutCirc only accepts floating-point inputs.");
             T range = finalVal - startVal;
             T alphaMinus1 = alpha - (T)1.0f;
-            return range * (vmath::sqrt((T)1.0f - alphaMinus1 * alphaMinus1) + startVal;
+            return range * vmath::sqrt((T)1.0f - alphaMinus1 * alphaMinus1) + startVal;
         }
         template <typename T>
         inline T easeOutCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {

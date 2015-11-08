@@ -22,36 +22,36 @@ namespace BufferUtils {
     /************************************************************************/
     /* Extraction                                                           */
     /************************************************************************/
-    inline ui32 extractInt(ui8* a, ui32 i) {
+    inline ui32 extractInt(const ui8* a, ui32 i) {
         return (((ui32)a[i + 3]) << SHIFT_THREE_BYTES) |
                (((ui32)a[i + 2]) << SHIFT_TWO_BYTES) |
                (((ui32)a[i + 1]) << SHIFT_ONE_BYTE) |
                (((ui32)a[i]));
     }
-    inline ui32 extractInt(ui8* a) {
+    inline ui32 extractInt(const ui8* a) {
         return (((ui32)a[3]) << SHIFT_THREE_BYTES) |
                (((ui32)a[2]) << SHIFT_TWO_BYTES) |
                (((ui32)a[1]) << SHIFT_ONE_BYTE) |
                (((ui32)a[0]));
     }
 
-    inline ui16 extractShort(ui8* a, ui32 i) {
+    inline ui16 extractShort(const ui8* a, ui32 i) {
         return (((ui32)a[i + 1]) << SHIFT_ONE_BYTE) | (((ui32)a[i]));
     }
-    inline ui16 extractShort(ui8* a) {
+    inline ui16 extractShort(const ui8* a) {
         return (((ui32)a[1]) << SHIFT_ONE_BYTE) | (((ui32)a[0]));
     }
 
-    inline f32 extractFloat(ui8* a, ui32 i) {
+    inline f32 extractFloat(const ui8* a, ui32 i) {
         ui32 n = extractInt(a, i);
         return *((f32*)(&n));
     }
-    inline f32 extractFloat(ui8* a) {
+    inline f32 extractFloat(const ui8* a) {
         ui32 n = extractInt(a);
         return *((f32*)(&n));
     }
 
-    inline bool extractBool(ui8* a, ui32 i) {
+    inline bool extractBool(const ui8* a, ui32 i) {
         return (a[i] != 0);
     }
 

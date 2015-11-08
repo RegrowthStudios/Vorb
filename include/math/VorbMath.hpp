@@ -270,6 +270,32 @@ namespace vorb {
         inline T pow3(T a) {
             return a * a * a;
         }
+
+        template <typename T>
+        inline T binomial(ui32 n, ui32 k) {
+            // TODO(Matthew): Optimise.
+            T i;
+            ui32 b = 1;
+            if (k == 0 || n == k) {
+                return 1;
+            }
+            if (k > n) {
+                return 0;
+            }
+            // Binomial symmetric about mid-point.
+            if (k > (n - k)) {
+                k = n - k;
+            }
+            if (k == 1) {
+                return n;
+            }
+            for (i = 1; i <= k; ++i) {
+                b *= (n - (k - i));
+                if (b < 0) return -1;
+                b /= i;
+            }
+            return (T)b;
+        }
     }
 }
 namespace vmath = vorb::math;

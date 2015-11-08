@@ -7,7 +7,7 @@
 
 #define FXX typename vg::Camera3D<T>::fXX
 #define FXXV2 typename vg::Camera3D<T>::fXXv2
-#define FXXV3 typename vg::Camera3D<T>::fXXv3
+#define FXXV3 typename vg::Camera3D<T>::FXXV3
 #define FXXV4 typename vg::Camera3D<T>::fXXv4
 #define FXXQ typename vg::Camera3D<T>::fXXq
 #define FXXM4 typename vg::Camera3D<T>::fXXm4
@@ -145,7 +145,88 @@ FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
 //                         Cinematic 3D Camera                          //
 //////////////////////////////////////////////////////////////////////////
 
-// Nothing so far.
+template <class T>
+void vg::CinematicCamera3D<T>::update(FXX deltaTime) {
+    updatePath(deltaTime);
+
+    bool updateFrustum = false;
+    if (m_viewChanged) {
+        updateView();
+        m_viewChanged = false;
+        updateFrustum = true;
+    }
+    if (m_projectionChanged) {
+        updateProjection();
+        m_projectionChanged = false;
+        updateFrustum = true;
+    }
+
+    if (updateFrustum) {
+        m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+        m_frustum.updateFromWVP(m_viewProjectionMatrix);
+    }
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::init() {
+    clearPath();
+    m_running = false;
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::addActualPointToPath(FXXV3 position, FXXV3 orientation, FXX period, FXX(*positionalTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX(*orientationTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX focalLength /* = (fXX)0.0 */, FXX(*focalLengthTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX fieldOfView /* = (fXX)-1.0 */, FXX(*fieldOfViewTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */) {
+    CameraPathFixedPoint actualPoint = {
+        position,
+        orientation,
+        focalLength,
+        fieldOfView,
+        period,
+        positionalTweeningFunc,
+        orientationTweeningFunc,
+        focalLengthTweeningFunc,
+        fieldOfViewTweeningFunc
+    };
+    m_path.push(std::make_pair(actualPoint, std::vector<CameraPathControlPoint>()));
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::addControlPointToPath(FXXV3 position, FXXV3 orientation, FXX focalLength /* = (fXX)0.0 */, FXX fieldOfView /* = (fXX)-1.0 */) {
+    CameraPathControlPoint controlPoint = {
+        position,
+        orientation,
+        focalLength,
+        fieldOfView
+    };
+    m_path.back().second.push_back(controlPoint);
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::begin() {
+    CameraPathFixedPoint startPoint = m_path.front().first;
+    setPosition(startPoint.position);
+    setOrientation(FXXQ(startPoint.orientation));
+    setFocalLength(startPoint.focalLength);
+    setFieldOfView(startPoint.fieldOfView);
+    m_running = true;
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::clearPath() {
+    while (m_path.size() > 0) {
+        m_path.pop();
+    }
+}
+
+template <class T>
+void vg::CinematicCamera3D<T>::updatePath(fXX deltaTime) {
+    m_timeElapsed += deltaTime;
+
+    CameraPathFixedPoint beginPoint = m_path.front().first;
+    CameraPathFixedPoint endPoint = m_path
+
+    // Calculate position change.
+
+}
 
 //////////////////////////////////////////////////////////////////////////
 //                            FPS 3D Camera                             //

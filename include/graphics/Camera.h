@@ -16,11 +16,7 @@
 #ifndef Vorb_Camera_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
 #define Vorb_Camera_h__
-//! @endcond
-
-#ifndef VORB_USING_PCH
-#include "../types.h"
-#endif // !VORB_USING_PCH
+//! @endcond 
 
 #include "Frustum.h"
 #include "math/TweeningMath.hpp"
@@ -120,9 +116,33 @@ namespace vorb {
         */
         template <class T>
         class CinematicCamera3D : public Camera3D<T> {
+            struct CameraPathControlPoint {
+                fXXv3 position;
+                fXXv3 orientation;
+                fXX focalLength;
+                fXX fieldOfView;
+            };
+            struct CameraPathFixedPoint : CameraPathControlPoint {
+                fXX period;
+                fXX(*positionalTweeningFunc)(fXX, fXX, fXX);
+                fXX(*orientationTweeningFunc)(fXX, fXX, fXX);
+                fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX);
+                fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX);
+            };
         public:
             virtual void update(fXX deltaTime) override;
+
+            void init();
+            void addActualPointToPath(fXXv3 position, fXXv3 orientation, fXX period, fXX(*positionalTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX(*orientationTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX focalLength = (fXX)0.0, fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX fieldOfView = (fXX)-1.0, fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX) = &vmath::linear);
+            void addControlPointToPath(fXXv3 position, fXXv3 orientation, fXX focalLength = (fXX)0.0, fXX fieldOfView = (fXX)-1.0);
+            void begin();
         private:
+            void clearPath();
+            void updatePath(fXX deltaTime);
+
+            std::queue<std::pair<CameraPathFixedPoint, std::vector<CameraPathControlPoint>>> m_path;
+            bool m_running = false;
+            fXX m_timeElapsed;
         };
 
         /*! @brief FPS camera class, offering various tools for maintaining a FPS-style camera.

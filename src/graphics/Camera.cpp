@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "graphics/Camera.h"
 
+#include "math/BezierMath.hpp"
+
 //////////////////////////////////////////////////////////////////////////
 //                          General 3D Camera                           //
 //////////////////////////////////////////////////////////////////////////
 
 #define FXX typename vg::Camera3D<T>::fXX
 #define FXXV2 typename vg::Camera3D<T>::fXXv2
-#define FXXV3 typename vg::Camera3D<T>::FXXV3
+#define FXXV3 typename vg::Camera3D<T>::fXXv3
 #define FXXV4 typename vg::Camera3D<T>::fXXv4
 #define FXXQ typename vg::Camera3D<T>::fXXq
 #define FXXM4 typename vg::Camera3D<T>::fXXm4
@@ -186,7 +188,7 @@ void vg::CinematicCamera3D<T>::addActualPointToPath(FXXV3 position, FXXV3 orient
         focalLengthTweeningFunc,
         fieldOfViewTweeningFunc
     };
-    m_path.push(std::make_pair(actualPoint, std::vector<CameraPathControlPoint>()));
+    m_path.emplace_back(actualPoint, std::vector<CameraPathControlPoint>());
 }
 
 template <class T>
@@ -218,14 +220,56 @@ void vg::CinematicCamera3D<T>::clearPath() {
 }
 
 template <class T>
-void vg::CinematicCamera3D<T>::updatePath(fXX deltaTime) {
-    m_timeElapsed += deltaTime;
+void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
+    CameraPathFixedPoint beginPoint = m_path[0].first;
+    CameraPathFixedPoint endPoint = m_path[1].first;
+    std::vector<CameraPathControlPoint> controlPoints = m_path[0].second;
 
-    CameraPathFixedPoint beginPoint = m_path.front().first;
-    CameraPathFixedPoint endPoint = m_path
+    std::vector<FXXV3> controlPositions;
+    std::vector<FXXV3> controlOrientations;
+    std::vector<FXX> controlFocalLengths;
+    std::vector<FXX> controlFieldOfViews;
+    controlPositions.push_back(beginPoint.position);
+    controlOrientations.push_back(beginPoint.orientation);
+    controlFocalLengths.push_back(beginPoint.focalLength);
+    controlFieldOfViews.push_back(beginPoint.fieldOfView);
+    for (size_t i = 0; i < controlPoints.size(); ++i) {
+        controlPositions.push_back(controlPoints[i].position);
+        controlOrientations.push_back(controlPoints[i].orientation);
+        controlFocalLengths.push_back(controlPoints[i].focalLength);
+        controlFieldOfViews.push_back(controlPoints[i].fieldOfView);
+    }
+    controlPositions.push_back(endPoint.position);
+    controlOrientations.push_back(endPoint.orientation);
+    controlFocalLengths.push_back(endPoint.focalLength);
+    controlFieldOfViews.push_back(endPoint.fieldOfView);
 
     // Calculate position change.
+    FXX effectivePosAlpha = beginPoint.positionalTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXXV3 newLocation = vmath::bezier3d(effectivePosAlpha, controlPositions);
+    setPosition(newLocation);
 
+    // Calculate orientation change.
+    FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXXV3 newOrientation = vmath::bezier3d(effectiveOriAlpha, controlOrientations);
+    setOrientation(Quaternion(newOrientation));
+
+    // Calculate focal length change.
+    FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXXV3 newFocalLength = vmath::bezier1d(effectiveFocLenAlpha, controlFocalLengths);
+    setFocalLength(newFocalLength);
+
+    // Calculate field of view change.
+    FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXXV3 newFocalLength = vmath::bezier1d(effectiveFovAlpha, controlFieldOfViews);
+    setFocalLength(newFocalLength);
+
+    m_timeElapsed += deltaTime;
+    if (m_timeElapsed > beginPoint.period) {
+        m_timeElapsed -= beginPoint.period;
+        m_path.pop_front();
+        updatePath((FXX)0.0);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

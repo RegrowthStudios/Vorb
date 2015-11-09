@@ -15,9 +15,9 @@
 
 #include "VorbMath.hpp"
 
-#ifndef Vorb_TweeningMath_hpp__
+#ifndef Vorb_BezierMath_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_TweeningMath_hpp__
+#define Vorb_BezierMath_hpp__
 //! @endcond
 
 namespace vorb {
@@ -69,3 +69,6 @@ namespace vorb {
         }
     }
 }
+namespace vmath = vorb::math;
+
+#endif // !Vorb_BezierMath_hpp__

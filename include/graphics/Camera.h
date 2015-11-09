@@ -140,9 +140,9 @@ namespace vorb {
             void clearPath();
             void updatePath(fXX deltaTime);
 
-            std::queue<std::pair<CameraPathFixedPoint, std::vector<CameraPathControlPoint>>> m_path;
+            std::deque<std::pair<CameraPathFixedPoint, std::vector<CameraPathControlPoint>>> m_path;
             bool m_running = false;
-            fXX m_timeElapsed;
+            fXX m_timeElapsed = (fXX)0.0;
         };
 
         /*! @brief FPS camera class, offering various tools for maintaining a FPS-style camera.

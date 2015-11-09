@@ -23,7 +23,7 @@ const FXXV3 vg::Camera3D<T>::ORIG_UP = FXXV3(0.0, 1.0, 0.0);
 
 template <class T>
 vg::Camera3D<T>::Camera3D() {
-    static_assert(std::numeric_limits<T>::is_iec559, "Camera3D only accepts floating-point template types.");
+    static_assert(std::numeric_limits<T>::is_iec559, "Camera3D only accepts floating-point class types.");
 }
 
 template <class T>
@@ -146,6 +146,11 @@ FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
 //////////////////////////////////////////////////////////////////////////
 //                         Cinematic 3D Camera                          //
 //////////////////////////////////////////////////////////////////////////
+
+template <class T>
+void vg::CinematicCamera3D<T>::CinematicCamera3D() {
+    static_assert(std::numeric_limits<T>::is_iec559, "CinematicCamera3D only accepts floating-point class types.");
+}
 
 template <class T>
 void vg::CinematicCamera3D<T>::update(FXX deltaTime) {
@@ -275,6 +280,11 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
 //////////////////////////////////////////////////////////////////////////
 //                            FPS 3D Camera                             //
 //////////////////////////////////////////////////////////////////////////
+
+template <class T>
+void vg::FPSCamera3D<T>::FPSCamera3D() {
+    static_assert(std::numeric_limits<T>::is_iec559, "FPSCamera3D only accepts floating-point class types.");
+}
 
 template <class T>
 void vg::FPSCamera3D<T>::update(FXX deltaTime) {

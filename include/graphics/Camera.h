@@ -35,6 +35,7 @@ namespace vorb {
             typedef Matrix4<T> fXXm4;
         public:
             Camera3D();
+
             void init(fXX aspectRatio, fXX fieldOfView);
             virtual void update(fXX deltaTime);
 
@@ -130,6 +131,8 @@ namespace vorb {
                 fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX);
             };
         public:
+            CinematicCamera3D();
+
             virtual void update(fXX deltaTime) override;
 
             void init();
@@ -150,6 +153,8 @@ namespace vorb {
         template <class T>
         class FPSCamera3D : public Camera3D<T> {
         public:
+            FPSCamera3D();
+
             virtual void update(fXX deltaTime) override;
 
             virtual void applyRotation(const fXXq& rot) override;

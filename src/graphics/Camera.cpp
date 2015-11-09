@@ -148,7 +148,7 @@ FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
 //////////////////////////////////////////////////////////////////////////
 
 template <class T>
-void vg::CinematicCamera3D<T>::CinematicCamera3D() {
+vg::CinematicCamera3D<T>::CinematicCamera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "CinematicCamera3D only accepts floating-point class types.");
 }
 
@@ -282,7 +282,7 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
 //////////////////////////////////////////////////////////////////////////
 
 template <class T>
-void vg::FPSCamera3D<T>::FPSCamera3D() {
+vg::FPSCamera3D<T>::FPSCamera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "FPSCamera3D only accepts floating-point class types.");
 }
 

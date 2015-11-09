@@ -19,7 +19,8 @@
 //! @endcond 
 
 #include "Frustum.h"
-#include "math/TweeningMath.hpp"
+#include "../math/TweeningMath.hpp"
+#include "../types.h"
 
 namespace vorb {
     namespace graphics {
@@ -27,6 +28,7 @@ namespace vorb {
         */
         template <class T>
         class Camera3D {
+        protected:
             typedef T fXX;
             typedef Vector2<T> fXXv2;
             typedef Vector3<T> fXXv3;
@@ -85,6 +87,8 @@ namespace vorb {
             // Frustum wrappers
             bool pointInFrustum(const fXXv3& pos) const { return m_frustum.pointInFrustum(pos); }
             bool sphereInFrustum(const fXXv3& pos, fXX radius) const { return m_frustum.sphereInFrustum(pos, radius); }
+
+            const Frustum& getFrustum() const { return m_frustum; }
         protected:
             void updateView();
             void updateProjection();
@@ -117,6 +121,7 @@ namespace vorb {
         */
         template <class T>
         class CinematicCamera3D : public Camera3D<T> {
+        protected:
             struct CameraPathControlPoint {
                 fXXv3 position;
                 fXXv3 orientation;
@@ -162,7 +167,7 @@ namespace vorb {
             void stabiliseRoll();
 
             // Setters
-            void setWobbleAmplitude(fXX amplitude) { m_wobbleAplitude = amplitude; }
+            void setWobbleAmplitude(fXX amplitude) { m_wobbleAmplitude = amplitude; }
             void enableWobble(bool enable) {
                 m_wobbleEnabled = enable;
                 if (enable) {
@@ -194,6 +199,12 @@ namespace vorb {
             fXX m_rollLimit = (fXX)0.0;
             bool m_lockRoll = true;
         };
+        template class Camera3D<f32>;
+        template class Camera3D<f64>;
+        template class CinematicCamera3D<f32>;
+        template class CinematicCamera3D<f64>;
+        template class FPSCamera3D<f32>;
+        template class FPSCamera3D<f64>;
     }
 }
 namespace vg = vorb::graphics;

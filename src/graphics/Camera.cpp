@@ -249,6 +249,11 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
     controlFocalLengths.push_back(endPoint.focalLength);
     controlFieldOfViews.push_back(endPoint.fieldOfView);
 
+    // TODO(Matthew): Assess if a weighting is needed when transitioning from a high dx/dt to a low dx/dt in any of the categories.
+    // Clarification:
+    //     If two path segments (path between two actual points) have same period and one is shorter in delta, or the same delta with
+    //     one having a shorter period, it may be necessary to add some weighting factor so that the transition between the two is nice.
+
     // Calculate position change.
     FXX effectivePosAlpha = beginPoint.positionalTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXXV3 newLocation = vmath::bezier3d(effectivePosAlpha, controlPositions);
@@ -268,7 +273,7 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
     FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXXV3 newFocalLength = vmath::bezier1d(effectiveFovAlpha, controlFieldOfViews);
     setFocalLength(newFocalLength);
-
+     
     m_timeElapsed += deltaTime;
     if (m_timeElapsed > beginPoint.period) {
         m_timeElapsed -= beginPoint.period;

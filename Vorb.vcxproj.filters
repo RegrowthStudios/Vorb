@@ -718,6 +718,9 @@
     <ClInclude Include="include\graphics\Camera.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\math\BezierMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -72,18 +72,9 @@ namespace vorb {
                 m_tasks.enqueue_bulk(tasks, size);
             }
 
-            /// Gets a bulk of tasks from the finished tasks
-            /// @param taskBuffer: Buffer to store the tasks
-            /// @param maxSize: Max tasks to deque
-            /// @return: The number of dequeued tasks
-            size_t getFinishedTasks(IThreadPoolTask<T>** taskBuffer, size_t maxSize) {
-                return m_finishedTasks.try_dequeue_bulk(taskBuffer, maxSize);
-            }
-
             /// Getters
             i32 getNumWorkers() const { return m_workers.size(); }
             size_t getTasksSizeApprox() const { return m_tasks.size_approx(); }
-            size_t getFinishedTasksSizeApprox() const { return m_finishedTasks.size_approx(); }
         private:
             VORB_NON_COPYABLE(ThreadPool);
             // Typedef for func ptr

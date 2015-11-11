@@ -36,6 +36,8 @@ namespace vorb {
                 T ap = vmath::pow(alpha, (T)i);
                 b += (controlPoints[i] * bc * up * ap);
             }
+
+            return b;
         }
         /*! @brief Computes a bezier point for a set of 2D control points.
         */
@@ -51,6 +53,8 @@ namespace vorb {
                 T ap = vmath::pow(alpha, i);
                 b += (controlPoints[i] * bc * up * ap);
             }
+
+            return b;
         }
         /*! @brief Computes a bezier point for a set of 1D control points.
         */
@@ -66,6 +70,8 @@ namespace vorb {
                 T ap = vmath::pow(alpha, (T)i);
                 b += (controlPoints[i] * bc * up * ap);
             }
+
+            return b;
         }
     }
 }

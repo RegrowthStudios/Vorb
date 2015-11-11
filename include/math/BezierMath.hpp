@@ -32,8 +32,8 @@ namespace vorb {
             Vector3<T> b = Vector3<T>(0, 0, 0);
             for (ui16 i = 0; i < n; ++i) {
                 T bc = vmath::binomial<T>(n, i);
-                T up = vmath::pow(u, n - i);
-                T ap = vmath::pow(alpha, i);
+                T up = vmath::pow(u, (T)(n - i));
+                T ap = vmath::pow(alpha, (T)i);
                 b += (controlPoints[i] * bc * up * ap);
             }
         }
@@ -62,8 +62,8 @@ namespace vorb {
             T b = (T)0.0;
             for (ui16 i = 0; i < n; ++i) {
                 T bc = vmath::binomial<T>(n, i);
-                T up = vmath::pow(u, n - i);
-                T ap = vmath::pow(alpha, i);
+                T up = vmath::pow(u, (T)(n - i));
+                T ap = vmath::pow(alpha, (T)i);
                 b += (controlPoints[i] * bc * up * ap);
             }
         }

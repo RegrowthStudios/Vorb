@@ -255,22 +255,22 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
     //     one having a shorter period, it may be necessary to add some weighting factor so that the transition between the two is nice.
 
     // Calculate position change.
-    FXX effectivePosAlpha = beginPoint.positionalTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectivePosAlpha = beginPoint.positionalTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXXV3 newLocation = vmath::bezier3d<FXX>(effectivePosAlpha, controlPositions);
     setPosition(newLocation);
 
     // Calculate orientation change.
-    FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXXV3 newOrientation = vmath::bezier3d<FXX>(effectiveOriAlpha, controlOrientations);
     setOrientation(Quaternion<FXX>(newOrientation));
 
     // Calculate focal length change.
-    FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXX newFocalLength = vmath::bezier1d<FXX>(effectiveFocLenAlpha, controlFocalLengths);
     setFocalLength(newFocalLength);
 
     // Calculate field of view change.
-    FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
     FXX newFov = vmath::bezier1d<FXX>(effectiveFovAlpha, controlFieldOfViews);
     setFieldOfView(newFov);
      

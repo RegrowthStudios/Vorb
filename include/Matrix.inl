@@ -185,6 +185,7 @@ inline Matrix3<T>& Matrix3<T>::operator=(const Matrix3<U>& rhs) {
     c0 = rhs.c0;
     c1 = rhs.c1;
     c2 = rhs.c2;
+    return *this;
 }
 template<typename T>
 inline bool Matrix3<T>::operator==(const Matrix3<T>& rhs) const {
@@ -349,6 +350,7 @@ inline Matrix4<T>& Matrix4<T>::operator=(const Matrix4<U>& rhs) {
     c1 = rhs.c1;
     c2 = rhs.c2;
     c3 = rhs.c3;
+    return *this;
 }
 template<typename T>
 inline bool Matrix4<T>::operator==(const Matrix4<T>& rhs) const {

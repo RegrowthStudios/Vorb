@@ -26,7 +26,7 @@ namespace vorb {
     namespace graphics {
         /*! @brief Basic camera class, offering standard camera functionality.
         */
-        template <class T>
+        template <typename T>
         class Camera3D {
         protected:
             typedef T fXX;
@@ -119,7 +119,7 @@ namespace vorb {
 
         /*! @brief Cinematic camera class, offering various tools for cinematic camera shots.
         */
-        template <class T>
+        template <typename T>
         class CinematicCamera3D : public Camera3D<T> {
         protected:
             struct CameraPathControlPoint {
@@ -127,6 +127,18 @@ namespace vorb {
                 fXXv3 orientation;
                 fXX focalLength;
                 fXX fieldOfView;
+                CameraPathControlPoint()
+                    : position(fXXv3(0.0)),
+                    orientation(fXXv3(0.0)),
+                    focalLength((fXX)0.0),
+                    fieldOfView((fXX)0.0) {
+                }
+                CameraPathControlPoint(fXXv3 pos, fXXv3 dir, fXX focLen, fXX fov)
+                    : position(pos),
+                    orientation(dir),
+                    focalLength(focLen),
+                    fieldOfView(fov) {
+                }
             };
             struct CameraPathFixedPoint : CameraPathControlPoint {
                 fXX period;
@@ -134,6 +146,26 @@ namespace vorb {
                 fXX(*orientationTweeningFunc)(fXX, fXX, fXX);
                 fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX);
                 fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX);
+                CameraPathFixedPoint()
+                    : CameraPathControlPoint(),
+                    period((fXX)0.0),
+                    positionalTweeningFunc(nullptr),
+                    orientationTweeningFunc(nullptr), 
+                    focalLengthTweeningFunc(nullptr),
+                    fieldOfViewTweeningFunc(nullptr) {
+                }
+                CameraPathFixedPoint(fXXv3 pos, fXXv3 dir, fXX focLen, fXX fov,
+                    fXX dur, fXX(*posTweeningFunc)(fXX, fXX, fXX),
+                    fXX(*dirTweeningFunc)(fXX, fXX, fXX),
+                    fXX(*focLenTweeningFunc)(fXX, fXX, fXX),
+                    fXX(*fovTweeningFunc)(fXX, fXX, fXX))
+                    : CameraPathControlPoint(pos, dir, focLen, fov),
+                    period(dur),
+                    positionalTweeningFunc(posTweeningFunc),
+                    orientationTweeningFunc(dirTweeningFunc),
+                    focalLengthTweeningFunc(focLenTweeningFunc),
+                    fieldOfViewTweeningFunc(fovTweeningFunc) {
+                }
             };
         public:
             CinematicCamera3D();
@@ -155,7 +187,7 @@ namespace vorb {
 
         /*! @brief FPS camera class, offering various tools for maintaining a FPS-style camera.
         */
-        template <class T>
+        template <typename T>
         class FPSCamera3D : public Camera3D<T> {
         public:
             FPSCamera3D();
@@ -199,12 +231,6 @@ namespace vorb {
             fXX m_rollLimit = (fXX)0.0;
             bool m_lockRoll = true;
         };
-        template class Camera3D<f32>;
-        template class Camera3D<f64>;
-        template class CinematicCamera3D<f32>;
-        template class CinematicCamera3D<f64>;
-        template class FPSCamera3D<f32>;
-        template class FPSCamera3D<f64>;
     }
 }
 namespace vg = vorb::graphics;

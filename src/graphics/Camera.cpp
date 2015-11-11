@@ -14,25 +14,25 @@
 #define FXXQ typename vg::Camera3D<T>::fXXq
 #define FXXM4 typename vg::Camera3D<T>::fXXm4
 
-template <class T>
+template <typename T>
 const FXXV3 vg::Camera3D<T>::ORIG_DIRECTION = FXXV3(1.0, 0.0, 0.0);
-template <class T>
+template <typename T>
 const FXXV3 vg::Camera3D<T>::ORIG_RIGHT = FXXV3(0.0, 0.0, 1.0);
-template <class T>
+template <typename T>
 const FXXV3 vg::Camera3D<T>::ORIG_UP = FXXV3(0.0, 1.0, 0.0);
 
-template <class T>
+template <typename T>
 vg::Camera3D<T>::Camera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "Camera3D only accepts floating-point class types.");
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::init(FXX aspectRatio, FXX fieldOfView) {
     m_aspectRatio = aspectRatio;
     m_fieldOfView = fieldOfView;
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::update(FXX deltaTime) {
     bool updateFrustum = false;
     if (m_viewChanged) {
@@ -52,51 +52,51 @@ void vg::Camera3D<T>::update(FXX deltaTime) {
     }
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::updateView() {
     m_viewMatrix = vmath::lookAt(FXXV3(0.0), getDirection(), getUp());
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::updateProjection() {
     m_frustum.setCamInternals(m_fieldOfView, m_aspectRatio, m_zNear, m_zFar);
     m_projectionMatrix = vmath::perspective(m_fieldOfView, m_aspectRatio, m_zNear, m_zFar);
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::offsetPosition(const FXXV3& offset) {
     m_position += offset;
     m_viewChanged = true;
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::applyRotation(const FXXQ& rot) {
     m_directionQuat = rot * m_directionQuat;
 
     m_viewChanged = true;
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::applyRotation(FXX angle, const FXXV3& axis) {
     applyRotation(vmath::angleAxis(angle, axis));
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::applyRoll(FXX angle) {
     applyRotation(vmath::angleAxis(angle, getDirection()));
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::applyYaw(FXX angle) {
     applyRotation(vmath::angleAxis(angle, getUp()));
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::applyPitch(FXX angle) {
     applyRotation(vmath::angleAxis(angle, getRight()));
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::rotateFromMouse(FXX dx, FXX dy, FXX speed) {
     FXXQ upQuat = vmath::angleAxis(dy * speed, getRight());
     FXXQ rightQuat = vmath::angleAxis(dx * speed, getUp());
@@ -104,14 +104,14 @@ void vg::Camera3D<T>::rotateFromMouse(FXX dx, FXX dy, FXX speed) {
     applyRotation(upQuat * rightQuat);
 }
 
-template <class T>
+template <typename T>
 void vg::Camera3D<T>::rollFromMouse(FXX dx, FXX speed) {
     FXXQ frontQuat = vmath::angleAxis(dx * speed, getDirection());
 
     applyRotation(frontQuat);
 }
 
-template <class T>
+template <typename T>
 FXXV3 vg::Camera3D<T>::worldToScreenPoint(const FXXV3& worldPoint) const {
     // Transform world to clipping coordinates
     FXXV4 clipPoint = m_viewProjectionMatrix * FXXV4(worldPoint, 1.0);
@@ -123,7 +123,7 @@ FXXV3 vg::Camera3D<T>::worldToScreenPoint(const FXXV3& worldPoint) const {
         clipPoint.z);
 }
 
-template <class T>
+template <typename T>
 FXXV3 vg::Camera3D<T>::worldToScreenPointLogZ(const FXXV3& worldPoint, FXX zFar) const {
     // Transform world to clipping coordinates
     FXXV4 clipPoint = m_viewProjectionMatrix * FXXV4(worldPoint, 1.0);
@@ -135,7 +135,7 @@ FXXV3 vg::Camera3D<T>::worldToScreenPointLogZ(const FXXV3& worldPoint, FXX zFar)
         clipPoint.z);
 }
 
-template <class T>
+template <typename T>
 FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
     FXXV4 clipRay(ndcScreenPos.x, ndcScreenPos.y, -1.0, 1.0);
     FXXV4 eyeRay = vmath::inverse(m_projectionMatrix) * clipRay;
@@ -147,12 +147,12 @@ FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
 //                         Cinematic 3D Camera                          //
 //////////////////////////////////////////////////////////////////////////
 
-template <class T>
+template <typename T>
 vg::CinematicCamera3D<T>::CinematicCamera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "CinematicCamera3D only accepts floating-point class types.");
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::update(FXX deltaTime) {
     updatePath(deltaTime);
 
@@ -174,15 +174,15 @@ void vg::CinematicCamera3D<T>::update(FXX deltaTime) {
     }
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::init() {
     clearPath();
     m_running = false;
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::addActualPointToPath(FXXV3 position, FXXV3 orientation, FXX period, FXX(*positionalTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX(*orientationTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX focalLength /* = (fXX)0.0 */, FXX(*focalLengthTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */, FXX fieldOfView /* = (fXX)-1.0 */, FXX(*fieldOfViewTweeningFunc)(FXX, FXX, FXX) /* = &vmath::linear */) {
-    CameraPathFixedPoint actualPoint = {
+    CameraPathFixedPoint actualPoint = CameraPathFixedPoint(
         position,
         orientation,
         focalLength,
@@ -192,22 +192,22 @@ void vg::CinematicCamera3D<T>::addActualPointToPath(FXXV3 position, FXXV3 orient
         orientationTweeningFunc,
         focalLengthTweeningFunc,
         fieldOfViewTweeningFunc
-    };
+    );
     m_path.emplace_back(actualPoint, std::vector<CameraPathControlPoint>());
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::addControlPointToPath(FXXV3 position, FXXV3 orientation, FXX focalLength /* = (fXX)0.0 */, FXX fieldOfView /* = (fXX)-1.0 */) {
-    CameraPathControlPoint controlPoint = {
+    CameraPathControlPoint controlPoint = CameraPathControlPoint(
         position,
         orientation,
         focalLength,
         fieldOfView
-    };
+    );
     m_path.back().second.push_back(controlPoint);
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::begin() {
     CameraPathFixedPoint startPoint = m_path.front().first;
     setPosition(startPoint.position);
@@ -217,14 +217,14 @@ void vg::CinematicCamera3D<T>::begin() {
     m_running = true;
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::clearPath() {
     while (m_path.size() > 0) {
-        m_path.pop();
+        m_path.pop_front();
     }
 }
 
-template <class T>
+template <typename T>
 void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
     CameraPathFixedPoint beginPoint = m_path[0].first;
     CameraPathFixedPoint endPoint = m_path[1].first;
@@ -256,23 +256,23 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
 
     // Calculate position change.
     FXX effectivePosAlpha = beginPoint.positionalTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
-    FXXV3 newLocation = vmath::bezier3d(effectivePosAlpha, controlPositions);
+    FXXV3 newLocation = vmath::bezier3d<FXX>(effectivePosAlpha, controlPositions);
     setPosition(newLocation);
 
     // Calculate orientation change.
     FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
-    FXXV3 newOrientation = vmath::bezier3d(effectiveOriAlpha, controlOrientations);
-    setOrientation(Quaternion(newOrientation));
+    FXXV3 newOrientation = vmath::bezier3d<FXX>(effectiveOriAlpha, controlOrientations);
+    setOrientation(Quaternion<FXX>(newOrientation));
 
     // Calculate focal length change.
     FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
-    FXXV3 newFocalLength = vmath::bezier1d(effectiveFocLenAlpha, controlFocalLengths);
+    FXX newFocalLength = vmath::bezier1d<FXX>(effectiveFocLenAlpha, controlFocalLengths);
     setFocalLength(newFocalLength);
 
     // Calculate field of view change.
     FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc<FXX>(0.0, 1.0, m_timeElapsed / beginPoint.period);
-    FXXV3 newFocalLength = vmath::bezier1d(effectiveFovAlpha, controlFieldOfViews);
-    setFocalLength(newFocalLength);
+    FXX newFov = vmath::bezier1d<FXX>(effectiveFovAlpha, controlFieldOfViews);
+    setFieldOfView(newFov);
      
     m_timeElapsed += deltaTime;
     if (m_timeElapsed > beginPoint.period) {
@@ -286,12 +286,12 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
 //                            FPS 3D Camera                             //
 //////////////////////////////////////////////////////////////////////////
 
-template <class T>
+template <typename T>
 vg::FPSCamera3D<T>::FPSCamera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "FPSCamera3D only accepts floating-point class types.");
 }
 
-template <class T>
+template <typename T>
 void vg::FPSCamera3D<T>::update(FXX deltaTime) {
     if (m_wobbleEnabled) {
         updateWobble(deltaTime);
@@ -315,7 +315,7 @@ void vg::FPSCamera3D<T>::update(FXX deltaTime) {
     }
 }
 
-template <class T>
+template <typename T>
 void vg::FPSCamera3D<T>::updateWobble(FXX deltaTime) {
     m_wobbleStage += deltaTime;
     if (m_wobbleStage > m_wobblePeriod) {
@@ -330,7 +330,7 @@ void vg::FPSCamera3D<T>::updateWobble(FXX deltaTime) {
     m_directionQuat = vmath::angleAxis(deltaRoll, getDirection()) * m_directionQuat;
 }
 
-template <class T>
+template <typename T>
 void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
     m_directionQuat = rot * m_directionQuat;
 
@@ -359,8 +359,19 @@ void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
     m_viewChanged = true;
 }
 
-template <class T>
+template <typename T>
 void vg::FPSCamera3D<T>::stabiliseRoll() {
     T currRoll = vmath::roll(m_directionQuat);
     applyRoll((FXX)-1.0 * currRoll);
+}
+
+namespace vorb {
+    namespace graphics {
+        template class Camera3D<f32>;
+        template class Camera3D<f64>;
+        template class CinematicCamera3D<f32>;
+        template class CinematicCamera3D<f64>;
+        template class FPSCamera3D<f32>;
+        template class FPSCamera3D<f64>;
+    }
 }

@@ -266,6 +266,7 @@
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
+    <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\Frustum.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
@@ -516,7 +517,6 @@
     <None Include="include\Vector.inl" />
     <None Include="include\voxel\IntervalTree.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
-    <None Include="src\graphics\Camera.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />
     <None Include="src\graphics\ImageIOConvF.inl" />
     <None Include="src\graphics\SpriteBatchShader.inl" />

@@ -52,7 +52,7 @@ namespace vorb {
             void offsetPosition(const fXXv3& offset);
 
             // Setters
-            void setOrientation(const fXXq& orientation);
+            void setOrientation(const fXXq& orientation) { m_directionQuat = orientation; m_viewChanged = 1; }
             void setFocalPoint(const fXXv3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = 1; }
             void setPosition(const fXXv3& position) { m_focalPoint = position; m_position = position; m_focalLength = 0;  m_viewChanged = 1; }
             void setClippingPlane(fXX zNear, fXX zFar){ m_zNear = zNear; m_zFar = zFar; m_projectionChanged = 1; }

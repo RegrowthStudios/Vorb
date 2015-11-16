@@ -71,7 +71,7 @@ void vg::Camera3D<T>::offsetPosition(const FXXV3& offset) {
 
 template <typename T>
 void vg::Camera3D<T>::applyRotation(const FXXQ& rot) {
-    m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
+    m_directionQuat = vmath::normalize(vmath::normalize(rot) * m_directionQuat);
 
     m_viewChanged = true;
 }
@@ -83,17 +83,17 @@ void vg::Camera3D<T>::applyRotation(FXX angle, const FXXV3& axis) {
 
 template <typename T>
 void vg::Camera3D<T>::applyRoll(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, getDirection()));
+    applyRotation(vmath::angleAxis(angle, ORIG_DIRECTION));
 }
 
 template <typename T>
 void vg::Camera3D<T>::applyYaw(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, getUp()));
+    applyRotation(vmath::angleAxis(angle, ORIG_UP));
 }
 
 template <typename T>
 void vg::Camera3D<T>::applyPitch(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, getRight()));
+    applyRotation(vmath::angleAxis(angle, ORIG_RIGHT));
 }
 
 template <typename T>

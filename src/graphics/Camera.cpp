@@ -71,7 +71,7 @@ void vg::Camera3D<T>::offsetPosition(const FXXV3& offset) {
 
 template <typename T>
 void vg::Camera3D<T>::applyRotation(const FXXQ& rot) {
-    m_directionQuat = vmath::normalize(vmath::normalize(rot) * m_directionQuat);
+    m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
 
     m_viewChanged = true;
 }
@@ -338,10 +338,10 @@ void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
         T newPitch = vmath::pitch(m_directionQuat);
         if (newPitch - m_pitchLimit > (FXX)0.00001) {
             T deltaPitch = newPitch - m_pitchLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, getRight())));
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, ORIG_RIGHT)));
         } else if (newPitch + m_pitchLimit > (FXX)0.00001) {
             T deltaPitch = newPitch + m_pitchLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, getRight())));
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, ORIG_RIGHT)));
         }
     }
 
@@ -349,10 +349,10 @@ void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
         T newRoll = vmath::roll(m_directionQuat);
         if (newRoll - m_rollLimit > (FXX)0.00001) {
             T deltaRoll = newRoll - m_rollLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, getDirection())));
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, ORIG_DIRECTION)));
         } else if (newRoll + m_rollLimit < (FXX)0.00001) {
             T deltaRoll = newRoll + m_rollLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, getDirection())));
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, ORIG_DIRECTION)));
         }
     }
 

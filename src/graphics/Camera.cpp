@@ -71,7 +71,7 @@ void vg::Camera3D<T>::offsetPosition(const FXXV3& offset) {
 
 template <typename T>
 void vg::Camera3D<T>::applyRotation(const FXXQ& rot) {
-    m_directionQuat = rot * m_directionQuat;
+    m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
 
     m_viewChanged = true;
 }
@@ -332,27 +332,27 @@ void vg::FPSCamera3D<T>::updateWobble(FXX deltaTime) {
 
 template <typename T>
 void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
-    m_directionQuat = rot * m_directionQuat;
+    m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
 
-    if (m_lockPitch) {
+    if (0 && m_lockPitch) {
         T newPitch = vmath::pitch(m_directionQuat);
-        if (newPitch > m_pitchLimit) {
+        if (newPitch - m_pitchLimit > (FXX)0.00001) {
             T deltaPitch = newPitch - m_pitchLimit;
-            m_directionQuat = vmath::angleAxis(deltaPitch, getRight()) * m_directionQuat;
-        } else if (newPitch < (FXX)-1.0 * m_pitchLimit) {
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, getRight())));
+        } else if (newPitch + m_pitchLimit > (FXX)0.00001) {
             T deltaPitch = newPitch + m_pitchLimit;
-            m_directionQuat = vmath::angleAxis(deltaPitch, getRight()) * m_directionQuat;
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, getRight())));
         }
     }
 
-    if (m_lockRoll) {
+    if (0 && m_lockRoll) {
         T newRoll = vmath::roll(m_directionQuat);
-        if (newRoll > m_rollLimit) {
+        if (newRoll - m_rollLimit > (FXX)0.00001) {
             T deltaRoll = newRoll - m_rollLimit;
-            m_directionQuat = vmath::angleAxis(deltaRoll, getDirection()) * m_directionQuat;
-        } else if (newRoll < (FXX)-1.0 * m_rollLimit) {
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, getDirection())));
+        } else if (newRoll + m_rollLimit < (FXX)0.00001) {
             T deltaRoll = newRoll + m_rollLimit;
-            m_directionQuat = vmath::angleAxis(deltaRoll, getDirection()) * m_directionQuat;
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, getDirection())));
         }
     }
 

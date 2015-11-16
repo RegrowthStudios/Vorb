@@ -62,9 +62,9 @@ namespace vorb {
 
             // Getters
             const fXXv3& getPosition() const { return m_position; }
-            const fXXv3& getDirection() const { return m_directionQuat * ORIG_DIRECTION; }
-            const fXXv3& getRight() const { return m_directionQuat * ORIG_RIGHT; }
-            const fXXv3& getUp() const { return m_directionQuat * ORIG_UP; }
+            const fXXv3& getDirection() const { return vmath::normalize(m_directionQuat * ORIG_DIRECTION); }
+            const fXXv3& getRight() const { return vmath::normalize(m_directionQuat * ORIG_RIGHT); }
+            const fXXv3& getUp() const { return vmath::normalize(m_directionQuat * ORIG_UP); }
             const fXX&   getRoll() const { return vmath::roll(m_directionQuat); }
             const fXX&   getPitch() const { return vmath::pitch(m_directionQuat); }
             const fXX&   getYaw() const { return vmath::yaw(m_directionQuat); }

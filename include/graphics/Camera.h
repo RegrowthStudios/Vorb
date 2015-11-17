@@ -195,6 +195,9 @@ namespace vorb {
             virtual void update(fXX deltaTime) override;
 
             virtual void applyRotation(const fXXq& rot) override;
+            virtual void applyRoll(fXX angle) override;
+            virtual void applyYaw(fXX angle) override;
+            virtual void applyPitch(fXX angle) override;
 
             void stabiliseRoll();
 
@@ -220,13 +223,17 @@ namespace vorb {
         private:
             void updateWobble(fXX deltaTime);
 
+            fXX m_roll = (fXX)0.0;
+            fXX m_pitch = (fXX)0.0;
+            fXX m_yaw = (fXX)0.0;
+
             fXX m_wobbleAmplitude = (fXX)0.0;
             fXX m_wobblePeriod = (fXX)0.0;
             fXX m_wobbleStage = (fXX)0.0; ///< Goes between -m_wobblePeriod and m_wobblePeriod
             fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutSine;
             bool m_wobbleEnabled = false;
 
-            fXX m_pitchLimit = (fXX)M_PIF;
+            fXX m_pitchLimit = (fXX)M_PI/(fXX)2.0;
             bool m_lockPitch = true;
             fXX m_rollLimit = (fXX)0.0;
             bool m_lockRoll = true;

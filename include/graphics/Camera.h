@@ -39,13 +39,18 @@ namespace vorb {
             Camera3D();
 
             void init(fXX aspectRatio, fXX fieldOfView);
-            virtual void update(fXX deltaTime);
+            virtual void update();
 
-            virtual void applyRotation(const fXXq& rot);
-            virtual void applyRotation(fXX angle, const fXXv3& axis);
-            virtual void applyRoll(fXX angle);
-            virtual void applyYaw(fXX angle);
-            virtual void applyPitch(fXX angle);
+            virtual void applyRelativeRotation(const fXXq& rot);
+            virtual void applyRelativeRotation(fXX angle, const fXXv3& axis);
+            virtual void applyAbsoluteRotation(const fXXq& rot);
+            virtual void applyAbsoluteRotation(fXX angle, const fXXv3& axis);
+            virtual void applyRelativeRoll(fXX angle);
+            virtual void applyRelativeYaw(fXX angle);
+            virtual void applyRelativePitch(fXX angle);
+            virtual void applyAbsoluteRoll(fXX angle);
+            virtual void applyAbsoluteYaw(fXX angle);
+            virtual void applyAbsolutePitch(fXX angle);
             virtual void rotateFromMouse(fXX dx, fXX dy, fXX speed);
             virtual void rollFromMouse(fXX dx, fXX speed);
 
@@ -62,9 +67,9 @@ namespace vorb {
 
             // Getters
             const fXXv3& getPosition() const { return m_position; }
-            const fXXv3& getDirection() const { return vmath::normalize(m_directionQuat * ORIG_DIRECTION); }
-            const fXXv3& getRight() const { return vmath::normalize(m_directionQuat * ORIG_RIGHT); }
-            const fXXv3& getUp() const { return vmath::normalize(m_directionQuat * ORIG_UP); }
+            const fXXv3& getDirection() const { return vmath::normalize(m_directionQuat * BASE_DIRECTION); }
+            const fXXv3& getRight() const { return vmath::normalize(m_directionQuat * BASE_RIGHT); }
+            const fXXv3& getUp() const { return vmath::normalize(m_directionQuat * BASE_UP); }
             const fXX&   getRoll() const { return vmath::roll(m_directionQuat); }
             const fXX&   getPitch() const { return vmath::pitch(m_directionQuat); }
             const fXX&   getYaw() const { return vmath::yaw(m_directionQuat); }
@@ -106,9 +111,9 @@ namespace vorb {
             fXXv3 m_position = fXXv3(0.0);
             fXXq m_directionQuat;
 
-            static const fXXv3 ORIG_DIRECTION;
-            static const fXXv3 ORIG_RIGHT;
-            static const fXXv3 ORIG_UP;
+            static const fXXv3 BASE_DIRECTION;
+            static const fXXv3 BASE_RIGHT;
+            static const fXXv3 BASE_UP;
 
             fXXm4 m_projectionMatrix;
             fXXm4 m_viewMatrix;
@@ -170,7 +175,8 @@ namespace vorb {
         public:
             CinematicCamera3D();
 
-            virtual void update(fXX deltaTime) override;
+            virtual void update() override;
+            virtual void update(fXX deltaTime);
 
             void init();
             void addActualPointToPath(fXXv3 position, fXXv3 orientation, fXX period, fXX(*positionalTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX(*orientationTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX focalLength = (fXX)0.0, fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX fieldOfView = (fXX)-1.0, fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX) = &vmath::linear);
@@ -192,51 +198,37 @@ namespace vorb {
         public:
             FPSCamera3D();
 
-            virtual void update(fXX deltaTime) override;
+            virtual void update() override;
 
-            virtual void applyRotation(const fXXq& rot) override;
-            virtual void applyRoll(fXX angle) override;
-            virtual void applyYaw(fXX angle) override;
-            virtual void applyPitch(fXX angle) override;
+            virtual void applyRelativeRotation(const fXXq& rot) override;
+            virtual void applyRelativePitch(fXX angle) override;
 
             void stabiliseRoll();
 
             // Setters
             void setWobbleAmplitude(fXX amplitude) { m_wobbleAmplitude = amplitude; }
-            void enableWobble(bool enable) {
-                m_wobbleEnabled = enable;
-                if (enable) {
-                    m_lockRoll = false;
-                }
-            }
+            void setWobblePeriod(fXX period) { m_wobblePeriod = period; }
+            void enableWobble(bool enable) { m_wobbleEnabled = enable; }
             void setWobbleTweening(fXX(*tweeningFunc)(fXX, fXX, fXX)) { m_wobbleTween = tweeningFunc; }
             void resetWobble() { m_wobbleStage = (T)0.0; }
             void setPitchLimit(fXX magnitude) { m_pitchLimit = magnitude; }
             void lockPitch(bool lock) { m_lockPitch = lock; }
-            void setRollLimit(fXX magnitude) { m_pitchLimit = magnitude; }
-            void lockRoll(bool lock) {
-                m_lockRoll = lock;
-                if (lock) {
-                    m_wobbleEnabled = false;
-                }
-            }
         private:
-            void updateWobble(fXX deltaTime);
+            void updateWobble();
+
+            fXXv3 m_postUpdatePosition = fXXv3(0.0);
 
             fXX m_roll = (fXX)0.0;
             fXX m_pitch = (fXX)0.0;
-            fXX m_yaw = (fXX)0.0;
 
-            fXX m_wobbleAmplitude = (fXX)0.0;
-            fXX m_wobblePeriod = (fXX)0.0;
+            fXX m_wobbleAmplitude = (fXX)M_PI * 0.01;
+            fXX m_wobblePeriod = (fXX)5.0;
             fXX m_wobbleStage = (fXX)0.0; ///< Goes between -m_wobblePeriod and m_wobblePeriod
-            fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutSine;
+            fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutCirc;
             bool m_wobbleEnabled = false;
 
             fXX m_pitchLimit = (fXX)M_PI/(fXX)2.0;
             bool m_lockPitch = true;
-            fXX m_rollLimit = (fXX)0.0;
-            bool m_lockRoll = true;
         };
     }
 }

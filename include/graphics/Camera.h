@@ -222,7 +222,7 @@ namespace vorb {
             fXX m_pitch = (fXX)0.0;
 
             fXX m_wobbleAmplitude = (fXX)M_PI * 0.01;
-            fXX m_wobblePeriod = (fXX)5.0;
+            fXX m_wobblePeriod = (fXX)1.0;
             fXX m_wobbleStage = (fXX)0.0; ///< Goes between -m_wobblePeriod and m_wobblePeriod
             fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutCirc;
             bool m_wobbleEnabled = false;

@@ -3,6 +3,8 @@
 
 #include "math/BezierMath.hpp"
 
+#include <iostream>
+
 //////////////////////////////////////////////////////////////////////////
 //                          General 3D Camera                           //
 //////////////////////////////////////////////////////////////////////////
@@ -15,11 +17,11 @@
 #define FXXM4 typename vg::Camera3D<T>::fXXm4
 
 template <typename T>
-const FXXV3 vg::Camera3D<T>::ORIG_DIRECTION = FXXV3(1.0, 0.0, 0.0);
+const FXXV3 vg::Camera3D<T>::BASE_DIRECTION = FXXV3(1.0, 0.0, 0.0);
 template <typename T>
-const FXXV3 vg::Camera3D<T>::ORIG_RIGHT = FXXV3(0.0, 0.0, 1.0);
+const FXXV3 vg::Camera3D<T>::BASE_RIGHT = FXXV3(0.0, 0.0, 1.0);
 template <typename T>
-const FXXV3 vg::Camera3D<T>::ORIG_UP = FXXV3(0.0, 1.0, 0.0);
+const FXXV3 vg::Camera3D<T>::BASE_UP = FXXV3(0.0, 1.0, 0.0);
 
 template <typename T>
 vg::Camera3D<T>::Camera3D() {
@@ -33,7 +35,7 @@ void vg::Camera3D<T>::init(FXX aspectRatio, FXX fieldOfView) {
 }
 
 template <typename T>
-void vg::Camera3D<T>::update(FXX deltaTime) {
+void vg::Camera3D<T>::update() {
     bool updateFrustum = false;
     if (m_viewChanged) {
         updateView();
@@ -70,45 +72,68 @@ void vg::Camera3D<T>::offsetPosition(const FXXV3& offset) {
 }
 
 template <typename T>
-void vg::Camera3D<T>::applyRotation(const FXXQ& rot) {
+void vg::Camera3D<T>::applyRelativeRotation(const FXXQ& rot) {
     m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
 
     m_viewChanged = true;
 }
 
 template <typename T>
-void vg::Camera3D<T>::applyRotation(FXX angle, const FXXV3& axis) {
-    applyRotation(vmath::angleAxis(angle, axis));
+void vg::Camera3D<T>::applyRelativeRotation(FXX angle, const FXXV3& axis) {
+    applyRelativeRotation(vmath::angleAxis(angle, axis));
 }
 
 template <typename T>
-void vg::Camera3D<T>::applyRoll(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, ORIG_DIRECTION));
+void vg::Camera3D<T>::applyAbsoluteRotation(const FXXQ& rot) {
+    m_directionQuat = vmath::normalize(vmath::normalize(rot) * m_directionQuat);
+
+    m_viewChanged = true;
 }
 
 template <typename T>
-void vg::Camera3D<T>::applyYaw(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, ORIG_UP));
+void vg::Camera3D<T>::applyAbsoluteRotation(FXX angle, const FXXV3& axis) {
+    applyAbsoluteRotation(vmath::angleAxis(angle, axis));
 }
 
 template <typename T>
-void vg::Camera3D<T>::applyPitch(FXX angle) {
-    applyRotation(vmath::angleAxis(angle, ORIG_RIGHT));
+void vg::Camera3D<T>::applyRelativeRoll(FXX angle) {
+    applyRelativeRotation(vmath::angleAxis(angle, BASE_DIRECTION));
+}
+
+template <typename T>
+void vg::Camera3D<T>::applyRelativeYaw(FXX angle) {
+    applyRelativeRotation(vmath::angleAxis(angle, BASE_UP));
+}
+
+template <typename T>
+void vg::Camera3D<T>::applyRelativePitch(FXX angle) {
+    applyRelativeRotation(vmath::angleAxis(angle, BASE_RIGHT));
+}
+
+template <typename T>
+void vg::Camera3D<T>::applyAbsoluteRoll(FXX angle) {
+    applyAbsoluteRotation(vmath::angleAxis(angle, BASE_DIRECTION));
+}
+
+template <typename T>
+void vg::Camera3D<T>::applyAbsoluteYaw(FXX angle) {
+    applyAbsoluteRotation(vmath::angleAxis(angle, BASE_UP));
+}
+
+template <typename T>
+void vg::Camera3D<T>::applyAbsolutePitch(FXX angle) {
+    applyAbsoluteRotation(vmath::angleAxis(angle, BASE_RIGHT));
 }
 
 template <typename T>
 void vg::Camera3D<T>::rotateFromMouse(FXX dx, FXX dy, FXX speed) {
-    FXXQ upQuat = vmath::angleAxis(dy * speed, getRight());
-    FXXQ rightQuat = vmath::angleAxis(dx * speed, getUp());
-
-    applyRotation(upQuat * rightQuat);
+    applyRelativePitch(dy * speed);
+    applyAbsoluteYaw(dx * speed);
 }
 
 template <typename T>
 void vg::Camera3D<T>::rollFromMouse(FXX dx, FXX speed) {
-    FXXQ frontQuat = vmath::angleAxis(dx * speed, getDirection());
-
-    applyRotation(frontQuat);
+    applyRelativeRoll(dx * speed);
 }
 
 template <typename T>
@@ -150,6 +175,11 @@ FXXV3 vg::Camera3D<T>::getPickRay(const FXXV2& ndcScreenPos) const {
 template <typename T>
 vg::CinematicCamera3D<T>::CinematicCamera3D() {
     static_assert(std::numeric_limits<T>::is_iec559, "CinematicCamera3D only accepts floating-point class types.");
+}
+
+template <typename T>
+void vg::CinematicCamera3D<T>::update() {
+    update((FXX)0.0);
 }
 
 template <typename T>
@@ -292,9 +322,9 @@ vg::FPSCamera3D<T>::FPSCamera3D() {
 }
 
 template <typename T>
-void vg::FPSCamera3D<T>::update(FXX deltaTime) {
+void vg::FPSCamera3D<T>::update() {
     if (m_wobbleEnabled) {
-        updateWobble(deltaTime);
+        updateWobble();
     }
 
     bool updateFrustum = false;
@@ -313,46 +343,38 @@ void vg::FPSCamera3D<T>::update(FXX deltaTime) {
         m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
         m_frustum.updateFromWVP(m_viewProjectionMatrix);
     }
+
+    m_postUpdatePosition = m_position;
 }
 
 template <typename T>
-void vg::FPSCamera3D<T>::updateWobble(FXX deltaTime) {
-    m_wobbleStage += deltaTime;
+void vg::FPSCamera3D<T>::updateWobble() {
+    m_wobbleStage += vmath::length(m_position - m_postUpdatePosition);
     if (m_wobbleStage > m_wobblePeriod) {
         FXX deltaStage = m_wobbleStage - m_wobblePeriod;
         m_wobbleStage = ((T)-1.0 * m_wobblePeriod) + deltaStage;
     }
 
     FXX targetRoll = m_wobbleTween((T)-1.0 * m_wobbleAmplitude, m_wobbleAmplitude, vmath::abs(m_wobbleStage) / m_wobblePeriod);
-    FXX currentRoll = vmath::roll(m_directionQuat);
-    FXX deltaRoll = targetRoll - currentRoll;
+    FXX deltaRoll = targetRoll - m_roll;
 
-    m_directionQuat = vmath::angleAxis(deltaRoll, getDirection()) * m_directionQuat;
+    applyRelativeRoll(deltaRoll);
+    m_roll = targetRoll;
 }
 
 template <typename T>
-void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
+void vg::FPSCamera3D<T>::applyRelativeRotation(const FXXQ& rot) {
     m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(rot));
 
-    if (0 && m_lockPitch) {
-        T newPitch = vmath::pitch(m_directionQuat);
-        if (newPitch - m_pitchLimit > (FXX)0.00001) {
-            T deltaPitch = newPitch - m_pitchLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, ORIG_RIGHT)));
-        } else if (newPitch + m_pitchLimit > (FXX)0.00001) {
-            T deltaPitch = newPitch + m_pitchLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, ORIG_RIGHT)));
-        }
-    }
-
-    if (0 && m_lockRoll) {
-        T newRoll = vmath::roll(m_directionQuat);
-        if (newRoll - m_rollLimit > (FXX)0.00001) {
-            T deltaRoll = newRoll - m_rollLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, ORIG_DIRECTION)));
-        } else if (newRoll + m_rollLimit < (FXX)0.00001) {
-            T deltaRoll = newRoll + m_rollLimit;
-            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaRoll, ORIG_DIRECTION)));
+    if (m_lockPitch) {
+        if (m_pitchLimit - m_pitch < (FXX)0.00001) {
+            T deltaPitch = m_pitchLimit - m_pitch;
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, BASE_RIGHT)));
+            m_pitch += deltaPitch;
+        } else if (m_pitchLimit + m_pitch < (FXX)0.00001) {
+            T deltaPitch = (FXX)-1.0 * (m_pitchLimit + m_pitch);
+            m_directionQuat = vmath::normalize(m_directionQuat * vmath::normalize(vmath::angleAxis(deltaPitch, BASE_RIGHT)));
+            m_pitch += deltaPitch;
         }
     }
 
@@ -360,9 +382,9 @@ void vg::FPSCamera3D<T>::applyRotation(const FXXQ& rot) {
 }
 
 template <typename T>
-void vg::FPSCamera3D<T>::stabiliseRoll() {
-    T currRoll = vmath::roll(m_directionQuat);
-    applyRoll((FXX)-1.0 * currRoll);
+void vg::FPSCamera3D<T>::applyRelativePitch(FXX angle) {
+    m_pitch += angle;
+    applyRelativeRotation(vmath::angleAxis(angle, BASE_RIGHT));
 }
 
 namespace vorb {

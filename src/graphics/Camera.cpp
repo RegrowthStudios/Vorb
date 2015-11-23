@@ -205,7 +205,9 @@ void vg::CinematicCamera3D<T>::update(FXX deltaTime) {
 }
 
 template <typename T>
-void vg::CinematicCamera3D<T>::init() {
+void vg::CinematicCamera3D<T>::init(FXX aspectRatio, FXX fieldOfView) {
+    m_aspectRatio = aspectRatio;
+    m_fieldOfView = fieldOfView;
     clearPath();
     m_running = false;
 }
@@ -238,7 +240,7 @@ void vg::CinematicCamera3D<T>::addControlPointToPath(FXXV3 position, FXXV3 orien
 }
 
 template <typename T>
-void vg::CinematicCamera3D<T>::begin() {
+void vg::CinematicCamera3D<T>::run() {
     CameraPathFixedPoint startPoint = m_path.front().first;
     setPosition(startPoint.position);
     setOrientation(FXXQ(startPoint.orientation));
@@ -256,6 +258,9 @@ void vg::CinematicCamera3D<T>::clearPath() {
 
 template <typename T>
 void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
+    if (m_path.size() <= 1) {
+        return;
+    }
     CameraPathFixedPoint beginPoint = m_path[0].first;
     CameraPathFixedPoint endPoint = m_path[1].first;
     std::vector<CameraPathControlPoint> controlPoints = m_path[0].second;
@@ -284,30 +289,34 @@ void vg::CinematicCamera3D<T>::updatePath(FXX deltaTime) {
     //     If two path segments (path between two actual points) have same period and one is shorter in delta, or the same delta with
     //     one having a shorter period, it may be necessary to add some weighting factor so that the transition between the two is nice.
 
+    FXX alpha = m_timeElapsed / beginPoint.period;
+
     // Calculate position change.
-    FXX effectivePosAlpha = beginPoint.positionalTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectivePosAlpha = beginPoint.positionalTweeningFunc(0.0, 1.0, alpha);
     FXXV3 newLocation = vmath::bezier3d<FXX>(effectivePosAlpha, controlPositions);
     setPosition(newLocation);
 
     // Calculate orientation change.
-    FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveOriAlpha = beginPoint.orientationTweeningFunc(0.0, 1.0, alpha);
     FXXV3 newOrientation = vmath::bezier3d<FXX>(effectiveOriAlpha, controlOrientations);
     setOrientation(Quaternion<FXX>(newOrientation));
 
     // Calculate focal length change.
-    FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveFocLenAlpha = beginPoint.focalLengthTweeningFunc(0.0, 1.0, alpha);
     FXX newFocalLength = vmath::bezier1d<FXX>(effectiveFocLenAlpha, controlFocalLengths);
     setFocalLength(newFocalLength);
 
     // Calculate field of view change.
-    FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc(0.0, 1.0, m_timeElapsed / beginPoint.period);
+    FXX effectiveFovAlpha = beginPoint.fieldOfViewTweeningFunc(0.0, 1.0, alpha);
     FXX newFov = vmath::bezier1d<FXX>(effectiveFovAlpha, controlFieldOfViews);
     setFieldOfView(newFov);
-     
+
+    std::cout << "Time Elapsed: " << m_timeElapsed << std::endl;
     m_timeElapsed += deltaTime;
-    if (m_timeElapsed > beginPoint.period) {
+    if (m_timeElapsed >= beginPoint.period) {
         m_timeElapsed -= beginPoint.period;
         m_path.pop_front();
+        std::cout << "Path Size: " << m_path.size() << std::endl;
         updatePath((FXX)0.0);
     }
 }
@@ -325,6 +334,10 @@ template <typename T>
 void vg::FPSCamera3D<T>::update() {
     if (m_wobbleEnabled) {
         updateWobble();
+    }
+
+    if (m_bobEnabled) {
+        updateBob();
     }
 
     bool updateFrustum = false;
@@ -360,6 +373,24 @@ void vg::FPSCamera3D<T>::updateWobble() {
 
     applyRelativeRoll(deltaRoll);
     m_roll = targetRoll;
+}
+
+template <typename T>
+void vg::FPSCamera3D<T>::updateBob() {
+    FXX deltaStage = vmath::length(m_position - m_postUpdatePosition);
+    std::cout << deltaStage << std::endl;
+    if (deltaStage < (FXX)0.0001) {
+        return;
+    }
+    m_bobStage += deltaStage;
+    if (m_bobStage > m_bobPeriod) {
+        FXX deltaStage = m_bobStage - m_bobPeriod;
+        m_bobStage = ((T)-1.0 * m_bobPeriod) + deltaStage;
+    }
+
+    FXX deltaBob = m_wobbleTween((T)-1.0 * m_bobAmplitude, m_bobAmplitude, vmath::abs(m_bobStage) / m_bobPeriod);
+
+    m_position.y += deltaBob;
 }
 
 template <typename T>

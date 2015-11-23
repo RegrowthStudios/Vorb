@@ -38,7 +38,7 @@ namespace vorb {
         public:
             Camera3D();
 
-            void init(fXX aspectRatio, fXX fieldOfView);
+            virtual void init(fXX aspectRatio, fXX fieldOfView);
             virtual void update();
 
             virtual void applyRelativeRotation(const fXXq& rot);
@@ -60,8 +60,8 @@ namespace vorb {
             void setOrientation(const fXXq& orientation) { m_directionQuat = orientation; m_viewChanged = 1; }
             void setFocalPoint(const fXXv3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = 1; }
             void setPosition(const fXXv3& position) { m_focalPoint = position; m_position = position; m_focalLength = 0;  m_viewChanged = 1; }
-            void setClippingPlane(fXX zNear, fXX zFar){ m_zNear = zNear; m_zFar = zFar; m_projectionChanged = 1; }
-            void setFieldOfView(fXX fieldOfView){ m_fieldOfView = fieldOfView; m_projectionChanged = 1; }
+            void setClippingPlane(fXX zNear, fXX zFar) { m_zNear = zNear; m_zFar = zFar; m_projectionChanged = 1; }
+            void setFieldOfView(fXX fieldOfView) { m_fieldOfView = fieldOfView; m_projectionChanged = 1; }
             void setFocalLength(fXX focalLength) { m_focalLength = focalLength; m_viewChanged = 1; }
             void setAspectRatio(fXX aspectRatio) { m_aspectRatio = aspectRatio; m_projectionChanged = 1; }
 
@@ -178,10 +178,10 @@ namespace vorb {
             virtual void update() override;
             virtual void update(fXX deltaTime);
 
-            void init();
-            void addActualPointToPath(fXXv3 position, fXXv3 orientation, fXX period, fXX(*positionalTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX(*orientationTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX focalLength = (fXX)0.0, fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX fieldOfView = (fXX)-1.0, fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX) = &vmath::linear);
-            void addControlPointToPath(fXXv3 position, fXXv3 orientation, fXX focalLength = (fXX)0.0, fXX fieldOfView = (fXX)-1.0);
-            void begin();
+            virtual void init(fXX aspectRatio, fXX fieldOfView);
+            void addActualPointToPath(fXXv3 position, fXXv3 orientation, fXX period, fXX(*positionalTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX(*orientationTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX focalLength = (fXX)0.0, fXX(*focalLengthTweeningFunc)(fXX, fXX, fXX) = &vmath::linear, fXX fieldOfView = (fXX)75.0, fXX(*fieldOfViewTweeningFunc)(fXX, fXX, fXX) = &vmath::linear);
+            void addControlPointToPath(fXXv3 position, fXXv3 orientation, fXX focalLength = (fXX)0.0, fXX fieldOfView = (fXX)75.0);
+            void run();
         private:
             void clearPath();
             void updatePath(fXX deltaTime);
@@ -203,18 +203,23 @@ namespace vorb {
             virtual void applyRelativeRotation(const fXXq& rot) override;
             virtual void applyRelativePitch(fXX angle) override;
 
-            void stabiliseRoll();
-
             // Setters
             void setWobbleAmplitude(fXX amplitude) { m_wobbleAmplitude = amplitude; }
             void setWobblePeriod(fXX period) { m_wobblePeriod = period; }
             void enableWobble(bool enable) { m_wobbleEnabled = enable; }
             void setWobbleTweening(fXX(*tweeningFunc)(fXX, fXX, fXX)) { m_wobbleTween = tweeningFunc; }
             void resetWobble() { m_wobbleStage = (T)0.0; }
+            void setBobAmplitude(fXX amplitude) { m_bobAmplitude = amplitude; }
+            void setBobPeriod(fXX period) { m_bobPeriod = period; }
+            void enableBob(bool enable) { m_bobEnabled = enable; }
+            void setBobTweening(fXX(*tweeningFunc)(fXX, fXX, fXX)) { m_bobTween = tweeningFunc; }
+            void resetBob() { m_bobStage = (T)0.0; }
             void setPitchLimit(fXX magnitude) { m_pitchLimit = magnitude; }
             void lockPitch(bool lock) { m_lockPitch = lock; }
         private:
-            void updateWobble();
+            // TODO(Matthew): Continue to restore to equilibrium after stopping moving.
+            virtual void updateWobble();
+            virtual void updateBob();
 
             fXXv3 m_postUpdatePosition = fXXv3(0.0);
 
@@ -226,6 +231,12 @@ namespace vorb {
             fXX m_wobbleStage = (fXX)0.0; ///< Goes between -m_wobblePeriod and m_wobblePeriod
             fXX(*m_wobbleTween)(fXX, fXX, fXX) = &vmath::easeInOutCirc;
             bool m_wobbleEnabled = false;
+
+            fXX m_bobAmplitude = (fXX)0.05;
+            fXX m_bobPeriod = (fXX)0.5;
+            fXX m_bobStage = (fXX)0.0; ///< Goes between -m_bobPeriod and m_bobPeriod
+            fXX(*m_bobTween)(fXX, fXX, fXX) = &vmath::easeInOutSine;
+            bool m_bobEnabled = false;
 
             fXX m_pitchLimit = (fXX)M_PI/(fXX)2.0;
             bool m_lockPitch = true;

@@ -309,9 +309,10 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
     f32 gx = 0.0f;
     std::vector <std::vector<GlyphToRender> > rows(1); // Rows of glyphs
     std::vector <f32> rightEdges(1, 0.0f); // Right edge positions for rows
-    for (int si = 0; s[si] != 0; si++) {
+    for (int si = 0; s[si] != '\0'; si++) {
         char c = s[si];
-        if (s[si] == '\n') {
+
+        if (c == '\n') {
             // Go to new row on newlines
             rightEdges.back() = gx;
             rightEdges.push_back(0.0f);
@@ -341,7 +342,7 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
                     default:
                         isOut = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
                 }
-         
+
                 // If the glyph is out of the clip rect, may need to go to new row
                 if (isOut) {
                     // TODO(Ben): Check input clipping characters
@@ -352,7 +353,7 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
                         int numChars = 0;
                         while (s[si - numChars] != ' ' && si - numChars != 0) numChars++;
 
-                        if (si - numChars > 0) {
+                        if (numChars > rows.back().size() - 1 && si - numChars > 0) {
                             for (int i = 0; i < numChars; i++) {
                                 gx -= m_glyphs[si - i].size.x * scaling.x;
                             }

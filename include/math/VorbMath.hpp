@@ -257,6 +257,19 @@ namespace vorb {
         inline T log2(T a) {
             return std::log2(a);
         }
+
+        template<typename T>
+        inline T pow(T a, T p) {
+            return std::pow(a, p);
+        }
+        template<typename T>
+        inline T pow2(T a) {
+            return a * a;
+        }
+        template<typename T>
+        inline T pow3(T a) {
+            return a * a * a;
+        }
     }
 }
 namespace vmath = vorb::math;

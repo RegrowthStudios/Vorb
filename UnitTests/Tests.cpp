@@ -28,6 +28,9 @@ bool UnitTests::Tests::runTest(const nString& name) {
     TestFunc f = (TestFunc)ptrFunc;
     try {
         return f();
+    } catch (std::exception e) {
+        puts(e.what());
+        return false;
     } catch (...) {
         return false;
     }

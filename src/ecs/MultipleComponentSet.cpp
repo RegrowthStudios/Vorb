@@ -7,7 +7,7 @@ vecs::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Entity added handler
-    _fEntityAdded.reset(makeFunctor<Sender, ComponentID, EntityID>([=] (Sender sender, ComponentID, EntityID eID) -> void {
+    _fEntityAdded.reset(makeFunctor([=] (Sender sender, ComponentID, EntityID eID) -> void {
         for (ComponentTableBase* table : this->_tables) {
             // See if a table doesn't contain the entity
             if (table == sender) continue;
@@ -18,7 +18,7 @@ vecs::MultipleComponentSet::MultipleComponentSet() :
     }));
 
     // Entity removed handler
-    _fEntityRemoved.reset(makeFunctor<Sender, ComponentID, EntityID>([=] (Sender, ComponentID, EntityID eID) -> void {
+    _fEntityRemoved.reset(makeFunctor([=] (Sender, ComponentID, EntityID eID) -> void {
         // Always remove the entity from this list
         auto entity = this->_entities.find(eID);
         if (entity != _entities.end()) {

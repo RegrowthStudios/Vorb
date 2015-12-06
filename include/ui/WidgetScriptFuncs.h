@@ -31,7 +31,6 @@
 
 DECL_VSCRIPT(class Environment)
 
-
 namespace vorb {
     namespace ui {
 
@@ -74,10 +73,10 @@ namespace vorb {
             virtual bool getFixedWidth(Widget* w) const;
             virtual bool getSelectable(Widget* w) const;
             virtual bool isMouseIn(Widget* w) const;
-            virtual int getAnchor(Widget* w) const;
-            virtual int getStyle(Widget* w) const;
-            virtual int getDock(Widget* w) const;
-            virtual int getNumWidgets(Widget* w) const;
+            virtual i32 getAnchor(Widget* w) const;
+            virtual i32 getStyle(Widget* w) const;
+            virtual i32 getDock(Widget* w) const;
+            virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
             virtual bool getClippingEnabled(Widget* w) const;
             virtual f32 getHeight(Widget* w) const;

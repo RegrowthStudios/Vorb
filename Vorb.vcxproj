@@ -105,6 +105,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -208,37 +209,43 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbArray.cpp">
+    <ClCompile Include="doxygen\examples\VorbArray.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbArrayKeg.cpp">
+    <ClCompile Include="doxygen\examples\VorbArrayKeg.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbEnumOps.cpp">
+    <ClCompile Include="doxygen\examples\VorbEnumOps.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbInit.cpp">
+    <ClCompile Include="doxygen\examples\VorbInit.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbKeg.cpp">
+    <ClCompile Include="doxygen\examples\VorbKeg.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="include\examples\VorbPtrRecycler.cpp">
+    <ClCompile Include="doxygen\examples\VorbLibs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -338,6 +345,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps/src/sha256/sha256sum.h" />
+    <ClInclude Include="doxygen\examples\VorbKeg.h" />
     <ClInclude Include="include/colors.h" />
     <ClInclude Include="include/compat.h" />
     <ClInclude Include="include/ecs/ComponentTable.hpp" />
@@ -392,7 +400,6 @@
     <ClInclude Include="include/graphics/RTSwapChain.hpp" />
     <ClInclude Include="include/graphics/SamplerState.h" />
     <ClInclude Include="include/ui/ScreenList.h" />
-    <ClInclude Include="include\examples\VorbKeg.h" />
     <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
     <ClInclude Include="include\graphics\ShaderInterface.h" />
@@ -415,11 +422,17 @@
     <ClInclude Include="include\io\KegEnvironment.h" />
     <ClInclude Include="include\io\KegFuncs.h" />
     <ClInclude Include="include\io\KegType.h" />
+    <ClInclude Include="include\io\KegTypes.h" />
     <ClInclude Include="include\io\KegValue.h" />
     <ClInclude Include="include\io\YAMLConverters.h" />
     <ClInclude Include="include\io\YAMLNode.h" />
     <ClInclude Include="include\io\YAMLReader.h" />
     <ClInclude Include="include\io\YAMLWriter.h" />
+    <ClInclude Include="include\math\QuaternionMath.hpp" />
+    <ClInclude Include="include\math\TweeningMath.hpp" />
+    <ClInclude Include="include\math\VectorMath.hpp" />
+    <ClInclude Include="include\math\VorbMath.hpp" />
+    <ClInclude Include="include\Matrix.hpp" />
     <ClInclude Include="include\MeshGenerators.h" />
     <ClInclude Include="include/voxel/VoxCommon.h" />
     <ClInclude Include="include/voxel/VoxelMeshAlg.h" />
@@ -432,6 +445,8 @@
     <ClInclude Include="include/sound/SoundListener.h" />
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\os.h" />
+    <ClInclude Include="include\Quaternion.hpp" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
     <ClInclude Include="include\script\GraphicsScriptInterface.h" />
@@ -469,7 +484,10 @@
     <ClInclude Include="include\ui\WidgetListScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetScriptFuncs.h" />
     <ClInclude Include="include\ui\WidgetStyle.h" />
+    <ClInclude Include="include\Vector.hpp" />
+    <ClInclude Include="include\VorbAssert.hpp" />
     <ClInclude Include="include\VorbLibs.h" />
+    <ClInclude Include="include\VorbMemory.h" />
     <ClInclude Include="include\voxel\IntervalTree.h" />
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
@@ -491,6 +509,10 @@
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
     <None Include="include\Bitfields.inl" />
+    <None Include="include\math\MatrixMath.hpp" />
+    <None Include="include\Matrix.inl" />
+    <None Include="include\Quaternion.inl" />
+    <None Include="include\Vector.inl" />
     <None Include="include\voxel\IntervalTree.inl" />
     <None Include="src/sound/SoundImplFMOD.inl" />
     <None Include="src\graphics\ImageIOConv.inl" />

@@ -158,13 +158,13 @@ f32v3 color::convertRGBToHSL(const f32v3& val) {
 
     if (val.r > val.g && val.r > val.b) {
         // R max
-        minVal = std::min(val.g, val.b);
+        minVal = vmath::min(val.g, val.b);
         delta = val.r - minVal;
         ret.r = HSV_ANGULAR_SCALING * std::fmod(((val.g - val.b) / minVal), 6.0f);
         ret.b = (val.r + minVal) * 0.5f;
     } else if (val.g > val.b) {
         // G max
-        minVal = std::min(val.r, val.b);
+        minVal = vmath::min(val.r, val.b);
         delta = val.r - minVal;
         ret.r = HSV_ANGULAR_SCALING * (((val.b - val.r) / minVal) + 2.0f);
         ret.b = (val.g + minVal) * 0.5f;
@@ -177,7 +177,7 @@ f32v3 color::convertRGBToHSL(const f32v3& val) {
             return ret;
         } else {
             // B max
-            minVal = std::min(val.r, val.g);
+            minVal = vmath::min(val.r, val.g);
             delta = val.r - minVal;
             ret.r = HSV_ANGULAR_SCALING * (((val.r - val.g) / minVal) + 4.0f);
             ret.b = (val.b + minVal) * 0.5f;

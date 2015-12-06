@@ -3,8 +3,7 @@
 #ifndef Tests_h__
 #define Tests_h__
 
-#define _WINSOCKAPI_
-#include <Windows.h>
+#include "../include/os.h"
 
 typedef std::map<nString, void*> TestLibrary; ///< Container type for tests
 __declspec(dllexport) TestLibrary& getLibrary(); ///< Member variable that stores tests

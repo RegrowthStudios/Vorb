@@ -20,6 +20,8 @@
 #define Vorb_os_h__
 //! @endcond
 
+#define NOMINMAX
+
 #define _WINSOCKAPI_
 #include <Windows.h>
 

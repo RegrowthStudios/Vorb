@@ -6,91 +6,27 @@
 
 #include "include/Events.hpp"
 
-bool getOppositeValue(bool v) {
-    return !v;
-}
-
-class A {
-public:
-    A() {
-        puts("CTOR");
-        fflush(stdout);
-    }
-    A(const A&) {
-        puts("Copy CTOR");
-        fflush(stdout);
-    }
-    A(A&&) {
-        puts("Move CTOR");
-        fflush(stdout);
-    }
-    A& operator=(const A&) {
-        puts("Copy ASGN");
-        fflush(stdout);
-        return *this;
-    }
-    A& operator=(A&&) {
-        puts("Move ASGN");
-        fflush(stdout);
-        return *this;
-    }
-    virtual ~A() {
-        puts("I've been destroyed");
-        fflush(stdout);
-    }
-
-    bool getOppositeValue(bool v) {
-        return !v;
-    }
-
-    virtual i32 virtualFunc() {
-        return 1;
-    }
-    i32 nonVirtualBaseFunc() {
-        return 2;
-    }
-    i32 overridenFunc() {
-        return 3;
-    }
-
-    i32 x;
-};
-
-class B : public A {
-public:
-    virtual i32 virtualFunc() {
-        return 4;
-    }
-    virtual i32 nonVirtualBaseFunc() {
-        return 5;
-    }
-    i32 overridenFunc() {
-        return 6;
-    }
-
-    i32 notX;
-    i32 x;
-};
+#include "TestClasses.h"
 
 TEST(TypelessMemberFunctionAccess) {
-    A valueA = {};
-    B valueB = {};
+    TestClassBase valueA = {};
+    TestClassDerived valueB = {};
 
     TypelessMember* typelessA = typeless(&valueA);
     TypelessMember* typelessB = typeless(&valueB);
 
-    auto funcVirtualA = TypelessMember::func(&A::virtualFunc);
-    auto funcNonVirtualBaseA = TypelessMember::func(&A::nonVirtualBaseFunc);
-    auto funcOverridenA = TypelessMember::func(&A::overridenFunc);
-    auto funcVirtualB = TypelessMember::func(&B::virtualFunc);
-    auto funcNonVirtualBaseB = TypelessMember::func(&B::nonVirtualBaseFunc);
-    auto funcOverridenB = TypelessMember::func(&B::overridenFunc);
+    auto funcVirtualA = TypelessMember::func(&TestClassBase::virtualFunc);
+    auto funcNonVirtualBaseA = TypelessMember::func(&TestClassBase::nonVirtualBaseFunc);
+    auto funcOverridenA = TypelessMember::func(&TestClassBase::overridenFunc);
+    auto funcVirtualB = TypelessMember::func(&TestClassDerived::virtualFunc);
+    auto funcNonVirtualBaseB = TypelessMember::func(&TestClassDerived::nonVirtualBaseFunc);
+    auto funcOverridenB = TypelessMember::func(&TestClassDerived::overridenFunc);
 
 #define TEST_VALUE(OBJ, FUNC, VALUE) \
     if ((OBJ->*FUNC)() != VALUE) { \
         printf(#OBJ"->*"#FUNC"() != "#VALUE"\n"); \
         return false; \
-            }
+    }
 
     TEST_VALUE(typelessA, funcVirtualA, 1);
     TEST_VALUE(typelessB, funcVirtualB, 4);
@@ -102,21 +38,21 @@ TEST(TypelessMemberFunctionAccess) {
     TEST_VALUE(typelessB, funcOverridenB, 6);
     TEST_VALUE(typelessA, funcOverridenB, 6);
     TEST_VALUE(typelessB, funcOverridenA, 3);
-#undef TEST_VALUE
+#undef TEST_VALUE 
 
     return true;
 }
 
 TEST(TypelessMemberValueAccess) {
     // Create a simple object
-    B value = {};
+    TestClassDerived value = {};
     value.x = 10;
 
     // Grab typeless pointers
-    i32 TypelessMember::* ptr = TypelessMember::value(&B::x);
-    i32 TypelessMember::* ptrOffset = TypelessMember::value<i32>(offsetof(B, x));
-    i32 TypelessMember::* ptrBad = TypelessMember::value(&A::x);
-    i32 TypelessMember::* ptrBadOffset = TypelessMember::value<i32>(offsetof(A, x));
+    i32 TypelessMember::* ptr = TypelessMember::value(&TestClassDerived::x);
+    i32 TypelessMember::* ptrOffset = TypelessMember::value<i32>(offsetof(TestClassDerived, x));
+    i32 TypelessMember::* ptrBad = TypelessMember::value(&TestClassBase::x);
+    i32 TypelessMember::* ptrBadOffset = TypelessMember::value<i32>(offsetof(TestClassBase, x));
     TypelessMember* obj = typeless(&value);
     
     // Test for offset locations
@@ -140,8 +76,8 @@ TEST(TypelessMemberValueAccess) {
 }
 
 TEST(DelegateMemberAccess) {
-    A valueA = {};
-    B valueB = {};
+    TestClassBase valueA = {};
+    TestClassDerived valueB = {};
 
 #define TEST_VALUE(OBJ, CLASS, FUNC, VALUE) \
     { \
@@ -151,15 +87,15 @@ TEST(DelegateMemberAccess) {
             return false; \
         } \
     }
-    TEST_VALUE(valueA, A, virtualFunc, 1);
-    TEST_VALUE(valueA, A, nonVirtualBaseFunc, 2);
-    TEST_VALUE(valueA, A, overridenFunc, 3);
-    TEST_VALUE(valueB, B, virtualFunc, 4);
-    TEST_VALUE(valueB, B, nonVirtualBaseFunc, 5);
-    TEST_VALUE(valueB, B, overridenFunc, 6);
-    TEST_VALUE(*((A*)&valueB), A, virtualFunc, 4);
-    TEST_VALUE(*((A*)&valueB), A, nonVirtualBaseFunc, 2);
-    TEST_VALUE(*((A*)&valueB), A, overridenFunc, 3);
+    TEST_VALUE(valueA, TestClassBase, virtualFunc, 1);
+    TEST_VALUE(valueA, TestClassBase, nonVirtualBaseFunc, 2);
+    TEST_VALUE(valueA, TestClassBase, overridenFunc, 3);
+    TEST_VALUE(valueB, TestClassDerived, virtualFunc, 4);
+    TEST_VALUE(valueB, TestClassDerived, nonVirtualBaseFunc, 5);
+    TEST_VALUE(valueB, TestClassDerived, overridenFunc, 6);
+    TEST_VALUE(*((TestClassBase*)&valueB), TestClassBase, virtualFunc, 4);
+    TEST_VALUE(*((TestClassBase*)&valueB), TestClassBase, nonVirtualBaseFunc, 2);
+    TEST_VALUE(*((TestClassBase*)&valueB), TestClassBase, overridenFunc, 3);
 #undef TEST_VALUE
     
     return true;
@@ -171,14 +107,14 @@ TEST(Convention1) {
 }
 
 TEST(Convention2) {
-    A obj;
-    RDelegate<bool, bool> v = makeRDelegate(obj, &A::getOppositeValue);
+    TestClassBase obj;
+    RDelegate<bool, bool> v = makeRDelegate(obj, &TestClassBase::getOppositeValue);
     return v(false);
 }
 
 TEST(Convention3) {
-    A obj;
-    RDelegate<bool, bool>* v = makeRFunctor(obj, &A::getOppositeValue);
+    TestClassBase obj;
+    RDelegate<bool, bool>* v = makeRFunctor(obj, &TestClassBase::getOppositeValue);
     bool a = v->invoke(false);
     delete v;
     return a;

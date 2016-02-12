@@ -25,6 +25,9 @@
       <Filter>Required Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TestClasses.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClInclude Include="macros.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TestClasses.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>

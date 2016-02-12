@@ -137,6 +137,8 @@ public:
         value.m_func = f;
         value.m_caller = nullptr;
         value.m_deleter = 0;
+        value.m_flagIsObject = false;
+        value.m_flagRequiresDeletion = false;
         return value;
     }
     template<typename T>

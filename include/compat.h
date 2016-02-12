@@ -34,6 +34,26 @@
 #define MACRO_PARAN_L {
 #define MACRO_PARAN_R }
 
+/*
+ * The purpose of the following statements is to detect what kind of computer architecture we are targeting as well as
+ * what compiler we are dealing with. The following is the list of enums that we search for:
+ *
+ * == ARCH ==
+ * X86
+ * X86_64
+ *
+ * == VORB_COMPILER ==
+ * CLANG
+ * MSVC
+ * GCC
+ *
+ * == VORB_OS ==
+ * WINDOWS
+ * MAC
+ * LINUX
+ */
+
+
 // Windows
 #if !defined(WIN32) && defined(_WIN32)
 #define WIN32 _WIN32
@@ -52,24 +72,31 @@
 // Detect architecture
 // http://sourceforge.net/p/predef/wiki/Architectures/
 
+
 // TODO(Ben): The rest of them.
 #if defined(__clang__)
 /* Clang/LLVM. ---------------------------------------------- */
+#define VORB_COMPILER_CLANG
 
 #elif defined(__ICC) || defined(__INTEL_COMPILER)
 /* Intel ICC/ICPC. ------------------------------------------ */
+#error Intel ICC/ICPC compiler is not supported by Vorb
 
 #elif defined(__GNUC__) || defined(__GNUG__)
 /* GNU GCC/G++. --------------------------------------------- */
+#define VORB_COMPILER_GCC
 
 #elif defined(__HP_cc) || defined(__HP_aCC)
 /* Hewlett-Packard C/aC++. ---------------------------------- */
+#error HP C/aC++ compiler is not supported by Vorb
 
 #elif defined(__IBMC__) || defined(__IBMCPP__)
 /* IBM XL C/C++. -------------------------------------------- */
+#error IBM XL C/C++ compiler is not supported by Vorb
 
 #elif defined(_MSC_VER)
 /* Microsoft Visual Studio. --------------------------------- */
+#define VORB_COMPILER_MSVC
 #ifdef _M_IX86
 #ifdef ARCH_32
 #define ARCH_X86_32
@@ -82,9 +109,12 @@
 
 #elif defined(__PGI)
 /* Portland Group PGCC/PGCPP. ------------------------------- */
+#error Portlan Group PGCC/PGCPP compiler is not supported by Vorb
 
 #elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 /* Oracle Solaris Studio. ----------------------------------- */
+#error Solaris compiler is not supported by Vorb
+
 #endif
 
 // register keyword creates a warning and is deprecated

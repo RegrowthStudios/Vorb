@@ -51,7 +51,7 @@ public:
 	}
 
 	virtual i32 virtualFunc() {
-		return performComputation(1);
+		return performComputation(1) ? 1 : 0;
 	}
 	i32 nonVirtualBaseFunc() {
 		return performComputation(2) ? 2 : 0;
@@ -73,6 +73,16 @@ public:
 	}
 	i32 overridenFunc() {
 		return performComputation(6) ? 6 : 0;
+	}
+
+	i32 notX;
+	i32 x;
+};
+
+class TestClassSuperDerived : public TestClassDerived {
+public:
+	virtual i32 nonVirtualBaseFunc() {
+		return performComputation(5) ? 7 : 0;
 	}
 
 	i32 notX;

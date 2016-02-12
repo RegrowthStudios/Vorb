@@ -80,11 +80,12 @@ class DelegateBase {
 public:
     typedef void* Caller;
     typedef void* Function;
+	typedef void (TypelessMember::*MemberFunction)();
     typedef void(*Deleter)(Caller);
     typedef void* UnknownStub;
 
     static_assert(sizeof(Deleter) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
-
+	
     ~DelegateBase() {
         if (m_flagRequiresDeletion != 0) {
             ((Deleter)m_deleters[m_deleter])(m_caller);
@@ -92,7 +93,10 @@ public:
     }
 
     Caller m_caller;
-    Function m_func;
+	union {
+		Function m_func;
+		MemberFunction m_memberFunc;
+	};
 protected:
     static std::vector<Deleter> m_deleters;
     static size_t grabDeleter(Deleter f) {
@@ -144,8 +148,8 @@ public:
     template<typename T>
     static RDelegate create(const T* o, Ret(T::*f)(Args...) const) {
         RDelegate value = {};
-        value.m_func = *(Function*)&f;
-        value.m_caller = const_cast<T*>(o);
+		value.m_memberFunc = (MemberFunction)f;
+		value.m_caller = const_cast<T*>(o);
         value.m_deleter = 0;
         value.m_flagIsObject = true;
         value.m_flagRequiresDeletion = false;
@@ -154,8 +158,8 @@ public:
     template<typename T>
     static RDelegate* createCopy(const T* o, Ret(T::*f)(Args...) const) {
         RDelegate* value = new RDelegate();
-        value->m_func = *(Function*)&f;
-        value->m_caller = new T(*const_cast<T*>(o));
+		value->m_memberFunc = (MemberFunction)f;
+		value->m_caller = new T(*const_cast<T*>(o));
         value->m_deleter = deleterID<T>();
         value->m_flagIsObject = true;
         value->m_flagRequiresDeletion = true;
@@ -164,7 +168,7 @@ public:
     template<typename T>
     static RDelegate create(T* o, Ret(T::*f)(Args...)) {
         RDelegate value = {};
-        value.m_func = *(Function*)&f;
+        value.m_memberFunc = (MemberFunction)f;
         value.m_caller = o;
         value.m_deleter = 0;
         value.m_flagIsObject = true;
@@ -174,7 +178,7 @@ public:
     template<typename T>
     static RDelegate* createCopy(T* o, Ret(T::*f)(Args...)) {
         RDelegate* value = new RDelegate();
-        value->m_func = *(Function*)&f;
+        value->m_memberFunc = (MemberFunction)f;
         value->m_caller = new T(*o);
         value->m_deleter = deleterID<T>();
         value->m_flagIsObject = true;
@@ -186,24 +190,24 @@ public:
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            PointerCast<Ret (TypelessMember::*)(Args...)> blankedFunction = { m_func };
-            return (((TypelessMember*)m_caller)->*blankedFunction.value)(args...);
+			auto blankedFunction = (Ret(TypelessMember::*)(Args...))m_memberFunc;
+			return (((TypelessMember*)m_caller)->*blankedFunction)(args...);
         }
     }
     Ret operator()(Args... args) const {
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            PointerCast<Ret(TypelessMember::*)(Args...)> blankedFunction = { m_func };
-            return (((TypelessMember*)m_caller)->*blankedFunction.value)(args...);
+			auto blankedFunction = (Ret(TypelessMember::*)(Args...))m_memberFunc;
+			return (((TypelessMember*)m_caller)->*blankedFunction)(args...);
         }
     }
 
     bool operator==(const RDelegate& other) const {
-        return m_func == other.m_func && m_caller == other.m_caller;
+        return m_memberFunc == other.m_memberFunc && m_caller == other.m_caller;
     }
     bool operator!=(const RDelegate& other) const {
-        return m_func != other.m_func || m_caller != other.m_caller;
+        return m_memberFunc != other.m_memberFunc || m_caller != other.m_caller;
     }
 protected:
     template<typename T>

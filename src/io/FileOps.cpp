@@ -8,7 +8,7 @@
 namespace fs = boost::filesystem;
 
 bool vio::buildDirectoryTree(const Path& path, bool omitEnd /*= false*/) {
-    if (!path.isNice()) return false;
+    if (path.isNull()) return false;
     
     Path pa = path;
     if (omitEnd) {

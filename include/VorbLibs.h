@@ -38,7 +38,7 @@
 #pragma comment(lib, "glew32.lib")
 
 
-#ifndef OS_WINDOWS
+#ifndef VORB_OS_WINDOWS
 #error DirectX is Windows-only
 #endif // !OS_WINDOWS
 
@@ -96,7 +96,7 @@
 #pragma message("Linking against <ZLIB.lib>")
 #pragma comment(lib, "ZLIB.lib")
 #endif // DEBUG
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #pragma message("VORB LIB: Linking Windows Common")
 #pragma message("Linking against <ws2_32.lib>")
 #pragma comment(lib, "ws2_32.lib")

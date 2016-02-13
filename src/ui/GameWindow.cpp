@@ -10,7 +10,7 @@
 
 #include "os.h"
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
 #else
@@ -99,7 +99,7 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     SDL_GetWindowWMInfo(VUI_WINDOW_HANDLE(m_window), &wmInfo);
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
     HWND hWnd = wmInfo.info.win.window;
 #else
 #error Plug'n'play your OS here
@@ -385,7 +385,7 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
         m_dispatcher->window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
-#elif defined(VORB_IMPL_UI_SDL)
+#elif defined(VORB_IMPL_UI_GLFW)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)
         VUI_WINDOW_HANDLE(m_window)->setSize(sf::Vector2u(m_displayMode.screenWidth, m_displayMode.screenHeight));

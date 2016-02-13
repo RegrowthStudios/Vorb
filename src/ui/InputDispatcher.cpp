@@ -212,7 +212,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
             break;
         case SDL_WINDOWEVENT_ENTER:
             // We must poll this one instance
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
             {
                 POINT mp;
                 GetCursorPos(&mp);
@@ -361,7 +361,7 @@ void vui::impl::InputDispatcherEventCatcher::onCharEvent(GLFWwindow*, unsigned i
     vui::InputDispatcher::key.onEvent();
 }
 void vui::impl::InputDispatcherEventCatcher::onMouseFocusEvent(GLFWwindow* window, int value) {
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
     {
         POINT mp;
         GetCursorPos(&mp);

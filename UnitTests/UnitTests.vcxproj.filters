@@ -31,6 +31,9 @@
       <Filter>Required Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TestClasses.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="D3DGraphics.cpp">
       <Filter>Tests\Graphics\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DelegateEvents.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="VorbMath.cpp">
       <Filter>Tests</Filter>

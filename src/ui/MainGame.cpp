@@ -4,7 +4,7 @@
 #include <thread>
 
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #include <SDL/SDL.h>
 #else
 #include <SDL2/SDL.h>

@@ -769,6 +769,9 @@
     <ClInclude Include="doxygen\examples\VorbKeg.h">
       <Filter>Examples</Filter>
     </ClInclude>
+    <ClInclude Include="include\TypeManip.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
     <ClInclude Include="include\io\KegTypes.h">
       <Filter>IO\Keg</Filter>
     </ClInclude>
@@ -796,7 +799,10 @@
     <ClInclude Include="include\VorbAssert.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\os.h" />
+    <ClInclude Include="include\os.h" />
+    <ClInclude Include="include\math\TweeningMath.hpp">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

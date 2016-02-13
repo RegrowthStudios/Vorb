@@ -570,6 +570,7 @@
     <ClInclude Include="include\io\YAMLReader.h" />
     <ClInclude Include="include\io\YAMLWriter.h" />
     <ClInclude Include="include\math\QuaternionMath.hpp" />
+    <ClInclude Include="include\math\TweeningMath.hpp" />
     <ClInclude Include="include\math\VectorMath.hpp" />
     <ClInclude Include="include\math\VorbMath.hpp" />
     <ClInclude Include="include\Matrix.hpp" />
@@ -585,6 +586,7 @@
     <ClInclude Include="include/sound/SoundListener.h" />
     <ClInclude Include="include/sound/SoundResource.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\os.h" />
     <ClInclude Include="include\Quaternion.hpp" />
     <ClInclude Include="include\script\Environment.h" />
     <ClInclude Include="include\script\Function.h" />
@@ -597,6 +599,7 @@
     <ClInclude Include="include\ecs\BitTable.hpp" />
     <ClInclude Include="include\io\YAML.h" />
     <ClInclude Include="include\ScopedTiming.hpp" />
+    <ClInclude Include="include\TypeManip.hpp" />
     <ClInclude Include="include\ui\ButtonScriptFuncs.h" />
     <ClInclude Include="include\ui\CheckBox.h" />
     <ClInclude Include="include\ui\CheckBoxScriptFuncs.h" />

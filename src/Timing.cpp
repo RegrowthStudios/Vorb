@@ -5,7 +5,7 @@
 #include "compat.h"
 #endif // !VORB_USING_PCH
 
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #include <SDL/SDL.h>
 #else
 #include <SDL2/SDL.h>

@@ -30,8 +30,7 @@ namespace vorb {
         public:
             /// Constructor
             /// @param taskId: Optional unique identifier for task type.
-            IThreadPoolTask(bool shouldAddToFinishedTasks = false, i32 taskId = -1) :
-                m_shouldAddToFinishedTasks(shouldAddToFinishedTasks),
+            IThreadPoolTask(i32 taskId = -1) :
                 m_taskId(taskId) {
                 /* Empty */
             }
@@ -41,21 +40,15 @@ namespace vorb {
             /// Executes the task
             virtual void execute(T* workerData) = 0;
 
-            /// Checks if this should be stored in a finished tasks queue
-            virtual const bool& shouldAddToFinishedTasks() const { return m_shouldAddToFinishedTasks; }
-
-            /// Setters
-            void setIsFinished(bool isFinished) { m_isFinished = isFinished; }
-            void setShouldAddToFinishedtasks(bool shouldAdd) { m_shouldAddToFinishedTasks = shouldAdd; }
-
+            /// Last thing that runs. Can delete or recycle the task here if you want.
+            virtual void cleanup() {};
+           
             /// Getters
             const i32& getTaskId() const { return m_taskId; }
-            const volatile bool& getIsFinished() const { return m_isFinished; }
 
+            volatile bool isFinished = false;
         protected:
             i32 m_taskId;
-            volatile bool m_isFinished = false;
-            bool m_shouldAddToFinishedTasks; ///< SHould it be stored in a finished tasks queue
         };
     }
 }

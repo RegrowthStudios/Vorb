@@ -81,7 +81,7 @@ inline void convertWToMBString(const cwString ws, nString& resultString) {
     size_t numConverted = 0;
     #if defined(__APPLE__) || defined(__linux__)
     wcstombs(&(resultString[0]), ws, numConverted);
-    #elif defined(WIN32) || defined(WIN64)
+    #elif defined(VORB_OS_WINDOWS)
     wcstombs_s(&numConverted, &(resultString[0]), l + 1, ws, l);
     #endif   // win32
 
@@ -93,7 +93,7 @@ inline const cwString convertMBToWString(const cString s) {
     size_t numConverted = 0;
 #if defined(__APPLE__) || defined(__linux__)
     wcstombs((char *)&(resultString[0]), (const wchar_t *)s, numConverted);
-#elif defined(WIN32) || defined(WIN64)
+#elif defined(VORB_OS_WINDOWS)
     mbstowcs(resultString, s, l);
 #endif   // win32
 

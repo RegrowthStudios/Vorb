@@ -14,7 +14,7 @@ TEST(IntervalTree) {
     IntervalTree<ui16> tree;
     tree.initSingle(0, 32768);
 
-    assert(tree[0].data == 0);
+    test_assert(tree[0].data == 0);
     for (int i = 0; i < 32768; i++) {
         tree.insert(i, i);
     }
@@ -24,7 +24,7 @@ TEST(IntervalTree) {
             std::cout << it.data << " != " << i << std::endl;
             return false;
         }
-        assert(it.length == 1);
+        test_assert(it.length == 1);
         i++;
     }
 
@@ -35,7 +35,7 @@ TEST(IntervalTree) {
     // Random insertions, big range
     tree.initSingle(0, 32768);
 
-    assert(tree[0].data == 0);
+    test_assert(tree[0].data == 0);
     for (int i = 0; i < 1000000; i++) {
         tree.insert(rand() % 32768, rand() % 60000);
     }
@@ -57,7 +57,7 @@ TEST(IntervalTree) {
     // Random insertions, small range
     tree.initSingle(0, 32768);
 
-    assert(tree[0].data == 0);
+    test_assert(tree[0].data == 0);
     for (int i = 0; i < 1000000; i++) {
         tree.insert(rand() % 32768, rand() % 8);
     }
@@ -68,7 +68,7 @@ TEST(IntervalTree) {
 
     // Random insertions, very small range
     tree.initSingle(0, 32768);
-    assert(tree[0].data == 0);
+    test_assert(tree[0].data == 0);
     for (int i = 0; i < 1000000; i++) {
         tree.insert(rand() % 32768, rand() % 3);
     }

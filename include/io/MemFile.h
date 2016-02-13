@@ -23,7 +23,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
 #include <io.h>
 #else
 #include <sys/mman.h>

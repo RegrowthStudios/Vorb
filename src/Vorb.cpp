@@ -5,7 +5,7 @@
 #include <enet/enet.h>
 #include <FreeImage.h>
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #include <TTF/SDL_ttf.h>
 #else
 #include <SDL2_ttf/SDL_ttf.h>
@@ -65,7 +65,7 @@ namespace vorb {
         vio::Path path = boost::filesystem::initial_path().string();
 
         // Set the executable directory
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
         {
             nString buf(1024, 0);
             GetModuleFileName(nullptr, &buf[0], 1024 * sizeof(TCHAR));

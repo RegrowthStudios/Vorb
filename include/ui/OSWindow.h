@@ -24,7 +24,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #define _WINSOCKAPI_
 #include <Windows.h>
 #endif
@@ -42,7 +42,7 @@ namespace vorb {
          * Mac OSX - ? <br/>
          * Linux   - ? <br/>
          */
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
         typedef HWND OSWindowHandle;
 #else 
         // TODO(Cristian): Add other typedefs

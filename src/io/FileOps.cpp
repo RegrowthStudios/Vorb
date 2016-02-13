@@ -21,7 +21,7 @@ bool vio::buildDirectoryTree(const Path& path, bool omitEnd /*= false*/) {
     return fs::create_directories(bp);
 }
 
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 namespace vorb {
     namespace io {
         DWORD CALLBACK windowsCopyProgressRoutine(

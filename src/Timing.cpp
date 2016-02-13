@@ -137,7 +137,7 @@ f32 FpsLimiter::endFrame() {
     return m_fps;
 }
 
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 namespace {
     LARGE_INTEGER getClockFrequency() {
         LARGE_INTEGER f;

@@ -6,7 +6,7 @@ namespace vorb {
     namespace graphics {
         namespace impl {
 
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #define R_OFFSET 2
 #define G_OFFSET 1
 #define B_OFFSET 0

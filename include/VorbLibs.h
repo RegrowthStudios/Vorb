@@ -30,7 +30,7 @@
 #pragma message("Linking against <glew32.lib>")
 #pragma comment(lib, "glew32.lib")
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
-#ifndef OS_WINDOWS
+#ifndef VORB_OS_WINDOWS
 #error DirectX is Windows-only
 #endif // !OS_WINDOWS
 #pragma message("VORB LIB: Linking GRAPHICS=D3D")
@@ -85,7 +85,7 @@
 #pragma message("Linking against <ZLIB.lib>")
 #pragma comment(lib, "ZLIB.lib")
 #endif // DEBUG
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #pragma message("VORB LIB: Linking Windows Common")
 #pragma message("Linking against <ws2_32.lib>")
 #pragma comment(lib, "ws2_32.lib")

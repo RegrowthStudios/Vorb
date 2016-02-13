@@ -25,6 +25,9 @@
       <Filter>Required Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TestClasses.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="tiny_obj_loader.cpp" />
     <ClCompile Include="VorbVoxel.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="DelegateEvents.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="VorbMath.cpp">

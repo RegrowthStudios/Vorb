@@ -139,7 +139,7 @@ vsound::Instance vsound::Engine::createInstance(const Resource& sound) {
     if (m_data->currentChannel >= VORB_SOUND_ENGINE_MAX_CHANNELS) m_data->currentChannel = 0;
 
     inst.m_data = &m_data->channels[m_data->currentChannel];
-    #if defined(OS_WINDOWS)
+    #if defined(VORB_OS_WINDOWS)
     m_data->system->playSound(FMOD_CHANNEL_FREE, sound.m_data->sound, true, &inst.m_data->channel);
     #else
     m_data->system->playSound(sound.m_data->sound, nullptr, true, &inst.m_data->channel);

@@ -4,7 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH OS_
 
-#define OS_WINDOWS
+#define VORB_OS_WINDOWS
 #include <include/io/MemFile.h>
 
 TEST(ConsoleRedirect) {

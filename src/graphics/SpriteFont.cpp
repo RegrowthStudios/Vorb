@@ -4,7 +4,7 @@
 #include <boost/filesystem.hpp>
 
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(OS_WINDOWS)
+#if defined(VORB_OS_WINDOWS)
 #include <TTF/SDL_ttf.h>
 #else
 #include <SDL2_ttf/SDL_ttf.h>

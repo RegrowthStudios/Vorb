@@ -270,7 +270,6 @@
     <ClCompile Include="src\ui\OSWindow.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\ImplUISDL.cpp" />
     <ClCompile Include="src\voxel\VoxelTetureStitcher.cpp">
       <Filter>Voxel</Filter>
     </ClCompile>
@@ -309,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\ImplUISDL.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -803,6 +805,7 @@
     <ClInclude Include="include\math\TweeningMath.hpp">
       <Filter>Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="src\os.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

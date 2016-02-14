@@ -7,7 +7,7 @@
 #include "ui/OSWindow.h"
 #include "D3DAdapter.h"
 
-#define COUNT_DX_VERSIONS 7
+#define COUNT_DX_VERSIONS 4
 
 namespace std {
     template<>
@@ -45,19 +45,13 @@ void vorb::graphics::IAdapter::listAdapterTypes(std::vector<APIVersion>& apis) {
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-        D3D_FEATURE_LEVEL_9_3,
-        D3D_FEATURE_LEVEL_9_2,
-        D3D_FEATURE_LEVEL_9_1
+        D3D_FEATURE_LEVEL_10_0
     };
     APIVersion dxAPIs[COUNT_DX_VERSIONS] = {
         { API::DIRECT_3D, 11, 1 },
         { API::DIRECT_3D, 11, 0 },
         { API::DIRECT_3D, 10, 1 },
-        { API::DIRECT_3D, 10, 0 },
-        { API::DIRECT_3D, 9, 3 },
-        { API::DIRECT_3D, 9, 3 },
-        { API::DIRECT_3D, 9, 1 }
+        { API::DIRECT_3D, 10, 0 }
     };
     D3D_FEATURE_LEVEL dxVersionObtained;
     for (size_t i = 0; i < COUNT_DX_VERSIONS; i++) {

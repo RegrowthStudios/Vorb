@@ -364,6 +364,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="VorbGraphics.cpp" />
+    <ClCompile Include="VorbGraphicsDevices.cpp" />
     <ClCompile Include="VorbIO.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

@@ -97,6 +97,9 @@
     <ClCompile Include="VorbMath.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="VorbGraphicsDevices.cpp">
+      <Filter>Tests\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

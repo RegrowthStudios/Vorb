@@ -134,29 +134,22 @@ namespace vorb {
             /// Clear out an entire row
             /// @param r: Row
             void setRowFalse(const ui32& r) {
-                ui8* val = &m_bits[r * m_columns];
-                for (ui32 c = 0; c < m_columns; c++) {
-                    *val = 0;
-                    val++;
-                }
+                memset(m_bits.data() + r * m_columns, 0, m_columns);
             }
 
-            /// Add a column to the table (resizes every 8 additions)
-            void addColumn() {
-                m_columnsBits++;
+            /// Add columns to the table (resizes every 8 new columns)
+            void addColumns(const size_t n) {
+                m_columnsBits += n;
                 ui32 col = (m_columnsBits + 7) >> 3;
                 if (col != m_columns) {
                     if (m_rows > 0) {
                         m_bits.resize(col * m_rows);
                         ui32 diff = col - m_columns;
 
-                        ui8* oldData = &m_bits[m_rows * m_columns];
-                        oldData--;
-                        ui8* newData = &m_bits[m_rows * col];
-                        newData--;
+                        ui8* oldData = &m_bits[m_rows * m_columns - 1];
+                        ui8* newData = &m_bits[m_rows * col - 1];     
 
                         // Translate the data
-                        // TODO: Can this be made faster?
                         for (ui32 r = m_rows; r > 0;) {
                             r--;
                             for (ui32 c = 0; c < diff; c++) {
@@ -173,10 +166,10 @@ namespace vorb {
                     m_columns = col;
                 }
             }
-            /// Add a row to the table
-            void addRow() {
-                // Add a bunch of columns
-                for (ui32 i = 0; i < m_columns; i++) m_bits.emplace_back();
+            /// Add rows to the table
+            void addRows(const size_t n) {
+                m_bits.resize(m_bits.size() + n * m_columns);
+                m_rows += n;
             }
 
         private:

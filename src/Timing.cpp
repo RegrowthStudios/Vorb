@@ -15,6 +15,10 @@ typedef std::chrono::milliseconds ms;
 
 const f64 MS_PER_SECOND = 1000.0;
 
+void vorb::sleep(UNIT_SPACE(MS) ui32 time) {
+    SDL_Delay(time);
+}
+
 void vorb::PreciseTimer::start() {
     m_timerRunning = true;
     m_start = getTimePrecise();

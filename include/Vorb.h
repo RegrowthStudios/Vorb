@@ -35,7 +35,8 @@ namespace vorb {
         IO = 0x02, ///< The IO submodule
         SOUND = 0x04, ///< The sound submodule
         NET = 0x08, ///< The network submodule
-        ALL = GRAPHICS | SOUND | IO | NET ///< All submodules are selected
+        TIMING = 0x10,  ///< The timing submodule.
+        ALL = GRAPHICS | SOUND | IO | NET | TIMING ///< All submodules are selected
     };
     ENUM_CLASS_OPS_INL(vorb::InitParam, ui64)
 

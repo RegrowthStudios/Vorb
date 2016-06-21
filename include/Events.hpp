@@ -87,9 +87,9 @@ public:
     static_assert(sizeof(Deleter) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
     
     ~DelegateBase() {
-        if (m_flagRequiresDeletion != 0) {
-            ((Deleter)m_deleters[m_deleter])(m_caller);
-        }
+     //   if (m_flagRequiresDeletion != 0) {
+     //       ((Deleter)m_deleters[m_deleter])(m_caller);
+     //   }
     }
 
     Caller m_caller;

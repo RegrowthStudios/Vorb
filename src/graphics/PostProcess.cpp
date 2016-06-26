@@ -79,7 +79,7 @@ void main() {
     
     vec3 sum = texture(unTexLuma, fUV).rgb * unWeight[0];
     float offset = unInvHeight;
-    for(int i = 1; i <= unGaussianN; i++) {
+    for(int i = 1; i < unGaussianN; i++) {
         sum += (texture(unTexLuma, vec2(fUV.x, fUV.y + offset)).rgb +
                 texture(unTexLuma, vec2(fUV.x, fUV.y - offset)).rgb) * unWeight[i];
         offset += unInvHeight;
@@ -117,7 +117,7 @@ void main() {
     vec3 val = texture(unTexColor, fUV).rgb;
     vec3 sum = texture(unTexBlur, fUV).rgb * unWeight[0];
     float offset = unInvWidth;
-    for(int i = 1; i <= unGaussianN; i++) {
+    for(int i = 1; i < unGaussianN; i++) {
         sum += (texture(unTexBlur, vec2(fUV.x + offset, fUV.y)).rgb +
                 texture(unTexBlur, vec2(fUV.x - offset, fUV.y)).rgb) * unWeight[i];
         offset += unInvWidth;

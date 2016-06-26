@@ -163,8 +163,8 @@ void vg::PostProcessBloom::load() {
     m_quad.init();
     // initialize FBOs
     m_fbos[0].setSize(m_windowWidth, m_windowHeight);
-    m_fbos[0].setSize(m_windowWidth, m_windowHeight);
-    m_fbos[1].init(vg::TextureInternalFormat::RGBA32F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
+    m_fbos[1].setSize(m_windowWidth, m_windowHeight);
+    m_fbos[0].init(vg::TextureInternalFormat::RGBA32F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
     m_fbos[1].init(vg::TextureInternalFormat::RGBA32F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
 
     // Load shaders

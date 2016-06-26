@@ -214,6 +214,10 @@ void vui::MainGame::onUpdateFrame() {
     m_screen->update(m_curTime);
 }
 void vui::MainGame::onRenderFrame() {
+    // Load anything that needs loading
+    // TODO(Ben): Support asynchronous.
+    m_renderer.load();
+
     m_renderer.beginRenderFrame();
 
     // TODO(Ben): Deferred

@@ -40,7 +40,7 @@ namespace vorb {
 		    bool shouldRead;
 		    bool shouldWrite;
 		
-		    // Comparison A(ainst Destination Depth For Pixel Write/Discard
+		    // Comparison Against Destination Depth For Pixel Write/Discard
 		    DepthFunction depthFunc;
 		
 		    // Always Draw Without Touching Depth

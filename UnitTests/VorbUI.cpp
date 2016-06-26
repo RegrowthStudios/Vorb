@@ -46,6 +46,8 @@ public:
     }
     virtual void registerRendering(vg::Renderer& renderer) override {
     }
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
+    }
     virtual void update(const vui::GameTime& gameTime) override {
     }
 };

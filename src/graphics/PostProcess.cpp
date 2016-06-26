@@ -27,6 +27,7 @@ void vg::IPostProcess::unregister() {
 #pragma region BloomShaderCode
 
 ///  Bloom shaders created by Isaque Dutra on 2 June 2015
+///  Optimized and ported to Vorb by Ben Arnold on 15 June 2016
 ///  Copyright 2015 Regrowth Studios
 ///  All Rights Reserved
 
@@ -52,10 +53,8 @@ float luma(vec3 color) {
 }
 
 void main() {
-
-    vec4 val = texture(unTexColor, fUV);
-    pColor = val * clamp( luma(val.rgb) - unLumaThresh, 0.0, 1.0 ) * (1.0 / (1.0 - unLumaThresh));
-    pColor = vec4(pColor.rgb, 1.0);
+    vec3 val = texture(unTexColor, fUV).rgb;
+    pColor = vec4(val * clamp(luma(val.rgb) - unLumaThresh, 0.0, 1.0) / (1.0 - unLumaThresh), 1.0);
 })";
 
 const cString BLOOM_GAUSS1_FRAG_SRC = R"(
@@ -70,24 +69,22 @@ in vec2 fUV;
 out vec4 pColor;
 
 // uniforms
-uniform int unHeight;           // Window height
+uniform float unInvHeight;      // 1 / Window height
 uniform sampler2D unTexLuma;    // Texture with brighest parts of image
 uniform int unGaussianN;        // Radius for gaussian blur
 uniform float unWeight[50];     // Gaussian weights
 
 // first pass of gaussian blur, in the y direction
 void main() {
-    float dy = 1.0 / float(unHeight);
     
-    vec4 sum = texture(unTexLuma, fUV) * unWeight[0];
-    for(int i=1; i<unGaussianN; i++) {
-        sum += texture( unTexLuma, fUV  +
-                        vec2(0.0, float(i)) * dy) * unWeight[i];
-        sum += texture( unTexLuma, fUV  -
-                        vec2(0.0, float(i)) * dy) * unWeight[i];
+    vec3 sum = texture(unTexLuma, fUV).rgb * unWeight[0];
+    float offset = unInvHeight;
+    for(int i = 1; i <= unGaussianN; i++) {
+        sum += (texture(unTexLuma, vec2(fUV.x, fUV.y + offset)).rgb +
+                texture(unTexLuma, vec2(fUV.x, fUV.y - offset)).rgb) * unWeight[i];
+        offset += unInvHeight;
     }
-    pColor = sum;
-    pColor = vec4(pColor.rgb, 1.0);
+    pColor = vec4(sum, 1.0);
 }
 )";
 
@@ -103,7 +100,7 @@ in vec2 fUV;
 out vec4 pColor;
 
 // uniforms
-uniform int unWidth;            // Window width
+uniform float unInvWidth;       // 1 / Window width
 uniform sampler2D unTexColor;   // Original color texture from pass before bloom pass
 uniform sampler2D unTexBlur;    // Blur texture from first blur pass
 uniform int unGaussianN;        // Radius for gaussian blur
@@ -116,18 +113,17 @@ float luma(vec3 color) {
 
 // Blurs image on x-axis and sums into the original image
 void main() {
-    float dx = 1.0 / float(unWidth);
-    vec4 val = texture(unTexColor, fUV);
-    vec4 sum = texture(unTexBlur, fUV) * unWeight[0];
-    for(int i=1; i<unGaussianN; i++) {
-        sum += texture( unTexBlur, fUV +
-                        vec2(float(i), 0.0) * dx) * unWeight[i];
-        sum += texture( unTexBlur, fUV -
-                        vec2(float(i), 0.0) * dx) * unWeight[i];
+
+    vec3 val = texture(unTexColor, fUV).rgb;
+    vec3 sum = texture(unTexBlur, fUV).rgb * unWeight[0];
+    float offset = unInvWidth;
+    for(int i = 1; i <= unGaussianN; i++) {
+        sum += (texture(unTexBlur, vec2(fUV.x + offset, fUV.y)).rgb +
+                texture(unTexBlur, vec2(fUV.x - offset, fUV.y)).rgb) * unWeight[i];
+        offset += unInvWidth;
     }
 
-    pColor = val + sum;
-    pColor = vec4(pColor.rgb, 1.0);
+    pColor = vec4(val + sum, 1.0);
 }
 )";
 
@@ -137,9 +133,10 @@ inline f32 gauss(int i, f32 sigma2) {
     return 1.0 / vmath::sqrt(2 * 3.14159265 * sigma2) * vmath::exp(-(i*i) / (2 * sigma2));
 }
 
-void vg::PostProcessBloom::init(ui32 windowWidth, ui32 windowHeight) {
+void vg::PostProcessBloom::init(ui32 windowWidth, ui32 windowHeight, ui32 renderFBO /*= 0*/) {
     m_windowWidth  = windowWidth;
     m_windowHeight = windowHeight;
+    m_renderFBO = renderFBO;
 }
 
 void vg::PostProcessBloom::setParams(ui32 gaussianN /* = 20*/, float gaussianVariance /*= 36.0f*/, float lumaThreshold /*= 0.75f*/) {
@@ -164,8 +161,8 @@ void vg::PostProcessBloom::load() {
     // initialize FBOs
     m_fbos[0].setSize(m_windowWidth, m_windowHeight);
     m_fbos[1].setSize(m_windowWidth, m_windowHeight);
-    m_fbos[0].init(vg::TextureInternalFormat::RGBA32F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
-    m_fbos[1].init(vg::TextureInternalFormat::RGBA32F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
+    m_fbos[0].init(vg::TextureInternalFormat::RGBA16F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
+    m_fbos[1].init(vg::TextureInternalFormat::RGBA16F, 0, vg::TextureFormat::RGBA, vg::TexturePixelType::FLOAT);
 
     // Load shaders
     // TODO(Ben): Error checking
@@ -183,9 +180,8 @@ void vg::PostProcessBloom::render() {
     glDisable(GL_DEPTH_TEST);
 
     // Get initial bound FBO and bound color texture to use it on final pass
-    GLint initial_fbo, initial_texture;
-    // Bad performance
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &initial_fbo);
+    int initial_texture;
+    // TODO(Ben): Bad performance
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &initial_texture);
 
     // color texture should be bound on GL_TEXTURE0 slot
@@ -201,18 +197,17 @@ void vg::PostProcessBloom::render() {
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_LUMA);
     m_fbos[0].bindTexture();
     renderStage(m_programGaussianFirst);
-
-    // Restore viewport
     m_fbos[1].unuse(m_windowWidth, m_windowHeight);
 
-    // second gaussian blur pass rendering on initially FBO
+    // second gaussian blur pass rendering. Sum initial color with blur color.
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_COLOR);
     glBindTexture(GL_TEXTURE_2D, initial_texture);
+
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_BLUR);
     m_fbos[1].bindTexture();
 
-    // Restore original FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, initial_fbo);
+    // Bind output FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
     renderStage(m_programGaussianSecond);
 
     // TODO(Ben): Need state manager
@@ -223,6 +218,9 @@ void vg::PostProcessBloom::dispose() {
     m_programLuma.dispose();
     m_programGaussianFirst.dispose();
     m_programGaussianSecond.dispose();
+    m_quad.dispose();
+    m_fbos[0].dispose();
+    m_fbos[1].dispose();
 
     // Unregister if we need to.
     if (m_renderer) {
@@ -236,7 +234,6 @@ void vg::PostProcessBloom::renderStage(vg::GLProgram& program) {
     program.enableVertexAttribArrays();
 
     m_quad.draw();
-    glEnable(GL_DEPTH_TEST);
 
     program.disableVertexAttribArrays();
     program.unuse();
@@ -250,14 +247,14 @@ void vg::PostProcessBloom::uploadUniforms() {
 
     m_programGaussianFirst.use();
     glUniform1i(m_programGaussianFirst.getUniform("unTexLuma"),   BLOOM_TEXTURE_SLOT_LUMA);
-    glUniform1i(m_programGaussianFirst.getUniform("unHeight"),    m_windowHeight);
+    glUniform1f(m_programGaussianFirst.getUniform("unInvHeight"), 1.0f / (f32)m_windowHeight);
     glUniform1i(m_programGaussianFirst.getUniform("unGaussianN"), m_gaussianN);
     m_programGaussianFirst.unuse();
 
     m_programGaussianSecond.use();
     glUniform1i(m_programGaussianSecond.getUniform("unTexColor"),  BLOOM_TEXTURE_SLOT_COLOR);
     glUniform1i(m_programGaussianSecond.getUniform("unTexBlur"),   BLOOM_TEXTURE_SLOT_BLUR);
-    glUniform1i(m_programGaussianSecond.getUniform("unWidth"),     m_windowWidth);
+    glUniform1f(m_programGaussianSecond.getUniform("unInvWidth"),  1.0f / (f32)m_windowWidth);
     glUniform1i(m_programGaussianSecond.getUniform("unGaussianN"), m_gaussianN);
     m_programGaussianSecond.unuse();
 
@@ -278,4 +275,24 @@ void vg::PostProcessBloom::uploadUniforms() {
     m_programGaussianSecond.use();
     glUniform1fv(m_programGaussianSecond.getUniform("unWeight[0]"), m_gaussianN, weights);
     m_programGaussianSecond.unuse();
+}
+
+void vorb::graphics::PostProcessPassthrough::load() {
+    m_program = ShaderManager::createProgram(shadercommon::PASSTHROUGH_VERT_SRC, shadercommon::TEXTURE_FRAG_SRC);
+    m_program.use();
+    glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
+    m_program.unuse();
+
+    m_quad.init();
+}
+
+void vorb::graphics::PostProcessPassthrough::render() {
+    m_program.use();
+    m_quad.draw();
+    m_program.unuse();
+}
+
+void vorb::graphics::PostProcessPassthrough::dispose() {
+    m_program.dispose();
+    m_quad.dispose();
 }

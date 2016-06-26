@@ -2,6 +2,7 @@
 #include "graphics/Renderer.h"
 #include "graphics/Scene.h"
 #include "graphics/PostProcess.h"
+#include "graphics/GBuffer.h"
 
 vg::Renderer::Renderer() {
     // Empty
@@ -19,6 +20,22 @@ bool vg::Renderer::init(vui::GameWindow* window) {
 
     m_window = window;
     m_isInitialized = true;
+
+    // Set up GBuffer for deferred rendering.
+    m_gBuffer = std::make_unique<vg::GBuffer>(m_window->getWidth(), m_window->getHeight());
+
+    // TODO(Ben): More than color.
+    std::vector<GBufferAttachment> attachments;
+    { // Color
+        attachments.emplace_back();
+        GBufferAttachment& color = attachments.back();
+        color.format = GBUFFER_INTERNAL_FORMAT_COLOR;
+        color.pixelFormat = vg::TextureFormat::RGBA;
+        color.pixelType = vg::TexturePixelType::FLOAT;
+        color.number = 0;
+    }
+    m_gBuffer->init(attachments, GBUFFER_INTERNAL_FORMAT_LIGHT);
+    m_gBuffer->initDepth();
 }
 
 void vg::Renderer::load() {
@@ -108,9 +125,11 @@ void vg::Renderer::setBackgroundColor(const f32v4& color) {
 
 void vg::Renderer::beginRenderFrame() {
 
+    // Bind the GBuffer for drawing
+    m_gBuffer->useGeometry();
+
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
 
-    glViewport(0, 0, m_window->getWidth(), m_window->getHeight());
     // TODO(Ben): Allow optional clearing
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -148,9 +167,33 @@ void vg::Renderer::renderScenes(const vui::GameTime& gameTime) {
 }
 
 void vg::Renderer::renderPostProcesses() {
+
+    // Disable FBO (Render to screen)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, m_window->getWidth(), m_window->getHeight());
+
+    // Bind color
+    m_gBuffer->bindGeometryTexture(0, 0);
+
+    // Do all post processing
     for (IPostProcess* p : m_postProcesses) {
         p->render();
     }
+
+    // If we have no post processes, we have to render the g buffer to the screen manually.
+    if (m_postProcesses.empty()) {
+        // Lazy load
+        if (!m_postProcessPassthrough) {
+            m_postProcessPassthrough = std::make_unique<vg::PostProcessPassthrough>();
+            m_postProcessPassthrough->init(0);
+            m_postProcessPassthrough->load();
+        }
+        // Bind color
+        m_gBuffer->bindGeometryTexture(0, 0);
+        // Render color to screen
+        m_postProcessPassthrough->render();
+    }
+
 }
 
 void vg::Renderer::dispose() {
@@ -171,6 +214,12 @@ void vg::Renderer::dispose() {
         p->dispose();
     }
     std::vector<IPostProcess*>().swap(m_postProcessesLoadQueue);
+
+    if (m_postProcessPassthrough) {
+        m_postProcessPassthrough->dispose();
+        m_postProcessPassthrough.reset();
+        m_postProcessPassthrough = nullptr;
+    }
 
     m_isInitialized = false;
 }

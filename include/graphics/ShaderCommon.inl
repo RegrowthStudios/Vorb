@@ -41,6 +41,18 @@ void main() {
   gl_Position =  vec4(vPosition, 0, 1);
 })";
 
+    const cString TEXTURE_FRAG_SRC = R"(
+// Output
+in vec2 fUV;
+
+uniform sampler2D unSampler;
+
+out vec4 pColor;
+
+void main() {
+  pColor = texture(unSampler, fUV);
+})";
+
 }
 }
 }

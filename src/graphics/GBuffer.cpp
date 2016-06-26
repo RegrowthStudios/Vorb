@@ -18,9 +18,9 @@ void vg::GBuffer::initTarget(const ui32v2& _size, const ui32& texID, const vg::G
     SamplerState::POINT_CLAMP.set(GL_TEXTURE_2D);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachment.number, GL_TEXTURE_2D, texID, 0);
 }
-vg::GBuffer& vg::GBuffer::init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat) {
+vg::GBuffer& vg::GBuffer::init(const std::vector<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat) {
     // Create texture targets
-    m_textures.setData(attachments.size() + 1);
+    m_textures.resize(attachments.size() + 1);
     glGenTextures((GLsizei)m_textures.size(), &m_textures[0]);
 
     // Make the framebuffer
@@ -105,8 +105,8 @@ void vg::GBuffer::dispose() {
         m_fboLight = 0;
     }
     if (m_textures.size() != 0) {
-        glDeleteTextures((GLsizei)m_textures.size(), &m_textures[0]);
-        m_textures.setData(0);
+        glDeleteTextures((GLsizei)m_textures.size(), m_textures.data());
+        std::vector<VGTexture>().swap(m_textures);
     }
     if (m_texDepth != 0) {
         glDeleteTextures(1, &m_texDepth);

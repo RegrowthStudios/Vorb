@@ -96,7 +96,7 @@ namespace vorb {
              *  It is recommended to do rendering via Scenes and PostProcesses rather than here,
              *  but you can optionally do rendering here.
              */
-            virtual void onRenderFrame(const vui::GameTime& gameTime) {};
+            virtual void onRenderFrame(const vui::GameTime& gameTime) = 0;
         
             /*! @brief Called In the main update loop.
              */

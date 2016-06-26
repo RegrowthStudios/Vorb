@@ -67,9 +67,10 @@ namespace graphics {
     /************************************************************************/
     /* Bloom                                                                */
     /************************************************************************/
+    /// Renders the bloom post process.
     class PostProcessBloom : public IPostProcess {
     public:
-        void         init     (ui32 windowWidth, ui32 windowHeight);
+        void         init     (ui32 windowWidth, ui32 windowHeight, ui32 renderFBO = 0);
         void         setParams(ui32 gaussianN = 20, f32 gaussianVariance = 36.0f, f32 lumaThreshold = 0.75f);
         void         load     () override;
         virtual void render   () override;
@@ -91,10 +92,32 @@ namespace graphics {
         ui32 m_windowWidth  = 0;
         ui32 m_windowHeight = 0;
 
+        ui32 m_renderFBO = 0; ///< FBO to render the final image to
+
         /// Parameters
         ui32 m_gaussianN        = 20;     ///< Threshold for filtering image luma for bloom bluring
         f32  m_gaussianVariance = 36.0f;  ///< Radius number for gaussian blur. Must be less than 50.
         f32  m_lumaThreshold    = 0.75f;  ///< Gaussian variance for blur pass
+    };
+
+    /************************************************************************/
+    /* Passthrough                                                          */
+    /************************************************************************/
+    /// Simply renders a texture from one FBO to another.
+    class PostProcessPassthrough : public IPostProcess {
+    public:
+
+        void init(ui32 textureUnit) { m_textureUnit = textureUnit; }
+        virtual void load()    override;
+        virtual void render()  override;
+        virtual void dispose() override;
+
+    private:
+        ui32 m_textureUnit = 0;
+        vg::GLProgram m_program;
+
+        // TODO(Ben): Quad sharing
+        vg::FullQuadVBO m_quad;
     };
 }
 }

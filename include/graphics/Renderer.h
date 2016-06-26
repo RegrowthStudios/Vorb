@@ -33,9 +33,10 @@ namespace vorb {
     namespace graphics {
 
         // Forward Declare
-        class GLRenderTarget;
+        class GBuffer;
         class IScene;
         class IPostProcess;
+        class PostProcessPassthrough;
 
         /// Manages storage and rendering of scenes and post processes
         class Renderer {
@@ -86,11 +87,11 @@ namespace vorb {
             virtual void sync(ui32 frameTime) { m_window->sync(frameTime); }
 
             /*! @brief Renders all scenes in order that they were registered
-             *  Does not sync. Call vui::GameWindow::sync() to draw to the screen.
              */
             virtual void renderScenes(const vui::GameTime& gameTime);
 
             /*! @brief Renders all postprocess stages. Call after renderScenes.
+             *  You must call this even if you don't use post processing in order to render the gbuffer.
              */
             virtual void renderPostProcesses();
 
@@ -111,6 +112,11 @@ namespace vorb {
         protected:
             bool             m_isInitialized    = false;
             vui::GameWindow* m_window           = nullptr; ///< The window we are targeting.
+
+            std::unique_ptr<PostProcessPassthrough> m_postProcessPassthrough = nullptr; ///< Default post process when none are active
+
+            // TODO(Ben): FBO Cache
+            std::unique_ptr<vg::GBuffer> m_gBuffer;
 
             std::vector<IScene*>       m_scenes;                 ///< Scenes that are loaded and ready to render
             std::vector<IScene*>       m_sceneLoadQueue;         ///< Scenes that need to load

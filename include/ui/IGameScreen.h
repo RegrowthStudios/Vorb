@@ -17,31 +17,27 @@
 
 #include "MainGame.h"
 #include "FocusController.h"
+#include "../VorbPreDecl.inl"
+
+DECL_VG(class Renderer);
 
 namespace vorb {
     namespace ui {
 #define SCREEN_INDEX_NO_SCREEN -1
 #define SCREEN_INDEX_NO_START_SELECTED -2
         
-        // A Screen Must Be In One Of These States
         enum class ScreenState {
-            // The Screen Is Doing Nothing At The Moment
             NONE,
-            // The Screen Is Running (Current Active)
             RUNNING,
-            // Exit Request To The Main Game
             EXIT_APPLICATION,
-            // Request To Move To The Next Screen
-            CHANGE_NEXT,
-            // Request To Move To The Previous Screen
-            CHANGE_PREVIOUS
+            CHANGE_NEXT,    ///< Go to next screen.
+            CHANGE_PREVIOUS ///< Go to previous screen.
         };
         
-        // Common Interface For A Game Screen
+        // Common interface for a game screen
         class IGameScreen {
         public:
-            IGameScreen()
-            : m_state(ScreenState::NONE) {
+            IGameScreen() {
                 // empty
             }
         
@@ -49,22 +45,28 @@ namespace vorb {
                 // empty
             }
         
-            // All Screens Should Have A Parent
+            /*! @brief All screens should have a parent.
+             */
             void setParentGame(MainGame* game, i32 index) {
                 m_game = game;
                 m_index = index;
             }
         
-            // The Screen's Location In The List
+            /*! @brief The screen's location in the list.
+             */
             i32 getIndex() const {
                 return m_index;
             }
         
-            // Returns Screen Index When Called To Change Screens
+            /*! @brief Returns screen index when called to change to next screen.
+             */
             virtual i32 getNextScreen() const = 0;
+            /*! @brief Returns screen index when called to change to previous screen.
+            */
             virtual i32 getPreviousScreen() const = 0;
         
-            // Screen State Functions
+            /*! @brief Screen state functions
+             */
             ScreenState getState() const {
                 return m_state;
             }
@@ -72,23 +74,39 @@ namespace vorb {
                 m_state = ScreenState::RUNNING;
             }
         
-            // Called At The Beginning And End Of The Application
+            /*! @brief Called At the beginning and end of the application.
+             */
             virtual void build() = 0;
+
+            /*! @brief Destroys all resources
+             */
             virtual void destroy(const vui::GameTime& gameTime) = 0;
         
-            // Called When A Screen Enters And Exits Focus
+            /*! @brief Called when a screen enters and exits focus.
+             */
             virtual void onEntry(const vui::GameTime& gameTime) = 0;
             virtual void onExit(const vui::GameTime& gameTime) = 0;
+
+            /*! @brief Initializes and register any scenes for rendering.
+             *  @param renderer: Register scenes and postprocesses with this to enable rendering.
+             */
+            virtual void registerRendering(vg::Renderer& renderer) = 0;
+            
+            /*! @brief Called after the screen clear, but before the Renderer begins to render.
+             *  It is recommended to do rendering via Scenes and PostProcesses rather than here,
+             *  but you can optionally do rendering here.
+             */
+            virtual void onRenderFrame(const vui::GameTime& gameTime) {};
         
-            // Called In The Main Update Loop
+            /*! @brief Called In the main update loop.
+             */
             virtual void update(const vui::GameTime& gameTime) = 0;
-            virtual void draw(const vui::GameTime& gameTime) = 0;
         protected:
-            ScreenState m_state;
-            MainGame* m_game = nullptr;
+            ScreenState     m_state = ScreenState::NONE;
+            MainGame*       m_game  = nullptr;
             FocusController m_focusController;
         private:
-            // Location In The ScreenList
+            // Location in the screenList
             i32 m_index = -1;
         };
         

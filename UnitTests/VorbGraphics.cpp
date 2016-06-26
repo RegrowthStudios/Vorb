@@ -101,6 +101,9 @@ public:
         if (m_tex.id != 0) glDeleteTextures(1, &m_tex.id);
     }
 
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
     virtual void update(const vui::GameTime& gameTime) {
         if (m_bmp.data) {
             glBindTexture(GL_TEXTURE_2D, m_tex.id);
@@ -197,6 +200,9 @@ public:
     virtual void onExit(const vui::GameTime& gameTime) {
         batch.dispose();
         font.dispose();
+    }
+
+    virtual void registerRendering(vg::Renderer& renderer) override {
     }
 
     virtual void update(const vui::GameTime& gameTime) {
@@ -315,6 +321,9 @@ void main() {
         program.dispose();
     }
 
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
     virtual void update(const vui::GameTime& gameTime) {
         yaw += (f32)(gameTime.elapsed * yawInput);
         pitch += (f32)(gameTime.elapsed * pitchInput);
@@ -416,6 +425,9 @@ public:
     }
     virtual void onExit(const vui::GameTime& gameTime) {
         batch.dispose();
+    }
+
+    virtual void registerRendering(vg::Renderer& renderer) override {
     }
 
     virtual void update(const vui::GameTime& gameTime) {
@@ -671,6 +683,9 @@ void main() {
         delete[] skeleton.childrenArray;
         delete[] mWorld;
         delete[] mRestInv;
+    }
+
+    virtual void registerRendering(vg::Renderer& renderer) override {
     }
 
     virtual void update(const vui::GameTime& gameTime) {

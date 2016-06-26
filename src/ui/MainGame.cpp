@@ -63,6 +63,7 @@ bool vui::MainGame::init() {
         // Run The First Game Screen
         m_screen->setRunning();
         m_screen->onEntry(m_lastTime);
+        m_screen->registerRendering(m_renderer);
     }
 
     // Set last known time
@@ -81,8 +82,11 @@ bool vui::MainGame::initSystems() {
     // Set A Default OpenGL State
     vg::DepthState::FULL.set();
     vg::RasterizerState::CULL_CLOCKWISE.set();
-#elif defined(VORB_IMPL_GRAPHICS_D3D)
 
+    m_renderer.init(&m_window);
+
+#elif defined(VORB_IMPL_GRAPHICS_D3D)
+ 
 #endif
 
     return true;
@@ -93,6 +97,7 @@ void vui::MainGame::exitGame() {
         m_screen = nullptr;
     }
     m_screenList.destroy(m_lastTime);
+    m_renderer.dispose();
     onExit();
     m_window.dispose();
     m_isRunning = false;
@@ -112,6 +117,7 @@ bool vui::MainGame::checkScreenChange() {
         if (m_screen != nullptr) {
             m_screen->setRunning();
             m_screen->onEntry(m_curTime);
+            m_screen->registerRendering(m_renderer);
         }
         return true;
     case ScreenState::CHANGE_PREVIOUS:
@@ -120,6 +126,7 @@ bool vui::MainGame::checkScreenChange() {
         if (m_screen != nullptr) {
             m_screen->setRunning();
             m_screen->onEntry(m_curTime);
+            m_screen->registerRendering(m_renderer);
         }
         return true;
     case ScreenState::EXIT_APPLICATION:
@@ -162,7 +169,7 @@ void vui::MainGame::run() {
             // Refresh time information for this frame
             refreshElapsedTime();
 
-            // Scree logic
+            // Screen logic
             if (!checkScreenChange()) {
                 // Update
                 onUpdateFrame();
@@ -174,7 +181,7 @@ void vui::MainGame::run() {
 
             // Swap buffers and synchronize time-step and window input
             ui32 curMS = MS_TIME;
-            m_window.sync(curMS - m_lastMS);
+            m_renderer.sync(curMS - m_lastMS);
 
             // Get the FPS
             m_fps = fpsCounter.endFrame();
@@ -207,29 +214,13 @@ void vui::MainGame::onUpdateFrame() {
     m_screen->update(m_curTime);
 }
 void vui::MainGame::onRenderFrame() {
-#if defined(VORB_IMPL_GRAPHICS_OPENGL)
-    // TODO: Investigate Removing This
-    glViewport(0, 0, m_window.getWidth(), m_window.getHeight());
-#elif defined(VORB_IMPL_GRAPHICS_D3D)
-    {
-#if defined(VORB_DX_9)
-        D3DVIEWPORT9 vp;
-        vp.X = 0;
-        vp.Y = 0;
-        vp.Width = m_window.getWidth();
-        vp.Height = m_window.getHeight();
-        vp.MinZ = 0.0f;
-        vp.MaxZ = 1.0f;
-        VG_DX_DEVICE(m_window.getContext())->SetViewport(&vp);
-#endif
-    }
-#if defined(VORB_DX_9)
-    VG_DX_DEVICE(m_window.getContext())->BeginScene();
-#endif
-#endif
+    m_renderer.beginRenderFrame();
 
-    // Draw the screen
-    m_screen->draw(m_curTime);
+    // TODO(Ben): Deferred
+
+    m_screen->onRenderFrame(m_curTime);
+    m_renderer.renderScenes(m_curTime);
+    m_renderer.renderPostProcesses();
 
 #if defined(VORB_IMPL_GRAPHICS_D3D)
 #if defined(VORB_DX_9)

@@ -14,7 +14,7 @@
 #pragma once
 
 #ifndef Vorb_MainGame_h__
-//! @cond DOXY_SHOW_HEADER_GUARDS
+//! @cond DOXY_SHOW_HEADER_GUARDS2
 #define Vorb_MainGame_h__
 //! @endcond
 
@@ -26,6 +26,7 @@
 #include "../Events.hpp"
 #include "GameWindow.h"
 #include "ScreenList.h"
+#include "../graphics/Renderer.h"
 
 namespace vorb {
     namespace ui {
@@ -53,23 +54,6 @@ namespace vorb {
             /*! @brief Virtual destructor for subclasses.
              */
             virtual ~MainGame();
-        
-            /*! @brief Retrieve this application's window.
-            *
-            * @warning Do not attempt to set the window to a value other than its own.
-            *
-            * @return This game's window reference.
-            */
-            GameWindow& getWindow() {
-                return m_window;
-            }
-            /*! @brief Retrieve this application's window.
-            *
-            * @return This game's window reference.
-            */
-            const GameWindow& getWindow() const {
-                return m_window;
-            }
         
             /*! @brief Initialize UI libraries and begin running the main loop.
              * 
@@ -102,6 +86,29 @@ namespace vorb {
             const f32& getFps() const {
                 return m_fps;
             }
+
+            /************************************************************************/
+            /* Accessors                                                            */
+            /************************************************************************/
+            /*! @brief Retrieve this application's window.
+            *
+            * @warning Do not attempt to set the window to a value other than its own.
+            *
+            * @return This game's window reference.
+            */
+            GameWindow& getWindow() {
+                return m_window;
+            }
+            /*! @brief Retrieve this application's window.
+            *
+            * @return This game's window reference.
+            */
+            const GameWindow& getWindow() const {
+                return m_window;
+            }
+
+            vg::Renderer& getRenderer() { return m_renderer; }
+
         protected:
             VORB_NON_COPYABLE(MainGame);
             VORB_NON_MOVABLE(MainGame);
@@ -120,16 +127,19 @@ namespace vorb {
             void onUpdateFrame();
             void onRenderFrame();
 
-            GameWindow m_window; ///< The application's window
+            GameWindow m_window; ///< The application's window.
+
+            vg::Renderer m_renderer; ///< Renders scenes to m_window.
         
             f32 m_fps = 0.0f; ///< Cached FPS value of the main loop
             UNIT_SPACE(MILLISECONDS) ui32 m_lastMS = 0; ///< Value of the last obtained clock time.
+
             GameTime m_curTime; ///< The current known application time.
             GameTime m_lastTime; ///< The last time value, used for delta purposes.
         
-            bool m_isRunning = false; ///< Flag if the application thinks it's running.
-            ScreenList m_screenList; ///< List of the managed screens.
-            IGameScreen* m_screen = nullptr; ///< The active screen.
+            bool         m_isRunning = false;   ///< Flag if the application thinks it's running.
+            IGameScreen* m_screen    = nullptr; ///< The active screen.
+            ScreenList   m_screenList;          ///< List of the managed screens.
         
             volatile bool m_signalQuit = false; ///< Tracks application's request to quit.
         };

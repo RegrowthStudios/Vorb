@@ -279,6 +279,18 @@
     <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\PostProcess.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\Scene.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -715,6 +727,18 @@
     <ClInclude Include="include\math\TweeningMath.hpp">
       <Filter>Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Scene.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\PostProcess.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -869,6 +893,9 @@
     </None>
     <None Include="include\math\MatrixMath.hpp">
       <Filter>Core\Math</Filter>
+    </None>
+    <None Include="include\graphics\ShaderCommon.inl">
+      <Filter>Graphics</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

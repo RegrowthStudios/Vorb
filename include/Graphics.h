@@ -20,6 +20,49 @@
 
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #include <GL/gl.h>
+
+// GL Error checking
+// TODO(Ben): This could go somewhere else.
+namespace vorb {
+    namespace graphics {
+        inline bool checkGlError(const nString& descriptor, OUT nString& errorMsg) {
+            GLenum error = glGetError();
+            if (error != GL_NO_ERROR) {
+                switch (error) {
+                    case GL_INVALID_ENUM:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1280: GL_INVALID_ENUM");
+                        break;
+                    case GL_INVALID_VALUE:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1281: GL_INVALID_VALUE");
+                        break;
+                    case GL_INVALID_OPERATION:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1282: GL_INVALID_OPERATION");
+                        break;
+                    case GL_STACK_OVERFLOW:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1283: GL_STACK_OVERFLOW");
+                        break;
+                    case GL_STACK_UNDERFLOW:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1284: GL_STACK_UNDERFLOW");
+                        break;
+                    case GL_OUT_OF_MEMORY:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1285: GL_OUT_OF_MEMORY");
+                        break;
+                    case GL_INVALID_FRAMEBUFFER_OPERATION:
+                        errorMsg = ("GL error at " + descriptor + ". Error code 1285: GL_INVALID_FRAMEBUFFER_OPERATION");
+                        break;
+                    default:
+                        errorMsg = ("GL error at " + descriptor + ". Error code " + std::to_string(error) + ": UNKNOWN");
+                        break;
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+}
+namespace vg = vorb::graphics;
+
+
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
 // Make sure we get correct DirectX version
 #if defined(VORB_DX_11)

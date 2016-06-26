@@ -2,6 +2,7 @@
 #include "ui/MainGame.h"
 
 #include <thread>
+#include <Graphics.h>
 
 #if defined(VORB_IMPL_UI_SDL)
 #if defined(VORB_OS_WINDOWS)
@@ -227,6 +228,14 @@ void vui::MainGame::onRenderFrame() {
     m_screen->onRenderFrame(m_curTime);
     m_renderer.renderScenes(m_curTime);
     m_renderer.renderPostProcesses();
+
+    // Check for OpenGL errors
+#if defined(VORB_IMPL_GRAPHICS_OPENGL)
+#ifndef defined(NDEBUG)
+    nString msg;
+    vorb_assert(!vg::checkGlError("vui::MainGame::onRenderFrame()", msg), msg.c_str());
+#endif
+#endif
 
 #if defined(VORB_IMPL_GRAPHICS_D3D)
 #if defined(VORB_DX_9)

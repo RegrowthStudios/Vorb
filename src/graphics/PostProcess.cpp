@@ -178,6 +178,10 @@ void vg::PostProcessBloom::load() {
 }
 
 void vg::PostProcessBloom::render() {
+    // No depth testing
+    // TODO(Ben): Don't fuck with existing state. Need state manager.
+    glDisable(GL_DEPTH_TEST);
+
     // Get initial bound FBO and bound color texture to use it on final pass
     GLint initial_fbo, initial_texture;
     // Bad performance
@@ -210,6 +214,9 @@ void vg::PostProcessBloom::render() {
     // Restore original FBO
     glBindFramebuffer(GL_FRAMEBUFFER, initial_fbo);
     renderStage(m_programGaussianSecond);
+
+    // TODO(Ben): Need state manager
+    glEnable(GL_DEPTH_TEST);
 }
 
 void vg::PostProcessBloom::dispose() {
@@ -228,7 +235,6 @@ void vg::PostProcessBloom::renderStage(vg::GLProgram& program) {
     program.use();
     program.enableVertexAttribArrays();
 
-    glDisable(GL_DEPTH_TEST);
     m_quad.draw();
     glEnable(GL_DEPTH_TEST);
 
@@ -253,5 +259,23 @@ void vg::PostProcessBloom::uploadUniforms() {
     glUniform1i(m_programGaussianSecond.getUniform("unTexBlur"),   BLOOM_TEXTURE_SLOT_BLUR);
     glUniform1i(m_programGaussianSecond.getUniform("unWidth"),     m_windowWidth);
     glUniform1i(m_programGaussianSecond.getUniform("unGaussianN"), m_gaussianN);
+    m_programGaussianSecond.unuse();
+
+    // Calculate gaussian weights
+    f32 weights[50], sum;
+    weights[0] = gauss(0, m_gaussianVariance);
+    sum = weights[0];
+    for (ui32 i = 1; i < m_gaussianN; i++) {
+        weights[i] = gauss(i, m_gaussianVariance);
+        sum += 2 * weights[i];
+    }
+    for (ui32 i = 0; i < m_gaussianN; i++) {
+        weights[i] = weights[i] / sum;
+    }
+    m_programGaussianFirst.use();
+    glUniform1fv(m_programGaussianFirst.getUniform("unWeight[0]"), m_gaussianN, weights);
+    m_programGaussianFirst.unuse();
+    m_programGaussianSecond.use();
+    glUniform1fv(m_programGaussianSecond.getUniform("unWeight[0]"), m_gaussianN, weights);
     m_programGaussianSecond.unuse();
 }

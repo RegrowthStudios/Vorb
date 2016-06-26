@@ -28,11 +28,11 @@ void vg::Renderer::load() {
     }
     m_sceneLoadQueue.clear();
 
-    for (IPostProcess* p : m_postProcesses) {
+    for (IPostProcess* p : m_postProcessesLoadQueue) {
         p->load();
         m_postProcesses.push_back(p);
     }
-    m_postProcesses.clear();
+    m_postProcessesLoadQueue.clear();
 }
 
 void vg::Renderer::registerScene(IScene* scene) {

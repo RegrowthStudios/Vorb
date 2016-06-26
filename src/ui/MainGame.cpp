@@ -209,10 +209,12 @@ void vui::MainGame::refreshElapsedTime() {
     m_curTime.elapsed = et;
     m_curTime.total += et;
 }
+
 void vui::MainGame::onUpdateFrame() {
     // Perform the screen's update logic
     m_screen->update(m_curTime);
 }
+
 void vui::MainGame::onRenderFrame() {
     // Load anything that needs loading
     // TODO(Ben): Support asynchronous.

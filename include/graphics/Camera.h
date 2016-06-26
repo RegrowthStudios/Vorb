@@ -35,6 +35,7 @@ namespace graphics {
         virtual ~Camera();
 
         /*! @brief Sets up the camera.
+         *  Does not set up the view or projection matrices, you must call update().
          */
         virtual void init(f32 aspectRatio);
 
@@ -71,7 +72,13 @@ namespace graphics {
          */
         virtual void roll(f32 roll);
 
-        void setOrientation  (const f64q& orientation);
+        /*! @brief Sets orientation using a direction. Up and direction need not be orthogonal, direction will take priority.
+         */
+        void setOrientation(const f32v3& direction, const f32v3& up);
+        /*! @brief Sets orientation to a quaternion.
+         */
+        void setOrientation(const f64q& orientation);
+
         void setFocalPoint   (const f64v3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = true; }
         void setPosition     (const f64v3& position)   { m_focalPoint = m_position = position; m_focalLength = 0;  m_viewChanged = true; }
         void setDirection    (const f32v3& direction)  { m_direction = direction; m_viewChanged = true; }

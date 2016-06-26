@@ -83,6 +83,14 @@ void vg::Camera::roll(f32 roll) {
     rotate(frontQuat);
 }
 
+void vg::Camera::setOrientation(const f32v3& direction, const f32v3& up) {
+    m_direction = direction;
+    m_up = up;
+    m_right = vmath::normalize(vmath::cross(m_up, m_direction));
+    // We calculate up again to guarantee orthogonality
+    m_up = vmath::normalize(vmath::cross(m_right, m_direction));
+}
+
 void vg::Camera::setOrientation(const f64q& orientation) {
     m_direction = orientation * f64v3(0.0, 0.0, 1.0);
     m_right = orientation * f64v3(1.0, 0.0, 0.0);

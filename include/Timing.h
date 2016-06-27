@@ -44,6 +44,17 @@ namespace vorb {
 
     f64 toSeconds(HighPrecisionTime time);
 
+    /*!
+     * \brief Sleeps the current thread.
+     *
+     * The amount of time the thread actually sleeps is really dependent on
+     * the scheduler. To achieve better precision, make sure to initialize the timing
+     * portion of Vorb.
+     *
+     * \param time The amount of time to sleep the thread in milliseconds.
+     */
+    void sleep(UNIT_SPACE(MS) ui32 time);
+
     class PreciseTimer {
     public:
         void start();

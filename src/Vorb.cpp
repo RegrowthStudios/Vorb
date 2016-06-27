@@ -23,10 +23,13 @@
 #include "graphics/D3DMap.h"
 #include "Events.hpp"
 
+#define VORB_TIMING_WINDOWS_WAIT_BUFFER 128
+
 void doNothing(void*) { 
     // Empty
 }
 std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
+
 
 namespace vorb {
     // Current system settings
@@ -115,6 +118,23 @@ namespace vorb {
         if (err != 0) return InitParam::NONE;
         return InitParam::NET;
     }
+    InitParam initTiming() {
+        // Check for previous initialization
+        if (isSystemInitialized(InitParam::TIMING)) {
+            return InitParam::TIMING;
+        }
+        
+#if defined(VORB_OS_WINDOWS)
+        // Make sleeping accuracy a bit better:
+        // http://stackoverflow.com/a/23258702
+        if (timeBeginPeriod(1) != TIMERR_NOERROR) return InitParam::NONE;
+        Sleep(VORB_TIMING_WINDOWS_WAIT_BUFFER);
+#else
+#error Better time precision is not implemented for this OS
+#endif
+
+        return InitParam::TIMING;
+    }
     
     /************************************************************************/
     /* Disposers                                                            */
@@ -163,6 +183,23 @@ namespace vorb {
 
         return InitParam::NET;
     }
+    InitParam disposeTiming() {
+        // Check for existence
+        if (!isSystemInitialized(InitParam::TIMING)) {
+            return InitParam::TIMING;
+        }
+
+#if defined(VORB_OS_WINDOWS)
+        // Go back to normal tick rate:
+        // http://stackoverflow.com/a/23258702
+        if (timeEndPeriod(1) != TIMERR_NOERROR) return InitParam::NONE;
+        Sleep(VORB_TIMING_WINDOWS_WAIT_BUFFER);
+#else
+#error Better time precision is not implemented for this OS
+#endif
+
+        return InitParam::TIMING;
+    }
 }
 
 vorb::InitParam vorb::init(const InitParam& p) {
@@ -173,6 +210,7 @@ vorb::InitParam vorb::init(const InitParam& p) {
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= initGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= initIO();
     if (HAS(p, InitParam::NET)) succeeded |= initNet();
+    if (HAS(p, InitParam::TIMING)) succeeded |= initTiming();
 
     // Add system flags
     currentSettings |= succeeded;
@@ -189,6 +227,7 @@ vorb::InitParam vorb::dispose(const InitParam& p) {
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= disposeGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= disposeIO();
     if (HAS(p, InitParam::NET)) succeeded |= disposeNet();
+    if (HAS(p, InitParam::TIMING)) succeeded |= disposeTiming();
 
     // Remove system flags
     currentSettings &= (InitParam)(~(ui64)succeeded);

@@ -384,6 +384,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="VorbUI.cpp" />
+    <ClCompile Include="VorbUtils.cpp" />
     <ClCompile Include="VorbVoxel.cpp" />
   </ItemGroup>
   <ItemGroup>

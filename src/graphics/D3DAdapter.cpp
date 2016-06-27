@@ -89,7 +89,7 @@ void vorb::graphics::D3DAdapter::attachToWindow(IContext* c, void* h) {
     D3DContext* context = (D3DContext*)c;
 
     RECT wRect;
-    GetWindowRect(hWnd, &wRect);
+    GetClientRect(hWnd, &wRect);
     UINT width = wRect.right - wRect.left;
     UINT height = wRect.bottom - wRect.top;
 

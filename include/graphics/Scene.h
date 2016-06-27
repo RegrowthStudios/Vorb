@@ -46,8 +46,9 @@ namespace vorb {
 
             // You should implement your own initialization logic
 
-            /*! @brief Sets up the camera.
-             * Override this to provide a custom camera implementation.
+            /*! @brief Allocates the Camera.
+             * Override this to provide a custom camera implementation or set up camera location.
+             * Does not get called by renderer, you must call this manually.
              */
             virtual void initCamera();
 

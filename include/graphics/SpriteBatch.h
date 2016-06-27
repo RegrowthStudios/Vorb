@@ -91,7 +91,7 @@ namespace vorb {
             static void disposeProgram();
         private:
             struct Glyph; struct Vertex;
-            typedef void(SpriteBatch::*QuadBuildFunc)(const Glyph*, Vertex*);      
+            typedef void(*QuadBuildFunc)(const Glyph*, Vertex*);      
 
             struct Glyph {
                 Glyph(QuadBuildFunc f, VGTexture tex, const f32v4& uvRect, const f32v2& uvTiling, const f32v2& position, const f32v2& offset, const f32v2& size, f32 rotation, const color4& tint, f32 depth);
@@ -133,12 +133,12 @@ namespace vorb {
             static bool SSMBackToFront(Glyph* g1, Glyph* g2) { return g1->depth > g2->depth; }
 
             /// Quad builders
-            void buildQuad(const Glyph* g, Vertex* verts);
-            void buildQuadOffset(const Glyph* g, Vertex* verts);
-            void buildQuadRotated(const Glyph* g, Vertex* verts);    
+            static void buildQuad(const Glyph* g, Vertex* verts);
+            static void buildQuadOffset(const Glyph* g, Vertex* verts);
+            static void buildQuadRotated(const Glyph* g, Vertex* verts);
 
             /// For color gradients
-            void calcColor(Vertex& vtl, Vertex& vtr, Vertex& vbl, Vertex& vbr, const Glyph* g);
+            static void calcColor(Vertex& vtl, Vertex& vtr, Vertex& vbl, Vertex& vbr, const Glyph* g);
 
             std::vector<Glyph> m_glyphs; ///< Glyph data
             std::vector<Glyph*> m_glyphPtrs; ///< Pointers to glyphs for fast sorting

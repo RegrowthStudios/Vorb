@@ -80,7 +80,7 @@ bool vg::Renderer::unregisterScene(IScene* scene) {
     return false;
 }
 
-void vg::Renderer::registerPostProcesses(IPostProcess* postProcess) {
+void vg::Renderer::registerPostProcess(IPostProcess* postProcess) {
     // Make sure the PostProcess doesn't exist
     vorb_assert(std::find(m_postProcesses.begin(), m_postProcesses.end(), postProcess) == m_postProcesses.end(), "PostProcess already added to SceneRenderer.");
 
@@ -89,7 +89,7 @@ void vg::Renderer::registerPostProcesses(IPostProcess* postProcess) {
     m_postProcessesLoadQueue.push_back(postProcess);
 }
 
-bool vg::Renderer::unregisterPostProcesses(IPostProcess* postProcess) {
+bool vg::Renderer::unregisterPostProcess(IPostProcess* postProcess) {
     auto& it = std::find(m_postProcesses.begin(), m_postProcesses.end(), postProcess);
     if (it != m_postProcesses.end()) {
         // Remove the PostProcess

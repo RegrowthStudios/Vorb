@@ -65,13 +65,13 @@ namespace vorb {
 
             /*! @brief Registers a PostProcess for load and then rendering.
             */
-            virtual void registerPostProcesses(IPostProcess* postProcess);
+            virtual void registerPostProcess(IPostProcess* postProcess);
 
             /*! @brief Unregisters a PostProcess for rendering.
             *  Does not dispose the PostProcess.
             *  @return true on success.
             */
-            virtual bool unregisterPostProcesses(IPostProcess* postProcess);
+            virtual bool unregisterPostProcess(IPostProcess* postProcess);
 
             /*! @Brief sets background color for window
              */

@@ -13,7 +13,7 @@
 void vg::IPostProcess::unregister() {
     vorb_assert(m_renderer, "PostProcess unregistered without having renderer.");
 
-    m_renderer->unregisterPostProcesses(this);
+    m_renderer->unregisterPostProcess(this);
 }
 
 /************************************************************************/
@@ -224,7 +224,7 @@ void vg::PostProcessBloom::dispose() {
 
     // Unregister if we need to.
     if (m_renderer) {
-        m_renderer->unregisterPostProcesses(this);
+        m_renderer->unregisterPostProcess(this);
     }
 }
 

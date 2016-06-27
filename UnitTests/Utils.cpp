@@ -316,3 +316,74 @@ TEST(Endianness) {
     v4 = vorb::endianSwap(v4);
     return true;
 }
+
+#include <deps/include/SDL/SDL.h>
+#include <deps/include/SDL/SDL_joystick.h>
+
+TEST(Rumble) {
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC | SDL_INIT_EVENTS);
+
+    //Set texture filtering to linear
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+        printf("Warning: Linear texture filtering not enabled!");
+    }
+
+    //Check for joysticks
+    if (SDL_NumJoysticks() < 1) {
+        printf("Warning: No joysticks connected!\n");
+    } else {
+        printf("Num Joysticks: %d\n", SDL_NumJoysticks());
+        SDL_Joystick* gGameController;
+
+        for (int i = SDL_NumJoysticks(); i--;) {
+            puts("\n\nNew joystick");
+            //Load joystick
+            gGameController = SDL_JoystickOpen(0);
+            if (!gGameController) {
+                printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+                continue;
+            }
+            printf("Name: %s\n", SDL_JoystickName(gGameController));
+
+            for (int j = SDL_JoystickNumAxes(gGameController); j--;) {
+                printf("Axis: %d\n", SDL_JoystickGetAxis(gGameController, j));
+            }
+
+
+            SDL_Haptic* haptic = SDL_HapticOpenFromJoystick(gGameController);
+            if (haptic) {
+                puts("Detected haptic feedback");
+                SDL_HapticRumbleInit(haptic);
+                SDL_HapticRumblePlay(haptic, 1, 1000);
+                SDL_Delay(1500);
+            }
+        }
+
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        SDL_CreateWindowAndRenderer(800, 600, SDL_WINDOW_SHOWN, &window, &renderer);
+
+        while (true) {
+            SDL_Event e;
+            while(SDL_PollEvent(&e)) {
+                switch (e.type) {
+                case SDL_QUIT:
+                    return true;
+                default:
+                    break;
+                }
+            }
+
+            if (system("CLS")) system("clear");
+            for (int j = SDL_JoystickNumAxes(gGameController); j--;) {
+                printf("Axis: %d\n", SDL_JoystickGetAxis(gGameController, j));
+            }
+
+            SDL_RenderPresent(renderer);
+            SDL_Delay(100);
+        }
+    }
+
+
+    return true;
+}

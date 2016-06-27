@@ -312,6 +312,9 @@
     <ClCompile Include="src\ui\ImplUISDL.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\GLAdapter.cpp">
+      <Filter>Graphics\Interfaces\GL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -806,6 +809,9 @@
       <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\os.h" />
+    <ClInclude Include="src\graphics\GLAdapter.h">
+      <Filter>Graphics\Interfaces\GL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

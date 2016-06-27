@@ -387,6 +387,7 @@
     <ClCompile Include="src\graphics\D3DDevice.cpp" />
     <ClCompile Include="src\graphics\D3DAdapter.cpp" />
     <ClCompile Include="src\graphics\D3DMap.cpp" />
+    <ClCompile Include="src\graphics\GLAdapter.cpp" />
     <ClCompile Include="src\graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\graphics\IAdapter.cpp" />
     <ClCompile Include="src\graphics\IContext.cpp" />
@@ -640,6 +641,7 @@
     <ClInclude Include="src\graphics\D3DMap.h" />
     <ClInclude Include="src\graphics\D3DObject.h" />
     <ClInclude Include="src\graphics\D3DResource.h" />
+    <ClInclude Include="src\graphics\GLAdapter.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\ImplUISDL.h" />
     <ClInclude Include="src\os.h" />

@@ -145,6 +145,19 @@ void vorb::graphics::IAdapter::listAdapterTypes(std::vector<APIVersion>& apis) {
     }
 }
 
+/* 
+ * Creating an adapter is done in a couple of ways:
+ * 
+ * D3D: Can only be created on a Windows OS build using the D3D library
+ *
+ * OpenGL:
+ *     GLFW with a hidden window
+ *     
+ *
+ *
+ *
+ *
+ */
 vorb::graphics::IAdapter* vorb::graphics::getAdapter(API api, ui32 majorVersion, ui32 minorVersion) {
     APIVersion version = { api, majorVersion, minorVersion };
     switch (api) {

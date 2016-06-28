@@ -66,6 +66,18 @@ void vui::Widget::updatePosition() {
     updateChildPositions();
 }
 
+// TODO(Matthew): Better solution? Even with caching seems a tad overkill.
+const vui::Form* vui::Widget::getParentForm() const {
+    const IWidgetContainer* widgetContainer = m_parent;
+    IWidgetContainer* form = new Form();
+    while (typeid(&widgetContainer) != typeid(&form)) {
+        const Widget* widget = static_cast<const Widget*>(widgetContainer);
+        widgetContainer = widget->getParent();
+    }
+    delete form;
+    return static_cast<const Form*>(widgetContainer);
+}
+
 void vui::Widget::setAnchor(const AnchorStyle& anchor) {
     m_anchor = anchor;
 }
@@ -122,7 +134,7 @@ void vui::Widget::updateDimensions() {
     }*/
 
     // Check min/max size
-    if (newDims.x < m_minSize.x) {
+    /*if (newDims.x < m_minSize.x) {
         newDims.x = m_minSize.x;
     } else if (newDims.x > m_maxSize.x) {
         newDims.x = m_maxSize.x;
@@ -131,7 +143,14 @@ void vui::Widget::updateDimensions() {
         newDims.y = m_minSize.y;
     } else if (newDims.y > m_maxSize.y) {
         newDims.y = m_maxSize.y;
+    }*/
+
+    switch (m_rawDimensions.second) {
+    case vui::DimensionType::PIXEL:
+        newDims = m_rawDimensions.first;
+    case vui::DimensionType::FORM_HEIGHT_PERC:
     }
+
     // Only set if it changed
     if (newDims != m_dimensions) {
         IWidgetContainer::setDimensions(newDims);

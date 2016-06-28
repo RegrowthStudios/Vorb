@@ -28,6 +28,7 @@
 #include "../Events.hpp"
 #include "../VorbPreDecl.inl"
 #include "IWidgetContainer.h"
+#include "Form.h"
 
 DECL_VG(class SpriteFont)
 
@@ -122,6 +123,7 @@ namespace vorb {
             /************************************************************************/ 
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const IWidgetContainer* getParent() const { return m_parent; }
+            virtual const Form* getParentForm() const;
             virtual const PositionType& getPositionType() const { return m_positionType; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
@@ -168,6 +170,8 @@ namespace vorb {
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
             IWidgetContainer* m_parent = nullptr; ///< Parent container
+            // TODO(Matthew): Use this to cache parent form of a widget, with invalidation of parent change to this or any parent widget.
+            //Form* m_parentForm = nullptr; ///< Cache for parent form of widget.
             PositionType m_positionType = PositionType::STATIC;
             std::pair<f32v2, DimensionType> m_minSize = std::pair<f32v2, DimensionType>(f32v2(0.0f), DimensionType::PIXEL);
             std::pair<f32v2, DimensionType> m_maxSize = std::pair<f32v2, DimensionType>(f32v2(FLT_MAX), DimensionType::PIXEL);

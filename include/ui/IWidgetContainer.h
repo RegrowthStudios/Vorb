@@ -28,8 +28,6 @@
 #include "../script/Function.h"
 #endif
 
-#include "MainGame.h"
-
 namespace vorb {
     namespace ui {
 
@@ -181,7 +179,7 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             ContainerStyle m_style; ///< The current style.
-            Form* m_parentForm = nullptr;
+            Form* m_parentForm = nullptr; ///< Parent form.
             std::vector<Widget*> m_widgets; ///< All child widgets.
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.

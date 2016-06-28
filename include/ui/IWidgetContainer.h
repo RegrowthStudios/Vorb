@@ -28,6 +28,8 @@
 #include "../script/Function.h"
 #endif
 
+#include "MainGame.h"
+
 namespace vorb {
     namespace ui {
 
@@ -36,6 +38,7 @@ namespace vorb {
         struct MouseMotionEvent;
         struct MouseEvent;
         class Widget;
+        class Form;
 
         //! Bitfield of container styling flags
         struct ContainerStyle {
@@ -100,6 +103,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
+            virtual Form* getParentForm() const { return m_parentForm; }
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
@@ -121,7 +125,8 @@ namespace vorb {
 
             /************************************************************************/
             /* Setters                                                              */
-            /************************************************************************/         
+            /************************************************************************/
+            virtual void setParentForm(Form* form);
             virtual void setDestRect(const f32v4& destRect);
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
@@ -174,8 +179,9 @@ namespace vorb {
 
             /************************************************************************/
             /* Members                                                              */
-            /************************************************************************/      
+            /************************************************************************/
             ContainerStyle m_style; ///< The current style.
+            Form* m_parentForm = nullptr;
             std::vector<Widget*> m_widgets; ///< All child widgets.
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.

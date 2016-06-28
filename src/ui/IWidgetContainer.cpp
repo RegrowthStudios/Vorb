@@ -36,6 +36,7 @@ void vui::IWidgetContainer::dispose() {
 bool vui::IWidgetContainer::addWidget(Widget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
+    child->m_parentForm = this->m_parentForm;
     child->updatePosition();
     return true; // TODO(Ben): Is this needed?
 }
@@ -47,6 +48,7 @@ bool vui::IWidgetContainer::removeWidget(Widget* child) {
             return true;
         }
     }
+    child->setParentForm(nullptr);
     return false;
 }
 
@@ -78,6 +80,13 @@ void vui::IWidgetContainer::disable() {
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
     return (x >= m_position.x && x < m_position.x + m_dimensions.x &&
             y >= m_position.y && y < m_position.y + m_dimensions.y);
+}
+
+void vui::IWidgetContainer::setParentForm(Form* form) {
+    m_parentForm = form;
+    for (auto& w : m_widgets) {
+        w->setParentForm(form);
+    }
 }
 
 void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {

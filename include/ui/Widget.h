@@ -170,8 +170,6 @@ namespace vorb {
             UIRenderer* m_renderer = nullptr;
             // TODO(Matthew): Move this to IWidgetContainer? Will make looking up and down chain easier.
             IWidgetContainer* m_parent = nullptr; ///< Parent container
-            // TODO(Matthew): Use this to cache parent form of a widget, with invalidation of parent change to this or any parent widget.
-            //Form* m_parentForm = nullptr; ///< Cache for parent form of widget.
             PositionType m_positionType = PositionType::STATIC;
             std::pair<f32v2, UnitType> m_minSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             std::pair<f32v2, UnitType> m_maxSize = std::pair<f32v2, UnitType>(f32v2(FLT_MAX), UnitType::PIXEL);

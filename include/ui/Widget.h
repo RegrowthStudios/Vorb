@@ -145,8 +145,8 @@ namespace vorb {
             virtual void setRawPosition(const std::pair<f32v2, DimensionType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
             virtual void setRawPosition(const f32v2& rawPosition, DimensionType& dimensionType) { m_rawPosition.first = rawPosition; m_rawPosition.second = dimensionType; updatePosition(); }
             virtual void setDimensions(const f32v2& dimensions);
-            virtual void setRawDimensions(const std::pair<f32v2, DimensionType>& rawDimensions) { m_rawDimensions = rawDimensions; updatePosition(); }
-            virtual void setRawDimensions(const f32v2& rawDimensions, DimensionType& dimensionType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = dimensionType; updatePosition(); }
+            virtual void setRawDimensions(const std::pair<f32v2, DimensionType>& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensions(); }
+            virtual void setRawDimensions(const f32v2& rawDimensions, DimensionType& dimensionType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = dimensionType; updateDimensions(); }
             virtual void setMaxSize(const std::pair<f32v2, DimensionType>& maxSize) { m_maxSize = maxSize; updatePosition(); }
             virtual void setMaxSize(const f32v2& maxSize, DimensionType& dimensionType) { m_maxSize.first = maxSize; m_maxSize.second = dimensionType; updatePosition(); }
             virtual void setMaxWidth(f32 maxWidth) { m_maxSize.first.x = maxWidth; updatePosition(); }

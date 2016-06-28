@@ -134,6 +134,6 @@ void vui::Widget::updateDimensions() {
     }
     // Only set if it changed
     if (newDims != m_dimensions) {
-        setDimensions(newDims);
+        IWidgetContainer::setDimensions(newDims);
     }
 }

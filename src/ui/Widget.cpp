@@ -177,10 +177,8 @@ void vui::Widget::updateDimensions() {
         case vui::PositionType::STATIC:
         case vui::PositionType::RELATIVE:
             newDims = m_rawDimensions.first * getParent()->getDimensions();
-        case vui::PositionType::FIXED_TO_FORM:
+        case vui::PositionType::FIXED:
             newDims = m_rawDimensions.first * getParentForm()->getDimensions();
-        case vui::PositionType::FIXED_TO_WINDOW:
-            // Find out a reasonable way to get window size.
         case vui::PositionType::ABSOLUTE:
             newDims = m_rawDimensions.first * getFirstPositionedParent()->getDimensions();
         }
@@ -202,11 +200,6 @@ void vui::Widget::updateDimensions() {
         } else {
             newDims = m_rawDimensions.first * formDims.x;
         }
-    case vui::UnitType::WINDOW_HEIGHT_PERC:
-    case vui::UnitType::WINDOW_WIDTH_PERC:
-    case vui::UnitType::WINDOW_MAX_PERC:
-    case vui::UnitType::WINDOW_MIN_PERC:
-        // Find out a reasonable way to get window size.
     }
 
     // Only set if it changed

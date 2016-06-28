@@ -50,8 +50,7 @@ namespace vorb {
         enum class PositionType {
             STATIC,
             ABSOLUTE,
-            FIXED_TO_WINDOW,
-            FIXED_TO_FORM,
+            FIXED,
             RELATIVE
         };
 

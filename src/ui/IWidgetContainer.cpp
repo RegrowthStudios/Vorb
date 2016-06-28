@@ -36,7 +36,7 @@ void vui::IWidgetContainer::dispose() {
 bool vui::IWidgetContainer::addWidget(Widget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
-    child->m_parentForm = this->m_parentForm;
+    child->setParentForm(this->m_parentForm);
     child->updatePosition();
     return true; // TODO(Ben): Is this needed?
 }

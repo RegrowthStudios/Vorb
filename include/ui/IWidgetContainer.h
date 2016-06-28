@@ -50,10 +50,6 @@ namespace vorb {
             bool bottom : 1; ///< If true, anchored to the bottom of parent
             bool top : 1; ///< If true, anchored to the top of parent
         };
-        //! Bitfield of dock flags
-        enum class DockStyle {
-            NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
-        };
 
         class IWidgetContainer {
         public:
@@ -100,8 +96,6 @@ namespace vorb {
              */
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
-
-            virtual void setChildDock(Widget* widget, DockStyle dockStyle);
 
             /************************************************************************/
             /* Getters                                                              */
@@ -154,10 +148,6 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
-            /*! Removes a widget from a dock and returns true on success. */
-            bool removeChildFromDock(Widget* widget);
-            /*! Refreshes all docked widget positions and sizes. */
-            void recalculateDockedWidgets();
             /*! Computes clipping for rendering and propagates through children. */
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
             virtual void computeChildClipRects();
@@ -187,12 +177,10 @@ namespace vorb {
             /************************************************************************/      
             ContainerStyle m_style; ///< The current style.
             std::vector<Widget*> m_widgets; ///< All child widgets.
-            std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX);
-            f32v4 m_dockSizes = f32v4(0.0f); ///< Total size of each dock other than fill.
-            f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent.
-            f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
-            f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
+            f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
+            f32v2 m_position = f32v2(0.0f); ///< The position of the container.
+            f32v2 m_relativePosition = f32v2(0.0f); ///< The relative position of the container to its parent.
+            f32v2 m_dimensions = f32v2(0.0f); ///< The dimensions of the container.
             nString m_name = ""; ///< Display name of the container.
 
             bool m_isClippingEnabled = true;

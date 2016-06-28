@@ -161,29 +161,46 @@ void vui::Widget::updateDimensions() {
         switch (m_positionType) {
         case vui::PositionType::STATIC:
         case vui::PositionType::RELATIVE:
-            newDims = m_rawDimensions.first * getParent()->getDimensions();
+            if (m_parentWidget) {
+                newDims = m_rawDimensions.first * m_parentWidget->getDimensions();
+            } else if (m_parentForm) {
+                newDims = m_rawDimensions.first * m_parentForm->getDimensions();
+            }
         case vui::PositionType::FIXED:
-            newDims = m_rawDimensions.first * getParentForm()->getDimensions();
+            if (m_parentForm) {
+                newDims = m_rawDimensions.first * m_parentForm->getDimensions();
+            }
         case vui::PositionType::ABSOLUTE:
-            newDims = m_rawDimensions.first * getFirstPositionedParent()->getDimensions();
+            const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
+            if (firstPositionedParent) {
+                newDims = m_rawDimensions.first * firstPositionedParent->getDimensions();
+            }
         }
     case vui::UnitType::FORM_HEIGHT_PERC:
-        newDims = m_rawDimensions.first * getParentForm()->getHeight();
+        if (m_parentForm) {
+            newDims = m_rawDimensions.first * m_parentForm->getHeight();
+        }
     case vui::UnitType::FORM_WIDTH_PERC:
-        newDims = m_rawDimensions.first * getParentForm()->getWidth();
+        if (m_parentForm) {
+            newDims = m_rawDimensions.first * m_parentForm->getWidth();
+        }
     case vui::UnitType::FORM_MAX_PERC:
-        f32v2 formDims = getParentForm()->getDimensions();
-        if (formDims.x > formDims.y) {
-            newDims = m_rawDimensions.first * formDims.x;
-        } else {
-            newDims = m_rawDimensions.first * formDims.y;
+        if (m_parentForm) {
+            f32v2 formDims = m_parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                newDims = m_rawDimensions.first * formDims.x;
+            } else {
+                newDims = m_rawDimensions.first * formDims.y;
+            }
         }
     case vui::UnitType::FORM_MIN_PERC:
-        f32v2 formDims = getParentForm()->getDimensions();
-        if (formDims.x > formDims.y) {
-            newDims = m_rawDimensions.first * formDims.y;
-        } else {
-            newDims = m_rawDimensions.first * formDims.x;
+        if (m_parentForm) {
+            f32v2 formDims = m_parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                newDims = m_rawDimensions.first * formDims.y;
+            } else {
+                newDims = m_rawDimensions.first * formDims.x;
+            }
         }
     }
 

@@ -75,6 +75,16 @@ void vui::Widget::setParent(IWidgetContainer* parent) {
     if (parent) parent->addWidget(this);
 }
 
+void vui::Widget::setPosition(const f32v2& position) {
+    m_rawPosition = std::pair<f32v2, vui::DimensionType>(position, vui::DimensionType::PIXEL);
+    IWidgetContainer::setPosition(position);
+}
+
+void vui::Widget::setDimensions(const f32v2& dimensions) {
+    m_rawDimensions = std::pair<f32v2, vui::DimensionType>(dimensions, vui::DimensionType::PIXEL);
+    IWidgetContainer::setDimensions(dimensions);
+}
+
 f32v2 vui::Widget::getWidgetAlignOffset() {
     switch (m_align) {
         case WidgetAlign::LEFT:
@@ -110,6 +120,7 @@ void vui::Widget::updateDimensions() {
             newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
         } 
     }*/
+
     // Check min/max size
     if (newDims.x < m_minSize.x) {
         newDims.x = m_minSize.x;

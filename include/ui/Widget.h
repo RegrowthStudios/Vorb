@@ -141,8 +141,10 @@ namespace vorb {
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setParent(IWidgetContainer* parent);
             virtual void setPositionType(PositionType& positionType) { m_positionType = positionType; updatePosition(); }
+            virtual void setPosition(const f32v2& position);
             virtual void setRawPosition(const std::pair<f32v2, DimensionType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
             virtual void setRawPosition(const f32v2& rawPosition, DimensionType& dimensionType) { m_rawPosition.first = rawPosition; m_rawPosition.second = dimensionType; updatePosition(); }
+            virtual void setDimensions(const f32v2& dimensions);
             virtual void setRawDimensions(const std::pair<f32v2, DimensionType>& rawDimensions) { m_rawDimensions = rawDimensions; updatePosition(); }
             virtual void setRawDimensions(const f32v2& rawDimensions, DimensionType& dimensionType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = dimensionType; updatePosition(); }
             virtual void setMaxSize(const std::pair<f32v2, DimensionType>& maxSize) { m_maxSize = maxSize; updatePosition(); }
@@ -169,7 +171,6 @@ namespace vorb {
             PositionType m_positionType = PositionType::STATIC;
             std::pair<f32v2, DimensionType> m_minSize = std::pair<f32v2, DimensionType>(f32v2(0.0f), DimensionType::PIXEL);
             std::pair<f32v2, DimensionType> m_maxSize = std::pair<f32v2, DimensionType>(f32v2(FLT_MAX), DimensionType::PIXEL);
-            // Is there a better way of doing this? E.g. moving position and dimensions out of IWidgetContainer?
             std::pair<f32v2, DimensionType> m_rawPosition = std::pair<f32v2, DimensionType>(f32v2(0.0f), DimensionType::PIXEL);
             std::pair<f32v2, DimensionType> m_rawDimensions = std::pair<f32v2, DimensionType>(f32v2(0.0f), DimensionType::PIXEL);
             volatile bool m_needsDrawableReload = false;

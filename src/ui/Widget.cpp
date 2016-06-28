@@ -88,12 +88,12 @@ void vui::Widget::setParent(IWidgetContainer* parent) {
 }
 
 void vui::Widget::setPosition(const f32v2& position) {
-    m_rawPosition = std::pair<f32v2, vui::DimensionType>(position, vui::DimensionType::PIXEL);
+    m_rawPosition = std::pair<f32v2, vui::UnitType>(position, vui::UnitType::PIXEL);
     IWidgetContainer::setPosition(position);
 }
 
 void vui::Widget::setDimensions(const f32v2& dimensions) {
-    m_rawDimensions = std::pair<f32v2, vui::DimensionType>(dimensions, vui::DimensionType::PIXEL);
+    m_rawDimensions = std::pair<f32v2, vui::UnitType>(dimensions, vui::UnitType::PIXEL);
     IWidgetContainer::setDimensions(dimensions);
 }
 
@@ -146,9 +146,43 @@ void vui::Widget::updateDimensions() {
     }*/
 
     switch (m_rawDimensions.second) {
-    case vui::DimensionType::PIXEL:
+    case vui::UnitType::PIXEL:
         newDims = m_rawDimensions.first;
-    case vui::DimensionType::FORM_HEIGHT_PERC:
+    case vui::UnitType::PERCENTAGE:
+        switch (m_positionType) {
+        case vui::PositionType::STATIC:
+        case vui::PositionType::RELATIVE:
+            newDims = m_rawDimensions.first * getParent()->getDimensions();
+        case vui::PositionType::FIXED_TO_FORM:
+            newDims = m_rawDimensions.first * getParentForm()->getDimensions();
+        case vui::PositionType::FIXED_TO_WINDOW:
+            // Find out a reasonable way to get window size.
+        case vui::PositionType::ABSOLUTE:
+            // Find first-out positioned parent and size proportionately to its dimensions.
+        }
+    case vui::UnitType::FORM_HEIGHT_PERC:
+        newDims = m_rawDimensions.first * getParentForm()->getHeight();
+    case vui::UnitType::FORM_WIDTH_PERC:
+        newDims = m_rawDimensions.first * getParentForm()->getWidth();
+    case vui::UnitType::FORM_MAX_PERC:
+        f32v2 formDims = getParentForm()->getDimensions();
+        if (formDims.x > formDims.y) {
+            newDims = m_rawDimensions.first * formDims.x;
+        } else {
+            newDims = m_rawDimensions.first * formDims.y;
+        }
+    case vui::UnitType::FORM_MIN_PERC:
+        f32v2 formDims = getParentForm()->getDimensions();
+        if (formDims.x > formDims.y) {
+            newDims = m_rawDimensions.first * formDims.y;
+        } else {
+            newDims = m_rawDimensions.first * formDims.x;
+        }
+    case vui::UnitType::WINDOW_HEIGHT_PERC:
+    case vui::UnitType::WINDOW_WIDTH_PERC:
+    case vui::UnitType::WINDOW_MAX_PERC:
+    case vui::UnitType::WINDOW_MIN_PERC:
+        // Find out a reasonable way to get window size.
     }
 
     // Only set if it changed

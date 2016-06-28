@@ -43,20 +43,20 @@ void vui::Widget::removeDrawables() {
 }
 
 void vui::Widget::updatePosition() {
-    f32v2 newPos = m_relativePosition;
-    if (m_parent) {
-        // Handle percentages
-        if (m_positionPercentage.x >= 0.0f) {
-            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
-        }
-        if (m_positionPercentage.y >= 0.0f) {
-            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
-        }
-        m_relativePosition = newPos;
-        newPos += m_parent->getPosition();
-    }
-    newPos += getWidgetAlignOffset();
-    m_position = newPos;
+    //f32v2 newPos = m_relativePosition;
+    //if (m_parent) {
+    //    // Handle percentages
+    //    if (m_positionPercentage.x >= 0.0f) {
+    //        newPos.x = m_parent->getWidth() * m_positionPercentage.x;
+    //    }
+    //    if (m_positionPercentage.y >= 0.0f) {
+    //        newPos.y = m_parent->getHeight() * m_positionPercentage.y;
+    //    }
+    //    m_relativePosition = newPos;
+    //    newPos += m_parent->getPosition();
+    //}
+    //newPos += getWidgetAlignOffset();
+    m_position = m_relativePosition;
     
     // Update relative dimensions
     updateDimensions();
@@ -68,14 +68,6 @@ void vui::Widget::updatePosition() {
 
 void vui::Widget::setAnchor(const AnchorStyle& anchor) {
     m_anchor = anchor;
-}
-
-void vui::Widget::setDock(const DockStyle& dock) {
-    if (m_parent) {
-        m_parent->setChildDock(this, dock);
-    } else {
-        m_dock = dock;
-    }
 }
 
 void vui::Widget::setParent(IWidgetContainer* parent) {
@@ -110,14 +102,14 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
 void vui::Widget::updateDimensions() {
     f32v2 newDims = m_dimensions;
     // Check parent relative dimensions
-    if (m_parent) {      
+    /*if (m_parent) {      
         if (m_dimensionsPercentage.x > 0.0f) {
             newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
         }
         if (m_dimensionsPercentage.y > 0.0f) {
             newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
         } 
-    }
+    }*/
     // Check min/max size
     if (newDims.x < m_minSize.x) {
         newDims.x = m_minSize.x;

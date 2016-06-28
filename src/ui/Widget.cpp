@@ -67,6 +67,7 @@ void vui::Widget::updatePosition() {
 }
 
 // TODO(Matthew): Better solution? Even with caching seems a tad overkill.
+//                Maybe move parent out to IWidgetContainer?
 const vui::Form* vui::Widget::getParentForm() const {
     const IWidgetContainer* widgetContainer = m_parent;
     IWidgetContainer* form = new Form();
@@ -76,6 +77,29 @@ const vui::Form* vui::Widget::getParentForm() const {
     }
     delete form;
     return static_cast<const Form*>(widgetContainer);
+}
+
+// TODO(Matthew): Better solution?
+const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
+    const IWidgetContainer* widgetContainer = m_parent;
+    while (true) {
+        const Widget* widget = dynamic_cast<const Widget*>(widgetContainer);
+
+        // Breakout if the widgetContainer is the first parent that is not a Widget or derivative.
+        if (widget == nullptr) {
+            break;
+        }
+
+        // Breakout if the widget is positioned.
+        vui::PositionType positionType = widget->getPositionType();
+        if (positionType == vui::PositionType::ABSOLUTE
+            || positionType == vui::PositionType::RELATIVE) {
+            break;
+        }
+
+        widgetContainer = widget->getParent();
+    }
+    return widgetContainer;
 }
 
 void vui::Widget::setAnchor(const AnchorStyle& anchor) {
@@ -158,7 +182,7 @@ void vui::Widget::updateDimensions() {
         case vui::PositionType::FIXED_TO_WINDOW:
             // Find out a reasonable way to get window size.
         case vui::PositionType::ABSOLUTE:
-            // Find first-out positioned parent and size proportionately to its dimensions.
+            newDims = m_rawDimensions.first * getFirstPositionedParent()->getDimensions();
         }
     case vui::UnitType::FORM_HEIGHT_PERC:
         newDims = m_rawDimensions.first * getParentForm()->getHeight();

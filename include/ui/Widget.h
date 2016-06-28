@@ -124,6 +124,7 @@ namespace vorb {
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const IWidgetContainer* getParent() const { return m_parent; }
             virtual const Form* getParentForm() const;
+            virtual const IWidgetContainer* getFirstPositionedParent() const;
             virtual const PositionType& getPositionType() const { return m_positionType; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }

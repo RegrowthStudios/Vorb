@@ -61,41 +61,39 @@ void vui::Widget::updatePosition() {
     // Update relative dimensions
     updateDimensions();
 
-    if (m_parent) computeClipRect(m_parent->getClipRect());
-    
+    if (m_parentWidget) {
+        computeClipRect(m_parentWidget->getClipRect());
+    } else if (m_parentForm) {
+        computeClipRect(m_parentForm->getClipRect());
+    }
+        
     updateChildPositions();
 }
 
-// TODO(Matthew): Better solution?
 const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
-    const IWidgetContainer* widgetContainer = m_parent;
-    while (true) {
-        const Widget* widget = dynamic_cast<const Widget*>(widgetContainer);
-
-        // Breakout if the widgetContainer is the first parent that is not a Widget or derivative.
-        if (widget == nullptr) {
-            break;
-        }
-
-        // Breakout if the widget is positioned.
+    const IWidgetContainer* firstPositionedParent = m_parentForm;
+    const Widget* widget = m_parentWidget;
+    while (widget != nullptr) {
         vui::PositionType positionType = widget->getPositionType();
         if (positionType == vui::PositionType::ABSOLUTE
             || positionType == vui::PositionType::RELATIVE) {
+            // Widget is "positioned"; break out.
+            firstPositionedParent = widget;
             break;
         }
 
-        widgetContainer = widget->getParent();
+        widget = widget->getParentWidget();
     }
-    return widgetContainer;
+    return firstPositionedParent;
+}
+
+void vui::Widget::setParentWidget(Widget* parent) {
+    if (m_parentWidget) m_parentWidget->removeWidget(this);
+    if (parent) parent->addWidget(this);
 }
 
 void vui::Widget::setAnchor(const AnchorStyle& anchor) {
     m_anchor = anchor;
-}
-
-void vui::Widget::setParent(IWidgetContainer* parent) {
-    if (m_parent) m_parent->removeWidget(this);
-    if (parent) parent->addWidget(this);
 }
 
 void vui::Widget::setPosition(const f32v2& position) {

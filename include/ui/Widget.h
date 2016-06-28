@@ -120,16 +120,15 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
-            virtual const IWidgetContainer* getParent() const { return m_parent; }
+            virtual const Widget* getParentWidget() const { return m_parentWidget; }
             virtual const IWidgetContainer* getFirstPositionedParent() const;
+            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const PositionType& getPositionType() const { return m_positionType; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const std::pair<f32v2, UnitType>& getRawPosition() const { return m_rawPosition; }
             virtual const std::pair<f32v2, UnitType>& getRawDimensions() const { return m_rawDimensions; }
-            // TODO(Matthew): Add functionality to return in pixels specifically?
             virtual const std::pair<f32v2, UnitType>& getMinSize() const { return m_minSize; }
             virtual const std::pair<f32v2, UnitType>& getMaxSize() const { return m_maxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
@@ -137,10 +136,10 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            virtual void setParentWidget(Widget* parent);
             virtual void setAnchor(const AnchorStyle& anchor);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
-            virtual void setParent(IWidgetContainer* parent);
             virtual void setPositionType(PositionType& positionType) { m_positionType = positionType; updatePosition(); }
             virtual void setPosition(const f32v2& position);
             virtual void setRawPosition(const std::pair<f32v2, UnitType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
@@ -164,12 +163,11 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            Widget* m_parentWidget = nullptr; ///< Parent widget. Nullptr implies widget is directly under its parent form.
             WidgetAlign m_align = WidgetAlign::TOP_LEFT;
             AnchorStyle m_anchor; ///< The anchor data.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
-            // TODO(Matthew): Move this to IWidgetContainer? Will make looking up and down chain easier.
-            IWidgetContainer* m_parent = nullptr; ///< Parent container
             PositionType m_positionType = PositionType::STATIC;
             std::pair<f32v2, UnitType> m_minSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             std::pair<f32v2, UnitType> m_maxSize = std::pair<f32v2, UnitType>(f32v2(FLT_MAX), UnitType::PIXEL);

@@ -33,6 +33,7 @@ void vui::IWidgetContainer::dispose() {
     disable();
 }
 
+// TODO(Matthew): Fix this. Make it a procedure?
 bool vui::IWidgetContainer::addWidget(Widget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;

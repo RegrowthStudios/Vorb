@@ -59,7 +59,7 @@ bool vui::Panel::addWidget(Widget* child) {
 }
 
 void vui::Panel::updatePosition() {
-    f32v2 newPos = processRawValue(m_rawPosition);
+    f32v2 newPos = processRawValues(m_rawPosition);
     m_relativePosition = newPos;
 
     newPos += getWidgetAlignOffset();

@@ -3,7 +3,12 @@
 #include "UI/InputDispatcher.h"
 #include "UI/UIRenderer.h"
 
-vui::Widget::Widget() : IWidgetContainer() {
+vui::Widget::Widget() : IWidgetContainer(), 
+    m_rawPosition({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawDimensions({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawMinSize({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawMaxSize({ FLT_MAX, FLT_MAX, { UnitType::PIXEL, UnitType::PIXEL } })
+{
     enable();
     m_anchor = {};
 }
@@ -48,7 +53,7 @@ void vui::Widget::removeDrawables() {
 }
 
 void vui::Widget::updatePosition() {
-    m_position = processRawValue(m_rawPosition);
+    m_position = processRawValues(m_rawPosition);
     // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
     m_relativePosition = m_position;
 
@@ -109,25 +114,53 @@ void vui::Widget::setParentWidget(Widget* parent) {
 }
 
 void vui::Widget::setPosition(const f32v2& position) {
-    m_rawPosition = std::pair<f32v2, vui::UnitType>(position, vui::UnitType::PIXEL);
+    m_rawPosition = { position.x, position.y, { UnitType::PIXEL, UnitType::PIXEL } };
     IWidgetContainer::setPosition(position);
 }
 
+void vui::Widget::setRawPosition(const f32v2& rawPosition, UnitType& units) {
+    m_rawPosition.x = rawPosition.x;
+    m_rawPosition.y = rawPosition.y;
+    m_rawPosition.units = { units, units };
+    updatePosition();
+}
+
 void vui::Widget::setDimensions(const f32v2& dimensions) {
-    m_rawDimensions = std::pair<f32v2, vui::UnitType>(dimensions, vui::UnitType::PIXEL);
+    m_rawDimensions = { dimensions.x, dimensions.y, { UnitType::PIXEL, UnitType::PIXEL } };
     IWidgetContainer::setDimensions(dimensions);
 }
 
+void vui::Widget::setRawDimensions(const f32v2& rawDimensions, UnitType& units) {
+    m_rawDimensions.x = rawDimensions.x;
+    m_rawDimensions.y = rawDimensions.y;
+    m_rawDimensions.units = { units, units };
+    updateDimensions();
+}
+
 void vui::Widget::setMaxSize(const f32v2& maxSize) {
-    m_rawMaxSize = std::pair<f32v2, vui::UnitType>(maxSize, vui::UnitType::PIXEL);
+    m_rawMaxSize = { maxSize.x, maxSize.y, { UnitType::PIXEL, UnitType::PIXEL } };
     m_maxSize = maxSize;
     updateDimensions();
 }
 
+void vui::Widget::setRawMaxSize(const f32v2& maxSize, UnitType& units) {
+    m_rawMaxSize.x = maxSize.x;
+    m_rawMaxSize.y = maxSize.y;
+    m_rawMaxSize.units = { units, units };
+    updateDimensions();
+}
+
 void vui::Widget::setMinSize(const f32v2& minSize) {
-    m_rawMinSize = std::pair<f32v2, vui::UnitType>(minSize, vui::UnitType::PIXEL);
+    m_rawMinSize = { minSize.x, minSize.y, { UnitType::PIXEL, UnitType::PIXEL } };
     m_minSize = minSize;
     updateDimensions();
+}
+
+void vui::Widget::setRawMinSize(const f32v2& minSize, UnitType& units) {
+    m_rawMinSize.x = minSize.x;
+    m_rawMinSize.y = minSize.y;
+    m_rawMinSize.units = { units, units };
+    updateMinSize();
 }
 
 f32v2 vui::Widget::getWidgetAlignOffset() {
@@ -156,7 +189,7 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
 
 void vui::Widget::updateDimensions() {
     // Process raw dimensions.
-    f32v2 newDims = processRawValue(m_rawDimensions);
+    f32v2 newDims = processRawValues(m_rawDimensions);
 
     // Check against min/max size.
     if (newDims.x < m_minSize.x) {
@@ -178,7 +211,14 @@ void vui::Widget::updateDimensions() {
     // TODO(Matthew): Update overflow/clipping.
 }
 
-f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
+f32v2 vui::Widget::processRawValues(const Length2& rawValues) {
+    f32v2 x = processRawValue(f32v2(rawValues.x, 0.0f), rawValues.units.x);
+    f32v2 y = processRawValue(f32v2(0.0f, rawValues.y), rawValues.units.y);
+
+    return x + y;
+}
+
+f32v2 vui::Widget::processRawValue(const f32v2& rawValue, const UnitType& units) {
     f32v2 result;
     switch (units) {
     case vui::UnitType::PIXEL:

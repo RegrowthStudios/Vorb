@@ -45,12 +45,15 @@ namespace vorb {
             bool selectable : 1; ///< If true, the control can receive focus.
         };
         //! Bitfield of anchor flags
+        // TODO(Matthew): Determine what this does precisely and see how it would fit in with new changes.
         struct AnchorStyle {
             bool left : 1; ///< If true, anchored to the left of parent
             bool right : 1; ///< If true, anchored to the right of parent
             bool bottom : 1; ///< If true, anchored to the bottom of parent
             bool top : 1; ///< If true, anchored to the top of parent
         };
+
+        // TODO(Matthew): Determine how docking works precisely and reimplement over top of new systems.
 
         class IWidgetContainer {
         public:

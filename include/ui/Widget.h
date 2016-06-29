@@ -63,6 +63,20 @@ namespace vorb {
             FORM_MAX_PERC
         };
 
+        // TODO(Matthew): More meaningful name?
+        struct StateSpace2 {
+            f32 x, y;
+            struct Units {
+                UnitType x, y;
+            } units;
+        };
+        struct StateSpace4 {
+            f32 x, y, z, w;
+            struct Units {
+                UnitType x, y, z, w;
+            } units;
+        };
+
         // Forward Declarations
         class UIRenderer;
 
@@ -117,6 +131,11 @@ namespace vorb {
             */
             virtual void update(f32 dt = 1.0f) { }
 
+            /*! @brief Updates the position, dimensions and clip rect of widget. */
+            virtual void updateStateSpace();
+            /*! @brief Updates the position, dimensions and clip rect of widget's children. */
+            virtual void updateChildStateSpaces();
+
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
@@ -130,9 +149,8 @@ namespace vorb {
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
-            virtual const std::pair<f32v2, UnitType>& getRawPosition() const { return m_rawPosition; }
+            virtual const StateSpace4& getRawStateSpace() const { return m_rawStateSpace; }
             virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
-            virtual const std::pair<f32v2, UnitType>& getRawDimensions() const { return m_rawDimensions; }
             virtual const std::pair<f32v2, UnitType>& getRawMinSize() const { return m_rawMinSize; }
             virtual const f32v2& getMinSize() const { return m_minSize; }
             virtual const std::pair<f32v2, UnitType>& getRawMaxSize() const { return m_rawMaxSize; }
@@ -146,13 +164,14 @@ namespace vorb {
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
+            virtual void setAlignType(const WidgetAlign& alignment) { m_align = alignment; updatePosition(); }
             virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updatePosition(); }
-            virtual void setPosition(const f32v2& position);
-            virtual void setRawPosition(const std::pair<f32v2, UnitType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
+            /*virtual void setRawPosition(const std::pair<f32v2, UnitType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& UnitType) { m_rawPosition.first = rawPosition; m_rawPosition.second = UnitType; updatePosition(); }
             virtual void setDimensions(const f32v2& dimensions);
             virtual void setRawDimensions(const std::pair<f32v2, UnitType>& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensions(); }
-            virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& UnitType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = UnitType; updateDimensions(); }
+            virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& UnitType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = UnitType; updateDimensions(); }*/
+            virtual void setPosition(const f32v2& position);
             virtual void setRawMaxSize(const std::pair<f32v2, UnitType>& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
             virtual void setRawMaxSize(const f32v2& maxSize, UnitType& UnitType) { m_rawMaxSize.first = maxSize; m_rawMaxSize.second = UnitType; updateMaxSize(); }
             virtual void setRawMaxWidth(f32 maxWidth) { m_rawMaxSize.first.x = maxWidth; updateMaxSize(); }
@@ -177,14 +196,14 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             Widget* m_parentWidget = nullptr; ///< Parent widget. Nullptr implies widget is directly under its parent form.
-            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
             AnchorStyle m_anchor; ///< The anchor data.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
+            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
             PositionType m_positionType = PositionType::STATIC;
-            std::pair<f32v2, UnitType> m_rawPosition = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
-            f32v2 m_relativePosition = f32v2(0.0f);
-            std::pair<f32v2, UnitType> m_rawDimensions = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
+            StateSpace4 m_rawStateSpace = { 0.0f, 0.0f, 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL, UnitType::PIXEL, UnitType::PIXEL } };
+            f32v2 m_relativePosition = f32v2(0.0f); // TODO(Matthew): Needed?
+            // TODO(Matthew): Allow different unit types per axis?
             std::pair<f32v2, UnitType> m_rawMinSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             f32v2 m_minSize = f32v2(0.0f);
             std::pair<f32v2, UnitType> m_rawMaxSize = std::pair<f32v2, UnitType>(f32v2(FLT_MAX), UnitType::PIXEL);

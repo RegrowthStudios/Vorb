@@ -47,6 +47,30 @@ void vui::Widget::removeDrawables() {
     }
 }
 
+void vui::Widget::updateStateSpace() {
+    // Update position of widget.
+    updatePosition();
+
+    // Update relative dimensions.
+    updateDimensions();
+
+    // Update clipping rectangle.
+    if (m_parentWidget) {
+        computeClipRect(m_parentWidget->getClipRect());
+    } else if (m_parentForm) {
+        computeClipRect(m_parentForm->getClipRect());
+    }
+
+    // Update child state spaces.
+    updateChildStateSpaces();
+}
+
+void vui::Widget::updateChildStateSpaces() {
+    for (auto& w : m_widgets) {
+        w->updateStateSpace();
+    }
+}
+
 void vui::Widget::updatePosition() {
     m_position = processRawValue(m_rawPosition);
     // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
@@ -73,17 +97,6 @@ void vui::Widget::updatePosition() {
         }
         break;
     }
-    
-    // Update relative dimensions
-    updateDimensions();
-
-    if (m_parentWidget) {
-        computeClipRect(m_parentWidget->getClipRect());
-    } else if (m_parentForm) {
-        computeClipRect(m_parentForm->getClipRect());
-    }
-        
-    updateChildPositions();
 }
 
 const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
@@ -109,8 +122,36 @@ void vui::Widget::setParentWidget(Widget* parent) {
 }
 
 void vui::Widget::setPosition(const f32v2& position) {
-    m_rawPosition = std::pair<f32v2, vui::UnitType>(position, vui::UnitType::PIXEL);
-    IWidgetContainer::setPosition(position);
+    switch (m_align) {
+    case WidgetAlign::TOP_LEFT:
+        m_rawStateSpace.x = position.x;
+        m_rawStateSpace.y = position.y;
+        m_rawStateSpace.units.x = UnitType::PIXEL;
+        m_rawStateSpace.units.y = UnitType::PIXEL;
+        IWidgetContainer::setPosition(position);
+        break;
+    case WidgetAlign::TOP_RIGHT:
+        m_rawStateSpace.y = position.y;
+        m_rawStateSpace.z = position.x;
+        m_rawStateSpace.units.x = UnitType::PIXEL;
+        m_rawStateSpace.units.y = UnitType::PIXEL;
+        IWidgetContainer::setPosition(f32v2(m_position.x, position.y));
+        break;
+    case WidgetAlign::BOTTOM_RIGHT:
+        break;
+    case WidgetAlign::BOTTOM_LEFT:
+        break;
+    case WidgetAlign::LEFT:
+        break;
+    case WidgetAlign::TOP:
+        break;
+    case WidgetAlign::RIGHT:
+        break;
+    case WidgetAlign::BOTTOM:
+        break;
+    case WidgetAlign::CENTER:
+        break;
+    }
 }
 
 void vui::Widget::setDimensions(const f32v2& dimensions) {

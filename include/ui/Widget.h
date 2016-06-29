@@ -60,11 +60,7 @@ namespace vorb {
             FORM_WIDTH_PERC,
             FORM_HEIGHT_PERC,
             FORM_MIN_PERC,
-            FORM_MAX_PERC,
-            WINDOW_WIDTH_PERC,
-            WINDOW_HEIGHT_PERC,
-            WINDOW_MIN_PERC,
-            WINDOW_MAX_PERC
+            FORM_MAX_PERC
         };
 
         // Forward Declarations

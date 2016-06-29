@@ -179,10 +179,14 @@ namespace vorb {
             
         protected:
             virtual f32v2 getWidgetAlignOffset();
+            /*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
             virtual void updateDimensions();
+            /*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
             virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensions(); }
+            /*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
             virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensions(); }
 
+            /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             f32v2 processRawValues(const Length2& rawValues);
             f32v2 processRawValue(const f32v2& rawValue, const UnitType& unit);
             /************************************************************************/

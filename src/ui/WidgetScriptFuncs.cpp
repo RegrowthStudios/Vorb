@@ -240,11 +240,11 @@ f32v4 vui::WidgetScriptFuncs::getDestRect(Widget* w) const {
     return w->getDestRect();
 }
 
-const vui::Form* vui::WidgetScriptFuncs::getParentForm(Widget* w) const {
+vui::Form* vui::WidgetScriptFuncs::getParentForm(Widget* w) const {
     return w->getParentForm();
 }
 
-const vui::Widget* vui::WidgetScriptFuncs::getParentWidget(Widget* w) const {
+vui::Widget* vui::WidgetScriptFuncs::getParentWidget(Widget* w) const {
     return w->getParentWidget();
 }
 

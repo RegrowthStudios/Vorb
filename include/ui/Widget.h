@@ -127,7 +127,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const Widget* getParentWidget() const { return m_parentWidget; }
+            virtual Widget* getParentWidget() const { return m_parentWidget; }
             virtual const IWidgetContainer* getFirstPositionedParent() const;
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const PositionType& getPositionType() const { return m_positionType; }

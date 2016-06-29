@@ -95,7 +95,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const Form* getParentForm() const { return m_parentForm; }
+            virtual Form* getParentForm() const { return m_parentForm; }
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }

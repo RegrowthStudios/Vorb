@@ -88,8 +88,8 @@ namespace vorb {
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
-            virtual const Form* getParentForm(Widget* w) const;
-            virtual const Widget* getParentWidget(Widget* w) const;
+            virtual Form* getParentForm(Widget* w) const;
+            virtual Widget* getParentWidget(Widget* w) const;
             virtual f32v2 getMinSize(Widget* w) const;
             virtual f32v2 getMaxSize(Widget* w) const;
             virtual WidgetAlign getWidgetAlign(Widget* w) const;

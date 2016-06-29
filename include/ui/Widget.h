@@ -150,7 +150,7 @@ namespace vorb {
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
-            virtual void setPositionType(PositionType& positionType) { m_positionType = positionType; updatePosition(); }
+            virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updatePosition(); }
             virtual void setPosition(const f32v2& position);
             virtual void setRawPosition(const std::pair<f32v2, UnitType>& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& UnitType) { m_rawPosition.first = rawPosition; m_rawPosition.second = UnitType; updatePosition(); }

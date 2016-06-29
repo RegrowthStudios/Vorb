@@ -18,6 +18,7 @@ vui::Panel::Panel() : Widget() {
 vui::Panel::Panel(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel() {
     m_name = name;
     setDestRect(destRect);
+    // TODO(Matthew): Is this needed?
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
 }

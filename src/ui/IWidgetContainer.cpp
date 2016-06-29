@@ -98,8 +98,7 @@ void vui::IWidgetContainer::setParentForm(Form* form) {
 
 void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setPosition(f32v2(destRect.x, destRect.y));
-    m_dimensions.x = destRect.z;
-    m_dimensions.y = destRect.w;
+    setDimensions(f32v2(destRect.z, destRect.w));
 }
 
 void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX)*/) {

@@ -10,6 +10,7 @@ vui::Button::Button() : Widget() {
 vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button() {
     m_name = name;
     setDestRect(destRect);
+    // TODO(Matthew): Is this needed?
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
     updateTextPosition();

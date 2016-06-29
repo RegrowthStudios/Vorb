@@ -174,6 +174,8 @@ void vui::Widget::updateDimensions() {
     if (newDims != m_dimensions) {
         IWidgetContainer::setDimensions(newDims);
     }
+
+    // TODO(Matthew): Update overflow/clipping.
 }
 
 f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {

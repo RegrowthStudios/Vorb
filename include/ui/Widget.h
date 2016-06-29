@@ -189,18 +189,19 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             Widget* m_parentWidget = nullptr; ///< Parent widget. Nullptr implies widget is directly under its parent form.
-            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
+            WidgetAlign m_align = WidgetAlign::TOP_LEFT; ///< Direction of alignment of the widget.
             AnchorStyle m_anchor; ///< The anchor data.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
-            UIRenderer* m_renderer = nullptr;
-            PositionType m_positionType = PositionType::STATIC;
-            Length2 m_rawPosition;
-            f32v2 m_relativePosition = f32v2(0.0f);
-            Length2 m_rawDimensions;
-            Length2 m_rawMinSize;
-            f32v2 m_minSize = f32v2(0.0f);
-            Length2 m_rawMaxSize;
-            f32v2 m_maxSize = f32v2(FLT_MAX);
+            UIRenderer* m_renderer = nullptr; ///< The renderer to be used by the widget.
+            PositionType m_positionType = PositionType::STATIC; ///< The type of positioning of the widget.
+            Length2 m_rawPosition; ///< The raw position of the widget.
+            // TODO(Matthew): Do we need this?
+            f32v2 m_relativePosition = f32v2(0.0f); ///< The relative position of the widget.
+            Length2 m_rawDimensions; ///< The raw dimensions of the widget.
+            Length2 m_rawMinSize; ///< The raw minimum dimensions of the widget.
+            f32v2 m_minSize = f32v2(0.0f); ///< The processed minimum dimensions of the widget.
+            Length2 m_rawMaxSize; ///< The raw maximum dimensions of the widget.
+            f32v2 m_maxSize = f32v2(FLT_MAX); ///< The processed maximum dimensions of the widget.
             volatile bool m_needsDrawableReload = false;
         };
     }

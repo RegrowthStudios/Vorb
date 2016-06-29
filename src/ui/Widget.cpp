@@ -42,6 +42,7 @@ void vui::Widget::removeDrawables() {
     }
 }
 
+//TODO(Matthew): Stop using m_relativePosition and instead update via raw position data.
 void vui::Widget::updatePosition() {
     //f32v2 newPos = m_relativePosition;
     //if (m_parent) {
@@ -56,6 +57,7 @@ void vui::Widget::updatePosition() {
     //    newPos += m_parent->getPosition();
     //}
     //newPos += getWidgetAlignOffset();
+    
     m_position = m_relativePosition;
     
     // Update relative dimensions
@@ -92,10 +94,6 @@ void vui::Widget::setParentWidget(Widget* parent) {
     if (parent) parent->addWidget(this);
 }
 
-void vui::Widget::setAnchor(const AnchorStyle& anchor) {
-    m_anchor = anchor;
-}
-
 void vui::Widget::setPosition(const f32v2& position) {
     m_rawPosition = std::pair<f32v2, vui::UnitType>(position, vui::UnitType::PIXEL);
     IWidgetContainer::setPosition(position);
@@ -104,6 +102,18 @@ void vui::Widget::setPosition(const f32v2& position) {
 void vui::Widget::setDimensions(const f32v2& dimensions) {
     m_rawDimensions = std::pair<f32v2, vui::UnitType>(dimensions, vui::UnitType::PIXEL);
     IWidgetContainer::setDimensions(dimensions);
+}
+
+void vui::Widget::setMaxSize(const f32v2& maxSize) {
+    m_rawMaxSize = std::pair<f32v2, vui::UnitType>(maxSize, vui::UnitType::PIXEL);
+    m_maxSize = maxSize;
+    updateDimensions();
+}
+
+void vui::Widget::setMinSize(const f32v2& minSize) {
+    m_rawMinSize = std::pair<f32v2, vui::UnitType>(minSize, vui::UnitType::PIXEL);
+    m_minSize = minSize;
+    updateDimensions();
 }
 
 f32v2 vui::Widget::getWidgetAlignOffset() {
@@ -131,19 +141,11 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
 }
 
 void vui::Widget::updateDimensions() {
-    f32v2 newDims = m_dimensions;
-    // Check parent relative dimensions
-    /*if (m_parent) {      
-        if (m_dimensionsPercentage.x > 0.0f) {
-            newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
-        }
-        if (m_dimensionsPercentage.y > 0.0f) {
-            newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
-        } 
-    }*/
+    // Process raw dimensions.
+    f32v2 newDims = processRawValue(m_rawDimensions);
 
-    // Check min/max size
-    /*if (newDims.x < m_minSize.x) {
+    // Check against min/max size.
+    if (newDims.x < m_minSize.x) {
         newDims.x = m_minSize.x;
     } else if (newDims.x > m_maxSize.x) {
         newDims.x = m_maxSize.x;
@@ -152,60 +154,66 @@ void vui::Widget::updateDimensions() {
         newDims.y = m_minSize.y;
     } else if (newDims.y > m_maxSize.y) {
         newDims.y = m_maxSize.y;
-    }*/
+    }
 
-    switch (m_rawDimensions.second) {
+    // Only set if dimensions changed
+    if (newDims != m_dimensions) {
+        IWidgetContainer::setDimensions(newDims);
+    }
+}
+
+f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
+    f32v2 result;
+    switch (units) {
     case vui::UnitType::PIXEL:
-        newDims = m_rawDimensions.first;
+        result = rawValue;
     case vui::UnitType::PERCENTAGE:
         switch (m_positionType) {
         case vui::PositionType::STATIC:
         case vui::PositionType::RELATIVE:
             if (m_parentWidget) {
-                newDims = m_rawDimensions.first * m_parentWidget->getDimensions();
+                result = rawValue * m_parentWidget->getDimensions();
             } else if (m_parentForm) {
-                newDims = m_rawDimensions.first * m_parentForm->getDimensions();
+                result = rawValue * m_parentForm->getDimensions();
             }
         case vui::PositionType::FIXED:
             if (m_parentForm) {
-                newDims = m_rawDimensions.first * m_parentForm->getDimensions();
+                result = rawValue * m_parentForm->getDimensions();
             }
         case vui::PositionType::ABSOLUTE:
             const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
             if (firstPositionedParent) {
-                newDims = m_rawDimensions.first * firstPositionedParent->getDimensions();
+                result = rawValue * firstPositionedParent->getDimensions();
             }
         }
     case vui::UnitType::FORM_HEIGHT_PERC:
         if (m_parentForm) {
-            newDims = m_rawDimensions.first * m_parentForm->getHeight();
+            result = rawValue * m_parentForm->getHeight();
         }
     case vui::UnitType::FORM_WIDTH_PERC:
         if (m_parentForm) {
-            newDims = m_rawDimensions.first * m_parentForm->getWidth();
+            result = rawValue * m_parentForm->getWidth();
         }
     case vui::UnitType::FORM_MAX_PERC:
         if (m_parentForm) {
             f32v2 formDims = m_parentForm->getDimensions();
             if (formDims.x > formDims.y) {
-                newDims = m_rawDimensions.first * formDims.x;
+                result = rawValue * formDims.x;
             } else {
-                newDims = m_rawDimensions.first * formDims.y;
+                result = rawValue * formDims.y;
             }
         }
     case vui::UnitType::FORM_MIN_PERC:
         if (m_parentForm) {
             f32v2 formDims = m_parentForm->getDimensions();
             if (formDims.x > formDims.y) {
-                newDims = m_rawDimensions.first * formDims.y;
+                result = rawValue * formDims.y;
             } else {
-                newDims = m_rawDimensions.first * formDims.x;
+                result = rawValue * formDims.x;
             }
         }
+    default: // Shouldn't happen.
+        result = rawValue;
     }
-
-    // Only set if it changed
-    if (newDims != m_dimensions) {
-        IWidgetContainer::setDimensions(newDims);
-    }
+    return result;
 }

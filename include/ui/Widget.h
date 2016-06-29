@@ -115,7 +115,7 @@ namespace vorb {
             virtual void update(f32 dt = 1.0f) { }
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;    
+            virtual void updatePosition() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -129,15 +129,15 @@ namespace vorb {
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const std::pair<f32v2, UnitType>& getRawPosition() const { return m_rawPosition; }
             virtual const std::pair<f32v2, UnitType>& getRawDimensions() const { return m_rawDimensions; }
-            virtual const std::pair<f32v2, UnitType>& getMinSize() const { return m_minSize; }
-            virtual const std::pair<f32v2, UnitType>& getMaxSize() const { return m_maxSize; }
+            virtual const std::pair<f32v2, UnitType>& getMinSize() const { return m_rawMinSize; }
+            virtual const std::pair<f32v2, UnitType>& getMaxSize() const { return m_rawMaxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setParentWidget(Widget* parent);
-            virtual void setAnchor(const AnchorStyle& anchor);
+            virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setPositionType(PositionType& positionType) { m_positionType = positionType; updatePosition(); }
@@ -147,19 +147,26 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions);
             virtual void setRawDimensions(const std::pair<f32v2, UnitType>& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensions(); }
             virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& UnitType) { m_rawDimensions.first = rawDimensions; m_rawDimensions.second = UnitType; updateDimensions(); }
-            virtual void setMaxSize(const std::pair<f32v2, UnitType>& maxSize) { m_maxSize = maxSize; updatePosition(); }
-            virtual void setMaxSize(const f32v2& maxSize, UnitType& UnitType) { m_maxSize.first = maxSize; m_maxSize.second = UnitType; updatePosition(); }
-            virtual void setMaxWidth(f32 maxWidth) { m_maxSize.first.x = maxWidth; updatePosition(); }
-            virtual void setMaxHeight(f32 maxHeight) { m_maxSize.first.y = maxHeight; updatePosition(); }
-            virtual void setMaxSize(const std::pair<f32v2, UnitType>& minSize) { m_minSize = minSize; updatePosition(); }
-            virtual void setMinSize(const f32v2& minSize) { m_minSize.first = minSize; updatePosition(); }
-            virtual void setMinWidth(f32 minWidth) { m_minSize.first.x = minWidth; updatePosition(); }
-            virtual void setMinHeight(f32 minHeight) { m_minSize.first.y = minHeight; updatePosition(); }
+            virtual void setRawMaxSize(const std::pair<f32v2, UnitType>& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
+            virtual void setRawMaxSize(const f32v2& maxSize, UnitType& UnitType) { m_rawMaxSize.first = maxSize; m_rawMaxSize.second = UnitType; updateMaxSize(); }
+            virtual void setRawMaxWidth(f32 maxWidth) { m_rawMaxSize.first.x = maxWidth; updateMaxSize(); }
+            virtual void setRawMaxHeight(f32 maxHeight) { m_rawMaxSize.first.y = maxHeight; updateMaxSize(); }
+            virtual void setMaxSize(const f32v2& maxSize);
+            virtual void setRawMinSize(const std::pair<f32v2, UnitType>& minSize) { m_rawMinSize = minSize; updateMinSize(); }
+            virtual void setRawMinSize(const f32v2& minSize) { m_rawMinSize.first = minSize; updateMinSize(); }
+            virtual void setRawMinWidth(f32 minWidth) { m_rawMinSize.first.x = minWidth; updateMinSize(); }
+            virtual void setRawMinHeight(f32 minHeight) { m_rawMinSize.first.y = minHeight; updateMinSize(); }
+            virtual void setMinSize(const f32v2& minSize);
             virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
             
         protected:
             virtual f32v2 getWidgetAlignOffset();
             virtual void updateDimensions();
+            virtual void updateMaxSize() { m_maxSize = processRawValue(m_rawMaxSize); updateDimensions(); }
+            virtual void updateMinSize() { m_minSize = processRawValue(m_rawMinSize); updateDimensions(); }
+
+            f32v2 processRawValue(std::pair<f32v2, UnitType> rawValue) { processRawValue(rawValue.first, rawValue.second); }
+            f32v2 processRawValue(f32v2 rawValue, UnitType units);
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
@@ -169,10 +176,12 @@ namespace vorb {
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
             PositionType m_positionType = PositionType::STATIC;
-            std::pair<f32v2, UnitType> m_minSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
-            std::pair<f32v2, UnitType> m_maxSize = std::pair<f32v2, UnitType>(f32v2(FLT_MAX), UnitType::PIXEL);
             std::pair<f32v2, UnitType> m_rawPosition = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             std::pair<f32v2, UnitType> m_rawDimensions = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
+            std::pair<f32v2, UnitType> m_rawMinSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
+            f32v2 m_minSize = f32v2(0.0f);
+            std::pair<f32v2, UnitType> m_rawMaxSize = std::pair<f32v2, UnitType>(f32v2(FLT_MAX), UnitType::PIXEL);
+            f32v2 m_maxSize = f32v2(FLT_MAX);
             volatile bool m_needsDrawableReload = false;
         };
     }

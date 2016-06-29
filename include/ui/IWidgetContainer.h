@@ -114,7 +114,6 @@ namespace vorb {
             virtual const f32& getY() const { return m_position.y; }
             virtual const f32v2& getDimensions() const { return m_dimensions; }
             virtual const f32v2& getPosition() const { return m_position; }
-            virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
             virtual const nString& getName() const { return m_name; }
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
@@ -130,12 +129,12 @@ namespace vorb {
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             virtual void setHeight(f32 height) { m_dimensions.y = height;  updateChildPositions(); }
-            virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
+            virtual void setPosition(const f32v2& position) { m_position = position; updatePosition(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             virtual void setWidth(f32 width) { m_dimensions.x = width;  updateChildPositions(); }
-            virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
-            virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
+            virtual void setX(f32 x) { m_position.x = x; updatePosition(); }
+            virtual void setY(f32 y) { m_position.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
             virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
 
@@ -183,7 +182,6 @@ namespace vorb {
             std::vector<Widget*> m_widgets; ///< All child widgets.
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.
-            f32v2 m_relativePosition = f32v2(0.0f); ///< The relative position of the container to its parent.
             f32v2 m_dimensions = f32v2(0.0f); ///< The dimensions of the container.
             nString m_name = ""; ///< Display name of the container.
 

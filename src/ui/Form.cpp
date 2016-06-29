@@ -38,8 +38,6 @@ bool vui::Form::removeWidget(Widget* widget) {
 }
 
 void vui::Form::updatePosition() {
-    m_position = m_relativePosition;
-
     computeClipRect();
     
     updateChildPositions();

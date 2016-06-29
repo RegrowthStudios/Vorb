@@ -75,7 +75,7 @@ namespace vorb {
             virtual bool isMouseIn(Widget* w) const;
             virtual i32 getAnchor(Widget* w) const;
             virtual i32 getStyle(Widget* w) const;
-            virtual i32 getDock(Widget* w) const;
+            //virtual i32 getDock(Widget* w) const;
             virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
             virtual bool getClippingEnabled(Widget* w) const;
@@ -88,11 +88,10 @@ namespace vorb {
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
-            virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual const Form* getParentForm(Widget* w) const;
+            virtual const Widget* getParentWidget(Widget* w) const;
             virtual f32v2 getMinSize(Widget* w) const;
             virtual f32v2 getMaxSize(Widget* w) const;
-            virtual f32v2 getPositionPercentage(Widget* w) const;
-            virtual f32v2 getDimensionsPercentage(Widget* w) const;
             virtual WidgetAlign getWidgetAlign(Widget* w) const;
 
             /************************************************************************/
@@ -101,7 +100,7 @@ namespace vorb {
             virtual void setAnchor(Widget* w, int anchor) const;
             virtual void setDestRect(Widget* w, f32v4 destRect) const;
             virtual void setDimensions(Widget* w, f32v2 dims) const;
-            virtual void setDock(Widget* w, DockStyle dock) const;
+            //virtual void setDock(Widget* w, DockStyle dock) const;
             virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
             virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;
@@ -112,15 +111,10 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
-            virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            virtual void setParentForm(Widget* w, Form* parent) const;
+            virtual void setParentWidget(Widget* w, Widget* parent) const;
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
-            virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
-            virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
-            virtual void setXPercentage(Widget* w, f32 xPercentage) const;
-            virtual void setYPercentage(Widget* w, f32 yPercentage) const;
-            virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
-            virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
             virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
             virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 

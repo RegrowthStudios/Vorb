@@ -52,7 +52,16 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Panel(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * @param parent: Parent control object.
+            * @param name: Name of the control.
+            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Panel(Form* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Panel();
 
@@ -68,7 +77,7 @@ namespace vorb {
             virtual void removeDrawables() override;
 
 
-            bool addWidget(Widget* child) override;
+            bool addWidget(Widget* child);
 
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;

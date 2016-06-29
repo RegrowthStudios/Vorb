@@ -69,12 +69,6 @@ namespace vorb {
              * Gets called in the destructor.
              */
             virtual void dispose();
-            /*! @brief Adds a child Widget to the container
-             *
-             * @param child: The Widget to add
-             * @return true on success.
-             */
-            virtual bool addWidget(Widget* child);
             /*! @brief Removes a Widget from the container
             *
             * @param child: The Widget to remove
@@ -101,7 +95,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual Form* getParentForm() const { return m_parentForm; }
+            virtual const Form* getParentForm() const { return m_parentForm; }
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
@@ -150,6 +144,13 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /*! @brief Adds a child Widget to the container
+            *
+            * @param child: The Widget to add
+            * @return true on success.
+            */
+            virtual bool addWidget(Widget* child, Widget* self);
+            virtual bool addWidget(Widget* child, Form* self);
             /*! Computes clipping for rendering and propagates through children. */
             virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
             virtual void computeChildClipRects();

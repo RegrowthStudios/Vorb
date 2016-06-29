@@ -22,8 +22,7 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const f32v4&
 }
 
 bool vui::Form::addWidget(Widget* widget) {
-    if (IWidgetContainer::addWidget(widget)) {
-        widget->setParentForm(this);
+    if (IWidgetContainer::addWidget(widget, this)) {
         if (!widget->getRenderer()) widget->addDrawables(&m_renderer);
         return true;
     }

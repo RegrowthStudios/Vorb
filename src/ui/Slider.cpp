@@ -18,7 +18,11 @@ vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     m_drawableBar.setPosition(getPosition());
 }
 
-vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+vui::Slider::Slider(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+    parent->addWidget(this);
+}
+
+vui::Slider::Slider(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
     parent->addWidget(this);
 }
 

@@ -12,7 +12,11 @@ vui::WidgetList::WidgetList(const nString& name, const f32v4& destRect /*= f32v4
     updatePosition();
 }
 
-vui::WidgetList::WidgetList(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
+vui::WidgetList::WidgetList(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
+    parent->addWidget(this);
+}
+
+vui::WidgetList::WidgetList(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
     parent->addWidget(this);
 }
 

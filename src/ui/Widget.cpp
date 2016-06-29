@@ -12,9 +12,9 @@ vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     enable();
 }
 
-vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-    setParent(parent);
-}
+//vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+//    setParent(parent);
+//}
 
 vui::Widget::~Widget() {
     // Empty
@@ -23,6 +23,10 @@ vui::Widget::~Widget() {
 void vui::Widget::dispose() {
     removeDrawables();
     IWidgetContainer::dispose();
+}
+
+bool vui::Widget::addWidget(Widget* widget) {
+    return IWidgetContainer::addWidget(widget, this);
 }
 
 void vui::Widget::addDrawables(UIRenderer* renderer) {
@@ -42,23 +46,32 @@ void vui::Widget::removeDrawables() {
     }
 }
 
-//TODO(Matthew): Stop using m_relativePosition and instead update via raw position data.
 void vui::Widget::updatePosition() {
-    //f32v2 newPos = m_relativePosition;
-    //if (m_parent) {
-    //    // Handle percentages
-    //    if (m_positionPercentage.x >= 0.0f) {
-    //        newPos.x = m_parent->getWidth() * m_positionPercentage.x;
-    //    }
-    //    if (m_positionPercentage.y >= 0.0f) {
-    //        newPos.y = m_parent->getHeight() * m_positionPercentage.y;
-    //    }
-    //    m_relativePosition = newPos;
-    //    newPos += m_parent->getPosition();
-    //}
-    //newPos += getWidgetAlignOffset();
-    
-    m_position = m_relativePosition;
+    m_position = processRawValue(m_rawPosition);
+    // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
+    m_relativePosition = m_position;
+
+    switch (m_positionType) {
+    case vui::PositionType::STATIC:
+    case vui::PositionType::RELATIVE:
+        if (m_parentWidget) {
+            m_position += m_parentWidget->getPosition();
+        } else if (m_parentForm) {
+            m_position += m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::FIXED:
+        if (m_parentForm) {
+            m_position += m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::ABSOLUTE:
+        const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
+        if (firstPositionedParent) {
+            m_position += firstPositionedParent->getPosition();
+        }
+        break;
+    }
     
     // Update relative dimensions
     updateDimensions();
@@ -167,6 +180,7 @@ f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
     switch (units) {
     case vui::UnitType::PIXEL:
         result = rawValue;
+        break;
     case vui::UnitType::PERCENTAGE:
         switch (m_positionType) {
         case vui::PositionType::STATIC:
@@ -176,24 +190,30 @@ f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
             } else if (m_parentForm) {
                 result = rawValue * m_parentForm->getDimensions();
             }
+            break;
         case vui::PositionType::FIXED:
             if (m_parentForm) {
                 result = rawValue * m_parentForm->getDimensions();
             }
+            break;
         case vui::PositionType::ABSOLUTE:
             const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
             if (firstPositionedParent) {
                 result = rawValue * firstPositionedParent->getDimensions();
             }
+            break;
         }
+        break;
     case vui::UnitType::FORM_HEIGHT_PERC:
         if (m_parentForm) {
             result = rawValue * m_parentForm->getHeight();
         }
+        break;
     case vui::UnitType::FORM_WIDTH_PERC:
         if (m_parentForm) {
             result = rawValue * m_parentForm->getWidth();
         }
+        break;
     case vui::UnitType::FORM_MAX_PERC:
         if (m_parentForm) {
             f32v2 formDims = m_parentForm->getDimensions();
@@ -203,6 +223,7 @@ f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
                 result = rawValue * formDims.y;
             }
         }
+        break;
     case vui::UnitType::FORM_MIN_PERC:
         if (m_parentForm) {
             f32v2 formDims = m_parentForm->getDimensions();
@@ -212,8 +233,10 @@ f32v2 vui::Widget::processRawValue(f32v2 rawValue, vui::UnitType units) {
                 result = rawValue * formDims.x;
             }
         }
+        break;
     default: // Shouldn't happen.
         result = rawValue;
+        break;
     }
     return result;
 }

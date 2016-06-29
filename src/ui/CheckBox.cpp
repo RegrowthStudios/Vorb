@@ -17,9 +17,12 @@ vui::CheckBox::CheckBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
     updateTextPosition();
 }
 
-vui::CheckBox::CheckBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
+vui::CheckBox::CheckBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
     parent->addWidget(this);
-    m_parent = parent;
+}
+
+vui::CheckBox::CheckBox(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
+    parent->addWidget(this);
 }
 
 vui::CheckBox::~CheckBox() {

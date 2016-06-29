@@ -56,7 +56,7 @@ namespace vorb {
              * @param widget: The Widget to add.
              * @return true on success.
              */
-            virtual bool addWidget(Widget* widget) override;
+            virtual bool addWidget(Widget* widget);
             /*! @brief Removes a widget from the Form.
             *
             * @param widget: The Widget to remove.

@@ -128,7 +128,7 @@ void vui::FormScriptEnvironment::registerConstants() {
         m_env->addValue("CENTER", vg::TextAlign::CENTER);
         m_env->setNamespaces();
     }
-    { // vui::DockStyle
+    /*{ // vui::DockStyle
         m_env->setNamespaces("DockStyle");
         m_env->addValue("NONE", DockStyle::NONE);
         m_env->addValue("LEFT", DockStyle::LEFT);
@@ -137,7 +137,7 @@ void vui::FormScriptEnvironment::registerConstants() {
         m_env->addValue("TOP", DockStyle::TOP);
         m_env->addValue("FILL", DockStyle::FILL);
         m_env->setNamespaces();
-    }
+    }*/
     // Misc constants
     m_env->addValue("INT_MAX", INT_MAX);
     m_env->addValue("INT_MIN", INT_MIN);

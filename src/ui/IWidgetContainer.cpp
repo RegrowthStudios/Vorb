@@ -33,11 +33,17 @@ void vui::IWidgetContainer::dispose() {
     disable();
 }
 
-// TODO(Matthew): Fix this. Make it a procedure?
-bool vui::IWidgetContainer::addWidget(Widget* child) {
+bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
     m_widgets.push_back(child);
-    child->m_parent = this;
+    child->m_parentWidget = self;
     child->setParentForm(this->m_parentForm);
+    child->updatePosition();
+    return true; // TODO(Ben): Is this needed?
+}
+
+bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
+    m_widgets.push_back(child);
+    child->setParentForm(self);
     child->updatePosition();
     return true; // TODO(Ben): Is this needed?
 }

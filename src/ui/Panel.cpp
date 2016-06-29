@@ -22,7 +22,11 @@ vui::Panel::Panel(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : P
     m_drawableRect.setDimensions(getDimensions());
 }
 
-vui::Panel::Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
+vui::Panel::Panel(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
+    parent->addWidget(this);
+}
+
+vui::Panel::Panel(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
     parent->addWidget(this);
 }
 
@@ -48,32 +52,27 @@ void vui::Panel::removeDrawables() {
 }
 
 bool vui::Panel::addWidget(Widget* child) {
-    bool rv = IWidgetContainer::addWidget(child);
+    bool rv = IWidgetContainer::addWidget(child, this);
     updateSliders();
     return rv;
 }
 
 void vui::Panel::updatePosition() {
-    f32v2 newPos = m_relativePosition;
-    if (m_parent) {
-        // Handle percentages
-        if (m_positionPercentage.x >= 0.0f) {
-            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
-        }
-        if (m_positionPercentage.y >= 0.0f) {
-            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
-        }
-        m_relativePosition = newPos;
-        newPos += m_parent->getPosition();
-    }
+    f32v2 newPos = processRawValue(m_rawPosition);
+    m_relativePosition = newPos;
+
     newPos += getWidgetAlignOffset();
     m_position = newPos;
 
     // Update relative dimensions
     updateDimensions();
 
-    if (m_parent) computeClipRect(m_parent->getClipRect());
-
+    if (m_parentWidget) {
+        computeClipRect(m_parentWidget->getClipRect());
+    } else if (m_parentForm) {
+        computeClipRect(m_parentForm->getClipRect());
+    }
+    
     // Use child offset for auto-scroll
     m_position -= m_childOffset;
     // Update child positions but skip sliders
@@ -130,7 +129,7 @@ void vui::Panel::setPosition(const f32v2& position) {
 void vui::Panel::setWidth(f32 width) {
     Widget::setWidth(width);
     m_drawableRect.setWidth(width);
-    updateSliders();
+    //updateSliders();
     refreshDrawables();
 }
 

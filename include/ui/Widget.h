@@ -90,7 +90,7 @@ namespace vorb {
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            //Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
             /*! @brief Releases all resources used by the Widget.
@@ -98,6 +98,13 @@ namespace vorb {
             * Gets called in the destructor.
             */
             virtual void dispose() override;
+
+            /*! @brief Adds a widget to the Form and initializes it for rendering.
+            *
+            * @param widget: The Widget to add.
+            * @return true on success.
+            */
+            virtual bool addWidget(Widget* widget);
 
             /*! @brief Adds all drawables to the UIRenderer
             *
@@ -128,9 +135,12 @@ namespace vorb {
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const std::pair<f32v2, UnitType>& getRawPosition() const { return m_rawPosition; }
+            virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const std::pair<f32v2, UnitType>& getRawDimensions() const { return m_rawDimensions; }
-            virtual const std::pair<f32v2, UnitType>& getMinSize() const { return m_rawMinSize; }
-            virtual const std::pair<f32v2, UnitType>& getMaxSize() const { return m_rawMaxSize; }
+            virtual const std::pair<f32v2, UnitType>& getRawMinSize() const { return m_rawMinSize; }
+            virtual const f32v2& getMinSize() const { return m_minSize; }
+            virtual const std::pair<f32v2, UnitType>& getRawMaxSize() const { return m_rawMaxSize; }
+            virtual const f32v2& getMaxSize() const { return m_maxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
 
             /************************************************************************/
@@ -165,7 +175,7 @@ namespace vorb {
             virtual void updateMaxSize() { m_maxSize = processRawValue(m_rawMaxSize); updateDimensions(); }
             virtual void updateMinSize() { m_minSize = processRawValue(m_rawMinSize); updateDimensions(); }
 
-            f32v2 processRawValue(std::pair<f32v2, UnitType> rawValue) { processRawValue(rawValue.first, rawValue.second); }
+            f32v2 processRawValue(std::pair<f32v2, UnitType> rawValue) { return processRawValue(rawValue.first, rawValue.second); }
             f32v2 processRawValue(f32v2 rawValue, UnitType units);
             /************************************************************************/
             /* Members                                                              */
@@ -177,6 +187,7 @@ namespace vorb {
             UIRenderer* m_renderer = nullptr;
             PositionType m_positionType = PositionType::STATIC;
             std::pair<f32v2, UnitType> m_rawPosition = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
+            f32v2 m_relativePosition = f32v2(0.0f);
             std::pair<f32v2, UnitType> m_rawDimensions = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             std::pair<f32v2, UnitType> m_rawMinSize = std::pair<f32v2, UnitType>(f32v2(0.0f), UnitType::PIXEL);
             f32v2 m_minSize = f32v2(0.0f);

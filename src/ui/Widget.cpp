@@ -25,14 +25,9 @@ void vui::Widget::dispose() {
     IWidgetContainer::dispose();
 }
 
-// TODO(Matthew): Why is this needed to see sub-widgets even if top-level widget is added to form last? Renderer should propogate through.
-//                Also, why is it that if top-level widget is added to form first we see nothing? Fix these things.
 bool vui::Widget::addWidget(Widget* widget) {
-    if (IWidgetContainer::addWidget(widget, this)) {
-        if (!widget->getRenderer()) widget->addDrawables(m_parentForm->getRenderer());
-        return true;
-    }
-    return false;
+    widget->addDrawables(m_renderer);
+    return IWidgetContainer::addWidget(widget, this);
 }
 
 void vui::Widget::addDrawables(UIRenderer* renderer) {

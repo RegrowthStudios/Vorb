@@ -82,7 +82,6 @@ namespace vorb {
              */
             virtual bool registerCallback(Widget* w, nString callback) { return false; }
 
-            virtual UIRenderer* getRenderer() { return &m_renderer; }
         protected:
             UIRenderer m_renderer; ///< The UI Renderer.
             IGameScreen* m_ownerIGameScreen = nullptr; ///< The Owning screen.

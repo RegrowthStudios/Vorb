@@ -167,8 +167,8 @@ void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
 }
 
 void vui::ComboBox::setHeight(f32 height) {
-    Widget::setHeight(height);
     m_mainButton.setHeight(height);
+    Widget::setHeight(height);
     updatePosition();
 }
 

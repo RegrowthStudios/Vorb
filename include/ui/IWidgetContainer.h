@@ -55,6 +55,20 @@ namespace vorb {
 
         //! Bitfield of clipping options.
         struct ClippingOptions {
+            ClippingOptions() : left{ true },
+                top{ true },
+                right{ true },
+                bottom{ true }
+            {
+            }
+            ClippingOptions(bool left, bool top, bool right, bool bottom) : 
+                left{ left },
+                top{ top },
+                right{ right },
+                bottom{ bottom }
+            {
+            }
+
             bool left : 1;
             bool top : 1;
             bool right : 1;
@@ -85,14 +99,20 @@ namespace vorb {
             */
             virtual bool removeWidget(Widget* child);
 
-            /*! @brief Defines how relative position is used to update position.
-             *  The simplest form could be m_position = m_relativePosition;
-             */
-            virtual void updatePosition() = 0;
             /*! @brief Enables events* */
             virtual void enable();
             /*! @brief Disables events* */
             virtual void disable();
+
+            /*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
+            void updateSpatialState();
+            /*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
+            void updatePositionState();
+            /*! @brief Updates dimension spatial state. I.e. dimensions, clipping and same for children. */
+            void updateDimensionState();
+            /*! @brief Updates clipping for both this widget container and its children. */
+            void updateClippingState();
+
             /*! @brief Checks if a point is inside the container
              *
              * @param point: The point to check
@@ -130,23 +150,23 @@ namespace vorb {
             virtual void setParentForm(Form* form);
             virtual void setParentWidget(Widget* parent, Widget* self);
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateDimensionState(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateChildPositions(); }
-            virtual void setPosition(const f32v2& position) { m_position = position; updatePosition(); }
+            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateDimensionState(); }
+            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateDimensionState(); }
+            virtual void setPosition(const f32v2& position) { m_position = position; updatePositionState(); }
+            virtual void setX(f32 x) { m_position.x = x; updatePositionState(); }
+            virtual void setY(f32 y) { m_position.y = y; updatePositionState(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
-            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateChildPositions(); }
-            virtual void setX(f32 x) { m_position.x = x; updatePosition(); }
-            virtual void setY(f32 y) { m_position.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
-            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; updatePosition(); }
-            virtual void setClipping(bool clipping) { m_clippingOptions = { clipping, clipping, clipping, clipping }; updatePosition(); }
-            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; updatePosition(); }
-            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updatePosition(); }
-            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updatePosition(); }
-            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updatePosition(); }
+            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; computeClipRect(); }
+            virtual void setClipping(bool clipping) { m_clippingOptions = ClippingOptions(clipping, clipping, clipping, clipping); computeClipRect(); }
+            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; computeClipRect(); }
+            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; computeClipRect(); }
+            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; computeClipRect(); }
+            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; computeClipRect(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -167,12 +187,22 @@ namespace vorb {
             */
             virtual bool addWidget(Widget* child, Widget* self);
             virtual bool addWidget(Widget* child, Form* self);
-            /*! Computes clipping for rendering and propagates through children. */
-            //virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
-            //virtual bool computeClipping(const f32v4& parentClipRect, f32v2& position, f32v2& dimensions);
+            
+            /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect();
+            /*! @brief Computes clipping for children of this widget container. */
             virtual void computeChildClipRects();
-            virtual void updateChildPositions();
+
+
+
+            virtual void updateChildSpatialStates();
+
+            /*! @brief Defines how raw position is used to process the actual position.
+            */
+            virtual void updatePosition() = 0;
+            /*! @brief Defines how raw dimensions are used to process the actual dimensions.
+            */
+            virtual void updateDimensions() = 0;
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

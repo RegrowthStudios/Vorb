@@ -12,7 +12,6 @@ vui::IWidgetContainer::IWidgetContainer() :
     MouseLeave(this),
     MouseMove(this) {
     m_style = {};
-    m_clippingOptions = { true, true, true, true };
     enable();
 }
 
@@ -38,14 +37,14 @@ bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
     m_widgets.push_back(child);
     child->m_parentWidget = self;
     child->setParentForm(this->m_parentForm);
-    child->updatePosition();
+    child->updateSpatialState();
     return true; // TODO(Ben): Is this needed?
 }
 
 bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
     m_widgets.push_back(child);
     child->setParentForm(self);
-    child->updatePosition();
+    child->updateSpatialState();
     return true; // TODO(Ben): Is this needed?
 }
 
@@ -85,6 +84,38 @@ void vui::IWidgetContainer::disable() {
     for (auto& w : m_widgets) w->disable();
 }
 
+void vui::IWidgetContainer::updateSpatialState() {
+    updatePosition();
+    
+    updateDimensions();
+
+    computeClipRect();
+
+    updateChildSpatialStates();
+}
+
+void vui::IWidgetContainer::updatePositionState() {
+    updatePosition();
+
+    computeClipRect();
+
+    updateChildSpatialStates();
+}
+
+void vui::IWidgetContainer::updateDimensionState() {
+    updateDimensions();
+
+    computeClipRect();
+
+    updateChildSpatialStates();
+}
+
+void vui::IWidgetContainer::updateClippingState() {
+    computeClipRect();
+
+    computeChildClipRects();
+}
+
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
     return (x >= m_position.x && x < m_position.x + m_dimensions.x &&
             y >= m_position.y && y < m_position.y + m_dimensions.y);
@@ -106,43 +137,6 @@ void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setPosition(f32v2(destRect.x, destRect.y));
     setDimensions(f32v2(destRect.z, destRect.w));
 }
-//
-//bool vui::IWidgetContainer::computeClipping(const f32v4& parentClipRect, f32v2& position, f32v2& dimensions) {
-//    bool clipping = false;
-//
-//    if (!m_clippingOptions.left) {
-//        position.x = parentClipRect.x;
-//    } else if (position.x < parentClipRect.x) {
-//        f32 t = parentClipRect.x - position.x;
-//        position.x = parentClipRect.x;
-//        dimensions.x -= t;
-//        clipping = true;
-//    }
-//    if (!m_clippingOptions.right) {
-//        dimensions.x = parentClipRect.z;
-//    } else if (position.x + dimensions.x > parentClipRect.x + parentClipRect.z) {
-//        f32 t = position.x + dimensions.x - (parentClipRect.x + parentClipRect.z);
-//        dimensions.x -= t;
-//        clipping = true;
-//    }
-//    if (!m_clippingOptions.top) {
-//        position.y = parentClipRect.y;
-//    } else if (position.y < parentClipRect.y) {
-//        f32 t = parentClipRect.y - position.y;
-//        position.y = parentClipRect.y;
-//        dimensions.y -= t;
-//        clipping = true;
-//    }
-//    if (!m_clippingOptions.bottom) {
-//        dimensions.y = parentClipRect.w;
-//    } else if (position.y + dimensions.y > parentClipRect.y + parentClipRect.w) {
-//        f32 t = position.y + dimensions.y - (parentClipRect.y + parentClipRect.w);
-//        dimensions.y -= t;
-//        clipping = true;
-//    }
-//
-//    return clipping;
-//}
 
 void vui::IWidgetContainer::computeClipRect() {
     f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
@@ -173,8 +167,6 @@ void vui::IWidgetContainer::computeClipRect() {
     if (!m_clippingOptions.bottom) {
         m_clipRect.w = parentClipRect.w;
     }
-
-    computeChildClipRects();
 }
 
 void vui::IWidgetContainer::computeChildClipRects() {
@@ -183,9 +175,9 @@ void vui::IWidgetContainer::computeChildClipRects() {
     }
 }
 
-void vui::IWidgetContainer::updateChildPositions() {
+void vui::IWidgetContainer::updateChildSpatialStates() {
     for (auto& w : m_widgets) {
-        w->updatePosition();
+        w->updateSpatialState();
     }
 }
 

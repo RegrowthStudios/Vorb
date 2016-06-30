@@ -70,9 +70,6 @@ namespace vorb {
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
-
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -109,9 +106,16 @@ namespace vorb {
             virtual void setTextScale(const f32v2& textScale);
 
         protected:
+            /*! @brief Updates the position of button. */
+            virtual void updatePosition() override;
+            /*! @brief Updates the dimensions of button. */
+            virtual void updateDimensions() override;
+
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();
+
+            virtual void updateDrawableSpatialState();
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;

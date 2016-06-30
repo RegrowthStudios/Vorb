@@ -17,9 +17,13 @@ vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     enable();
 }
 
-//vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-//    setParent(parent);
-//}
+vui::Widget::Widget(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+    parent->addWidget(this);
+}
+
+vui::Widget::Widget(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+    parent->addWidget(this);
+}
 
 vui::Widget::~Widget() {
     // Empty
@@ -52,41 +56,6 @@ void vui::Widget::removeDrawables() {
     }
 }
 
-void vui::Widget::updatePosition() {
-    m_position = processRawValues(m_rawPosition);
-    // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
-    m_relativePosition = m_position;
-
-    switch (m_positionType) {
-    case vui::PositionType::STATIC:
-    case vui::PositionType::RELATIVE:
-        if (m_parentWidget) {
-            m_position += m_parentWidget->getPosition();
-        } else if (m_parentForm) {
-            m_position += m_parentForm->getPosition();
-        }
-        break;
-    case vui::PositionType::FIXED:
-        if (m_parentForm) {
-            m_position += m_parentForm->getPosition();
-        }
-        break;
-    case vui::PositionType::ABSOLUTE:
-        const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
-        if (firstPositionedParent) {
-            m_position += firstPositionedParent->getPosition();
-        }
-        break;
-    }
-    
-    // Update relative dimensions
-    updateDimensions();
-
-    computeClipRect();
-        
-    updateChildPositions();
-}
-
 const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
     const IWidgetContainer* firstPositionedParent = m_parentForm;
     const Widget* widget = m_parentWidget;
@@ -110,10 +79,8 @@ void vui::Widget::setPosition(const f32v2& position) {
 }
 
 void vui::Widget::setRawPosition(const f32v2& rawPosition, UnitType& units) {
-    m_rawPosition.x = rawPosition.x;
-    m_rawPosition.y = rawPosition.y;
-    m_rawPosition.units = { units, units };
-    updatePosition();
+    m_rawPosition = { rawPosition.x, rawPosition.y, { units, units } };
+    updatePositionState();
 }
 
 void vui::Widget::setDimensions(const f32v2& dimensions) {
@@ -122,35 +89,29 @@ void vui::Widget::setDimensions(const f32v2& dimensions) {
 }
 
 void vui::Widget::setRawDimensions(const f32v2& rawDimensions, UnitType& units) {
-    m_rawDimensions.x = rawDimensions.x;
-    m_rawDimensions.y = rawDimensions.y;
-    m_rawDimensions.units = { units, units };
-    updateDimensions();
+    m_rawDimensions = { rawDimensions.x, rawDimensions.y, { units, units } };
+    updateDimensionState();
 }
 
 void vui::Widget::setMaxSize(const f32v2& maxSize) {
     m_rawMaxSize = { maxSize.x, maxSize.y, { UnitType::PIXEL, UnitType::PIXEL } };
     m_maxSize = maxSize;
-    updateDimensions();
+    updateDimensionState();
 }
 
 void vui::Widget::setRawMaxSize(const f32v2& maxSize, UnitType& units) {
-    m_rawMaxSize.x = maxSize.x;
-    m_rawMaxSize.y = maxSize.y;
-    m_rawMaxSize.units = { units, units };
-    updateDimensions();
+    m_rawMaxSize = { maxSize.x, maxSize.y, { units, units } };
+    updateMaxSize();
 }
 
 void vui::Widget::setMinSize(const f32v2& minSize) {
     m_rawMinSize = { minSize.x, minSize.y, { UnitType::PIXEL, UnitType::PIXEL } };
     m_minSize = minSize;
-    updateDimensions();
+    updateDimensionState();
 }
 
 void vui::Widget::setRawMinSize(const f32v2& minSize, UnitType& units) {
-    m_rawMinSize.x = minSize.x;
-    m_rawMinSize.y = minSize.y;
-    m_rawMinSize.units = { units, units };
+    m_rawMinSize = { minSize.x, minSize.y, { units, units } };
     updateMinSize();
 }
 
@@ -178,6 +139,34 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
     return f32v2(0.0f); // Should never happen
 }
 
+void vui::Widget::updatePosition() {
+    m_position = processRawValues(m_rawPosition);
+    // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
+    m_relativePosition = m_position;
+
+    switch (m_positionType) {
+    case vui::PositionType::STATIC:
+    case vui::PositionType::RELATIVE:
+        if (m_parentWidget) {
+            m_position += m_parentWidget->getPosition();
+        } else if (m_parentForm) {
+            m_position += m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::FIXED:
+        if (m_parentForm) {
+            m_position += m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::ABSOLUTE:
+        const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
+        if (firstPositionedParent) {
+            m_position += firstPositionedParent->getPosition();
+        }
+        break;
+    }
+}
+
 void vui::Widget::updateDimensions() {
     // Process raw dimensions.
     f32v2 newDims = processRawValues(m_rawDimensions);
@@ -198,8 +187,6 @@ void vui::Widget::updateDimensions() {
     if (newDims != m_dimensions) {
         IWidgetContainer::setDimensions(newDims);
     }
-
-    // TODO(Matthew): Update overflow/clipping.
 }
 
 f32v2 vui::Widget::processRawValues(const Length2& rawValues) {

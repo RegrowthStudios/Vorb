@@ -74,7 +74,7 @@ void vui::Panel::updatePosition() {
     m_position -= m_childOffset;
     // Update child positions but skip sliders
     for (size_t i = 2; i < m_widgets.size(); i++) {
-        m_widgets[i]->updatePosition();
+        m_widgets[i]->updatePositionState();
     }
     m_position += m_childOffset;
 

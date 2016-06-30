@@ -18,6 +18,8 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const f32v4&
     m_position.y = destRect.y;
     m_dimensions.x = destRect.z;
     m_dimensions.y = destRect.w;
+    computeClipRect();
+    updateChildSpatialStates();
     m_renderer.init(defaultFont, spriteBatch);
 }
 
@@ -34,12 +36,6 @@ bool vui::Form::removeWidget(Widget* widget) {
         return true;
     }
     return false;
-}
-
-void vui::Form::updatePosition() {
-    computeClipRect();
-    
-    updateChildPositions();
 }
 
 void vui::Form::update(f32 dt /*= 1.0f*/) {

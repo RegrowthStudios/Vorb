@@ -90,6 +90,15 @@ namespace vorb {
              */
             Widget(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The widget will be made a child of parent.
+            *
+            * @param parent: Parent container object.
+            * @param name: Name of the control.
+            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Widget(Form* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            /*! @brief Constructor that sets parent control, name, position, and dimensions.
              *
              * The widget will be made a child of parent.
              *
@@ -97,7 +106,7 @@ namespace vorb {
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            //Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Widget(Widget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
             /*! @brief Releases all resources used by the Widget.
@@ -128,9 +137,6 @@ namespace vorb {
             */
             virtual void update(f32 dt = 1.0f) { }
 
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
-
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
@@ -155,17 +161,17 @@ namespace vorb {
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
-            virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updatePosition(); }
+            virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updateSpatialState(); }
             virtual void setPosition(const f32v2& position);
-            virtual void setRawPosition(const Length2& rawPosition) { m_rawPosition = rawPosition; updatePosition(); }
+            virtual void setRawPosition(const Length2& rawPosition) { m_rawPosition = rawPosition; updatePositionState(); }
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& units);
-            virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePosition(); }
-            virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; updatePosition(); }
+            virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePositionState(); }
+            virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; updatePositionState(); }
             virtual void setDimensions(const f32v2& dimensions);
-            virtual void setRawDimensions(const Length2& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensions(); }
+            virtual void setRawDimensions(const Length2& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensionState(); }
             virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& units);
-            virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; updateDimensions(); }
-            virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; updateDimensions(); }
+            virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; updateDimensionState(); }
+            virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; updateDimensionState(); }
             virtual void setRawMaxSize(const Length2& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
             virtual void setRawMaxSize(const f32v2& maxSize, UnitType& units);
             virtual void setRawMaxWidth(f32 maxWidth, UnitType& units) { m_rawMaxSize.x = maxWidth; m_rawMaxSize.units.x = units; updateMaxSize(); }
@@ -176,16 +182,19 @@ namespace vorb {
             virtual void setRawMinWidth(f32 minWidth, UnitType& units) { m_rawMinSize.x = minWidth; m_rawMinSize.units.x = units; updateMinSize(); }
             virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; updateMinSize(); }
             virtual void setMinSize(const f32v2& minSize);
-            virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
+            virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePositionState(); }
             
         protected:
             virtual f32v2 getWidgetAlignOffset();
+
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition() override;
             /*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
-            virtual void updateDimensions();
+            virtual void updateDimensions() override;
             /*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
-            virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensions(); }
+            virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensionState(); }
             /*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
-            virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensions(); }
+            virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensionState(); }
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             f32v2 processRawValues(const Length2& rawValues);

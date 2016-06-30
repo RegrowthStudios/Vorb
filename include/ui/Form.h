@@ -63,8 +63,6 @@ namespace vorb {
             * @return true on success.
             */
             virtual bool removeWidget(Widget* widget) override;
-            /* Updates the position of the Form. */
-            virtual void updatePosition() override;
             /*! @brief Updates all the widgets in the Form.
              * 
              * @param dt: deltatime
@@ -83,6 +81,11 @@ namespace vorb {
             virtual bool registerCallback(Widget* w, nString callback) { return false; }
 
         protected:
+            /* Updates the position of the Form. */
+            virtual void updatePosition() override {}
+            /* Updates the dimensions of the Form. */
+            virtual void updateDimensions() override {}
+
             UIRenderer m_renderer; ///< The UI Renderer.
             IGameScreen* m_ownerIGameScreen = nullptr; ///< The Owning screen.
         };

@@ -252,7 +252,14 @@ void vui::CheckBox::refreshDrawables() {
 }
 
 
-void vui::CheckBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
+void vui::CheckBox::computeClipRect() {
+    f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
+    if (m_parentWidget) {
+        parentClipRect = m_parentWidget->getClipRect();
+    } else if (m_parentForm) {
+        parentClipRect = m_parentForm->getClipRect();
+    }
+
     m_clipRect = parentClipRect;
     computeChildClipRects();
 }

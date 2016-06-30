@@ -68,11 +68,7 @@ void vui::Panel::updatePosition() {
     // Update relative dimensions
     updateDimensions();
 
-    if (m_parentWidget) {
-        computeClipRect(m_parentWidget->getClipRect());
-    } else if (m_parentForm) {
-        computeClipRect(m_parentForm->getClipRect());
-    }
+    computeClipRect();
     
     // Use child offset for auto-scroll
     m_position -= m_childOffset;

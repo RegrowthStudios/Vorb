@@ -78,7 +78,6 @@ namespace vorb {
             //virtual i32 getDock(Widget* w) const;
             virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
-            virtual bool getClippingEnabled(Widget* w) const;
             virtual f32 getHeight(Widget* w) const;
             virtual f32 getWidth(Widget* w) const;
             virtual f32 getX(Widget* w) const;
@@ -116,7 +115,6 @@ namespace vorb {
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
             virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
-            virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

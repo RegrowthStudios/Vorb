@@ -119,7 +119,7 @@ namespace vorb {
             virtual void updateSlidePosition();
             virtual void updateColor();
             virtual void refreshDrawables();
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
+            virtual void computeClipRect() override;
 
             /************************************************************************/
             /* Event Handlers                                                       */

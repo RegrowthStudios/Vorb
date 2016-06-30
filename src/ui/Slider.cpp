@@ -174,21 +174,39 @@ void vui::Slider::refreshDrawables() {
     m_drawnSlide = m_drawableSlide;
 }
 
-void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
-        f32v2 slideDims = m_drawableSlide.getDimensions();
-        pos -= slideDims * 0.5f;
-        dims += slideDims * 2.0f;
-
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
+void vui::Slider::computeClipRect() {
+    f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
+    if (m_parentWidget) {
+        parentClipRect = m_parentWidget->getClipRect();
+    } else if (m_parentForm) {
+        parentClipRect = m_parentForm->getClipRect();
     }
+
+    f32v2 position = m_position;
+    f32v2 dimensions = m_dimensions;
+    f32v2 slideDimensions = m_drawableSlide.getDimensions();
+    position -= slideDimensions * 0.5f;
+    dimensions += slideDimensions * 2.0f;
+
+    computeClipping(parentClipRect, position, dimensions);
+
+    if (dimensions.x < 0) dimensions.x = 0;
+    if (dimensions.y < 0) dimensions.y = 0;
+
+    m_clipRect = f32v4(position.x, position.y, dimensions.x, dimensions.y);
+    if (!m_clippingOptions.left) {
+        m_clipRect.x = parentClipRect.x;
+    }
+    if (!m_clippingOptions.top) {
+        m_clipRect.y = parentClipRect.y;
+    }
+    if (!m_clippingOptions.right) {
+        m_clipRect.z = parentClipRect.z;
+    }
+    if (!m_clippingOptions.bottom) {
+        m_clipRect.w = parentClipRect.w;
+    }
+
     computeChildClipRects();
 }
 

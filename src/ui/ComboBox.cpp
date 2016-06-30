@@ -243,20 +243,38 @@ void vui::ComboBox::updateDropButton(vui::Button* b) {
     b->setTextScale(m_mainButton.getTextScale());
 }
 
-void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
-
-        dims.y += m_dropPanel.getHeight();
-
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
+void vui::ComboBox::computeClipRect() {
+    f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
+    if (m_parentWidget) {
+        parentClipRect = m_parentWidget->getClipRect();
+    } else if (m_parentForm) {
+        parentClipRect = m_parentForm->getClipRect();
     }
+
+    f32v2 position = m_position;
+    f32v2 dimensions = m_dimensions;
+
+    dimensions.y += m_dropPanel.getHeight();
+
+    computeClipping(parentClipRect, position, dimensions);
+
+    if (dimensions.x < 0) dimensions.x = 0;
+    if (dimensions.y < 0) dimensions.y = 0;
+
+    m_clipRect = f32v4(position.x, position.y, dimensions.x, dimensions.y);
+    if (!m_clippingOptions.left) {
+        m_clipRect.x = parentClipRect.x;
+    }
+    if (!m_clippingOptions.top) {
+        m_clipRect.y = parentClipRect.y;
+    }
+    if (!m_clippingOptions.right) {
+        m_clipRect.z = parentClipRect.z;
+    }
+    if (!m_clippingOptions.bottom) {
+        m_clipRect.w = parentClipRect.w;
+    }
+
     computeChildClipRects();
 }
 

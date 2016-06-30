@@ -82,11 +82,7 @@ void vui::Widget::updatePosition() {
     // Update relative dimensions
     updateDimensions();
 
-    if (m_parentWidget) {
-        computeClipRect(m_parentWidget->getClipRect());
-    } else if (m_parentForm) {
-        computeClipRect(m_parentForm->getClipRect());
-    }
+    computeClipRect();
         
     updateChildPositions();
 }
@@ -106,11 +102,6 @@ const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
         widget = widget->getParentWidget();
     }
     return firstPositionedParent;
-}
-
-void vui::Widget::setParentWidget(Widget* parent) {
-    if (m_parentWidget) m_parentWidget->removeWidget(this);
-    if (parent) parent->addWidget(this);
 }
 
 void vui::Widget::setPosition(const f32v2& position) {

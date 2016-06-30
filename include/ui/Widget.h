@@ -35,6 +35,7 @@ DECL_VG(class SpriteFont)
 namespace vorb {
     namespace ui {
 
+        //! Enum of widget alignments.
         enum class WidgetAlign {
             LEFT,
             TOP_LEFT,
@@ -47,6 +48,7 @@ namespace vorb {
             CENTER
         };
 
+        //! Enum of position types.
         enum class PositionType {
             STATIC,
             ABSOLUTE,
@@ -54,6 +56,7 @@ namespace vorb {
             RELATIVE
         };
 
+        //! Enum of unit types.
         enum class UnitType {
             PIXEL,
             PERCENTAGE,
@@ -63,7 +66,7 @@ namespace vorb {
             FORM_MAX_PERC
         };
 
-        /*! Stores two lengths and their units. */
+        //! Stores two lengths and their units.
         struct Length2 {
             f32 x, y;
             struct {
@@ -131,7 +134,6 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual Widget* getParentWidget() const { return m_parentWidget; }
             virtual const IWidgetContainer* getFirstPositionedParent() const;
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const PositionType& getPositionType() const { return m_positionType; }
@@ -150,7 +152,6 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setParentWidget(Widget* parent);
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
@@ -192,7 +193,6 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            Widget* m_parentWidget = nullptr; ///< Parent widget. Nullptr implies widget is directly under its parent form.
             WidgetAlign m_align = WidgetAlign::TOP_LEFT; ///< Direction of alignment of the widget.
             AnchorStyle m_anchor; ///< The anchor data.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.

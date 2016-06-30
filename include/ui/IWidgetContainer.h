@@ -44,12 +44,21 @@ namespace vorb {
             bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
             bool selectable : 1; ///< If true, the control can receive focus.
         };
+
         //! Bitfield of anchor flags
         struct AnchorStyle {
             bool left : 1; ///< If true, anchored to the left of parent
             bool right : 1; ///< If true, anchored to the right of parent
             bool bottom : 1; ///< If true, anchored to the bottom of parent
             bool top : 1; ///< If true, anchored to the top of parent
+        };
+
+        //! Bitfield of clipping options.
+        struct ClippingOptions {
+            bool left : 1;
+            bool top : 1;
+            bool right : 1;
+            bool bottom : 1;
         };
 
         class IWidgetContainer {
@@ -96,6 +105,7 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual Form* getParentForm() const { return m_parentForm; }
+            virtual Widget* getParentWidget() const { return m_parentWidget; }
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
@@ -111,13 +121,14 @@ namespace vorb {
             virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
             virtual const nString& getName() const { return m_name; }
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
+            virtual const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
             virtual f32v4 getClipRect() const { return m_clipRect; }
-            virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setParentForm(Form* form);
+            virtual void setParentWidget(Widget* parent, Widget* self);
             virtual void setDestRect(const f32v4& destRect);
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
@@ -130,7 +141,12 @@ namespace vorb {
             virtual void setX(f32 x) { m_position.x = x; updatePosition(); }
             virtual void setY(f32 y) { m_position.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
-            virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
+            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; updatePosition(); }
+            virtual void setClipping(bool clipping) { m_clippingOptions = { clipping, clipping, clipping, clipping }; updatePosition(); }
+            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; updatePosition(); }
+            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updatePosition(); }
+            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updatePosition(); }
+            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -152,7 +168,9 @@ namespace vorb {
             virtual bool addWidget(Widget* child, Widget* self);
             virtual bool addWidget(Widget* child, Form* self);
             /*! Computes clipping for rendering and propagates through children. */
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
+            //virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
+            //virtual bool computeClipping(const f32v4& parentClipRect, f32v2& position, f32v2& dimensions);
+            virtual void computeClipRect();
             virtual void computeChildClipRects();
             virtual void updateChildPositions();
             /************************************************************************/
@@ -180,13 +198,14 @@ namespace vorb {
             /************************************************************************/
             ContainerStyle m_style; ///< The current style.
             Form* m_parentForm = nullptr; ///< Parent form.
+            Widget* m_parentWidget = nullptr; ///< Parent widget.
             std::vector<Widget*> m_widgets; ///< All child widgets.
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.
             f32v2 m_dimensions = f32v2(0.0f); ///< The dimensions of the container.
             nString m_name = ""; ///< Display name of the container.
 
-            bool m_isClippingEnabled = true;
+            ClippingOptions m_clippingOptions; ///< Determines directions in which clipping may or may not occur.
 
             // TODO(Ben): Bitfield for memory reduction?.
             bool m_isClicking = false; ///< Used for click event tracking.

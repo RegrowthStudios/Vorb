@@ -12,6 +12,7 @@ vui::IWidgetContainer::IWidgetContainer() :
     MouseLeave(this),
     MouseMove(this) {
     m_style = {};
+    m_clippingOptions = { true, true, true, true };
     enable();
 }
 
@@ -96,28 +97,89 @@ void vui::IWidgetContainer::setParentForm(Form* form) {
     }
 }
 
+void vui::IWidgetContainer::setParentWidget(Widget* parent, Widget* self) {
+    if (m_parentWidget) m_parentWidget->removeWidget(self);
+    if (parent) parent->addWidget(self);
+}
+
 void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setPosition(f32v2(destRect.x, destRect.y));
     setDimensions(f32v2(destRect.z, destRect.w));
 }
+//
+//bool vui::IWidgetContainer::computeClipping(const f32v4& parentClipRect, f32v2& position, f32v2& dimensions) {
+//    bool clipping = false;
+//
+//    if (!m_clippingOptions.left) {
+//        position.x = parentClipRect.x;
+//    } else if (position.x < parentClipRect.x) {
+//        f32 t = parentClipRect.x - position.x;
+//        position.x = parentClipRect.x;
+//        dimensions.x -= t;
+//        clipping = true;
+//    }
+//    if (!m_clippingOptions.right) {
+//        dimensions.x = parentClipRect.z;
+//    } else if (position.x + dimensions.x > parentClipRect.x + parentClipRect.z) {
+//        f32 t = position.x + dimensions.x - (parentClipRect.x + parentClipRect.z);
+//        dimensions.x -= t;
+//        clipping = true;
+//    }
+//    if (!m_clippingOptions.top) {
+//        position.y = parentClipRect.y;
+//    } else if (position.y < parentClipRect.y) {
+//        f32 t = parentClipRect.y - position.y;
+//        position.y = parentClipRect.y;
+//        dimensions.y -= t;
+//        clipping = true;
+//    }
+//    if (!m_clippingOptions.bottom) {
+//        dimensions.y = parentClipRect.w;
+//    } else if (position.y + dimensions.y > parentClipRect.y + parentClipRect.w) {
+//        f32 t = position.y + dimensions.y - (parentClipRect.y + parentClipRect.w);
+//        dimensions.y -= t;
+//        clipping = true;
+//    }
+//
+//    return clipping;
+//}
 
-void vui::IWidgetContainer::computeClipRect(const f32v4& parentClipRect /*= f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
+void vui::IWidgetContainer::computeClipRect() {
+    f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
+    if (m_parentWidget) {
+        parentClipRect = m_parentWidget->getClipRect();
+    } else if (m_parentForm) {
+        parentClipRect = m_parentForm->getClipRect();
     }
+
+    f32v2 position = m_position;
+    f32v2 dimensions = m_dimensions;
+
+    computeClipping(parentClipRect, position, dimensions);
+
+    if (dimensions.x < 0.0f) dimensions.x = 0.0f;
+    if (dimensions.y < 0.0f) dimensions.y = 0.0f;
+    
+    m_clipRect = f32v4(position.x, position.y, dimensions.x, dimensions.y);
+    if (!m_clippingOptions.left) {
+        m_clipRect.x = parentClipRect.x;
+    }
+    if (!m_clippingOptions.top) {
+        m_clipRect.y = parentClipRect.y;
+    }
+    if (!m_clippingOptions.right) {
+        m_clipRect.z = parentClipRect.z;
+    }
+    if (!m_clippingOptions.bottom) {
+        m_clipRect.w = parentClipRect.w;
+    }
+
     computeChildClipRects();
 }
 
 void vui::IWidgetContainer::computeChildClipRects() {
     for (auto& w : m_widgets) {
-        w->computeClipRect(m_clipRect);
+        w->computeClipRect();
     }
 }
 

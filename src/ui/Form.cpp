@@ -11,9 +11,9 @@ vui::Form::~Form() {
     // Empty
 }
 
-void vui::Form::init(const nString& name, f32v2 screenSize, IGameScreen* ownerScreen, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWindow* viewport, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_name = name;
-    m_screenSize = screenSize;
+    m_viewport = viewport;
     m_ownerIGameScreen = ownerScreen;
     m_position.x = destRect.x;
     m_position.y = destRect.y;
@@ -54,7 +54,7 @@ void vui::Form::update(f32 dt /*= 1.0f*/) {
 
 void vui::Form::draw() {
     if (!m_isEnabled) return;
-    m_renderer.draw(m_screenSize);
+    m_renderer.draw(m_viewport->getViewportDims());
 }
 
 void vui::Form::dispose() {

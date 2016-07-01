@@ -28,6 +28,7 @@
 #include "IWidgetContainer.h"
 #include "UIRenderer.h"
 #include "IGameScreen.h"
+#include "GameWindow.h"
 
 DECL_VG(class SpriteFont; class SpriteBatch)
 
@@ -51,7 +52,7 @@ namespace vorb {
              * @param defaultFont: The optional SpriteBatch to use.
              */
             // TODO(Matthew): Need to get screen size in a better way than this.
-            virtual void init(const nString& name, f32v2 screenSize, IGameScreen* ownerScreen, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(const nString& name, IGameScreen* ownerScreen, const GameWindow* viewport, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Adds a widget to the Form and initializes it for rendering.
              * 
              * @param widget: The Widget to add.
@@ -87,7 +88,7 @@ namespace vorb {
             /* Updates the dimensions of the Form. */
             virtual void updateDimensions() override {}
 
-            f32v2 m_screenSize;
+            const GameWindow* m_viewport;
             UIRenderer m_renderer; ///< The UI Renderer.
             IGameScreen* m_ownerIGameScreen = nullptr; ///< The Owning screen.
         };

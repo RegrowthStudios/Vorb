@@ -206,8 +206,6 @@ void vui::Slider::computeClipRect() {
     if (!m_clippingOptions.bottom) {
         m_clipRect.w = parentClipRect.w;
     }
-
-    computeChildClipRects();
 }
 
 void vui::Slider::onMouseDown(Sender s, const MouseButtonEvent& e) {

@@ -261,7 +261,6 @@ void vui::CheckBox::computeClipRect() {
     }
 
     m_clipRect = parentClipRect;
-    computeChildClipRects();
 }
 
 void vui::CheckBox::onMouseUp(Sender s, const MouseButtonEvent& e) {

@@ -274,8 +274,6 @@ void vui::ComboBox::computeClipRect() {
     if (!m_clippingOptions.bottom) {
         m_clipRect.w = parentClipRect.w;
     }
-
-    computeChildClipRects();
 }
 
 void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {

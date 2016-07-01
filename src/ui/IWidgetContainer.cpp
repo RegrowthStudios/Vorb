@@ -113,7 +113,7 @@ void vui::IWidgetContainer::updateDimensionState() {
 void vui::IWidgetContainer::updateClippingState() {
     computeClipRect();
 
-    computeChildClipRects();
+    updateChildClippingStates();
 }
 
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
@@ -169,15 +169,15 @@ void vui::IWidgetContainer::computeClipRect() {
     }
 }
 
-void vui::IWidgetContainer::computeChildClipRects() {
-    for (auto& w : m_widgets) {
-        w->computeClipRect();
-    }
-}
-
 void vui::IWidgetContainer::updateChildSpatialStates() {
     for (auto& w : m_widgets) {
         w->updateSpatialState();
+    }
+}
+
+void vui::IWidgetContainer::updateChildClippingStates() {
+    for (auto& w : m_widgets) {
+        w->updateClippingState();
     }
 }
 

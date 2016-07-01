@@ -161,12 +161,12 @@ namespace vorb {
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             virtual void setName(const nString& name) { m_name = name; }
-            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; computeClipRect(); }
-            virtual void setClipping(bool clipping) { m_clippingOptions = ClippingOptions(clipping, clipping, clipping, clipping); computeClipRect(); }
-            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; computeClipRect(); }
-            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; computeClipRect(); }
-            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; computeClipRect(); }
-            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; computeClipRect(); }
+            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; updateClippingState(); }
+            virtual void setClipping(bool clipping) { m_clippingOptions = ClippingOptions(clipping, clipping, clipping, clipping); updateClippingState(); }
+            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; updateClippingState(); }
+            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updateClippingState(); }
+            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updateClippingState(); }
+            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updateClippingState(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -190,18 +190,16 @@ namespace vorb {
             
             /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect();
-            /*! @brief Computes clipping for children of this widget container. */
-            virtual void computeChildClipRects();
 
 
-
+            /*! @brief Calls updateSpatialState on all children. */
             virtual void updateChildSpatialStates();
+            /*! @brief Calls updateClippingState on all children. */
+            virtual void updateChildClippingStates();
 
-            /*! @brief Defines how raw position is used to process the actual position.
-            */
+            /*! @brief Defines how raw position is used to process the actual position. */
             virtual void updatePosition() = 0;
-            /*! @brief Defines how raw dimensions are used to process the actual dimensions.
-            */
+            /*! @brief Defines how raw dimensions are used to process the actual dimensions. */
             virtual void updateDimensions() = 0;
             /************************************************************************/
             /* Event Handlers                                                       */

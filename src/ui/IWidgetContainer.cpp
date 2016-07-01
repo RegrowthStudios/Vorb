@@ -117,8 +117,8 @@ void vui::IWidgetContainer::updateClippingState() {
 }
 
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
-    return (x >= m_position.x && x < m_position.x + m_dimensions.x &&
-            y >= m_position.y && y < m_position.y + m_dimensions.y);
+    return (x >= vmath::max(m_position.x, m_clipRect.x) && x < vmath::min(m_position.x + m_dimensions.x, m_clipRect.x + m_clipRect.z) &&
+        y >= vmath::max(m_position.y, m_clipRect.y) && y < vmath::min(m_position.y + m_dimensions.y, m_clipRect.y + m_clipRect.w));
 }
 
 void vui::IWidgetContainer::setParentForm(Form* form) {

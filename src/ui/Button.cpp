@@ -159,6 +159,11 @@ void vui::Button::updateDimensions() {
     updateDrawableSpatialState();
 }
 
+void vui::Button::computeClipRect() {
+    Widget::computeClipRect();
+    updateDrawableSpatialState();
+}
+
 void vui::Button::updateColor() {
     if (m_isMouseIn) {
         m_drawableRect.setColor1(m_backHoverColor1);

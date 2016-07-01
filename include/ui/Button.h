@@ -106,10 +106,12 @@ namespace vorb {
             virtual void setTextScale(const f32v2& textScale);
 
         protected:
-            /*! @brief Updates the position of button. */
+            /*! @brief Updates the position of the button. */
             virtual void updatePosition() override;
-            /*! @brief Updates the dimensions of button. */
+            /*! @brief Updates the dimensions of the button. */
             virtual void updateDimensions() override;
+            /*! @brief Computes the clipping rectangle of the button. */
+            virtual void computeClipRect() override;
 
             virtual void updateColor();
             virtual void updateTextPosition();

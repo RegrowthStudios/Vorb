@@ -151,6 +151,7 @@ void vui::IWidgetContainer::computeClipRect() {
 
     computeClipping(parentClipRect, position, dimensions);
 
+
     if (dimensions.x < 0.0f) dimensions.x = 0.0f;
     if (dimensions.y < 0.0f) dimensions.y = 0.0f;
     
@@ -162,10 +163,12 @@ void vui::IWidgetContainer::computeClipRect() {
         m_clipRect.y = parentClipRect.y;
     }
     if (!m_clippingOptions.right) {
-        m_clipRect.z = parentClipRect.z;
+        m_clipRect.z = (parentClipRect.x + parentClipRect.z) - m_clipRect.x;
+        if (m_clipRect.z < 0.0f) m_clipRect.z = 0.0f;
     }
     if (!m_clippingOptions.bottom) {
-        m_clipRect.w = parentClipRect.w;
+        m_clipRect.w = (parentClipRect.y + parentClipRect.w) - m_clipRect.y;
+        if (m_clipRect.w < 0.0f) m_clipRect.w = 0.0f;
     }
 }
 

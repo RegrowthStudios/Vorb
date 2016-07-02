@@ -115,6 +115,17 @@ void vui::Widget::setRawMinSize(const f32v2& minSize, UnitType& units) {
     updateMinSize();
 }
 
+void vui::Widget::setZIndex(ui16 zIndex) {
+    m_zIndex = zIndex;
+    if (m_parentWidget) {
+        // TODO(Matthew): Somewhat dangerous as is, but it is intended all children be Widgets and not Forms.
+        //                May be a good idea to do a clean-up round on UI to improve architecture.
+        m_parentWidget->updateZIndexState(this);
+    } else if (m_parentForm) {
+        m_parentForm->updateZIndexState(this);
+    }
+}
+
 f32v2 vui::Widget::getWidgetAlignOffset() {
     switch (m_align) {
         case WidgetAlign::LEFT:

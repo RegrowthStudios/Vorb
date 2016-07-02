@@ -131,6 +131,13 @@ namespace vorb {
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
+            // TODO(Matthew): Porbably going to have to call this from the Form as
+            //                changing Z-index of even one element requires redoing
+            //                the entire draw order.
+            /*! @brief Updates drawable state of this widget and its children. */
+            void updateDrawableState();
+
+
             /*! @brief Updates the widget. Can be used for animation.
             *
             * @param dt: The TimeStep
@@ -154,6 +161,7 @@ namespace vorb {
             virtual const Length2& getRawMaxSize() const { return m_rawMaxSize; }
             virtual const f32v2& getMaxSize() const { return m_maxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
+            virtual ui16 getZIndex() const { return m_zIndex; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -183,6 +191,7 @@ namespace vorb {
             virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; updateMinSize(); }
             virtual void setMinSize(const f32v2& minSize);
             virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePositionState(); }
+            virtual void setZIndex(ui16 zIndex);
             
         protected:
             virtual f32v2 getWidgetAlignOffset();
@@ -206,6 +215,7 @@ namespace vorb {
             AnchorStyle m_anchor; ///< The anchor data.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr; ///< The renderer to be used by the widget.
+            ui16 m_zIndex; ///< The Z-index of the widget.
             PositionType m_positionType = PositionType::STATIC; ///< The type of positioning of the widget.
             Length2 m_rawPosition; ///< The raw position of the widget.
             // TODO(Matthew): Do we need this?

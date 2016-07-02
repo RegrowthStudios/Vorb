@@ -139,17 +139,6 @@ void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setDimensions(f32v2(destRect.z, destRect.w));
 }
 
-void vui::IWidgetContainer::setZIndex(ui16 zIndex) {
-    m_zIndex = zIndex;
-    if (m_parentWidget) {
-        // TODO(Matthew): Somewhat dangerous as is, but it is intended all children be Widgets and not Forms.
-        //                May be a good idea to do a clean-up round on UI to improve architecture.
-        m_parentWidget->updateZIndexState(static_cast<Widget*>(this));
-    } else if (m_parentForm) {
-        m_parentForm->updateZIndexState(static_cast<Widget*>(this));
-    }
-}
-
 void vui::IWidgetContainer::computeClipRect() {
     f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
     if (m_parentWidget) {
@@ -162,7 +151,6 @@ void vui::IWidgetContainer::computeClipRect() {
     f32v2 dimensions = m_dimensions;
 
     computeClipping(parentClipRect, position, dimensions);
-
 
     if (dimensions.x < 0.0f) dimensions.x = 0.0f;
     if (dimensions.y < 0.0f) dimensions.y = 0.0f;
@@ -208,6 +196,8 @@ void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/
         }
         m_widgetsOrdered = newWidgetsOrdered;
     }
+
+
 }
 
 void vui::IWidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {

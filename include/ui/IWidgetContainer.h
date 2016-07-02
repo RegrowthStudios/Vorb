@@ -150,7 +150,6 @@ namespace vorb {
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
             virtual f32v4 getClipRect() const { return m_clipRect; }
-            virtual ui16 getZIndex() const { return m_zIndex; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -175,7 +174,6 @@ namespace vorb {
             virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updateClippingState(); }
             virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updateClippingState(); }
             virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updateClippingState(); }
-            virtual void setZIndex(ui16 zIndec);
 
             /************************************************************************/
             /* Events                                                               */
@@ -243,7 +241,6 @@ namespace vorb {
             bool (*m_zIndexCompare)(Widget*, Widget*)  = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
             boost::container::flat_set<Widget*, decltype(m_zIndexCompare)> m_widgetsOrdered = boost::container::flat_set<Widget*, decltype(m_zIndexCompare)>(m_zIndexCompare); ///< Child widgets in order of Z-index.
 
-            ui16 m_zIndex;
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.
             f32v2 m_dimensions = f32v2(0.0f); ///< The dimensions of the container.

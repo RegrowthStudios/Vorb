@@ -7,14 +7,22 @@ vui::Widget::Widget() : IWidgetContainer(),
     m_rawPosition({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
     m_rawDimensions({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
     m_rawMinSize({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
-    m_rawMaxSize({ FLT_MAX, FLT_MAX, { UnitType::PIXEL, UnitType::PIXEL } })
+    m_rawMaxSize({ FLT_MAX, FLT_MAX, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_zIndex(0)
 {
     enable();
     m_anchor = {};
 }
 
-vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect) {
+vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect),
+    m_rawPosition({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawDimensions({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawMinSize({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_rawMaxSize({ FLT_MAX, FLT_MAX, { UnitType::PIXEL, UnitType::PIXEL } }),
+    m_zIndex(0)
+{
     enable();
+    m_anchor = {};
 }
 
 vui::Widget::Widget(Form* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
@@ -35,7 +43,7 @@ void vui::Widget::dispose() {
 }
 
 bool vui::Widget::addWidget(Widget* widget) {
-    widget->addDrawables(m_renderer);
+    //widget->addDrawables(m_renderer);
     return IWidgetContainer::addWidget(widget, this);
 }
 
@@ -53,6 +61,15 @@ void vui::Widget::removeDrawables() {
     }
     for (auto& w : m_widgets) {
         w->removeDrawables();
+    }
+}
+
+void vui::Widget::updateDrawableOrderState() {
+    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->removeDrawables();
+        (*it)->setNeedsDrawableReload(false);
+        (*it)->addDrawables(m_renderer);
+        (*it)->updateDrawableOrderState();
     }
 }
 
@@ -118,8 +135,6 @@ void vui::Widget::setRawMinSize(const f32v2& minSize, UnitType& units) {
 void vui::Widget::setZIndex(ui16 zIndex) {
     m_zIndex = zIndex;
     if (m_parentWidget) {
-        // TODO(Matthew): Somewhat dangerous as is, but it is intended all children be Widgets and not Forms.
-        //                May be a good idea to do a clean-up round on UI to improve architecture.
         m_parentWidget->updateZIndexState(this);
     } else if (m_parentForm) {
         m_parentForm->updateZIndexState(this);

@@ -20,6 +20,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <sorted_vector.h>
 #include <string>
 
 #include "decorators.h"
@@ -556,6 +557,9 @@ typedef vorb::Matrix4<f32> f32m4;
  * </pre>
  */
 typedef vorb::Matrix4<f64> f64m4;
+
+template<typename Key, bool NoDuplicates = false, typename Compare = std::less<Key>, class Allocator = std::allocator<Key>>
+using SortedVector = codeproject::sorted_vector<Key, NoDuplicates, Compare, Allocator>;
 
 // Colors
 #include "typesColor.inl"

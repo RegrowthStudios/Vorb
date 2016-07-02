@@ -75,6 +75,9 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
+            /*! @brief Recalculates order of drawables based on Z-index. */
+            virtual void updateDrawableOrderState();
+
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
              * @param callbackName: Name of the custom callback 

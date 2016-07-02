@@ -11,6 +11,8 @@ vui::IWidgetContainer::IWidgetContainer() :
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this) {
+    m_zIndexCompare = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
+    m_widgets = SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>(m_zIndexCompare);
     m_style = {};
     enable();
 }
@@ -28,24 +30,21 @@ void vui::IWidgetContainer::dispose() {
     for (auto& w : m_widgets) {
         w->dispose();
     }
-    std::vector<Widget*>().swap(m_widgets);
+    SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>().swap(m_widgets);
 
     disable();
 }
 
 bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
-    m_widgets.push_back(child);
     child->m_parentWidget = self;
-    child->setParentForm(this->m_parentForm);
-    child->updateSpatialState();
-    return true; // TODO(Ben): Is this needed?
+    return addWidget(child, self->getParentForm());
 }
 
 bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
-    m_widgets.push_back(child);
-    m_widgetsOrdered.insert(child);
+    m_widgets.insert(child);
     child->setParentForm(self);
     child->updateSpatialState();
+    self->updateDrawableOrderState();
     return true; // TODO(Ben): Is this needed?
 }
 
@@ -117,6 +116,16 @@ void vui::IWidgetContainer::updateClippingState() {
     updateChildClippingStates();
 }
 
+void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
+    if (changedChild) {
+        auto& it = m_widgets.find(changedChild);
+        m_widgets.erase(it);
+        m_widgets.insert(changedChild);
+    } else {
+        m_widgets.sort();
+    }
+}
+
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
     return (x >= vmath::max(m_position.x, m_clipRect.x) && x < vmath::min(m_position.x + m_dimensions.x, m_clipRect.x + m_clipRect.z) &&
         y >= vmath::max(m_position.y, m_clipRect.y) && y < vmath::min(m_position.y + m_dimensions.y, m_clipRect.y + m_clipRect.w));
@@ -182,22 +191,6 @@ void vui::IWidgetContainer::updateChildClippingStates() {
     for (auto& w : m_widgets) {
         w->updateClippingState();
     }
-}
-
-void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
-    if (changedChild) {
-        auto& it = m_widgetsOrdered.find(changedChild);
-        m_widgetsOrdered.erase(it);
-        m_widgetsOrdered.insert(changedChild);
-    } else {
-        boost::container::flat_set<Widget*, decltype(m_zIndexCompare)> newWidgetsOrdered = boost::container::flat_set<Widget*, decltype(m_zIndexCompare)>(m_zIndexCompare);
-        for (auto& w : m_widgetsOrdered) {
-            newWidgetsOrdered.insert(w);
-        }
-        m_widgetsOrdered = newWidgetsOrdered;
-    }
-
-
 }
 
 void vui::IWidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {

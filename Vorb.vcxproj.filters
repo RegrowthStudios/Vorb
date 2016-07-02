@@ -246,9 +246,6 @@
     <ClCompile Include="src\ui\WidgetListScriptFuncs.cpp">
       <Filter>UI\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\FocusController.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\Frustum.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -290,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="src\graphics\Scene.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\FocusController.cpp">
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

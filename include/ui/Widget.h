@@ -131,11 +131,8 @@ namespace vorb {
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
-            // TODO(Matthew): Porbably going to have to call this from the Form as
-            //                changing Z-index of even one element requires redoing
-            //                the entire draw order.
-            /*! @brief Updates drawable state of this widget and its children. */
-            void updateDrawableState();
+            /*! @brief Recalculates order of drawables based on Z-index. */
+            virtual void updateDrawableOrderState();
 
 
             /*! @brief Updates the widget. Can be used for animation.

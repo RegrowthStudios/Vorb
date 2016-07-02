@@ -25,11 +25,8 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWi
 }
 
 bool vui::Form::addWidget(Widget* widget) {
-    if (IWidgetContainer::addWidget(widget, this)) {
-        widget->addDrawables(&m_renderer);
-        return true;
-    }
-    return false;
+    //widget->addDrawables(&m_renderer);
+    return IWidgetContainer::addWidget(widget, this);
 }
 
 bool vui::Form::removeWidget(Widget* widget) {
@@ -60,4 +57,13 @@ void vui::Form::draw() {
 void vui::Form::dispose() {
     IWidgetContainer::dispose();
     m_renderer.dispose();
+}
+
+void vui::Form::updateDrawableOrderState() {
+    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+        (*it)->removeDrawables();
+        (*it)->setNeedsDrawableReload(false);
+        (*it)->addDrawables(&m_renderer);
+        (*it)->updateDrawableOrderState();
+    }
 }

@@ -28,8 +28,6 @@
 #include "../script/Function.h"
 #endif
 
-#include <boost/container/flat_set.hpp>
-
 namespace vorb {
     namespace ui {
 
@@ -115,9 +113,9 @@ namespace vorb {
             /*! @brief Updates clipping for both this widget container and its children. */
             void updateClippingState();
             /*! @brief Updates the ordered child widget collection.
-             *
-             * @param changedChild: If provided, function assumes only that child changed and only replaces that child.
-             */
+            *
+            * @param changedChild: If provided, function assumes only that child changed and only replaces that child.
+            */
             void updateZIndexState(Widget* changedChild = nullptr);
 
             /*! @brief Checks if a point is inside the container
@@ -145,7 +143,7 @@ namespace vorb {
             virtual const f32& getY() const { return m_position.y; }
             virtual const f32v2& getDimensions() const { return m_dimensions; }
             virtual const f32v2& getPosition() const { return m_position; }
-            virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
+            virtual const SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>& getWidgets() const { return m_widgets; }
             virtual const nString& getName() const { return m_name; }
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
@@ -236,10 +234,10 @@ namespace vorb {
             Widget* m_parentWidget = nullptr; ///< Parent widget.
 
             // TODO(Matthew): Do we need to store widgets both ways? Probably not...
-            std::vector<Widget*> m_widgets; ///< All child widgets in order of creation.
+            //std::vector<Widget*> m_widgets; ///< All child widgets in order of creation.
             
-            bool (*m_zIndexCompare)(Widget*, Widget*)  = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
-            boost::container::flat_set<Widget*, decltype(m_zIndexCompare)> m_widgetsOrdered = boost::container::flat_set<Widget*, decltype(m_zIndexCompare)>(m_zIndexCompare); ///< Child widgets in order of Z-index.
+            bool(*m_zIndexCompare)(Widget*, Widget*);
+            SortedVector<Widget*, true, bool(*)(Widget*, Widget*)> m_widgets; ///< Child widgets in order of Z-index.
 
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.

@@ -558,7 +558,7 @@ typedef vorb::Matrix4<f32> f32m4;
  */
 typedef vorb::Matrix4<f64> f64m4;
 
-template<typename Key, bool NoDuplicates = false, typename Compare = std::less<Key>, class Allocator = std::allocator<Key>>
+template<typename Key, bool NoDuplicates = false, typename Compare = std::less<Key>, typename Allocator = std::allocator<Key>>
 using SortedVector = codeproject::sorted_vector<Key, NoDuplicates, Compare, Allocator>;
 
 // Colors

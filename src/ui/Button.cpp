@@ -37,6 +37,9 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
     m_defaultFont = renderer->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
+    // TODO(Matthew): If we could reverse this relationship (i.e. renderer calls a single
+    //                function in Form and then that controls propogation of drawing
+    //                performance gains could be had with Z indexing.
     // Add the rect
     renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),

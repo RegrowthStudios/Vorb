@@ -75,6 +75,8 @@ namespace vorb {
             bool bottom : 1;
         };
 
+        // TODO(Matthew): Template/bool flag for IWidgetContainer and down to deactivate use of Z index?
+        //                Coule be useful for cases where feature is less useful than performance penalty hurts.
         class IWidgetContainer {
         public:
             /*! @brief Default constructor. */

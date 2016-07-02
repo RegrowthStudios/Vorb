@@ -28,6 +28,8 @@
 #include "../script/Function.h"
 #endif
 
+#include <boost/container/flat_set.hpp>
+
 namespace vorb {
     namespace ui {
 
@@ -112,6 +114,11 @@ namespace vorb {
             void updateDimensionState();
             /*! @brief Updates clipping for both this widget container and its children. */
             void updateClippingState();
+            /*! @brief Updates the ordered child widget collection.
+             *
+             * @param changedChild: If provided, function assumes only that child changed and only replaces that child.
+             */
+            void updateZIndexState(Widget* changedChild = nullptr);
 
             /*! @brief Checks if a point is inside the container
              *
@@ -143,6 +150,7 @@ namespace vorb {
             virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
             virtual const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
             virtual f32v4 getClipRect() const { return m_clipRect; }
+            virtual ui16 getZIndex() const { return m_zIndex; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -167,6 +175,7 @@ namespace vorb {
             virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updateClippingState(); }
             virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updateClippingState(); }
             virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updateClippingState(); }
+            virtual void setZIndex(ui16 zIndec);
 
             /************************************************************************/
             /* Events                                                               */
@@ -227,7 +236,14 @@ namespace vorb {
             ContainerStyle m_style; ///< The current style.
             Form* m_parentForm = nullptr; ///< Parent form.
             Widget* m_parentWidget = nullptr; ///< Parent widget.
-            std::vector<Widget*> m_widgets; ///< All child widgets.
+
+            // TODO(Matthew): Do we need to store widgets both ways? Probably not...
+            std::vector<Widget*> m_widgets; ///< All child widgets in order of creation.
+            
+            bool (*m_zIndexCompare)(Widget*, Widget*)  = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
+            boost::container::flat_set<Widget*, decltype(m_zIndexCompare)> m_widgetsOrdered = boost::container::flat_set<Widget*, decltype(m_zIndexCompare)>(m_zIndexCompare); ///< Child widgets in order of Z-index.
+
+            ui16 m_zIndex;
             f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX); ///< The clipping rectangle of the container.
             f32v2 m_position = f32v2(0.0f); ///< The position of the container.
             f32v2 m_dimensions = f32v2(0.0f); ///< The dimensions of the container.

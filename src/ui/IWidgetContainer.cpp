@@ -43,6 +43,7 @@ bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
 
 bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
     m_widgets.push_back(child);
+    m_widgetsOrdered.insert(child);
     child->setParentForm(self);
     child->updateSpatialState();
     return true; // TODO(Ben): Is this needed?
@@ -138,6 +139,17 @@ void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setDimensions(f32v2(destRect.z, destRect.w));
 }
 
+void vui::IWidgetContainer::setZIndex(ui16 zIndex) {
+    m_zIndex = zIndex;
+    if (m_parentWidget) {
+        // TODO(Matthew): Somewhat dangerous as is, but it is intended all children be Widgets and not Forms.
+        //                May be a good idea to do a clean-up round on UI to improve architecture.
+        m_parentWidget->updateZIndexState(static_cast<Widget*>(this));
+    } else if (m_parentForm) {
+        m_parentForm->updateZIndexState(static_cast<Widget*>(this));
+    }
+}
+
 void vui::IWidgetContainer::computeClipRect() {
     f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
     if (m_parentWidget) {
@@ -181,6 +193,20 @@ void vui::IWidgetContainer::updateChildSpatialStates() {
 void vui::IWidgetContainer::updateChildClippingStates() {
     for (auto& w : m_widgets) {
         w->updateClippingState();
+    }
+}
+
+void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
+    if (changedChild) {
+        auto& it = m_widgetsOrdered.find(changedChild);
+        m_widgetsOrdered.erase(it);
+        m_widgetsOrdered.insert(changedChild);
+    } else {
+        boost::container::flat_set<Widget*, decltype(m_zIndexCompare)> newWidgetsOrdered = boost::container::flat_set<Widget*, decltype(m_zIndexCompare)>(m_zIndexCompare);
+        for (auto& w : m_widgetsOrdered) {
+            newWidgetsOrdered.insert(w);
+        }
+        m_widgetsOrdered = newWidgetsOrdered;
     }
 }
 

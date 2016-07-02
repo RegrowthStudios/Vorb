@@ -93,14 +93,14 @@ void vui::CheckBox::setFont(const vg::SpriteFont* font) {
     refreshDrawables();
 }
 
-void vui::CheckBox::setHeight(f32 height) {
-    Widget::setHeight(height);
+void vui::CheckBox::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, update);
     m_drawableRect.setHeight(height);
     updateTextPosition();
 }
 
-void vui::CheckBox::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
+void vui::CheckBox::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
     m_drawableRect.setPosition(position);
     updateTextPosition();
 }
@@ -115,8 +115,8 @@ void vui::CheckBox::setUncheckedTexture(VGTexture texture) {
     refreshDrawables();
 }
 
-void vui::CheckBox::setWidth(f32 width) {
-    Widget::setWidth(width);
+void vui::CheckBox::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
     m_drawableRect.setWidth(width);
     updateTextPosition();
 }

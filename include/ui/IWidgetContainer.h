@@ -53,6 +53,31 @@ namespace vorb {
             bool top : 1; ///< If true, anchored to the top of parent
         };
 
+        //! Enum of unit types.
+        enum class UnitType {
+            PIXEL,
+            PERCENTAGE,
+            FORM_WIDTH_PERC,
+            FORM_HEIGHT_PERC,
+            FORM_MIN_PERC,
+            FORM_MAX_PERC
+        };
+
+        //! Stores a single length and its units.
+        struct Length {
+            f32 x;
+            struct {
+                UnitType x;
+            } units;
+        };
+        //! Stores two lengths and their units.
+        struct Length2 {
+            f32 x, y;
+            struct {
+                UnitType x, y;
+            } units;
+        };
+
         //! Bitfield of clipping options.
         struct ClippingOptions {
             ClippingOptions() : left{ true },
@@ -108,17 +133,23 @@ namespace vorb {
 
             /*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
             void updateSpatialState();
+            /*! @brief Calls updateSpatialState on all children. */
+            void updateChildSpatialStates();
             /*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
             void updatePositionState();
             /*! @brief Updates dimension spatial state. I.e. dimensions, clipping and same for children. */
             void updateDimensionState();
             /*! @brief Updates clipping for both this widget container and its children. */
             void updateClippingState();
+            /*! @brief Calls updateClippingState on all children. */
+            void updateChildClippingStates();
             /*! @brief Updates the ordered child widget collection.
             *
             * @param changedChild: If provided, function assumes only that child changed and only replaces that child.
             */
             void updateZIndexState(Widget* changedChild = nullptr);
+            /*! @brief Updates children based on their docking options. */
+            void updateDockingState();
 
             /*! @brief Checks if a point is inside the container
              *
@@ -133,6 +164,7 @@ namespace vorb {
             /************************************************************************/
             virtual Form* getParentForm() const { return m_parentForm; }
             virtual Widget* getParentWidget() const { return m_parentWidget; }
+            virtual const IWidgetContainer* getFirstPositionedParent() const;
             virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             virtual bool getSelectable() const { return m_style.selectable; }
@@ -160,9 +192,9 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateDimensionState(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateDimensionState(); }
-            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateDimensionState(); }
-            virtual void setPosition(const f32v2& position) { m_position = position; updatePositionState(); }
+            virtual void setHeight(f32 height, bool update = true) { m_dimensions.y = height; if (update) updateDimensionState(); }
+            virtual void setWidth(f32 width, bool update = true) { m_dimensions.x = width; if (update) updateDimensionState(); }
+            virtual void setPosition(const f32v2& position, bool update = true) { m_position = position; if (update) updatePositionState(); }
             virtual void setX(f32 x) { m_position.x = x; updatePositionState(); }
             virtual void setY(f32 y) { m_position.y = y; updatePositionState(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
@@ -198,16 +230,16 @@ namespace vorb {
             /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect();
 
-
-            /*! @brief Calls updateSpatialState on all children. */
-            virtual void updateChildSpatialStates();
-            /*! @brief Calls updateClippingState on all children. */
-            virtual void updateChildClippingStates();
-
             /*! @brief Defines how raw position is used to process the actual position. */
             virtual void updatePosition() = 0;
             /*! @brief Defines how raw dimensions are used to process the actual dimensions. */
             virtual void updateDimensions() = 0;
+
+            /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations.
+             *         Uses the widget provided for parent data etc.
+             */
+            virtual f32v2 processRawValues(Widget* widget, const Length2& rawValues);
+            virtual f32v2 processRawValue(Widget* widget, const f32v2& rawValue, const UnitType& unit);
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

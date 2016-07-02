@@ -47,6 +47,7 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Slider::refreshDrawables));
 }
 
+// TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 void vui::Slider::updatePosition() {
     Widget::updatePosition();
 
@@ -63,14 +64,14 @@ void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
     updatePosition();
 }
 
-void vui::Slider::setHeight(f32 height) {
-    Widget::setHeight(height);
-    updatePosition();
+void vui::Slider::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, update);
+    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 }
 
-void vui::Slider::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    updatePosition();
+void vui::Slider::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
+    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 }
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
@@ -88,9 +89,9 @@ void vui::Slider::setBarColor(const color4& color) {
     updateColor();
 }
 
-void vui::Slider::setWidth(f32 width) {
-    Widget::setWidth(width);
-    updatePosition();
+void vui::Slider::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
+    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 }
 
 void vui::Slider::setSlideColor(const color4& color) {

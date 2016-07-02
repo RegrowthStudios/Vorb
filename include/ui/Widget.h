@@ -56,22 +56,19 @@ namespace vorb {
             RELATIVE
         };
 
-        //! Enum of unit types.
-        enum class UnitType {
-            PIXEL,
-            PERCENTAGE,
-            FORM_WIDTH_PERC,
-            FORM_HEIGHT_PERC,
-            FORM_MIN_PERC,
-            FORM_MAX_PERC
+        //! Enum of docking styles.
+        enum class DockingStyle {
+            NONE,
+            LEFT,
+            TOP,
+            RIGHT,
+            BOTTOM,
+            FILL
         };
 
-        //! Stores two lengths and their units.
-        struct Length2 {
-            f32 x, y;
-            struct {
-                UnitType x, y;
-            } units;
+        struct DockingOptions {
+            DockingStyle style;
+            Length size;
         };
 
         // Forward Declarations
@@ -144,7 +141,8 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const IWidgetContainer* getFirstPositionedParent() const;
+            virtual const DockingOptions& getDockingOptions() const { return m_dockingOptions; }
+            virtual f32 getProcessedDockingSize() const { return m_processedDockingSize; }
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const PositionType& getPositionType() const { return m_positionType; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
@@ -164,10 +162,13 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
+            virtual void setDockingOptions(const DockingOptions& options);
+            virtual void setRawDockingSize(const Length& size);
+            virtual void setDockingStyle(const DockingStyle& style);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updateSpatialState(); }
-            virtual void setPosition(const f32v2& position);
+            virtual void setPosition(const f32v2& position, bool update = true);
             virtual void setRawPosition(const Length2& rawPosition) { m_rawPosition = rawPosition; updatePositionState(); }
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& units);
             virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePositionState(); }
@@ -201,15 +202,19 @@ namespace vorb {
             virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensionState(); }
             /*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
             virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensionState(); }
+            /*! @brief Processes the raw size of docking. */
+            virtual void updateDockingSize();
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
-            f32v2 processRawValues(const Length2& rawValues);
-            f32v2 processRawValue(const f32v2& rawValue, const UnitType& unit);
+            virtual f32v2 processRawValues(const Length2& rawValues);
+            virtual f32v2 processRawValue(const f32v2& rawValue, const UnitType& unit);
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
             WidgetAlign m_align = WidgetAlign::TOP_LEFT; ///< Direction of alignment of the widget.
             AnchorStyle m_anchor; ///< The anchor data.
+            DockingOptions m_dockingOptions; ///< Docking options of the widget.
+            f32 m_processedDockingSize; ///< Cache of processed docking size.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr; ///< The renderer to be used by the widget.
             ui16 m_zIndex; ///< The Z-index of the widget.

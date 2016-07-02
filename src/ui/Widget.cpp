@@ -73,26 +73,57 @@ void vui::Widget::updateDrawableOrderState() {
     }
 }
 
-const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
-    const IWidgetContainer* firstPositionedParent = m_parentForm;
-    const Widget* widget = m_parentWidget;
-    while (widget != nullptr) {
-        vui::PositionType positionType = widget->getPositionType();
-        if (positionType == vui::PositionType::ABSOLUTE
-            || positionType == vui::PositionType::RELATIVE) {
-            // Widget is "positioned"; break out.
-            firstPositionedParent = widget;
-            break;
-        }
+void vui::Widget::setDockingOptions(const DockingOptions& options) { 
+    m_dockingOptions = options;
 
-        widget = widget->getParentWidget();
+    // Reprocess docking size.
+    updateDockingSize();
+
+    // Reprocess docking of all sibling widgets and self.
+    if (m_parentWidget) {
+        m_parentWidget->updateDockingState();
+        m_parentWidget->updateChildClippingStates();
+    } else if (m_parentForm) {
+        m_parentForm->updateDockingState();
+        m_parentForm->updateChildClippingStates();
     }
-    return firstPositionedParent;
 }
 
-void vui::Widget::setPosition(const f32v2& position) {
+void vui::Widget::setRawDockingSize(const Length& size) {
+    m_dockingOptions.size = size;
+
+    // Reprocess docking size.
+    updateDockingSize();
+
+    // Reprocess docking of all sibling widgets and self.
+    if (m_parentWidget) {
+        m_parentWidget->updateDockingState();
+        m_parentWidget->updateChildClippingStates();
+    } else if (m_parentForm) {
+        m_parentForm->updateDockingState();
+        m_parentForm->updateChildClippingStates();
+    }
+}
+
+void vui::Widget::setDockingStyle(const DockingStyle& style) {
+    m_dockingOptions.style = style;
+
+    // Reprocess docking size.
+    updateDockingSize();
+
+    // Reprocess docking of all sibling widgets and self.
+    if (m_parentWidget) {
+        m_parentWidget->updateDockingState();
+        m_parentWidget->updateChildClippingStates();
+    } else if (m_parentForm) {
+        m_parentForm->updateDockingState();
+        m_parentForm->updateChildClippingStates();
+    }
+}
+
+void vui::Widget::setPosition(const f32v2& position, bool update /*= true*/) {
     m_rawPosition = { position.x, position.y, { UnitType::PIXEL, UnitType::PIXEL } };
-    IWidgetContainer::setPosition(position);
+    IWidgetContainer::setPosition(position, update);
 }
 
 void vui::Widget::setRawPosition(const f32v2& rawPosition, UnitType& units) {
@@ -166,124 +197,84 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
 }
 
 void vui::Widget::updatePosition() {
-    m_position = processRawValues(m_rawPosition);
-    // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
-    m_relativePosition = m_position;
+    if (m_dockingOptions.style == DockingStyle::NONE) {
+        m_position = processRawValues(m_rawPosition);
+        // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
+        m_relativePosition = m_position;
 
-    switch (m_positionType) {
-    case vui::PositionType::STATIC:
-    case vui::PositionType::RELATIVE:
-        if (m_parentWidget) {
-            m_position += m_parentWidget->getPosition();
-        } else if (m_parentForm) {
-            m_position += m_parentForm->getPosition();
-        }
-        break;
-    case vui::PositionType::FIXED:
-        if (m_parentForm) {
-            m_position += m_parentForm->getPosition();
-        }
-        break;
-    case vui::PositionType::ABSOLUTE:
-        const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
-        if (firstPositionedParent) {
-            m_position += firstPositionedParent->getPosition();
-        }
-        break;
-    }
-}
-
-void vui::Widget::updateDimensions() {
-    // Process raw dimensions.
-    f32v2 newDims = processRawValues(m_rawDimensions);
-
-    // Check against min/max size.
-    if (newDims.x < m_minSize.x) {
-        newDims.x = m_minSize.x;
-    } else if (newDims.x > m_maxSize.x) {
-        newDims.x = m_maxSize.x;
-    }
-    if (newDims.y < m_minSize.y) {
-        newDims.y = m_minSize.y;
-    } else if (newDims.y > m_maxSize.y) {
-        newDims.y = m_maxSize.y;
-    }
-
-    // Only set if dimensions changed
-    if (newDims != m_dimensions) {
-        IWidgetContainer::setDimensions(newDims);
-    }
-}
-
-f32v2 vui::Widget::processRawValues(const Length2& rawValues) {
-    f32v2 x = processRawValue(f32v2(rawValues.x, 0.0f), rawValues.units.x);
-    f32v2 y = processRawValue(f32v2(0.0f, rawValues.y), rawValues.units.y);
-
-    return x + y;
-}
-
-f32v2 vui::Widget::processRawValue(const f32v2& rawValue, const UnitType& units) {
-    f32v2 result;
-    switch (units) {
-    case vui::UnitType::PIXEL:
-        result = rawValue;
-        break;
-    case vui::UnitType::PERCENTAGE:
         switch (m_positionType) {
         case vui::PositionType::STATIC:
         case vui::PositionType::RELATIVE:
             if (m_parentWidget) {
-                result = rawValue * m_parentWidget->getDimensions();
+                m_position += m_parentWidget->getPosition();
             } else if (m_parentForm) {
-                result = rawValue * m_parentForm->getDimensions();
+                m_position += m_parentForm->getPosition();
             }
             break;
         case vui::PositionType::FIXED:
             if (m_parentForm) {
-                result = rawValue * m_parentForm->getDimensions();
+                m_position += m_parentForm->getPosition();
             }
             break;
         case vui::PositionType::ABSOLUTE:
             const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
             if (firstPositionedParent) {
-                result = rawValue * firstPositionedParent->getDimensions();
+                m_position += firstPositionedParent->getPosition();
             }
             break;
         }
-        break;
-    case vui::UnitType::FORM_HEIGHT_PERC:
-        if (m_parentForm) {
-            result = rawValue * m_parentForm->getHeight();
+    }
+}
+
+void vui::Widget::updateDimensions() {
+    if (m_dockingOptions.style == DockingStyle::NONE) {
+        // Process raw dimensions.
+        f32v2 newDims = processRawValues(m_rawDimensions);
+
+        // Check against min/max size.
+        if (newDims.x < m_minSize.x) {
+            newDims.x = m_minSize.x;
+        } else if (newDims.x > m_maxSize.x) {
+            newDims.x = m_maxSize.x;
         }
-        break;
-    case vui::UnitType::FORM_WIDTH_PERC:
-        if (m_parentForm) {
-            result = rawValue * m_parentForm->getWidth();
+        if (newDims.y < m_minSize.y) {
+            newDims.y = m_minSize.y;
+        } else if (newDims.y > m_maxSize.y) {
+            newDims.y = m_maxSize.y;
         }
-        break;
-    case vui::UnitType::FORM_MAX_PERC:
-        if (m_parentForm) {
-            f32v2 formDims = m_parentForm->getDimensions();
-            if (formDims.x > formDims.y) {
-                result = rawValue * formDims.x;
-            } else {
-                result = rawValue * formDims.y;
-            }
+
+        // Only set if dimensions changed
+        if (newDims != m_dimensions) {
+            IWidgetContainer::setDimensions(newDims);
         }
+    }
+}
+
+void vui::Widget::updateDockingSize() {
+    switch (m_dockingOptions.style) {
+    case DockingStyle::LEFT:
+        m_processedDockingSize = processRawValue(f32v2(m_dockingOptions.size.x, 0.0f), m_dockingOptions.size.units.x).x;
         break;
-    case vui::UnitType::FORM_MIN_PERC:
-        if (m_parentForm) {
-            f32v2 formDims = m_parentForm->getDimensions();
-            if (formDims.x > formDims.y) {
-                result = rawValue * formDims.y;
-            } else {
-                result = rawValue * formDims.x;
-            }
-        }
+    case DockingStyle::TOP:
+        m_processedDockingSize = processRawValue(f32v2(0.0f, m_dockingOptions.size.x), m_dockingOptions.size.units.x).y;
         break;
-    default: // Shouldn't happen.
-        result = rawValue;
+    case DockingStyle::BOTTOM:
+        m_processedDockingSize = processRawValue(f32v2(m_dockingOptions.size.x, 0.0f), m_dockingOptions.size.units.x).x;
+        break;
+    case DockingStyle::RIGHT:
+        m_processedDockingSize = processRawValue(f32v2(0.0f, m_dockingOptions.size.x), m_dockingOptions.size.units.x).y;
+        break;
+    case DockingStyle::FILL:
+    case DockingStyle::NONE:
+    default:
         break;
     }
-    return result;
+}
+
+f32v2 vui::Widget::processRawValues(const Length2& rawValues) {
+    return IWidgetContainer::processRawValues(this, rawValues);
+}
+
+f32v2 vui::Widget::processRawValue(const f32v2& rawValue, const UnitType& units) {
+    return IWidgetContainer::processRawValue(this, rawValue, units);
 }

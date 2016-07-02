@@ -60,18 +60,21 @@ void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
     updateTextPosition();
 }
 
-void vui::Label::setHeight(f32 height) {
-    Widget::setHeight(height);
+// TODO(Matthew): Probably don't want to be updating position like this...
+void vui::Label::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, update);
     updatePosition();
 }
 
-void vui::Label::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
+// TODO(Matthew): Probably don't want to be updating position like this...
+void vui::Label::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
     updatePosition();
 }
 
-void vui::Label::setWidth(f32 width) {
-    Widget::setWidth(width);
+// TODO(Matthew): Probably don't want to be updating position like this...
+void vui::Label::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
     updatePosition();
 }
 

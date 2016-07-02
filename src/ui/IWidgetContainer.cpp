@@ -94,6 +94,12 @@ void vui::IWidgetContainer::updateSpatialState() {
     updateChildSpatialStates();
 }
 
+void vui::IWidgetContainer::updateChildSpatialStates() {
+    for (auto& w : m_widgets) {
+        w->updateSpatialState();
+    }
+}
+
 void vui::IWidgetContainer::updatePositionState() {
     updatePosition();
 
@@ -116,6 +122,12 @@ void vui::IWidgetContainer::updateClippingState() {
     updateChildClippingStates();
 }
 
+void vui::IWidgetContainer::updateChildClippingStates() {
+    for (auto& w : m_widgets) {
+        w->updateClippingState();
+    }
+}
+
 void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
     if (changedChild) {
         auto& it = m_widgets.find(changedChild);
@@ -123,6 +135,69 @@ void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/
         m_widgets.insert(changedChild);
     } else {
         m_widgets.sort();
+    }
+}
+
+void vui::IWidgetContainer::updateDockingState() {
+    f32 surplusWidth = m_dimensions.x;
+    f32 surplusHeight = m_dimensions.y;
+    f32v2 usedSpace = f32v2(0.0f);
+    for (auto& w : m_widgets.get_container()) {
+        DockingOptions options = w->getDockingOptions();
+        f32 size = w->getProcessedDockingSize();
+        switch (options.style) {
+        case DockingStyle::NONE:
+            break;
+        case DockingStyle::LEFT:
+            w->setHeight(surplusHeight, false);
+            surplusWidth -= size;
+            if (surplusWidth > -FLT_EPSILON) {
+                w->setWidth(size, false);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
+            } else {
+                w->setWidth(0.0f, true);
+            }
+            usedSpace.x += size;
+            break;
+        case DockingStyle::TOP:
+            w->setWidth(surplusWidth, false);
+            surplusHeight -= size;
+            if (surplusHeight > -FLT_EPSILON) {
+                w->setHeight(size, false);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
+            } else {
+                w->setHeight(0.0f, true);
+            }
+            usedSpace.y += size;
+            break;
+        case DockingStyle::RIGHT:
+            w->setHeight(surplusHeight, false);
+            surplusWidth -= size;
+            if (surplusWidth > -FLT_EPSILON) {
+                w->setWidth(size, false);
+                w->setPosition(f32v2(usedSpace.x + surplusWidth, usedSpace.y), false);
+            } else {
+                w->setWidth(0.0f, true);
+            }
+            break;
+        case DockingStyle::BOTTOM:
+            w->setWidth(surplusWidth, false);
+            surplusHeight -= size;
+            if (surplusHeight > -FLT_EPSILON) {
+                w->setHeight(size, false);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y + surplusHeight), false);
+            } else {
+                w->setHeight(0.0f, true);
+            }
+            break;
+        case DockingStyle::FILL:
+            // Not sure what to do with this one yet.
+            // TODO(Matthew): Find a way to implement this.
+            break;
+        default:
+            // Shouldn't get here.
+            break;
+        }
     }
 }
 
@@ -181,16 +256,96 @@ void vui::IWidgetContainer::computeClipRect() {
     }
 }
 
-void vui::IWidgetContainer::updateChildSpatialStates() {
-    for (auto& w : m_widgets) {
-        w->updateSpatialState();
+const vui::IWidgetContainer* vui::IWidgetContainer::getFirstPositionedParent() const {
+    const IWidgetContainer* firstPositionedParent = m_parentForm;
+    const Widget* widget = m_parentWidget;
+    while (widget != nullptr) {
+        vui::PositionType positionType = widget->getPositionType();
+        if (positionType == vui::PositionType::ABSOLUTE
+            || positionType == vui::PositionType::RELATIVE) {
+            // Widget is "positioned"; break out.
+            firstPositionedParent = widget;
+            break;
+        }
+
+        widget = widget->getParentWidget();
     }
+    return firstPositionedParent;
 }
 
-void vui::IWidgetContainer::updateChildClippingStates() {
-    for (auto& w : m_widgets) {
-        w->updateClippingState();
+f32v2 vui::IWidgetContainer::processRawValues(Widget* widget, const Length2& rawValues) {
+    f32v2 x = processRawValue(widget, f32v2(rawValues.x, 0.0f), rawValues.units.x);
+    f32v2 y = processRawValue(widget, f32v2(0.0f, rawValues.y), rawValues.units.y);
+
+    return x + y;
+}
+
+f32v2 vui::IWidgetContainer::processRawValue(Widget* widget, const f32v2& rawValue, const UnitType& units) {
+    f32v2 result;
+    Widget* parentWidget = widget->getParentWidget();
+    Form* parentForm = widget->getParentForm();
+    switch (units) {
+    case vui::UnitType::PIXEL:
+        result = rawValue;
+        break;
+    case vui::UnitType::PERCENTAGE:
+        switch (widget->getPositionType()) {
+        case vui::PositionType::STATIC:
+        case vui::PositionType::RELATIVE:
+            if (parentWidget) {
+                result = rawValue * parentWidget->getDimensions();
+            } else if (parentForm) {
+                result = rawValue * parentForm->getDimensions();
+            }
+            break;
+        case vui::PositionType::FIXED:
+            if (parentForm) {
+                result = rawValue * parentForm->getDimensions();
+            }
+            break;
+        case vui::PositionType::ABSOLUTE:
+            const IWidgetContainer* firstPositionedParent = widget->getFirstPositionedParent();
+            if (firstPositionedParent) {
+                result = rawValue * firstPositionedParent->getDimensions();
+            }
+            break;
+        }
+        break;
+    case vui::UnitType::FORM_HEIGHT_PERC:
+        if (parentForm) {
+            result = rawValue * parentForm->getHeight();
+        }
+        break;
+    case vui::UnitType::FORM_WIDTH_PERC:
+        if (parentForm) {
+            result = rawValue * parentForm->getWidth();
+        }
+        break;
+    case vui::UnitType::FORM_MAX_PERC:
+        if (parentForm) {
+            f32v2 formDims = parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                result = rawValue * formDims.x;
+            } else {
+                result = rawValue * formDims.y;
+            }
+        }
+        break;
+    case vui::UnitType::FORM_MIN_PERC:
+        if (parentForm) {
+            f32v2 formDims = parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                result = rawValue * formDims.y;
+            } else {
+                result = rawValue * formDims.x;
+            }
+        }
+        break;
+    default: // Shouldn't happen.
+        result = rawValue;
+        break;
     }
+    return result;
 }
 
 void vui::IWidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {

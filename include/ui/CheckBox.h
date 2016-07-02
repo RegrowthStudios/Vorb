@@ -100,11 +100,11 @@ namespace vorb {
             /************************************************************************/
             virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
+            virtual void setHeight(f32 height, bool update = true) override;
+            virtual void setPosition(const f32v2& position, bool update = true) override;
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
-            virtual void setWidth(f32 width) override;
+            virtual void setWidth(f32 width, bool update = true) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setBoxColor(const color4& color);

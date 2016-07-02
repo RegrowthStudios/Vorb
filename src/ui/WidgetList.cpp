@@ -89,8 +89,9 @@ void vui::WidgetList::setDimensions(const f32v2& dimensions) {
     updatePosition();
 }
 
-void vui::WidgetList::setHeight(f32 height) {
-    Widget::setHeight(height);
+// TODO(Matthew): Probably don't want to be updating position this way...
+void vui::WidgetList::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, true);
     m_panel.setHeight(height);
     updatePosition();
 }
@@ -99,8 +100,9 @@ void vui::WidgetList::setTexture(VGTexture texture) {
     m_panel.setTexture(texture);
 }
 
-void vui::WidgetList::setWidth(f32 width) {
-    Widget::setWidth(width);
+// TODO(Matthew): Probably don't want to be updating position this way...
+void vui::WidgetList::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, true);
     m_panel.setWidth(width);
     updatePosition();
 }

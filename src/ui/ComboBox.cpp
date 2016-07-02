@@ -166,8 +166,9 @@ void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
     for (auto& b : m_buttons) b->setFont(font);
 }
 
-void vui::ComboBox::setHeight(f32 height) {
-    m_mainButton.setHeight(height);
+// TODO(Matthew): Probably don't want to be updating position like this.
+void vui::ComboBox::setHeight(f32 height, bool update /*= true*/) {
+    m_mainButton.setHeight(height, update);
     Widget::setHeight(height);
     updatePosition();
 }
@@ -184,8 +185,9 @@ void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
     for (auto& b : m_buttons) b->setTexture(texture);
 }
 
-void vui::ComboBox::setWidth(f32 width) {
-    Widget::setWidth(width);
+// TODO(Matthew): Probably don't want to be updating position like this.
+void vui::ComboBox::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
     m_mainButton.setWidth(width);
     updatePosition();
 }

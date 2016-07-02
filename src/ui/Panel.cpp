@@ -109,22 +109,22 @@ void vui::Panel::setDimensions(const f32v2& dimensions) {
     refreshDrawables();
 }
 
-void vui::Panel::setHeight(f32 height) {
-    Widget::setHeight(height);
+void vui::Panel::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, update);
     m_drawableRect.setHeight(height);
     updateSliders();
     refreshDrawables();
 }
 
-void vui::Panel::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
+void vui::Panel::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
     m_drawableRect.setPosition(m_position);
     updateSliders();
     refreshDrawables();
 }
 
-void vui::Panel::setWidth(f32 width) {
-    Widget::setWidth(width);
+void vui::Panel::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
     m_drawableRect.setWidth(width);
     //updateSliders();
     refreshDrawables();

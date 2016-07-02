@@ -68,14 +68,14 @@ void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
     updateDrawableSpatialState();
 }
 
-void vui::Button::setHeight(f32 height) {
-    Widget::setHeight(height);
+void vui::Button::setHeight(f32 height, bool update /*= true*/) {
+    Widget::setHeight(height, update);
     m_drawableRect.setHeight(height);
     updateDrawableSpatialState();
 }
 
-void vui::Button::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
+void vui::Button::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
     m_drawableRect.setPosition(m_position);
     updateDrawableSpatialState();
 }
@@ -85,8 +85,8 @@ void vui::Button::setTexture(VGTexture texture) {
     refreshDrawables();
 }
 
-void vui::Button::setWidth(f32 width) {
-    Widget::setWidth(width);
+void vui::Button::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
     m_drawableRect.setWidth(width);
     updateDrawableSpatialState();
 }

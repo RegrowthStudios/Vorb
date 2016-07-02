@@ -89,10 +89,10 @@ namespace vorb {
             virtual void setDestRect(const f32v4& destRect) override;
             virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
+            virtual void setHeight(f32 height, bool update = true) override;
+            virtual void setPosition(const f32v2& position, bool update = true) override;
             virtual void setTexture(VGTexture texture);
-            virtual void setWidth(f32 width) override;
+            virtual void setWidth(f32 width, bool update = true) override;
             virtual void setX(f32 x) override;
             virtual void setY(f32 y) override;
             virtual void setBackColor(const color4& color);

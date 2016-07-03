@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IAdapter.h
- * @brief 
+/*!
+ * \file IAdapter.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -29,7 +31,7 @@ namespace vorb {
         class IContext;
         class IDevice;
 
-        /*! @brief An enumeration of the supported 3D APIs.
+        /*! \brief An enumeration of the supported 3D APIs.
          */
         enum class API {
             DIRECT_3D, ///< Microsoft's 3D standard.
@@ -37,13 +39,13 @@ namespace vorb {
         };
         ENUM_CLASS_OPS_INL(API, ui32);
 
-        /*! @brief A specific version of an API denoted by versioning numbers.
+        /*! \brief A specific version of an API denoted by versioning numbers.
          */
         struct APIVersion {
         public:
             API api; ///< The targeted API.
             struct {
-                /*! @brief The major version of this API.
+                /*! \brief The major version of this API.
                  * 
                  * For D3D, this must be at least 9.
                  */

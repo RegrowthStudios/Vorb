@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file MemFile.h
- * @brief A memory-mapped file.
+/*!
+ * \file MemFile.h
+ * 
+ * \brief A memory-mapped file.
  */
 
 #pragma once

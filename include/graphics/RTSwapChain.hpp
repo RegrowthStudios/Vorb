@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file RTSwapChain.hpp
- * @brief A series of FBOs that are swapped.
+/*!
+ * \file RTSwapChain.hpp
+ * 
+ * \brief A series of FBOs that are swapped.
  */
 
 #pragma once
@@ -33,9 +35,9 @@ namespace vorb {
         class RTSwapChain {
         public:
             /// Initialize all of the FBOs on the chain
-            /// @param w: Width in pixels of each FBO
-            /// @param h: Height in pixels of each FBO
-            /// @param format: Internal pixel format for the color textures
+            /// \param w: Width in pixels of each FBO
+            /// \param h: Height in pixels of each FBO
+            /// \param format: Internal pixel format for the color textures
             void init(ui32 w, ui32 h, TextureInternalFormat format = TextureInternalFormat::RGBA8) {
                 for (i32 i = 0; i < N; i++) {
                     _fbos[i].setSize(w, h);
@@ -50,10 +52,10 @@ namespace vorb {
             }
 
             /// Reset the swapchain with a fully rendered FBO as an input
-            /// @param textureUnit: Texture unit placement for input FBO [0, MaxTextureUnits)
-            /// @param rt: Rendered input FBO
-            /// @param isMSAA: True if the input FBO has MSAA turned on
-            /// @param shouldClear: True if the current target should have its color cleared
+            /// \param textureUnit: Texture unit placement for input FBO [0, MaxTextureUnits)
+            /// \param rt: Rendered input FBO
+            /// \param isMSAA: True if the input FBO has MSAA turned on
+            /// \param shouldClear: True if the current target should have its color cleared
             void reset(ui32 textureUnit, VGFramebuffer fb, VGTexture rt, bool isMSAA, bool shouldClear = true) {
                 _current = 0;
                 if (isMSAA) {
@@ -81,8 +83,8 @@ namespace vorb {
                 m_previousTexture = getPrevious().getTextureID();
             }
             /// Setup FBO IO via a designated texture unit
-            /// @param textureUnit: Texture unit placement for previous FBO [0, MaxTextureUnits)
-            /// @param shouldClear: True if the current FBO should have its color cleared
+            /// \param textureUnit: Texture unit placement for previous FBO [0, MaxTextureUnits)
+            /// \param shouldClear: True if the current FBO should have its color cleared
             void use(ui32 textureUnit, bool shouldClear = true) {
                 getCurrent().use();
                 if (shouldClear) glClear(GL_COLOR_BUFFER_BIT);
@@ -90,24 +92,24 @@ namespace vorb {
                 bindPreviousTexture(textureUnit);
             }
             /// Unuse SwapChain and bind default framebuffer
-            /// @param w: Width for setting viewport
-            /// @param h: Height for setting viewport
+            /// \param w: Width for setting viewport
+            /// \param h: Height for setting viewport
             const void unuse(ui32 w, ui32 h) {
                 getCurrent().unuse(w, h);
             }
-            /*! @brief Binds the texture from the previous swapchain stage
+            /*! \brief Binds the texture from the previous swapchain stage
              * 
-             * @param textureUnit: Texture unit to bind the texture to 
+             * \param textureUnit: Texture unit to bind the texture to 
              */
             void bindPreviousTexture(ui32 textureUnit) {
                 glActiveTexture(GL_TEXTURE0 + textureUnit);
                 glBindTexture(GL_TEXTURE_2D, m_previousTexture);
             }
-            /// @return The current FBO (output)
+            /// \return The current FBO (output)
             const GLRenderTarget& getCurrent() {
                 return _fbos[_current];
             }
-            /// @return The previous FBO (input)
+            /// \return The previous FBO (input)
             const GLRenderTarget& getPrevious() {
                 return _fbos[(_current + N - 1) % N];
             }

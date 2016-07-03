@@ -23,7 +23,7 @@ namespace vorb {
         template<typename T> class TextInputConverter; ///< Handles character conversions from cString
 
         /// Provides string manipulation functionality
-        /// @tparam T: Internal character type (char, wchar_t, i32, enums, ...)
+        /// \tparam T: Internal character type (char, wchar_t, i32, enums, ...)
         template<typename T>
         class TextInputController {
         public:
@@ -33,7 +33,7 @@ namespace vorb {
             }
 
             /// Insert a string at the caret location
-            /// @param s: String value
+            /// \param s: String value
             void insert(const cString s) {
                 T v = TextInputConverter<T>::convert(s);
                 m_input.insert(m_input.begin() + m_caret, v);
@@ -53,7 +53,7 @@ namespace vorb {
                 }
             }
             /// Moves the caret
-            /// @param amount: Direction and magnitude of movement
+            /// \param amount: Direction and magnitude of movement
             void move(const i32& amount) {
                 i64 v = (i64)m_caret + amount;
                 m_caret = (v < 0) ? 0 : (size_t)v;
@@ -66,12 +66,12 @@ namespace vorb {
                 m_caret = 0;
             }
 
-            /// @return The current length of the string
+            /// \return The current length of the string
             size_t length() const {
                 return m_input.size() - 1;
             }
 
-            /// @return Conversion into string of target character type
+            /// \return Conversion into string of target character type
             explicit operator const T*() const {
                 return (T*)m_input.data();
             }
@@ -101,7 +101,7 @@ namespace vorb {
         };
 
         /// Listens to OS events for text manipulation
-        /// @tparam T: Internal character type (char, wchar_t, i32, enums, ...)
+        /// \tparam T: Internal character type (char, wchar_t, i32, enums, ...)
         template<typename T>
         class TextInputListener {
         public:

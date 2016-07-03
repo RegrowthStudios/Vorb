@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file RingBuffer.hpp
- * @brief A ring buffer with a maximum number of elements.
+/*!
+ * \file RingBuffer.hpp
+ * 
+ * \brief A ring buffer with a maximum number of elements.
  */
 
 #pragma once

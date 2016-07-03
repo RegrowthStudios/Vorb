@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file WidgetListScriptFuncs.h
-* @brief 
+/*!
+ * \file WidgetListScriptFuncs.h
+ * 
+* \brief 
 * Script functions for WidgetList widget.
 *
 */
@@ -38,30 +40,30 @@ namespace vorb {
             void init(const cString nSpace, vscript::Environment* env) override;
         protected:
 
-            /*! @brief Adds a Widget to the combo box
+            /*! \brief Adds a Widget to the combo box
             *
-            * @param w: The Widget to add
+            * \param w: The Widget to add
             */
             virtual void addItem(WidgetList* wl, Widget* w);
-            /*! @brief Adds a Widget to the combo box at a specific index
+            /*! \brief Adds a Widget to the combo box at a specific index
             * and shifts other items accordingly.
             *
-            * @param index: The index to add at
-            * @param w: The Widget to add
-            * @return true if successfully added
+            * \param index: The index to add at
+            * \param w: The Widget to add
+            * \return true if successfully added
             */
             virtual bool addItemAtIndex(WidgetList* wl, int index, Widget* w);
-            /*! @brief Removes a Widget from the combo box
+            /*! \brief Removes a Widget from the combo box
             * If there are multiple instances of the Widget, only the
             * first will be removed
-            * @param w: The Widget to remove
-            * @return true if successfully removed
+            * \param w: The Widget to remove
+            * \return true if successfully removed
             */
             virtual bool removeItem(WidgetList* wl, Widget* w);
-            /*! @brief Removes a Widget from the combo box
+            /*! \brief Removes a Widget from the combo box
             *
-            * @param index: The index of the Widget to remove
-            * @return true if successfully removed
+            * \param index: The index of the Widget to remove
+            * \return true if successfully removed
             */
             virtual bool removeItemAtIndex(WidgetList* wl, int index);
 

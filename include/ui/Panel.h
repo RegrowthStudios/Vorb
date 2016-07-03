@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Panel.h
-* @brief 
+/*!
+ * \file Panel.h
+ * 
+* \brief 
 * Panel widget implementation, used for
 * grouping controls inside a parent region.
 */
@@ -36,41 +38,41 @@ namespace vorb {
 
         class Panel : public Widget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Panel(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
             *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             Panel(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
             *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Panel();
 
-            /*! @brief Adds all drawables to the UIRenderer
+            /*! \brief Adds all drawables to the UIRenderer
             *
-            * @param renderer: UIRenderer to add to
+            * \param renderer: UIRenderer to add to
             */
             virtual void addDrawables(UIRenderer* renderer) override;
-            /*! @brief Removes all drawables from the UIRenderer
+            /*! \brief Removes all drawables from the UIRenderer
             *
-            * @param renderer: UIRenderer to remove from
+            * \param renderer: UIRenderer to remove from
             */
             virtual void removeDrawables() override;
 
 
             bool addWidget(Widget* child) override;
 
-            /*! @brief Updates the position relative to parent */
+            /*! \brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
             /************************************************************************/

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegValue.h
- * @brief 
+/*!
+ * \file KegValue.h
+ * 
+ * \brief 
  */
 
 #pragma once

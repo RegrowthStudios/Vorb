@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DContext.h
- * @brief 
+/*!
+ * \file D3DContext.h
+ * 
+ * \brief 
  */
 
 #pragma once

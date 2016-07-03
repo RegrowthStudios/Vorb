@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VorbLibs.h
- * @brief Controls library linkage.
+/*!
+ * \file VorbLibs.h
+ * 
+ * \brief Controls library linkage.
  */
 
 #pragma once
@@ -237,7 +239,8 @@
 
 #endif // Vorb_VorbLibs_h__
 
-/*! \example "Vorb Library Linkage"
+/*!
+ * \example "Vorb Library Linkage"
  * 
  * When linking against Vorb, a utility file "VorbLibs.h"
  * is provided to accurately specify which libraries must be
@@ -252,6 +255,7 @@
  *  - VORB_IMPL_UI_SDL
  *  - VORB_IMPL_UI_SFML
  *  - VORB_IMPL_SOUND_FMOD
- *  - VORB_IMPL_FONT_SDL
+ *  - VORB_IMPL_FONT_SDL  
+ * 
  * \include "VorbLibs.cpp"
  */

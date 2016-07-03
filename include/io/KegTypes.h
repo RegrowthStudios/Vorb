@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegTypes.h
-* @brief Defines custom vector types for keg since glm needs alignment.
+/*!
+ * \file KegTypes.h
+ * 
+* \brief Defines custom vector types for keg since glm needs alignment.
 */
 
 #pragma once

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DGraphicsContext.h
- * @brief 
+/*!
+ * \file D3DGraphicsContext.h
+ * 
+ * \brief 
  */
 
 #pragma once

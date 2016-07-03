@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file DeferredShaders.h
- * @brief A container for deferred shading shaders.
+/*!
+ * \file DeferredShaders.h
+ * 
+ * \brief A container for deferred shading shaders.
  */
 
 #pragma once

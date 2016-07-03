@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file YAML.h
- * @brief YAML headers.
+/*!
+ * \file YAML.h
+ * 
+ * \brief YAML headers.
  */
 
 #pragma once

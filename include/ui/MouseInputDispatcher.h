@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file MouseInputDispatcher.h
- * @brief Dispatches mouse events.
+/*!
+ * \file MouseInputDispatcher.h
+ * 
+ * \brief Dispatches mouse events.
  * 
  * 
  */

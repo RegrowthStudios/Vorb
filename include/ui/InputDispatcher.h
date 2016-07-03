@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file InputDispatcher.h
- * @brief Dispatches OS and device inputs via events.
+/*!
+ * \file InputDispatcher.h
+ * 
+ * \brief Dispatches OS and device inputs via events.
  */
 
 #pragma once
@@ -33,14 +35,14 @@ namespace vorb {
             VORB_INTERNAL class InputDispatcherEventCatcher;
         }
 
-        /*! @brief Path drag'n'drop event wrapper.
+        /*! \brief Path drag'n'drop event wrapper.
          */
         struct DragDropEvent {
         public:
             const cString path; ///< Path of the drop (limited to 1).
         };
 
-        /*! @brief Handles receiving and dispatching important events.
+        /*! \brief Handles receiving and dispatching important events.
          * 
          * There exists an input dispatcher tied per window as well as a global
          * dispatcher that listens to application-wide events.
@@ -49,18 +51,18 @@ namespace vorb {
             friend class impl::InputDispatcherEventCatcher;
             friend class OSWindow;
         public:
-            /*! @brief Begin pumping OS events through all the created input dispatchers.
+            /*! \brief Begin pumping OS events through all the created input dispatchers.
              *
              * This will do nothing if init() has already been called successfully.
              *
-             * @pre The UI implementation must have been initialized using vorb::init.
+             * \pre The UI implementation must have been initialized using vorb::init.
              */
             static void init();
-            /*! @brief Stop pumping OS events through dispatchers.
+            /*! \brief Stop pumping OS events through dispatchers.
              *
              * This will do nothing if init() has not yet been called.
              *
-             * @pre The UI implementation must have been initialized using vorb::init.
+             * \pre The UI implementation must have been initialized using vorb::init.
              */
             static void dispose();
 

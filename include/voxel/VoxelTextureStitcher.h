@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VoxelTextureStitcher.h
- * @brief Maps voxel tile textures to an atlas.
+/*!
+ * \file VoxelTextureStitcher.h
+ * 
+ * \brief Maps voxel tile textures to an atlas.
  */
 
 #pragma once
@@ -25,37 +27,37 @@
 /// Stores Information About An Atlas Page For Construction Purposes
 class BlockAtlasPage;
 
-/*! @brief Maps textures into a texture atlas
+/*! \brief Maps textures into a texture atlas
 */
 namespace vorb {
     namespace voxel {
         class VoxelTextureStitcher {
         public:
-            /*! @brief Constructor
+            /*! \brief Constructor
             *
             * Allocates a single page and maps a null texture index
             */
             VoxelTextureStitcher(ui32 tilesPerRow = 16u);
-            /*! @brief Necessary destructor to free allocated pages
+            /*! \brief Necessary destructor to free allocated pages
             */
             virtual ~VoxelTextureStitcher();
 
             /// Maps a single block texture to the atlases
-            /// @return The index of the texture start into the atlas array.
+            /// \return The index of the texture start into the atlas array.
             ui32 mapSingle();
             /// Maps a large box texture to the atlases
-            /// @param width: The width of the box
-            /// @param height: The height of the box
-            /// @return The index of the texture start into the atlas array.
+            /// \param width: The width of the box
+            /// \param height: The height of the box
+            /// \return The index of the texture start into the atlas array.
             ui32 mapBox(ui32 width, ui32 height);
             /// Maps a contiguous array of single textures to the atlases
-            /// @param numTiles: The number of tiles to map
-            /// @return The index of the texture start into the atlas array.
+            /// \param numTiles: The number of tiles to map
+            /// \return The index of the texture start into the atlas array.
             ui32 mapContiguous(ui32 numTiles);
 
-            /*! @brief Retrieve the number of pages currently allocated by the mapper
+            /*! \brief Retrieve the number of pages currently allocated by the mapper
             *
-            * @return Number of allocated pages
+            * \return Number of allocated pages
             */
             size_t getNumPages() const {
                 return m_pages.size();

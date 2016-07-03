@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file WidgetList.h
-* @brief 
+/*!
+ * \file WidgetList.h
+ * 
+* \brief 
 * A widget that is a vertical list of other widgets.
 *
 */
@@ -35,60 +37,60 @@ namespace vorb {
         class WidgetList : public Widget {
             friend class ComboBoxScriptFuncs;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             WidgetList(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
             *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             WidgetList(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
             *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             WidgetList(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~WidgetList();
 
             virtual void dispose() override;
 
-            /*!@brief Updates the position relative to parent */
+            /*!\brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
-            /*! @brief Adds a Widget to the combo box
+            /*! \brief Adds a Widget to the combo box
             *
-            * @param w: The Widget to add
+            * \param w: The Widget to add
             */
             virtual void addItem(Widget* w);
-            /*! @brief Adds a Widget to the combo box at a specific index
+            /*! \brief Adds a Widget to the combo box at a specific index
             * and shifts other items accordingly.
             *
-            * @param index: The index to add at
-            * @param w: The Widget to add
-            * @return true if successfully added
+            * \param index: The index to add at
+            * \param w: The Widget to add
+            * \return true if successfully added
             */
             virtual bool addItemAtIndex(int index, Widget* w);
-            /*! @brief Removes a Widget from the combo box
+            /*! \brief Removes a Widget from the combo box
             * If there are multiple instances of the Widget, only the
             * first will be removed
-            * @param w: The Widget to remove
-            * @return true if successfully removed
+            * \param w: The Widget to remove
+            * \return true if successfully removed
             */
             virtual bool removeItem(Widget* w);
-            /*! @brief Removes a Widget from the combo box
+            /*! \brief Removes a Widget from the combo box
             *
-            * @param index: The index of the Widget to remove
-            * @return true if successfully removed
+            * \param index: The index of the Widget to remove
+            * \return true if successfully removed
             */
             virtual bool removeItem(int index);
-            /*! @brief Adds a series of items to the combo box
+            /*! \brief Adds a series of items to the combo box
             *
-            * @param widgetsToAdd: The Widgets to add
+            * \param widgetsToAdd: The Widgets to add
             */
             virtual void addItems(const std::vector <Widget*>& widgetsToAdd);
    

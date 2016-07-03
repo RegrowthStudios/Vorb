@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Enums.h
- * @brief 
+/*!
+ * \file Enums.h
+ * 
+ * \brief 
  */
 
 #pragma once

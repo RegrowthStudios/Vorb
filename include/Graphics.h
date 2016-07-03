@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Graphics.h
- * @brief Graphics headers from API detection.
+/*!
+ * \file Graphics.h
+ * 
+ * \brief Graphics headers from API detection.
  */
 
 #pragma once

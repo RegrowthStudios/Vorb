@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file LabelScriptFuncs.h
-* @brief 
+/*!
+ * \file LabelScriptFuncs.h
+ * 
+* \brief 
 *
 *
 */

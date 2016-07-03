@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Vector.h
-* @brief Defines custom Vorb vector types.
+/*!
+ * \file Vector.h
+ * 
+* \brief Defines custom Vorb vector types.
 */
 
 #pragma once

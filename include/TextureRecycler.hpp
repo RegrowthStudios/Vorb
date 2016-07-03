@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file TextureRecycler.hpp
- * @brief TextureRecycler will recycle a specific type and size of texture.
+/*!
+ * \file TextureRecycler.hpp
+ * 
+ * \brief TextureRecycler will recycle a specific type and size of texture.
  *
  * It is useful for terrain rendering for instance, when all textures are the same format and type.
  */
@@ -36,12 +38,12 @@ namespace vorb {
         class TextureRecycler {
         public:
             /// Constructor
-            /// @param width: Width of the textures
-            /// @param height: Height of the textures
-            /// @param samplingParameters: Sampling parameters for the textures
-            /// @param mipmapLevels: Number of mipmap levels for the textures
-            /// @param internalFormat: Internal pixel data format
-            /// @param maxSize: Maximum number of textures to cache
+            /// \param width: Width of the textures
+            /// \param height: Height of the textures
+            /// \param samplingParameters: Sampling parameters for the textures
+            /// \param mipmapLevels: Number of mipmap levels for the textures
+            /// \param internalFormat: Internal pixel data format
+            /// \param maxSize: Maximum number of textures to cache
             TextureRecycler(ui32 width,
                             ui32 height,
                             SamplerState* samplingParameters,
@@ -67,7 +69,7 @@ namespace vorb {
             void setMaxSize(ui32 maxSize) { m_maxSize = maxSize; }
 
             /// Produces a texture, either a new one or a recycled one
-            /// @return textureID.
+            /// \return textureID.
             VGTexture produce(const ui8* pixels = nullptr,
                                 vg::TextureFormat format = vg::TextureFormat::RGBA) {
                 VGTexture rv;

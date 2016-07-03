@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file DepthState.h
- * @brief Changes GPU depth functionality.
+/*!
+ * \file DepthState.h
+ * 
+ * \brief Changes GPU depth functionality.
  */
 
 #pragma once

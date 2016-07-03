@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ThreadPool.h
- * @brief Provides a general threadpool implementation for distributing work.
+/*!
+ * \file ThreadPool.h
+ * 
+ * \brief Provides a general threadpool implementation for distributing work.
  */
 
 #pragma once
@@ -50,7 +52,7 @@ namespace vorb {
             ~ThreadPool();
 
             /// Initializes the threadpool
-            /// @param size: The number of worker threads
+            /// \param size: The number of worker threads
             void init(ui32 size);
 
             /// Frees all resources
@@ -60,14 +62,14 @@ namespace vorb {
             void clearTasks();
 
             /// Adds a task to the task queue
-            /// @param task: The task to add
+            /// \param task: The task to add
             void addTask(IThreadPoolTask<T>* task) {
                 m_tasks.enqueue(task);
             }
 
             /// Add an array of tasks to the task queue
-            /// @param tasks: The array of tasks to add
-            /// @param size: The size of the array
+            /// \param tasks: The array of tasks to add
+            /// \param size: The size of the array
             void addTasks(IThreadPoolTask<T>* tasks[], size_t size) {
                 m_tasks.enqueue_bulk(tasks, size);
             }
@@ -84,7 +86,7 @@ namespace vorb {
             class WorkerThread {
             public:
                 /// Creates the thread
-                /// @param func: The function the thread should execute
+                /// \param func: The function the thread should execute
                 WorkerThread(workerFunc func, ThreadPool<T>* threadPool) {
                     thread = new std::thread(func, threadPool, &data);
                 }
@@ -99,7 +101,7 @@ namespace vorb {
             };
 
             /// Thread function that processes tasks
-            /// @param data: The worker specific data
+            /// \param data: The worker specific data
             void workerThreadFunc(T* data);
 
             /// Lock free task queues

@@ -7,10 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file os.h
- * @brief 
- *
- *
+/*!
+ * \file os.h
+ * 
+ * \brief TODO(Cristian): What was the original purpose?
  */
 
 #pragma once

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GLEnums.h
- * @brief Enums for virtualizing the current graphics implementation.
+/*!
+ * \file GLEnums.h
+ * 
+ * \brief Enums for virtualizing the current graphics implementation.
  */
 
 #pragma once

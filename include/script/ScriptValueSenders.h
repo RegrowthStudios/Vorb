@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ScriptValueSenders.h
- * @brief Defines a preset number of scripting conversion methods.
+/*!
+ * \file ScriptValueSenders.h
+ * 
+ * \brief Defines a preset number of scripting conversion methods.
  */
 
 #pragma once
@@ -27,9 +29,9 @@ struct lua_State;
 namespace vorb {
     namespace script {
         typedef lua_State* EnvironmentHandle; ///< The pointer to the scripting environment implementation
-        /*! @brief Pre-declaration of the conversion API
+        /*! \brief Pre-declaration of the conversion API
          * 
-         * @tparam T: Type of the value that can be converted into/from the scripting environment
+         * \tparam T: Type of the value that can be converted into/from the scripting environment
          */
         template<typename T, typename = void> struct ScriptValueSender;
 

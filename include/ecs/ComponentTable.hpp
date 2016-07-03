@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ComponentTable.hpp
- * @brief Common abstract implementation of ComponentTableBase for any component type.
+/*!
+ * \file ComponentTable.hpp
+ * 
+ * \brief Common abstract implementation of ComponentTableBase for any component type.
  */
 
 #pragma once
@@ -37,7 +39,7 @@ namespace vorb {
             typedef std::vector<ComponentPairing> ComponentList; ///< List of components accessed by component IDs
 
             /// Constructor that requires a blank component for reference
-            /// @param defaultData: Blank component data
+            /// \param defaultData: Blank component data
             ComponentTable(const T& defaultData) : ComponentTableBase() {
                 // Default data goes in the first slot
                 _components.emplace_back(ID_GENERATOR_NULL_ID, defaultData);
@@ -48,59 +50,59 @@ namespace vorb {
             }
         
             /// Obtain a component from this table
-            /// @param cID: Component ID
-            /// @return Const component reference
+            /// \param cID: Component ID
+            /// \return Const component reference
             const T& get(const ComponentID& cID) const {
                 return _components[cID].second;
             }
             /// Obtain a component from this table
-            /// @param cID: Component ID
-            /// @return Component reference
+            /// \param cID: Component ID
+            /// \return Component reference
             T& get(const ComponentID& cID) {
                 return _components[cID].second;
             }
             /// Obtain an entity's component from this table
-            /// @param eID: Entity ID
-            /// @return Const component reference
+            /// \param eID: Entity ID
+            /// \return Const component reference
             const T& getFromEntity(const EntityID& eID) const {
                 return get(getComponentID(eID));
             }
             /// Obtain an entity's component from this table
-            /// @param eID: Entity ID
-            /// @return Component reference
+            /// \param eID: Entity ID
+            /// \return Component reference
             T& getFromEntity(const EntityID& eID) {
                 return get(getComponentID(eID));
             }
 
-            /// @return The blank component data
+            /// \return The blank component data
             const T& getDefaultData() const {
                 return _components[0].second;
             }
 
-            /// @return Iterator to the first pair of (entity ID, T)
+            /// \return Iterator to the first pair of (entity ID, T)
             typename ComponentList::iterator begin() {
                 // + 1 to skip the default element
                 return ++_components.begin();
             }
-            /// @return Iterator to the end of component pairing list
+            /// \return Iterator to the end of component pairing list
             typename ComponentList::iterator end() {
                 return _components.end();
             }
-            /// @return Const iterator to the first pair of (entity ID, T)
+            /// \return Const iterator to the first pair of (entity ID, T)
             typename ComponentList::const_iterator cbegin() const {
                 return ++_components.cbegin();
             }
-            /// @return Const iterator to the end of component pairing list
+            /// \return Const iterator to the end of component pairing list
             typename ComponentList::const_iterator cend() const {
                 return _components.cend();
             }
 
-            /// @return Reference to component list for iteration
+            /// \return Reference to component list for iteration
             operator const ComponentList& () const {
                 return _components;
             }
 
-            /// @return size of internal component list
+            /// \return size of internal component list
             size_t getComponentListSize() const { return _components.size(); }
 
         protected:

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Random.h
- * @brief A simple random number generator.
+/*!
+ * \file Random.h
+ * 
+ * \brief A simple random number generator.
  */
 
 #pragma once
@@ -29,7 +31,7 @@
 class Random {
 public:
     /// Create a random generator using a seed value
-    /// @param s: Seed value
+    /// \param s: Seed value
     Random(const i32& s);
     /// Create a random generator with seed value of clock ticks
     Random();
@@ -37,12 +39,12 @@ public:
     ~Random();
 
     /// Reform the random generator
-    /// @param s: Seed value
+    /// \param s: Seed value
     void seed(const i32& s);
 
-    /// @return: A random number between [0-1] inclusive using mersenne twister
+    /// \return: A random number between [0-1] inclusive using mersenne twister
     f32 genMT();
-    /// @return: A random number between [0-1] inclusive using murmur hash
+    /// \return: A random number between [0-1] inclusive using murmur hash
     f32 genMH();
 private:
     /// ... Because we want to keep generating random stuff after MERSENNE_ARRAY_SIZE uses

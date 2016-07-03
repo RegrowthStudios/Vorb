@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GLAdapter.h
- * @brief 
+/*!
+ * \file GLAdapter.h
+ * 
+ * \brief 
  *
  *
  */

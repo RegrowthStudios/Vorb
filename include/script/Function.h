@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Function.h
- * @brief A function that may be invoked within an Environment.
+/*!
+ * \file Function.h
+ * 
+ * \brief A function that may be invoked within an Environment.
  */
 
 #pragma once

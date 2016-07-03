@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ScopedTiming.hpp
- * @brief Simple implementation of an lifetime-based timer.
+/*!
+ * \file ScopedTiming.hpp
+ * 
+ * \brief Simple implementation of an lifetime-based timer.
  */
 
 #pragma once
@@ -29,18 +31,18 @@
 
 namespace vorb {
     /// A timer that samples a time period via its lifetime
-    /// @tparam T Context type that stores sample information (must overload T& operator+= (ui64 microSeconds))
+    /// \tparam T Context type that stores sample information (must overload T& operator+= (ui64 microSeconds))
     template<typename T = ui64>
     class ScopedSampler {
     public:
         /// Hook the timer up to an output and take the starting time
-        /// @param context: Destination for time data
+        /// \param context: Destination for time data
         ScopedSampler(OUT T& context) :
             m_context(context) {
             m_time = std::chrono::high_resolution_clock::now();
         }
         /// Hook the timer up to an output and take the starting time
-        /// @param context: Destination for time data
+        /// \param context: Destination for time data
         ScopedSampler(OUT T* context) : ScopedSampler(*context) {
             // Empty
         }
@@ -58,8 +60,8 @@ namespace vorb {
     class AccumulationSamplerContext {
     public:
         /// Add elapsed milliseconds to this context
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         AccumulationSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             m_ticks += dt;
             return *this;
@@ -83,8 +85,8 @@ namespace vorb {
     class AveragedSamplerContext {
     public:
         /// Add elapsed milliseconds to this context and increment number of slices
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         AveragedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             m_ticks += dt;
             m_entries++;
@@ -124,8 +126,8 @@ namespace vorb {
     class DetailedSamplerContext {
     public:
         /// Add elapsed milliseconds to this context, increment slices, and check bounds
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         DetailedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             m_ticks += dt;
             m_entries++;
@@ -175,8 +177,8 @@ namespace vorb {
     class MTAccumulationSamplerContext {
     public:
         /// Add elapsed milliseconds to this context
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         MTAccumulationSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             std::atomic_fetch_add(&m_ticks, dt);
             return *this;
@@ -200,8 +202,8 @@ namespace vorb {
     class MTAveragedSamplerContext {
     public:
         /// Add elapsed milliseconds to this context and increment number of slices
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         MTAveragedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             std::atomic_fetch_add(&m_ticks, dt);
             std::atomic_fetch_add(&m_entries, 1);
@@ -250,8 +252,8 @@ namespace vorb {
     class MTDetailedSamplerContext {
     public:
         /// Add elapsed milliseconds to this context, increment slices, and check bounds
-        /// @param dt: Elapsed time
-        /// @return Self
+        /// \param dt: Elapsed time
+        /// \return Self
         MTDetailedSamplerContext& operator+=(UNIT_SPACE(MICROSECONDS) const ui64& dt) {
             std::atomic_fetch_add(&m_ticks, dt);
             std::atomic_fetch_add(&m_entries, 1);

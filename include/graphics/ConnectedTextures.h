@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ConnectedTextures.h
- * @brief Utilities for connected textures.
+/*!
+ * \file ConnectedTextures.h
+ * 
+ * \brief Utilities for connected textures.
  */
 
 #pragma once
@@ -28,12 +30,12 @@ namespace vorb {
         class ConnectedTextureHelper {
         public:
             /// Given a set of fully surrounding neighbors, find the corresponding connected texture index
-            /// @param neighbors: 8 bits designating which sides/corners have neighbors
-            /// @return Texture offset in range [0,46]
+            /// \param neighbors: 8 bits designating which sides/corners have neighbors
+            /// \return Texture offset in range [0,46]
             static const size_t& getOffsetFull(const size_t& neighbors);
             /// Given a set of neighbors, find the corresponding connected texture index
-            /// @param neighbors: 5 bits designating which sides/corners have neighbors
-            /// @return Texture offset in range [0,8]
+            /// \param neighbors: 5 bits designating which sides/corners have neighbors
+            /// \return Texture offset in range [0,8]
             static const size_t& getOffsetSmall(const size_t& neighbors);
 
             /// Initializes offsets array

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ButtonScriptFuncs.h
-* @brief 
+/*!
+ * \file ButtonScriptFuncs.h
+ * 
+* \brief 
 * Scripting functions for buttons.
 *
 */

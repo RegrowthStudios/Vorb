@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IDGenerator.h
- * @brief Unique ID generator and recycler.
+/*!
+ * \file IDGenerator.h
+ * 
+ * \brief Unique ID generator and recycler.
  */
 
 #pragma once
@@ -27,13 +29,13 @@ namespace vorb {
 #define ID_GENERATOR_NULL_ID 0
 
         /// Generates and recycles unique IDs of a certain type
-        /// @tparam T: must support operator size_t() and operator++()
+        /// \tparam T: must support operator size_t() and operator++()
         template<typename T>
         class IDGenerator {
         public:
             /// Grabs an unique ID from either generation of recycling
-            /// @param wasNew: Additional return value to determine if a new ID was created
-            /// @return An unique ID
+            /// \param wasNew: Additional return value to determine if a new ID was created
+            /// \return An unique ID
             T generate(OPT bool* wasNew = nullptr) {
                 T v;
                 if (m_recycled.size() > 0) {
@@ -48,8 +50,8 @@ namespace vorb {
                 return v;
             }
             /// Returns an ID to a recycle queue
-            /// @pre: ID value is not in the recycle queue already
-            /// @param v: ID to recycle
+            /// \pre: ID value is not in the recycle queue already
+            /// \param v: ID to recycle
             void recycle(const T& v) {
                 m_recycled.push(v);
             }
@@ -60,7 +62,7 @@ namespace vorb {
                 std::queue<T>().swap(m_recycled);
             }
 
-            /// @return Number of active IDs
+            /// \return Number of active IDs
             size_t getActiveCount() const {
                 return static_cast<size_t>(m_currentID) - m_recycled.size();
             }

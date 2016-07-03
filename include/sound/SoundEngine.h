@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SoundEngine.h
- * @brief The main interface to keeping track of sounds.
+/*!
+ * \file SoundEngine.h
+ * 
+ * \brief The main interface to keeping track of sounds.
  */
 
 #pragma once
@@ -43,49 +45,49 @@ namespace vorb {
         class Engine {
         public:
             /// Initialize this engine
-            /// @return True if no error occurred and properly initialized
+            /// \return True if no error occurred and properly initialized
             bool init();
             /// Dispose this engine and any associated resources
-            /// @return True if no error occurred and properly disposed
+            /// \return True if no error occurred and properly disposed
             bool dispose();
 
-            /// @return True if this engine is not initialized or has been disposed
+            /// \return True if this engine is not initialized or has been disposed
             bool isDisposed() const {
                 return (m_alive.get() == nullptr) || !(*m_alive);
             }
 
             /// Load a sound resource into this engine
-            /// @param path: Path of sound
-            /// @param is3D: True if resource is used as a 3D sound
-            /// @param isStream: True if resource should be streamed from disk
-            /// @return Loaded sound resource (Null if could not load)
+            /// \param path: Path of sound
+            /// \param is3D: True if resource is used as a 3D sound
+            /// \param isStream: True if resource should be streamed from disk
+            /// \return Loaded sound resource (Null if could not load)
             Resource loadSound(const vio::Path& path, bool is3D = true, bool isStream = false);
             /// Destroy a sound resource loaded from this engine
-            /// @param sound: Sound resource
+            /// \param sound: Sound resource
             void freeSound(Resource& sound);
 
             /// Determines if this engine manages a sound resource
-            /// @param sound: Sound resource
-            /// @return True if this engine create this sound
+            /// \param sound: Sound resource
+            /// \return True if this engine create this sound
             bool containsSound(Resource& sound) const;
 
             /// Create an active sound instance from a resource
-            /// @pre: This engine contains the sound
-            /// @param sound: Sound resource reference
-            /// @return Handle to the paused sound instance
+            /// \pre: This engine contains the sound
+            /// \param sound: Sound resource reference
+            /// \return Handle to the paused sound instance
             Instance createInstance(const Resource& sound);
             /// Create an active sound instance from a resource and begin playing it
-            /// @pre: This engine contains the sound
-            /// @param sound: Sound resource reference
-            /// @return Handle to the playing sound instance
+            /// \pre: This engine contains the sound
+            /// \param sound: Sound resource reference
+            /// \return Handle to the playing sound instance
             Instance playInstance(const Resource& sound);
 
             /// Update this sound engine and it's associated handles
-            /// @param listener: The main sound listener
+            /// \param listener: The main sound listener
             void update(const Listener& listener);
         private:
             /// Internal sound resource disposal
-            /// @param sound: Sound resource
+            /// \param sound: Sound resource
             void disposeSound(Resource& sound);
 
             std::unordered_map<ResourceID, Resource> m_resources; ///< Sound resources managed by this engine

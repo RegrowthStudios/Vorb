@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SoundListener.h
- * @brief Positional information for a listener to a sound engine.
+/*!
+ * \file SoundListener.h
+ * 
+ * \brief Positional information for a listener to a sound engine.
  */
 
 #pragma once

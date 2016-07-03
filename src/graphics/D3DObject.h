@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DObject.h
- * @brief 
+/*!
+ * \file D3DObject.h
+ * 
+ * \brief 
  *
  *
  */

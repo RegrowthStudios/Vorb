@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IntersectionUtils.hpp
- * @brief Intersection functions.
+/*!
+ * \file IntersectionUtils.hpp
+ * 
+ * \brief Intersection functions.
  */
 
 #pragma once
@@ -36,14 +38,14 @@ namespace IntersectionUtils {
     }
 
     /// Calculates intersection between a ray and a sphere
-    /// @param raydir: Direction of ray
-    /// @param rayorig: Origin of ray
-    /// @param pos: Center of sphere
-    /// @param rad: Radius of sphere
-    /// @param hitpoint: returned hit location
-    /// @param distance: returned distance of collision
-    /// @param normal: returned normal of collision
-    /// @return true on collision
+    /// \param raydir: Direction of ray
+    /// \param rayorig: Origin of ray
+    /// \param pos: Center of sphere
+    /// \param rad: Radius of sphere
+    /// \param hitpoint: returned hit location
+    /// \param distance: returned distance of collision
+    /// \param normal: returned normal of collision
+    /// \return true on collision
     inline bool sphereIntersect(const f32v3& raydir, const f32v3& rayorig, const f32v3& pos,
                                 const f32& rad, OUT f32v3& hitpoint, OUT f32& distance, OUT f32v3& normal) {
         f32 a = vecsum(raydir*raydir);
@@ -102,11 +104,11 @@ namespace IntersectionUtils {
     *      Journal of graphics tools, 10(1):49-54, 2005
     *
     */
-    /// @param corners: -x,-y,-z and +x,+y,+z corner positions
-    /// @param dir: direction of ray
-    /// @param start: origin of ray
-    /// @param tmin: distance along ray for collision
-    /// @return true on collision
+    /// \param corners: -x,-y,-z and +x,+y,+z corner positions
+    /// \param dir: direction of ray
+    /// \param start: origin of ray
+    /// \param tmin: distance along ray for collision
+    /// \return true on collision
     inline bool boxIntersect(const f32v3 corners[2], const f32v3& dir, const f32v3& start, OUT f32& tmin) {
         f32 tmax, tymin, tymax, tzmin, tzmax;
 

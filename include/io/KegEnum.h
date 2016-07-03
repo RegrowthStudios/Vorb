@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegEnum.h
- * @brief 
+/*!
+ * \file KegEnum.h
+ * 
+ * \brief 
  */
 
 #pragma once

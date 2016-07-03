@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Frustum.h
- * @brief Defines a Frustum, helpful in culling and view detection.
+/*!
+ * \file Frustum.h
+ * 
+ * \brief Defines a Frustum, helpful in culling and view detection.
  */
 
 #pragma once
@@ -47,21 +49,21 @@ namespace vorb {
             void setCamInternals(f32 fov, f32 aspectRatio, f32 znear, f32 zfar);
 
             /// Updates the frustum with the projection and view matrix
-            /// @param MVP: World-View-Projection matrix of camera
+            /// \param MVP: World-View-Projection matrix of camera
             void updateFromWVP(const f32m4& WVP);
 
             /// Updates the frustum with the geometric information
             void update(const f32v3& position, const f32v3& dir, const f32v3& up);
 
             /// Checks if a point is in the frustum
-            /// @param pos: The position of the point
-            /// @return true if it is in the frustum
+            /// \param pos: The position of the point
+            /// \return true if it is in the frustum
             bool pointInFrustum(const f32v3& pos) const;
 
             /// Checks if a sphere is in the frustum
-            /// @param pos: Center position of the sphere
-            /// @param radius: Radius of the sphere
-            /// @return true if it is in the frustum
+            /// \param pos: Center position of the sphere
+            /// \param radius: Radius of the sphere
+            /// \return true if it is in the frustum
             bool sphereInFrustum(const f32v3& pos, f32 radius) const;
         private:
             f32 m_fov = 0.0f; ///< Vertical field of view in degrees

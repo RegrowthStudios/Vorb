@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VGEnums.h
- * @brief 
+/*!
+ * \file VGEnums.h
+ * 
+ * \brief 
  *
  *
  */

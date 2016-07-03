@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ResourceDescriptions.h
- * @brief 
+/*!
+ * \file ResourceDescriptions.h
+ * 
+ * \brief 
  */
 
 #pragma once

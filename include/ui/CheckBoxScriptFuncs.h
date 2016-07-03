@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file CheckBoxScriptFuncs.h
-* @brief 
+/*!
+ * \file CheckBoxScriptFuncs.h
+ * 
+* \brief 
 * Script functions for CheckBox widget.
 *
 */
@@ -42,7 +44,7 @@ namespace vorb {
             virtual void unregisterWidget(Widget* w) override;
         protected:
             virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
-            /*! @brief Deregisters a LUA callback with a widget* */
+            /*! \brief Deregisters a LUA callback with a widget* */
             virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
 
             virtual void check(CheckBox* c) const;

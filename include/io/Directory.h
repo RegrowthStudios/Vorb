@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Directory.h
- * @brief A directory wrapper.
+/*!
+ * \file Directory.h
+ * 
+ * \brief A directory wrapper.
  */
 
 #pragma once
@@ -41,22 +43,22 @@ namespace vorb {
                 // Empty
             }
 
-            /// @return Underlying path
+            /// \return Underlying path
             const Path& getPath() const {
                 return m_path;
             }
-            /// @return True if this directory exists
+            /// \return True if this directory exists
             bool isValid() const {
                 return m_path.isValid();
             }
 
             /// Iterate the directory, placing entries into a list
-            /// @param l: List where entries will be placed
-            /// @return Number of added entries
+            /// \param l: List where entries will be placed
+            /// \return Number of added entries
             size_t appendEntries(OUT DirectoryEntries& l) const;
             /// Iterate a directory, invoking a function on each entry
-            /// @pre: f may not be null
-            /// @param f: Invokable function
+            /// \pre: f may not be null
+            /// \param f: Invokable function
             void forEachEntry(DirectoryEntryCallback* f) const;
             template<typename F>
             void forEachEntry(F f) const {
@@ -65,11 +67,11 @@ namespace vorb {
                 delete fDel;
             }
 
-            /// @return True if this directory contains no elements
+            /// \return True if this directory contains no elements
             bool isEmpty() const;
         private:
             /// Secret-sauce directory builder
-            /// @param p: Path value
+            /// \param p: Path value
             Directory(const Path& p);
 
             Path m_path; ///< Directory's path value

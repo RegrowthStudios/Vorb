@@ -7,8 +7,8 @@ static const f32 negOneHalf = -0.5f;
 ///   fast ceiling
 ///   fast rounding toward zero
 ///   fast rounding away from zero
-/// @tparam T: Input type: [f64, f32]
-/// @tparam U: Output type: [f64, f32, i64, i32]
+/// \tparam T: Input type: [f64, f32]
+/// \tparam U: Output type: [f64, f32, i64, i32]
 template<class T, class U>
 class FastConversion {
 public:

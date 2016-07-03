@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VorbPreDecl.inl
- * @brief Pre-declaration helpers for classes in Vorb namespaces
+/*!
+ * \file VorbPreDecl.inl
+ * 
+ * \brief Pre-declaration helpers for classes in Vorb namespaces.
  */
 
 #pragma once
@@ -18,30 +20,49 @@
 #define Vorb_VorbPreDecl_inl__
 //! @endcond
 
-/** @brief The root namespace for most Vorb classes.
+/*!
+ * \namespace vorb
+ * 
+ * \brief The root namespace for most Vorb classes.
  * 
  * This holds core submodules as well as various
  * extensions. ADT's, utilities, and common
  * engine functionality is implemented here.
  */
 namespace vorb {
+    /*!
+     * \namespace vorb::core
+     * 
+     * \brief Vorb's core submodule.
+     * 
+     * Contains code that is common between all other submodules.
+     */
     namespace core {
     }
-    /** @brief Vorb's graphics submodule.
+    /*!
+     * \namespace vorb::graphics
+     *
+     * \brief Vorb's graphics submodule.
      * 
      * Utilities for modifying context state as well as imaging, mesh,
      * and debugging renderers can be found here.
      */
     namespace graphics {
     }
-    /** @brief Vorb's voxel extension.
+    /*!
+     * \namespace vorb::voxel
+     *
+     * \brief Vorb's voxel extension.
      * 
      * The voxel extension provides a suite of utilities for voxel
      * code that wishes to adhere a set of interfaces.
      */
     namespace voxel {
     }
-    /** @brief Vorb's UI submodule.
+    /*!
+     * \namespace vorb::ui
+     *
+     * \brief Vorb's UI submodule.
      * 
      * It provides an abstraction over the underlying OS to be able to provide
      * a window, graphics context, and input handling. It also contains
@@ -49,32 +70,51 @@ namespace vorb {
      */
     namespace ui {
     }
-    /** @brief Vorb's IO submodule.
+    /*!
+     * \namespace vorb::io
+     *
+     * \brief Vorb's IO submodule.
      * 
      * It simplifies tasks that relate to the filesystem, such as directory
      * enumeration, file reading and writing, and path operations.
      */
     namespace io {
     }
-    /** @brief Vorb's sound submodule.
+    /*!
+     * \namespace vorb::sound
+     *
+     * \brief Vorb's sound submodule.
      * 
      * It builds and maintains the audio context necessary to produce sound as
      * well as an engine that controls how resources are loaded and instanced.
      */
     namespace sound {
     }
-    /** @brief Vorb's Entity Component System extension.
+    /*!
+     * \namespace vorb::ecs
+     *
+     * \brief Vorb's Entity Component System extension.
      * 
      * This provides an implementation template for structuring an ECS system.
      */
     namespace ecs {
     }
-    /** @brief Vorb's networking submodule.
+    /*!
+     * \namespace vorb::net
+     *
+     * \brief Vorb's networking submodule.
      * 
      * It currently initializes and destroys enet.
      */
     namespace net {
     }
+    /*!
+     * \namespace vorb::script
+     *
+     * \brief Vorb's scripting submodule.
+     * 
+     * Contains components that are necessary for a simplified scripting experience
+     */
     namespace script {
     }
 }

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file compat.h
- * @brief Macros and headers designed to aid in cross-platform and cross-compiler compatibility.
+/*!
+ * \file compat.h
+ * 
+ * \brief Macros and headers designed to aid in cross-platform and cross-compiler compatibility.
  */
 
 #pragma once

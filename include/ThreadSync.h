@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ThreadSync.h
- * @brief Handles synchronization barriers between threads via token consumption.
+/*!
+ * \file ThreadSync.h
+ * 
+ * \brief Handles synchronization barriers between threads via token consumption.
  */
 
 #pragma once
@@ -52,8 +54,8 @@ public:
     };
 
     /// Add a token into the queue
-    /// @param so: Object using for synchronization
-    /// @param blockUntilFinished: True if current thread should block until object is consumed
+    /// \param so: Object using for synchronization
+    /// \param blockUntilFinished: True if current thread should block until object is consumed
     void add(ThreadSyncObject* so, bool blockUntilFinished = true) {
         std::unique_lock<std::mutex> lck(so->m_lock);
         so->m_hasCompleted = false;
@@ -62,16 +64,16 @@ public:
     }
 
     /// Perform a bulk dequeue operation on the queue
-    /// @tparam N: Size of objects array
-    /// @param objects: Buffer to hold synchronization tokens
-    /// @return Number of objects actually obtained
+    /// \tparam N: Size of objects array
+    /// \param objects: Buffer to hold synchronization tokens
+    /// \return Number of objects actually obtained
     template<size_t N>
     size_t getObjects(ThreadSyncObject* (&objects)[N]) {
         return m_queue.try_dequeue_bulk(objects, N);
     }
     
     /// Perform consumption and notification of a token
-    /// @param so: The token to be updated
+    /// \param so: The token to be updated
     void finish(ThreadSyncObject* so) {
         so->m_lock.lock();
         so->m_hasCompleted = true;

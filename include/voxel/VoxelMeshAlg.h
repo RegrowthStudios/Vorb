@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VoxelMeshAlg.h
- * @brief Defines general API for voxel mesh algorithms.
+/*!
+ * \file VoxelMeshAlg.h
+ * 
+ * \brief Defines general API for voxel mesh algorithms.
  */
 
 #pragma once
@@ -44,10 +46,10 @@ namespace vorb {
             };
 
             /// Create an index list for quads
-            /// @tparam T: Index type/size
-            /// @param quads: Number of quads for which indices must be specified
-            /// @param startIndex: The index of the first vertex
-            /// @return Array of quad vertex indices
+            /// \tparam T: Index type/size
+            /// \param quads: Number of quads for which indices must be specified
+            /// \param startIndex: The index of the first vertex
+            /// \return Array of quad vertex indices
             template<typename T>
             CALLER_DELETE T* generateQuadIndices(const ui32& quads, T startIndex = 0) {
                 size_t ic = quads * 6;

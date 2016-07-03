@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file MatrixMath.hpp
-* @brief Defines common matrix math operations.
+/*!
+ * \file MatrixMath.hpp
+ * 
+* \brief Defines common matrix math operations.
 */
 
 #pragma once

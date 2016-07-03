@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file RasterizerState.h
- * @brief Changes GPU polygon drawing and fill ops.
+/*!
+ * \file RasterizerState.h
+ * 
+ * \brief Changes GPU polygon drawing and fill ops.
  */
 
 #pragma once

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SliderScriptFuncs.h
-* @brief 
+/*!
+ * \file SliderScriptFuncs.h
+ * 
+* \brief 
 * Scripting functions for the Slider widget.
 *
 */
@@ -40,7 +42,7 @@ namespace vorb {
             virtual void unregisterWidget(Widget* w) override;
         protected:
             virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
-            /*! @brief Deregisters a LUA callback with a widget* */
+            /*! \brief Deregisters a LUA callback with a widget* */
             virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
 
             /************************************************************************/

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FullQuadVBO.h
- * @brief A mesh for a fullscreen quad.
+/*!
+ * \file FullQuadVBO.h
+ * 
+ * \brief A mesh for a fullscreen quad.
  */
 
 #pragma once
@@ -28,7 +30,7 @@ namespace vorb {
         class FullQuadVBO {
         public:
             /// Initialize all OpenGL resources
-            /// @param attrLocation: Position attribute location for VAO
+            /// \param attrLocation: Position attribute location for VAO
             void init(i32 attrLocation = 0);
             /// Dispose all OpenGL resources
             void dispose();

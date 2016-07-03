@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FileStream.h
- * @brief An opened file stream for I/O operations.
+/*!
+ * \file FileStream.h
+ * 
+ * \brief An opened file stream for I/O operations.
  */
 
 #pragma once
@@ -42,12 +44,12 @@ namespace vorb {
                 // Empty
             }
 
-            /// @return True if the file handle is still present
+            /// \return True if the file handle is still present
             bool isOpened() {
                 return m_fileCached != nullptr;
             }
 
-            /// @return This stream's file reference
+            /// \return This stream's file reference
             const File& getFile() const {
                 return m_parent;
             }
@@ -62,47 +64,47 @@ namespace vorb {
             }
 
             /// Write a chunk of data
-            /// @param count: Number of elements
-            /// @param size: Size of an element (in bytes)
-            /// @param data: Pointer to data
+            /// \param count: Number of elements
+            /// \param size: Size of an element (in bytes)
+            /// \param data: Pointer to data
             size_t write(size_t count, size_t size, const void* data) const {
                 return fwrite(data, size, count, m_fileCached);
             }
             /// Write a formatted string
-            /// @param format: String format
-            /// @param args: Format arguments
+            /// \param format: String format
+            /// \param args: Format arguments
             template<typename... Args>
             void write(const cString format, Args... args) const {
                 fprintf(m_fileCached, format, args...);
             }
 
             /// Read data to a buffer
-            /// @param count: Number of elements
-            /// @param size: Size of an element (in bytes)
-            /// @param data: Pointer to data buffer
+            /// \param count: Number of elements
+            /// \param size: Size of an element (in bytes)
+            /// \param data: Pointer to data buffer
             size_t read(size_t count, size_t size, void* data) const {
                 return fread(data, size, count, m_fileCached);
             }
 
             /// Read a formatted string
-            /// @param format: String format
-            /// @param args: Format arguments
+            /// \param format: String format
+            /// \param args: Format arguments
             template<typename... Args>
             void read(const cString format, Args... args) const {
                 fscanf(m_fileCached, format, args...);
             }
 
             /// Move the read/write head to a certain place
-            /// @param off: Offset from anchor in bytes
-            /// @param anchor: Reference position in file
+            /// \param off: Offset from anchor in bytes
+            /// \param anchor: Reference position in file
             void seek(FileSeekOffset off, const FileSeekAnchor& anchor) const {
                 fseek(m_fileCached, off, (i32)anchor);
             }
-            /// @return Current offset in the file in bytes
+            /// \return Current offset in the file in bytes
             FileSeekOffset offset() const {
                 return ftell(m_fileCached);
             }
-            /// @return Length of the file to be read in bytes
+            /// \return Length of the file to be read in bytes
             FileSeekOffset length() const {
                 seek(0, FileSeekAnchor::END);
                 FileSeekOffset l = offset();
@@ -116,7 +118,7 @@ namespace vorb {
             }
         private:
             /// Create a file stream from a file
-            /// @param parent:
+            /// \param parent:
             FileStream(const File& parent) :
                 m_parent(parent) {
                 // Empty

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VorbMemory.h
-* @brief Defines memory utilities such as aligned allocation.
+/*!
+ * \file VorbMemory.h
+ * 
+* \brief Defines memory utilities such as aligned allocation.
 */
 
 #pragma once
@@ -27,11 +29,11 @@
 
 namespace vorb {
     namespace core {
-        /*! @brief Mallocs aligned memory.
+        /*! \brief Mallocs aligned memory.
          * 
-         * @param size: Size in bytes of the returned block.
-         * @param alignment: Alignment in bytes of the returned block.
-         * @return pointer to new memory block.
+         * \param size: Size in bytes of the returned block.
+         * \param alignment: Alignment in bytes of the returned block.
+         * \return pointer to new memory block.
          */
         void* aligned_malloc(size_t size, size_t alignment) {
             void* p1; // original block
@@ -42,9 +44,9 @@ namespace vorb {
             p2[-1] = p1;
             return p2;
         }
-        /*! @brief Frees memory allocated with aligned_malloc.
+        /*! \brief Frees memory allocated with aligned_malloc.
          * 
-         * @param p: The pointer to free.
+         * \param p: The pointer to free.
          */
         void aligned_free(void *p) {
             free(((void**)p)[-1]);

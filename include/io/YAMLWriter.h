@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file YAMLWriter.h
- * @brief API for writing YAML data.
+/*!
+ * \file YAMLWriter.h
+ * 
+ * \brief API for writing YAML data.
  */
 
 #pragma once
@@ -45,20 +47,20 @@ namespace keg {
         ~YAMLWriter();
 
         /// Emit a value at the current stage
-        /// @tparam T: Type of value (must have NodeValueConverter<T> defined)
-        /// @param value: Data to be written
-        /// @return Self
+        /// \tparam T: Type of value (must have NodeValueConverter<T> defined)
+        /// \param value: Data to be written
+        /// \return Self
         template<typename T>
         YAMLWriter& operator<< (T value) {
             NodeValueConverter<T>::write(m_emitter, value);
             return *this;
         }
         /// Change the state of the document and the node hierarchy
-        /// @param param: Change to the YAML flow
-        /// @return Self
+        /// \param param: Change to the YAML flow
+        /// \return Self
         YAMLWriter& push(const WriterParam& param);
 
-        /// @return The YAML data constructed up to this point
+        /// \return The YAML data constructed up to this point
         const cString c_str() const;
     private:
         YAMLEmitter* m_emitter; ///< Pointer to emitter implementation

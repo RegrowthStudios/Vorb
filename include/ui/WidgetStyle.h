@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file WidgetStyle.h
-* @brief 
+/*!
+ * \file WidgetStyle.h
+ * 
+* \brief 
 * StyleSheet definition for widgets
 *
 */

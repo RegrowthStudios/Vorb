@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Asset.h
- * @brief Generic asset class.
+/*!
+ * \file Asset.h
+ * 
+ * \brief Generic asset class.
  *
  * Custom assets should derive from this class.
  */

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DResource.h
- * @brief 
+/*!
+ * \file D3DResource.h
+ * 
+ * \brief 
  */
 
 #pragma once

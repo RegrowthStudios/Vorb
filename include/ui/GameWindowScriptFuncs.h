@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GameWindowScriptFuncs.h
-* @brief 
+/*!
+ * \file GameWindowScriptFuncs.h
+ * 
+* \brief 
 * Scripting functions for a vui::GameWindow
 *
 */

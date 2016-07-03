@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Quaternion.hpp
-* @brief Implements Quaternion for rotation math.
+/*!
+ * \file Quaternion.hpp
+ * 
+* \brief Implements Quaternion for rotation math.
 */
 
 #pragma once

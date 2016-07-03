@@ -8,8 +8,10 @@
 // All Rights Reserved
 //
 
-/*! \file SpriteBatch.h
- * @brief Defines the SpriteBatch for easy and efficient 2D rendering of Sprites.
+/*!
+ * \file SpriteBatch.h
+ * 
+ * \brief Defines the SpriteBatch for easy and efficient 2D rendering of Sprites.
  */
 
 #pragma once

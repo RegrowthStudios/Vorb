@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GBuffer.h
- * @brief A special render target used for deferred rendering
+/*!
+ * \file GBuffer.h
+ * 
+ * \brief A special render target used for deferred rendering
  */
 
 #pragma once
@@ -44,7 +46,7 @@
 
 namespace vorb {
     namespace graphics {
-         /*! @brief Information that specifies size and location of a texture in the GBuffer
+         /*! \brief Information that specifies size and location of a texture in the GBuffer
           */
         struct GBufferAttachment {
         public:
@@ -58,25 +60,25 @@ namespace vorb {
         class GBuffer {
         public:
             /// Set up a GBuffer with a certain size
-            /// @param w: Width in pixels of each target
-            /// @param h: Height in pixels of each target
+            /// \param w: Width in pixels of each target
+            /// \param h: Height in pixels of each target
             GBuffer(ui32 w = 0, ui32 h = 0);
             /// Set up a GBuffer with a certain size
-            /// @param s: Size in pixels of each target
+            /// \param s: Size in pixels of each target
             GBuffer(ui32v2 s) : GBuffer(s.x, s.y) {
                 // Empty
             }
 
             /// Create the value-based render targets
-            /// @return Self
+            /// \return Self
             GBuffer& init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat);
             /// Attach a depth buffer to this GBuffer
-            /// @param depthFormat: Precision used for depth buffer
-            /// @return Self
+            /// \param depthFormat: Precision used for depth buffer
+            /// \return Self
             GBuffer& initDepth(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH_COMPONENT32);
             /// Attack a depth and stencil buffer to this GBuffer
-            /// @param depthFormat: Precision used for depth and stencil buffer
-            /// @return Self
+            /// \param depthFormat: Precision used for depth and stencil buffer
+            /// \return Self
             GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
 
             void initTarget(const ui32v2& _size, const ui32& texID, const GBufferAttachment& attachment);
@@ -89,23 +91,23 @@ namespace vorb {
             void useLight();
 
             /// Bind Geometry Texture
-            /// @param i: Which Geometry texture to bind
-            /// @param textureUnit Position to bind texture
+            /// \param i: Which Geometry texture to bind
+            /// \param textureUnit Position to bind texture
             void bindGeometryTexture(size_t i, ui32 textureUnit);
 
             /// Bind Depth Texture
-            /// @param textureUnit Position to bind texture
+            /// \param textureUnit Position to bind texture
             void bindDepthTexture(ui32 textureUnit);
             
             /// Bind Light Texture
-            /// @param textureUnit Position to bind texture
+            /// \param textureUnit Position to bind texture
             void bindLightTexture(ui32 textureUnit);
 
-            /// @return OpenGL texture IDs
+            /// \return OpenGL texture IDs
             const VGTexture& getGeometryTexture(size_t i) const {
                 return m_textures[i];
             }
-            /// @return Light texture
+            /// \return Light texture
             const VGTexture& getLightTexture() const {
                 return m_textures[m_textures.size() - 1];
             }
@@ -119,15 +121,15 @@ namespace vorb {
                 m_size = size;
             }
 
-            /// @return Size of the GBuffer in pixels (W,H)
+            /// \return Size of the GBuffer in pixels (W,H)
             const ui32v2& getSize() const {
                 return m_size;
             }
-            /// @return Width of the GBuffer in pixels
+            /// \return Width of the GBuffer in pixels
             const ui32& getWidth() const {
                 return m_size.x;
             }
-            /// @return Height of the GBuffer in pixels
+            /// \return Height of the GBuffer in pixels
             const ui32& getHeight() const {
                 return m_size.y;
             }

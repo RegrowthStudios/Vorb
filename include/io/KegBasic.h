@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegBasic.h
- * @brief 
+/*!
+ * \file KegBasic.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -25,7 +27,7 @@
 #endif // !VORB_USING_PCH
 
 namespace keg {
-    /*! @brief These are all the types that can be parsed directly into a value.
+    /*! \brief These are all the types that can be parsed directly into a value.
      */
     enum class BasicType {
         /************************************************************************/

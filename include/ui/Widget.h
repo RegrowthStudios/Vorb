@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Widget.h
-* @brief 
+/*!
+ * \file Widget.h
+ * 
+* \brief 
 * Base class for all Widgets.
 *
 */
@@ -53,47 +55,47 @@ namespace vorb {
             friend class WidgetScriptFuncs;
             friend class IWidgetContainer;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Widget(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
              *
-             * @param name: Name of the control.
-             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+             * \param name: Name of the control.
+             * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
             Widget(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
              *
              * The widget will be made a child of parent.
              *
-             * @param parent: Parent container object.
-             * @param name: Name of the control.
-             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+             * \param parent: Parent container object.
+             * \param name: Name of the control.
+             * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
             Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Destructor that unhooks events */
+            /*! \brief Destructor that unhooks events */
             virtual ~Widget();
-            /*! @brief Releases all resources used by the Widget.
+            /*! \brief Releases all resources used by the Widget.
             *
             * Gets called in the destructor.
             */
             virtual void dispose() override;
 
-            /*! @brief Adds all drawables to the UIRenderer
+            /*! \brief Adds all drawables to the UIRenderer
             *
-            * @param renderer: UIRenderer to add to.
+            * \param renderer: UIRenderer to add to.
             */
             virtual void addDrawables(UIRenderer* renderer);
 
-            /*! @brief Removes all drawables from the UIRenderer */
+            /*! \brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
-            /*! @brief Updates the widget. Can be used for animation.
+            /*! \brief Updates the widget. Can be used for animation.
             *
-            * @param dt: The TimeStep
+            * \param dt: The TimeStep
             */
             virtual void update(f32 dt = 1.0f) { }
 
-            /*! @brief Updates the position relative to parent */
+            /*! \brief Updates the position relative to parent */
             virtual void updatePosition() override;    
 
             /************************************************************************/

@@ -650,7 +650,6 @@
     <ClInclude Include="src\graphics\GLAdapter.h" />
     <ClInclude Include="src\io\YAMLImpl.h" />
     <ClInclude Include="src\ui\ImplUISDL.h" />
-    <ClInclude Include="src\os.h" />
     <ClInclude Include="src\ui\InputDispatcherEventCatcher.h" />
   </ItemGroup>
   <ItemGroup>

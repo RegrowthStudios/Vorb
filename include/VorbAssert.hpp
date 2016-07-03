@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VorbAssert.hpp
-* @brief Defines custom vorb assertion.
+/*!
+ * \file VorbAssert.hpp
+ * 
+* \brief Defines custom vorb assertion.
 */
 
 #pragma once

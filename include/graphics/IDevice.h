@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IDevice.h
- * @brief The device is responsible for submitting draw calls to the graphics device.
+/*!
+ * \file IDevice.h
+ * 
+ * \brief The device is responsible for submitting draw calls to the graphics device.
  */
 
 #pragma once
@@ -29,7 +31,7 @@
 
 namespace vorb {
     namespace graphics {
-        /* @brief
+        /* \brief
          */
         class IDevice {
         public:

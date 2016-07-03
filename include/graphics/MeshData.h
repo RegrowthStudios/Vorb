@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file MeshData.h
- * @brief 
+/*!
+ * \file MeshData.h
+ * 
+ * \brief 
  */
 
 #pragma once

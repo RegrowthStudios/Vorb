@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Drawables.h
-* @brief 
+/*!
+ * \file Drawables.h
+ * 
+* \brief 
 * Defines drawable components for controls
 *
 */

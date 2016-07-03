@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ShaderParser.h
- * @brief Handles parsing of semantics and includes for shaders.
+/*!
+ * \file ShaderParser.h
+ * 
+ * \brief Handles parsing of semantics and includes for shaders.
  */
 
 #pragma once
@@ -40,19 +42,19 @@ namespace vorb {
         class ShaderParser {
         public:
             /// Parses includes and semantics for a vertex shader
-            /// @param inputCode: The input code to use for parsing
-            /// @param resultCode: The stored resulting code after parse
-            /// @param attributeNames: The stored attribute names
-            /// @param semantics: The stored semantics, 1 to 1 with attributeNames
-            /// @param iom: Optional iomanager to use for include lookups
+            /// \param inputCode: The input code to use for parsing
+            /// \param resultCode: The stored resulting code after parse
+            /// \param attributeNames: The stored attribute names
+            /// \param semantics: The stored semantics, 1 to 1 with attributeNames
+            /// \param iom: Optional iomanager to use for include lookups
             static void parseVertexShader(const cString inputCode, OUT nString& resultCode,
                                           OUT std::vector<nString>& attributeNames, 
                                           OUT std::vector<VGSemantic>& semantics,
                                           vio::IOManager* iom = nullptr);
             // Parses includes for a fragment shader
-            /// @param inputCode: The input code to use for parsing
-            /// @param resultCode: The stored resulting code after parse
-            /// @param iom: Optional iomanager to use for include lookups
+            /// \param inputCode: The input code to use for parsing
+            /// \param resultCode: The stored resulting code after parse
+            /// \param iom: Optional iomanager to use for include lookups
             static void parseFragmentShader(const cString inputCode, OUT nString& resultCode,
                                             vio::IOManager* iom = nullptr);
             
@@ -61,22 +63,22 @@ namespace vorb {
             /// Initializes the semantic map. Call once.
             static void initSemantics();
             /// Attempts to parse an #include line
-            /// @param s: The code to parse
-            /// @param i: Position in the s string
-            /// @return true if parse was successful
+            /// \param s: The code to parse
+            /// \param i: Position in the s string
+            /// \return true if parse was successful
             /// @post s may be resized with new included code
             static bool tryParseInclude(nString& s, size_t i);
             /// Attempts to parse an attribute
-            /// @param s: The code to parse
-            /// @param i: Position in the s string
-            /// @param semantic: Stores the semantic type
-            /// @return the attribute name if successful or the empty string
+            /// \param s: The code to parse
+            /// \param i: Position in the s string
+            /// \param semantic: Stores the semantic type
+            /// \return the attribute name if successful or the empty string
             static nString tryParseAttribute(const cString s, size_t i, OUT VGSemantic& semantic);
             /// Checks if there is a comment at a point in the string,
             /// and sets the internal comment bools as well.
-            /// @param s: The code to check
-            /// @param i: Position in the code
-            /// @return true if comment was found
+            /// \param s: The code to check
+            /// \param i: Position in the code
+            /// \return true if comment was found
             static bool checkForComment(const cString s, size_t i);
            
             static bool isComment() { return isBlockComment || isNormalComment; }

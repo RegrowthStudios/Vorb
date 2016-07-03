@@ -27,8 +27,10 @@
 /*                                                                      */
 /************************************************************************/
 
-/*! \file Events.hpp
- * @brief C#-style events.
+/*!
+ * \file Events.hpp
+ * 
+ * \brief C#-style events.
  */
 
 #pragma once
@@ -44,7 +46,7 @@
 
 #include "TypeManip.hpp"
 
-/*! @brief Calling conventions 
+/*! \brief Calling conventions 
  * 
  * 1. Static function
  *      Requires:
@@ -364,31 +366,31 @@ Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)) {
 }
 
 /// An event that invokes methods taking certain arguments
-/// @tparam Params: Metadata sent in event invocation
+/// \tparam Params: Metadata sent in event invocation
 template<typename... Params>
 class Event {
 public:
     typedef RDelegate<void, Sender, Params...> Listener; ///< Callback delegate type
 
     /// Create an event with a sender attached to it
-    /// @param sender: Owner object sent with each invocation
+    /// \param sender: Owner object sent with each invocation
     Event(Sender sender = nullptr) :
         m_sender(sender) {
         // Empty
     }
 
-    /*! @brief Reset the sender value of this event to another.
+    /*! \brief Reset the sender value of this event to another.
      * 
      * @warning Resetting a sender of an event could cause harm to existing listeners.
      * 
-     * @param s: New sender pointer.
+     * \param s: New sender pointer.
      */
     void setSender(Sender s) {
         m_sender = s;
     }
 
     /// Call all bound methods
-    /// @param p: Arguments used in function calls
+    /// \param p: Arguments used in function calls
     void send(Params... p) {
         size_t sz = m_funcs.size();
         for (size_t i = 0; i < sz && i < m_funcs.size(); i++) {
@@ -396,23 +398,23 @@ public:
         }
     }
     /// Call all bound methods
-    /// @param p: Arguments used in function calls
+    /// \param p: Arguments used in function calls
     void operator()(Params... p) {
         this->send(p...);
     }
 
     /// Add a function to this event
-    /// @param f: A subscriber
-    /// @return The delegate passed in
+    /// \param f: A subscriber
+    /// \return The delegate passed in
     Event& add(Listener f) {
         f.neuter();
         m_funcs.push_back(f);
         return *this;
     }
     /// Add a function to this event
-    /// @param f: A unknown-type subscriber
-    /// @tparam F: Functor type
-    /// @return The newly made delegate (CALLER DELETE)
+    /// \param f: A unknown-type subscriber
+    /// \tparam F: Functor type
+    /// \return The newly made delegate (CALLER DELETE)
     template<typename F>
     Listener* addFunctor(F f) {
         Listener* functor = makeRFunctor(f);
@@ -421,14 +423,14 @@ public:
     }
 
     /// Add a function to this event whilst allowing chaining
-    /// @param f: A subscriber
-    /// @return Self
+    /// \param f: A subscriber
+    /// \return Self
     Event& operator +=(const Listener& f) {
         return add(f);
     }
 
     /// Remove a function (just one) from this event
-    /// @param f: A subscriber
+    /// \param f: A subscriber
     Event& remove(const Listener& f) {
         auto fLoc = std::find(m_funcs.begin(), m_funcs.end(), f);
         if (fLoc == m_funcs.end()) return *this;
@@ -436,8 +438,8 @@ public:
         return *this;
     }
     /// Remove a function (just one) from this event whilst allowing chaining
-    /// @param f: A subscriber
-    /// @return Self
+    /// \param f: A subscriber
+    /// \return Self
     Event& operator -=(const Listener& f) {
         return remove(f);
     }
@@ -458,10 +460,10 @@ public:
     }
 
     /// Binds a callback to an event and adds it for automatic destruction
-    /// @tparam F: f's functor type
-    /// @tparam Params: f's extra invocation parameters
-    /// @param e: Event
-    /// @param f: Callback function
+    /// \tparam F: f's functor type
+    /// \tparam Params: f's extra invocation parameters
+    /// \param e: Event
+    /// \param f: Callback function
     template<typename F, typename... Params>
     void addAutoHook(Event<Params...>& e, F f) {
         auto fd = e.addFunctor<F>(f);

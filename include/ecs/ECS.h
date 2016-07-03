@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ECS.h
- * @brief The main ECS class.
+/*!
+ * \file ECS.h
+ * 
+ * \brief The main ECS class.
  */
 
 #pragma once
@@ -45,68 +47,68 @@ namespace vorb {
             /// Default constructor which initializes events
             ECS();
 
-            /// @return Set of entities for iteration
+            /// \return Set of entities for iteration
             const EntitySet& getEntities() const {
                 return _entities;
             }
-            /// @return Number of entities that are active
+            /// \return Number of entities that are active
             size_t getActiveEntityCount() const {
                 return _genEntity.getActiveCount();
             }
-            /// @return The dictionary of NamedComponents
+            /// \return The dictionary of NamedComponents
             const ComponentSet& getComponents() const {
                 return _components;
             }
 
-            /// @return The ID of a newly generated entity
+            /// \return The ID of a newly generated entity
             EntityID addEntity();
             /// Delete an entity from this ECS
-            /// @param id: The entity's ID
-            /// @return True if an entity was deleted
+            /// \param id: The entity's ID
+            /// \return True if an entity was deleted
             bool deleteEntity(EntityID id);
             /// Generate a chunk of entities
-            /// @param n: Number of entities to generate
-            /// @param ids: Pointer to output array of entities
+            /// \param n: Number of entities to generate
+            /// \param ids: Pointer to output array of entities
             void genEntities(const size_t& n, EntityID* ids) {
                 for (size_t i = 0; i < n; i++) ids[i] = addEntity();
             }
 
             /// Add a component to an entity
-            /// @param name: Friendly name of component
-            /// @param id: Component owner entity
-            /// @return ID of generated component
+            /// \param name: Friendly name of component
+            /// \param id: Component owner entity
+            /// \return ID of generated component
             ComponentID addComponent(nString name, EntityID id);
             /// Remove a component from an entity
-            /// @param name: Friendly name of component
-            /// @param id: Component owner entity
-            /// @return True if a component was deleted
+            /// \param name: Friendly name of component
+            /// \param id: Component owner entity
+            /// \return True if a component was deleted
             bool deleteComponent(nString name, EntityID id);
             /// Check if an entity has a component
-            /// @param tableID: ID of the component table
-            /// @param id: Entity
-            /// @return True if the entity holds that component
+            /// \param tableID: ID of the component table
+            /// \param id: Entity
+            /// \return True if the entity holds that component
             bool hasComponent(const TableID& tableID, const EntityID& id) const;
             /// Check if an entity has a component
-            /// @param name: Friendly name of the component
-            /// @param id: Entity
-            /// @return True if the entity holds that component
+            /// \param name: Friendly name of the component
+            /// \param id: Entity
+            /// \return True if the entity holds that component
             bool hasComponent(const nString& name, const EntityID& id) const;
 
             /// Add a component table to be referenced by a special name
-            /// @param name: Friendly name of component table
-            /// @param table: Component table
+            /// \param name: Friendly name of component table
+            /// \param table: Component table
             TableID addComponentTable(nString name, ComponentTableBase* table);
             /// 
-            /// @param name: Friendly name
-            /// @return ID of the table, or 0 if none
+            /// \param name: Friendly name
+            /// \return ID of the table, or 0 if none
             TableID getComponentTableID(const nString& name) const;
             /// Obtain a component table by its name
-            /// @param name: Friendly name
-            /// @return The component table
+            /// \param name: Friendly name
+            /// \return The component table
             ComponentTableBase* getComponentTable(nString name) const;
             /// Obtain a component table by its name
-            /// @param id: Component table's ID
-            /// @return The component table
+            /// \param id: Component table's ID
+            /// \return The component table
             ComponentTableBase* getComponentTable(TableID id) const;
 
             Event<EntityID> onEntityAdded; ///< Called when an entity is added to this system

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ScriptedUI.cpp
-* @brief
+/*!
+ * \file ScriptedUI.cpp
+ * 
+* \brief
 * High level UI class that is defined
 * with scripting.
 */

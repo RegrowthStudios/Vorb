@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IContext.h
- * @brief The context hold graphics resources that multiple devices may share.
+/*!
+ * \file IContext.h
+ * 
+ * \brief The context hold graphics resources that multiple devices may share.
  */
 
 #pragma once
@@ -30,7 +32,7 @@ namespace vorb {
     namespace graphics {
         class ResourceAllocator;
 
-        /* @brief
+        /* \brief
          */
         class IContext {
             friend class IAdapter;
@@ -40,7 +42,7 @@ namespace vorb {
                 return m_api;
             }
 
-            /*! @brief Signal that this thread will be used by the context
+            /*! \brief Signal that this thread will be used by the context
              * 
              */
             void branchThread(OUT ResourceAllocator* allocator);

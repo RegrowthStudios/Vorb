@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Entity.h
- * @brief Basic ECS types.
+/*!
+ * \file Entity.h
+ * 
+ * \brief Basic ECS types.
  */
 
 #pragma once
@@ -37,7 +39,7 @@ namespace vorb {
         class Entity {
         public:
             /// It must not be nameless
-            /// @param _id: Unique non-zero id
+            /// \param _id: Unique non-zero id
             Entity(const EntityID& _id) :
                 id(_id) {
                 // Empty

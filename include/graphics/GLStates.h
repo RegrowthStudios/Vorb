@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GLStates.h
- * @brief State headers.
+/*!
+ * \file GLStates.h
+ * 
+ * \brief State headers.
  */
 
 #pragma once

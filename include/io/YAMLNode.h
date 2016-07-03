@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file YAMLNode.h
- * @brief YAML node type and utilities.
+/*!
+ * \file YAMLNode.h
+ * 
+ * \brief YAML node type and utilities.
  */
 
 #pragma once
@@ -38,35 +40,35 @@ namespace keg {
     };
 
     /// Determine the usage for a node
-    /// @pre: node must not be null
-    /// @param node: Node
-    /// @return Node's type
+    /// \pre: node must not be null
+    /// \param node: Node
+    /// \return Node's type
     NodeType getType(Node node);
     /// Check if a node has an interior node
-    /// @pre: node must not be null
-    /// @param node: Node
-    /// @param value: Name of interior node
-    /// @return True if interior exists
+    /// \pre: node must not be null
+    /// \param node: Node
+    /// \param value: Name of interior node
+    /// \return True if interior exists
     bool hasInterior(Node node, const cString value);
     /// Check if a node has an interior node
-    /// @pre: node must not be null
-    /// @param node: Node
-    /// @param value: Name of interior node
-    /// @return True if interior exists
+    /// \pre: node must not be null
+    /// \param node: Node
+    /// \param value: Name of interior node
+    /// \return True if interior exists
     inline bool hasInterior(Node node, const nString& value) {
         return hasInterior(node, value.c_str());
     }
     /// Determine the array size of a node
-    /// @pre: node must not be null
-    /// @param node: Node
-    /// @return Size of the array this node contains
+    /// \pre: node must not be null
+    /// \param node: Node
+    /// \return Size of the array this node contains
     size_t getSequenceSize(Node node);
 
     /// Convert this node into a more useful value
-    /// @pre: node must not be null
-    /// @tparam T: Type to be retrieved
-    /// @param node: Node
-    /// @return Node's value as the specified type
+    /// \pre: node must not be null
+    /// \tparam T: Type to be retrieved
+    /// \param node: Node
+    /// \return Node's value as the specified type
     template<typename T>
     T convert(Node node) {
         return NodeValueConverter<T>::convert(node);

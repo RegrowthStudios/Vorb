@@ -7,11 +7,11 @@
 // All Rights Reserved
 //
 
-/*! \file ImplUISDL.h
-* @brief 
-*
-*
-*/
+/*!
+ * \file ImplUISDL.h
+ * 
+ * \brief 
+ */
 
 #pragma once
 

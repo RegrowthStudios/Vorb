@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GameWindow.h
- * @brief A window wrapper object for simple applications.
+/*!
+ * \file GameWindow.h
+ * 
+ * \brief A window wrapper object for simple applications.
  */
 
 #pragma once
@@ -36,14 +38,14 @@ namespace vorb {
         // Forward declarations
         struct WindowResizeEvent;
 
-        /*! @brief Typeless window handle.
+        /*! \brief Typeless window handle.
          * <br/>
          * GLFW - GLFWwindow* <br/>
          * SDL - SDL_Window* <br/>
          * SFML - sf::RenderWindow* <br/>
          */
         typedef void* WindowHandle;
-        /*! @brief Typeless graphics handle
+        /*! \brief Typeless graphics handle
          * <br/>
          * GLFW - GLFWwindow* <br/>
          * SDL/D3D - D3DContext* <br/>
@@ -59,7 +61,7 @@ namespace vorb {
         #define DEFAULT_MAX_FPS 60.0f
         #define DEFAULT_APP_CONFIG_FILE "app.config"
         
-        /*! @brief Swapping intervals used for monitor synchronization and graphics stability.
+        /*! \brief Swapping intervals used for monitor synchronization and graphics stability.
          */
         enum class GameSwapInterval : i32 {
             UNLIMITED_FPS = 0, ///< No synchronization or FPS limiting is performed.
@@ -80,7 +82,7 @@ namespace vorb {
             ui32 swapChainSize; ///< Number of framebuffers in the swap chain.
         };
 
-        /*! @brief Window properties that additionally define graphics usage.
+        /*! \brief Window properties that additionally define graphics usage.
          */
         struct GameDisplayMode {
         public:
@@ -99,25 +101,25 @@ namespace vorb {
         
         class GameWindow : public OSWindow {
         public:
-            /*! @brief Initializes window with default application settings.
+            /*! \brief Initializes window with default application settings.
              * 
              * Does not create the physical window or modify any OS settings.
              */
             GameWindow();
         
-            /*! @brief Create the window and graphics context.
+            /*! \brief Create the window and graphics context.
              * 
              * The window will attempt to load application settings from DEFAULT_APP_CONFIG_FILE
              * for user configuration purposes, otherwise it will use the default settings. The
              * graphics context will be created during window initialization and it will be configured
              * to the thread that this method is called upon. The InputDispatcher will be created as well.
              * 
-             * @return True if no error occurred.
+             * \return True if no error occurred.
              */
             bool init(bool isResizable = true);
-            /*! @brief Destroys the window and associated graphics context.
+            /*! \brief Destroys the window and associated graphics context.
              * 
-             * @pre: This disposal method should be called on the thread where the window was created and the
+             * \pre: This disposal method should be called on the thread where the window was created and the
              * graphics context has ownership.
              * 
              * The window will save its current settings to DEFAULT_APP_CONFIG_FILE. The InputDispatcher will
@@ -125,17 +127,17 @@ namespace vorb {
              */
             void dispose();
         
-            /*! @brief A check for whether the window has been created or not.
+            /*! \brief A check for whether the window has been created or not.
              * 
-             * @return True if the window is created and if it is still alive.
+             * \return True if the window is created and if it is still alive.
              */
             bool isInitialized() const {
                 return m_window != nullptr;
             }
 
-            /*! @brief Detection of input to terminate this window.
+            /*! \brief Detection of input to terminate this window.
              * 
-             * @return True if a quit signal was received by this window.
+             * \return True if a quit signal was received by this window.
              */
             const bool& shouldQuit() const {
                 return m_quitSignal;
@@ -179,11 +181,11 @@ namespace vorb {
                 return m_supportedResolutions;
             }
 
-            /*! @brief Obtain the handle to the graphics context.
+            /*! \brief Obtain the handle to the graphics context.
              * 
              * @warning When utilizing D3D, the D3D device pointer will be returned instead of the full struct.
              * 
-             * @return This window's graphics context.
+             * \return This window's graphics context.
              */
             GraphicsContext getContext() const; // TODO(Cristian): Does returning the D3D Device cause convenience or confusion?
 #if defined(VORB_DX_11)
@@ -195,10 +197,10 @@ namespace vorb {
             void setFullscreen(bool useFullscreen, bool overrideCheck = false);
             void setBorderless(bool useBorderless, bool overrideCheck = false);
             void setSwapInterval(GameSwapInterval mode, bool overrideCheck = false);
-            /*! @brief Sets the position of the window
+            /*! \brief Sets the position of the window
              * 
-             * @param x: X position. 0 will center it.
-             * @param Y: Y position. 0 will center it.
+             * \param x: X position. 0 will center it.
+             * \param Y: Y position. 0 will center it.
              */
             void setPosition(int x, int y);
             void setMaxFPS(f32 fpsLimit);

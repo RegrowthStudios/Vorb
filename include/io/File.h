@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file File.h
- * @brief A file wrapper.
+/*!
+ * \file File.h
+ * 
+ * \brief A file wrapper.
  */
 
 #pragma once
@@ -67,40 +69,40 @@ namespace vorb {
                 // Empty
             }
 
-            /// @return Underlying path
+            /// \return Underlying path
             const Path& getPath() const {
                 return m_path;
             }
-            /// @return True if this file exists
+            /// \return True if this file exists
             bool isValid() const {
                 return m_path.isValid();
             }
-            /// @return A file checksum
+            /// \return A file checksum
             void computeSum(OUT SHA256Sum* sum) const;
 
-            /// @return The size of the file in bytes
+            /// \return The size of the file in bytes
             ui64 length() const;
             
             /// Attempt to resize this file
-            /// @param l: New file size
-            /// @return True if the file was resized successfully
+            /// \param l: New file size
+            /// \return True if the file was resized successfully
             bool resize(const ui64& l) const;
 
             /// Open the file handle
-            /// @return A stream to the file
+            /// \return A stream to the file
             FileStream open(FileOpenFlags flags) const;
             /// Open the file handle
-            /// @return A stream to the file
+            /// \return A stream to the file
             FileStream open(const bool& binary = true) const;
             /// Open the file handle for reading only
-            /// @return A stream to the file
+            /// \return A stream to the file
             FileStream openReadOnly(const bool& binary = true) const;
             /// Create the file handle
-            /// @return A stream to the file
+            /// \return A stream to the file
             FileStream create(const bool& binary = true) const;
         private:
             /// Secret-sauce file builder
-            /// @param p: Path value
+            /// \param p: Path value
             File(const Path& p);
 
             Path m_path; ///< File's path value

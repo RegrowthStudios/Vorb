@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file gtypes.h
- * @brief Typenames for general graphics types.
+/*!
+ * \file gtypes.h
+ * 
+ * \brief Typenames for general graphics types.
  */
 
 #pragma once

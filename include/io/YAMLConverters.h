@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file YAMLConverters.h
- * @brief Declarations of types supported for node conversion.
+/*!
+ * \file YAMLConverters.h
+ * 
+ * \brief Declarations of types supported for node conversion.
  */
 
 #pragma once

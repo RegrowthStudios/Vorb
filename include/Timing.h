@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Timing.h
- * @brief Different timers.
+/*!
+ * \file Timing.h
+ * 
+ * \brief Different timers.
  */
 
 #pragma once
@@ -131,7 +133,7 @@ public:
     void beginFrame();
 
     /// Ends the frame
-    /// @return The current FPS
+    /// \return The current FPS
     f32 endFrame();
 
     /// Returns the current fps as last recorded by an endFrame
@@ -159,7 +161,7 @@ public:
     void setMaxFPS(const f32& maxFPS);
 
     // Limits (blocks) the current frame to achieve the desired FPS
-    /// @return Current FPS
+    /// \return Current FPS
     f32 endFrame();
 private:
     f32 m_maxFPS = DEFAULT_MAX_FPS;

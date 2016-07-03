@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FormScriptEnvironment.h
-* @brief 
+/*!
+ * \file FormScriptEnvironment.h
+ * 
+* \brief 
 * Scripting environment for a UI form.
 *
 */

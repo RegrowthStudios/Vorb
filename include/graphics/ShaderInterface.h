@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ShaderInterface.h
- * @brief Interface for communicating semantic information between programs and vertex buffer.
+/*!
+ * \file ShaderInterface.h
+ * 
+ * \brief Interface for communicating semantic information between programs and vertex buffer.
  */
 
 #pragma once
@@ -55,12 +57,12 @@ namespace vorb {
             void dispose();
 
             /// Builds the VAO from semantic bindings
-            /// @param semBinds: The semantic to attribute bindings
-            /// @return number of bindings successfully linked
+            /// \param semBinds: The semantic to attribute bindings
+            /// \return number of bindings successfully linked
             i32 build(const AttributeSemBinding& semBinds);
 
             /// Builds the VAO from a GLProgram
-            /// @return number of bindings successfully linked
+            /// \return number of bindings successfully linked
             i32 build(const GLProgram* program);
 
             /// Enables the VAO for this interface

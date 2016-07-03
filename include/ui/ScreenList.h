@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ScreenList.h
- * @brief Indexed screen container.
+/*!
+ * \file ScreenList.h
+ * 
+ * \brief Indexed screen container.
  */
 
 #pragma once

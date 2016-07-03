@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file TweeningMath.hpp
-* @brief Defines common tweening math operations. Based on the easing equations provided in jQuery: https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+/*!
+ * \file TweeningMath.hpp
+ * 
+* \brief Defines common tweening math operations. Based on the easing equations provided in jQuery: https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
 *       Examples of each tween found here: http://hosted.zeh.com.br/mctween/animationtypes.html
 */
 
@@ -25,7 +27,7 @@ namespace vorb {
     namespace math {
         // TODO(Matthew): Ensure the checks for alpha being 0.0f or 1.0f in various locations actually fix possible precision issues - and if the possible performance hit is worthwhile.
 
-        /*! @brief Computes a linear tweening.
+        /*! \brief Computes a linear tweening.
         */
         template <typename T>
         inline T linear(T startVal, T finalVal, T alpha) {
@@ -39,7 +41,7 @@ namespace vorb {
             return linear(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInQuad tweening.
+        /*! \brief Computes an easeInQuad tweening.
         */
         template <typename T>
         inline T easeInQuad(T startVal, T finalVal, T alpha) {
@@ -53,7 +55,7 @@ namespace vorb {
             return easeInQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutQuad tweening.
+        /*! \brief Computes an easeOutQuad tweening.
         */
         template <typename T>
         inline T easeOutQuad(T startVal, T finalVal, T alpha) {
@@ -67,7 +69,7 @@ namespace vorb {
             return easeOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutQuad tweening.
+        /*! \brief Computes an easeInOutQuad tweening.
         */
         template <typename T>
         inline T easeInOutQuad(T startVal, T finalVal, T alpha) {
@@ -86,7 +88,7 @@ namespace vorb {
             return easeInOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInCubic tweening.
+        /*! \brief Computes an easeInCubic tweening.
         */
         template <typename T>
         inline T easeInCubic(T startVal, T finalVal, T alpha) {
@@ -100,7 +102,7 @@ namespace vorb {
             return easeInCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutCubic tweening.
+        /*! \brief Computes an easeOutCubic tweening.
         */
         template <typename T>
         inline T easeOutCubic(T startVal, T finalVal, T alpha) {
@@ -115,7 +117,7 @@ namespace vorb {
             return easeOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutCubic tweening.
+        /*! \brief Computes an easeInOutCubic tweening.
         */
         template <typename T>
         inline T easeInOutCubic(T startVal, T finalVal, T alpha) {
@@ -134,7 +136,7 @@ namespace vorb {
             return easeInOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInQuart tweening.
+        /*! \brief Computes an easeInQuart tweening.
         */
         template <typename T>
         inline T easeInQuart(T startVal, T finalVal, T alpha) {
@@ -148,7 +150,7 @@ namespace vorb {
             return easeInQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutQuart tweening.
+        /*! \brief Computes an easeOutQuart tweening.
         */
         template <typename T>
         inline T easeOutQuart(T startVal, T finalVal, T alpha) {
@@ -163,7 +165,7 @@ namespace vorb {
             return easeOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutQuart tweening.
+        /*! \brief Computes an easeInOutQuart tweening.
         */
         template <typename T>
         inline T easeInOutQuart(T startVal, T finalVal, T alpha) {
@@ -182,7 +184,7 @@ namespace vorb {
             return easeInOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInQuint tweening.
+        /*! \brief Computes an easeInQuint tweening.
         */
         template <typename T>
         inline T easeInQuint(T startVal, T finalVal, T alpha) {
@@ -196,7 +198,7 @@ namespace vorb {
             return easeInQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutQuint tweening.
+        /*! \brief Computes an easeOutQuint tweening.
         */
         template <typename T>
         inline T easeOutQuint(T startVal, T finalVal, T alpha) {
@@ -211,7 +213,7 @@ namespace vorb {
             return easeOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutQuint tweening.
+        /*! \brief Computes an easeInOutQuint tweening.
         */
         template <typename T>
         inline T easeInOutQuint(T startVal, T finalVal, T alpha) {
@@ -230,7 +232,7 @@ namespace vorb {
             return easeInOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInSine tweening.
+        /*! \brief Computes an easeInSine tweening.
         */
         template <typename T>
         inline T easeInSine(T startVal, T finalVal, T alpha) {
@@ -244,7 +246,7 @@ namespace vorb {
             return easeInSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutSine tweening.
+        /*! \brief Computes an easeOutSine tweening.
         */
         template <typename T>
         inline T easeOutSine(T startVal, T finalVal, T alpha) {
@@ -258,7 +260,7 @@ namespace vorb {
             return easeOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutSine tweening.
+        /*! \brief Computes an easeInOutSine tweening.
         */
         template <typename T>
         inline T easeInOutSine(T startVal, T finalVal, T alpha) {
@@ -272,7 +274,7 @@ namespace vorb {
             return easeInOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInExpo tweening.
+        /*! \brief Computes an easeInExpo tweening.
         */
         template <typename T>
         inline T easeInExpo(T startVal, T finalVal, T alpha) {
@@ -286,7 +288,7 @@ namespace vorb {
             return easeInExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutExpo tweening.
+        /*! \brief Computes an easeOutExpo tweening.
         */
         template <typename T>
         inline T easeOutExpo(T startVal, T finalVal, T alpha) {
@@ -300,7 +302,7 @@ namespace vorb {
             return easeOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutExpo tweening.
+        /*! \brief Computes an easeInOutExpo tweening.
         */
         template <typename T>
         inline T easeInOutExpo(T startVal, T finalVal, T alpha) {
@@ -320,7 +322,7 @@ namespace vorb {
             return easeInOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInCirc tweening.
+        /*! \brief Computes an easeInCirc tweening.
         */
         template <typename T>
         inline T easeInCirc(T startVal, T finalVal, T alpha) {
@@ -334,7 +336,7 @@ namespace vorb {
             return easeInCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutCirc tweening.
+        /*! \brief Computes an easeOutCirc tweening.
         */
         template <typename T>
         inline T easeOutCirc(T startVal, T finalVal, T alpha) {
@@ -349,7 +351,7 @@ namespace vorb {
             return easeOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutCirc tweening.
+        /*! \brief Computes an easeInOutCirc tweening.
         */
         template <typename T>
         inline T easeInOutCirc(T startVal, T finalVal, T alpha) {
@@ -368,7 +370,7 @@ namespace vorb {
             return easeInOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInElastic tweening.
+        /*! \brief Computes an easeInElastic tweening.
         */
         template <typename T>
         inline T easeInElastic(T startVal, T finalVal, T alpha) {
@@ -385,7 +387,7 @@ namespace vorb {
             return easeInElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutElastic tweening.
+        /*! \brief Computes an easeOutElastic tweening.
         */
         template <typename T>
         inline T easeOutElastic(T startVal, T finalVal, T alpha) {
@@ -401,7 +403,7 @@ namespace vorb {
             return easeOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutElastic tweening.
+        /*! \brief Computes an easeInOutElastic tweening.
         */
         template <typename T>
         inline T easeInOutElastic(T startVal, T finalVal, T alpha) {
@@ -422,7 +424,7 @@ namespace vorb {
             return easeInOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInBack tweening.
+        /*! \brief Computes an easeInBack tweening.
         */
         template <typename T>
         inline T easeInBack(T startVal, T finalVal, T alpha, T s = 1.70158) {
@@ -436,7 +438,7 @@ namespace vorb {
             return easeInBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
-        /*! @brief Computes an easeOutBack tweening.
+        /*! \brief Computes an easeOutBack tweening.
         */
         template <typename T>
         inline T easeOutBack(T startVal, T finalVal, T alpha, T s = 1.70158) {
@@ -451,7 +453,7 @@ namespace vorb {
             return easeOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
-        /*! @brief Computes an easeInOutBack tweening.
+        /*! \brief Computes an easeInOutBack tweening.
         */
         template <typename T>
         inline T easeInOutBack(T startVal, T finalVal, T alpha, T s = 1.70158) {
@@ -471,7 +473,7 @@ namespace vorb {
             return easeInOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
 
-        /*! @brief Computes an easeInBounce tweening.
+        /*! \brief Computes an easeInBounce tweening.
         */
         template <typename T>
         inline T easeInBounce(T startVal, T finalVal, T alpha) {
@@ -485,7 +487,7 @@ namespace vorb {
             return easeInBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeOutBounce tweening.
+        /*! \brief Computes an easeOutBounce tweening.
         */
         template <typename T>
         inline T easeOutBounce(T startVal, T finalVal, T alpha) {
@@ -510,7 +512,7 @@ namespace vorb {
             return easeOutBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
 
-        /*! @brief Computes an easeInOutBounce tweening.
+        /*! \brief Computes an easeInOutBounce tweening.
         */
         template <typename T>
         inline T easeInOutBounce(T startVal, T finalVal, T alpha) {

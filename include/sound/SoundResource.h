@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SoundResource.h
- * @brief A wrapper for sound data container.
+/*!
+ * \file SoundResource.h
+ * 
+ * \brief A wrapper for sound data container.
  */
 
 #pragma once
@@ -34,7 +36,7 @@ namespace vorb {
         class Resource {
             friend class Engine;
         public:
-            /// @return True if this resource has no sound data
+            /// \return True if this resource has no sound data
             bool isNull() const {
                 return m_id == ID_GENERATOR_NULL_ID;
             }

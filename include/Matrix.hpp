@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Matrix.hpp
-* @brief 
+/*!
+ * \file Matrix.hpp
+ * 
+* \brief 
 */
 
 #pragma once

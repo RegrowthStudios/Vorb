@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file PtrRecycler.hpp
- * @brief Templated free-list implementation.
+/*!
+ * \file PtrRecycler.hpp
+ * 
+ * \brief Templated free-list implementation.
  */
 
 #pragma once
@@ -24,20 +26,20 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
-/*! @brief Creates and caches larges numbers of pointers.
+/*! \brief Creates and caches larges numbers of pointers.
  * 
  * Objects are created as unique pointers and one at a time. The
  * recycler will free all objects when it is destroyed.
  * 
- * @tparam T: Data type pointers
+ * \tparam T: Data type pointers
  */
 template<typename T>
 class PtrRecycler {
 public:
-    /*! @brief Default constructor.
+    /*! \brief Default constructor.
      */
     PtrRecycler() = default;
-    /*! @brief Frees all constructed objects.
+    /*! \brief Frees all constructed objects.
      * 
      * The destructor calls freeAll().
      */
@@ -45,14 +47,14 @@ public:
         freeAll();
     }
 
-    /*! @brief Obtain a new object.
+    /*! \brief Obtain a new object.
      * 
      * Objects created using this method should be recycled in
      * order to preserve memory.
      * 
-     * @tparam Args: Types of constructor arguments.
-     * @param args: Argument values for object constructor.
-     * @return A pointer to an object.
+     * \tparam Args: Types of constructor arguments.
+     * \param args: Argument values for object constructor.
+     * \return A pointer to an object.
      */
     template<typename... Args>
     CALLEE_DELETE T* create(Args... args) {
@@ -79,14 +81,14 @@ public:
         return data;
     }
 
-    /*! @brief Recycle the memory for later use.
+    /*! \brief Recycle the memory for later use.
      * 
      * The object's destructor will be called, and it
      * should not be used after this point.
      * 
-     * @pre: The object pointer must have been constructed from this pool
+     * \pre: The object pointer must have been constructed from this pool
      * 
-     * @param data: Object to be destroyed
+     * \param data: Object to be destroyed
      */
     void recycle(T* data) {
         // Make sure it hasn't already been recycled
@@ -100,7 +102,7 @@ public:
         }
     }
 
-    /*! @brief Free all allocated objects.
+    /*! \brief Free all allocated objects.
      */
     void freeAll() {
         if (m_allocated.size() > 0) {
@@ -126,7 +128,7 @@ private:
     // The recycler may not be copied to avoid ownership issues
     VORB_NON_COPYABLE(PtrRecycler);
 
-    /*! @brief Value tracking struct to limit destructor calls.
+    /*! \brief Value tracking struct to limit destructor calls.
      */
     struct PtrBind {
     public:
@@ -134,12 +136,12 @@ private:
         i32 recycleCheck = 0; ///< Counter that tracks recycling calls
     };
 
-    /*! @brief Obtain recycling counter for an object.
+    /*! \brief Obtain recycling counter for an object.
      * 
-     * @pre: The object pointer must have been constructed from this pool
+     * \pre: The object pointer must have been constructed from this pool
      *
-     * @param data: Object
-     * @return Pointer to recycling counter
+     * \param data: Object
+     * \return Pointer to recycling counter
      */
     i32* getCounter(T* data) {
         auto ptr = (typename PtrRecycler<T>::PtrBind*)data;

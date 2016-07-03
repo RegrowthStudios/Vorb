@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ISoundImpl.h
- * @brief Sound data implementation hiding.
+/*!
+ * \file ISoundImpl.h
+ * 
+ * \brief Sound data implementation hiding.
  */
 
 #pragma once

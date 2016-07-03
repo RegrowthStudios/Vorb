@@ -808,7 +808,6 @@
     <ClInclude Include="include\math\TweeningMath.hpp">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\os.h" />
     <ClInclude Include="src\graphics\GLAdapter.h">
       <Filter>Graphics\Interfaces\GL</Filter>
     </ClInclude>

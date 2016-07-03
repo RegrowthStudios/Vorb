@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file OSWindow.h
- * @brief
+/*!
+ * \file OSWindow.h
+ * 
+ * \brief
  *
  *
  */
@@ -36,7 +38,7 @@
 namespace vorb {
     namespace ui {
 
-        /*! @brief Typeless window handle.
+        /*! \brief Typeless window handle.
          * <br/>
          * Windows - HWND <br/>
          * Mac OSX - ? <br/>
@@ -97,7 +99,7 @@ namespace vorb {
             bool setSize(UNIT_SPACE(PIXEL) i64 w, UNIT_SPACE(PIXEL) i64 h);
             bool setTitle(const cString value);
         protected:
-            /*! @brief Typeless UI API handle.
+            /*! \brief Typeless UI API handle.
              * <br/>
              * GLFW - GLFWwindow* <br/>
              * SDL - SDL_Window* <br/>

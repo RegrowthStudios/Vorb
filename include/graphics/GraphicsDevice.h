@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GraphicsDevice.h
- * @brief Stores information about the graphics device.
+/*!
+ * \file GraphicsDevice.h
+ * 
+ * \brief Stores information about the graphics device.
  */
 
 #pragma once

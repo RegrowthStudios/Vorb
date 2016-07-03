@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FixedSizeArrayRecycler.hpp
- * @brief This class will recycle fixed sized arrays of a specific type.
+/*!
+ * \file FixedSizeArrayRecycler.hpp
+ * 
+ * \brief This class will recycle fixed sized arrays of a specific type.
  */
 
 #pragma once
@@ -31,7 +33,7 @@ namespace vorb {
         class FixedSizeArrayRecycler {
         public:
             /// Constructor
-            /// @param maxSize: The maximum number of arrays to hold at any time.
+            /// \param maxSize: The maximum number of arrays to hold at any time.
             FixedSizeArrayRecycler(ui32 maxSize) : _maxSize(maxSize) { /* Empty */ }
             ~FixedSizeArrayRecycler() { destroy(); }
 
@@ -44,7 +46,7 @@ namespace vorb {
             }
 
             /// Gets an array of type T with size N. May allocate new memory
-            /// @return Pointer to the array
+            /// \return Pointer to the array
             T* create() {
                 T* rv;
                 if (_arrays.size()) {
@@ -59,7 +61,7 @@ namespace vorb {
             /// Recycles an array of type T with size N.
             /// Does not check for double recycles, and does not
             /// check that size is actually N, so be careful.
-            /// @param data: The pointer to the array to be recycled.
+            /// \param data: The pointer to the array to be recycled.
             /// must be of size N. You should no longer use data after it has
             /// been recycled, as it may be deleted.
             void recycle(T* data) {

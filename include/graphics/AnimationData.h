@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file AnimationData.h
- * @brief 
+/*!
+ * \file AnimationData.h
+ * 
+ * \brief 
  */
 
 #pragma once

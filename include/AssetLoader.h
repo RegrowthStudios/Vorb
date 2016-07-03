@@ -8,8 +8,10 @@
 // All Rights Reserved
 //
 
-/*! \file AssetLoader.h
- * @brief Handles loading assets.
+/*!
+ * \file AssetLoader.h
+ * 
+ * \brief Handles loading assets.
  */
 
 #pragma once

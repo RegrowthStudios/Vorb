@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DMap.h
- * @brief 
+/*!
+ * \file D3DMap.h
+ * 
+ * \brief 
  *
  *
  */

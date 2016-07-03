@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GLProgram.h
- * @brief This file provides a wrapper around an OpenGL shader program.
+/*!
+ * \file GLProgram.h
+ * 
+ * \brief This file provides a wrapper around an OpenGL shader program.
  */
 
 #pragma once
@@ -69,61 +71,61 @@ namespace vorb {
             typedef std::map<nString, VGUniform> UniformMap; ///< Dictionary of uniform locations by name
 
             /// Create and possibly initialize program
-            /// @param init: True to call init()
+            /// \param init: True to call init()
             GLProgram(bool init = false);
 
             /// Create GPU resources
             void init();
             /// Free all resources
             void dispose();
-            /// @return The program ID
+            /// \return The program ID
             const VGProgram& getID() const {
                 return m_id;
             }
-            /// @return True if the program was created
+            /// \return True if the program was created
             bool isCreated() const {
                 return m_id != 0;
             }
-            /// @return True if the program is linked
+            /// \return True if the program is linked
             bool isLinked() const {
                 return m_isLinked;
             }
-            /// @return True if the program is in use
+            /// \return True if the program is in use
             bool isInUse() const {
                 return m_programInUse == m_id;
             }
 
             /// Attaches shader to the build information
-            /// @param data: Shader's type, code, and version
-            /// @return True on success
+            /// \param data: Shader's type, code, and version
+            /// \return True on success
             bool addShader(const ShaderSource& data);
             /// Attaches shader to the build information
-            /// @param type: Shader's stage in the pipeline
-            /// @param code: Shader's source code
-            /// @param version: Language version
-            /// @return True on success
+            /// \param type: Shader's stage in the pipeline
+            /// \param code: Shader's source code
+            /// \param version: Language version
+            /// \return True on success
             bool addShader(const ShaderType& type, const cString code, const ShaderLanguageVersion& version = DEFAULT_SHADING_LANGUAGE_VERSION);
 
             /// Sets an attribute before the link step
-            /// @param name: Attribute name
-            /// @param index: Attribute index
+            /// \param name: Attribute name
+            /// \param index: Attribute index
             void setAttribute(nString name, VGAttribute index);
             /// Sets a list of attributes before the link step
-            /// @param attr: Map of attributes
+            /// \param attr: Map of attributes
             void setAttributes(const std::map<nString, VGAttribute>& attr);
             /// Sets a list of attributes before the link step
-            /// @param attr: List of attribute bindings
+            /// \param attr: List of attribute bindings
             void setAttributes(const std::vector<AttributeBinding>& attr);
             /// Sets a list of attributes before the link step
-            /// @param attr: List of attributes (array index as attribute index)
+            /// \param attr: List of attributes (array index as attribute index)
             void setAttributes(const std::vector<nString>& attr);
             /// Sets a list of attributes before the link step
-            /// @param attr: List of attributes (array index as attribute index)
-            /// @param sem: List of semantics (array index as attribute index)
+            /// \param attr: List of attributes (array index as attribute index)
+            /// \param sem: List of semantics (array index as attribute index)
             void setAttributes(const std::vector<nString>& attr, const std::vector<VGSemantic>& sem);
 
             /// Links the shader program using its currently added shaders
-            /// @return True on success
+            /// \return True on success
             bool link();
 
             /// Creates mappings for attributes
@@ -132,18 +134,18 @@ namespace vorb {
             void initUniforms();
 
             /// Binds fragment shader outputs to color numbers.
-            /// @pre program is not yet linked.
+            /// \pre program is not yet linked.
             void bindFragDataLocation(ui32 colorNumber, const cString name);
 
             /// Gets an attribute index
-            /// @param name: The attribute's name
-            /// @return Attribute location
+            /// \param name: The attribute's name
+            /// \return Attribute location
             const VGAttribute& getAttribute(const nString& name) const {
                 return m_attributes.at(name);
             }
             /// Gets a uniform index
-            /// @param name: The uniform's name
-            /// @return Uniform location
+            /// \param name: The uniform's name
+            /// \return Uniform location
             const VGUniform& getUniform(const nString& name) const {
                 return m_uniforms.at(name);
             }
@@ -162,7 +164,7 @@ namespace vorb {
             /// Will unuse whatever program is currently in use
             static void unuse();
 
-            /// @return The current program that is in use
+            /// \return The current program that is in use
             static VGProgram getCurrentProgram() {
                 return m_programInUse;
             }

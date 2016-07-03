@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Constants.h
- * @brief Defines simple numerical constants.
+/*!
+ * \file Constants.h
+ * 
+ * \brief Defines simple numerical constants.
  */
 
 #pragma once

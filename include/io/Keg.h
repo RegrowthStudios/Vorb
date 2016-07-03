@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Keg.h
- * @brief Keg YAML utility.
+/*!
+ * \file Keg.h
+ * 
+ * \brief Keg YAML utility.
  */
 
 #pragma once
@@ -33,7 +35,7 @@
 #define KEG_DOC_TYPE_ID "__TYPE__"
 #define KEG_DOC_DATA_ID "__DATA__"
 
-/*! @brief Vorb extension for YAML parsing.
+/*! \brief Vorb extension for YAML parsing.
  * 
  * Provides utility classes for parsing YAML files as well
  * as basic user-defined reflection capabilities.

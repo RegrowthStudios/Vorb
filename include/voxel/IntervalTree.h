@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IntervalTree.h
- * @brief Interval tree data structure for storing RLE compressed data in a contiguous buffer with O(log(n)) lookup and insertion speed.
+/*!
+ * \file IntervalTree.h
+ * 
+ * \brief Interval tree data structure for storing RLE compressed data in a contiguous buffer with O(log(n)) lookup and insertion speed.
  */
 
 #pragma once

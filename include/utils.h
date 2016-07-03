@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file utils.h
- * @brief Simple utility functions.
+/*!
+ * \file utils.h
+ * 
+ * \brief Simple utility functions.
  */
 
 #pragma once
@@ -169,10 +171,10 @@ inline T hermite(const T& v) { return static_cast<T>(3.0) * (v * v) - static_cas
 /* Quaternion Utilities                                                 */
 /************************************************************************/
 /// Finds the shortest arc rotation quat between two directions
-/// @param v1: Starting direction
-/// @param v2: End direction
-/// @pre: v1 and v2 are normalized
-/// @pre: v1 != -v2
+/// \param v1: Starting direction
+/// \param v2: End direction
+/// \pre: v1 and v2 are normalized
+/// \pre: v1 != -v2
 inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     f64q q;
     f64v3 a = vmath::cross(v1, v2);
@@ -183,10 +185,10 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     return vmath::normalize(q);
 }
 /// Finds the shortest arc rotation quat between two directions
-/// @param v1: Starting direction
-/// @param v2: End direction
-/// @pre: v1 and v2 are normalized
-/// @pre: v1 != -v2
+/// \param v1: Starting direction
+/// \param v2: End direction
+/// \pre: v1 and v2 are normalized
+/// \pre: v1 != -v2
 inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
     f32q q;
     f32v3 a = vmath::cross(v1, v2);
@@ -201,13 +203,13 @@ inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
 /************************************************************************/
 /* Clip utilities                                                       */
 /************************************************************************/
-/*! @brief Computes clipping of a rect.
+/*! \brief Computes clipping of a rect.
  * 
- * @param clipRect: The clipping rectangle
- * @param position: The rectangle position to check. Will be clipped. 
- * @param position: The rectangle size to check. Will be clipped.
- * @param uvRect: The rectangle UVs. Will be clipped.
- * @return true if it clipped.
+ * \param clipRect: The clipping rectangle
+ * \param position: The rectangle position to check. Will be clipped. 
+ * \param position: The rectangle size to check. Will be clipped.
+ * \param uvRect: The rectangle UVs. Will be clipped.
+ * \return true if it clipped.
  */
 inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) {
     bool rv = false;

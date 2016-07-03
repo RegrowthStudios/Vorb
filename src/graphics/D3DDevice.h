@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file D3DDevice.h
- * @brief 
+/*!
+ * \file D3DDevice.h
+ * 
+ * \brief 
  */
 
 #pragma once

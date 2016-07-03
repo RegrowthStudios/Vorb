@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ComboBox.h
-* @brief 
+/*!
+ * \file ComboBox.h
+ * 
+* \brief 
 * Defines the ComboBox widget
 *
 */
@@ -45,73 +47,73 @@ namespace vorb {
         class ComboBox : public Widget {
             friend class ComboBoxScriptFuncs;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             ComboBox(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
             *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             ComboBox(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
             *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~ComboBox();
 
             virtual void dispose() override;
 
-            /*!@brief Updates the position relative to parent */
+            /*!\brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
-            /*! @brief Adds an item to the combo box
+            /*! \brief Adds an item to the combo box
              * 
-             * @param item: The item to add
+             * \param item: The item to add
              */
             virtual void addItem(const nString& item);
-            /*! @brief Adds an item to the combo box at a specific index
+            /*! \brief Adds an item to the combo box at a specific index
             * and shifts other items accordingly.
             *
-            * @param index: The index to add at
-            * @param item: The item to add
-            * @return true if successfully added
+            * \param index: The index to add at
+            * \param item: The item to add
+            * \return true if successfully added
             */
             virtual bool addItemAtIndex(int index, const nString& item);
-            /*! @brief Removes an item from the combo box
+            /*! \brief Removes an item from the combo box
             * If there are multiple instances of the item, only the
             * first will be removed
-            * @param item: The item to remove
-            * @return true if successfully removed
+            * \param item: The item to remove
+            * \return true if successfully removed
             */
             virtual bool removeItem(const nString& item);
-            /*! @brief Removes an item from the combo box
+            /*! \brief Removes an item from the combo box
             * 
-            * @param item: The index of the item to remove
-            * @return true if successfully removed
+            * \param item: The index of the item to remove
+            * \return true if successfully removed
             */
             virtual bool removeItem(int index);
-            /*! @brief Adds a series of items to the combo box
+            /*! \brief Adds a series of items to the combo box
             *
-            * @param itemsToAdd: The items to add
+            * \param itemsToAdd: The items to add
             */
             virtual void addItems(const std::vector <nString>& itemsToAdd);
-            /*! @brief Selects an item index
+            /*! \brief Selects an item index
             *
-            * @param index: The index to select
-            * @return true if successfully selected
+            * \param index: The index to select
+            * \return true if successfully selected
             */
             virtual bool selectItem(int index);
 
-            /*! @brief Checks if a point is inside the drop window
+            /*! \brief Checks if a point is inside the drop window
             *
-            * @param point: The point to check
-            * @return true if point is in m_destRect
+            * \param point: The point to check
+            * \return true if point is in m_destRect
             */
             virtual bool isInDropBounds(const f32v2& point) const { return isInDropBounds(point.x, point.y); }
             virtual bool isInDropBounds(f32 x, f32 y) const;

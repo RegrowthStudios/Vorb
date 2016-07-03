@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ComboBoxScriptFuncs.h
-* @brief 
+/*!
+ * \file ComboBoxScriptFuncs.h
+ * 
+* \brief 
 * Script functions for ComboBox widget.
 *
 */
@@ -42,7 +44,7 @@ namespace vorb {
             virtual void unregisterWidget(Widget* w) override;
         protected:
             virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
-            /*! @brief Deregisters a LUA callback with a widget* */
+            /*! \brief Deregisters a LUA callback with a widget* */
             virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
 
             virtual void addItem(ComboBox* c, nString item) const;

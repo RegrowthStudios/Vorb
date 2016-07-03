@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GraphicsScriptInterface.h
- * @brief Scripting functions and registration for vorb::graphics.
+/*!
+ * \file GraphicsScriptInterface.h
+ * 
+ * \brief Scripting functions and registration for vorb::graphics.
  */
 
 #pragma once

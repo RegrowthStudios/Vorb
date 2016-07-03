@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file MultiComponentTracker.hpp
- * @brief An extended entity tracker.
+/*!
+ * \file MultiComponentTracker.hpp
+ * 
+ * \brief An extended entity tracker.
  */
 
 #pragma once
@@ -38,19 +40,19 @@ namespace vorb {
                 friend class MultiComponentTracker;
             public:
                 /// Obtain a component ID for a specific table
-                /// @param i: Index of tracked component table 
-                /// @return Component ID
+                /// \param i: Index of tracked component table 
+                /// \return Component ID
                 const ComponentID& operator[] (size_t i) const {
                     return _data[i];
                 }
-                /// @return Pointer to component IDs
+                /// \return Pointer to component IDs
                 explicit operator const ComponentID* () const {
                     return _data;
                 }
             private:
                 /// Update a component ID for a specific table
-                /// @param i: Index of component table
-                /// @param cID: New component ID
+                /// \param i: Index of component table
+                /// \param cID: New component ID
                 void set(size_t i, const ComponentID& cID) {
                     _data[i] = cID;
                 }
@@ -76,8 +78,8 @@ namespace vorb {
             }
 
             /// Obtain the tracked components for an entity
-            /// @param id: Tracked entity
-            /// @return A list of tracked component ids
+            /// \param id: Tracked entity
+            /// \return A list of tracked component ids
             const Components& getComponents(const EntityID& id) const {
                 return _trackedComponents.at(id);
             }

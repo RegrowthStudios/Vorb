@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KeyboardEventDispatcher.h
- * @brief Dispatches keyboard events.
+/*!
+ * \file KeyboardEventDispatcher.h
+ * 
+ * \brief Dispatches keyboard events.
  */
 
 #pragma once

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file TypeManip.hpp
- * @brief Contains facilities for manipulating C++ types and to aid in meta-template programming.
+/*!
+ * \file TypeManip.hpp
+ * 
+ * \brief Contains facilities for manipulating C++ types and to aid in meta-template programming.
  */
 
 #pragma once
@@ -18,9 +20,9 @@
 #define Vorb_TypeManip_hpp__
 //! @endcond
 
-/*! @brief Reinterprets the value of a pointer as any other type that is of the same size.
+/*! \brief Reinterprets the value of a pointer as any other type that is of the same size.
  * 
- * @tparam T Type to which to interpret the pointer.
+ * \tparam T Type to which to interpret the pointer.
  */
 template<typename T>
 union PointerCast {
@@ -38,7 +40,7 @@ union PointerCast {
     void* ptr;
 };
 
-/*! @brief Syntactic sugar for ghosting member functions of unknown classes.
+/*! \brief Syntactic sugar for ghosting member functions of unknown classes.
  */
 class TypelessMember {
 public:

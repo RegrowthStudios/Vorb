@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IObject.h
- * @brief 
+/*!
+ * \file IObject.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -26,7 +28,7 @@ namespace vorb {
     namespace graphics {
         class IDevice;
 
-        /*! @brief
+        /*! \brief
          */
         class IObject {
             friend class IDevice;
@@ -47,7 +49,7 @@ namespace vorb {
             IDevice* m_owner; ///< The state view that owns this object.
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IVertexStateBind : public IObject {
         public:
@@ -58,7 +60,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IEffect : public IObject {
         public:
@@ -69,7 +71,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IRenderTarget : public IObject {
         public:
@@ -80,7 +82,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IBlendState : public IObject {
         public:
@@ -91,7 +93,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IDepthStencilState : public IObject {
         public:
@@ -102,7 +104,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IRasterizerState : public IObject {
         public:
@@ -113,7 +115,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class ISamplerState : public IObject {
         public:
@@ -125,7 +127,7 @@ namespace vorb {
         };
 
 
-        /*! @brief
+        /*! \brief
           */
         class IQuery : public IObject {
         public:
@@ -136,7 +138,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IPredicate : public IQuery {
         public:
@@ -147,7 +149,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class ISyncFence : public IObject {
         public:

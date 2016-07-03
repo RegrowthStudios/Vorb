@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file QuaternionMath.hpp
-* @brief Common quaternion mathematical functions.
+/*!
+ * \file QuaternionMath.hpp
+ * 
+* \brief Common quaternion mathematical functions.
 */
 
 #pragma once

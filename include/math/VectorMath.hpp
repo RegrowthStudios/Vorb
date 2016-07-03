@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VectorMath.hpp
-* @brief defines common vector math operations.
+/*!
+ * \file VectorMath.hpp
+ * 
+* \brief defines common vector math operations.
 */
 
 #pragma once
@@ -20,7 +22,7 @@
 
 namespace vorb {
     namespace math {
-        /*! @brief Computes the dot product of two vectors.
+        /*! \brief Computes the dot product of two vectors.
         */
         template <typename T>
         inline T dot(const Vector2<T>& v1, const Vector2<T>& v2) {
@@ -37,7 +39,7 @@ namespace vorb {
             static_assert(std::numeric_limits<T>::is_iec559, "dot only accepts floating-point inputs.");
             return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
         }
-        /*! @brief Gets the length of a vector.
+        /*! \brief Gets the length of a vector.
         */
         template <typename T>
         inline T length(const Vector2<T>& v) {
@@ -51,7 +53,7 @@ namespace vorb {
         inline T length(const Vector4<T>& v) {
             return vmath::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
         }
-        /*! @brief Gets the squared length of a vector. Is faster than getting length.
+        /*! \brief Gets the squared length of a vector. Is faster than getting length.
         */
         template <typename T>
         inline T lengthSquared(const Vector2<T>& v) {
@@ -65,7 +67,7 @@ namespace vorb {
         inline T lengthSquared(const Vector4<T>& v) {
             return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
         }
-        /*! @brief Computes the cross product of two 3d vectors.
+        /*! \brief Computes the cross product of two 3d vectors.
         */
         template <typename T>
         inline Vector3<T> cross(const Vector3<T>& v1, const Vector3<T>& v2) {
@@ -74,7 +76,7 @@ namespace vorb {
                               v1.z * v2.x - v1.x * v2.z,
                               v1.x * v2.y - v1.y * v2.x);
         }
-        /*! @brief Normalizes a vector, turning it into a unit vector.
+        /*! \brief Normalizes a vector, turning it into a unit vector.
         */
         template <typename T>
         inline Vector2<T> normalize(const Vector2<T>& v) {

@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegType.h
- * @brief 
+/*!
+ * \file KegType.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -37,7 +39,7 @@ namespace keg {
     typedef void (*DeallocatorFunction)(void* p);
 
 
-    /*! @brief Custom YAML-mapped data type
+    /*! \brief Custom YAML-mapped data type
      */
     class Type {
         friend class Environment;

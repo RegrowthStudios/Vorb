@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IWidgetContainer.h
-* @brief 
+/*!
+ * \file IWidgetContainer.h
+ * 
+* \brief 
 * Abstract Container for widgets
 *
 */
@@ -58,46 +60,46 @@ namespace vorb {
 
         class IWidgetContainer {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             IWidgetContainer(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
              *
-             * @param name: Name of the container.
-             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+             * \param name: Name of the container.
+             * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
             IWidgetContainer(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Destructor that unhooks events */
+            /*! \brief Destructor that unhooks events */
             virtual ~IWidgetContainer();
-            /*! @brief Releases all resources used by the Widget.
+            /*! \brief Releases all resources used by the Widget.
              *
              * Gets called in the destructor.
              */
             virtual void dispose();
-            /*! @brief Adds a child Widget to the container
+            /*! \brief Adds a child Widget to the container
              *
-             * @param child: The Widget to add
-             * @return true on success.
+             * \param child: The Widget to add
+             * \return true on success.
              */
             virtual bool addWidget(Widget* child);
-            /*! @brief Removes a Widget from the container
+            /*! \brief Removes a Widget from the container
             *
-            * @param child: The Widget to remove
-            * @return true on success.
+            * \param child: The Widget to remove
+            * \return true on success.
             */
             virtual bool removeWidget(Widget* child);
 
-            /*! @brief Defines how relative position is used to update position.
+            /*! \brief Defines how relative position is used to update position.
              *  The simplest form could be m_position = m_relativePosition;
              */
             virtual void updatePosition() = 0;
-            /*! @brief Enables events* */
+            /*! \brief Enables events* */
             virtual void enable();
-            /*! @brief Disables events* */
+            /*! \brief Disables events* */
             virtual void disable();
-            /*! @brief Checks if a point is inside the container
+            /*! \brief Checks if a point is inside the container
              *
-             * @param point: The point to check
-             * @return true if point is in the bounds of the container
+             * \param point: The point to check
+             * \return true if point is in the bounds of the container
              */
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;

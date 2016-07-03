@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FileOps.h
- * @brief Operations with the file system.
+/*!
+ * \file FileOps.h
+ * 
+ * \brief Operations with the file system.
  */
 
 #pragma once

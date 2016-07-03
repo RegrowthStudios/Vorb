@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SamplerState.h
- * @brief Changes GPU texture sampling state.
+/*!
+ * \file SamplerState.h
+ * 
+ * \brief Changes GPU texture sampling state.
  */
 
 #pragma once
@@ -59,9 +61,9 @@ namespace vorb {
 		    void setObject(ui32 textureUnit) const;
 
 #ifdef VORB_USING_SCRIPT
-            /*! @brief Registers states with a script environment.
+            /*! \brief Registers states with a script environment.
              * 
-             * @param env: The scripting environment. 
+             * \param env: The scripting environment. 
              */
             static void registerStates(vscript::Environment& env);
 #endif

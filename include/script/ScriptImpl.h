@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ScriptImpl.h
- * @brief 
+/*!
+ * \file ScriptImpl.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -29,19 +31,19 @@ namespace vorb {
         class Function;
 
         namespace impl {
-            /*! @brief Dumps the scripting environment's stack contents to the console
+            /*! \brief Dumps the scripting environment's stack contents to the console
              * 
-             * @pre: The handle must a valid handle
-             * @param h: Environment handle
+             * \pre: The handle must a valid handle
+             * \param h: Environment handle
              */
             void dumpStack(EnvironmentHandle h);
 
-            /*! @brief Put the global namespace on the stack
+            /*! \brief Put the global namespace on the stack
              * 
              * 
              * 
-             * @param h: 
-             * @return 
+             * \param h: 
+             * \return 
              */
             void pushGlobalNamespace(EnvironmentHandle h);
             void pushNamespace(EnvironmentHandle h, const nString& name);

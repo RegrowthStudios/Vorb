@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ShaderManager.h
- * @brief Handles caching, creation, and destruction of programs.
+/*!
+ * \file ShaderManager.h
+ * 
+ * \brief Handles caching, creation, and destruction of programs.
  */
 
 #pragma once
@@ -42,23 +44,23 @@ namespace vorb {
             /// TODO(Ben): Add overloads for tesselation, geometry, ect.
             /// Creates a GLProgram from source code.
             /// Does not register to global cache.
-            /// @param vertSrc: Source code for vertex shader
-            /// @param fragSrc: Source code for fragment shader
-            /// @param vertIOM: Optional IOManager for vert #include lookups
-            /// @param fragIOM: Optional IOManager for frag #include lookups
-            /// @param defines: #defines for the program
-            /// @return the created program.
+            /// \param vertSrc: Source code for vertex shader
+            /// \param fragSrc: Source code for fragment shader
+            /// \param vertIOM: Optional IOManager for vert #include lookups
+            /// \param fragIOM: Optional IOManager for frag #include lookups
+            /// \param defines: #defines for the program
+            /// \return the created program.
             static GLProgram createProgram(const cString vertSrc, const cString fragSrc,
                                            vio::IOManager* vertIOM = nullptr,
                                            vio::IOManager* fragIOM = nullptr,
                                            cString defines = nullptr);
             /// Creates a GLProgram from files.
             /// Does not register to global cache.
-            /// @param vertPath: Path to vertex shader
-            /// @param fragPath: Path to fragment shader
-            /// @param iom: Optional IOManager for loading
-            /// @param defines: #defines for the program
-            /// @return the created program.
+            /// \param vertPath: Path to vertex shader
+            /// \param fragPath: Path to fragment shader
+            /// \param iom: Optional IOManager for loading
+            /// \param defines: #defines for the program
+            /// \return the created program.
             static GLProgram createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
                                                    vio::IOManager* iom = nullptr, cString defines = nullptr);
 
@@ -66,25 +68,25 @@ namespace vorb {
             static void disposeAllPrograms();
 
             /// Adds a program to the global cache
-            /// @param name: String identifier for the program
-            /// @param program: The GLProgram to cache
-            /// @return false if a program is already cached on that name
+            /// \param name: String identifier for the program
+            /// \param program: The GLProgram to cache
+            /// \return false if a program is already cached on that name
             static bool registerProgram(const nString& name, const GLProgram& program);
 
             /// Removes a program from the global cache and returns it
-            /// @param name: String identifier for the program
-            /// @return the GLProgram that was unregistered
+            /// \param name: String identifier for the program
+            /// \return the GLProgram that was unregistered
             static GLProgram unregisterProgram(const nString& name);
             /// Removes a program from the global cache and returns it
             /// WARNING: Is slower than the nString version - O(n) lookup
             /// instead of O(log(n))
-            /// @param program: The GLProgram to unregister
-            /// @return false if it was not cached
+            /// \param program: The GLProgram to unregister
+            /// \return false if it was not cached
             static bool unregisterProgram(const GLProgram& program);
 
             /// Gets a program from the cache.
-            /// @param name: String identifier for the program
-            /// @return nullptr on failure or the program
+            /// \param name: String identifier for the program
+            /// \return nullptr on failure or the program
             static GLProgram& getProgram(const nString& name);
 
             /// Gets size of program cache

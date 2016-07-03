@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VoxCommon.h
- * @brief Common code in voxel environments.
+/*!
+ * \file VoxCommon.h
+ * 
+ * \brief Common code in voxel environments.
  */
 
 #pragma once
@@ -50,13 +52,13 @@ namespace vorb {
 
 
         /// Create a cardinal direction
-        /// @param a: Axis
-        /// @param positive: True if facing in positive direction
-        /// @return Cardinal direction
+        /// \param a: Axis
+        /// \param positive: True if facing in positive direction
+        /// \return Cardinal direction
         Cardinal toCardinal(const Axis& a, const bool& positive);
         /// Extract axis information from cardinal direction
-        /// @param c: Cardinal direction
-        /// @return Axis of the cardinal direction
+        /// \param c: Cardinal direction
+        /// \return Axis of the cardinal direction
         Axis toAxis(const Cardinal& c);
     }
 }

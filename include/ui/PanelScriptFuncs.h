@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file PanelScriptFuncs.h
-* @brief 
+/*!
+ * \file PanelScriptFuncs.h
+ * 
+* \brief 
 * Scripting functions for Panel Widget.
 *
 */

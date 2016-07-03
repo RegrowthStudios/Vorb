@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file KegFuncs.h
- * @brief 
+/*!
+ * \file KegFuncs.h
+ * 
+ * \brief 
  */
 
 #pragma once

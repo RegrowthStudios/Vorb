@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file SpriteFont.h
- * @brief Bitmap glyph font container.
+/*!
+ * \file SpriteFont.h
+ * 
+ * \brief Bitmap glyph font container.
  */
 
 #pragma once

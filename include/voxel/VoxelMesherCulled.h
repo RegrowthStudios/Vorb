@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VoxelMesherCulled.h
- * @brief Contains various algorithms for voxel meshing.
+/*!
+ * \file VoxelMesherCulled.h
+ * 
+ * \brief Contains various algorithms for voxel meshing.
  */
 
 #pragma once
@@ -29,11 +31,11 @@ namespace vorb {
     namespace voxel {
         namespace meshalg {
             /// Construct a voxel mesh, generating and culling desired face pairs
-            /// @tparam T: Voxel data type
-            /// @tparam API: Type of API object that handles culled meshing
-            /// @param data: 3D array of voxel data accessed Y-Z-X
-            /// @param size: Sizes of array (XYZ)
-            /// @param apiCull: API object
+            /// \tparam T: Voxel data type
+            /// \tparam API: Type of API object that handles culled meshing
+            /// \param data: 3D array of voxel data accessed Y-Z-X
+            /// \param size: Sizes of array (XYZ)
+            /// \param apiCull: API object
             template<typename T, typename API>
             inline void createCulled(const T* data, const ui32v3& size, API* api) {
                 static ui32v3 SWEEPS[3] = {

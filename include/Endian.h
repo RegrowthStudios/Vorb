@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Endian.h
- * @brief 
+/*!
+ * \file Endian.h
+ * 
+ * \brief 
  *
  *
  */

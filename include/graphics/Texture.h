@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Texture.h
- * @brief This file provides a wrapper for a texture.
+/*!
+ * \file Texture.h
+ * 
+ * \brief This file provides a wrapper for a texture.
  */
 
 #pragma once

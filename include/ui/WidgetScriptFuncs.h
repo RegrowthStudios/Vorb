@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file WidgetScriptFuncs.h
-* @brief
+/*!
+ * \file WidgetScriptFuncs.h
+ * 
+* \brief
 * Scripts functions for Widgets
 *
 */
@@ -52,18 +54,18 @@ namespace vorb {
             virtual void unregisterWidget(Widget* w);
         protected:
 
-            /*! @brief Releases all resources used by the Widget.
+            /*! \brief Releases all resources used by the Widget.
             *
             * Gets called in the destructor.
             */
             virtual void dispose(Widget* w);
-            /*! @brief Enables events* */
+            /*! \brief Enables events* */
             virtual void enable(Widget* w);
-            /*! @brief Disables events* */
+            /*! \brief Disables events* */
             virtual void disable(Widget* w);
-            /*! @brief Registers a LUA callback with a widget* */
+            /*! \brief Registers a LUA callback with a widget* */
             virtual bool addCallback(Widget* w, EventType eventType, nString funcName);
-            /*! @brief Deregisters a LUA callback with a widget* */
+            /*! \brief Deregisters a LUA callback with a widget* */
             virtual bool removeCallback(Widget* w, EventType eventType, nString funcName);
 
             /************************************************************************/

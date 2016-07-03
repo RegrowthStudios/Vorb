@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file ModelIO.h
- * @brief Handles loading models into indexed-interleaved-vertex meshes.
+/*!
+ * \file ModelIO.h
+ * 
+ * \brief Handles loading models into indexed-interleaved-vertex meshes.
  */
 
 #pragma once

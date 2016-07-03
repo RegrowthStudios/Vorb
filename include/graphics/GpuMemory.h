@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file GpuMemory.h
- * @brief This file provides a wrapper around VRAM and openGL object uploads.
+/*!
+ * \file GpuMemory.h
+ * 
+ * \brief This file provides a wrapper around VRAM and openGL object uploads.
  */
 
 #pragma once
@@ -39,14 +41,14 @@ namespace vorb {
         public:
 
             /// Uploads a texture to the GPU.
-            /// @param data: The bitmap data.
-            /// @param width: The width of the data
-            /// @param height: The height of the data
-            /// @param texturePixelType: Format of the resource pixels.
-            /// @param samplingParameters: The texture sampler parameters.
-            /// @param internalFormat: Internal pixel data format.
-            /// @param textureFormat: Format of uploaded pixels.
-            /// @param mipmapLevels: The max number of mipmap levels.
+            /// \param data: The bitmap data.
+            /// \param width: The width of the data
+            /// \param height: The height of the data
+            /// \param texturePixelType: Format of the resource pixels.
+            /// \param samplingParameters: The texture sampler parameters.
+            /// \param internalFormat: Internal pixel data format.
+            /// \param textureFormat: Format of uploaded pixels.
+            /// \param mipmapLevels: The max number of mipmap levels.
             static void uploadTexture(VGTexture texture,
                                       const void* data,
                                       ui32 width,
@@ -59,14 +61,14 @@ namespace vorb {
                                       i32 mipmapLevels = INT_MAX);
 
             /// Uploads a texture to the GPU.
-            /// @param data: The bitmap data.
-            /// @param width: The width of the data
-            /// @param height: The height of the data
-            /// @param texturePixelType: Format of the resource pixels.
-            /// @param samplingParameters: The texture sampler parameters.
-            /// @param internalFormat: Internal pixel data format.
-            /// @param textureFormat: Format of uploaded pixels.
-            /// @param mipmapLevels: The max number of mipmap levels.
+            /// \param data: The bitmap data.
+            /// \param width: The width of the data
+            /// \param height: The height of the data
+            /// \param texturePixelType: Format of the resource pixels.
+            /// \param samplingParameters: The texture sampler parameters.
+            /// \param internalFormat: Internal pixel data format.
+            /// \param textureFormat: Format of uploaded pixels.
+            /// \param mipmapLevels: The max number of mipmap levels.
             static VGTexture uploadTexture(const void* data,
                                            ui32 width,
                                            ui32 height,
@@ -85,12 +87,12 @@ namespace vorb {
             }
 
             /// Uploads a texture to the GPU.
-            /// @param res: The bitmap resource.
-            /// @param texturePixelType: Format of the resource pixels.
-            /// @param samplingParameters: The texture sampler parameters.
-            /// @param internalFormat: Internal pixel data format.
-            /// @param textureFormat: Format of uploaded pixels.
-            /// @param mipmapLevels: The max number of mipmap levels.
+            /// \param res: The bitmap resource.
+            /// \param texturePixelType: Format of the resource pixels.
+            /// \param samplingParameters: The texture sampler parameters.
+            /// \param internalFormat: Internal pixel data format.
+            /// \param textureFormat: Format of uploaded pixels.
+            /// \param mipmapLevels: The max number of mipmap levels.
             static void uploadTexture(VGTexture texture,
                                       const BitmapResource* res,
                                       TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
@@ -100,13 +102,13 @@ namespace vorb {
                                       TextureFormat textureFormat = TextureFormat::RGBA,
                                       i32 mipmapLevels = INT_MAX);
             /// Uploads a texture to the GPU.
-            /// @param res: The bitmap resource.
-            /// @param texturePixelType: Format of the resource pixels.
-            /// @param samplingParameters: The texture sampler parameters.
-            /// @param internalFormat: Internal pixel data format.
-            /// @param textureFormat: Format of uploaded pixels.
-            /// @param mipmapLevels: The max number of mipmap levels.
-            /// @return The texture ID.
+            /// \param res: The bitmap resource.
+            /// \param texturePixelType: Format of the resource pixels.
+            /// \param samplingParameters: The texture sampler parameters.
+            /// \param internalFormat: Internal pixel data format.
+            /// \param textureFormat: Format of uploaded pixels.
+            /// \param mipmapLevels: The max number of mipmap levels.
+            /// \return The texture ID.
             static VGTexture uploadTexture(const BitmapResource* res,
                                            TexturePixelType texturePixelType = TexturePixelType::UNSIGNED_BYTE,
                                            TextureTarget textureTarget = TextureTarget::TEXTURE_2D,
@@ -124,11 +126,11 @@ namespace vorb {
             }
 
             /// Frees a texture and sets its ID to 0
-            /// @param textureID: The texture to free. Will be set to 0.
+            /// \param textureID: The texture to free. Will be set to 0.
             static void freeTexture(VGTexture& textureID);
 
             /// Creates an OpenGL buffer object
-            /// @param vbo: The result buffer ID
+            /// \param vbo: The result buffer ID
             static void createBuffer(VGBuffer& bufferID) {
                 glGenBuffers(1, &bufferID);
                 m_buffers[bufferID] = 0;
@@ -136,22 +138,22 @@ namespace vorb {
 
             /// Frees an OpenGL buffer object and sets the
             /// ID to 0.
-            /// @param bufferID: The ID of the buffer
+            /// \param bufferID: The ID of the buffer
             static void freeBuffer(VGBuffer& bufferID);
 
             /// Binds a buffer
-            /// @param bufferID: The ID of the buffer
-            /// @param target: The desired buffer target
+            /// \param bufferID: The ID of the buffer
+            /// \param target: The desired buffer target
             static void bindBuffer(const VGBuffer& bufferID, BufferTarget target) {
                 glBindBuffer(static_cast<GLenum>(target), bufferID);
             }
 
             /// Uploads data to a buffer. Make sure the buffer is bound using
             /// bindBuffer before uploading.
-            /// @param bufferID: The ID of the buffer
-            /// @param target: The desired buffer target
-            /// @param bufferSize: The size of data
-            /// @param data: Pointer to the buffer data
+            /// \param bufferID: The ID of the buffer
+            /// \param target: The desired buffer target
+            /// \param bufferSize: The size of data
+            /// \param data: Pointer to the buffer data
             /// @usage: The desired buffer usage
             static void uploadBufferData(VGBuffer bufferID,
                                          BufferTarget target,
@@ -160,10 +162,10 @@ namespace vorb {
                                          BufferUsageHint usage = BufferUsageHint::STATIC_DRAW);
 
             /// Changes The Total Texture Memory Usage By A Specified Amount
-            /// @param s: Amount Of Memory Change In Bytes
+            /// \param s: Amount Of Memory Change In Bytes
             static void changeTextureMemory(ui32 s);
             /// Changes The Total Buffer Memory Usage By A Specified Amount
-            /// @param s: Amount Of Memory Change In Bytes
+            /// \param s: Amount Of Memory Change In Bytes
             static void changeBufferMemory(ui32 s);
 
             /// Gets the amount of VRAM used in bytes

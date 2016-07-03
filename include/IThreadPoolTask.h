@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IThreadPoolTask.h
- * @brief This file provides a thread pool task interface.
+/*!
+ * \file IThreadPoolTask.h
+ * 
+ * \brief This file provides a thread pool task interface.
  */
 
 #pragma once
@@ -29,7 +31,7 @@ namespace vorb {
         class IThreadPoolTask {
         public:
             /// Constructor
-            /// @param taskId: Optional unique identifier for task type.
+            /// \param taskId: Optional unique identifier for task type.
             IThreadPoolTask(i32 taskId = -1) :
                 m_taskId(taskId) {
                 /* Empty */

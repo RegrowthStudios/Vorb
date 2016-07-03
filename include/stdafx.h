@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file stdafx.h
- * @brief Vorb's precompiled header, should you wish to use it.
+/*!
+ * \file stdafx.h
+ * 
+ * \brief Vorb's precompiled header, should you wish to use it.
  */
 
 #pragma once

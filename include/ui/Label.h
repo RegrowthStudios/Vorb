@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Label.h
-* @brief 
+/*!
+ * \file Label.h
+ * 
+* \brief 
 * A simple text label widget.
 *
 */
@@ -35,33 +37,33 @@ namespace vorb {
 
         class Label : public Widget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Label(InputDispatcher* dispatcher);
-            /*! @brief Constructor that sets name, position, and dimensions.
+            /*! \brief Constructor that sets name, position, and dimensions.
             *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             Label(InputDispatcher* dispatcher, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
             *
             * The control will be made a child of parent.
             *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
             Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Label();
 
-            /*! @brief Adds all drawables to the UIRenderer
+            /*! \brief Adds all drawables to the UIRenderer
             *
-            * @param renderer: UIRenderer to add to
+            * \param renderer: UIRenderer to add to
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
-            /*! @brief Updates the position relative to parent */
+            /*! \brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
             /************************************************************************/

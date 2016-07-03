@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file IResource.h
- * @brief 
+/*!
+ * \file IResource.h
+ * 
+ * \brief 
  */
 
 #pragma once
@@ -29,7 +31,7 @@ namespace vorb {
     namespace graphics {
         class IContext;
 
-        /*! @brief This is a GPU resource that must be manually managed
+        /*! \brief This is a GPU resource that must be manually managed
          */
         class IResource {
             friend class IContext;
@@ -47,7 +49,7 @@ namespace vorb {
             IContext* m_owner; ///< The context that created this resource
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IBuffer : public IResource {
         public:
@@ -62,7 +64,7 @@ namespace vorb {
             BufferDescription m_desc;
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IConstantBlock : public IResource {
         public:
@@ -77,7 +79,7 @@ namespace vorb {
             ConstantBlockDescription m_desc;
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IVertexDeclaration : public IResource {
         public:
@@ -89,7 +91,7 @@ namespace vorb {
         };
 
 #pragma region Textures
-        /* @brief
+        /* \brief
          */
         class ITexture : public IResource {
         public:
@@ -100,7 +102,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /* \brief
          */
         class ITexture1D : public ITexture {
         public:
@@ -115,7 +117,7 @@ namespace vorb {
             Texture1DDescription m_desc;
         };
 
-        /* @brief
+        /* \brief
          */
         class ITexture2D : public ITexture {
         public:
@@ -130,7 +132,7 @@ namespace vorb {
             Texture2DDescription m_desc;
         };
 
-        /* @brief
+        /* \brief
          */
         class ITexture3D : public ITexture {
         public:
@@ -147,7 +149,7 @@ namespace vorb {
 #pragma endregion
 
 #pragma region Shaders
-        /* @brief The compiled bytecode of a shader
+        /* \brief The compiled bytecode of a shader
          */
         class IShaderCode : public IResource {
         public:
@@ -160,7 +162,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /* \brief
          */
         class IShader : public IResource {
         public:
@@ -172,7 +174,7 @@ namespace vorb {
         };
 
 
-        /* @brief
+        /* \brief
          */
         class IVertexShader : public IShader {
         public:
@@ -186,7 +188,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /* \brief
          */
         class IPixelShader : public IShader {
         public:
@@ -200,7 +202,7 @@ namespace vorb {
             }
         };
 
-        /* @brief
+        /* \brief
          */
         class IGeometryShader : public IShader {
         public:
@@ -214,7 +216,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class ITessGenShader : public IShader {
         public:
@@ -228,7 +230,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class ITessEvalShader : public IShader {
         public:
@@ -242,7 +244,7 @@ namespace vorb {
             }
         };
 
-        /*! @brief
+        /*! \brief
          */
         class IComputeShader : public IShader {
         public:
@@ -258,7 +260,7 @@ namespace vorb {
 #pragma endregion
 
 #pragma region Resource Views
-        /*! @brief 
+        /*! \brief 
          */
         class IResourceView : public IResource {
         public:

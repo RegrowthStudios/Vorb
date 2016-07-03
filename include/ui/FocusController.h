@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file FocusController.h
-* @brief 
+/*!
+ * \file FocusController.h
+ * 
+* \brief 
 * Handles input focus.
 *
 */

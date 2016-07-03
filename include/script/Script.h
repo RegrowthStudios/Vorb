@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file Script.h
- * @brief Operations that can be performed on scripting objects.
+/*!
+ * \file Script.h
+ * 
+ * \brief Operations that can be performed on scripting objects.
  */
 
 #pragma once

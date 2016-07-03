@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file RPC.h
- * @brief Handles cross-thread function invocation and synchronization.
+/*!
+ * \file RPC.h
+ * 
+ * \brief Handles cross-thread function invocation and synchronization.
  */
 
 #pragma once
@@ -44,12 +46,12 @@ namespace vorb {
         class RPCManager {
         public:
             /// Reports to target thread that a cross-thread call should be invoked upon it
-            /// @param so: RPC handle, can be used later for synchronization
-            /// @param blockUntilFinished: True if current thread should be blocked until RPC finishes
+            /// \param so: RPC handle, can be used later for synchronization
+            /// \param blockUntilFinished: True if current thread should be blocked until RPC finishes
             void invoke(RPC* so, bool blockUntilFinished = true);
             /// Invokes cross-thread calls, method should be called on the target thread
-            /// @param maxRequests: Maximum number of requests to process (clamped to RPC_REQUESTS_PER_PROCESS)
-            /// @return Number of requests that were processed
+            /// \param maxRequests: Maximum number of requests to process (clamped to RPC_REQUESTS_PER_PROCESS)
+            /// \return Number of requests that were processed
             size_t processRequests(size_t maxRequests = RPC_REQUESTS_PER_PROCESS);
         private:
             ThreadSyncQueue<RPCData> m_queue; ///< Queue of idle requests

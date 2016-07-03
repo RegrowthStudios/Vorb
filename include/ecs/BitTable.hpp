@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file BitTable.hpp
- * @brief An M x N bit table for storing bools.
+/*!
+ * \file BitTable.hpp
+ * 
+ * \brief An M x N bit table for storing bools.
  */
 
 #pragma once
@@ -36,29 +38,29 @@ namespace vorb {
             }
 
             /// Retrieve a bit value
-            /// @param i: Index of value
-            /// @return True if bit is non-zero
+            /// \param i: Index of value
+            /// \return True if bit is non-zero
             bool valueOf(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
                 return ((val >> (i & 0x07)) & 0x01) == 1;
             }
 
             /// Set a bit true
-            /// @param i: Index of value
+            /// \param i: Index of value
             void setTrue(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
                 ui8 field = 0x01 << (i & 0x07);
                 val |= field;
             }
             /// Set a bit false
-            /// @param i: Index of value
+            /// \param i: Index of value
             void setFalse(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
                 ui8 field = 0x01 << (i & 0x07);
                 val &= ~field;
             }
             /// Toggle a bit's value
-            /// @param i: Index of value
+            /// \param i: Index of value
             void toggleValue(const ui32& i) {
                 ui8& val = m_bits[i >> 3];
                 ui8 field = 0x01 << (i & 0x07);
@@ -66,7 +68,7 @@ namespace vorb {
             }
         private:
             /// Internal constructor
-            /// @param bits: Data
+            /// \param bits: Data
             BitArray(ui8* bits) :
                 m_bits(bits) {
                 // Empty
@@ -88,16 +90,16 @@ namespace vorb {
             }
 
             /// Obtain a row's bit data
-            /// @param r: Row from which to obtain values
-            /// @return Array pointer to the row (invalidates on this table's resizing operations)
+            /// \param r: Row from which to obtain values
+            /// \return Array pointer to the row (invalidates on this table's resizing operations)
             BitArray getRow(const ui32& r) {
                 return BitArray(&m_bits[r * m_columns]);
             }
 
             /// Retrieve a bit value
-            /// @param r: Row of value
-            /// @param c: Column of value
-            /// @return True if bit is non-zero
+            /// \param r: Row of value
+            /// \param c: Column of value
+            /// \return True if bit is non-zero
             bool valueOf(const ui32& r, const ui32& c) const {
                 const ui8* bits = &m_bits[r * m_columns];
                 bits += c >> 3;
@@ -105,8 +107,8 @@ namespace vorb {
             }
 
             /// Set a bit true
-            /// @param r: Row of value
-            /// @param c: Column of value
+            /// \param r: Row of value
+            /// \param c: Column of value
             void setTrue(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
@@ -114,8 +116,8 @@ namespace vorb {
                 *val |= field;
             }
             /// Set a bit false
-            /// @param r: Row of value
-            /// @param c: Column of value
+            /// \param r: Row of value
+            /// \param c: Column of value
             void setFalse(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
@@ -123,8 +125,8 @@ namespace vorb {
                 *val &= ~field;
             }
             /// Toggle a bit's value
-            /// @param r: Row of value
-            /// @param c: Column of value
+            /// \param r: Row of value
+            /// \param c: Column of value
             void toggleValue(const ui32& r, const ui32& c) {
                 ui8* val = &m_bits[r * m_columns];
                 val += c >> 3;
@@ -132,7 +134,7 @@ namespace vorb {
                 *val ^= field;
             }
             /// Clear out an entire row
-            /// @param r: Row
+            /// \param r: Row
             void setRowFalse(const ui32& r) {
                 ui8* val = &m_bits[r * m_columns];
                 for (ui32 c = 0; c < m_columns; c++) {

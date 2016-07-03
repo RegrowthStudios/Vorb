@@ -7,8 +7,10 @@
 // All Rights Reserved
 //
 
-/*! \file VorbMath.h
-* @brief Defines all vorb math.
+/*!
+ * \file VorbMath.h
+ * 
+* \brief Defines all vorb math.
 */
 
 #pragma once
@@ -61,21 +63,21 @@
 
 namespace vorb {
     namespace math {
-        /*! @brief Computes the dot product of two values.
+        /*! \brief Computes the dot product of two values.
         */
         template <typename T>
         inline T dot(T x, T y) {
             static_assert(std::numeric_limits<T>::is_iec559, "'dot' only accept floating-point inputs.");
             return x * y;
         }
-        /*! @brief Computes the square root of a number.
+        /*! \brief Computes the square root of a number.
         */
         template <typename T>
         inline T sqrt(T a) {
             // TODO(Ben): Optional fast implementation with #define.
             return std::sqrt(a);
         }
-        /*! @brief John Carmack's fast inverse sqrt from Quake3.
+        /*! \brief John Carmack's fast inverse sqrt from Quake3.
         */
         inline f32 fastInverseSqrt(f32 number) {
             i32 i;

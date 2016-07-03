@@ -525,7 +525,10 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include\VorbAssert.hpp" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="include\VorbMemory.h" />
+    <ClInclude Include="include\voxel\Chunk.h" />
+    <ClInclude Include="include\voxel\BlockPack.h" />
     <ClInclude Include="include\voxel\IntervalTree.h" />
+    <ClInclude Include="include\voxel\SmartVoxelContainer.hpp" />
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />

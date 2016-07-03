@@ -11,8 +11,9 @@ vg::IScene::~IScene() {
     // Empty
 }
 
-void vg::IScene::initCamera() {
+void vg::IScene::initCamera(f32 aspectRatio) {
     m_camera = std::make_unique<Camera>();
+    m_camera->init(aspectRatio);
 }
 
 void vg::IScene::unregister() {

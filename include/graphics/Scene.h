@@ -50,7 +50,7 @@ namespace vorb {
              * Override this to provide a custom camera implementation or set up camera location.
              * Does not get called by renderer, you must call this manually.
              */
-            virtual void initCamera();
+            virtual void initCamera(f32 aspectRatio);
 
             /* @brief Load all graphics objects.
              *  Gets called by SceneRenderer.

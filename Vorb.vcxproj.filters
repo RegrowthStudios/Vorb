@@ -739,6 +739,15 @@
     <ClInclude Include="include\graphics\Renderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\voxel\Chunk.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\voxel\SmartVoxelContainer.hpp">
+      <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\voxel\BlockPack.h">
+      <Filter>Voxel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

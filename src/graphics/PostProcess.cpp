@@ -167,9 +167,9 @@ void vg::PostProcessBloom::load() {
     // Load shaders
     // TODO(Ben): Error checking
     // TODO(Ben): Re-use compiled vertex shader
-    m_programLuma           = ShaderManager::createProgram(shadercommon::PASSTHROUGH_VERT_SRC, BLOOM_LUMA_FRAG_SRC);
-    m_programGaussianFirst  = ShaderManager::createProgram(shadercommon::PASSTHROUGH_VERT_SRC, BLOOM_GAUSS1_FRAG_SRC);
-    m_programGaussianSecond = ShaderManager::createProgram(shadercommon::PASSTHROUGH_VERT_SRC, BLOOM_GAUSS2_FRAG_SRC);
+    m_programLuma           = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, BLOOM_LUMA_FRAG_SRC);
+    m_programGaussianFirst  = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, BLOOM_GAUSS1_FRAG_SRC);
+    m_programGaussianSecond = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, BLOOM_GAUSS2_FRAG_SRC);
 
     uploadUniforms();
 }
@@ -278,7 +278,7 @@ void vg::PostProcessBloom::uploadUniforms() {
 }
 
 void vorb::graphics::PostProcessPassthrough::load() {
-    m_program = ShaderManager::createProgram(shadercommon::PASSTHROUGH_VERT_SRC, shadercommon::TEXTURE_FRAG_SRC);
+    m_program = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, shadercommon::TEXTURE_FRAG_SRC);
     m_program.use();
     glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
     m_program.unuse();

@@ -29,7 +29,7 @@ namespace graphics {
 namespace shadercommon {
 
     /// For just passing UV through the vertex shader
-    const cString PASSTHROUGH_VERT_SRC = R"(
+    const cString const PASSTHROUGH_2D_VERT_SRC = R"(
 // Input
 in vec2 vPosition; // Position in screen space
 
@@ -41,8 +41,8 @@ void main() {
   gl_Position =  vec4(vPosition, 0, 1);
 })";
 
-    const cString TEXTURE_FRAG_SRC = R"(
-// Output
+    const cString const TEXTURE_FRAG_SRC = R"(
+// Input
 in vec2 fUV;
 
 uniform sampler2D unSampler;
@@ -51,6 +51,16 @@ out vec4 pColor;
 
 void main() {
   pColor = texture(unSampler, fUV);
+})";
+
+    const cString const COLOR_FRAG_SRC = R"(
+// Input
+in vec4 fColor;
+
+out vec4 pColor;
+
+void main() {
+  pColor = fColor;
 })";
 
 }

@@ -52,10 +52,10 @@ namespace vorb {
         /// Create a cardinal direction
         /// @param a: Axis
         /// @return Cardinal direction
-        Cardinal toCardinalPositive(const Axis& a, const bool& positive) {
+        inline Cardinal toCardinalPositive(const Axis& a) {
             return (Cardinal)((ui8)a << 1) | Cardinal::POSITIVE;
         }
-        Cardinal toCardinalNegative(const Axis& a, const bool& positive) {
+        inline Cardinal toCardinalNegative(const Axis& a) {
             return (Cardinal)((ui8)a << 1) | Cardinal::NEGATIVE;
         }
         /// Extract axis information from cardinal direction

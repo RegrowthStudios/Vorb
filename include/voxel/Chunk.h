@@ -30,11 +30,16 @@ namespace vorb {
 namespace voxel {
 
     // Type for block data and tertiary data
-    template<typename TB, typename TT>
+    template<typename TB, typename TT, ui32 WIDTH>
     class Chunk {
     public:
-        SmartVoxelContainer<TB> blockData;
-        SmartVoxelContainer<TB> tertiaryData;
+
+        const ui32 width = WIDTH;
+        const ui32 size = WIDTH * WIDTH * WIDTH;
+
+        SmartVoxelContainer<TB, WIDTH * WIDTH * WIDTH> blockData;
+        SmartVoxelContainer<TB, WIDTH * WIDTH * WIDTH> tertiaryData;
+
     };
 
 

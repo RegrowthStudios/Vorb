@@ -24,6 +24,8 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include "../Events.hpp"
+
 namespace vorb {
 namespace voxel {
 
@@ -41,9 +43,9 @@ namespace voxel {
 
     /*! @brief A pack of blocks.
      *  You should define a BLOCK type that inherits from vvox::Block.
-     *  INDEX should be an unsigned integer type, that is larger than the maximum number of unique blocks.
+     *  BLOCKINDEX should be an unsigned integer type, that is larger than the maximum number of unique blocks.
      */
-    template <typename BLOCK, typename INDEX, typename BLOCKID>
+    template <typename BLOCK, typename BLOCKINDEX, typename BLOCKID>
     class BlockPack {
     public:
         BlockPack() {}
@@ -114,16 +116,16 @@ namespace voxel {
         const BLOCK& operator[](const BlockIdentifier& sid) const {
             return m_blockList[m_blockMap.at(sid)];
         }
-        const INDEX& getBlockIndex(const BlockIdentifier& sid) const {
+        const BLOCKINDEX& getBlockIndex(const BlockIdentifier& sid) const {
             return m_blockMap.at(sid);
         }
 
-        const std::unordered_map<BlockIdentifier, INDEX>& getBlockMap() const { return m_blockMap; }
+        const std::unordered_map<BlockIdentifier, BLOCKINDEX>& getBlockMap() const { return m_blockMap; }
         const std::vector<BLOCK>& getBlockList() const { return m_blockList; }
 
-        Event<INDEX> onBlockAddition; ///< Signaled when a block is loaded
+        Event<BLOCKINDEX> onBlockAddition; ///< Signaled when a block is loaded
     private:
-        std::unordered_map<BlockIdentifier, INDEX> m_blockMap; ///< Blocks indices organized by identifiers
+        std::unordered_map<BlockIdentifier, BLOCKINDEX> m_blockMap; ///< Blocks indices organized by identifiers
         std::vector<BLOCK> m_blockList; ///< BLOCK data list
     };
 

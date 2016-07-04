@@ -51,13 +51,19 @@ namespace vorb {
 
         /// Create a cardinal direction
         /// @param a: Axis
-        /// @param positive: True if facing in positive direction
         /// @return Cardinal direction
-        Cardinal toCardinal(const Axis& a, const bool& positive);
+        Cardinal toCardinalPositive(const Axis& a, const bool& positive) {
+            return (Cardinal)((ui8)a << 1) | Cardinal::POSITIVE;
+        }
+        Cardinal toCardinalNegative(const Axis& a, const bool& positive) {
+            return (Cardinal)((ui8)a << 1) | Cardinal::NEGATIVE;
+        }
         /// Extract axis information from cardinal direction
         /// @param c: Cardinal direction
         /// @return Axis of the cardinal direction
-        Axis toAxis(const Cardinal& c);
+        inline Axis toAxis(const Cardinal& c) {
+            return (Axis)((ui8)c >> 1);
+        }
     }
 }
 namespace vvox = vorb::voxel;

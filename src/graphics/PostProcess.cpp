@@ -265,7 +265,17 @@ void vg::PostProcessBloom::uploadUniforms() {
     m_programGaussianSecond.unuse();
 }
 
-void vorb::graphics::PostProcessPassthrough::load() {
+void vg::PostProcessPassthrough::setTextureUnit(ui32 textureUnit) {
+    m_textureUnit = textureUnit;
+    // Update if needed
+    if (m_program.isLinked()) {
+        m_program.use();
+        glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
+        m_program.unuse();
+    }
+}
+
+void vg::PostProcessPassthrough::load() {
     m_program = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, shadercommon::TEXTURE_FRAG_SRC);
     m_program.use();
     glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
@@ -274,13 +284,13 @@ void vorb::graphics::PostProcessPassthrough::load() {
     m_quad.init();
 }
 
-void vorb::graphics::PostProcessPassthrough::render() {
+void vg::PostProcessPassthrough::render() {
     m_program.use();
     m_quad.draw();
     m_program.unuse();
 }
 
-void vorb::graphics::PostProcessPassthrough::dispose() {
+void vg::PostProcessPassthrough::dispose() {
     m_program.dispose();
     m_quad.dispose();
 }

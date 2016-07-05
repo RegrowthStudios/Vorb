@@ -108,6 +108,7 @@ namespace graphics {
     public:
 
         void init(ui32 textureUnit) { m_textureUnit = textureUnit; }
+        void setTextureUnit(ui32 textureUnit);
         virtual void load()    override;
         virtual void render()  override;
         virtual void dispose() override;

@@ -32,6 +32,13 @@ DECL_VUI(struct GameTime);
 namespace vorb {
     namespace graphics {
 
+        enum class GBUFFER_TEXTURE_UNITS {
+            COLOR = 0,
+            POSITION,
+            NORMAL,
+            COUNT
+        };
+
         // Forward Declare
         class GBuffer;
         class IScene;

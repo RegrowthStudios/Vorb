@@ -22,7 +22,8 @@ void vg::IPostProcess::unregister() {
 
 #define BLOOM_TEXTURE_SLOT_COLOR  0      // texture slot to bind color texture which luma info will be extracted
 #define BLOOM_TEXTURE_SLOT_LUMA   0      // texture slot to bind luma texture
-#define BLOOM_TEXTURE_SLOT_BLUR   1      // texture slot to bind blur texture
+#define BLOOM_TEXTURE_SLOT_BLUR   3      // texture slot to bind blur texture
+static_assert(BLOOM_TEXTURE_SLOT_BLUR >= (ui32)vg::GBUFFER_TEXTURE_UNITS::COUNT, "Blur will collide with GBuffer");
 
 #pragma region BloomShaderCode
 
@@ -179,17 +180,10 @@ void vg::PostProcessBloom::render() {
     // TODO(Ben): Don't fuck with existing state. Need state manager.
     glDisable(GL_DEPTH_TEST);
 
-    // Get initial bound FBO and bound color texture to use it on final pass
-    int initial_texture;
-    // TODO(Ben): Bad performance
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &initial_texture);
-
-    // color texture should be bound on GL_TEXTURE0 slot
-
     // luma pass rendering on temporary FBO 1
     m_fbos[0].use();
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_COLOR);
-    glBindTexture(GL_TEXTURE_2D, initial_texture);
+    glBindTexture(GL_TEXTURE_2D, (ui32)GBUFFER_TEXTURE_UNITS::COLOR);
     renderStage(m_programLuma);
 
     // first gaussian blur pass rendering on temporary FBO 2
@@ -201,7 +195,7 @@ void vg::PostProcessBloom::render() {
 
     // second gaussian blur pass rendering. Sum initial color with blur color.
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_COLOR);
-    glBindTexture(GL_TEXTURE_2D, initial_texture);
+    glBindTexture(GL_TEXTURE_2D, (ui32)GBUFFER_TEXTURE_UNITS::COLOR);
 
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_BLUR);
     m_fbos[1].bindTexture();

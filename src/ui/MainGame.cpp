@@ -223,8 +223,6 @@ void vui::MainGame::onRenderFrame() {
 
     m_renderer.beginRenderFrame();
 
-    // TODO(Ben): Deferred
-
     m_screen->onRenderFrame(m_curTime);
     m_renderer.renderScenes(m_curTime);
     m_renderer.renderPostProcesses();

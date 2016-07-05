@@ -24,15 +24,30 @@ bool vg::Renderer::init(vui::GameWindow* window) {
     // Set up GBuffer for deferred rendering.
     m_gBuffer = std::make_unique<vg::GBuffer>(m_window->getWidth(), m_window->getHeight());
 
-    // TODO(Ben): More than color.
     std::vector<GBufferAttachment> attachments;
     { // Color
         attachments.emplace_back();
-        GBufferAttachment& color = attachments.back();
-        color.format = GBUFFER_INTERNAL_FORMAT_COLOR;
-        color.pixelFormat = vg::TextureFormat::RGBA;
-        color.pixelType = vg::TexturePixelType::FLOAT;
-        color.number = 0;
+        GBufferAttachment& a = attachments.back();
+        a.format = GBUFFER_INTERNAL_FORMAT_COLOR;
+        a.pixelFormat = vg::TextureFormat::RGBA;
+        a.pixelType = vg::TexturePixelType::FLOAT;
+        a.number = (ui32)GBUFFER_TEXTURE_UNITS::COLOR;
+    }
+    { // Position
+        attachments.emplace_back();
+        GBufferAttachment& a = attachments.back();
+        a.format = vg::TextureInternalFormat::RGB16F;
+        a.pixelFormat = vg::TextureFormat::RGB;
+        a.pixelType = vg::TexturePixelType::FLOAT;
+        a.number = (ui32)GBUFFER_TEXTURE_UNITS::POSITION;
+    }
+    { // Normal
+        attachments.emplace_back();
+        GBufferAttachment& a = attachments.back();
+        a.format = vg::TextureInternalFormat::RGB16F;
+        a.pixelFormat = vg::TextureFormat::RGB;
+        a.pixelType = vg::TexturePixelType::FLOAT;
+        a.number = (ui32)GBUFFER_TEXTURE_UNITS::NORMAL;
     }
     m_gBuffer->init(attachments, GBUFFER_INTERNAL_FORMAT_LIGHT);
     m_gBuffer->initDepth();
@@ -172,8 +187,10 @@ void vg::Renderer::renderPostProcesses() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, m_window->getWidth(), m_window->getHeight());
 
-    // Bind color
-    m_gBuffer->bindGeometryTexture(0, 0);
+    // Bind gbuffer textures
+    m_gBuffer->bindGeometryTexture((ui32)GBUFFER_TEXTURE_UNITS::COLOR, (ui32)GBUFFER_TEXTURE_UNITS::COLOR);
+    m_gBuffer->bindGeometryTexture((ui32)GBUFFER_TEXTURE_UNITS::POSITION, (ui32)GBUFFER_TEXTURE_UNITS::POSITION);
+    m_gBuffer->bindGeometryTexture((ui32)GBUFFER_TEXTURE_UNITS::NORMAL, (ui32)GBUFFER_TEXTURE_UNITS::NORMAL);
 
     // Do all post processing
     for (IPostProcess* p : m_postProcesses) {

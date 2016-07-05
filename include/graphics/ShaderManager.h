@@ -27,13 +27,13 @@
 #include "../Events.hpp"
 #include "../VorbPreDecl.inl"
 #include "../io/Path.h"
+#include "GLProgram.h"
 
 DECL_VIO(class IOManager)
 
 namespace vorb {
     namespace graphics {
 
-        class GLProgram;
         typedef std::map<nString, GLProgram> GLProgramMap;
 
         /// Static class that handles caching, creation, and destruction of GLPrograms
@@ -44,11 +44,13 @@ namespace vorb {
             /// Does not register to global cache.
             /// @param vertSrc: Source code for vertex shader
             /// @param fragSrc: Source code for fragment shader
+            /// @param version: Optional shader version
             /// @param vertIOM: Optional IOManager for vert #include lookups
             /// @param fragIOM: Optional IOManager for frag #include lookups
             /// @param defines: #defines for the program
             /// @return the created program.
             static GLProgram createProgram(const cString vertSrc, const cString fragSrc,
+                                           ShaderLanguageVersion version = DEFAULT_SHADING_LANGUAGE_VERSION,
                                            vio::IOManager* vertIOM = nullptr,
                                            vio::IOManager* fragIOM = nullptr,
                                            cString defines = nullptr);
@@ -56,10 +58,12 @@ namespace vorb {
             /// Does not register to global cache.
             /// @param vertPath: Path to vertex shader
             /// @param fragPath: Path to fragment shader
+            /// @param version: Optional shader version
             /// @param iom: Optional IOManager for loading
             /// @param defines: #defines for the program
             /// @return the created program.
             static GLProgram createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
+                                                   ShaderLanguageVersion version = DEFAULT_SHADING_LANGUAGE_VERSION,
                                                    vio::IOManager* iom = nullptr, cString defines = nullptr);
 
             /// Disposes and deallocates all globally cached programs and clears the cache

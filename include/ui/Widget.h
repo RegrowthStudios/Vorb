@@ -236,6 +236,9 @@ namespace vorb {
 
             /*! @brief Calculate relatve-to-parent change in position. */
             virtual f32v2 calculateRelativeToParentShift();
+
+            /*! @brief Applies the current min and max sizes to the provided dimensions. */
+            virtual void applyMinMaxSizesToDimensions(f32v2& dimensions);
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

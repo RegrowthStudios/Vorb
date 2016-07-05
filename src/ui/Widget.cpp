@@ -219,7 +219,7 @@ void vui::Widget::updatePosition() {
 void vui::Widget::updateDimensions() {
     if (m_dockingOptions.style == DockingStyle::NONE) {
         // Process raw dimensions.
-        f32v2 newDims = processRawValues(m_rawDimensions);
+        m_dimensions = processRawValues(m_rawDimensions);
 
         // Check against min/max size.
         if (newDims.x < m_minSize.x) {
@@ -231,11 +231,6 @@ void vui::Widget::updateDimensions() {
             newDims.y = m_minSize.y;
         } else if (newDims.y > m_maxSize.y) {
             newDims.y = m_maxSize.y;
-        }
-
-        // Only set if dimensions changed
-        if (newDims != m_dimensions) {
-            IWidgetContainer::setDimensions(newDims);
         }
     }
 }

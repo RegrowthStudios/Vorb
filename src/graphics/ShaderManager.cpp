@@ -52,7 +52,7 @@ vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cStr
     // Create the fragment shader
     ShaderSource srcFrag;
     srcFrag.stage = vg::ShaderType::FRAGMENT_SHADER;
-    srcVert.version = version;
+    srcFrag.version = version;
     if (defines) srcFrag.sources.push_back(defines);
     srcFrag.sources.push_back(parsedFragSrc.c_str());
     if (!program.addShader(srcFrag)) {

@@ -20,10 +20,9 @@ void vg::IPostProcess::unregister() {
 /* Bloom                                                                */
 /************************************************************************/
 
-#define BLOOM_TEXTURE_SLOT_COLOR  0      // texture slot to bind color texture which luma info will be extracted
-#define BLOOM_TEXTURE_SLOT_LUMA   0      // texture slot to bind luma texture
-#define BLOOM_TEXTURE_SLOT_BLUR   3      // texture slot to bind blur texture
-static_assert(BLOOM_TEXTURE_SLOT_BLUR >= (ui32)vg::GBUFFER_TEXTURE_UNITS::COUNT, "Blur will collide with GBuffer");
+#define BLOOM_TEXTURE_SLOT_LUMA   4      // texture slot to bind luma texture
+#define BLOOM_TEXTURE_SLOT_BLUR   5      // texture slot to bind blur texture
+static_assert(BLOOM_TEXTURE_SLOT_LUMA >= (ui32)vg::GBUFFER_TEXTURE_UNITS::COUNT, "Bloom will collide with GBuffer");
 
 #pragma region BloomShaderCode
 
@@ -180,10 +179,8 @@ void vg::PostProcessBloom::render() {
     // TODO(Ben): Don't fuck with existing state. Need state manager.
     glDisable(GL_DEPTH_TEST);
 
-    // luma pass rendering on temporary FBO 1
+    // luma pass rendering on temporary FBO 1 using the color gbuffer
     m_fbos[0].use();
-    glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_COLOR);
-    glBindTexture(GL_TEXTURE_2D, (ui32)GBUFFER_TEXTURE_UNITS::COLOR);
     renderStage(m_programLuma);
 
     // first gaussian blur pass rendering on temporary FBO 2
@@ -194,9 +191,6 @@ void vg::PostProcessBloom::render() {
     m_fbos[1].unuse(m_windowWidth, m_windowHeight);
 
     // second gaussian blur pass rendering. Sum initial color with blur color.
-    glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_COLOR);
-    glBindTexture(GL_TEXTURE_2D, (ui32)GBUFFER_TEXTURE_UNITS::COLOR);
-
     glActiveTexture(GL_TEXTURE0 + BLOOM_TEXTURE_SLOT_BLUR);
     m_fbos[1].bindTexture();
 
@@ -235,7 +229,7 @@ void vg::PostProcessBloom::renderStage(vg::GLProgram& program) {
 
 void vg::PostProcessBloom::uploadUniforms() {
     m_programLuma.use();
-    glUniform1i(m_programLuma.getUniform("unTexColor"),   BLOOM_TEXTURE_SLOT_COLOR);
+    glUniform1i(m_programLuma.getUniform("unTexColor"),   (ui32)vg::GBUFFER_TEXTURE_UNITS::COLOR);
     glUniform1f(m_programLuma.getUniform("unLumaThresh"), m_lumaThreshold);
     m_programLuma.unuse();
 
@@ -246,7 +240,7 @@ void vg::PostProcessBloom::uploadUniforms() {
     m_programGaussianFirst.unuse();
 
     m_programGaussianSecond.use();
-    glUniform1i(m_programGaussianSecond.getUniform("unTexColor"),  BLOOM_TEXTURE_SLOT_COLOR);
+    glUniform1i(m_programGaussianSecond.getUniform("unTexColor"),  (ui32)vg::GBUFFER_TEXTURE_UNITS::COLOR);
     glUniform1i(m_programGaussianSecond.getUniform("unTexBlur"),   BLOOM_TEXTURE_SLOT_BLUR);
     glUniform1f(m_programGaussianSecond.getUniform("unInvWidth"),  1.0f / (f32)m_windowWidth);
     glUniform1i(m_programGaussianSecond.getUniform("unGaussianN"), m_gaussianN);

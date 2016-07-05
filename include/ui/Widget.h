@@ -167,15 +167,15 @@ namespace vorb {
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const Length2& getRawPosition() const { return m_rawPosition; }
-            virtual const TargetLength2& getTargetRawPosition() const { return m_targetRawPosition; }
+            virtual const Transition2& getTargetRawPosition() const { return m_targetRawPosition; }
             virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const Length2& getRawDimensions() const { return m_rawDimensions; }
-            virtual const TargetLength2& getTargetRawDimensions() const { return m_targetRawDimensions; }
+            virtual const Transition2& getTargetRawDimensions() const { return m_targetRawDimensions; }
             virtual const Length2& getRawMinSize() const { return m_rawMinSize; }
-            virtual const TargetLength2& getTargetRawMinSize() const { return m_targetRawMinSize; }
+            virtual const Transition2& getTargetRawMinSize() const { return m_targetRawMinSize; }
             virtual const f32v2& getMinSize() const { return m_minSize; }
             virtual const Length2& getRawMaxSize() const { return m_rawMaxSize; }
-            virtual const TargetLength2& getTargetRawMaxSize() const { return m_targetRawMaxSize; }
+            virtual const Transition2& getTargetRawMaxSize() const { return m_targetRawMaxSize; }
             virtual const f32v2& getMaxSize() const { return m_maxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             virtual ui16 getZIndex() const { return m_zIndex; }
@@ -186,7 +186,7 @@ namespace vorb {
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             virtual void setDockingOptions(const DockingOptions& options);
             virtual void setRawDockingSize(const Length& size);
-            virtual void setRawTargetDockingSize(const TargetLength& targetSize);
+            virtual void setRawTargetDockingSize(const Transition& targetSize);
             virtual void setDockingStyle(const DockingStyle& style);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
@@ -196,25 +196,25 @@ namespace vorb {
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& units);
             virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePositionState(); }
             virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; updatePositionState(); }
-            virtual void setTargetRawPosition(const TargetLength2& targetRawPosition);
+            virtual void setTargetRawPosition(const Transition2& targetRawPosition);
             virtual void setDimensions(const f32v2& dimensions);
             virtual void setRawDimensions(const Length2& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensionState(); }
             virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& units);
             virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; updateDimensionState(); }
             virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; updateDimensionState(); }
-            virtual void setTargetRawDimensions(const TargetLength2& targetRawDimensions);
+            virtual void setTargetRawDimensions(const Transition2& targetRawDimensions);
             virtual void setRawMaxSize(const Length2& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
             virtual void setRawMaxSize(const f32v2& maxSize, UnitType& units);
             virtual void setRawMaxWidth(f32 maxWidth, UnitType& units) { m_rawMaxSize.x = maxWidth; m_rawMaxSize.units.x = units; updateMaxSize(); }
             virtual void setRawMaxHeight(f32 maxHeight, UnitType& units) { m_rawMaxSize.y = maxHeight; m_rawMaxSize.units.y = units; updateMaxSize(); }
             virtual void setMaxSize(const f32v2& maxSize);
-            virtual void setTargetRawMaxSize(const TargetLength2& targetMaxSize);
+            virtual void setTargetRawMaxSize(const Transition2& targetMaxSize);
             virtual void setRawMinSize(const Length2& minSize) { m_rawMinSize = minSize; updateMinSize(); }
             virtual void setRawMinSize(const f32v2& minSize, UnitType& units);
             virtual void setRawMinWidth(f32 minWidth, UnitType& units) { m_rawMinSize.x = minWidth; m_rawMinSize.units.x = units; updateMinSize(); }
             virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; updateMinSize(); }
             virtual void setMinSize(const f32v2& minSize);
-            virtual void setTargetRawMinSize(const TargetLength2& targetMinSize);
+            virtual void setTargetRawMinSize(const Transition2& targetMinSize);
             virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePositionState(); }
             virtual void setZIndex(ui16 zIndex);
             

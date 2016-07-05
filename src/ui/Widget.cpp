@@ -202,26 +202,16 @@ void vui::Widget::updatePosition() {
         // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
         m_relativePosition = m_position;
 
-        switch (m_positionType) {
-        case vui::PositionType::STATIC:
-        case vui::PositionType::RELATIVE:
-            if (m_parentWidget) {
-                m_position += m_parentWidget->getPosition();
-            } else if (m_parentForm) {
-                m_position += m_parentForm->getPosition();
-            }
-            break;
-        case vui::PositionType::FIXED:
-            if (m_parentForm) {
-                m_position += m_parentForm->getPosition();
-            }
-            break;
-        case vui::PositionType::ABSOLUTE:
-            const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
-            if (firstPositionedParent) {
-                m_position += firstPositionedParent->getPosition();
-            }
-            break;
+        // Calculate and apply the relative-to-parent position component of the widget.
+        f32v2 relativeShift = calculateRelativeToParentShift();
+        m_position += relativeShift;
+
+        // Only update transition data if a transition is in process of completing.
+        if (m_targetRawPosition.currentTime < m_targetRawPosition.finalTime) {
+            m_targetRawPosition.initialLength = processRawValues(m_targetRawPosition.rawInitialLength);
+            m_targetRawPosition.initialLength += relativeShift;
+            m_targetRawPosition.targetLength = processRawValues(m_targetRawPosition.rawTargetLength);
+            m_targetRawPosition.targetLength += relativeShift;
         }
     }
 }
@@ -277,4 +267,30 @@ f32v2 vui::Widget::processRawValues(const Length2& rawValues) {
 
 f32v2 vui::Widget::processRawValue(const f32v2& rawValue, const UnitType& units) {
     return IWidgetContainer::processRawValue(this, rawValue, units);
+}
+
+f32v2 vui::Widget::calculateRelativeToParentShift() {
+    f32v2 relativeShift = f32v2(0.0f);
+    switch (m_positionType) {
+    case vui::PositionType::STATIC:
+    case vui::PositionType::RELATIVE:
+        if (m_parentWidget) {
+            relativeShift = m_parentWidget->getPosition();
+        } else if (m_parentForm) {
+            relativeShift = m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::FIXED:
+        if (m_parentForm) {
+            relativeShift = m_parentForm->getPosition();
+        }
+        break;
+    case vui::PositionType::ABSOLUTE:
+        const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
+        if (firstPositionedParent) {
+            relativeShift = firstPositionedParent->getPosition();
+        }
+        break;
+    }
+    return relativeShift;
 }

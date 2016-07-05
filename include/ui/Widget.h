@@ -81,10 +81,8 @@ namespace vorb {
             f32(*tweeningFunc)(f32, f32, ui16, ui16);
         };
         struct Transition2 {
-            Length2 initialLength, targetLength;
-            struct {
-                f32 x, y;
-            } initialLength, targetLength; // TODO(Matthew): Ensure these details are updated at appropriate changes to parent.
+            Length2 rawInitialLength, rawTargetLength;
+            f32v2 initialLength, targetLength; // TODO(Matthew): Ensure these details are updated at appropriate changes to parent.
             ui16 currentTime, finalTime;
             f32(*tweeningFunc)(f32, f32, ui16, ui16);
         };
@@ -235,6 +233,9 @@ namespace vorb {
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             virtual f32v2 processRawValues(const Length2& rawValues);
             virtual f32v2 processRawValue(const f32v2& rawValue, const UnitType& unit);
+
+            /*! @brief Calculate relatve-to-parent change in position. */
+            virtual f32v2 calculateRelativeToParentShift();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

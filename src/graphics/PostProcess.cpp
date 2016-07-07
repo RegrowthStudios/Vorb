@@ -6,6 +6,8 @@
 #include "graphics/ShaderManager.h"
 #include "graphics/Renderer.h"
 
+vg::FullQuadVBO vg::IPostProcess::quad;
+
 /************************************************************************/
 /* IPostProcess                                                         */
 /************************************************************************/
@@ -16,13 +18,21 @@ void vg::IPostProcess::unregister() {
     m_renderer->unregisterPostProcess(this);
 }
 
+bool vg::IPostProcess::tryInitQuad() {
+    if (quad.isInitialized()) return false;
+    quad.init();
+    return true;
+}
+
+#define TEXTURE_SLOT_INPUT 4
+static_assert(TEXTURE_SLOT_INPUT >= (ui32)vg::GBUFFER_TEXTURE_UNITS::COUNT, "PostProcess input will collide with GBuffer");
+
 /************************************************************************/
 /* Bloom                                                                */
 /************************************************************************/
 
-#define BLOOM_TEXTURE_SLOT_LUMA   4      // texture slot to bind luma texture
-#define BLOOM_TEXTURE_SLOT_BLUR   5      // texture slot to bind blur texture
-static_assert(BLOOM_TEXTURE_SLOT_LUMA >= (ui32)vg::GBUFFER_TEXTURE_UNITS::COUNT, "Bloom will collide with GBuffer");
+#define BLOOM_TEXTURE_SLOT_LUMA 5 // texture slot to bind luma texture
+#define BLOOM_TEXTURE_SLOT_BLUR 6 // texture slot to bind blur texture=
 
 #pragma region BloomShaderCode
 
@@ -133,10 +143,10 @@ inline f32 gauss(int i, f32 sigma2) {
     return 1.0 / vmath::sqrt(2 * 3.14159265 * sigma2) * vmath::exp(-(i*i) / (2 * sigma2));
 }
 
-void vg::PostProcessBloom::init(ui32 windowWidth, ui32 windowHeight, ui32 renderFBO /*= 0*/) {
+void vg::PostProcessBloom::init(ui32 windowWidth, ui32 windowHeight, VGTexture inputColorTexture) {
     m_windowWidth  = windowWidth;
     m_windowHeight = windowHeight;
-    m_renderFBO = renderFBO;
+    m_inputTextures.resize(1, inputColorTexture);
 }
 
 void vg::PostProcessBloom::setParams(ui32 gaussianN /* = 20*/, float gaussianVariance /*= 36.0f*/, float lumaThreshold /*= 0.75f*/) {
@@ -147,17 +157,14 @@ void vg::PostProcessBloom::setParams(ui32 gaussianN /* = 20*/, float gaussianVar
     m_gaussianVariance = gaussianVariance;
     m_lumaThreshold = lumaThreshold;
 
-    // If our shaders are already made, send uniforms again.
-    if (m_programLuma.isLinked()) {
-        uploadUniforms();
-    }
+    uploadShaderUniforms();
 }
 
 void vg::PostProcessBloom::load() {
 
     vorb_assert(m_windowWidth != 0 && m_windowHeight != 0, "PostProcessBloom was not initialized.");
 
-    m_quad.init();
+    tryInitQuad();
     // initialize FBOs
     m_fbos[0].setSize(m_windowWidth, m_windowHeight);
     m_fbos[1].setSize(m_windowWidth, m_windowHeight);
@@ -171,7 +178,7 @@ void vg::PostProcessBloom::load() {
     m_programGaussianFirst  = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, BLOOM_GAUSS1_FRAG_SRC);
     m_programGaussianSecond = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, BLOOM_GAUSS2_FRAG_SRC);
 
-    uploadUniforms();
+    uploadShaderUniforms();
 }
 
 void vg::PostProcessBloom::render() {
@@ -181,6 +188,8 @@ void vg::PostProcessBloom::render() {
 
     // luma pass rendering on temporary FBO 1 using the color gbuffer
     m_fbos[0].use();
+    glActiveTexture(GL_TEXTURE0 + TEXTURE_SLOT_INPUT);
+    glBindTexture(GL_TEXTURE_2D, m_inputTextures.at(0));
     renderStage(m_programLuma);
 
     // first gaussian blur pass rendering on temporary FBO 2
@@ -195,7 +204,7 @@ void vg::PostProcessBloom::render() {
     m_fbos[1].bindTexture();
 
     // Bind output FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_outputFBO);
     renderStage(m_programGaussianSecond);
 
     // TODO(Ben): Need state manager
@@ -206,7 +215,6 @@ void vg::PostProcessBloom::dispose() {
     m_programLuma.dispose();
     m_programGaussianFirst.dispose();
     m_programGaussianSecond.dispose();
-    m_quad.dispose();
     m_fbos[0].dispose();
     m_fbos[1].dispose();
 
@@ -216,81 +224,94 @@ void vg::PostProcessBloom::dispose() {
     }
 }
 
+void vg::PostProcessBloom::uploadShaderUniforms() {
+    if (m_programGaussianSecond.isLinked()) {
+        m_programLuma.use();
+        glUniform1i(m_programLuma.getUniform("unTexColor"), TEXTURE_SLOT_INPUT);
+        glUniform1f(m_programLuma.getUniform("unLumaThresh"), m_lumaThreshold);
+        m_programLuma.unuse();
+
+        m_programGaussianFirst.use();
+        glUniform1i(m_programGaussianFirst.getUniform("unTexLuma"), BLOOM_TEXTURE_SLOT_LUMA);
+        glUniform1f(m_programGaussianFirst.getUniform("unInvHeight"), 1.0f / (f32)m_windowHeight);
+        glUniform1i(m_programGaussianFirst.getUniform("unGaussianN"), m_gaussianN);
+        m_programGaussianFirst.unuse();
+
+        m_programGaussianSecond.use();
+        glUniform1i(m_programGaussianSecond.getUniform("unTexColor"), TEXTURE_SLOT_INPUT);
+        glUniform1i(m_programGaussianSecond.getUniform("unTexBlur"), BLOOM_TEXTURE_SLOT_BLUR);
+        glUniform1f(m_programGaussianSecond.getUniform("unInvWidth"), 1.0f / (f32)m_windowWidth);
+        glUniform1i(m_programGaussianSecond.getUniform("unGaussianN"), m_gaussianN);
+        m_programGaussianSecond.unuse();
+
+        // Calculate gaussian weights
+        f32 weights[50], sum;
+        weights[0] = gauss(0, m_gaussianVariance);
+        sum = weights[0];
+        for (ui32 i = 1; i < m_gaussianN; i++) {
+            weights[i] = gauss(i, m_gaussianVariance);
+            sum += 2 * weights[i];
+        }
+        for (ui32 i = 0; i < m_gaussianN; i++) {
+            weights[i] = weights[i] / sum;
+        }
+        m_programGaussianFirst.use();
+        glUniform1fv(m_programGaussianFirst.getUniform("unWeight[0]"), m_gaussianN, weights);
+        m_programGaussianFirst.unuse();
+        m_programGaussianSecond.use();
+        glUniform1fv(m_programGaussianSecond.getUniform("unWeight[0]"), m_gaussianN, weights);
+        m_programGaussianSecond.unuse();
+    }
+}
+
 void vg::PostProcessBloom::renderStage(vg::GLProgram& program) {
 
     program.use();
     program.enableVertexAttribArrays();
 
-    m_quad.draw();
+    quad.draw();
 
     program.disableVertexAttribArrays();
     program.unuse();
 }
 
-void vg::PostProcessBloom::uploadUniforms() {
-    m_programLuma.use();
-    glUniform1i(m_programLuma.getUniform("unTexColor"),   (ui32)vg::GBUFFER_TEXTURE_UNITS::COLOR);
-    glUniform1f(m_programLuma.getUniform("unLumaThresh"), m_lumaThreshold);
-    m_programLuma.unuse();
-
-    m_programGaussianFirst.use();
-    glUniform1i(m_programGaussianFirst.getUniform("unTexLuma"),   BLOOM_TEXTURE_SLOT_LUMA);
-    glUniform1f(m_programGaussianFirst.getUniform("unInvHeight"), 1.0f / (f32)m_windowHeight);
-    glUniform1i(m_programGaussianFirst.getUniform("unGaussianN"), m_gaussianN);
-    m_programGaussianFirst.unuse();
-
-    m_programGaussianSecond.use();
-    glUniform1i(m_programGaussianSecond.getUniform("unTexColor"),  (ui32)vg::GBUFFER_TEXTURE_UNITS::COLOR);
-    glUniform1i(m_programGaussianSecond.getUniform("unTexBlur"),   BLOOM_TEXTURE_SLOT_BLUR);
-    glUniform1f(m_programGaussianSecond.getUniform("unInvWidth"),  1.0f / (f32)m_windowWidth);
-    glUniform1i(m_programGaussianSecond.getUniform("unGaussianN"), m_gaussianN);
-    m_programGaussianSecond.unuse();
-
-    // Calculate gaussian weights
-    f32 weights[50], sum;
-    weights[0] = gauss(0, m_gaussianVariance);
-    sum = weights[0];
-    for (ui32 i = 1; i < m_gaussianN; i++) {
-        weights[i] = gauss(i, m_gaussianVariance);
-        sum += 2 * weights[i];
-    }
-    for (ui32 i = 0; i < m_gaussianN; i++) {
-        weights[i] = weights[i] / sum;
-    }
-    m_programGaussianFirst.use();
-    glUniform1fv(m_programGaussianFirst.getUniform("unWeight[0]"), m_gaussianN, weights);
-    m_programGaussianFirst.unuse();
-    m_programGaussianSecond.use();
-    glUniform1fv(m_programGaussianSecond.getUniform("unWeight[0]"), m_gaussianN, weights);
-    m_programGaussianSecond.unuse();
-}
-
-void vg::PostProcessPassthrough::setTextureUnit(ui32 textureUnit) {
-    m_textureUnit = textureUnit;
-    // Update if needed
-    if (m_program.isLinked()) {
-        m_program.use();
-        glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
-        m_program.unuse();
-    }
+void vg::PostProcessPassthrough::init(VGTexture inputTexture) {
+    m_inputTextures.resize(1, inputTexture);
 }
 
 void vg::PostProcessPassthrough::load() {
     m_program = ShaderManager::createProgram(shadercommon::PASSTHROUGH_2D_VERT_SRC, shadercommon::TEXTURE_FRAG_SRC);
-    m_program.use();
-    glUniform1i(m_program.getUniform("unSampler"), m_textureUnit);
-    m_program.unuse();
-
-    m_quad.init();
+   
+    uploadShaderUniforms();
+    tryInitQuad();
 }
 
 void vg::PostProcessPassthrough::render() {
+
+    glDisable(GL_DEPTH_TEST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, m_outputFBO);
+
+    glActiveTexture(GL_TEXTURE0 + TEXTURE_SLOT_INPUT);
+    glBindTexture(GL_TEXTURE_2D, m_inputTextures.at(0));
+
     m_program.use();
-    m_quad.draw();
+    quad.draw();
     m_program.unuse();
+
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void vg::PostProcessPassthrough::dispose() {
     m_program.dispose();
-    m_quad.dispose();
+}
+
+void vg::PostProcessPassthrough::uploadShaderUniforms() {
+    if (m_program.isLinked()) {
+        // Can interrupt outer state
+        m_program.use();
+        glUniform1i(m_program.getUniform("unSampler"), TEXTURE_SLOT_INPUT);
+        m_program.unuse();
+    }
 }

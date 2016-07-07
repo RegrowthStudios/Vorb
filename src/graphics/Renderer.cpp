@@ -197,12 +197,12 @@ void vg::Renderer::renderPostProcesses() {
         p->render();
     }
 
-    // If we have no post processes, we have to render the g buffer to the screen manually.
+    // If we have no post processes, we have to render the color to the screen manually.
     if (m_postProcesses.empty()) {
         // Lazy load
         if (!m_postProcessPassthrough) {
             m_postProcessPassthrough = std::make_unique<vg::PostProcessPassthrough>();
-            m_postProcessPassthrough->init(0);
+            m_postProcessPassthrough->init((ui32)GBUFFER_TEXTURE_UNITS::COLOR);
             m_postProcessPassthrough->load();
         }
         // Bind color
@@ -211,6 +211,9 @@ void vg::Renderer::renderPostProcesses() {
         m_postProcessPassthrough->render();
     }
 
+    // Unset FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, m_window->getWidth(), m_window->getHeight());
 }
 
 void vg::Renderer::dispose() {

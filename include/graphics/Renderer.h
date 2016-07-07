@@ -115,6 +115,7 @@ namespace vorb {
             const std::vector<IScene*>&       getScenes()        const { return m_scenes; }
             const std::vector<IPostProcess*>& getPostProcesses() const { return m_postProcesses; }
             bool                              isInitialized()    const { return m_isInitialized; }
+            const vg::GBuffer*                getGBuffer()       const { return m_gBuffer.get(); }
 
         protected:
             bool             m_isInitialized    = false;

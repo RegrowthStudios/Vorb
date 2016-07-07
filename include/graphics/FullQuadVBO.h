@@ -22,28 +22,35 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
+#include "gtypes.h"
+
 namespace vorb {
     namespace graphics {
         /// Wrapper over common functionality to draw a quad across the entire screen
         class FullQuadVBO {
         public:
-            /// Initialize all OpenGL resources
-            /// @param attrLocation: Position attribute location for VAO
+            /*! @brief Initialize all graphics resources.
+             * @param attrLocation: Position attribute location for VAO
+             */
             void init(i32 attrLocation = 0);
-            /// Dispose all OpenGL resources
+            /*! @brief Dispose all graphics resources
+             */
             void dispose();
 
-            /// Binds vertex array, index buffer, and issues a draw command
+            /*! @brief Binds vertex array, index buffer, and issues a draw command.
+             */
             void draw();
+
+            bool isInitialized() const { return m_vao != 0; }
         private:
             union {
                 struct {
-                    ui32 m_vb; ///< Vertex buffer ID
-                    ui32 m_ib; ///< Index buffer ID
+                    VGVertexBuffer m_vb;
+                    VGIndexBuffer  m_ib;
                 };
-                ui32 m_buffers[2]; ///< Storage for both buffers used by this mesh
+                VGVertexBuffer m_buffers[2];
             };
-            ui32 m_vao; ///< VAO with vertex attribute pointing to 0
+            VGVertexArray m_vao = 0;
         };
     }
 }

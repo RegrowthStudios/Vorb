@@ -35,6 +35,9 @@ namespace graphics {
     class GLRenderTarget;
     class Renderer;
 
+    // TODO(Ben): Visual shader programming tool with live recompiling.
+    // TODO(Ben): FBO Cacheing.
+
     /************************************************************************/
     /* Base                                                                 */
     /************************************************************************/
@@ -57,42 +60,71 @@ namespace graphics {
         virtual void dispose() = 0;
 
         /*! @brief Unregisters from the SceneRenderer
-        */
+         */
         virtual void unregister();
 
+        /*! @brief Gets and sets the input textures.
+         * Derived classes must allocate input texture space in m_inputTextures or setInputTexture will crash.
+         * setInputTextures should be preferred with multiple textures, as setInputTexture will redundantly upload uniforms.
+         */
+        virtual void setInputTexture (ui32 index, VGTexture  inputTexture)  { m_inputTextures.at(index) = inputTexture; }
+        virtual void setInputTextures(std::vector<VGTexture> inputTextures) { m_inputTextures           = inputTextures; }
+        virtual const std::vector<VGTexture>& getInputTextures() const { return m_inputTextures; }
+
+        /*! @brief Gets and sets the input textures.
+         * It is assumed that the outputFBO is a format that works for this PostProcess. 
+         */
+        virtual void          setOutputFBO(VGFramebuffer outputFBO) { m_outputFBO = outputFBO; }
+        virtual VGFramebuffer getOutputFBO() const                  { return m_outputFBO; }
+
+        /*! @brief Checks if quad is created, and creates it if not.
+         *  This must be called to initialize the shared quad. Recommend calling in
+         *  any shader that needs the quad.
+         *  @return False if the quad is already initialized.
+         */
+        static bool tryInitQuad();
+
+        static vg::FullQuadVBO quad; ///< Optional shared VBO. Call dispose manually.
+
     protected:
+
         Renderer* m_renderer = nullptr; ///< Renderer that owns this.
+
+        std::vector<VGTexture> m_inputTextures; ///< Optional input textures, some PostProcesses may not use.
+
+        VGFramebuffer m_outputFBO    = 0; ///< FBO that we will write to.
     };
 
     /************************************************************************/
     /* Bloom                                                                */
     /************************************************************************/
-    /// Renders the bloom post process.
+    /*! @brief Renders the bloom post process: A gaussian blur of bright objects.
+     * 
+     *  @input Texture 0 as color.
+     *  @output[0] Color.
+     */
     class PostProcessBloom : public IPostProcess {
     public:
-        void         init     (ui32 windowWidth, ui32 windowHeight, ui32 renderFBO = 0);
+        void         init     (ui32 windowWidth, ui32 windowHeight, VGTexture inputColorTexture);
         void         setParams(ui32 gaussianN = 20, f32 gaussianVariance = 36.0f, f32 lumaThreshold = 0.75f);
         void         load     () override;
         virtual void render   () override;
         virtual void dispose  () override;
 
     private:
-        void renderStage   (vg::GLProgram& program);
-        void uploadUniforms();
+        virtual void uploadShaderUniforms();
+
+        void renderStage (vg::GLProgram& program);
 
         /// Shaders
         vg::GLProgram m_programLuma;
         vg::GLProgram m_programGaussianFirst;
         vg::GLProgram m_programGaussianSecond;
 
-        vg::FullQuadVBO m_quad;
-
         vg::GLRenderTarget m_fbos[2];
 
         ui32 m_windowWidth  = 0;
         ui32 m_windowHeight = 0;
-
-        ui32 m_renderFBO = 0; ///< FBO to render the final image to
 
         /// Parameters
         ui32 m_gaussianN        = 20;     ///< Threshold for filtering image luma for bloom bluring
@@ -103,23 +135,24 @@ namespace graphics {
     /************************************************************************/
     /* Passthrough                                                          */
     /************************************************************************/
-    /// Simply renders a texture from one FBO to another.
+    /*! @brief Simply renders a 2D texture from one FBO to another.
+    *
+    * @input Texture.
+    * @output[0] Texture.
+    */
     class PostProcessPassthrough : public IPostProcess {
     public:
-
-        void init(ui32 textureUnit) { m_textureUnit = textureUnit; }
-        void setTextureUnit(ui32 textureUnit);
+        void         init(VGTexture inputTexture);
         virtual void load()    override;
         virtual void render()  override;
         virtual void dispose() override;
+        virtual void uploadShaderUniforms();
 
     private:
-        ui32 m_textureUnit = 0;
         vg::GLProgram m_program;
-
-        // TODO(Ben): Quad sharing
-        vg::FullQuadVBO m_quad;
     };
+
+    // TODO(Ben): Gaussian blur.
 }
 }
 namespace vg = vorb::graphics;

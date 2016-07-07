@@ -25,13 +25,13 @@ void vg::FullQuadVBO::init(i32 attrLocation /*= 0*/) {
 }
 
 void vg::FullQuadVBO::dispose() {
-    if (m_buffers[0]) {
+    if (m_vao) {
         glDeleteBuffers(2, m_buffers);
         m_buffers[0] = 0;
         m_buffers[1] = 0;
-    }
-    if (m_vao) {
+
         glDeleteVertexArrays(1, &m_vao);
+        m_vao = 0; ///< So we know we aren't initialized.
     }
 }
 

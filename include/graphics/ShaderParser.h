@@ -37,6 +37,7 @@ DECL_VIO(class IOManager);
 namespace vorb {
     namespace graphics {
 
+        // TODO(Ben): Detect output location based on chronological order.
         class ShaderParser {
         public:
             /// Parses includes and semantics for a vertex shader

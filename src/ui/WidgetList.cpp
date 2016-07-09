@@ -83,28 +83,28 @@ void vui::WidgetList::addItems(const std::vector <Widget*>& widgetsToAdd) {
     updatePosition();
 }
 
-void vui::WidgetList::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
+void vui::WidgetList::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+    Widget::setDimensions(dimensions, update);
     m_panel.setDimensions(dimensions);
     updatePosition();
 }
 
 // TODO(Matthew): Probably don't want to be updating position this way...
 void vui::WidgetList::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, true);
+    Widget::setHeight(height, update);
     m_panel.setHeight(height);
+    updatePosition();
+}
+
+// TODO(Matthew): Probably don't want to be updating position this way...
+void vui::WidgetList::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
+    m_panel.setWidth(width);
     updatePosition();
 }
 
 void vui::WidgetList::setTexture(VGTexture texture) {
     m_panel.setTexture(texture);
-}
-
-// TODO(Matthew): Probably don't want to be updating position this way...
-void vui::WidgetList::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, true);
-    m_panel.setWidth(width);
-    updatePosition();
 }
 
 void vui::WidgetList::setBackColor(const color4& color) {

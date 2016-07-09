@@ -74,6 +74,9 @@ namespace vorb {
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
+            /*! @brief Updates all drawable spatial states. */
+            virtual void updateDrawableSpatialState() override {};
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -94,11 +97,11 @@ namespace vorb {
             /************************************************************************/
             virtual void setSlideDimensions(const f32v2& dimensions);
             virtual void setHeight(f32 height, bool update = true) override;
+            virtual void setWidth(f32 width, bool update = true) override;
             virtual void setPosition(const f32v2& position, bool update = true) override;
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
             virtual void setBarColor(const color4& color);
-            virtual void setWidth(f32 width, bool update = true) override;
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
             virtual void setValue(int value);

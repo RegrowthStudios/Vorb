@@ -70,6 +70,9 @@ namespace vorb {
             */
             virtual void addDrawables(UIRenderer* renderer) override;
 
+            /*! @brief Updates all drawable spatial states. */
+            virtual void updateDrawableSpatialState() override;
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -87,14 +90,14 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions) override;
+            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height, bool update = true) override;
             virtual void setPosition(const f32v2& position, bool update = true) override;
             virtual void setTexture(VGTexture texture);
             virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
+            virtual void setX(f32 x, bool update = true) override;
+            virtual void setY(f32 y, bool update = true) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setBackHoverColor(const color4& color);
@@ -115,9 +118,7 @@ namespace vorb {
 
             virtual void updateColor();
             virtual void updateTextPosition();
-            virtual void refreshDrawables();
-
-            virtual void updateDrawableSpatialState();
+            virtual void refreshDrawables() override;
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;

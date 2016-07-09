@@ -3,6 +3,8 @@
 #include "UI/InputDispatcher.h"
 #include "UI/UIRenderer.h"
 
+#include <iostream>
+
 vui::Widget::Widget() : IWidgetContainer(), 
     m_rawPosition({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
     m_rawDimensions({ 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } }),
@@ -65,11 +67,68 @@ void vui::Widget::removeDrawables() {
 }
 
 void vui::Widget::updateDrawableOrderState() {
-    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
-        (*it)->removeDrawables();
-        (*it)->setNeedsDrawableReload(false);
-        (*it)->addDrawables(m_renderer);
-        (*it)->updateDrawableOrderState();
+    for (auto& w : m_widgets.get_container()) {
+        w->removeDrawables();
+        w->setNeedsDrawableReload(false);
+        w->addDrawables(m_renderer);
+        w->updateDrawableOrderState();
+    }
+}
+
+void vui::Widget::updateSpatialState() {
+    updateMaxSize(); // TODO(Matthew): Updating children too many times. Should be just the once.
+
+    updateMinSize();
+
+    vui::IWidgetContainer::updateSpatialState();
+}
+
+void vui::Widget::updateTransitionState() {
+    updateTargetMaxSize();
+
+    updateTargetMinSize();
+
+    vui::IWidgetContainer::updateTransitionState();
+}
+
+void vui::Widget::update(f32 dt /*= 1.0f*/) {
+    m_targetPosition.currentTime += dt;
+    if (m_targetPosition.currentTime <= m_targetPosition.finalTime) {
+        m_position = m_targetPosition.tweeningFunc(m_targetPosition.initialLength,
+                                                m_targetPosition.targetLength,
+                                                m_targetPosition.finalTime,
+                                                m_targetPosition.currentTime);
+        m_needsDrawableReload = true;
+    }
+    m_targetDimensions.currentTime += dt;
+    if (m_targetDimensions.currentTime <= m_targetDimensions.finalTime) {
+        m_dimensions = m_targetDimensions.tweeningFunc(m_targetDimensions.initialLength,
+                                                m_targetDimensions.targetLength,
+                                                m_targetDimensions.finalTime,
+                                                m_targetDimensions.currentTime);
+        m_needsDrawableReload = true;
+    }
+    m_targetMaxSize.currentTime += dt;
+    if (m_targetMaxSize.currentTime <= m_targetMaxSize.finalTime) {
+        m_maxSize = m_targetMaxSize.tweeningFunc(m_targetMaxSize.initialLength,
+                                                m_targetMaxSize.targetLength,
+                                                m_targetMaxSize.finalTime,
+                                                m_targetMaxSize.currentTime);
+        m_needsDrawableReload = true;
+    }
+    m_targetMinSize.currentTime += dt;
+    if (m_targetMinSize.currentTime <= m_targetMinSize.finalTime) {
+        m_minSize = m_targetMinSize.tweeningFunc(m_targetMinSize.initialLength,
+                                                m_targetMinSize.targetLength,
+                                                m_targetMinSize.finalTime,
+                                                m_targetMinSize.currentTime);
+        m_needsDrawableReload = true;
+    }
+    applyMinMaxSizesToDimensions(m_dimensions);
+    updateChildSpatialStates(); // TODO(Matthew): Optimise this.
+    if (m_needsDrawableReload) {
+        updateDrawableSpatialState();
+        m_needsDrawableReload = false;
     }
 }
 
@@ -123,7 +182,11 @@ void vui::Widget::setDockingStyle(const DockingStyle& style) {
 
 void vui::Widget::setPosition(const f32v2& position, bool update /*= true*/) {
     m_rawPosition = { position.x, position.y, { UnitType::PIXEL, UnitType::PIXEL } };
-    IWidgetContainer::setPosition(position, update);
+    m_position = position;
+    if (update) {
+        computeClipRect();
+        updateChildSpatialStates();
+    }
 }
 
 void vui::Widget::setRawPosition(const f32v2& rawPosition, UnitType& units) {
@@ -131,9 +194,31 @@ void vui::Widget::setRawPosition(const f32v2& rawPosition, UnitType& units) {
     updatePositionState();
 }
 
-void vui::Widget::setDimensions(const f32v2& dimensions) {
+void vui::Widget::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
     m_rawDimensions = { dimensions.x, dimensions.y, { UnitType::PIXEL, UnitType::PIXEL } };
-    IWidgetContainer::setDimensions(dimensions);
+    m_dimensions = dimensions;
+    if (update) {
+        computeClipRect();
+        updateChildSpatialStates();
+    }
+}
+
+void vui::Widget::setHeight(f32 height, bool update /*= true*/) {
+    m_rawDimensions = { m_rawDimensions.x, height, { m_rawDimensions.units.x, UnitType::PIXEL } };
+    m_dimensions = f32v2(m_dimensions.x, height);
+    if (update) {
+        computeClipRect();
+        updateChildSpatialStates();
+    }
+}
+
+void vui::Widget::setWidth(f32 width, bool update /*= true*/) {
+    m_rawDimensions = { width, m_rawDimensions.y, { UnitType::PIXEL, m_rawDimensions.units.y } };
+    m_dimensions = f32v2(width, m_dimensions.y);
+    if (update) {
+        computeClipRect();
+        updateChildSpatialStates();
+    }
 }
 
 void vui::Widget::setRawDimensions(const f32v2& rawDimensions, UnitType& units) {
@@ -203,17 +288,20 @@ void vui::Widget::updatePosition() {
         m_relativePosition = m_position;
 
         // Calculate and apply the relative-to-parent position component of the widget.
-        f32v2 relativeShift = calculateRelativeToParentShift();
-        m_position += relativeShift;
-
-        // Only update transition data if a transition is in process of completing.
-        if (m_targetRawPosition.currentTime < m_targetRawPosition.finalTime) {
-            m_targetRawPosition.initialLength = processRawValues(m_targetRawPosition.rawInitialLength);
-            m_targetRawPosition.initialLength += relativeShift;
-            m_targetRawPosition.targetLength = processRawValues(m_targetRawPosition.rawTargetLength);
-            m_targetRawPosition.targetLength += relativeShift;
-        }
+        m_position += calculateRelativeToParentShift();
     }
+}
+
+void vui::Widget::updateTargetPosition() {
+    //// Only update transition data if a transition is in process of completing.
+    //if (m_targetPosition.currentTime < m_targetPosition.finalTime) {
+        m_targetPosition.initialLength = processRawValues(m_targetPosition.rawInitialLength);
+        m_targetPosition.targetLength = processRawValues(m_targetPosition.rawTargetLength);
+        // Calculate and apply the relative-to-parent position component of the widget.
+        f32v2 relativeShift = calculateRelativeToParentShift();
+        m_targetPosition.initialLength += relativeShift;
+        m_targetPosition.targetLength += relativeShift;
+    //}
 }
 
 void vui::Widget::updateDimensions() {
@@ -222,17 +310,27 @@ void vui::Widget::updateDimensions() {
         m_dimensions = processRawValues(m_rawDimensions);
 
         // Check against min/max size.
-        if (newDims.x < m_minSize.x) {
-            newDims.x = m_minSize.x;
-        } else if (newDims.x > m_maxSize.x) {
-            newDims.x = m_maxSize.x;
-        }
-        if (newDims.y < m_minSize.y) {
-            newDims.y = m_minSize.y;
-        } else if (newDims.y > m_maxSize.y) {
-            newDims.y = m_maxSize.y;
-        }
+        applyMinMaxSizesToDimensions(m_dimensions);
     }
+}
+
+void vui::Widget::updateTargetDimensions() {
+    //if (m_targetRawDimensions.currentTime < m_targetRawDimensions.finalTime) {
+        m_targetPosition.initialLength = processRawValues(m_targetDimensions.rawInitialLength);
+        applyMinMaxSizesToDimensions(m_targetPosition.initialLength);
+        m_targetPosition.targetLength = processRawValues(m_targetDimensions.rawTargetLength);
+        applyMinMaxSizesToDimensions(m_targetPosition.targetLength);
+    //}
+}
+
+void vui::Widget::updateTargetMaxSize() {
+    m_targetMaxSize.initialLength = processRawValues(m_targetMaxSize.rawInitialLength);
+    m_targetMaxSize.targetLength = processRawValues(m_targetMaxSize.rawTargetLength);
+}
+
+void vui::Widget::updateTargetMinSize() {
+    m_targetMinSize.initialLength = processRawValues(m_targetMinSize.rawInitialLength);
+    m_targetMinSize.targetLength = processRawValues(m_targetMinSize.rawTargetLength);
 }
 
 void vui::Widget::updateDockingSize() {
@@ -288,4 +386,17 @@ f32v2 vui::Widget::calculateRelativeToParentShift() {
         break;
     }
     return relativeShift;
+}
+
+void vui::Widget::applyMinMaxSizesToDimensions(f32v2& dimensions) {
+    if (dimensions.x < m_minSize.x) {
+        dimensions.x = m_minSize.x;
+    } else if (dimensions.x > m_maxSize.x) {
+        dimensions.x = m_maxSize.x;
+    }
+    if (dimensions.y < m_minSize.y) {
+        dimensions.y = m_minSize.y;
+    } else if (dimensions.y > m_maxSize.y) {
+        dimensions.y = m_maxSize.y;
+    }
 }

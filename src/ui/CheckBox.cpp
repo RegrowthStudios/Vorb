@@ -82,8 +82,8 @@ void vui::CheckBox::toggleChecked() {
     refreshDrawables();
 }
 
-void vui::CheckBox::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
+void vui::CheckBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+    Widget::setDimensions(dimensions, update);
     m_drawableRect.setDimensions(dimensions);
     updateTextPosition();
 }
@@ -121,14 +121,14 @@ void vui::CheckBox::setWidth(f32 width, bool update /*= true*/) {
     updateTextPosition();
 }
 
-void vui::CheckBox::setX(f32 x) {
-    Widget::setX(x);
+void vui::CheckBox::setX(f32 x, bool update /*= true*/) {
+    Widget::setX(x, update);
     m_drawableRect.setX(x);
     updateTextPosition();
 }
 
-void vui::CheckBox::setY(f32 y) {
-    Widget::setY(y);
+void vui::CheckBox::setY(f32 y, bool update /*= true*/) {
+    Widget::setY(y, update);
     m_drawableRect.setX(y);
     updateTextPosition();
 }

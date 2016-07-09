@@ -102,8 +102,8 @@ void vui::Panel::setDestRect(const f32v4& destRect) {
     refreshDrawables();
 }
 
-void vui::Panel::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
+void vui::Panel::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+    Widget::setDimensions(dimensions, update);
     m_drawableRect.setDimensions(dimensions);
     updateSliders();
     refreshDrawables();
@@ -116,13 +116,6 @@ void vui::Panel::setHeight(f32 height, bool update /*= true*/) {
     refreshDrawables();
 }
 
-void vui::Panel::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    m_drawableRect.setPosition(m_position);
-    updateSliders();
-    refreshDrawables();
-}
-
 void vui::Panel::setWidth(f32 width, bool update /*= true*/) {
     Widget::setWidth(width, update);
     m_drawableRect.setWidth(width);
@@ -130,15 +123,22 @@ void vui::Panel::setWidth(f32 width, bool update /*= true*/) {
     refreshDrawables();
 }
 
-void vui::Panel::setX(f32 x) {
-    Widget::setX(x);
+void vui::Panel::setPosition(const f32v2& position, bool update /*= true*/) {
+    Widget::setPosition(position, update);
+    m_drawableRect.setPosition(m_position);
+    updateSliders();
+    refreshDrawables();
+}
+
+void vui::Panel::setX(f32 x, bool update /*= true*/) {
+    Widget::setX(x, update);
     m_drawableRect.setX(m_position.x);
     updateSliders();
     refreshDrawables();
 }
 
-void vui::Panel::setY(f32 y) {
-    Widget::setY(y);
+void vui::Panel::setY(f32 y, bool update /*= true*/) {
+    Widget::setY(y, update);
     m_drawableRect.setX(m_position.y);
     updateSliders();
     refreshDrawables();

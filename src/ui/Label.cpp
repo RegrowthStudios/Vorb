@@ -50,8 +50,8 @@ void vui::Label::setDestRect(const f32v4& destRect) {
     refreshDrawables();
 }
 
-void vui::Label::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
+void vui::Label::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+    Widget::setDimensions(dimensions, update);
     updatePosition();
 }
 
@@ -78,13 +78,13 @@ void vui::Label::setWidth(f32 width, bool update /*= true*/) {
     updatePosition();
 }
 
-void vui::Label::setX(f32 x) {
-    Widget::setX(x);
+void vui::Label::setX(f32 x, bool update /*= true*/) {
+    Widget::setX(x, update);
     updatePosition();
 }
 
-void vui::Label::setY(f32 y) {
-    Widget::setY(y);
+void vui::Label::setY(f32 y, bool update /*= true*/) {
+    Widget::setY(y, update);
     updatePosition();
 }
 

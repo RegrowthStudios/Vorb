@@ -51,6 +51,13 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
 
+void vui::Button::updateDrawableSpatialState() {
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+    m_drawableRect.setClipRect(m_clipRect);
+    updateTextPosition();
+}
+
 void vui::Button::setDestRect(const f32v4& destRect) {
     vui::Widget::setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
@@ -58,9 +65,9 @@ void vui::Button::setDestRect(const f32v4& destRect) {
     refreshDrawables();
 }
 
-void vui::Button::setDimensions(const f32v2& dimensions) {
+void vui::Button::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
     m_drawableRect.setDimensions(dimensions);
-    Widget::setDimensions(dimensions);
+    Widget::setDimensions(dimensions, update);
 }
 
 void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
@@ -91,14 +98,14 @@ void vui::Button::setWidth(f32 width, bool update /*= true*/) {
     updateDrawableSpatialState();
 }
 
-void vui::Button::setX(f32 x) {
-    Widget::setX(x);
+void vui::Button::setX(f32 x, bool update /*= true*/) {
+    Widget::setX(x, update);
     m_drawableRect.setX(m_position.x);
     updateDrawableSpatialState();
 }
 
-void vui::Button::setY(f32 y) {
-    Widget::setY(y);
+void vui::Button::setY(f32 y, bool update /*= true*/) {
+    Widget::setY(y, update);
     m_drawableRect.setX(m_position.y);
     updateDrawableSpatialState();
 }
@@ -223,7 +230,6 @@ void vui::Button::updateTextPosition() {
 }
 
 void vui::Button::refreshDrawables() {
-
     // Use renderer default font if we don't have a font
     if (!m_drawableText.getFont()) {
         m_drawableText.setFont(m_defaultFont);
@@ -235,13 +241,6 @@ void vui::Button::refreshDrawables() {
     
     m_drawableRect.setClipRect(m_clipRect);
     m_drawnRect = m_drawableRect;
-}
-
-void vui::Button::updateDrawableSpatialState() {
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    updateTextPosition();
 }
 
 void vui::Button::onMouseMove(Sender s, const MouseMotionEvent& e) {

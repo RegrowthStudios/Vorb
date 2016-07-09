@@ -132,7 +132,7 @@ namespace vorb {
             virtual void disable();
 
             /*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
-            void updateSpatialState();
+            virtual void updateSpatialState();
             /*! @brief Calls updateSpatialState on all children. */
             void updateChildSpatialStates();
             /*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
@@ -150,6 +150,9 @@ namespace vorb {
             void updateZIndexState(Widget* changedChild = nullptr);
             /*! @brief Updates children based on their docking options. */
             void updateDockingState();
+            /*! @brief Updates all transitionary states. */
+            virtual void updateTransitionState();
+
 
             /*! @brief Checks if a point is inside the container
              *
@@ -189,14 +192,14 @@ namespace vorb {
             virtual void setParentForm(Form* form);
             virtual void setParentWidget(Widget* parent, Widget* self);
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateDimensionState(); }
+            virtual void setDimensions(const f32v2& dimensions, bool update = true) { m_dimensions = dimensions; if (update) updateDimensionState(); }
             virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             virtual void setHeight(f32 height, bool update = true) { m_dimensions.y = height; if (update) updateDimensionState(); }
             virtual void setWidth(f32 width, bool update = true) { m_dimensions.x = width; if (update) updateDimensionState(); }
             virtual void setPosition(const f32v2& position, bool update = true) { m_position = position; if (update) updatePositionState(); }
-            virtual void setX(f32 x) { m_position.x = x; updatePositionState(); }
-            virtual void setY(f32 y) { m_position.y = y; updatePositionState(); }
+            virtual void setX(f32 x, bool update = true) { m_position.x = x; if (update) updatePositionState(); }
+            virtual void setY(f32 y, bool update = true) { m_position.y = y; if (update) updatePositionState(); }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             virtual void setName(const nString& name) { m_name = name; }
@@ -232,8 +235,12 @@ namespace vorb {
 
             /*! @brief Defines how raw position is used to process the actual position. */
             virtual void updatePosition() = 0;
+            /*! @brief Updates the target position data. */
+            virtual void updateTargetPosition() = 0;
             /*! @brief Defines how raw dimensions are used to process the actual dimensions. */
             virtual void updateDimensions() = 0;
+            /*! @brief Updates the target dimensions data. */
+            virtual void updateTargetDimensions() = 0;
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations.
              *         Uses the widget provided for parent data etc.
@@ -266,9 +273,6 @@ namespace vorb {
             ContainerStyle m_style; ///< The current style.
             Form* m_parentForm = nullptr; ///< Parent form.
             Widget* m_parentWidget = nullptr; ///< Parent widget.
-
-            // TODO(Matthew): Do we need to store widgets both ways? Probably not...
-            //std::vector<Widget*> m_widgets; ///< All child widgets in order of creation.
             
             bool(*m_zIndexCompare)(Widget*, Widget*);
             SortedVector<Widget*, true, bool(*)(Widget*, Widget*)> m_widgets; ///< Child widgets in order of Z-index.

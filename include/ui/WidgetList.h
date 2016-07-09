@@ -100,6 +100,9 @@ namespace vorb {
             * @param widgetsToAdd: The Widgets to add
             */
             virtual void addItems(const std::vector <Widget*>& widgetsToAdd);
+
+            /*! @brief Updates all drawable spatial states. */
+            virtual void updateDrawableSpatialState() override {};
    
             /************************************************************************/
             /* Getters                                                              */
@@ -114,16 +117,19 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions) override;
+            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
             virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setTexture(VGTexture texture);
             virtual void setWidth(f32 width, bool update = true) override;
+            virtual void setTexture(VGTexture texture);
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);
             virtual void setAutoScroll(bool autoScroll);
 
-        protected:  
+        protected:
+            /*! @brief Refreshes drawables. */
+            virtual void refreshDrawables() override {};
+
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

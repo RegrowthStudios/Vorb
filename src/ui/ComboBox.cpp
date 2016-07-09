@@ -155,8 +155,8 @@ const nString& vui::ComboBox::getItem(int index) const {
     return m_items.at(index);
 }
 
-void vui::ComboBox::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
+void vui::ComboBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+    Widget::setDimensions(dimensions, update);
     m_mainButton.setDimensions(dimensions);
     updatePosition();
 }

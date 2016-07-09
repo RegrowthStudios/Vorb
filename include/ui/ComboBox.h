@@ -125,6 +125,9 @@ namespace vorb {
             virtual bool isInDropBounds(const f32v2& point) const { return isInDropBounds(point.x, point.y); }
             virtual bool isInDropBounds(f32 x, f32 y) const;
 
+            /*! @brief Updates all drawable spatial states. */
+            virtual void updateDrawableSpatialState() override {};
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -145,7 +148,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions) override;
+            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height, bool update = true) override;
             virtual void setTexture(VGTexture texture);
@@ -168,6 +171,9 @@ namespace vorb {
         protected:
             virtual void updateDropButton(vorb::ui::Button* b);
             virtual void computeClipRect() override;
+
+            /*! @brief Refreshes drawables. */
+            virtual void refreshDrawables() override {};
 
             /************************************************************************/
             /* Event Handlers                                                       */

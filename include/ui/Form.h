@@ -88,8 +88,12 @@ namespace vorb {
         protected:
             /* Updates the position of the Form. */
             virtual void updatePosition() override {}
+            /*! @brief Updates the target position data. */
+            virtual void updateTargetPosition() override {};
             /* Updates the dimensions of the Form. */
             virtual void updateDimensions() override {}
+            /*! @brief Updates the target dimensions data. */
+            virtual void updateTargetDimensions() override {};
 
             const GameWindow* m_viewport;
             UIRenderer m_renderer; ///< The UI Renderer.

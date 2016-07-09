@@ -69,6 +69,11 @@ void vui::Slider::setHeight(f32 height, bool update /*= true*/) {
     updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 }
 
+void vui::Slider::setWidth(f32 width, bool update /*= true*/) {
+    Widget::setWidth(width, update);
+    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
+}
+
 void vui::Slider::setPosition(const f32v2& position, bool update /*= true*/) {
     Widget::setPosition(position, update);
     updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
@@ -87,11 +92,6 @@ void vui::Slider::setBarTexture(VGTexture texture) {
 void vui::Slider::setBarColor(const color4& color) {
     m_barColor = color;
     updateColor();
-}
-
-void vui::Slider::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
 }
 
 void vui::Slider::setSlideColor(const color4& color) {

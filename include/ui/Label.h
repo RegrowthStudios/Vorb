@@ -73,6 +73,9 @@ namespace vorb {
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;
 
+            /*! @brief Updates all drawable spatial states. */
+            virtual void updateDrawableSpatialState() override {};
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -86,13 +89,13 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions) override;
+            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setHeight(f32 height, bool update = true) override;
             virtual void setPosition(const f32v2& position, bool update = true) override;
             virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
+            virtual void setX(f32 x, bool update = true) override;
+            virtual void setY(f32 y, bool update = true) override;
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);

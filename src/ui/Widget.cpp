@@ -92,41 +92,29 @@ void vui::Widget::updateTransitionState() {
 }
 
 void vui::Widget::update(f32 dt /*= 1.0f*/) {
-    m_targetPosition.currentTime += dt;
+    m_targetPosition.currentTime += dt; // TODO(Matthew): Optional callback on transition completion?
     if (m_targetPosition.currentTime <= m_targetPosition.finalTime) {
-        m_position = m_targetPosition.tweeningFunc(m_targetPosition.initialLength,
-                                                m_targetPosition.targetLength,
-                                                m_targetPosition.finalTime,
-                                                m_targetPosition.currentTime);
+        m_position = m_targetPosition.calculateCurrent();
         m_needsDrawableReload = true;
     }
     m_targetDimensions.currentTime += dt;
     if (m_targetDimensions.currentTime <= m_targetDimensions.finalTime) {
-        m_dimensions = m_targetDimensions.tweeningFunc(m_targetDimensions.initialLength,
-                                                m_targetDimensions.targetLength,
-                                                m_targetDimensions.finalTime,
-                                                m_targetDimensions.currentTime);
+        m_dimensions = m_targetDimensions.calculateCurrent();
         m_needsDrawableReload = true;
     }
     m_targetMaxSize.currentTime += dt;
     if (m_targetMaxSize.currentTime <= m_targetMaxSize.finalTime) {
-        m_maxSize = m_targetMaxSize.tweeningFunc(m_targetMaxSize.initialLength,
-                                                m_targetMaxSize.targetLength,
-                                                m_targetMaxSize.finalTime,
-                                                m_targetMaxSize.currentTime);
+        m_maxSize = m_targetMaxSize.calculateCurrent();
         m_needsDrawableReload = true;
     }
     m_targetMinSize.currentTime += dt;
     if (m_targetMinSize.currentTime <= m_targetMinSize.finalTime) {
-        m_minSize = m_targetMinSize.tweeningFunc(m_targetMinSize.initialLength,
-                                                m_targetMinSize.targetLength,
-                                                m_targetMinSize.finalTime,
-                                                m_targetMinSize.currentTime);
+        m_minSize = m_targetMinSize.calculateCurrent();
         m_needsDrawableReload = true;
     }
     applyMinMaxSizesToDimensions(m_dimensions);
     updateChildSpatialStates(); // TODO(Matthew): Optimise this.
-    if (m_needsDrawableReload) {
+    if (m_needsDrawableReload) { // TODO(Matthew): Some choppiness is appearing. Investigate.
         updateDrawableSpatialState();
         m_needsDrawableReload = false;
     }

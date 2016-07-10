@@ -73,19 +73,52 @@ namespace vorb {
             Length size;
         };
         
-        // TODO(Matthew): Convert ui16 time to f32.
         //! Structs of target length and time frame to completion.
-        struct Transition {
-            Length rawInitialLength, rawTargetLength;
-            f32 initialLength, targetLength; // TODO(Matthew): Ensure these details are updated at appropriate changes to parent.
-            ui16 currentTime, finalTime;
-            f32(*tweeningFunc)(f32, f32, ui16, ui16);
+        struct UITransition : public vmath::Transition32_F32 {
+            Length rawInitialLength, rawFinalLength;
+
+            UITransition() {
+                rawInitialLength = { 0.0f, { UnitType::PIXEL } };
+                rawFinalLength = { 0.0f, { UnitType::PIXEL } };
+                initialLength = 0.0f;
+                finalLength = 0.0f;
+                currentTime = 0.0f;
+                finalTime = 0.0f;
+                tweeningFunc = nullptr;
+            }
+
+            UITransition(const Length& _rawInitialLength, const Length& _rawFinalLength, f32 duration, f32(*_tweeningFunc)(f32, f32, f32)) {
+                rawInitialLength = _rawInitialLength;
+                rawFinalLength = _rawFinalLength;
+                initialLength = 0.0f;
+                finalLength = 0.0f;
+                currentTime = 0.0f;
+                finalTime = duration;
+                tweeningFunc = _tweeningFunc;
+            }
         };
-        struct Transition2 {
-            Length2 rawInitialLength, rawTargetLength;
-            f32v2 initialLength, targetLength; // TODO(Matthew): Ensure these details are updated at appropriate changes to parent.
-            ui16 currentTime, finalTime;
-            f32v2(*tweeningFunc)(f32v2, f32v2, ui16, ui16);
+        struct UITransition2 : public vmath::Transition32v2_F32 {
+            Length2 rawInitialLength, rawFinalLength;
+
+            UITransition2() {
+                rawInitialLength = { 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } };
+                rawFinalLength = { 0.0f, 0.0f, { UnitType::PIXEL, UnitType::PIXEL } };
+                initialLength = f32v2(0.0f);
+                finalLength = f32v2(0.0f);
+                currentTime = 0.0f;
+                finalTime = 0.0f;
+                tweeningFunc = nullptr;
+            }
+
+            UITransition2(const Length2& _rawInitialLength, const Length2& _rawFinalLength, f32 duration, f32v2(*_tweeningFunc)(f32v2, f32v2, f32)) {
+                rawInitialLength = _rawInitialLength;
+                rawFinalLength = _rawFinalLength;
+                initialLength = 0.0f;
+                finalLength = 0.0f;
+                currentTime = 0.0f;
+                finalTime = duration;
+                tweeningFunc = _tweeningFunc;
+            }
         };
 
         // Forward Declarations
@@ -172,15 +205,15 @@ namespace vorb {
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const Length2& getRawPosition() const { return m_rawPosition; }
-            virtual const Transition2& getTargetPosition() const { return m_targetPosition; }
+            virtual const UITransition2& getTargetPosition() const { return m_targetPosition; }
             virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
             virtual const Length2& getRawDimensions() const { return m_rawDimensions; }
-            virtual const Transition2& getTargetDimensions() const { return m_targetDimensions; }
+            virtual const UITransition2& getTargetDimensions() const { return m_targetDimensions; }
             virtual const Length2& getRawMinSize() const { return m_rawMinSize; }
-            virtual const Transition2& getTargetMinSize() const { return m_targetMinSize; }
+            virtual const UITransition2& getTargetMinSize() const { return m_targetMinSize; }
             virtual const f32v2& getMinSize() const { return m_minSize; }
             virtual const Length2& getRawMaxSize() const { return m_rawMaxSize; }
-            virtual const Transition2& getTargetMaxSize() const { return m_targetMaxSize; }
+            virtual const UITransition2& getTargetMaxSize() const { return m_targetMaxSize; }
             virtual const f32v2& getMaxSize() const { return m_maxSize; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             virtual ui16 getZIndex() const { return m_zIndex; }
@@ -206,7 +239,7 @@ namespace vorb {
             virtual void setRawPosition(const f32v2& rawPosition, UnitType& units);
             virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePositionState(); }
             virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; updatePositionState(); }
-            virtual void setTargetPosition(const Transition2& targetPosition, bool update = true) { m_targetPosition = targetPosition; if (update) updateTargetPosition(); } // TODO(Matthew): Some more friendly setting functions?
+            virtual void setTargetPosition(const UITransition2& targetPosition, bool update = true) { m_targetPosition = targetPosition; if (update) updateTargetPosition(); } // TODO(Matthew): Some more friendly setting functions?
             virtual void setDimensions(const f32v2& dimensions, bool update = true);
             virtual void setHeight(f32 height, bool update = true) override;
             virtual void setWidth(f32 width, bool update = true) override;
@@ -214,19 +247,19 @@ namespace vorb {
             virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& units);
             virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; updateDimensionState(); }
             virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; updateDimensionState(); }
-            virtual void setTargetDimensions(const Transition2& targetDimensions, bool update = true) { m_targetDimensions = targetDimensions; if (update) updateTargetDimensions(); }
+            virtual void setTargetDimensions(const UITransition2& targetDimensions, bool update = true) { m_targetDimensions = targetDimensions; if (update) updateTargetDimensions(); }
             virtual void setRawMaxSize(const Length2& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
             virtual void setRawMaxSize(const f32v2& maxSize, UnitType& units);
             virtual void setRawMaxWidth(f32 maxWidth, UnitType& units) { m_rawMaxSize.x = maxWidth; m_rawMaxSize.units.x = units; updateMaxSize(); }
             virtual void setRawMaxHeight(f32 maxHeight, UnitType& units) { m_rawMaxSize.y = maxHeight; m_rawMaxSize.units.y = units; updateMaxSize(); }
             virtual void setMaxSize(const f32v2& maxSize);
-            virtual void setTargetMaxSize(const Transition2& targetMaxSize, bool update = true) { m_targetMaxSize = targetMaxSize; if (update) updateTargetMaxSize(); }
+            virtual void setTargetMaxSize(const UITransition2& targetMaxSize, bool update = true) { m_targetMaxSize = targetMaxSize; if (update) updateTargetMaxSize(); }
             virtual void setRawMinSize(const Length2& minSize) { m_rawMinSize = minSize; updateMinSize(); }
             virtual void setRawMinSize(const f32v2& minSize, UnitType& units);
             virtual void setRawMinWidth(f32 minWidth, UnitType& units) { m_rawMinSize.x = minWidth; m_rawMinSize.units.x = units; updateMinSize(); }
             virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; updateMinSize(); }
             virtual void setMinSize(const f32v2& minSize);
-            virtual void setTargetMinSize(const Transition2& targetMinSize, bool update = true) { m_targetMinSize = targetMinSize; if (update) updateTargetMinSize(); }
+            virtual void setTargetMinSize(const UITransition2& targetMinSize, bool update = true) { m_targetMinSize = targetMinSize; if (update) updateTargetMinSize(); }
             virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePositionState(); }
             virtual void setZIndex(ui16 zIndex);
             
@@ -271,23 +304,23 @@ namespace vorb {
             AnchorStyle m_anchor; ///< The anchor data.
             DockingOptions m_dockingOptions; ///< Docking options of the widget.
             // TODO(Matthew): Move transitions in some way to IWidgetContainer, at least in processed position/dimension so form may transition.
-            Transition m_targetDockingSize; ///< The target docking size of the widget.
+            UITransition m_targetDockingSize; ///< The target docking size of the widget.
             f32 m_processedDockingSize; ///< Cache of processed docking size.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr; ///< The renderer to be used by the widget.
             ui16 m_zIndex; ///< The Z-index of the widget.
             PositionType m_positionType = PositionType::STATIC; ///< The type of positioning of the widget.
             Length2 m_rawPosition; ///< The raw position of the widget.
-            Transition2 m_targetPosition; ///< The target raw position of the widget.
+            UITransition2 m_targetPosition; ///< The target raw position of the widget.
             // TODO(Matthew): Do we need this?
             f32v2 m_relativePosition = f32v2(0.0f); ///< The relative position of the widget.
             Length2 m_rawDimensions; ///< The raw dimensions of the widget.
-            Transition2 m_targetDimensions; ///< The target raw dimensions of the widget.
+            UITransition2 m_targetDimensions; ///< The target raw dimensions of the widget.
             Length2 m_rawMinSize; ///< The raw minimum dimensions of the widget.
-            Transition2 m_targetMinSize; ///< The target raw minimum dimensions of the widget.
+            UITransition2 m_targetMinSize; ///< The target raw minimum dimensions of the widget.
             f32v2 m_minSize = f32v2(0.0f); ///< The processed minimum dimensions of the widget.
             Length2 m_rawMaxSize; ///< The raw maximum dimensions of the widget.
-            Transition2 m_targetMaxSize; ///< The target raw minimum dimensions of the widget.
+            UITransition2 m_targetMaxSize; ///< The target raw minimum dimensions of the widget.
             f32v2 m_maxSize = f32v2(FLT_MAX); ///< The processed maximum dimensions of the widget.
             volatile bool m_needsDrawableReload = false;
         };

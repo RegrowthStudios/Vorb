@@ -178,15 +178,15 @@ namespace vorb {
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
-            /*! @brief Recalculates order of drawables based on Z-index. */
-            virtual void updateDrawableOrderState();
+            ///*! @brief Recalculates order of drawables based on Z-index. */
+            //virtual void updateDrawableOrderState();
 
-            /*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
-            virtual void updateSpatialState() override;
-            /*! @brief Updates all transitionary states. */
-            virtual void updateTransitionState() override;
-            /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() = 0;
+            ///*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
+            //virtual void updateSpatialState() override;
+            ///*! @brief Updates all transitionary states. */
+            //virtual void updateTransitionState() override;
+            ///*! @brief Updates all drawable spatial states. */
+            //virtual void updateDrawableSpatialState() = 0;
 
             /*! @brief Updates the widget. Can be used for animation.
             *
@@ -197,96 +197,113 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const DockingOptions& getDockingOptions() const { return m_dockingOptions; }
-            virtual f32 getProcessedDockingSize() const { return m_processedDockingSize; }
-            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
-            virtual const PositionType& getPositionType() const { return m_positionType; }
-            virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
-            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
-            virtual const UIRenderer* getRenderer() const { return m_renderer; }
-            virtual const Length2& getRawPosition() const { return m_rawPosition; }
-            virtual const UITransition2& getTargetPosition() const { return m_targetPosition; }
-            virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
-            virtual const Length2& getRawDimensions() const { return m_rawDimensions; }
-            virtual const UITransition2& getTargetDimensions() const { return m_targetDimensions; }
-            virtual const Length2& getRawMinSize() const { return m_rawMinSize; }
-            virtual const UITransition2& getTargetMinSize() const { return m_targetMinSize; }
-            virtual const f32v2& getMinSize() const { return m_minSize; }
-            virtual const Length2& getRawMaxSize() const { return m_rawMaxSize; }
-            virtual const UITransition2& getTargetMaxSize() const { return m_targetMaxSize; }
-            virtual const f32v2& getMaxSize() const { return m_maxSize; }
-            virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
-            virtual ui16 getZIndex() const { return m_zIndex; }
+            Form* getParentForm() const { return m_parentForm; }
+            Widget* getParentWidget() const { return m_parentWidget; }
+            const IWidgetContainer* getFirstPositionedParent() const;
+            //const DockingOptions& getDockingOptions() const { return m_dockingOptions; } // TODO(Matthew): Reimplement docking in new update system.
+            //f32 getProcessedDockingSize() const { return m_processedDockingSize; }
+            const AnchorStyle& getAnchor() const { return m_anchor; }
+            const PositionType& getPositionType() const { return m_positionType; }
+            const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
+            const vorb::graphics::SpriteFont* getFont() const { return m_font; }
+            const UIRenderer* getRenderer() const { return m_renderer; }
+            const Length2& getRawPosition() const { return m_rawPosition; }
+            const UITransition2& getTargetPosition() const { return m_targetPosition; }
+            const f32v2& getRelativePosition() const { return m_relativePosition; }
+            const Length2& getRawDimensions() const { return m_rawDimensions; }
+            const UITransition2& getTargetDimensions() const { return m_targetDimensions; }
+            const Length2& getRawMinSize() const { return m_rawMinSize; }
+            const UITransition2& getTargetMinSize() const { return m_targetMinSize; }
+            const f32v2& getMinSize() const { return m_minSize; }
+            const Length2& getRawMaxSize() const { return m_rawMaxSize; }
+            const UITransition2& getTargetMaxSize() const { return m_targetMaxSize; }
+            const f32v2& getMaxSize() const { return m_maxSize; }
+            //const WidgetAlign& getWidgetAlign() const { return m_align; }
+            //ui16 getZIndex() const { return m_zIndex; }
 
-            virtual bool isPositionTransitioning() const { return m_targetPosition.currentTime < m_targetPosition.finalTime; }
-            virtual bool isDimensionsTransitioning() const { return m_targetDimensions.currentTime < m_targetDimensions.finalTime; }
-            virtual bool isMaxSizeTransitioning() const { return m_targetMaxSize.currentTime < m_targetMaxSize.finalTime; }
-            virtual bool isMinSizeTransitioning() const { return m_targetMinSize.currentTime < m_targetMinSize.finalTime; }
+            bool isPositionTransitioning() const { return m_targetPosition.currentTime < m_targetPosition.finalTime; }
+            bool isDimensionsTransitioning() const { return m_targetDimensions.currentTime < m_targetDimensions.finalTime; }
+            bool isMaxSizeTransitioning() const { return m_targetMaxSize.currentTime < m_targetMaxSize.finalTime; }
+            bool isMinSizeTransitioning() const { return m_targetMinSize.currentTime < m_targetMinSize.finalTime; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
-            virtual void setDockingOptions(const DockingOptions& options);
-            virtual void setRawDockingSize(const Length& size);
+            //virtual void setDockingOptions(const DockingOptions& options);
+            //virtual void setRawDockingSize(const Length& size);
             //virtual void setRawTargetDockingSize(const Transition& targetSize); // TODO(Matthew): Implement.
-            virtual void setDockingStyle(const DockingStyle& style);
+            //virtual void setDockingStyle(const DockingStyle& style);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
-            virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; updateSpatialState(); }
-            virtual void setPosition(const f32v2& position, bool update = true);
-            virtual void setRawPosition(const Length2& rawPosition) { m_rawPosition = rawPosition; updatePositionState(); }
-            virtual void setRawPosition(const f32v2& rawPosition, UnitType& units);
-            virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; updatePositionState(); }
-            virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; updatePositionState(); }
-            virtual void setTargetPosition(const UITransition2& targetPosition, bool update = true) { m_targetPosition = targetPosition; if (update) updateTargetPosition(); } // TODO(Matthew): Some more friendly setting functions?
-            virtual void setDimensions(const f32v2& dimensions, bool update = true);
-            virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setRawDimensions(const Length2& rawDimensions) { m_rawDimensions = rawDimensions; updateDimensionState(); }
-            virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& units);
-            virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; updateDimensionState(); }
-            virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; updateDimensionState(); }
-            virtual void setTargetDimensions(const UITransition2& targetDimensions, bool update = true) { m_targetDimensions = targetDimensions; if (update) updateTargetDimensions(); }
-            virtual void setRawMaxSize(const Length2& maxSize) { m_rawMaxSize = maxSize; updateMaxSize(); }
-            virtual void setRawMaxSize(const f32v2& maxSize, UnitType& units);
-            virtual void setRawMaxWidth(f32 maxWidth, UnitType& units) { m_rawMaxSize.x = maxWidth; m_rawMaxSize.units.x = units; updateMaxSize(); }
-            virtual void setRawMaxHeight(f32 maxHeight, UnitType& units) { m_rawMaxSize.y = maxHeight; m_rawMaxSize.units.y = units; updateMaxSize(); }
+            virtual void setPositionType(const PositionType& positionType) { m_positionType = positionType; m_pendingUpdates |= UpdateFlag::SPATIAL; }
+            virtual void setPosition(const f32v2& position) override { m_rawPosition = { position.x, position.y, { UnitType::PIXEL, UnitType::PIXEL } }; IWidgetContainer::setPosition(position); }
+            virtual void setRawPosition(const Length2& rawPosition) { m_rawPosition = rawPosition; m_pendingUpdates |= UpdateFlag::RAW_POSITION; }
+            virtual void setRawPosition(const f32v2& rawPosition, UnitType& units) { m_rawPosition = { rawPosition.x, rawPosition.y, { units, units } }; m_pendingUpdates |= UpdateFlag::RAW_POSITION; }
+            virtual void setRawPositionX(f32 value, UnitType& units) { m_rawPosition.x = value; m_rawPosition.units.x = units; m_pendingUpdates |= UpdateFlag::RAW_POSITION; }
+            virtual void setRawPositionY(f32 value, UnitType& units) { m_rawPosition.y = value; m_rawPosition.units.y = units; m_pendingUpdates |= UpdateFlag::RAW_POSITION; }
+            virtual void setTargetPosition(const UITransition2& targetPosition) { m_targetPosition = targetPosition;  m_pendingUpdates |= UpdateFlag::TRANSITION_POSITION; } // TODO(Matthew): Some more friendly setting functions?
+            virtual void setDimensions(const f32v2& dimensions) override { m_rawDimensions = { dimensions.x, dimensions.y, { UnitType::PIXEL, UnitType::PIXEL } }; IWidgetContainer::setDimensions(dimensions); }
+            virtual void setHeight(f32 height) override { m_rawDimensions = { m_rawDimensions.x, height, { m_rawDimensions.units.x, UnitType::PIXEL } }; IWidgetContainer::setHeight(height); }
+            virtual void setWidth(f32 width) override { m_rawDimensions = { width, m_rawDimensions.y, { UnitType::PIXEL, m_rawDimensions.units.y } }; IWidgetContainer::setWidth(width); }
+            virtual void setRawDimensions(const Length2& rawDimensions) { m_rawDimensions = rawDimensions; m_pendingUpdates |= UpdateFlag::RAW_DIMENSIONS; }
+            virtual void setRawDimensions(const f32v2& rawDimensions, UnitType& units) { m_rawDimensions = { rawDimensions.x, rawDimensions.y, { units, units } }; m_pendingUpdates |= UpdateFlag::RAW_DIMENSIONS; }
+            virtual void setRawWidth(f32 value, UnitType& units) { m_rawDimensions.x = value; m_rawDimensions.units.x = units; m_pendingUpdates |= UpdateFlag::RAW_DIMENSIONS; }
+            virtual void setRawHeight(f32 value, UnitType& units) { m_rawDimensions.y = value; m_rawDimensions.units.y = units; m_pendingUpdates |= UpdateFlag::RAW_DIMENSIONS; }
+            virtual void setTargetDimensions(const UITransition2& targetDimensions) { m_targetDimensions = targetDimensions; m_pendingUpdates |= UpdateFlag::TRANSITION_DIMENSIONS; }
+            virtual void setRawMaxSize(const Length2& maxSize) { m_rawMaxSize = maxSize; m_pendingUpdates |= UpdateFlag::RAW_MAX_SIZE; }
+            virtual void setRawMaxSize(const f32v2& maxSize, UnitType& units) { m_rawMaxSize = { maxSize.x, maxSize.y, { units, units } }; m_pendingUpdates |= UpdateFlag::RAW_MAX_SIZE; }
+            virtual void setRawMaxWidth(f32 maxWidth, UnitType& units) { m_rawMaxSize.x = maxWidth; m_rawMaxSize.units.x = units; m_pendingUpdates |= UpdateFlag::RAW_MAX_SIZE; }
+            virtual void setRawMaxHeight(f32 maxHeight, UnitType& units) { m_rawMaxSize.y = maxHeight; m_rawMaxSize.units.y = units; m_pendingUpdates |= UpdateFlag::RAW_MAX_SIZE; }
             virtual void setMaxSize(const f32v2& maxSize);
-            virtual void setTargetMaxSize(const UITransition2& targetMaxSize, bool update = true) { m_targetMaxSize = targetMaxSize; if (update) updateTargetMaxSize(); }
-            virtual void setRawMinSize(const Length2& minSize) { m_rawMinSize = minSize; updateMinSize(); }
-            virtual void setRawMinSize(const f32v2& minSize, UnitType& units);
-            virtual void setRawMinWidth(f32 minWidth, UnitType& units) { m_rawMinSize.x = minWidth; m_rawMinSize.units.x = units; updateMinSize(); }
-            virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; updateMinSize(); }
+            virtual void setTargetMaxSize(const UITransition2& targetMaxSize, bool update = true) { m_targetMaxSize = targetMaxSize; m_pendingUpdates |= UpdateFlag::TRANSITION_MAX_SIZE; }
+            virtual void setRawMinSize(const Length2& minSize) { m_rawMinSize = minSize; m_pendingUpdates |= UpdateFlag::RAW_MIN_SIZE; }
+            virtual void setRawMinSize(const f32v2& minSize, UnitType& units) { m_rawMinSize = { minSize.x, minSize.y, { units, units } }; m_pendingUpdates |= UpdateFlag::RAW_MIN_SIZE; }
+            virtual void setRawMinWidth(f32 minWidth, UnitType& units) { m_rawMinSize.x = minWidth; m_rawMinSize.units.x = units; m_pendingUpdates |= UpdateFlag::RAW_MIN_SIZE; }
+            virtual void setRawMinHeight(f32 minHeight, UnitType& units) { m_rawMinSize.y = minHeight; m_rawMinSize.units.y = units; m_pendingUpdates |= UpdateFlag::RAW_MIN_SIZE; }
             virtual void setMinSize(const f32v2& minSize);
-            virtual void setTargetMinSize(const UITransition2& targetMinSize, bool update = true) { m_targetMinSize = targetMinSize; if (update) updateTargetMinSize(); }
-            virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePositionState(); }
-            virtual void setZIndex(ui16 zIndex);
+            virtual void setTargetMinSize(const UITransition2& targetMinSize, bool update = true) { m_targetMinSize = targetMinSize; m_pendingUpdates |= UpdateFlag::TRANSITION_MIN_SIZE; }
+            //virtual void setWidgetAlign(WidgetAlign align) { m_align = align; m_pendingUpdates |= UpdateFlag::POSITION; }
+            //virtual void setZIndex(ui16 zIndex);
             
         protected:
-            virtual f32v2 getWidgetAlignOffset();
+            /*! @brief Sets the parent Form for this container.
+            *
+            * @param parent: The parent Form to be set for this Widget.
+            */
+            void setParentForm(Form* parent);
+            /*! @brief Sets the parent Widget for this container.
+            *
+            * @param parent: The parent Widget to be set for this Widget.
+            */
+            void setParentWidget(Widget* parent);
 
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
-            /*! @brief Updates the target position data. */
-            virtual void updateTargetPosition() override;
-            /*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
-            virtual void updateDimensions() override;
-            /*! @brief Updates the target dimensions data. */
-            virtual void updateTargetDimensions() override;
-            /*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
-            virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensionState(); }
-            /*! @brief Updates the target max size data. */
-            virtual void updateTargetMaxSize();
-            /*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
-            virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensionState(); }
-            /*! @brief Updates the target min size data. */
-            virtual void updateTargetMinSize();
-            /*! @brief Processes the raw size of docking. */
-            virtual void updateDockingSize();
+            //virtual f32v2 getWidgetAlignOffset();
+
+            ///*! @brief Updates the position relative to parent */
+            //virtual void updatePosition() override;
+            ///*! @brief Updates the target position data. */
+            //virtual void updateTargetPosition() override;
+            ///*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
+            //virtual void updateDimensions() override;
+            ///*! @brief Updates the target dimensions data. */
+            //virtual void updateTargetDimensions() override;
+            ///*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
+            //virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensionState(); }
+            ///*! @brief Updates the target max size data. */
+            //virtual void updateTargetMaxSize();
+            ///*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
+            //virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensionState(); }
+            ///*! @brief Updates the target min size data. */
+            //virtual void updateTargetMinSize();
+            ///*! @brief Processes the raw size of docking. */
+            //virtual void updateDockingSize();
 
             /*! @brief Refreshes drawables. */
             virtual void refreshDrawables() = 0;
+
+            /*! @brief Computes clipping for this widget container. */
+            virtual void computeClipRect();
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             virtual f32v2 processRawValues(const Length2& rawValues);
@@ -300,6 +317,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            Form* m_parentForm = nullptr; ///< Parent form.
+            Widget* m_parentWidget = nullptr; ///< Parent widget.
             WidgetAlign m_align = WidgetAlign::TOP_LEFT; ///< Direction of alignment of the widget.
             AnchorStyle m_anchor; ///< The anchor data.
             DockingOptions m_dockingOptions; ///< Docking options of the widget.

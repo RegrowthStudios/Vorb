@@ -35,27 +35,14 @@ void vui::IWidgetContainer::dispose() {
     disable();
 }
 
-bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
-    child->m_parentWidget = self;
-    return addWidget(child, self->getParentForm());
-}
-
-bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
-    m_widgets.insert(child);
-    child->setParentForm(self);
-    child->updateSpatialState();
-    self->updateDrawableOrderState();
-    return true; // TODO(Ben): Is this needed?
-}
-
 bool vui::IWidgetContainer::removeWidget(Widget* child) {
     for (auto& it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
             m_widgets.erase(it);
+            child->setParentForm(nullptr);
             return true;
         }
     }
-    child->setParentForm(nullptr);
     return false;
 }
 
@@ -84,144 +71,132 @@ void vui::IWidgetContainer::disable() {
     for (auto& w : m_widgets) w->disable();
 }
 
-void vui::IWidgetContainer::updateSpatialState() {
-    updatePosition();
-    
-    updateDimensions();
-
-    computeClipRect();
-
-    updateChildSpatialStates();
-}
-
-void vui::IWidgetContainer::updateChildSpatialStates() {
-    for (auto& w : m_widgets) {
-        w->updateSpatialState();
-    }
-}
-
-void vui::IWidgetContainer::updatePositionState() {
-    updatePosition();
-
-    computeClipRect();
-
-    updateChildSpatialStates();
-}
-
-void vui::IWidgetContainer::updateDimensionState() {
-    updateDimensions();
-
-    computeClipRect();
-
-    updateChildSpatialStates();
-}
-
-void vui::IWidgetContainer::updateClippingState() {
-    computeClipRect();
-
-    updateChildClippingStates();
-}
-
-void vui::IWidgetContainer::updateChildClippingStates() {
-    for (auto& w : m_widgets) {
-        w->updateClippingState();
-    }
-}
-
-void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
-    if (changedChild) {
-        auto& it = m_widgets.find(changedChild);
-        m_widgets.erase(it);
-        m_widgets.insert(changedChild);
-    } else {
-        m_widgets.sort();
-    }
-}
-
-void vui::IWidgetContainer::updateDockingState() {
-    f32 surplusWidth = m_dimensions.x;
-    f32 surplusHeight = m_dimensions.y;
-    f32v2 usedSpace = f32v2(0.0f);
-    for (auto& w : m_widgets.get_container()) {
-        DockingOptions options = w->getDockingOptions();
-        f32 size = w->getProcessedDockingSize();
-        switch (options.style) {
-        case DockingStyle::NONE:
-            break;
-        case DockingStyle::LEFT:
-            w->setHeight(surplusHeight, false);
-            surplusWidth -= size;
-            if (surplusWidth > -FLT_EPSILON) {
-                w->setWidth(size, false);
-                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
-            } else {
-                w->setWidth(0.0f, true);
-            }
-            usedSpace.x += size;
-            break;
-        case DockingStyle::TOP:
-            w->setWidth(surplusWidth, false);
-            surplusHeight -= size;
-            if (surplusHeight > -FLT_EPSILON) {
-                w->setHeight(size, false);
-                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
-            } else {
-                w->setHeight(0.0f, true);
-            }
-            usedSpace.y += size;
-            break;
-        case DockingStyle::RIGHT:
-            w->setHeight(surplusHeight, false);
-            surplusWidth -= size;
-            if (surplusWidth > -FLT_EPSILON) {
-                w->setWidth(size, false);
-                w->setPosition(f32v2(usedSpace.x + surplusWidth, usedSpace.y), false);
-            } else {
-                w->setWidth(0.0f, true);
-            }
-            break;
-        case DockingStyle::BOTTOM:
-            w->setWidth(surplusWidth, false);
-            surplusHeight -= size;
-            if (surplusHeight > -FLT_EPSILON) {
-                w->setHeight(size, false);
-                w->setPosition(f32v2(usedSpace.x, usedSpace.y + surplusHeight), false);
-            } else {
-                w->setHeight(0.0f, true);
-            }
-            break;
-        case DockingStyle::FILL:
-            // Not sure what to do with this one yet.
-            // TODO(Matthew): Find a way to implement this.
-            break;
-        default:
-            // Shouldn't get here.
-            break;
-        }
-    }
-}
-
-void vui::IWidgetContainer::updateTransitionState() {
-    updateTargetPosition();
-
-    updateTargetDimensions();
-}
+//void vui::IWidgetContainer::updateSpatialState() {
+//    updatePosition();
+//    
+//    updateDimensions();
+//
+//    computeClipRect();
+//
+//    updateChildSpatialStates();
+//}
+//
+//void vui::IWidgetContainer::updateChildSpatialStates() {
+//    for (auto& w : m_widgets) {
+//        w->updateSpatialState();
+//    }
+//}
+//
+//void vui::IWidgetContainer::updatePositionState() {
+//    updatePosition();
+//
+//    computeClipRect();
+//
+//    updateChildSpatialStates();
+//}
+//
+//void vui::IWidgetContainer::updateDimensionState() {
+//    updateDimensions();
+//
+//    computeClipRect();
+//
+//    updateChildSpatialStates();
+//}
+//
+//void vui::IWidgetContainer::updateClippingState() {
+//    computeClipRect();
+//
+//    updateChildClippingStates();
+//}
+//
+//void vui::IWidgetContainer::updateChildClippingStates() {
+//    for (auto& w : m_widgets) {
+//        w->updateClippingState();
+//    }
+//}
+//
+//void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
+//    if (changedChild) {
+//        auto& it = m_widgets.find(changedChild);
+//        m_widgets.erase(it);
+//        m_widgets.insert(changedChild);
+//    } else {
+//        m_widgets.sort();
+//    }
+//}
+//
+//void vui::IWidgetContainer::updateDockingState() {
+//    f32 surplusWidth = m_dimensions.x;
+//    f32 surplusHeight = m_dimensions.y;
+//    f32v2 usedSpace = f32v2(0.0f);
+//    for (auto& w : m_widgets.get_container()) {
+//        DockingOptions options = w->getDockingOptions();
+//        f32 size = w->getProcessedDockingSize();
+//        switch (options.style) {
+//        case DockingStyle::NONE:
+//            break;
+//        case DockingStyle::LEFT:
+//            w->setHeight(surplusHeight, false);
+//            surplusWidth -= size;
+//            if (surplusWidth > -FLT_EPSILON) {
+//                w->setWidth(size, false);
+//                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
+//            } else {
+//                w->setWidth(0.0f, true);
+//            }
+//            usedSpace.x += size;
+//            break;
+//        case DockingStyle::TOP:
+//            w->setWidth(surplusWidth, false);
+//            surplusHeight -= size;
+//            if (surplusHeight > -FLT_EPSILON) {
+//                w->setHeight(size, false);
+//                w->setPosition(f32v2(usedSpace.x, usedSpace.y), false);
+//            } else {
+//                w->setHeight(0.0f, true);
+//            }
+//            usedSpace.y += size;
+//            break;
+//        case DockingStyle::RIGHT:
+//            w->setHeight(surplusHeight, false);
+//            surplusWidth -= size;
+//            if (surplusWidth > -FLT_EPSILON) {
+//                w->setWidth(size, false);
+//                w->setPosition(f32v2(usedSpace.x + surplusWidth, usedSpace.y), false);
+//            } else {
+//                w->setWidth(0.0f, true);
+//            }
+//            break;
+//        case DockingStyle::BOTTOM:
+//            w->setWidth(surplusWidth, false);
+//            surplusHeight -= size;
+//            if (surplusHeight > -FLT_EPSILON) {
+//                w->setHeight(size, false);
+//                w->setPosition(f32v2(usedSpace.x, usedSpace.y + surplusHeight), false);
+//            } else {
+//                w->setHeight(0.0f, true);
+//            }
+//            break;
+//        case DockingStyle::FILL:
+//            // Not sure what to do with this one yet.
+//            // TODO(Matthew): Find a way to implement this.
+//            break;
+//        default:
+//            // Shouldn't get here.
+//            break;
+//        }
+//    }
+//}
+//
+//void vui::IWidgetContainer::updateTransitionState() {
+//    updateTargetPosition();
+//
+//    updateTargetDimensions();
+//}
 
 bool vui::IWidgetContainer::isInBounds(f32 x, f32 y) const {
     return (x >= vmath::max(m_position.x, m_clipRect.x) && x < vmath::min(m_position.x + m_dimensions.x, m_clipRect.x + m_clipRect.z) &&
         y >= vmath::max(m_position.y, m_clipRect.y) && y < vmath::min(m_position.y + m_dimensions.y, m_clipRect.y + m_clipRect.w));
-}
-
-void vui::IWidgetContainer::setParentForm(Form* form) {
-    m_parentForm = form;
-    for (auto& w : m_widgets) {
-        w->setParentForm(form);
-    }
-}
-
-void vui::IWidgetContainer::setParentWidget(Widget* parent, Widget* self) {
-    if (m_parentWidget) m_parentWidget->removeWidget(self);
-    if (parent) parent->addWidget(self);
 }
 
 void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
@@ -229,54 +204,20 @@ void vui::IWidgetContainer::setDestRect(const f32v4& destRect) {
     setDimensions(f32v2(destRect.z, destRect.w));
 }
 
-void vui::IWidgetContainer::computeClipRect() {
-    f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
-    if (m_parentWidget) {
-        parentClipRect = m_parentWidget->getClipRect();
-    } else if (m_parentForm) {
-        parentClipRect = m_parentForm->getClipRect();
+bool vui::IWidgetContainer::addWidget(Widget* child, Widget* self) {
+    if (m_widgets.insert(child).second) {
+        child->setParentWidget(self);
+        return true;
     }
-
-    f32v2 position = m_position;
-    f32v2 dimensions = m_dimensions;
-
-    computeClipping(parentClipRect, position, dimensions);
-
-    if (dimensions.x < 0.0f) dimensions.x = 0.0f;
-    if (dimensions.y < 0.0f) dimensions.y = 0.0f;
-    
-    m_clipRect = f32v4(position.x, position.y, dimensions.x, dimensions.y);
-    if (!m_clippingOptions.left) {
-        m_clipRect.x = parentClipRect.x;
-    }
-    if (!m_clippingOptions.top) {
-        m_clipRect.y = parentClipRect.y;
-    }
-    if (!m_clippingOptions.right) {
-        m_clipRect.z = (parentClipRect.x + parentClipRect.z) - m_clipRect.x;
-        if (m_clipRect.z < 0.0f) m_clipRect.z = 0.0f;
-    }
-    if (!m_clippingOptions.bottom) {
-        m_clipRect.w = (parentClipRect.y + parentClipRect.w) - m_clipRect.y;
-        if (m_clipRect.w < 0.0f) m_clipRect.w = 0.0f;
-    }
+    return false;
 }
 
-const vui::IWidgetContainer* vui::IWidgetContainer::getFirstPositionedParent() const {
-    const IWidgetContainer* firstPositionedParent = m_parentForm;
-    const Widget* widget = m_parentWidget;
-    while (widget != nullptr) {
-        vui::PositionType positionType = widget->getPositionType();
-        if (positionType == vui::PositionType::ABSOLUTE
-            || positionType == vui::PositionType::RELATIVE) {
-            // Widget is "positioned"; break out.
-            firstPositionedParent = widget;
-            break;
-        }
-
-        widget = widget->getParentWidget();
+bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
+    if (m_widgets.insert(child).second) {
+        child->setParentForm(self);
+        return true;
     }
-    return firstPositionedParent;
+    return false;
 }
 
 f32v2 vui::IWidgetContainer::processRawValues(Widget* widget, const Length2& rawValues) {

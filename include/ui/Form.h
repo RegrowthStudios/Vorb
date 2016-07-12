@@ -51,32 +51,20 @@ namespace vorb {
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
-            // TODO(Matthew): Need to get screen size in a better way than this.
             virtual void init(const nString& name, IGameScreen* ownerScreen, const GameWindow* viewport, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
-            /*! @brief Adds a widget to the Form and initializes it for rendering.
-             * 
-             * @param widget: The Widget to add.
-             * @return true on success.
-             */
-            virtual bool addWidget(Widget* widget);
-            /*! @brief Removes a widget from the Form.
-            *
-            * @param widget: The Widget to remove.
-            * @return true on success.
-            */
-            virtual bool removeWidget(Widget* widget) override;
+
             /*! @brief Updates all the widgets in the Form.
              * 
              * @param dt: deltatime
              */
-            virtual void update(f32 dt = 1.0f);
+            virtual void update(f32 dt = 0.0f);
             /*! @brief Draws the Form. */
             virtual void draw();
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
-            /*! @brief Recalculates order of drawables based on Z-index. */
-            virtual void updateDrawableOrderState();
+            ///*! @brief Recalculates order of drawables based on Z-index. */
+            //virtual void updateDrawableOrderState();
 
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
@@ -86,14 +74,17 @@ namespace vorb {
             virtual bool registerCallback(Widget* w, nString callback) { return false; }
 
         protected:
-            /* Updates the position of the Form. */
-            virtual void updatePosition() override {}
-            /*! @brief Updates the target position data. */
-            virtual void updateTargetPosition() override {};
-            /* Updates the dimensions of the Form. */
-            virtual void updateDimensions() override {}
-            /*! @brief Updates the target dimensions data. */
-            virtual void updateTargetDimensions() override {};
+            /*! @brief Computes clipping for this widget container. */
+            virtual void computeClipRect();
+
+            ///* Updates the position of the Form. */
+            //virtual void updatePosition() override {}
+            ///*! @brief Updates the target position data. */
+            //virtual void updateTargetPosition() override {};
+            ///* Updates the dimensions of the Form. */
+            //virtual void updateDimensions() override {}
+            ///*! @brief Updates the target dimensions data. */
+            //virtual void updateTargetDimensions() override {};
 
             const GameWindow* m_viewport;
             UIRenderer m_renderer; ///< The UI Renderer.

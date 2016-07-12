@@ -38,10 +38,34 @@ namespace vorb {
         class Widget;
         class Form;
 
+        //! Enum of updatable properties that have changed since last update.
+        enum UpdateFlag {
+            CLIPPING                    = 0x0001,
+            POSITION                    = 0x0002 | CLIPPING,
+            RAW_POSITION                = 0x0004 | POSITION | CLIPPING,
+            DIMENSIONS                  = 0x0008 | CLIPPING,
+            RAW_DIMENSIONS              = 0x0010 | DIMENSIONS | CLIPPING,
+            MIN_SIZE                    = 0x0020 | DIMENSIONS | CLIPPING,
+            RAW_MIN_SIZE                = 0x0040 | MIN_SIZE | DIMENSIONS | CLIPPING,
+            MAX_SIZE                    = 0x0080 | DIMENSIONS | CLIPPING,
+            RAW_MAX_SIZE                = 0x0100 | MAX_SIZE | DIMENSIONS | CLIPPING,
+            DOCKING                     = 0x0200 | DIMENSIONS | POSITION | CLIPPING,
+            TRANSITION_POSITION         = 0x0400,
+            TRANSITION_DIMENSIONS       = 0x0800,
+            TRANSITION_MIN_SIZE         = 0x1000,
+            TRANSITION_MAX_SIZE         = 0x2000,
+            TRANSITION_DOCKING          = 0x4000,
+            DRAWABLE_ORDER              = 0x8000,
+            ALL                         = CLIPPING | POSITION | RAW_POSITION | DIMENSIONS | RAW_DIMENSIONS | MIN_SIZE | MAX_SIZE | DOCKING 
+                                            | TRANSITION_POSITION | TRANSITION_DIMENSIONS | TRANSITION_MIN_SIZE | TRANSITION_MAX_SIZE | TRANSITION_DOCKING
+                                            | DRAWABLE_ORDER,
+            SPATIAL                     = CLIPPING | POSITION | DIMENSIONS | MIN_SIZE | MAX_SIZE
+        };
+
         //! Bitfield of container styling flags
-        struct ContainerStyle {
-            bool fixedHeight : 1; ///< If true, the control has fixed height when auto-scaled.
-            bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
+        struct ContainerStyle { // TODO(Matthew): Implement auto sizing and fixed height/width.
+            //bool fixedHeight : 1; ///< If true, the control has fixed height when auto-scaled.
+            //bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
             bool selectable : 1; ///< If true, the control can receive focus.
         };
 
@@ -83,15 +107,13 @@ namespace vorb {
             ClippingOptions() : left{ true },
                 top{ true },
                 right{ true },
-                bottom{ true }
-            {
+                bottom{ true } {
             }
             ClippingOptions(bool left, bool top, bool right, bool bottom) : 
                 left{ left },
                 top{ top },
                 right{ right },
-                bottom{ bottom }
-            {
+                bottom{ bottom } {
             }
 
             bool left : 1;
@@ -125,33 +147,36 @@ namespace vorb {
             * @return true on success.
             */
             virtual bool removeWidget(Widget* child);
+            /*! @brief Adds a Widget to the container. */
+            virtual bool addWidget(Widget* child) = 0;
 
             /*! @brief Enables events* */
             virtual void enable();
             /*! @brief Disables events* */
             virtual void disable();
 
-            /*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
-            virtual void updateSpatialState();
-            /*! @brief Calls updateSpatialState on all children. */
-            void updateChildSpatialStates();
-            /*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
-            void updatePositionState();
-            /*! @brief Updates dimension spatial state. I.e. dimensions, clipping and same for children. */
-            void updateDimensionState();
-            /*! @brief Updates clipping for both this widget container and its children. */
-            void updateClippingState();
-            /*! @brief Calls updateClippingState on all children. */
-            void updateChildClippingStates();
-            /*! @brief Updates the ordered child widget collection.
-            *
-            * @param changedChild: If provided, function assumes only that child changed and only replaces that child.
-            */
-            void updateZIndexState(Widget* changedChild = nullptr);
-            /*! @brief Updates children based on their docking options. */
-            void updateDockingState();
-            /*! @brief Updates all transitionary states. */
-            virtual void updateTransitionState();
+            ///*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
+            //virtual void updateSpatialState();
+            ///*! @brief Calls updateSpatialState on all children. */
+            //void updateChildSpatialStates();
+            ///*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
+            //void updatePositionState();
+            ///*! @brief Updates dimension spatial state. I.e. dimensions, clipping and same for children. */
+            //void updateDimensionState();
+            ///*! @brief Updates clipping for both this widget container and its children. */
+            //void updateClippingState();
+            ///*! @brief Calls updateClippingState on all children. */
+            //void updateChildClippingStates();
+            // TODO(Matthew): Implement z-indexing with new update system. (In some cases a full sort is not needed and may be quicker to just remove and reinsert specific widget.)
+            ///*! @brief Updates the ordered child widget collection.
+            //*
+            //* @param changedChild: If provided, function assumes only that child changed and only replaces that child.
+            //*/
+            //void updateZIndexState(Widget* changedChild = nullptr);
+            ///*! @brief Updates children based on their docking options. */
+            //void updateDockingState();
+            ///*! @brief Updates all transitionary states. */
+            //virtual void updateTransitionState();
 
 
             /*! @brief Checks if a point is inside the container
@@ -165,50 +190,51 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual Form* getParentForm() const { return m_parentForm; }
-            virtual Widget* getParentWidget() const { return m_parentWidget; }
-            virtual const IWidgetContainer* getFirstPositionedParent() const;
-            virtual bool getFixedHeight() const { return m_style.fixedHeight; }
-            virtual bool getFixedWidth() const { return m_style.fixedWidth; }
-            virtual bool getSelectable() const { return m_style.selectable; }
-            virtual bool isMouseIn() const { return m_isMouseIn; }      
-            virtual const ContainerStyle& getStyle() const { return m_style; }
-            virtual const bool& isEnabled() const { return m_isEnabled; }
-            virtual const f32& getHeight() const { return m_dimensions.y; }
-            virtual const f32& getWidth() const { return m_dimensions.x; }
-            virtual const f32& getX() const { return m_position.x; }
-            virtual const f32& getY() const { return m_position.y; }
-            virtual const f32v2& getDimensions() const { return m_dimensions; }
-            virtual const f32v2& getPosition() const { return m_position; }
-            virtual const SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>& getWidgets() const { return m_widgets; }
-            virtual const nString& getName() const { return m_name; }
-            virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
-            virtual const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
-            virtual f32v4 getClipRect() const { return m_clipRect; }
+            //virtual bool getFixedHeight() const { return m_style.fixedHeight; }
+            //virtual bool getFixedWidth() const { return m_style.fixedWidth; }
+            bool getSelectable() const { return m_style.selectable; }
+            bool isMouseIn() const { return m_isMouseIn; }      
+            const ContainerStyle& getStyle() const { return m_style; }
+            const bool& isEnabled() const { return m_isEnabled; }
+            const f32& getHeight() const { return m_dimensions.y; }
+            const f32& getWidth() const { return m_dimensions.x; }
+            const f32& getX() const { return m_position.x; }
+            const f32& getY() const { return m_position.y; }
+            const f32v2& getDimensions() const { return m_dimensions; }
+            const f32v2& getPosition() const { return m_position; }
+            const SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>& getWidgets() const { return m_widgets; }
+            const nString& getName() const { return m_name; }
+            f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
+            const ClippingOptions& getOverflowOptions() const { return m_clippingOptions; }
+            f32v4 getClipRect() const { return m_clipRect; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setParentForm(Form* form);
-            virtual void setParentWidget(Widget* parent, Widget* self);
             virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) { m_dimensions = dimensions; if (update) updateDimensionState(); }
-            virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
-            virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height, bool update = true) { m_dimensions.y = height; if (update) updateDimensionState(); }
-            virtual void setWidth(f32 width, bool update = true) { m_dimensions.x = width; if (update) updateDimensionState(); }
-            virtual void setPosition(const f32v2& position, bool update = true) { m_position = position; if (update) updatePositionState(); }
-            virtual void setX(f32 x, bool update = true) { m_position.x = x; if (update) updatePositionState(); }
-            virtual void setY(f32 y, bool update = true) { m_position.y = y; if (update) updatePositionState(); }
+            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; m_pendingUpdates |= UpdateFlag::DIMENSIONS; } // TODO(Matthew): Cache pending sets for application on next update() call?
+                                                                                                                                           //                (I.e. update not just processing side effects of set calls.)
+                                                                                                                                           //                Would increase memory footprint but would make current and 
+                                                                                                                                           //                iminent state accessible.
+            //virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
+            //virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
+            virtual void setHeight(f32 height) { m_dimensions.y = height; m_pendingUpdates |= UpdateFlag::DIMENSIONS; }
+            virtual void setWidth(f32 width) { m_dimensions.x = width; m_pendingUpdates |= UpdateFlag::DIMENSIONS; }
+            virtual void setPosition(const f32v2& position) { m_position = position; m_pendingUpdates |= UpdateFlag::POSITION; }
+            virtual void setX(f32 x) { m_position.x = x; m_pendingUpdates |= UpdateFlag::POSITION; }
+            virtual void setY(f32 y) { m_position.y = y; m_pendingUpdates |= UpdateFlag::POSITION; }
             virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
             virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             virtual void setName(const nString& name) { m_name = name; }
-            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; updateClippingState(); }
-            virtual void setClipping(bool clipping) { m_clippingOptions = ClippingOptions(clipping, clipping, clipping, clipping); updateClippingState(); }
-            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; updateClippingState(); }
-            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; updateClippingState(); }
-            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; updateClippingState(); }
-            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; updateClippingState(); }
+            virtual void setClipping(const ClippingOptions& clippingOptions) { m_clippingOptions = clippingOptions; m_pendingUpdates |= UpdateFlag::CLIPPING; }
+            virtual void setClipping(bool clipping) { m_clippingOptions = ClippingOptions(clipping, clipping, clipping, clipping); m_pendingUpdates |= UpdateFlag::CLIPPING; }
+            virtual void setClippingTop(bool clipping) { m_clippingOptions.top = clipping; m_pendingUpdates |= UpdateFlag::CLIPPING; }
+            virtual void setClippingRight(bool clipping) { m_clippingOptions.right = clipping; m_pendingUpdates |= UpdateFlag::CLIPPING; }
+            virtual void setClippingBottom(bool clipping) { m_clippingOptions.bottom = clipping; m_pendingUpdates |= UpdateFlag::CLIPPING; }
+            virtual void setClippingLeft(bool clipping) { m_clippingOptions.left = clipping; m_pendingUpdates |= UpdateFlag::CLIPPING; }
+
+            /*! @brief Adds an update flag to the pending updates for this element. */
+            void applyUpdateFlag(ui32 flag) { m_pendingUpdates |= flag; }
 
             /************************************************************************/
             /* Events                                                               */
@@ -225,23 +251,34 @@ namespace vorb {
             /*! @brief Adds a child Widget to the container
             *
             * @param child: The Widget to add
-            * @return true on success.
+            * @param self: The Widget that is the new parent.
+            *
+            * @return bool: True on successful addition, false otherwise.
             */
-            virtual bool addWidget(Widget* child, Widget* self);
-            virtual bool addWidget(Widget* child, Form* self);
-            
+            bool addWidget(Widget* child, Widget* self);
+            /*! @brief Adds a child Widget to the container
+            *
+            * @param child: The Widget to add
+            * @param self: The Form that is the new parent.
+            *
+            * @return bool: True on successful addition, false otherwise.
+            */
+            bool addWidget(Widget* child, Form* self);
+
+            ///*! @brief Updates data affected by a change in clipping. */
+            //virtual void updateClipping();
+            ///*! @brief Updates data affected by a change in position. */
+            //virtual void updatePosition() = 0;
+            ///*! @brief Updates data affected by a change in target position. */
+            //virtual void updateTargetPosition() = 0;
+            ///*! @brief Updates data affected by a change in dimensions. */
+            //virtual void updateDimensions() = 0;
+            ///*! @brief Updates data affected by a change in target dimensions. */
+            //virtual void updateTargetDimensions() = 0;
+
+            // TODO(Matthew): Should be procedures?
             /*! @brief Computes clipping for this widget container. */
-            virtual void computeClipRect();
-
-            /*! @brief Defines how raw position is used to process the actual position. */
-            virtual void updatePosition() = 0;
-            /*! @brief Updates the target position data. */
-            virtual void updateTargetPosition() = 0;
-            /*! @brief Defines how raw dimensions are used to process the actual dimensions. */
-            virtual void updateDimensions() = 0;
-            /*! @brief Updates the target dimensions data. */
-            virtual void updateTargetDimensions() = 0;
-
+            virtual void computeClipRect() = 0;
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations.
              *         Uses the widget provided for parent data etc.
              */
@@ -271,8 +308,6 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             ContainerStyle m_style; ///< The current style.
-            Form* m_parentForm = nullptr; ///< Parent form.
-            Widget* m_parentWidget = nullptr; ///< Parent widget.
             
             bool(*m_zIndexCompare)(Widget*, Widget*);
             SortedVector<Widget*, true, bool(*)(Widget*, Widget*)> m_widgets; ///< Child widgets in order of Z-index.
@@ -283,6 +318,8 @@ namespace vorb {
             nString m_name = ""; ///< Display name of the container.
 
             ClippingOptions m_clippingOptions; ///< Determines directions in which clipping may or may not occur.
+
+            ui32 m_pendingUpdates = 0; ///< Pending updates for the UI.
 
             // TODO(Ben): Bitfield for memory reduction?.
             bool m_isClicking = false; ///< Used for click event tracking.

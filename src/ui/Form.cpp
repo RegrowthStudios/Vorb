@@ -19,24 +19,11 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWi
     m_position.y = destRect.y;
     m_dimensions.x = destRect.z;
     m_dimensions.y = destRect.w;
-    computeClipRect();
-    updateChildSpatialStates();
+    m_pendingUpdates |= UpdateFlag::DIMENSIONS | UpdateFlag::POSITION;
     m_renderer.init(defaultFont, spriteBatch);
 }
 
-bool vui::Form::addWidget(Widget* widget) {
-    //widget->addDrawables(&m_renderer);
-    return IWidgetContainer::addWidget(widget, this);
-}
-
-bool vui::Form::removeWidget(Widget* widget) {
-    if (IWidgetContainer::removeWidget(widget)) {
-        return true;
-    }
-    return false;
-}
-
-void vui::Form::update(f32 dt /*= 1.0f*/) {
+void vui::Form::update(f32 dt /*= 0.0f*/) {
     if (!m_isEnabled) return;
     for (auto& w : m_widgets) {
         // Check if we need to reload the drawables
@@ -59,11 +46,27 @@ void vui::Form::dispose() {
     m_renderer.dispose();
 }
 
-void vui::Form::updateDrawableOrderState() {
-    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
-        (*it)->removeDrawables();
-        (*it)->setNeedsDrawableReload(false);
-        (*it)->addDrawables(&m_renderer);
-        (*it)->updateDrawableOrderState();
+//void vui::Form::updateDrawableOrderState() {
+//    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
+//        (*it)->removeDrawables();
+//        (*it)->setNeedsDrawableReload(false);
+//        (*it)->addDrawables(&m_renderer);
+//        (*it)->updateDrawableOrderState();
+//    }
+//}
+
+void vui::Form::computeClipRect() {
+    m_clipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
+    if (m_clippingOptions.left) {
+        m_clipRect.x = m_position.x;
+    }
+    if (m_clippingOptions.top) {
+        m_clipRect.y = m_position.y;
+    }
+    if (m_clippingOptions.right) {
+        m_clipRect.z = m_dimensions.x;
+    }
+    if (m_clippingOptions.bottom) {
+        m_clipRect.w = m_dimensions.y;
     }
 }

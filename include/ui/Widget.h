@@ -70,7 +70,8 @@ namespace vorb {
         //! Struct of docking options.
         struct DockingOptions {
             DockingStyle style;
-            Length size;
+            Length rawSize;
+            f32 size;
         };
         
         //! Structs of target length and time frame to completion.
@@ -280,12 +281,26 @@ namespace vorb {
 
             //virtual f32v2 getWidgetAlignOffset();
 
-            ///*! @brief Updates the position relative to parent */
-            //virtual void updatePosition() override;
+            /*! @brief Processes all raw data not related to docking. */
+            virtual void processNonDockingRawState();
+            /*! @brief Processes the raw position relative to parent */
+            virtual void processRawPosition();
+            /*! @brief Processes the raw dimensions of the widget. */
+            virtual void processRawDimensions();
+            /*! @brief Processes the raw max size of the widget. */
+            virtual void processRawMaxSize();
+            /*! @brief Processes the raw min size of the widget. */
+            virtual void processRawMinSize();
+
+            /*! @brief Processes the raw size of the docking of this widget. */
+            virtual void processRawDockingSize();
+
+            /*! @brief Updates the position relative to parent */
+            virtual void updatePosition();
+            /*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
+            virtual void updateDimensions();
             ///*! @brief Updates the target position data. */
             //virtual void updateTargetPosition() override;
-            ///*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
-            //virtual void updateDimensions() override;
             ///*! @brief Updates the target dimensions data. */
             //virtual void updateTargetDimensions() override;
             ///*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
@@ -307,6 +322,7 @@ namespace vorb {
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             virtual f32v2 processRawValues(const Length2& rawValues);
+            virtual f32 processRawValues(const Length& rawValues);
             virtual f32v2 processRawValue(const f32v2& rawValue, const UnitType& unit);
 
             /*! @brief Calculate relatve-to-parent change in position. */

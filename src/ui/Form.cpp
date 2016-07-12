@@ -24,6 +24,10 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWi
 }
 
 void vui::Form::update(f32 dt /*= 0.0f*/) {
+    if (m_pendingUpdates & UpdateFlag::CLIPPING == UpdateFlag::CLIPPING) {
+        updateClipping();
+    }
+
     if (!m_isEnabled) return;
     for (auto& w : m_widgets) {
         // Check if we need to reload the drawables

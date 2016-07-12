@@ -11,7 +11,7 @@ vui::IWidgetContainer::IWidgetContainer() :
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this) {
-    m_zIndexCompare = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
+    //m_zIndexCompare = [](Widget* w1, Widget* w2) { return w1->getZIndex() < w2->getZIndex(); };
     m_widgets = SortedVector<Widget*, true, bool(*)(Widget*, Widget*)>(m_zIndexCompare);
     m_style = {};
     enable();
@@ -71,50 +71,6 @@ void vui::IWidgetContainer::disable() {
     for (auto& w : m_widgets) w->disable();
 }
 
-//void vui::IWidgetContainer::updateSpatialState() {
-//    updatePosition();
-//    
-//    updateDimensions();
-//
-//    computeClipRect();
-//
-//    updateChildSpatialStates();
-//}
-//
-//void vui::IWidgetContainer::updateChildSpatialStates() {
-//    for (auto& w : m_widgets) {
-//        w->updateSpatialState();
-//    }
-//}
-//
-//void vui::IWidgetContainer::updatePositionState() {
-//    updatePosition();
-//
-//    computeClipRect();
-//
-//    updateChildSpatialStates();
-//}
-//
-//void vui::IWidgetContainer::updateDimensionState() {
-//    updateDimensions();
-//
-//    computeClipRect();
-//
-//    updateChildSpatialStates();
-//}
-//
-//void vui::IWidgetContainer::updateClippingState() {
-//    computeClipRect();
-//
-//    updateChildClippingStates();
-//}
-//
-//void vui::IWidgetContainer::updateChildClippingStates() {
-//    for (auto& w : m_widgets) {
-//        w->updateClippingState();
-//    }
-//}
-//
 //void vui::IWidgetContainer::updateZIndexState(Widget* changedChild /*= nullptr*/) {
 //    if (changedChild) {
 //        auto& it = m_widgets.find(changedChild);
@@ -220,79 +176,10 @@ bool vui::IWidgetContainer::addWidget(Widget* child, Form* self) {
     return false;
 }
 
-f32v2 vui::IWidgetContainer::processRawValues(Widget* widget, const Length2& rawValues) {
-    f32v2 x = processRawValue(widget, f32v2(rawValues.x, 0.0f), rawValues.units.x);
-    f32v2 y = processRawValue(widget, f32v2(0.0f, rawValues.y), rawValues.units.y);
-
-    return x + y;
-}
-
-f32v2 vui::IWidgetContainer::processRawValue(Widget* widget, const f32v2& rawValue, const UnitType& units) {
-    f32v2 result;
-    Widget* parentWidget = widget->getParentWidget();
-    Form* parentForm = widget->getParentForm();
-    switch (units) {
-    case vui::UnitType::PIXEL:
-        result = rawValue;
-        break;
-    case vui::UnitType::PERCENTAGE:
-        switch (widget->getPositionType()) {
-        case vui::PositionType::STATIC:
-        case vui::PositionType::RELATIVE:
-            if (parentWidget) {
-                result = rawValue * parentWidget->getDimensions();
-            } else if (parentForm) {
-                result = rawValue * parentForm->getDimensions();
-            }
-            break;
-        case vui::PositionType::FIXED:
-            if (parentForm) {
-                result = rawValue * parentForm->getDimensions();
-            }
-            break;
-        case vui::PositionType::ABSOLUTE:
-            const IWidgetContainer* firstPositionedParent = widget->getFirstPositionedParent();
-            if (firstPositionedParent) {
-                result = rawValue * firstPositionedParent->getDimensions();
-            }
-            break;
-        }
-        break;
-    case vui::UnitType::FORM_HEIGHT_PERC:
-        if (parentForm) {
-            result = rawValue * parentForm->getHeight();
-        }
-        break;
-    case vui::UnitType::FORM_WIDTH_PERC:
-        if (parentForm) {
-            result = rawValue * parentForm->getWidth();
-        }
-        break;
-    case vui::UnitType::FORM_MAX_PERC:
-        if (parentForm) {
-            f32v2 formDims = parentForm->getDimensions();
-            if (formDims.x > formDims.y) {
-                result = rawValue * formDims.x;
-            } else {
-                result = rawValue * formDims.y;
-            }
-        }
-        break;
-    case vui::UnitType::FORM_MIN_PERC:
-        if (parentForm) {
-            f32v2 formDims = parentForm->getDimensions();
-            if (formDims.x > formDims.y) {
-                result = rawValue * formDims.y;
-            } else {
-                result = rawValue * formDims.x;
-            }
-        }
-        break;
-    default: // Shouldn't happen.
-        result = rawValue;
-        break;
-    }
-    return result;
+void vui::IWidgetContainer::updateClipping() {
+    f32v4 currRect = m_clipRect;
+    computeClipRect();
+    if (currRect != m_clipRect) applyUpdateFlagToChildren(UpdateFlag::CLIPPING);
 }
 
 void vui::IWidgetContainer::onMouseDown(Sender s, const MouseButtonEvent& e) {

@@ -40,25 +40,29 @@ namespace vorb {
 
         //! Enum of updatable properties that have changed since last update.
         enum UpdateFlag {
-            CLIPPING                    = 0x0001,
-            POSITION                    = 0x0002 | CLIPPING,
-            RAW_POSITION                = 0x0004 | POSITION | CLIPPING,
-            DIMENSIONS                  = 0x0008 | CLIPPING,
-            RAW_DIMENSIONS              = 0x0010 | DIMENSIONS | CLIPPING,
-            MIN_SIZE                    = 0x0020 | DIMENSIONS | CLIPPING,
-            RAW_MIN_SIZE                = 0x0040 | MIN_SIZE | DIMENSIONS | CLIPPING,
-            MAX_SIZE                    = 0x0080 | DIMENSIONS | CLIPPING,
-            RAW_MAX_SIZE                = 0x0100 | MAX_SIZE | DIMENSIONS | CLIPPING,
-            DOCKING                     = 0x0200 | DIMENSIONS | POSITION | CLIPPING,
-            TRANSITION_POSITION         = 0x0400,
-            TRANSITION_DIMENSIONS       = 0x0800,
-            TRANSITION_MIN_SIZE         = 0x1000,
-            TRANSITION_MAX_SIZE         = 0x2000,
-            TRANSITION_DOCKING          = 0x4000,
-            DRAWABLE_ORDER              = 0x8000,
-            ALL                         = CLIPPING | POSITION | RAW_POSITION | DIMENSIONS | RAW_DIMENSIONS | MIN_SIZE | MAX_SIZE | DOCKING 
-                                            | TRANSITION_POSITION | TRANSITION_DIMENSIONS | TRANSITION_MIN_SIZE | TRANSITION_MAX_SIZE | TRANSITION_DOCKING
-                                            | DRAWABLE_ORDER,
+            // TODO(Matthew): Instead of applying sub-flags here, apply them after processing the highest level
+            //                flag in update() so that unnecessary steps may be skipped.
+            CLIPPING                    = 0x00000001,
+            POSITION                    = 0x00000002 | CLIPPING,
+            DIMENSIONS                  = 0x00000004 | CLIPPING,
+            RAW_POSITION                = 0x00000008,
+            RAW_DIMENSIONS              = 0x00000010,
+            MIN_SIZE                    = 0x00000020 | DIMENSIONS | CLIPPING,
+            RAW_MIN_SIZE                = 0x00000040,
+            MAX_SIZE                    = 0x00000080 | DIMENSIONS | CLIPPING,
+            RAW_MAX_SIZE                = 0x00000100,
+            DOCKING_STYLE               = 0x00000200 | DIMENSIONS | POSITION | CLIPPING,
+            DOCKING_SIZE                = 0x00000400 | DIMENSIONS | POSITION | CLIPPING,
+            RAW_DOCKING_SIZE            = 0x00000800,
+            TRANSITION_POSITION         = 0x00001000,
+            TRANSITION_DIMENSIONS       = 0x00002000,
+            TRANSITION_MIN_SIZE         = 0x00004000,
+            TRANSITION_MAX_SIZE         = 0x00008000,
+            TRANSITION_DOCKING          = 0x00010000,
+            DRAWABLE_ORDER              = 0x00020000,
+            ALL                         = CLIPPING | POSITION | RAW_POSITION | DIMENSIONS | RAW_DIMENSIONS | MIN_SIZE | RAW_MIN_SIZE | MAX_SIZE | RAW_MAX_SIZE
+                                            | DOCKING_STYLE | DOCKING_SIZE | TRANSITION_POSITION | TRANSITION_DIMENSIONS | TRANSITION_MIN_SIZE | TRANSITION_MAX_SIZE 
+                                            | TRANSITION_DOCKING | DRAWABLE_ORDER,
             SPATIAL                     = CLIPPING | POSITION | DIMENSIONS | MIN_SIZE | MAX_SIZE
         };
 
@@ -155,18 +159,6 @@ namespace vorb {
             /*! @brief Disables events* */
             virtual void disable();
 
-            ///*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
-            //virtual void updateSpatialState();
-            ///*! @brief Calls updateSpatialState on all children. */
-            //void updateChildSpatialStates();
-            ///*! @brief Updates position spatial state. I.e. position, clipping and same for children. */
-            //void updatePositionState();
-            ///*! @brief Updates dimension spatial state. I.e. dimensions, clipping and same for children. */
-            //void updateDimensionState();
-            ///*! @brief Updates clipping for both this widget container and its children. */
-            //void updateClippingState();
-            ///*! @brief Calls updateClippingState on all children. */
-            //void updateChildClippingStates();
             // TODO(Matthew): Implement z-indexing with new update system. (In some cases a full sort is not needed and may be quicker to just remove and reinsert specific widget.)
             ///*! @brief Updates the ordered child widget collection.
             //*
@@ -215,7 +207,9 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; m_pendingUpdates |= UpdateFlag::DIMENSIONS; } // TODO(Matthew): Cache pending sets for application on next update() call?
                                                                                                                                            //                (I.e. update not just processing side effects of set calls.)
                                                                                                                                            //                Would increase memory footprint but would make current and 
-                                                                                                                                           //                iminent state accessible.
+                                                                                                                                           //                iminent state accessible. Allowing for skipping unnecessary
+                                                                                                                                           //                update steps.
+                                                                                                                                           //                (Would feed in to making things like Z-index work better.)
             //virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
             //virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             virtual void setHeight(f32 height) { m_dimensions.y = height; m_pendingUpdates |= UpdateFlag::DIMENSIONS; }
@@ -265,8 +259,8 @@ namespace vorb {
             */
             bool addWidget(Widget* child, Form* self);
 
-            ///*! @brief Updates data affected by a change in clipping. */
-            //virtual void updateClipping();
+            /*! @brief Updates data affected by a change in clipping. */
+            virtual void updateClipping();
             ///*! @brief Updates data affected by a change in position. */
             //virtual void updatePosition() = 0;
             ///*! @brief Updates data affected by a change in target position. */
@@ -279,11 +273,9 @@ namespace vorb {
             // TODO(Matthew): Should be procedures?
             /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect() = 0;
-            /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations.
-             *         Uses the widget provided for parent data etc.
-             */
-            virtual f32v2 processRawValues(Widget* widget, const Length2& rawValues);
-            virtual f32v2 processRawValue(Widget* widget, const f32v2& rawValue, const UnitType& unit);
+
+            /*! @brief Adds an update flag to the pending updates for this element's children. */
+            void applyUpdateFlagToChildren(ui32 flag) { for (auto& w : m_widgets.get_container()) w->applyUpdateFlag(flag); }
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

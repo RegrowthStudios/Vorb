@@ -131,6 +131,13 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
     //    w->update(dt);
     //}
 
+    // Process changes to raw state not associated with docking if this widget is not docked.
+    if (m_dockingOptions.style == DockingStyle::NONE) {
+        processNonDockingRawState();
+    } else if (m_pendingUpdates & UpdateFlag::RAW_DOCKING_SIZE) {
+        processRawDockingSize();
+    }
+
 
 }
 
@@ -259,17 +266,73 @@ void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should als
 //    return f32v2(0.0f); // Should never happen
 //}
 
-//void vui::Widget::updatePosition() {
-//    if (m_dockingOptions.style == DockingStyle::NONE) {
-//        m_position = processRawValues(m_rawPosition);
-//        // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
-//        m_relativePosition = m_position;
-//
-//        // Calculate and apply the relative-to-parent position component of the widget.
-//        m_position += calculateRelativeToParentShift();
-//    }
-//}
-//
+void vui::Widget::processNonDockingRawState() {
+    if (m_pendingUpdates & UpdateFlag::RAW_POSITION == UpdateFlag::RAW_POSITION)
+        processRawPosition();
+    if (m_pendingUpdates & UpdateFlag::RAW_DIMENSIONS == UpdateFlag::RAW_DIMENSIONS)
+        processRawDimensions();
+    if (m_pendingUpdates & UpdateFlag::RAW_MAX_SIZE == UpdateFlag::RAW_MAX_SIZE)
+        processRawMaxSize();
+    if (m_pendingUpdates & UpdateFlag::RAW_MIN_SIZE == UpdateFlag::RAW_MIN_SIZE)
+        processRawMinSize();
+}
+
+void vui::Widget::processRawPosition() {
+    f32v2 currPosition = m_position;
+
+    // Process raw position.
+    m_position = processRawValues(m_rawPosition);
+
+    // TODO(Matthew): Determine if this is a valid replacement of old m_relativePosition.
+    m_relativePosition = m_position;
+
+    // Calculate and apply the relative-to-parent position component of the widget.
+    m_position += calculateRelativeToParentShift();
+
+    // If position has changed, propogate to children.
+    if (m_position != currPosition) {
+        m_pendingUpdates |= UpdateFlag::POSITION;
+        applyUpdateFlagToChildren(UpdateFlag::POSITION);
+    }
+}
+
+void vui::Widget::processRawDimensions() {
+    f32v2 currDimensions = m_dimensions;
+
+    // Process raw dimensions.
+    m_dimensions = processRawValues(m_rawDimensions);
+
+    // If dimensions has changed, propogate to children.
+    if (m_dimensions != currDimensions) {
+        m_pendingUpdates |= UpdateFlag::DIMENSIONS;
+        applyUpdateFlagToChildren(UpdateFlag::DIMENSIONS);
+    }
+}
+
+void vui::Widget::processRawMaxSize() {
+    f32v2 currMaxSize = m_maxSize;
+
+    m_maxSize = processRawValues(m_rawMaxSize);
+
+    if (m_maxSize != currMaxSize) m_pendingUpdates |= UpdateFlag::MAX_SIZE;
+}
+
+void vui::Widget::processRawMinSize() {
+    f32v2 currMinSize = m_minSize;
+
+    m_minSize = processRawValues(m_rawMinSize);
+
+    if (m_minSize != currMinSize) m_pendingUpdates |= UpdateFlag::MIN_SIZE;
+}
+
+void vui::Widget::processRawDockingSize() {
+    f32 currDockingSize = m_dockingOptions.size;
+
+    m_dockingOptions.size = processRawValues(m_dockingOptions.rawSize);
+
+    if (m_dockingOptions.size != currDockingSize) m_pendingUpdates |= UpdateFlag::DOCKING_SIZE;
+}
+
 //void vui::Widget::updateTargetPosition() {
 //    //// Only update transition data if a transition is in process of completing.
 //    //if (m_targetPosition.currentTime < m_targetPosition.finalTime) {
@@ -280,16 +343,6 @@ void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should als
 //        m_targetPosition.initialLength += relativeShift;
 //        m_targetPosition.targetLength += relativeShift;
 //    //}
-//}
-//
-//void vui::Widget::updateDimensions() {
-//    if (m_dockingOptions.style == DockingStyle::NONE) {
-//        // Process raw dimensions.
-//        m_dimensions = processRawValues(m_rawDimensions);
-//
-//        // Check against min/max size.
-//        applyMinMaxSizesToDimensions(m_dimensions);
-//    }
 //}
 //
 //void vui::Widget::updateTargetDimensions() {
@@ -366,11 +419,80 @@ void vui::Widget::computeClipRect() {
 }
 
 f32v2 vui::Widget::processRawValues(const Length2& rawValues) {
-    return IWidgetContainer::processRawValues(this, rawValues);
+    f32v2 x = processRawValue(f32v2(rawValues.x, 0.0f), rawValues.units.x);
+    f32v2 y = processRawValue(f32v2(0.0f, rawValues.y), rawValues.units.y);
+
+    return x + y;
+}
+
+f32 vui::Widget::processRawValues(const Length& rawValues) {
+    return processRawValue(f32v2(rawValues.x, 0.0f), rawValues.units.x).x;
 }
 
 f32v2 vui::Widget::processRawValue(const f32v2& rawValue, const UnitType& units) {
-    return IWidgetContainer::processRawValue(this, rawValue, units);
+    f32v2 result;
+    switch (units) {
+    case vui::UnitType::PIXEL:
+        result = rawValue;
+        break;
+    case vui::UnitType::PERCENTAGE:
+        switch (m_positionType) {
+        case vui::PositionType::STATIC:
+        case vui::PositionType::RELATIVE:
+            if (m_parentWidget) {
+                result = rawValue * m_parentWidget->getDimensions();
+            } else if (m_parentForm) {
+                result = rawValue * m_parentForm->getDimensions();
+            }
+            break;
+        case vui::PositionType::FIXED:
+            if (m_parentForm) {
+                result = rawValue * m_parentForm->getDimensions();
+            }
+            break;
+        case vui::PositionType::ABSOLUTE:
+            const IWidgetContainer* firstPositionedParent = getFirstPositionedParent();
+            if (firstPositionedParent) {
+                result = rawValue * firstPositionedParent->getDimensions();
+            }
+            break;
+        }
+        break;
+    case vui::UnitType::FORM_HEIGHT_PERC:
+        if (m_parentForm) {
+            result = rawValue * m_parentForm->getHeight();
+        }
+        break;
+    case vui::UnitType::FORM_WIDTH_PERC:
+        if (m_parentForm) {
+            result = rawValue * m_parentForm->getWidth();
+        }
+        break;
+    case vui::UnitType::FORM_MAX_PERC:
+        if (m_parentForm) {
+            f32v2 formDims = m_parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                result = rawValue * formDims.x;
+            } else {
+                result = rawValue * formDims.y;
+            }
+        }
+        break;
+    case vui::UnitType::FORM_MIN_PERC:
+        if (m_parentForm) {
+            f32v2 formDims = m_parentForm->getDimensions();
+            if (formDims.x > formDims.y) {
+                result = rawValue * formDims.y;
+            } else {
+                result = rawValue * formDims.x;
+            }
+        }
+        break;
+    default: // Shouldn't happen.
+        result = rawValue;
+        break;
+    }
+    return result;
 }
 
 f32v2 vui::Widget::calculateRelativeToParentShift() {

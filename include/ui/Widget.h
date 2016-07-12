@@ -281,8 +281,6 @@ namespace vorb {
 
             //virtual f32v2 getWidgetAlignOffset();
 
-            /*! @brief Processes all raw data not related to docking. */
-            virtual void processNonDockingRawState();
             /*! @brief Processes the raw position relative to parent */
             virtual void processRawPosition();
             /*! @brief Processes the raw dimensions of the widget. */
@@ -291,9 +289,16 @@ namespace vorb {
             virtual void processRawMaxSize();
             /*! @brief Processes the raw min size of the widget. */
             virtual void processRawMinSize();
-
             /*! @brief Processes the raw size of the docking of this widget. */
             virtual void processRawDockingSize();
+            /*! @brief Processes the raw transitioning position of the widget. */
+            virtual void processRawTransitionPosition();
+            /*! @brief Processes the raw transitioning dimensions of the widget. */
+            virtual void processRawTransitionDimensions();
+            /*! @brief Processes the raw transitioning max size of the widget. */
+            virtual void processRawTransitionMaxSize();
+            /*! @brief Processes the raw transitioning min size of the widget. */
+            virtual void processRawTransitionMinSize();
 
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition();

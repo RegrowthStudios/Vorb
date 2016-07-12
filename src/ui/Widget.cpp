@@ -133,7 +133,34 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
 
     // Process changes to raw state not associated with docking if this widget is not docked.
     if (m_dockingOptions.style == DockingStyle::NONE) {
-        processNonDockingRawState();
+        if (!isPositionTransitioning()) {
+            if (m_pendingUpdates & UpdateFlag::RAW_POSITION == UpdateFlag::RAW_POSITION)
+                processRawPosition();
+        } else {
+            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_POSITION == UpdateFlag::RAW_TRANSITION_POSITION)
+                processRawTransitionPosition();
+        }
+        if (!isDimensionsTransitioning()) {
+            if (m_pendingUpdates & UpdateFlag::RAW_DIMENSIONS == UpdateFlag::RAW_DIMENSIONS)
+                processRawDimensions();
+        } else {
+            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_DIMENSIONS == UpdateFlag::RAW_TRANSITION_DIMENSIONS)
+                processRawTransitionDimensions();
+        }
+        if (!isMaxSizeTransitioning()) {
+            if (m_pendingUpdates & UpdateFlag::RAW_MAX_SIZE == UpdateFlag::RAW_MAX_SIZE)
+                processRawMaxSize();
+        } else {
+            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MAX_SIZE == UpdateFlag::RAW_TRANSITION_MAX_SIZE)
+                processRawTransitionMaxSize();
+        }
+        if (!isMinSizeTransitioning()) {
+            if (m_pendingUpdates & UpdateFlag::RAW_MIN_SIZE == UpdateFlag::RAW_MIN_SIZE)
+                processRawMinSize();
+        } else {
+            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MIN_SIZE == UpdateFlag::RAW_TRANSITION_MIN_SIZE)
+                processRawTransitionMinSize();
+        }
     } else if (m_pendingUpdates & UpdateFlag::RAW_DOCKING_SIZE) {
         processRawDockingSize();
     }
@@ -266,17 +293,6 @@ void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should als
 //    return f32v2(0.0f); // Should never happen
 //}
 
-void vui::Widget::processNonDockingRawState() {
-    if (m_pendingUpdates & UpdateFlag::RAW_POSITION == UpdateFlag::RAW_POSITION)
-        processRawPosition();
-    if (m_pendingUpdates & UpdateFlag::RAW_DIMENSIONS == UpdateFlag::RAW_DIMENSIONS)
-        processRawDimensions();
-    if (m_pendingUpdates & UpdateFlag::RAW_MAX_SIZE == UpdateFlag::RAW_MAX_SIZE)
-        processRawMaxSize();
-    if (m_pendingUpdates & UpdateFlag::RAW_MIN_SIZE == UpdateFlag::RAW_MIN_SIZE)
-        processRawMinSize();
-}
-
 void vui::Widget::processRawPosition() {
     f32v2 currPosition = m_position;
 
@@ -331,6 +347,64 @@ void vui::Widget::processRawDockingSize() {
     m_dockingOptions.size = processRawValues(m_dockingOptions.rawSize);
 
     if (m_dockingOptions.size != currDockingSize) m_pendingUpdates |= UpdateFlag::DOCKING_SIZE;
+}
+
+void vui::Widget::processRawTransitionPosition() { // TODO(Matthew): Think about how changing only other aspects of transition should work.
+    f32v2 currInitialLength = m_targetPosition.initialLength;
+    f32v2 currFinalLength = m_targetPosition.finalLength;
+
+    // Process raw values.
+    m_targetPosition.initialLength = processRawValues(m_targetPosition.rawInitialLength);
+    m_targetPosition.finalLength = processRawValues(m_targetPosition.rawFinalLength);
+
+    // Apply relative shift due to parent.
+    f32v2 relativeShift = calculateRelativeToParentShift();
+    m_targetPosition.initialLength += relativeShift;
+    m_targetPosition.finalLength += relativeShift;
+
+    if (m_targetPosition.initialLength != currInitialLength
+        || m_targetPosition.finalLength != currFinalLength)
+        m_pendingUpdates |= UpdateFlag::TRANSITION_POSITION;
+}
+
+void vui::Widget::processRawTransitionDimensions() {
+    f32v2 currInitialDimensions = m_targetDimensions.initialLength;
+    f32v2 currFinalDimensions = m_targetDimensions.finalLength;
+
+    // Process raw values.
+    m_targetDimensions.initialLength = processRawValues(m_targetDimensions.rawInitialLength);
+    m_targetDimensions.finalLength = processRawValues(m_targetDimensions.rawFinalLength);
+
+    // If dimensions has changed, propogate to children.
+    if (m_targetDimensions.initialLength != currInitialDimensions
+        || m_targetDimensions.finalLength != currFinalDimensions)
+        m_pendingUpdates |= UpdateFlag::TRANSITION_DIMENSIONS;
+}
+
+void vui::Widget::processRawTransitionMaxSize() {
+    f32v2 currInitialMaxSize = m_targetMaxSize.initialLength;
+    f32v2 currFinalMaxSize = m_targetMaxSize.finalLength;
+
+    // Process raw values.
+    m_targetMaxSize.initialLength = processRawValues(m_targetMaxSize.rawInitialLength);
+    m_targetMaxSize.finalLength = processRawValues(m_targetMaxSize.rawFinalLength);
+
+    if (m_targetMaxSize.initialLength != currInitialMaxSize
+        || m_targetMaxSize.finalLength != currFinalMaxSize)
+        m_pendingUpdates |= UpdateFlag::TRANSITION_MAX_SIZE;
+}
+
+void vui::Widget::processRawTransitionMinSize() {
+    f32v2 currInitialMinSize = m_targetMinSize.initialLength;
+    f32v2 currFinalMinSize = m_targetMinSize.finalLength;
+
+    // Process raw values.
+    m_targetMinSize.initialLength = processRawValues(m_targetMinSize.rawInitialLength);
+    m_targetMinSize.finalLength = processRawValues(m_targetMinSize.rawFinalLength);
+
+    if (m_targetMinSize.initialLength != currInitialMinSize
+        || m_targetMinSize.finalLength != currFinalMinSize)
+        m_pendingUpdates |= UpdateFlag::TRANSITION_MIN_SIZE;
 }
 
 //void vui::Widget::updateTargetPosition() {

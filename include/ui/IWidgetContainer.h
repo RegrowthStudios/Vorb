@@ -43,8 +43,8 @@ namespace vorb {
             // TODO(Matthew): Instead of applying sub-flags here, apply them after processing the highest level
             //                flag in update() so that unnecessary steps may be skipped.
             CLIPPING                    = 0x00000001,
-            POSITION                    = 0x00000002 | CLIPPING,
-            DIMENSIONS                  = 0x00000004 | CLIPPING,
+            POSITION                    = 0x00000002,
+            DIMENSIONS                  = 0x00000004,
             MIN_SIZE                    = 0x00000008 | DIMENSIONS | CLIPPING,
             MAX_SIZE                    = 0x00000010 | DIMENSIONS | CLIPPING,
             RAW_POSITION                = 0x00000020,

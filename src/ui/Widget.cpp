@@ -161,11 +161,33 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
             if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MIN_SIZE == UpdateFlag::RAW_TRANSITION_MIN_SIZE)
                 processRawTransitionMinSize();
         }
+
+        // Update transitions
+
+        if (m_pendingUpdates & UpdateFlag::POSITION == UpdateFlag::POSITION)
+            updatePosition();
+        if (m_pendingUpdates & UpdateFlag::DIMENSIONS == UpdateFlag::DIMENSIONS)
+            updateDimensions();
     } else if (m_pendingUpdates & UpdateFlag::RAW_DOCKING_SIZE) {
         processRawDockingSize();
+
+        // Update docking state
     }
 
+    if (m_pendingUpdates & UpdateFlag::CLIPPING == UpdateFlag::CLIPPING)
+        computeClipRect();
 
+    if (m_pendingUpdates & UpdateFlag::DRAWABLE_ORDER == UpdateFlag::DRAWABLE_ORDER) {
+        for (auto& w : m_widgets.get_container()) {
+            w->removeDrawables();
+            w->setNeedsDrawableReload(false);
+            w->addDrawables(m_renderer);
+            w->applyUpdateFlag(UpdateFlag::DRAWABLE_ORDER); // TODO(Matthew): Change method for UI rendering to 
+                                                            //                better accommodate z-indexing.
+                                                            //                (I.e. so this is unnecessary.)
+            w->update();
+        }
+    }
 }
 
 //void vui::Widget::setDockingOptions(const DockingOptions& options) { 
@@ -405,6 +427,14 @@ void vui::Widget::processRawTransitionMinSize() {
     if (m_targetMinSize.initialLength != currInitialMinSize
         || m_targetMinSize.finalLength != currFinalMinSize)
         m_pendingUpdates |= UpdateFlag::TRANSITION_MIN_SIZE;
+}
+
+void vui::Widget::updatePosition() {
+    m_pendingUpdates |= UpdateFlag::CLIPPING;
+}
+
+void vui::Widget::updateDimensions() {
+    m_pendingUpdates |= UpdateFlag::CLIPPING;
 }
 
 //void vui::Widget::updateTargetPosition() {

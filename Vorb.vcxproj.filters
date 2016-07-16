@@ -291,6 +291,9 @@
     <ClCompile Include="src\graphics\Scene.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\InputMapper.cpp">
+      <Filter>UI\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -747,6 +750,9 @@
     </ClInclude>
     <ClInclude Include="include\voxel\BlockPack.h">
       <Filter>Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\InputMapper.h">
+      <Filter>UI\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

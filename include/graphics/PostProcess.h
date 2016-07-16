@@ -34,6 +34,7 @@ namespace graphics {
     // Forward Declare
     class GLRenderTarget;
     class Renderer;
+    class Camera;
 
     // TODO(Ben): Visual shader programming tool with live recompiling.
     // TODO(Ben): FBO Cacheing.
@@ -129,6 +130,42 @@ namespace graphics {
         ui32 m_gaussianN        = 20;     ///< Threshold for filtering image luma for bloom bluring
         f32  m_gaussianVariance = 36.0f;  ///< Radius number for gaussian blur. Must be less than 50.
         f32  m_lumaThreshold    = 0.75f;  ///< Gaussian variance for blur pass
+    };
+
+    /************************************************************************/
+    /* SSAO                                                                */
+    /************************************************************************/
+    /*! @brief Renders the SSAO post process: Screen space ambient occlusion.
+    */
+    class PostProcessSSAO : public IPostProcess {
+    public:
+        void         init(ui32 windowWidth, ui32 windowHeight,
+                          VGTexture inputColorTexture,
+                          VGTexture inputDepthTexture,
+                          VGTexture inputNormalTexture,
+                          vg::Camera* camera);
+
+        void         load() override;
+        virtual void render() override;
+        virtual void dispose() override;
+
+    private:
+        virtual void uploadShaderUniforms();
+   
+        /// Shaders
+        vg::GLProgram m_programSSAO;
+        vg::GLProgram m_programBlur;
+
+        vg::Camera* m_camera = nullptr;
+
+        VGTexture m_noiseTexture;
+
+        vg::GLRenderTarget m_ssaoTarget;
+
+        ui32 m_windowWidth = 0;
+        ui32 m_windowHeight = 0;
+
+        std::vector<f32v3> m_sampleKernel;
     };
 
     /************************************************************************/

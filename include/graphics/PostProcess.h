@@ -65,7 +65,6 @@ namespace graphics {
 
         /*! @brief Gets and sets the input textures.
          * Derived classes must allocate input texture space in m_inputTextures or setInputTexture will crash.
-         * setInputTextures should be preferred with multiple textures, as setInputTexture will redundantly upload uniforms.
          */
         virtual void setInputTexture (ui32 index, VGTexture  inputTexture)  { m_inputTextures.at(index) = inputTexture; }
         virtual void setInputTextures(std::vector<VGTexture> inputTextures) { m_inputTextures           = inputTextures; }

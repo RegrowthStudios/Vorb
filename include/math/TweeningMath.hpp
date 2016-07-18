@@ -1925,7 +1925,6 @@ namespace vorb {
         template <typename T>
         inline T easeInBack(T startVal, T finalVal, T alpha, T s = (T)1.70158) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInBack only accepts floating-point inputs.");
-            static_assert(std::numeric_limits<U>::is_iec559, "easeInBack only accepts floating-point inputs.");
             T range = finalVal - startVal;
             return range * alpha * alpha * ((s + (T)1.0f) * alpha - s) + startVal;
         }

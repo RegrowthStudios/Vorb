@@ -77,7 +77,7 @@ namespace vorb {
             virtual void dispose() override;
 
             /*!@brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            //virtual void updatePosition() override;
 
             /*! @brief Adds an item to the combo box
              * 
@@ -126,13 +126,13 @@ namespace vorb {
             virtual bool isInDropBounds(f32 x, f32 y) const;
 
             /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() override {};
+            //virtual void updateDrawableSpatialState() override {};
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_mainButton.getTexture(); }
-            virtual const vorb::graphics::SpriteFont* getFont() const override;
+            virtual const vorb::graphics::SpriteFont* getFont() const;
             virtual const color4& getBackColor() const { return m_mainButton.getBackColor(); }
             virtual const color4& getBackHoverColor() const { return m_mainButton.getBackHoverColor(); }
             virtual const color4& getTextColor() const { return m_mainButton.getTextColor(); }
@@ -148,13 +148,13 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
+            //virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height, bool update = true) override;
+            //virtual void setHeight(f32 height) override;
             virtual void setTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture);
-            virtual void setWidth(f32 width, bool update = true) override;
+            //virtual void setWidth(f32 width) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setTextColor(const color4& color);

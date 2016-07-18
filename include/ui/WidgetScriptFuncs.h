@@ -69,8 +69,8 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual bool getFixedHeight(Widget* w) const;
-            virtual bool getFixedWidth(Widget* w) const;
+            //virtual bool getFixedHeight(Widget* w) const;
+            //virtual bool getFixedWidth(Widget* w) const;
             virtual bool getSelectable(Widget* w) const;
             virtual bool isMouseIn(Widget* w) const;
             virtual i32 getAnchor(Widget* w) const;
@@ -91,7 +91,7 @@ namespace vorb {
             virtual Widget* getParentWidget(Widget* w) const;
             virtual f32v2 getMinSize(Widget* w) const;
             virtual f32v2 getMaxSize(Widget* w) const;
-            virtual WidgetAlign getWidgetAlign(Widget* w) const;
+            //virtual WidgetAlign getWidgetAlign(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -100,8 +100,8 @@ namespace vorb {
             virtual void setDestRect(Widget* w, f32v4 destRect) const;
             virtual void setDimensions(Widget* w, f32v2 dims) const;
             //virtual void setDock(Widget* w, DockStyle dock) const;
-            virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
-            virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
+            //virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
+            //virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;
             virtual void setPosition(Widget* w, f32v2 pos) const;
             virtual void setSelectable(Widget* w, bool selectable) const;
@@ -114,7 +114,7 @@ namespace vorb {
             virtual void setParentWidget(Widget* w, Widget* parent) const;
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
-            virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
+            //virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
 
             /************************************************************************/
             /* Widget Event Handlers                                                */

@@ -13,8 +13,8 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
 
     { // Register all functions
         // Getters
-        REGISTER_RDEL(env, getFixedHeight);
-        REGISTER_RDEL(env, getFixedWidth);
+        //REGISTER_RDEL(env, getFixedHeight);
+        //REGISTER_RDEL(env, getFixedWidth);
         REGISTER_RDEL(env, getSelectable);
         REGISTER_RDEL(env, isMouseIn);
         REGISTER_RDEL(env, getAnchor);
@@ -35,14 +35,14 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, getParentWidget);
         REGISTER_RDEL(env, getMinSize);
         REGISTER_RDEL(env, getMaxSize);
-        REGISTER_RDEL(env, getWidgetAlign);
+        //REGISTER_RDEL(env, getWidgetAlign);
         // Setters
         REGISTER_DEL(env, setAnchor);
         REGISTER_DEL(env, setDestRect);
         REGISTER_DEL(env, setDimensions);
         //REGISTER_DEL(env, setDock);
-        REGISTER_DEL(env, setFixedHeight);
-        REGISTER_DEL(env, setFixedWidth);
+        //REGISTER_DEL(env, setFixedHeight);
+        //REGISTER_DEL(env, setFixedWidth);
         REGISTER_DEL(env, setHeight);
         REGISTER_DEL(env, setPosition);
         REGISTER_DEL(env, setSelectable);
@@ -55,7 +55,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setParentWidget);
         REGISTER_DEL(env, setMinSize);
         REGISTER_DEL(env, setMaxSize);
-        REGISTER_DEL(env, setWidgetAlign);
+        //REGISTER_DEL(env, setWidgetAlign);
         // Misc
         REGISTER_DEL(env, dispose);
         REGISTER_DEL(env, enable);
@@ -162,13 +162,13 @@ bool vui::WidgetScriptFuncs::removeCallback(Widget* w, EventType eventType, nStr
     return true;
 }
 
-bool vui::WidgetScriptFuncs::getFixedHeight(Widget* w) const {
-    return w->getFixedHeight();
-}
+//bool vui::WidgetScriptFuncs::getFixedHeight(Widget* w) const {
+//    return w->getFixedHeight();
+//}
 
-bool vui::WidgetScriptFuncs::getFixedWidth(Widget* w) const {
-    return w->getFixedWidth();
-}
+//bool vui::WidgetScriptFuncs::getFixedWidth(Widget* w) const {
+//    return w->getFixedWidth();
+//}
 
 bool vui::WidgetScriptFuncs::getSelectable(Widget* w) const {
     return w->getSelectable();
@@ -250,9 +250,9 @@ f32v2 vui::WidgetScriptFuncs::getMaxSize(Widget* w) const {
     return w->getMaxSize();
 }
 
-vui::WidgetAlign vui::WidgetScriptFuncs::getWidgetAlign(Widget* w) const {
-    return w->getWidgetAlign();
-}
+//vui::WidgetAlign vui::WidgetScriptFuncs::getWidgetAlign(Widget* w) const {
+//    return w->getWidgetAlign();
+//}
 
 void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
     // TODO(Ben): Implement
@@ -270,13 +270,13 @@ void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) const {
 //    w->setDock(dock);
 //}
 
-void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) const {
-    w->setFixedHeight(fixedHeight);
-}
+//void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) const {
+//    w->setFixedHeight(fixedHeight);
+//}
 
-void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) const {
-    w->setFixedWidth(fixedWidth);
-}
+//void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) const {
+//    w->setFixedWidth(fixedWidth);
+//}
 
 void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) const {
     w->setHeight(height);
@@ -315,7 +315,7 @@ void vui::WidgetScriptFuncs::setParentForm(Widget* w, Form* parent) const {
 }
 
 void vui::WidgetScriptFuncs::setParentWidget(Widget* w, Widget* parent) const {
-    w->setParentWidget(parent, w);
+    w->setParentWidget(parent);
 }
 
 void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2 minSize) const {
@@ -326,9 +326,9 @@ void vui::WidgetScriptFuncs::setMaxSize(Widget* w, f32v2 maxSize) const {
     w->setMaxSize(maxSize);
 }
 
-void vui::WidgetScriptFuncs::setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const {
-    w->setWidgetAlign(widgetAlign);
-}
+//void vui::WidgetScriptFuncs::setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const {
+//    w->setWidgetAlign(widgetAlign);
+//}
 
 void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {
     Widget* w = (Widget*)s;

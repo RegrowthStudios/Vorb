@@ -72,7 +72,7 @@ namespace vorb {
             virtual void addDrawables(UIRenderer* renderer) override;
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            //virtual void updatePosition() override;
 
             virtual void check();
             virtual void unCheck();
@@ -80,14 +80,14 @@ namespace vorb {
             virtual void computeClipRect() override;
 
             /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() override {};
+            //virtual void updateDrawableSpatialState() override {};
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getUncheckedTexture() const { return m_uncheckedTexture; }
             virtual const VGTexture& getCheckedTexture() const { return m_checkedTexture; }
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
+            virtual const vorb::graphics::SpriteFont* getFont() const { return m_drawableText.getFont(); }
             virtual const color4& getBoxColor() const { return m_boxColor; }
             virtual const color4& getBoxHoverColor() const { return m_boxHoverColor; }
             virtual const color4& getBoxCheckedColor() const { return m_boxCheckedColor; }
@@ -101,15 +101,15 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
+            //virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setPosition(const f32v2& position, bool update = true) override;
+            //virtual void setHeight(f32 height) override;
+            //virtual void setPosition(const f32v2& position) override;
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
-            virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setX(f32 x, bool update = true) override;
-            virtual void setY(f32 y, bool update = true) override;
+            //virtual void setWidth(f32 width) override;
+            //virtual void setX(f32 x) override;
+            //virtual void setY(f32 y) override;
             virtual void setBoxColor(const color4& color);
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);
@@ -128,7 +128,7 @@ namespace vorb {
         protected:
             virtual void updateColor();
             virtual void updateTextPosition();
-            virtual void refreshDrawables();
+            virtual void refreshDrawables() override;
 
             /************************************************************************/
             /* Event Handlers                                                       */

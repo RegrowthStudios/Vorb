@@ -40,20 +40,20 @@ void vui::Label::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Label::refreshDrawables));
 }
 
-void vui::Label::updatePosition() {
-    Widget::updatePosition();
-    updateTextPosition();
-}
+//void vui::Label::updatePosition() {
+//    Widget::updatePosition();
+//    updateTextPosition();
+//}
 
 void vui::Label::setDestRect(const f32v4& destRect) {
     vui::Widget::setDestRect(destRect);
     refreshDrawables();
 }
 
-void vui::Label::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    Widget::setDimensions(dimensions, update);
-    updatePosition();
-}
+//void vui::Label::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+//    Widget::setDimensions(dimensions, update);
+//    updatePosition();
+//}
 
 void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
     m_font = font;
@@ -61,32 +61,32 @@ void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
 }
 
 // TODO(Matthew): Probably don't want to be updating position like this...
-void vui::Label::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    updatePosition();
-}
+//void vui::Label::setHeight(f32 height, bool update /*= true*/) {
+//    Widget::setHeight(height, update);
+//    updatePosition();
+//}
 
 // TODO(Matthew): Probably don't want to be updating position like this...
-void vui::Label::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    updatePosition();
-}
+//void vui::Label::setPosition(const f32v2& position, bool update /*= true*/) {
+//    Widget::setPosition(position, update);
+//    updatePosition();
+//}
 
-// TODO(Matthew): Probably don't want to be updating position like this...
-void vui::Label::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    updatePosition();
-}
+//// TODO(Matthew): Probably don't want to be updating position like this...
+//void vui::Label::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    updatePosition();
+//}
 
-void vui::Label::setX(f32 x, bool update /*= true*/) {
-    Widget::setX(x, update);
-    updatePosition();
-}
+//void vui::Label::setX(f32 x, bool update /*= true*/) {
+//    Widget::setX(x, update);
+//    updatePosition();
+//}
 
-void vui::Label::setY(f32 y, bool update /*= true*/) {
-    Widget::setY(y, update);
-    updatePosition();
-}
+//void vui::Label::setY(f32 y, bool update /*= true*/) {
+//    Widget::setY(y, update);
+//    updatePosition();
+//}
 
 void vui::Label::setText(const nString& text) {
     m_drawableText.setText(text);

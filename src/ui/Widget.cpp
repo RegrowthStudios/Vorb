@@ -65,129 +65,110 @@ void vui::Widget::removeDrawables() {
     }
 }
 
-//void vui::Widget::updateDrawableOrderState() {
-//    for (auto& w : m_widgets.get_container()) {
-//        w->removeDrawables();
-//        w->setNeedsDrawableReload(false);
-//        w->addDrawables(m_renderer);
-//        w->updateDrawableOrderState();
-//    }
-//}
-//
-//void vui::Widget::updateSpatialState() {
-//    updateMaxSize(); // TODO(Matthew): Updating children too many times. Should be just the once.
-//
-//    updateMinSize();
-//
-//    vui::IWidgetContainer::updateSpatialState();
-//}
-//
-//void vui::Widget::updateTransitionState() {
-//    updateTargetMaxSize();
-//
-//    updateTargetMinSize();
-//
-//    vui::IWidgetContainer::updateTransitionState();
-//}
-
 void vui::Widget::update(f32 dt /*= 0.0f*/) {
-    //m_targetPosition.currentTime += dt; // TODO(Matthew): Optional callback on transition completion?
-    //if (m_targetPosition.currentTime <= m_targetPosition.finalTime) {
-    //    m_position = m_targetPosition.calculateCurrent();
-    //    m_needsDrawableReload = true;
-    //}
-    //m_targetDimensions.currentTime += dt;
-    //if (m_targetDimensions.currentTime <= m_targetDimensions.finalTime) {
-    //    m_dimensions = m_targetDimensions.calculateCurrent();
-    //    m_needsDrawableReload = true;
-    //}
-    //m_targetMaxSize.currentTime += dt;
-    //if (m_targetMaxSize.currentTime <= m_targetMaxSize.finalTime) {
-    //    m_maxSize = m_targetMaxSize.calculateCurrent();
-    //    m_needsDrawableReload = true;
-    //}
-    //m_targetMinSize.currentTime += dt;
-    //if (m_targetMinSize.currentTime <= m_targetMinSize.finalTime) {
-    //    m_minSize = m_targetMinSize.calculateCurrent();
-    //    m_needsDrawableReload = true;
-    //}
-    //applyMinMaxSizesToDimensions(m_dimensions);
-    //updateChildSpatialStates(); // TODO(Matthew): Optimise this.
-    //if (m_needsDrawableReload) { // TODO(Matthew): Some choppiness is appearing. Investigate.
-    //    updateDrawableSpatialState();
-    //    m_needsDrawableReload = false;
-    //}
-    //
     //// TODO(Matthew): For auto scaling widgets, may need to propogate updates up as well as down (i.e. propogate down for sizing not-auto-scaled widgets then propogate back upwards to update the auto-scaled widgets).
-    //
-    //// Next update children.
-    //for (auto& w : m_widgets.get_container()) {
-    //    // Check if we need to reload the drawables
-    //    if (w->needsDrawableReload()) {
-    //        w->removeDrawables();
-    //        w->setNeedsDrawableReload(false);
-    //        w->addDrawables(m_renderer);
-    //    }
-    //    w->update(dt);
-    //}
 
     // Process changes to raw state not associated with docking if this widget is not docked.
     if (m_dockingOptions.style == DockingStyle::NONE) {
         if (!isPositionTransitioning()) {
-            if (m_pendingUpdates & UpdateFlag::RAW_POSITION == UpdateFlag::RAW_POSITION)
+            if ((m_pendingUpdates & UpdateFlag::RAW_POSITION) == UpdateFlag::RAW_POSITION)
                 processRawPosition();
         } else {
-            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_POSITION == UpdateFlag::RAW_TRANSITION_POSITION)
-                processRawTransitionPosition();
+            if ((m_pendingUpdates & UpdateFlag::RAW_TRANSITION_POSITION) == UpdateFlag::RAW_TRANSITION_POSITION)
+                processRawPositionTransition();
+            if ((m_pendingUpdates & UpdateFlag::TRANSITION_POSITION) == UpdateFlag::TRANSITION_POSITION)
+                onPositionTransitionUpdate();
+            processPositionTransition(dt);
         }
         if (!isDimensionsTransitioning()) {
-            if (m_pendingUpdates & UpdateFlag::RAW_DIMENSIONS == UpdateFlag::RAW_DIMENSIONS)
+            if ((m_pendingUpdates & UpdateFlag::RAW_DIMENSIONS) == UpdateFlag::RAW_DIMENSIONS)
                 processRawDimensions();
         } else {
-            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_DIMENSIONS == UpdateFlag::RAW_TRANSITION_DIMENSIONS)
-                processRawTransitionDimensions();
+            if ((m_pendingUpdates & UpdateFlag::RAW_TRANSITION_DIMENSIONS) == UpdateFlag::RAW_TRANSITION_DIMENSIONS)
+                processRawDimensionsTransition();
+            if ((m_pendingUpdates & UpdateFlag::TRANSITION_DIMENSIONS) == UpdateFlag::TRANSITION_DIMENSIONS)
+                onDimensionsTransitionUpdate();
+            processDimensionsTransition(dt);
         }
         if (!isMaxSizeTransitioning()) {
-            if (m_pendingUpdates & UpdateFlag::RAW_MAX_SIZE == UpdateFlag::RAW_MAX_SIZE)
+            if ((m_pendingUpdates & UpdateFlag::RAW_MAX_SIZE) == UpdateFlag::RAW_MAX_SIZE)
                 processRawMaxSize();
         } else {
-            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MAX_SIZE == UpdateFlag::RAW_TRANSITION_MAX_SIZE)
-                processRawTransitionMaxSize();
+            if ((m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MAX_SIZE) == UpdateFlag::RAW_TRANSITION_MAX_SIZE)
+                processRawMaxSizeTransition();
+            if ((m_pendingUpdates & UpdateFlag::TRANSITION_MAX_SIZE) == UpdateFlag::TRANSITION_MAX_SIZE)
+                onMaxSizeTransitionUpdate();
+            processMaxSizeTransition(dt);
         }
         if (!isMinSizeTransitioning()) {
-            if (m_pendingUpdates & UpdateFlag::RAW_MIN_SIZE == UpdateFlag::RAW_MIN_SIZE)
+            if ((m_pendingUpdates & UpdateFlag::RAW_MIN_SIZE) == UpdateFlag::RAW_MIN_SIZE)
                 processRawMinSize();
         } else {
-            if (m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MIN_SIZE == UpdateFlag::RAW_TRANSITION_MIN_SIZE)
-                processRawTransitionMinSize();
+            if ((m_pendingUpdates & UpdateFlag::RAW_TRANSITION_MIN_SIZE) == UpdateFlag::RAW_TRANSITION_MIN_SIZE)
+                processRawMinSizeTransition();
+            if ((m_pendingUpdates & UpdateFlag::TRANSITION_MIN_SIZE) == UpdateFlag::TRANSITION_MIN_SIZE)
+                onMinSizeTransitionUpdate();
+            processMinSizeTransition(dt);
         }
 
-        // Update transitions
-
-        if (m_pendingUpdates & UpdateFlag::POSITION == UpdateFlag::POSITION)
-            updatePosition();
-        if (m_pendingUpdates & UpdateFlag::DIMENSIONS == UpdateFlag::DIMENSIONS)
-            updateDimensions();
-    } else if (m_pendingUpdates & UpdateFlag::RAW_DOCKING_SIZE) {
-        processRawDockingSize();
-
-        // Update docking state
-    }
-
-    if (m_pendingUpdates & UpdateFlag::CLIPPING == UpdateFlag::CLIPPING)
-        computeClipRect();
-
-    if (m_pendingUpdates & UpdateFlag::DRAWABLE_ORDER == UpdateFlag::DRAWABLE_ORDER) {
-        for (auto& w : m_widgets.get_container()) {
-            w->removeDrawables();
-            w->setNeedsDrawableReload(false);
-            w->addDrawables(m_renderer);
-            w->applyUpdateFlag(UpdateFlag::DRAWABLE_ORDER); // TODO(Matthew): Change method for UI rendering to 
-                                                            //                better accommodate z-indexing.
-                                                            //                (I.e. so this is unnecessary.)
-            w->update();
+        if ((m_pendingUpdates & UpdateFlag::SIZE_LIMITS) > 0)
+            applyMinMaxSizesToDimensions(m_dimensions);
+    } else {
+        if (!isDockingTransitioning()) {
+            if ((m_pendingUpdates & UpdateFlag::RAW_DOCKING_SIZE) == UpdateFlag::RAW_DOCKING_SIZE)
+                processRawDockingSize();
+        } else {
+            if ((m_pendingUpdates & UpdateFlag::RAW_TRANSITION_DOCKING) == UpdateFlag::RAW_TRANSITION_DOCKING)
+                processRawDockingTransition();
+            if ((m_pendingUpdates & UpdateFlag::TRANSITION_DOCKING) == UpdateFlag::RAW_TRANSITION_DOCKING)
+                onDockingTransitionUpdate();
+            processDockingTransition(dt);
         }
+
+        if ((m_pendingUpdates & UpdateFlag::DOCKING) > 0)
+            recalculateDocking();
+
+        if ((m_pendingUpdates & UpdateFlag::DOCKING_SIZE) == UpdateFlag::DOCKING_SIZE)
+            onDockingSizeUpdate();
+        if ((m_pendingUpdates & UpdateFlag::DOCKING_STYLE) == UpdateFlag::DOCKING_STYLE)
+            onDockingStyleUpdate();
     }
+
+    if ((m_pendingUpdates & UpdateFlag::SPATIAL) > 0)
+        onSpatialUpdate();
+
+    if ((m_pendingUpdates & UpdateFlag::CLIPPING) == UpdateFlag::CLIPPING)
+        recalculateClipping();
+
+    if ((m_pendingUpdates & UpdateFlag::DRAWABLE) > 0)
+        recalculateDrawables();
+
+    if ((m_pendingUpdates & UpdateFlag::TEXT) == UpdateFlag::TEXT)
+        recalculateText();
+
+    if ((m_pendingUpdates & UpdateFlag::DRAWABLE_ORDER) == UpdateFlag::DRAWABLE_ORDER)
+        recalculateDrawableOrder();
+
+    for (auto& w : m_widgets.get_container()) {
+        w->update(dt);
+    }
+}
+
+const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
+    const IWidgetContainer* firstPositionedParent = m_parentForm;
+    const Widget* widget = m_parentWidget;
+    while (widget != nullptr) {
+        vui::PositionType positionType = widget->getPositionType();
+        if (positionType == vui::PositionType::ABSOLUTE
+            || positionType == vui::PositionType::RELATIVE) {
+            // Widget is "positioned"; break out.
+            firstPositionedParent = widget;
+            break;
+        }
+
+        widget = widget->getParentWidget();
+    }
+    return firstPositionedParent;
 }
 
 //void vui::Widget::setDockingOptions(const DockingOptions& options) { 
@@ -205,23 +186,7 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
 //        m_parentForm->updateChildClippingStates();
 //    }
 //}
-//
-//void vui::Widget::setRawDockingSize(const Length& size) {
-//    m_dockingOptions.size = size;
-//
-//    // Reprocess docking size.
-//    updateDockingSize();
-//
-//    // Reprocess docking of all sibling widgets and self.
-//    if (m_parentWidget) {
-//        m_parentWidget->updateDockingState();
-//        m_parentWidget->updateChildClippingStates();
-//    } else if (m_parentForm) {
-//        m_parentForm->updateDockingState();
-//        m_parentForm->updateChildClippingStates();
-//    }
-//}
-//
+
 //void vui::Widget::setDockingStyle(const DockingStyle& style) {
 //    m_dockingOptions.style = style;
 //
@@ -259,38 +224,6 @@ void vui::Widget::setMinSize(const f32v2& minSize) {
 //    }
 //}
 
-const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
-    const IWidgetContainer* firstPositionedParent = m_parentForm;
-    const Widget* widget = m_parentWidget;
-    while (widget != nullptr) {
-        vui::PositionType positionType = widget->getPositionType();
-        if (positionType == vui::PositionType::ABSOLUTE
-            || positionType == vui::PositionType::RELATIVE) {
-            // Widget is "positioned"; break out.
-            firstPositionedParent = widget;
-            break;
-        }
-
-        widget = widget->getParentWidget();
-    }
-    return firstPositionedParent;
-}
-
-void vui::Widget::setParentForm(Form* parent) {
-    if (m_parentForm) m_parentForm->removeWidget(this);
-    m_parentForm = parent;
-    for (auto& w : m_widgets) {
-        w->setParentForm(parent);
-    }
-    m_pendingUpdates = UpdateFlag::ALL;
-}
-
-void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should also update drawables.
-    if (m_parentWidget) m_parentWidget->removeWidget(this);
-    m_parentWidget = parent;
-    setParentForm(parent->getParentForm());
-}
-
 //f32v2 vui::Widget::getWidgetAlignOffset() {
 //    switch (m_align) {
 //        case WidgetAlign::LEFT:
@@ -314,6 +247,21 @@ void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should als
 //    }
 //    return f32v2(0.0f); // Should never happen
 //}
+
+void vui::Widget::setParentForm(Form* parent) {
+    if (m_parentForm) m_parentForm->removeWidget(this);
+    m_parentForm = parent;
+    for (auto& w : m_widgets) {
+        w->setParentForm(parent);
+    }
+    m_pendingUpdates = UpdateFlag::ALL;
+}
+
+void vui::Widget::setParentWidget(Widget* parent) { // TODO(Matthew): Should also update drawables.
+    if (m_parentWidget) m_parentWidget->removeWidget(this);
+    m_parentWidget = parent;
+    setParentForm(parent->getParentForm());
+}
 
 void vui::Widget::processRawPosition() {
     f32v2 currPosition = m_position;
@@ -371,7 +319,7 @@ void vui::Widget::processRawDockingSize() {
     if (m_dockingOptions.size != currDockingSize) m_pendingUpdates |= UpdateFlag::DOCKING_SIZE;
 }
 
-void vui::Widget::processRawTransitionPosition() { // TODO(Matthew): Think about how changing only other aspects of transition should work.
+void vui::Widget::processRawPositionTransition() { // TODO(Matthew): Think about how changing only other aspects of transition should work.
     f32v2 currInitialLength = m_targetPosition.initialLength;
     f32v2 currFinalLength = m_targetPosition.finalLength;
 
@@ -389,7 +337,7 @@ void vui::Widget::processRawTransitionPosition() { // TODO(Matthew): Think about
         m_pendingUpdates |= UpdateFlag::TRANSITION_POSITION;
 }
 
-void vui::Widget::processRawTransitionDimensions() {
+void vui::Widget::processRawDimensionsTransition() {
     f32v2 currInitialDimensions = m_targetDimensions.initialLength;
     f32v2 currFinalDimensions = m_targetDimensions.finalLength;
 
@@ -403,7 +351,7 @@ void vui::Widget::processRawTransitionDimensions() {
         m_pendingUpdates |= UpdateFlag::TRANSITION_DIMENSIONS;
 }
 
-void vui::Widget::processRawTransitionMaxSize() {
+void vui::Widget::processRawMaxSizeTransition() {
     f32v2 currInitialMaxSize = m_targetMaxSize.initialLength;
     f32v2 currFinalMaxSize = m_targetMaxSize.finalLength;
 
@@ -416,7 +364,7 @@ void vui::Widget::processRawTransitionMaxSize() {
         m_pendingUpdates |= UpdateFlag::TRANSITION_MAX_SIZE;
 }
 
-void vui::Widget::processRawTransitionMinSize() {
+void vui::Widget::processRawMinSizeTransition() {
     f32v2 currInitialMinSize = m_targetMinSize.initialLength;
     f32v2 currFinalMinSize = m_targetMinSize.finalLength;
 
@@ -429,65 +377,169 @@ void vui::Widget::processRawTransitionMinSize() {
         m_pendingUpdates |= UpdateFlag::TRANSITION_MIN_SIZE;
 }
 
-void vui::Widget::updatePosition() {
-    m_pendingUpdates |= UpdateFlag::CLIPPING;
+void vui::Widget::processRawDockingTransition() {
+    f32 currInitialDockingSize = m_targetDockingSize.initialLength;
+    f32 currFinalDockingSize = m_targetDockingSize.finalLength;
+
+    // Process raw values.
+    m_targetDockingSize.initialLength = processRawValues(m_targetDockingSize.rawInitialLength);
+    m_targetDockingSize.finalLength = processRawValues(m_targetDockingSize.rawFinalLength);
+
+    if (m_targetDockingSize.initialLength != currInitialDockingSize
+        || m_targetDockingSize.finalLength != currFinalDockingSize)
+        m_pendingUpdates |= UpdateFlag::TRANSITION_DOCKING;
 }
 
-void vui::Widget::updateDimensions() {
-    m_pendingUpdates |= UpdateFlag::CLIPPING;
+void vui::Widget::processPositionTransition(f32 dt) {
+    m_targetPosition.currentTime += dt;
+    if (m_targetPosition.currentTime <= m_targetPosition.finalTime) {
+        f32v2 currPosition = m_position;
+
+        m_position = m_targetPosition.calculateCurrent();
+
+        // If position has changed, propogate to children.
+        if (m_position != currPosition) {
+            m_pendingUpdates |= UpdateFlag::POSITION;
+            applyUpdateFlagToChildren(UpdateFlag::POSITION);
+        }
+    }
 }
 
-//void vui::Widget::updateTargetPosition() {
-//    //// Only update transition data if a transition is in process of completing.
-//    //if (m_targetPosition.currentTime < m_targetPosition.finalTime) {
-//        m_targetPosition.initialLength = processRawValues(m_targetPosition.rawInitialLength);
-//        m_targetPosition.targetLength = processRawValues(m_targetPosition.rawTargetLength);
-//        // Calculate and apply the relative-to-parent position component of the widget.
-//        f32v2 relativeShift = calculateRelativeToParentShift();
-//        m_targetPosition.initialLength += relativeShift;
-//        m_targetPosition.targetLength += relativeShift;
-//    //}
-//}
-//
-//void vui::Widget::updateTargetDimensions() {
-//    //if (m_targetRawDimensions.currentTime < m_targetRawDimensions.finalTime) {
-//        m_targetPosition.initialLength = processRawValues(m_targetDimensions.rawInitialLength);
-//        applyMinMaxSizesToDimensions(m_targetPosition.initialLength);
-//        m_targetPosition.targetLength = processRawValues(m_targetDimensions.rawTargetLength);
-//        applyMinMaxSizesToDimensions(m_targetPosition.targetLength);
-//    //}
-//}
-//
-//void vui::Widget::updateTargetMaxSize() {
-//    m_targetMaxSize.initialLength = processRawValues(m_targetMaxSize.rawInitialLength);
-//    m_targetMaxSize.targetLength = processRawValues(m_targetMaxSize.rawTargetLength);
-//}
-//
-//void vui::Widget::updateTargetMinSize() {
-//    m_targetMinSize.initialLength = processRawValues(m_targetMinSize.rawInitialLength);
-//    m_targetMinSize.targetLength = processRawValues(m_targetMinSize.rawTargetLength);
-//}
-//
-//void vui::Widget::updateDockingSize() {
-//    switch (m_dockingOptions.style) {
-//    case DockingStyle::LEFT:
-//        m_processedDockingSize = processRawValue(f32v2(m_dockingOptions.size.x, 0.0f), m_dockingOptions.size.units.x).x;
-//        break;
-//    case DockingStyle::TOP:
-//        m_processedDockingSize = processRawValue(f32v2(0.0f, m_dockingOptions.size.x), m_dockingOptions.size.units.x).y;
-//        break;
-//    case DockingStyle::BOTTOM:
-//        m_processedDockingSize = processRawValue(f32v2(m_dockingOptions.size.x, 0.0f), m_dockingOptions.size.units.x).x;
-//        break;
-//    case DockingStyle::RIGHT:
-//        m_processedDockingSize = processRawValue(f32v2(0.0f, m_dockingOptions.size.x), m_dockingOptions.size.units.x).y;
-//        break;
-//    case DockingStyle::FILL:
-//    case DockingStyle::NONE:
-//    default:
-//        break;
-//    }
-//}
+void vui::Widget::processDimensionsTransition(f32 dt) {
+    m_targetDimensions.currentTime += dt;
+    if (m_targetDimensions.currentTime <= m_targetDimensions.finalTime) {
+        f32v2 currDimensions = m_dimensions;
+
+        m_dimensions = m_targetDimensions.calculateCurrent();
+
+        // If dimensions have changed, propogate to children.
+        if (m_dimensions != currDimensions) {
+            m_pendingUpdates |= UpdateFlag::DIMENSIONS;
+            applyUpdateFlagToChildren(UpdateFlag::DIMENSIONS);
+        }
+    }
+}
+
+void vui::Widget::processMaxSizeTransition(f32 dt) {
+    m_targetMaxSize.currentTime += dt;
+    if (m_targetMaxSize.currentTime <= m_targetMaxSize.finalTime) {
+        f32v2 currMaxSize = m_maxSize;
+
+        m_maxSize = m_targetMaxSize.calculateCurrent();
+
+        if (m_maxSize != currMaxSize)
+            m_pendingUpdates |= UpdateFlag::MAX_SIZE;
+    }
+}
+
+void vui::Widget::processMinSizeTransition(f32 dt) {
+    m_targetMinSize.currentTime += dt;
+    if (m_targetMinSize.currentTime <= m_targetMinSize.finalTime) {
+        f32v2 currMinSize = m_minSize;
+
+        m_minSize = m_targetMinSize.calculateCurrent();
+
+        if (m_minSize != currMinSize)
+            m_pendingUpdates |= UpdateFlag::MIN_SIZE;
+    }
+}
+
+void vui::Widget::processDockingTransition(f32 dt) {
+    m_targetDockingSize.currentTime += dt;
+    if (m_targetDockingSize.currentTime <= m_targetDockingSize.finalTime) {
+        f32 currDockingSize = m_dockingOptions.size;
+
+        m_dockingOptions.size = m_targetDockingSize.calculateCurrent();
+
+        if (m_dockingOptions.size != currDockingSize)
+            m_pendingUpdates |= UpdateFlag::DOCKING_SIZE;
+    }
+}
+
+inline void vui::Widget::recalculateClipping() {
+    computeClipRect();
+}
+
+void vui::Widget::recalculateDocking() {
+    f32 surplusWidth = m_dimensions.x;
+    f32 surplusHeight = m_dimensions.y;
+    f32v2 usedSpace = f32v2(0.0f);
+    for (auto& w : m_widgets.get_container()) {
+        DockingOptions options = w->getDockingOptions();
+        f32 size = w->getProcessedDockingSize();
+        switch (options.style) {
+        case DockingStyle::NONE:
+            break;
+        case DockingStyle::LEFT:
+            w->setHeight(surplusHeight);
+            surplusWidth -= size;
+            if (surplusWidth > -FLT_EPSILON) {
+                w->setWidth(size);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y));
+            } else {
+                w->setWidth(0.0f);
+            }
+            usedSpace.x += size;
+            break;
+        case DockingStyle::TOP:
+            w->setWidth(surplusWidth);
+            surplusHeight -= size;
+            if (surplusHeight > -FLT_EPSILON) {
+                w->setHeight(size);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y));
+            } else {
+                w->setHeight(0.0f);
+            }
+            usedSpace.y += size;
+            break;
+        case DockingStyle::RIGHT:
+            w->setHeight(surplusHeight);
+            surplusWidth -= size;
+            if (surplusWidth > -FLT_EPSILON) {
+                w->setWidth(size);
+                w->setPosition(f32v2(usedSpace.x + surplusWidth, usedSpace.y));
+            } else {
+                w->setWidth(0.0f);
+            }
+            break;
+        case DockingStyle::BOTTOM:
+            w->setWidth(surplusWidth);
+            surplusHeight -= size;
+            if (surplusHeight > -FLT_EPSILON) {
+                w->setHeight(size);
+                w->setPosition(f32v2(usedSpace.x, usedSpace.y + surplusHeight));
+            } else {
+                w->setHeight(0.0f);
+            }
+            break;
+        case DockingStyle::FILL:
+            // Not sure what to do with this one yet.
+            // TODO(Matthew): Find a way to implement this.
+            break;
+        default:
+            // Shouldn't get here.
+            break;
+        }
+    }
+}
+
+void vui::Widget::recalculateDrawableOrder() {
+    // TODO(Matthew): Shouldn't have to call sort here (call it on separate event).
+    m_widgets.sort();
+
+    for (auto& w : m_widgets.get_container()) {
+        w->removeDrawables();
+        w->setNeedsDrawableReload(false);
+        w->addDrawables(m_renderer);
+        w->applyUpdateFlag(UpdateFlag::DRAWABLE_ORDER); // TODO(Matthew): Change method for UI rendering to 
+                                                        //                better accommodate z-indexing.
+                                                        //                (I.e. so this is unnecessary.)
+    }
+}
+
+inline void vui::Widget::onSpatialUpdate() {
+    m_pendingUpdates |= UpdateFlag::CLIPPING;
+}
 
 void vui::Widget::computeClipRect() {
     f32v4 parentClipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);
@@ -635,5 +687,13 @@ void vui::Widget::applyMinMaxSizesToDimensions(f32v2& dimensions) {
         dimensions.y = m_minSize.y;
     } else if (dimensions.y > m_maxSize.y) {
         dimensions.y = m_maxSize.y;
+    }
+}
+
+void vui::Widget::applyUpdateFlagToParent(ui32 flag) {
+    if (m_parentWidget) {
+        m_parentWidget->applyUpdateFlag(flag);
+    } else if (m_parentForm) {
+        m_parentForm->applyUpdateFlag(flag);
     }
 }

@@ -13,7 +13,7 @@ vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) :
     // TODO(Matthew): Is this needed?
     m_drawableRect.setPosition(getPosition());
     m_drawableRect.setDimensions(getDimensions());
-    updateTextPosition();
+    recalculateText();
 }
 
 vui::Button::Button(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
@@ -51,63 +51,16 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
 
-void vui::Button::updateDrawableSpatialState() {
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    updateTextPosition();
-}
-
-void vui::Button::setDestRect(const f32v4& destRect) {
-    vui::Widget::setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    refreshDrawables();
-}
-
-void vui::Button::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    m_drawableRect.setDimensions(dimensions);
-    Widget::setDimensions(dimensions, update);
-}
-
-void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
-    m_font = font;
-    updateDrawableSpatialState();
-}
-
-void vui::Button::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    m_drawableRect.setHeight(height);
-    updateDrawableSpatialState();
-}
-
-void vui::Button::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    m_drawableRect.setPosition(m_position);
-    updateDrawableSpatialState();
-}
+// TODO(Matthew): Determine what needs to be updated when font is set in button.
+//                Should move this logic into an onFontUpdate event.
+//void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
+//    m_font = font;
+//    recalculateDrawables();
+//}
 
 void vui::Button::setTexture(VGTexture texture) {
     m_drawableRect.setTexture(texture);
     refreshDrawables();
-}
-
-void vui::Button::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    m_drawableRect.setWidth(width);
-    updateDrawableSpatialState();
-}
-
-void vui::Button::setX(f32 x, bool update /*= true*/) {
-    Widget::setX(x, update);
-    m_drawableRect.setX(m_position.x);
-    updateDrawableSpatialState();
-}
-
-void vui::Button::setY(f32 y, bool update /*= true*/) {
-    Widget::setY(y, update);
-    m_drawableRect.setX(m_position.y);
-    updateDrawableSpatialState();
 }
 
 void vui::Button::setBackColor(const color4& color) {
@@ -134,11 +87,6 @@ void vui::Button::setBackHoverColorGrad(const color4& color1, const color4& colo
     updateColor();
 }
 
-void vui::Button::setText(const nString& text) {
-    m_drawableText.setText(text);
-    updateTextPosition();
-}
-
 void vui::Button::setTextColor(const color4& color) {
     m_textColor = color;
     updateColor();
@@ -159,19 +107,50 @@ void vui::Button::setTextScale(const f32v2& textScale) {
     updateTextPosition();
 }
 
-void vui::Button::updatePosition() {
-    Widget::updatePosition();
-    updateDrawableSpatialState();
+void vui::Button::recalculateDrawables() {
+    m_drawableRect.setPosition(getPosition());
+    m_drawableRect.setDimensions(getDimensions());
+    m_drawableRect.setClipRect(m_clipRect);
 }
 
-void vui::Button::updateDimensions() {
-    Widget::updateDimensions();
-    updateDrawableSpatialState();
-}
+void vui::Button::recalculateText() {
+    const f32v2& dims = getDimensions();
+    const f32v2& pos = getPosition();
+    const vg::TextAlign& textAlign = getTextAlign();
 
-void vui::Button::computeClipRect() {
-    Widget::computeClipRect();
-    updateDrawableSpatialState();
+    m_drawableText.setClipRect(m_clipRect);
+
+    // TODO(Ben): Padding
+    switch (textAlign) {
+    case vg::TextAlign::LEFT:
+        m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
+        break;
+    case vg::TextAlign::TOP_LEFT:
+        m_drawableText.setPosition(pos);
+        break;
+    case vg::TextAlign::TOP:
+        m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
+        break;
+    case vg::TextAlign::TOP_RIGHT:
+        m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
+        break;
+    case vg::TextAlign::RIGHT:
+        m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
+        break;
+    case vg::TextAlign::BOTTOM_RIGHT:
+        m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
+        break;
+    case vg::TextAlign::BOTTOM:
+        m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
+        break;
+    case vg::TextAlign::BOTTOM_LEFT:
+        m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
+        break;
+    case vg::TextAlign::CENTER:
+        m_drawableText.setPosition(pos + dims / 2.0f);
+        break;
+    }
+    refreshDrawables();
 }
 
 void vui::Button::updateColor() {
@@ -185,46 +164,6 @@ void vui::Button::updateColor() {
         m_drawableRect.setColor2(m_backColor2);
         m_drawableRect.setGradientType(gradHover);
         m_drawableText.setColor(m_textColor);
-    }
-    refreshDrawables();
-}
-
-void vui::Button::updateTextPosition() {
-    const f32v2& dims = getDimensions();
-    const f32v2& pos = getPosition();
-    const vg::TextAlign& textAlign = getTextAlign();
-
-    m_drawableText.setClipRect(m_clipRect);
-
-    // TODO(Ben): Padding
-    switch (textAlign) {
-        case vg::TextAlign::LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::TOP_LEFT:
-            m_drawableText.setPosition(pos);
-            break;
-        case vg::TextAlign::TOP:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
-            break;
-        case vg::TextAlign::TOP_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
-            break;
-        case vg::TextAlign::RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::BOTTOM_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM_LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
-            break;
-        case vg::TextAlign::CENTER:
-            m_drawableText.setPosition(pos + dims / 2.0f);
-            break;
     }
     refreshDrawables();
 }

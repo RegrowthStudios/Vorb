@@ -74,6 +74,7 @@ namespace vorb {
             f32 size;
         };
         
+        // TODO(Matthew): Optional callback on transition completion?
         //! Structs of target length and time frame to completion.
         struct UITransition : public vmath::Transition32_F32 {
             Length rawInitialLength, rawFinalLength;
@@ -179,16 +180,6 @@ namespace vorb {
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
-            ///*! @brief Recalculates order of drawables based on Z-index. */
-            //virtual void updateDrawableOrderState();
-
-            ///*! @brief Updates all spatial state. I.e. position, dimensions, clipping and the same for children. */
-            //virtual void updateSpatialState() override;
-            ///*! @brief Updates all transitionary states. */
-            //virtual void updateTransitionState() override;
-            ///*! @brief Updates all drawable spatial states. */
-            //virtual void updateDrawableSpatialState() = 0;
-
             /*! @brief Updates the widget. Can be used for animation.
             *
             * @param dt: The TimeStep
@@ -201,8 +192,8 @@ namespace vorb {
             Form* getParentForm() const { return m_parentForm; }
             Widget* getParentWidget() const { return m_parentWidget; }
             const IWidgetContainer* getFirstPositionedParent() const;
-            //const DockingOptions& getDockingOptions() const { return m_dockingOptions; } // TODO(Matthew): Reimplement docking in new update system.
-            //f32 getProcessedDockingSize() const { return m_processedDockingSize; }
+            const DockingOptions& getDockingOptions() const { return m_dockingOptions; } // TODO(Matthew): Reimplement docking in new update system.
+            f32 getProcessedDockingSize() const { return m_processedDockingSize; }
             const AnchorStyle& getAnchor() const { return m_anchor; }
             const PositionType& getPositionType() const { return m_positionType; }
             const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
@@ -226,13 +217,14 @@ namespace vorb {
             bool isDimensionsTransitioning() const { return m_targetDimensions.currentTime < m_targetDimensions.finalTime; }
             bool isMaxSizeTransitioning() const { return m_targetMaxSize.currentTime < m_targetMaxSize.finalTime; }
             bool isMinSizeTransitioning() const { return m_targetMinSize.currentTime < m_targetMinSize.finalTime; }
+            bool isDockingTransitioning() const { return m_targetDockingSize.currentTime < m_targetDockingSize.finalTime; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setAnchor(const AnchorStyle& anchor) { m_anchor = anchor; }
             //virtual void setDockingOptions(const DockingOptions& options);
-            //virtual void setRawDockingSize(const Length& size);
+            virtual void setRawDockingSize(const Length& size) { m_dockingOptions.rawSize = size; m_pendingUpdates |= UpdateFlag::RAW_DOCKING_SIZE; }
             //virtual void setRawTargetDockingSize(const Transition& targetSize); // TODO(Matthew): Implement.
             //virtual void setDockingStyle(const DockingStyle& style);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
@@ -291,33 +283,55 @@ namespace vorb {
             virtual void processRawMinSize();
             /*! @brief Processes the raw size of the docking of this widget. */
             virtual void processRawDockingSize();
-            /*! @brief Processes the raw transitioning position of the widget. */
-            virtual void processRawTransitionPosition();
+            /*! @brief Processes the raw transitioning positions of the widget. */
+            virtual void processRawPositionTransition();
             /*! @brief Processes the raw transitioning dimensions of the widget. */
-            virtual void processRawTransitionDimensions();
-            /*! @brief Processes the raw transitioning max size of the widget. */
-            virtual void processRawTransitionMaxSize();
-            /*! @brief Processes the raw transitioning min size of the widget. */
-            virtual void processRawTransitionMinSize();
+            virtual void processRawDimensionsTransition();
+            /*! @brief Processes the raw transitioning max sizes of the widget. */
+            virtual void processRawMaxSizeTransition();
+            /*! @brief Processes the raw transitioning min sizes of the widget. */
+            virtual void processRawMinSizeTransition();
+            /*! @brief Processes the raw transitioning docking sizes of the widget. */
+            virtual void processRawDockingTransition();
 
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition();
-            /*! @brief Updates the dimensions of the widget based on processed positioning and size boundaries. */
-            virtual void updateDimensions();
-            ///*! @brief Updates the target position data. */
-            //virtual void updateTargetPosition() override;
-            ///*! @brief Updates the target dimensions data. */
-            //virtual void updateTargetDimensions() override;
-            ///*! @brief Processes the raw maximum size then updates the dimensions appropriately. */
-            //virtual void updateMaxSize() { m_maxSize = processRawValues(m_rawMaxSize); updateDimensionState(); }
-            ///*! @brief Updates the target max size data. */
-            //virtual void updateTargetMaxSize();
-            ///*! @brief Processes the raw minimum size then updates the dimensions appropriately. */
-            //virtual void updateMinSize() { m_minSize = processRawValues(m_rawMinSize); updateDimensionState(); }
-            ///*! @brief Updates the target min size data. */
-            //virtual void updateTargetMinSize();
-            ///*! @brief Processes the raw size of docking. */
-            //virtual void updateDockingSize();
+            /*! @brief Processes the position transition of the widget. */
+            virtual void processPositionTransition(f32 dt);
+            /*! @brief Processes the dimensions transition of the widget. */
+            virtual void processDimensionsTransition(f32 dt);
+            /*! @brief Processes the max size transition of the widget. */
+            virtual void processMaxSizeTransition(f32 dt);
+            /*! @brief Processes the min size transition of the widget. */
+            virtual void processMinSizeTransition(f32 dt);
+            /*! @brief Processes the docking transition of the widget. */
+            virtual void processDockingTransition(f32 dt);
+
+            /*! @brief Recalculates clipping. */
+            virtual void recalculateClipping();
+            /*! @brief Recalculates text. */
+            virtual void recalculateText() = 0;
+            /*! @brief Recalculates docking of children. */
+            virtual void recalculateDocking();
+            /*! @brief Recalculates the drawables of the children. */
+            virtual void recalculateDrawables() = 0;
+            /*! @brief Recalculates drawing order of children. */
+            virtual void recalculateDrawableOrder();
+
+            /*! @brief Allows custom behaviour when position or dimensions change. */
+            virtual void onSpatialUpdate();
+            /*! @brief Allows custom behaviour when the position transition changes. */
+            virtual void onPositionTransitionUpdate();
+            /*! @brief Allows custom behaviour when the dimensions transition changes. */
+            virtual void onDimensionsTransitionUpdate();
+            /*! @brief Allows custom behaviour when the max size transition changes. */
+            virtual void onMaxSizeTransitionUpdate();
+            /*! @brief Allows custom behaviour when the min size transition changes. */
+            virtual void onMinSizeTransitionUpdate();
+            /*! @brief Allows custom behaviour when the docking transition changes. */
+            virtual void onDockingTransitionUpdate();
+            /*! @brief Allows custom behaviour when the docking size changes. */
+            virtual void onDockingSizeUpdate();
+            /*! @brief Allows custom behaviour when the docking style changes. */
+            virtual void onDockingStyleUpdate();
 
             /*! @brief Refreshes drawables. */
             virtual void refreshDrawables() = 0;
@@ -335,6 +349,9 @@ namespace vorb {
 
             /*! @brief Applies the current min and max sizes to the provided dimensions. */
             virtual void applyMinMaxSizesToDimensions(f32v2& dimensions);
+
+            /*! @broef Adds an update flag to the pending updates for this element's most direct parent. */
+            void applyUpdateFlagToParent(ui32 flag);
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

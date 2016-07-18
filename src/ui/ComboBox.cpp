@@ -23,7 +23,7 @@ vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*
     m_name = name;
     setDestRect(destRect);
     m_mainButton.setDimensions(m_dimensions);
-    updatePosition();
+    //updatePosition();
 }
 
 vui::ComboBox::ComboBox(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
@@ -46,43 +46,43 @@ void vui::ComboBox::dispose() {
     std::vector<Button*>().swap(m_buttons);
 }
 
-void vui::ComboBox::updatePosition() {
-
-    bool hasSlider = false;
-    if (m_items.size() * getHeight() > m_maxDropHeight) {
-        hasSlider = true;
-    }
-
-    // Buttons
-    f32 i = 0;
-    for (auto& b : m_buttons) {
-        if (m_isDropped) {
-            b->enable();
-            b->setPosition(f32v2(0.0f, i * getHeight()));
-            if (hasSlider) {
-                b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
-            } else {
-                b->setDimensions(getDimensions());
-            }
-        } else {
-            b->disable();
-            b->setDimensions(f32v2(0.0f));
-        }
-        i += 1.0f;
-    }
-
-    // Drop list
-    if (m_isDropped) {
-        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        f32v2 dims = getDimensions() * f32v2(1.0f, (f32)m_items.size());
-        dims.y = vmath::min(dims.y, m_maxDropHeight);
-        m_dropPanel.setDimensions(dims);
-    } else {
-        m_dropPanel.setDimensions(f32v2(0.0f));
-    }
-    
-    vui::Widget::updatePosition();
-}
+//void vui::ComboBox::updatePosition() {
+//
+//    bool hasSlider = false;
+//    if (m_items.size() * getHeight() > m_maxDropHeight) {
+//        hasSlider = true;
+//    }
+//
+//    // Buttons
+//    f32 i = 0;
+//    for (auto& b : m_buttons) {
+//        if (m_isDropped) {
+//            b->enable();
+//            b->setPosition(f32v2(0.0f, i * getHeight()));
+//            if (hasSlider) {
+//                b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
+//            } else {
+//                b->setDimensions(getDimensions());
+//            }
+//        } else {
+//            b->disable();
+//            b->setDimensions(f32v2(0.0f));
+//        }
+//        i += 1.0f;
+//    }
+//
+//    // Drop list
+//    if (m_isDropped) {
+//        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
+//        f32v2 dims = getDimensions() * f32v2(1.0f, (f32)m_items.size());
+//        dims.y = vmath::min(dims.y, m_maxDropHeight);
+//        m_dropPanel.setDimensions(dims);
+//    } else {
+//        m_dropPanel.setDimensions(f32v2(0.0f));
+//    }
+//    
+//    vui::Widget::updatePosition();
+//}
 
 void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
@@ -97,7 +97,7 @@ void vui::ComboBox::addItem(const nString& item) {
     b->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
     updateDropButton(b);
     b->setDimensions(m_dimensions);
-    updatePosition();
+    //updatePosition();
 }
 
 bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
@@ -155,11 +155,11 @@ const nString& vui::ComboBox::getItem(int index) const {
     return m_items.at(index);
 }
 
-void vui::ComboBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    Widget::setDimensions(dimensions, update);
-    m_mainButton.setDimensions(dimensions);
-    updatePosition();
-}
+//void vui::ComboBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+//    Widget::setDimensions(dimensions, update);
+//    m_mainButton.setDimensions(dimensions);
+//    updatePosition();
+//}
 
 void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
     m_mainButton.setFont(font);
@@ -167,11 +167,11 @@ void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
 }
 
 // TODO(Matthew): Probably don't want to be updating position like this.
-void vui::ComboBox::setHeight(f32 height, bool update /*= true*/) {
-    m_mainButton.setHeight(height, update);
-    Widget::setHeight(height);
-    updatePosition();
-}
+//void vui::ComboBox::setHeight(f32 height, bool update /*= true*/) {
+//    m_mainButton.setHeight(height, update);
+//    Widget::setHeight(height);
+//    updatePosition();
+//}
 
 void vui::ComboBox::setTexture(VGTexture texture) {
     m_mainButton.setTexture(texture);
@@ -186,11 +186,11 @@ void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
 }
 
 // TODO(Matthew): Probably don't want to be updating position like this.
-void vui::ComboBox::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    m_mainButton.setWidth(width);
-    updatePosition();
-}
+//void vui::ComboBox::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    m_mainButton.setWidth(width);
+//    updatePosition();
+//}
 
 void vui::ComboBox::setBackColor(const color4& color) {
     m_mainButton.setBackColor(color);
@@ -232,7 +232,7 @@ void vui::ComboBox::setText(const nString& text) {
 
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_maxDropHeight = maxDropHeight;
-    updatePosition();
+    //updatePosition();
 }
 
 void vui::ComboBox::updateDropButton(vui::Button* b) {
@@ -298,11 +298,11 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
         MouseUp(e);
         if (!m_isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
-            updatePosition();
+            //updatePosition();
         }
     } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
-        updatePosition();
+        //updatePosition();
     }
     m_isClicking = false;
 }
@@ -319,5 +319,5 @@ void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent& e) {
 void vui::ComboBox::onMainButtonClick(Sender s, const MouseButtonEvent& e) {
     MouseClick(e);
     m_isDropped = !m_isDropped;
-    updatePosition();
+    //updatePosition();
 }

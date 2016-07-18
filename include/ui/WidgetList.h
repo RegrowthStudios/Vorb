@@ -67,7 +67,7 @@ namespace vorb {
             virtual void dispose() override;
 
             /*!@brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            //virtual void updatePosition() override;
 
             /*! @brief Adds a Widget to the combo box
             *
@@ -102,7 +102,7 @@ namespace vorb {
             virtual void addItems(const std::vector <Widget*>& widgetsToAdd);
 
             /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() override {};
+            //virtual void updateDrawableSpatialState() override {};
    
             /************************************************************************/
             /* Getters                                                              */
@@ -117,9 +117,9 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
-            virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setWidth(f32 width, bool update = true) override;
+            //virtual void setDimensions(const f32v2& dimensions) override;
+            //virtual void setHeight(f32 height) override;
+            //virtual void setWidth(f32 width) override;
             virtual void setTexture(VGTexture texture);
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);

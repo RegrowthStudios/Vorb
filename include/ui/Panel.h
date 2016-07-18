@@ -80,10 +80,10 @@ namespace vorb {
             bool addWidget(Widget* child);
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            //virtual void updatePosition() override;
 
             /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() override {};
+            //virtual void updateDrawableSpatialState() override {};
 
             /************************************************************************/
             /* Getters                                                              */
@@ -99,12 +99,12 @@ namespace vorb {
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
             virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
-            virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setPosition(const f32v2& position, bool update = true) override;
-            virtual void setX(f32 x, bool update = true) override;
-            virtual void setY(f32 y, bool update = true) override;
+            //virtual void setDimensions(const f32v2& dimensions) override;
+            //virtual void setHeight(f32 height) override;
+            //virtual void setWidth(f32 width) override;
+            //virtual void setPosition(const f32v2& position) override;
+            //virtual void setX(f32 x) override;
+            //virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);

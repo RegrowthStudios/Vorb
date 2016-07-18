@@ -45,29 +45,34 @@ namespace vorb {
             CLIPPING                    = 0x00000001,
             POSITION                    = 0x00000002,
             DIMENSIONS                  = 0x00000004,
-            MIN_SIZE                    = 0x00000008 | DIMENSIONS | CLIPPING,
-            MAX_SIZE                    = 0x00000010 | DIMENSIONS | CLIPPING,
-            RAW_POSITION                = 0x00000020,
-            RAW_DIMENSIONS              = 0x00000040,
-            RAW_MIN_SIZE                = 0x00000080,
-            RAW_MAX_SIZE                = 0x00000100,
-            DOCKING_STYLE               = 0x00000200 | DIMENSIONS | POSITION | CLIPPING,
-            DOCKING_SIZE                = 0x00000400 | DIMENSIONS | POSITION | CLIPPING,
-            RAW_DOCKING_SIZE            = 0x00000800,
-            TRANSITION_POSITION         = 0x00001000,
-            TRANSITION_DIMENSIONS       = 0x00002000,
-            TRANSITION_MIN_SIZE         = 0x00004000,
-            TRANSITION_MAX_SIZE         = 0x00008000,
-            TRANSITION_DOCKING          = 0x00010000,
-            RAW_TRANSITION_POSITION     = 0x00020000,
-            RAW_TRANSITION_DIMENSIONS   = 0x00040000,
-            RAW_TRANSITION_MIN_SIZE     = 0x00080000,
-            RAW_TRANSITION_MAX_SIZE     = 0x00100000,
-            DRAWABLE_ORDER              = 0x00200000,
+            TEXT                        = 0x00000008,
+            SPATIAL                     = POSITION | DIMENSIONS,
+            DRAWABLE                    = CLIPPING | SPATIAL,
+            MIN_SIZE                    = 0x00000010,
+            MAX_SIZE                    = 0x00000020,
+            SIZE_LIMITS                 = MIN_SIZE | MAX_SIZE,
+            RAW_POSITION                = 0x00000040,
+            RAW_DIMENSIONS              = 0x00000080,
+            RAW_MIN_SIZE                = 0x00000100,
+            RAW_MAX_SIZE                = 0x00000200,
+            DOCKING_STYLE               = 0x00000400,
+            DOCKING_SIZE                = 0x00000800,
+            DOCKING                     = DOCKING_STYLE | DOCKING_SIZE,
+            RAW_DOCKING_SIZE            = 0x00001000,
+            TRANSITION_POSITION         = 0x00002000,
+            TRANSITION_DIMENSIONS       = 0x00004000,
+            TRANSITION_MIN_SIZE         = 0x00008000,
+            TRANSITION_MAX_SIZE         = 0x00010000,
+            TRANSITION_DOCKING          = 0x00020000,
+            RAW_TRANSITION_POSITION     = 0x00040000,
+            RAW_TRANSITION_DIMENSIONS   = 0x00080000,
+            RAW_TRANSITION_MIN_SIZE     = 0x00100000,
+            RAW_TRANSITION_MAX_SIZE     = 0x00200000,
+            RAW_TRANSITION_DOCKING      = 0x00400000,
+            DRAWABLE_ORDER              = 0x00800000,
             ALL                         = CLIPPING | POSITION | RAW_POSITION | DIMENSIONS | RAW_DIMENSIONS | MIN_SIZE | RAW_MIN_SIZE | MAX_SIZE | RAW_MAX_SIZE
                                             | DOCKING_STYLE | DOCKING_SIZE | TRANSITION_POSITION | TRANSITION_DIMENSIONS | TRANSITION_MIN_SIZE | TRANSITION_MAX_SIZE 
-                                            | TRANSITION_DOCKING | DRAWABLE_ORDER,
-            SPATIAL                     = CLIPPING | POSITION | DIMENSIONS | MIN_SIZE | MAX_SIZE
+                                            | TRANSITION_DOCKING | DRAWABLE_ORDER
         };
 
         //! Bitfield of container styling flags
@@ -233,7 +238,6 @@ namespace vorb {
 
             /*! @brief Adds an update flag to the pending updates for this element. */
             void applyUpdateFlag(ui32 flag) { m_pendingUpdates |= flag; }
-
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
@@ -265,21 +269,13 @@ namespace vorb {
 
             /*! @brief Updates data affected by a change in clipping. */
             virtual void updateClipping();
-            ///*! @brief Updates data affected by a change in position. */
-            //virtual void updatePosition() = 0;
-            ///*! @brief Updates data affected by a change in target position. */
-            //virtual void updateTargetPosition() = 0;
-            ///*! @brief Updates data affected by a change in dimensions. */
-            //virtual void updateDimensions() = 0;
-            ///*! @brief Updates data affected by a change in target dimensions. */
-            //virtual void updateTargetDimensions() = 0;
 
             // TODO(Matthew): Should be procedures?
             /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect() = 0;
 
             /*! @brief Adds an update flag to the pending updates for this element's children. */
-            void applyUpdateFlagToChildren(ui32 flag) { for (auto& w : m_widgets.get_container()) w->applyUpdateFlag(flag); }
+            void applyUpdateFlagToChildren(ui32 flag);
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

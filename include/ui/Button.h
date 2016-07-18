@@ -71,13 +71,13 @@ namespace vorb {
             virtual void addDrawables(UIRenderer* renderer) override;
 
             /*! @brief Updates all drawable spatial states. */
-            virtual void updateDrawableSpatialState() override;
+            //virtual void updateDrawableSpatialState() override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
+            //virtual const vorb::graphics::SpriteFont* getFont() const { return m_drawableText.getFont(); }
             virtual const color4& getBackColor() const { return m_backColor1; }
             virtual const color4& getBackHoverColor() const { return m_backHoverColor1; }
             virtual const color4& getTextColor() const { return m_textColor; }
@@ -89,35 +89,25 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions, bool update = true) override;
-            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height, bool update = true) override;
-            virtual void setPosition(const f32v2& position, bool update = true) override;
+            //virtual void setFont(const vorb::graphics::SpriteFont* font) override;
             virtual void setTexture(VGTexture texture);
-            virtual void setWidth(f32 width, bool update = true) override;
-            virtual void setX(f32 x, bool update = true) override;
-            virtual void setY(f32 y, bool update = true) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setBackHoverColor(const color4& color);
             virtual void setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
-            virtual void setText(const nString& text);
+            virtual void setText(const nString& text) { m_drawableText.setText(text); m_pendingUpdates |= UpdateFlag::TEXT; }
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
 
         protected:
-            /*! @brief Updates the position of the button. */
-            virtual void updatePosition() override;
-            /*! @brief Updates the dimensions of the button. */
-            virtual void updateDimensions() override;
-            /*! @brief Computes the clipping rectangle of the button. */
-            virtual void computeClipRect() override;
+            /*! @brief Recalculates the drawables of this Button. */
+            virtual void recalculateDrawables();
+            /*! @brief Recalculates the text state of this Button.*/
+            virtual void recalculateText();
 
             virtual void updateColor();
-            virtual void updateTextPosition();
             virtual void refreshDrawables() override;
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;

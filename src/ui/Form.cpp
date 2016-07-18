@@ -24,9 +24,8 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWi
 }
 
 void vui::Form::update(f32 dt /*= 0.0f*/) {
-    if (m_pendingUpdates & UpdateFlag::CLIPPING == UpdateFlag::CLIPPING) {
+    if ((m_pendingUpdates & UpdateFlag::CLIPPING) == UpdateFlag::CLIPPING)
         updateClipping();
-    }
 
     if (!m_isEnabled) return;
     for (auto& w : m_widgets) {
@@ -48,6 +47,10 @@ void vui::Form::draw() {
 void vui::Form::dispose() {
     IWidgetContainer::dispose();
     m_renderer.dispose();
+}
+
+bool vui::Form::addWidget(Widget* child) {
+    return IWidgetContainer::addWidget(child, this);
 }
 
 //void vui::Form::updateDrawableOrderState() {

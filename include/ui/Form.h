@@ -63,6 +63,9 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
+            /*! @brief Adds a Widget to the Form. */
+            virtual bool addWidget(Widget* child);
+
             ///*! @brief Recalculates order of drawables based on Z-index. */
             //virtual void updateDrawableOrderState();
 

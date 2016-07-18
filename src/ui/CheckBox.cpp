@@ -50,15 +50,15 @@ void vui::CheckBox::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 }
 
-void vui::CheckBox::updatePosition() {
-    Widget::updatePosition();
-
-    updateTextPosition();
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    m_drawableText.setClipRect(m_clipRect);
-}
+//void vui::CheckBox::updatePosition() {
+//    Widget::updatePosition();
+//
+//    updateTextPosition();
+//    m_drawableRect.setPosition(getPosition());
+//    m_drawableRect.setDimensions(getDimensions());
+//    m_drawableRect.setClipRect(m_clipRect);
+//    m_drawableText.setClipRect(m_clipRect);
+//}
 
 void vui::CheckBox::check() {
     if (!m_isChecked) {
@@ -82,28 +82,28 @@ void vui::CheckBox::toggleChecked() {
     refreshDrawables();
 }
 
-void vui::CheckBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    Widget::setDimensions(dimensions, update);
-    m_drawableRect.setDimensions(dimensions);
-    updateTextPosition();
-}
+//void vui::CheckBox::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+//    Widget::setDimensions(dimensions, update);
+//    m_drawableRect.setDimensions(dimensions);
+//    updateTextPosition();
+//}
 
 void vui::CheckBox::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
     refreshDrawables();
 }
 
-void vui::CheckBox::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    m_drawableRect.setHeight(height);
-    updateTextPosition();
-}
+//void vui::CheckBox::setHeight(f32 height, bool update /*= true*/) {
+//    Widget::setHeight(height, update);
+//    m_drawableRect.setHeight(height);
+//    updateTextPosition();
+//}
 
-void vui::CheckBox::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    m_drawableRect.setPosition(position);
-    updateTextPosition();
-}
+//void vui::CheckBox::setPosition(const f32v2& position, bool update /*= true*/) {
+//    Widget::setPosition(position, update);
+//    m_drawableRect.setPosition(position);
+//    updateTextPosition();
+//}
 
 void vui::CheckBox::setCheckedTexture(VGTexture texture) {
     m_checkedTexture = texture;
@@ -115,23 +115,23 @@ void vui::CheckBox::setUncheckedTexture(VGTexture texture) {
     refreshDrawables();
 }
 
-void vui::CheckBox::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    m_drawableRect.setWidth(width);
-    updateTextPosition();
-}
+//void vui::CheckBox::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    m_drawableRect.setWidth(width);
+//    updateTextPosition();
+//}
 
-void vui::CheckBox::setX(f32 x, bool update /*= true*/) {
-    Widget::setX(x, update);
-    m_drawableRect.setX(x);
-    updateTextPosition();
-}
+//void vui::CheckBox::setX(f32 x, bool update /*= true*/) {
+//    Widget::setX(x, update);
+//    m_drawableRect.setX(x);
+//    updateTextPosition();
+//}
 
-void vui::CheckBox::setY(f32 y, bool update /*= true*/) {
-    Widget::setY(y, update);
-    m_drawableRect.setX(y);
-    updateTextPosition();
-}
+//void vui::CheckBox::setY(f32 y, bool update /*= true*/) {
+//    Widget::setY(y, update);
+//    m_drawableRect.setX(y);
+//    updateTextPosition();
+//}
 
 void vui::CheckBox::setBoxColor(const color4& color) {
     m_boxColor = color;

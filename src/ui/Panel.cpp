@@ -58,36 +58,36 @@ bool vui::Panel::addWidget(Widget* child) {
     return rv;
 }
 
-void vui::Panel::updatePosition() {
-    f32v2 newPos = processRawValues(m_rawPosition);
-    m_relativePosition = newPos;
-
-    newPos += getWidgetAlignOffset();
-    m_position = newPos;
-
-    // Update relative dimensions
-    updateDimensions();
-
-    computeClipRect();
-    
-    // Use child offset for auto-scroll
-    m_position -= m_childOffset;
-    // Update child positions but skip sliders
-    for (size_t i = 2; i < m_widgets.size(); i++) {
-        m_widgets[i]->updatePositionState();
-    }
-    m_position += m_childOffset;
-
-    if (m_autoScroll) {
-        m_sliders[0].updatePosition();
-        m_sliders[1].updatePosition();
-    }
-
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    refreshDrawables();
-}
+//void vui::Panel::updatePosition() {
+//    f32v2 newPos = processRawValues(m_rawPosition);
+//    m_relativePosition = newPos;
+//
+//    newPos += getWidgetAlignOffset();
+//    m_position = newPos;
+//
+//    // Update relative dimensions
+//    updateDimensions();
+//
+//    computeClipRect();
+//    
+//    // Use child offset for auto-scroll
+//    m_position -= m_childOffset;
+//    // Update child positions but skip sliders
+//    for (size_t i = 2; i < m_widgets.size(); i++) {
+//        m_widgets[i]->updatePositionState();
+//    }
+//    m_position += m_childOffset;
+//
+//    if (m_autoScroll) {
+//        m_sliders[0].updatePosition();
+//        m_sliders[1].updatePosition();
+//    }
+//
+//    m_drawableRect.setPosition(getPosition());
+//    m_drawableRect.setDimensions(getDimensions());
+//    m_drawableRect.setClipRect(m_clipRect);
+//    refreshDrawables();
+//}
 
 void vui::Panel::setTexture(VGTexture texture) {
     m_drawableRect.setTexture(texture);
@@ -102,47 +102,47 @@ void vui::Panel::setDestRect(const f32v4& destRect) {
     refreshDrawables();
 }
 
-void vui::Panel::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    Widget::setDimensions(dimensions, update);
-    m_drawableRect.setDimensions(dimensions);
-    updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+//    Widget::setDimensions(dimensions, update);
+//    m_drawableRect.setDimensions(dimensions);
+//    updateSliders();
+//    refreshDrawables();
+//}
 
-void vui::Panel::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    m_drawableRect.setHeight(height);
-    updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setHeight(f32 height, bool update /*= true*/) {
+//    Widget::setHeight(height, update);
+//    m_drawableRect.setHeight(height);
+//    updateSliders();
+//    refreshDrawables();
+//}
 
-void vui::Panel::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    m_drawableRect.setWidth(width);
-    //updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    m_drawableRect.setWidth(width);
+//    //updateSliders();
+//    refreshDrawables();
+//}
 
-void vui::Panel::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    m_drawableRect.setPosition(m_position);
-    updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setPosition(const f32v2& position, bool update /*= true*/) {
+//    Widget::setPosition(position, update);
+//    m_drawableRect.setPosition(m_position);
+//    updateSliders();
+//    refreshDrawables();
+//}
 
-void vui::Panel::setX(f32 x, bool update /*= true*/) {
-    Widget::setX(x, update);
-    m_drawableRect.setX(m_position.x);
-    updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setX(f32 x, bool update /*= true*/) {
+//    Widget::setX(x, update);
+//    m_drawableRect.setX(m_position.x);
+//    updateSliders();
+//    refreshDrawables();
+//}
 
-void vui::Panel::setY(f32 y, bool update /*= true*/) {
-    Widget::setY(y, update);
-    m_drawableRect.setX(m_position.y);
-    updateSliders();
-    refreshDrawables();
-}
+//void vui::Panel::setY(f32 y, bool update /*= true*/) {
+//    Widget::setY(y, update);
+//    m_drawableRect.setX(m_position.y);
+//    updateSliders();
+//    refreshDrawables();
+//}
 
 void vui::Panel::setColor(const color4& color) {
     m_backColor = color;
@@ -158,7 +158,7 @@ void vui::Panel::setAutoScroll(bool autoScroll) {
     if (autoScroll != m_autoScroll) {
         m_autoScroll = autoScroll;
         updateSliders();
-        updatePosition();
+        //updatePosition();
     }
 }
 
@@ -299,5 +299,5 @@ void vui::Panel::onSliderValueChange(Sender s, int v) {
             m_childOffset.y = minY + range * r;
         }
     }
-    updatePosition();
+    //updatePosition();
 }

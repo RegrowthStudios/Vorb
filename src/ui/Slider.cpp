@@ -13,7 +13,7 @@ vui::Slider::Slider() : Widget() {
 vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
     m_name = name;
     setDestRect(destRect); 
-    updatePosition();
+    //updatePosition();
     m_drawableBar.setDimensions(getDimensions());
     m_drawableBar.setPosition(getPosition());
 }
@@ -48,36 +48,36 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
 }
 
 // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
-void vui::Slider::updatePosition() {
-    Widget::updatePosition();
-
-    m_drawableBar.setPosition(m_position);
-    m_drawableBar.setDimensions(m_dimensions);
-    m_drawableBar.setClipRect(m_clipRect);
-    m_drawableSlide.setClipRect(m_clipRect);
-
-    updateSlidePosition();
-}
+//void vui::Slider::updatePosition() {
+//    Widget::updatePosition();
+//
+//    m_drawableBar.setPosition(m_position);
+//    m_drawableBar.setDimensions(m_dimensions);
+//    m_drawableBar.setClipRect(m_clipRect);
+//    m_drawableSlide.setClipRect(m_clipRect);
+//
+//    updateSlidePosition();
+//}
 
 void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
     m_drawableSlide.setDimensions(dimensions);
-    updatePosition();
+    //updatePosition();
 }
 
-void vui::Slider::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
-}
+//void vui::Slider::setHeight(f32 height, bool update /*= true*/) {
+//    Widget::setHeight(height, update);
+//    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
+//}
 
-void vui::Slider::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
-}
+//void vui::Slider::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
+//}
 
-void vui::Slider::setPosition(const f32v2& position, bool update /*= true*/) {
-    Widget::setPosition(position, update);
-    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
-}
+//void vui::Slider::setPosition(const f32v2& position, bool update /*= true*/) {
+//    Widget::setPosition(position, update);
+//    updatePosition(); // TODO(Matthew): Slider's implementation of updatePosition needs to be fixed.
+//}
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
     m_drawableSlide.setTexture(texture);
@@ -108,7 +108,7 @@ void vui::Slider::setValue(int value) {
     int old = m_value;
     m_value = vmath::clamp(value, m_min, m_max);
     if (old != m_value) ValueChange(m_value);
-    updatePosition();
+    //updatePosition();
 }
 
 void vui::Slider::setRange(int min, int max) {
@@ -130,7 +130,7 @@ void vui::Slider::setMax(int max) {
 void vui::Slider::setIsVertical(bool isVertical) {
     if (isVertical != m_isVertical) {
         m_isVertical = isVertical;
-        updatePosition();
+        //updatePosition();
     }
 }
 

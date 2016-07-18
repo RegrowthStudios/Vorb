@@ -9,7 +9,7 @@ vui::WidgetList::WidgetList(const nString& name, const f32v4& destRect /*= f32v4
     m_name = name;
     setDestRect(destRect);
     m_panel.setDimensions(m_dimensions);
-    updatePosition();
+    //updatePosition();
 }
 
 vui::WidgetList::WidgetList(Widget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
@@ -29,26 +29,26 @@ void vui::WidgetList::dispose() {
     std::vector<Widget*>().swap(m_listedWidgets);
 }
 
-void vui::WidgetList::updatePosition() {
-    f32 totalHeight = 0.0f;
-    for (size_t i = 0; i < m_listedWidgets.size(); i++) {
-        m_listedWidgets[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
-        totalHeight += m_listedWidgets[i]->getHeight();
-    }
-    vui::Widget::updatePosition();
-}
+//void vui::WidgetList::updatePosition() {
+//    f32 totalHeight = 0.0f;
+//    for (size_t i = 0; i < m_listedWidgets.size(); i++) {
+//        m_listedWidgets[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
+//        totalHeight += m_listedWidgets[i]->getHeight();
+//    }
+//    vui::Widget::updatePosition();
+//}
 
 void vui::WidgetList::addItem(Widget* w) {
     m_panel.addWidget(w);
     m_listedWidgets.push_back(w);
-    updatePosition();
+    //updatePosition();
 }
 
 bool vui::WidgetList::addItemAtIndex(int index, Widget* w) {
     if (index > (int)m_listedWidgets.size()) return false;
     m_listedWidgets.insert(m_listedWidgets.begin() + index, w);
     m_panel.removeWidget(w);
-    updatePosition();
+    //updatePosition();
     return true;
 }
 
@@ -58,7 +58,7 @@ bool vui::WidgetList::removeItem(Widget* w) {
             w->removeDrawables();
             m_listedWidgets.erase(it);
             m_panel.removeWidget(w);
-            updatePosition();
+            //updatePosition();
             return true;
         }
     }
@@ -71,7 +71,7 @@ bool vui::WidgetList::removeItem(int index) {
     (*it)->removeDrawables();
     m_panel.removeWidget(*it);
     m_listedWidgets.erase(it);
-    updatePosition();
+    //updatePosition();
     return true;
 }
 
@@ -80,28 +80,28 @@ void vui::WidgetList::addItems(const std::vector <Widget*>& widgetsToAdd) {
         m_panel.addWidget(it);
         m_listedWidgets.push_back(it);
     }
-    updatePosition();
+    //updatePosition();
 }
 
-void vui::WidgetList::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
-    Widget::setDimensions(dimensions, update);
-    m_panel.setDimensions(dimensions);
-    updatePosition();
-}
+//void vui::WidgetList::setDimensions(const f32v2& dimensions, bool update /*= true*/) {
+//    Widget::setDimensions(dimensions, update);
+//    m_panel.setDimensions(dimensions);
+//    updatePosition();
+//}
 
-// TODO(Matthew): Probably don't want to be updating position this way...
-void vui::WidgetList::setHeight(f32 height, bool update /*= true*/) {
-    Widget::setHeight(height, update);
-    m_panel.setHeight(height);
-    updatePosition();
-}
+//// TODO(Matthew): Probably don't want to be updating position this way...
+//void vui::WidgetList::setHeight(f32 height, bool update /*= true*/) {
+//    Widget::setHeight(height, update);
+//    m_panel.setHeight(height);
+//    updatePosition();
+//}
 
-// TODO(Matthew): Probably don't want to be updating position this way...
-void vui::WidgetList::setWidth(f32 width, bool update /*= true*/) {
-    Widget::setWidth(width, update);
-    m_panel.setWidth(width);
-    updatePosition();
-}
+//// TODO(Matthew): Probably don't want to be updating position this way...
+//void vui::WidgetList::setWidth(f32 width, bool update /*= true*/) {
+//    Widget::setWidth(width, update);
+//    m_panel.setWidth(width);
+//    updatePosition();
+//}
 
 void vui::WidgetList::setTexture(VGTexture texture) {
     m_panel.setTexture(texture);
@@ -117,7 +117,7 @@ void vui::WidgetList::setBackHoverColor(const color4& color) {
 
 void vui::WidgetList::setSpacing(f32 spacing) {
     m_spacing = spacing;
-    updatePosition();
+    //updatePosition();
 }
 
 void vui::WidgetList::setAutoScroll(bool autoScroll) {

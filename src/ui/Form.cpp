@@ -24,17 +24,12 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const GameWi
 }
 
 void vui::Form::update(f32 dt /*= 0.0f*/) {
+    if (!m_isEnabled) return;
+
     if ((m_pendingUpdates & UpdateFlag::CLIPPING) == UpdateFlag::CLIPPING)
         updateClipping();
 
-    if (!m_isEnabled) return;
     for (auto& w : m_widgets) {
-        // Check if we need to reload the drawables
-        if (w->needsDrawableReload()) {
-            w->removeDrawables();
-            w->setNeedsDrawableReload(false);
-            w->addDrawables(&m_renderer);
-        }
         w->update(dt);
     }
 }
@@ -52,15 +47,6 @@ void vui::Form::dispose() {
 bool vui::Form::addWidget(Widget* child) {
     return IWidgetContainer::addWidget(child, this);
 }
-
-//void vui::Form::updateDrawableOrderState() {
-//    for (auto& it = m_widgets.begin(); it != m_widgets.end(); ++it) {
-//        (*it)->removeDrawables();
-//        (*it)->setNeedsDrawableReload(false);
-//        (*it)->addDrawables(&m_renderer);
-//        (*it)->updateDrawableOrderState();
-//    }
-//}
 
 void vui::Form::computeClipRect() {
     m_clipRect = f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX);

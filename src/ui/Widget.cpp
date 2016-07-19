@@ -143,8 +143,9 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
     if ((m_pendingUpdates & UpdateFlag::DRAWABLE) > 0)
         recalculateDrawables();
 
-    if ((m_pendingUpdates & UpdateFlag::TEXT) == UpdateFlag::TEXT)
-        recalculateText();
+    // TODO(Matthew): All drawable work should occur due to DRAWABLE flag.
+    //if ((m_pendingUpdates & UpdateFlag::TEXT) == UpdateFlag::TEXT)
+    //    recalculateText();
 
     if ((m_pendingUpdates & UpdateFlag::DRAWABLE_ORDER) == UpdateFlag::DRAWABLE_ORDER)
         recalculateDrawableOrder();
@@ -152,6 +153,8 @@ void vui::Widget::update(f32 dt /*= 0.0f*/) {
     for (auto& w : m_widgets.get_container()) {
         w->update(dt);
     }
+
+    m_pendingUpdates = 0;
 }
 
 const vui::IWidgetContainer* vui::Widget::getFirstPositionedParent() const {
@@ -524,13 +527,10 @@ void vui::Widget::recalculateDocking() {
 }
 
 void vui::Widget::recalculateDrawableOrder() {
-    // TODO(Matthew): Shouldn't have to call sort here (call it on separate event).
+    // TODO(Matthew): Shouldn't have to call sort here if only one child's Z-index has changed.
     m_widgets.sort();
 
-    for (auto& w : m_widgets.get_container()) {
-        w->removeDrawables();
-        w->setNeedsDrawableReload(false);
-        w->addDrawables(m_renderer);
+    for (auto& w : m_widgets) {
         w->applyUpdateFlag(UpdateFlag::DRAWABLE_ORDER); // TODO(Matthew): Change method for UI rendering to 
                                                         //                better accommodate z-indexing.
                                                         //                (I.e. so this is unnecessary.)
@@ -539,6 +539,18 @@ void vui::Widget::recalculateDrawableOrder() {
 
 inline void vui::Widget::onSpatialUpdate() {
     m_pendingUpdates |= UpdateFlag::CLIPPING;
+}
+
+void vui::Widget::refreshDrawables() {
+    removeDrawables();
+    m_pendingUpdates ^= UpdateFlag::DRAWABLE_ORDER;
+    addDrawables(m_renderer);
+
+    for (auto& w : m_widgets) {
+        w->applyUpdateFlag(UpdateFlag::DRAWABLE_ORDER); // TODO(Matthew): Change method for UI rendering to 
+        //                better accommodate z-indexing.
+        //                (I.e. so this is unnecessary.)
+    }
 }
 
 void vui::Widget::computeClipRect() {

@@ -66,28 +66,15 @@ namespace vorb {
             /*! @brief Adds a Widget to the Form. */
             virtual bool addWidget(Widget* child);
 
-            ///*! @brief Recalculates order of drawables based on Z-index. */
-            //virtual void updateDrawableOrderState();
-
             /*! @brief Registers a custom callback with a widget event.
              * Override this in custom forms to set up callbacks
              * @param callbackName: Name of the custom callback 
              * @return true if callbackName was the name of a function
              */
             virtual bool registerCallback(Widget* w, nString callback) { return false; }
-
         protected:
             /*! @brief Computes clipping for this widget container. */
-            virtual void computeClipRect();
-
-            ///* Updates the position of the Form. */
-            //virtual void updatePosition() override {}
-            ///*! @brief Updates the target position data. */
-            //virtual void updateTargetPosition() override {};
-            ///* Updates the dimensions of the Form. */
-            //virtual void updateDimensions() override {}
-            ///*! @brief Updates the target dimensions data. */
-            //virtual void updateTargetDimensions() override {};
+            virtual void computeClipRect() override;
 
             const GameWindow* m_viewport;
             UIRenderer m_renderer; ///< The UI Renderer.

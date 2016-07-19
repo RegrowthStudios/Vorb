@@ -184,7 +184,7 @@ namespace vorb {
             *
             * @param dt: The TimeStep
             */
-            virtual void update(f32 dt = 1.0f);  // TODO(Matthew): Implement animation using tweening funcs.
+            virtual void update(f32 dt = 0.0f);
 
             /************************************************************************/
             /* Getters                                                              */
@@ -334,10 +334,10 @@ namespace vorb {
             virtual void onDockingStyleUpdate();
 
             /*! @brief Refreshes drawables. */
-            virtual void refreshDrawables() = 0;
+            virtual void refreshDrawables();
 
             /*! @brief Computes clipping for this widget container. */
-            virtual void computeClipRect();
+            virtual void computeClipRect() override;
 
             /*! @brief Processes a set of raw values and converts them to processed values that can be used for basic calculations. */
             virtual f32v2 processRawValues(const Length2& rawValues);

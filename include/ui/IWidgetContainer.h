@@ -72,7 +72,8 @@ namespace vorb {
             DRAWABLE_ORDER              = 0x00800000,
             ALL                         = CLIPPING | POSITION | RAW_POSITION | DIMENSIONS | RAW_DIMENSIONS | MIN_SIZE | RAW_MIN_SIZE | MAX_SIZE | RAW_MAX_SIZE
                                             | DOCKING_STYLE | DOCKING_SIZE | TRANSITION_POSITION | TRANSITION_DIMENSIONS | TRANSITION_MIN_SIZE | TRANSITION_MAX_SIZE 
-                                            | TRANSITION_DOCKING | DRAWABLE_ORDER
+                                            | TRANSITION_DOCKING | DRAWABLE_ORDER,
+            DRAW_STATE                  = DRAWABLE | DRAWABLE_ORDER
         };
 
         //! Bitfield of container styling flags
@@ -270,7 +271,6 @@ namespace vorb {
             /*! @brief Updates data affected by a change in clipping. */
             virtual void updateClipping();
 
-            // TODO(Matthew): Should be procedures?
             /*! @brief Computes clipping for this widget container. */
             virtual void computeClipRect() = 0;
 

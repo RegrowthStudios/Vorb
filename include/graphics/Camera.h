@@ -82,7 +82,7 @@ namespace graphics {
         void setFocalPoint   (const f64v3& focalPoint) { m_focalPoint = focalPoint; m_viewChanged = true; }
         void setPosition     (const f64v3& position)   { m_focalPoint = m_position = position; m_focalLength = 0;  m_viewChanged = true; }
         void setDirection    (const f32v3& direction)  { m_direction = direction; m_viewChanged = true; }
-        void setRight        (const f32v3& right)      { m_right = right; m_viewChanged = true; }
+        void setLeft         (const f32v3& left)      { m_left = left; m_viewChanged = true; }
         void setUp           (const f32v3& up)         { m_up = up; m_viewChanged = true; }
         void setClippingPlane(f32 zNear, f32 zFar)     { m_zNear = zNear; m_zFar = zFar; m_projectionChanged = true; }
         void setFieldOfView  (f32 fieldOfView)         { m_fieldOfView = fieldOfView; m_projectionChanged = true; }
@@ -98,7 +98,7 @@ namespace graphics {
         const f64&   getMaxFocalLength() const { return m_maxFocalLength; }
 
         const f32v3& getDirection() const { return m_direction; }
-        const f32v3& getRight    () const { return m_right;     }
+        const f32v3& getLeft     () const { return m_left;     }
         const f32v3& getUp       () const { return m_up;        }
 
         const f32m4& getProjectionMatrix    () const { return m_projectionMatrix;     }
@@ -126,7 +126,7 @@ namespace graphics {
         f32 m_aspectRatio = 0.0f;
 
         f32v3 m_direction = f32v3(1.0f, 0.0f, 0.0f);
-        f32v3 m_right     = f32v3(0.0f, 0.0f, 1.0f);
+        f32v3 m_left     = f32v3(0.0f, 0.0f, 1.0f);
         f32v3 m_up        = f32v3(0.0f, 1.0f, 0.0f);
 
         f32m4 m_projectionMatrix;

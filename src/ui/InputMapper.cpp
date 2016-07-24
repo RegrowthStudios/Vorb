@@ -164,31 +164,30 @@ void vui::InputMapper::setKeyToDefault(const InputID id) {
 }
 
 void vui::InputMapper::onMouseButtonDown(Sender, const vui::MouseButtonEvent& e) {
-    ui32 code = VKEY_HIGHEST_VALUE + (ui32)e.button;
+    // These must map 1:1
+    ui32 code = VKEY_MOUSE_UNKNOWN + (ui32)e.button;
     if (!m_keyStates[code]) {
         m_keyStates[code] = true;
-        // TODO(Ben): input mapping for mouse
-        //auto& it = m_keyCodeMap.find((VirtualKey)e.keyCode);
-        //if (it != m_keyCodeMap.end()) {
-        //    // Call all events mapped to that virtual key
-        //    for (auto& id : it->second) {
-        //        m_inputs[id].downEvent(e.keyCode);
-        //    }
-        //}
+        auto& it = m_keyCodeMap.find((VirtualKey)code);
+        if (it != m_keyCodeMap.end()) {
+            // Call all events mapped to that virtual key
+            for (auto& id : it->second) {
+                m_inputs[id].downEvent(code);
+            }
+        }
     }
 }
 
 void vui::InputMapper::onMouseButtonUp(Sender, const vui::MouseButtonEvent& e) {
-    ui32 code = VKEY_HIGHEST_VALUE + (ui32)e.button;
+    ui32 code = VKEY_MOUSE_UNKNOWN + (ui32)e.button;
     m_keyStates[code] = false;
-    // TODO(Ben): input mapping for mouse
-    //auto& it = m_keyCodeMap.find((VirtualKey)e.keyCode);
-    //if (it != m_keyCodeMap.end()) {
-    //    // Call all events mapped to that virtual key
-    //    for (auto& id : it->second) {
-    //        m_inputs[id].upEvent(e.keyCode);
-    //    }
-    //} 
+    auto& it = m_keyCodeMap.find((VirtualKey)code);
+    if (it != m_keyCodeMap.end()) {
+        // Call all events mapped to that virtual key
+        for (auto& id : it->second) {
+            m_inputs[id].downEvent(code);
+        }
+    }
 }
 
 void vui::InputMapper::onKeyDown(Sender, const vui::KeyEvent& e) {

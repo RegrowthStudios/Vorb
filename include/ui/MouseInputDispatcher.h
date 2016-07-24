@@ -37,7 +37,7 @@ namespace vorb {
 
         /// The known mouse buttons
         enum class MouseButton {
-            UNKNOWN, ///< An unknown mouse button
+            UNKNOWN = 0, ///< An unknown mouse button
             LEFT, ///< The left mouse button
             MIDDLE, ///< The middle mouse button
             RIGHT, ///< The right mouse button

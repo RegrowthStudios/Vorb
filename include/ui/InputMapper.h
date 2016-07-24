@@ -128,8 +128,7 @@ namespace ui {
         InputMap m_inputLookup; ///< A map of input names to input IDs for quick look up.
         std::unordered_map<VirtualKey, std::vector<InputID> > m_keyCodeMap; ///< Map of keycodes to active input
     
-        /// Assuming vui::MouseButton wont change...
-        bool m_keyStates[VKEY_HIGHEST_VALUE + (ui32)vui::MouseButton::X2]; ///< The state of the keys and mouse buttons this frame.
+        bool m_keyStates[VKEY_HIGHEST_VALUE]; ///< The state of the keys and mouse buttons this frame.
   
         bool m_receivingInput = false; ///< Tracks input reception state
         AutoDelegatePool m_inputHooks; ///< Stores input reception function hooks for deallocation

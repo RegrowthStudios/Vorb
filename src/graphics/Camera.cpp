@@ -47,7 +47,7 @@ void vg::Camera::offsetPosition(const f64v3& offset) {
 void vg::Camera::rotate(const f32q& rot) {
     m_direction = rot * m_direction;
     m_left      = rot * m_left;
-    m_up        = vmath::normalize(vmath::cross(m_left, m_direction));
+    m_up        = vmath::normalize(vmath::cross(m_direction, m_left));
 
     m_viewChanged = true;
 }
@@ -100,10 +100,10 @@ void vg::Camera::setOrientation(const f64q& orientation) {
 
 void vg::Camera::updateView() {
     // TODO(Ben): Allow camera relative view matrix.
-    m_viewMatrix = vmath::lookAt(f32v3(m_position), f32v3(m_position) + m_direction, -m_up);
+    m_viewMatrix = vmath::lookAt(f32v3(m_position), f32v3(m_position) + m_direction, m_up);
 }
 
 void vg::Camera::updateProjection() {
-    m_frustum.setCamInternals(m_fieldOfView, m_aspectRatio, m_zNear, m_zFar);
-    m_projectionMatrix = vmath::perspective(m_fieldOfView, m_aspectRatio, m_zNear, m_zFar);
+    m_frustum.setCamInternals(vmath::radians(m_fieldOfView), m_aspectRatio, m_zNear, m_zFar);
+    m_projectionMatrix = vmath::perspective(vmath::radians(m_fieldOfView), m_aspectRatio, m_zNear, m_zFar);
 }

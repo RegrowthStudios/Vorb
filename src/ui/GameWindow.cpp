@@ -444,6 +444,16 @@ void vui::GameWindow::setTitle(const cString title) const {
 #endif
 }
 
+void vui::GameWindow::setRelativeMouseMode(bool relative) const {
+#if defined(VORB_IMPL_UI_SDL)
+    SDL_SetRelativeMouseMode(static_cast<SDL_bool>(relative));
+#elif defined(VORB_IMPL_UI_GLFW)
+    // TODO
+#elif defined(VORB_IMPL_UI_SFML)
+    // TODO
+#endif
+}
+
 void vui::GameWindow::setPosition(int x, int y) {
 #if defined(VORB_IMPL_UI_SDL)
     SDL_SetWindowPosition((SDL_Window*)m_window, x, y);

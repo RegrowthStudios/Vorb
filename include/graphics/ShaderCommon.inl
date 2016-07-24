@@ -50,7 +50,7 @@ uniform sampler2D unSampler;
 out vec4 pColor;
 
 void main() {
-  pColor = texture(unSampler, fUV);
+  pColor = vec4(texture(unSampler, fUV).rgb, 1.0);
 })";
 
     const cString const COLOR_FRAG_SRC = R"(

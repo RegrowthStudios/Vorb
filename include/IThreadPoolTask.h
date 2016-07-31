@@ -26,31 +26,67 @@
 
 namespace vorb {
     namespace core {
-
+        /*!
+         * \class IThreadPoolTask
+         *
+         * \brief A task handled by the ThreadPool.
+         *
+         * \tparam T Data passed in for work.
+         */
         template<typename T>
         class IThreadPoolTask {
         public:
-            /// Constructor
-            /// \param taskId: Optional unique identifier for task type.
+            /*!
+             * \fn IThreadPoolTask::IThreadPoolTask(i32 taskId = -1)
+             *
+             * \brief Initializes the task with its type.
+             *
+             * \param taskId (Optional) Unique identifier for task type.
+             */
             IThreadPoolTask(i32 taskId = -1) :
                 m_taskId(taskId) {
                 /* Empty */
             }
+            /*!
+             * \fn virtual IThreadPoolTask::~IThreadPoolTask()
+             *
+             * \brief Destructor. Subclassed tasks probably want to perform a cleanup here.
+             */
+            virtual ~IThreadPoolTask() {
+                /* Empty */
+            }
 
-            virtual ~IThreadPoolTask() { /* Empty */ }
-
-            /// Executes the task
+            /*!
+             * \fn virtual void IThreadPoolTask::execute(T* workerData) = 0;
+             *
+             * \brief Executes the task.
+             *
+             * \param [in,out] workerData Data used for task operation.
+             */
             virtual void execute(T* workerData) = 0;
-
-            /// Last thing that runs. Can delete or recycle the task here if you want.
+            /*!
+             * \fn virtual void IThreadPoolTask::cleanup()
+             *
+             * \brief Last thing that runs.
+             *  
+             *  Can delete or recycle the task here if you want.
+             */
             virtual void cleanup() {};
-           
-            /// Getters
-            const i32& getTaskId() const { return m_taskId; }
 
-            volatile bool isFinished = false;
+            /*!
+             * \fn const i32& IThreadPoolTask::getTaskId() const
+             *
+             * \brief Get the unique type ID for this task.
+             *
+             * \return The task ID.
+             */
+            const i32& getTaskId() const {
+                return m_taskId;
+            }
+
+            volatile bool isFinished = false; ///< Flag that is true if this task is finished.
         protected:
-            i32 m_taskId;
+            i32 m_taskId; ///< The unique type identifier for this task.
         };
     }
 }

@@ -1,22 +1,12 @@
-# Compiler tools
-!IF "$(COMPILER)"=="MSVC"
-CC   = cl.exe
-CPP  = cl.exe
-LINK = link.exe
+include tools.mk
+
+include preprocessors.mk
+
+
+
+!IFNDEF VORB_BUILD_TARGET
+VORB_BUILD_TARGET=DEBUG
 !ELSEIF "$(COMPILER)"=="CLANG"
-!ERROR TODO(Cristian): Clang tools not supported yet
-!ELSEIF "$(COMPILER)"=="GNU"
-!ERROR TODO(Cristian): GNU tools not supported yet
-!ELSE
-!ERROR No good compiler specified - must be one of [MSVC]
-!ENDIF
-
-
-# Display the toolset to the user
-!MESSAGE Toolset:
-!MESSAGE CC   = $(CC)
-!MESSAGE CPP  = $(CPP)
-!MESSAGE LINK = $(LINK)
 
 
 # Determine the file system under which we are operating
@@ -56,6 +46,7 @@ vorb.lib: $(VORB_INT_DIR)\vorb.obj
 	!MESSAGE FOR THE LIB: $<
 	$(LINK) /OUT:vorb.lib $<
 	
+.PHONY : clean
 clean:
 	del main.obj
 	del vorb.lib
@@ -78,4 +69,16 @@ clean:
 # /D "_DEBUG"
 # /D "_CONSOLE"
 # /D "_UNICODE"
-# /D "UNICODE" /errorReport:prompt /WX- /Zc:forScope /RTC1 /Gd /Oy- /MDd /Fa"Debug\" /EHsc /nologo /Fo"Debug\" /Fp"Debug\ConsoleApplication1.pch"
+# /D "UNICODE"
+# /errorReport:prompt
+# /WX-
+# /Zc:forScope
+# /RTC1
+# /Gd
+# /Oy-
+# /MDd
+# /Fa"Debug\"
+# /EHsc
+# /nologo
+# /Fo"Debug\"
+# /Fp"Debug\ConsoleApplication1.pch"

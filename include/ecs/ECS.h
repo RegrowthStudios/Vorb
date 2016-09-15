@@ -49,15 +49,15 @@ namespace vorb {
 
             /// \return Set of entities for iteration
             const EntitySet& getEntities() const {
-                return _entities;
+                return m_entities;
             }
             /// \return Number of entities that are active
             size_t getActiveEntityCount() const {
-                return _genEntity.getActiveCount();
+                return m_genEntity.getActiveCount();
             }
             /// \return The dictionary of NamedComponents
             const ComponentSet& getComponents() const {
-                return _components;
+                return m_components;
             }
 
             /// \return The ID of a newly generated entity
@@ -118,12 +118,12 @@ namespace vorb {
             typedef std::pair<ComponentTableBase*, std::shared_ptr<Delegate<Sender, EntityID>>> ComponentSubscriber;
             typedef std::unordered_map<nString, ComponentSubscriber> ComponentSubscriberSet;
 
-            EntitySet _entities; ///< List of entities
+            EntitySet m_entities; ///< List of entities
             EntityID m_eidHighest = 0; ///< Highest generated entity ID
             BitTable m_entityComponents; ///< Truth table for components that an entity holds
 
-            vcore::IDGenerator<EntityID> _genEntity; ///< Unique ID generator for entities
-            ComponentSet _components; ///< List of component tables
+            vcore::IDGenerator<EntityID> m_genEntity; ///< Unique ID generator for entities
+            ComponentSet m_components; ///< List of component tables
             ComponentList m_componentList; ///< Component tables organized by their id
         };
     }

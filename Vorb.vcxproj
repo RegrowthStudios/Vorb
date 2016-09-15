@@ -166,6 +166,13 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+$(SolutionDir)DepsBuildCopy.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copies the dependencies to the lib folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -190,6 +197,13 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+$(SolutionDir)DepsBuildCopy.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copies the dependencies to the lib folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -220,6 +234,13 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+$(SolutionDir)DepsBuildCopy.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copies the dependencies to the lib folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
     <ClCompile>
@@ -310,6 +331,13 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+$(SolutionDir)DepsBuildCopy.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copies the dependencies to the lib folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="deps/src/sha256/sha256sum.c">

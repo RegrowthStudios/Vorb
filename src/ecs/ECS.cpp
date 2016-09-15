@@ -12,17 +12,15 @@ vecs::ECS::ECS() :
 
 vecs::EntityID vecs::ECS::addEntity() {
     // Generate a new entity
-    EntityID id = _genEntity.generate();
-    _entities.emplace(id);
+    EntityID id = m_genEntity.generate();
+    m_entities.emplace(id);
 
     // Check for bit-table insertion
     if (id > m_eidHighest) {
-        do {
-            m_eidHighest++;
-            m_entityComponents.addRow();
-        } while (id > m_eidHighest);
+        m_entityComponents.addRows(id - m_eidHighest);
+        m_eidHighest = id;
     } else {
-        // Erase previous entity's component values
+        // Erase previous entity's component values (why?)
         m_entityComponents.setRowFalse(id - 1);
     }
 
@@ -34,13 +32,12 @@ vecs::EntityID vecs::ECS::addEntity() {
 }
 bool vecs::ECS::deleteEntity(EntityID id) {
     // Check for a correct ID
-    if (id > m_eidHighest) return false;
-    auto entity = _entities.find(id);
-    if (entity == _entities.end()) return false;
+    auto entity = m_entities.find(id);
+    if (entity == m_entities.end()) return false;
 
     // Recycle the ID
-    _entities.erase(entity);
-    _genEntity.recycle(id);
+    m_entities.erase(entity);
+    m_genEntity.recycle(id);
 
     // Signal an entity must be destroyed
     onEntityRemoved(id);
@@ -58,9 +55,9 @@ bool vecs::ECS::deleteEntity(EntityID id) {
 vecs::TableID vecs::ECS::addComponentTable(nString name, vecs::ComponentTableBase* table) {
     TableID id = (TableID)m_componentList.size() + 1;
     table->m_id = id;
-    _components[name] = id;
+    m_components[name] = id;
 
-    m_entityComponents.addColumn();
+    m_entityComponents.addColumns(1);
     m_componentList.push_back(table);
 
     onComponentAdded(NamedComponent(name, table));
@@ -68,8 +65,8 @@ vecs::TableID vecs::ECS::addComponentTable(nString name, vecs::ComponentTableBas
     return id;
 }
 vecs::TableID vecs::ECS::getComponentTableID(const nString& name) const {
-    auto kvp = _components.find(name);
-    return (kvp == _components.end()) ? 0 : kvp->second;
+    auto kvp = m_components.find(name);
+    return (kvp == m_components.end()) ? 0 : kvp->second;
 }
 vecs::ComponentTableBase* vecs::ECS::getComponentTable(nString name) const {
     TableID tid = getComponentTableID(name);

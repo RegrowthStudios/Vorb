@@ -25,15 +25,11 @@ VORB_SRC_FILES = $(wildcard $(VORB_SRC_DIR)*.cpp)
 # Convert CPP to OBJ targets
 VORB_OBJ_FILES = $(VORB_SRC_FILES:$(VORB_SRC_DIR)%.cpp=$(VORB_INT_DIR)%.obj)
 
-dummy:
-	@echo Dummy target
-
+# Everything is built
 all: vorb.lib
 
 
-
-
-# Common CPP inference rule
+# Common CPP inference rules
 %.depend: %.cpp
 	@set -e; rm -f $@; \
 	 ($(CC) -M $(CPP_FLAGS) $<) > $@.$$$$; \

@@ -1,6 +1,12 @@
-# Predefine build type
-VORB_BUILD_TARGET ?= DEBUG
-VORB_BUILD_OS     ?= WIN32
+# Give help information
+help:
+	@type MakeHelp.txt
+
+# Predefine configuration defaults
+VORB_TARGET ?= DEBUG
+VORB_OS     ?= WINDOWS
+VORB_ARCH   ?= INTEL_X86
+COMPILER    ?= MSVC
 
 # Include utility files
 include tools.mk
@@ -15,16 +21,17 @@ VORB_INCLUDE_DIRS = deps/include/
 
 # Add and omit all source files here
 VORB_SRC_FILES = $(wildcard $(VORB_SRC_DIR)*.cpp)
-$(info $(VORB_SRC_FILES))
 
 # Convert CPP to OBJ targets
 VORB_OBJ_FILES = $(VORB_SRC_FILES:$(VORB_SRC_DIR)%.cpp=$(VORB_INT_DIR)%.obj)
-$(info $(VORB_OBJ_FILES))
 
 dummy:
 	@echo Dummy target
 
 all: vorb.lib
+
+
+
 
 # Common CPP inference rule
 %.depend: %.cpp
@@ -35,6 +42,12 @@ all: vorb.lib
 
 # How to build Vorb
 vorb.lib: $(VORB_OBJ_FILES)
+	# Display the toolset to the user
+	@echo Toolset:
+	@echo CC   = $(CC)
+	@echo CPP  = $(CPP)
+	@echo LINK = $(LINK)
+
 	@echo FOR THE LIB: $<
 	$(LINK) /OUT:vorb.lib $<
 	
@@ -42,41 +55,8 @@ vorb.lib: $(VORB_OBJ_FILES)
 clean:
 	del $(VORB_OBJ_FILES)
 	del vorb.lib
-	
-# /Yu"stdafx.h"
-# /GS
-# /analyze-
-# /W3
-# /Zc:wchar_t
-# /ZI
-# /Gm
-# /Od
-# /sdl
-# /Fd"Debug\vc140.pdb"
-# /Zc:inline
-# /fp:precise
-# /errorReport:prompt
-# /WX-
-# /Zc:forScope
-# /RTC1
-# /Gd
-# /Oy-
-# /MDd
-# /Fa"Debug\"
-# /EHsc
-# /nologo
-# /Fo"Debug\"
-# /Fp"Debug\ConsoleApplication1.pch"
 
-
-
-
-
-
-
-
-
-
+# # Auto-dependency generation
 # DEPDIR = .depend
 # $(shell mkdir -p $(DEPDIR) >/dev/null)
 # DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td

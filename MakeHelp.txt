@@ -1,0 +1,29 @@
+|=====================|
+|== VORB MAKE 1.0.0 ==|
+|=====================|
+
+The following options are recognized by the make systems:
+
+VORB_TARGET =
+    DEBUG
+    DEVELOP
+    RELEASE
+  Controls the optimization level and capabilities of the resulting binary
+
+VORB_OS =
+    WINDOWS
+    MAC
+    LINUX
+  This is the operating system on which the binary will be deployed
+
+VORB_ARCH =
+    INTEL_X86
+    INTEL_X64
+    AMD_ARM
+  The processor on which the binary will be deployed. INTEL_X86 is a 32-bit architecture. INTEL_X64 and AMD_ARM are 64-bit architectures.
+
+COMPILER =
+    MSVC
+    CLANG
+    GNU
+  The compiler toolset used to build the binaries

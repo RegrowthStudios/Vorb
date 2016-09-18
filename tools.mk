@@ -10,10 +10,3 @@ else ifeq ($(COMPILER),GNU)
 else
   $(error No good compiler specified - must be one of [MSVC])
 endif
-
-
-# Display the toolset to the user
-$(info Toolset:)
-$(info CC   = $(CC))
-$(info CPP  = $(CPP))
-$(info LINK = $(LINK))

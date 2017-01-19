@@ -3,7 +3,7 @@
  */
 
 /*! @brief The common root for an array type.
- *
+ * 
  * This common root functions in a similar manner as void* for pointers.
  * This array contains element size metadata in order to store accurate
  * length information. It is recommended that only POD data types are
@@ -11,13 +11,12 @@
  */
 class ArrayBase {
     template <typename T> friend class Array;
-
 public:
     /*! @brief Default array constructor with no data
      */
     ArrayBase() = default;
     /*! @brief Construct an array with element information.
-     *
+     * 
      * @param elemSize: Size of an element in bytes
      */
     ArrayBase(size_t elemSize) :
@@ -25,10 +24,10 @@ public:
         // Empty
     }
     /*! @brief Construct an array with element information and give it existing data.
-     *
+     * 
      * The array copies over all the data found within the data block.
      * It becomes the first owner of the data.
-     *
+     * 
      * @param elemSize: Size of an element in bytes
      * @param d: Pointer to a block of element data (garbage if nullptr)
      * @param l: Number of elements found in the data
@@ -38,7 +37,7 @@ public:
     }
 
     /*! @brief Obtain the number of elements in the array.
-     *
+     * 
      * @return Number of elements in the array (0 for none)
      */
     const size_t& size() const {
@@ -46,10 +45,10 @@ public:
     }
 
     /*! @brief Make this array to hold a new set of data
-     *
+     * 
      * The array copies over all the data found within the data block.
      * It becomes the first owner of the data.
-     *
+     * 
      * @param data: Pointer to a block of element data (garbage if nullptr)
      * @param len: Number of elements found in the data
      */
@@ -69,10 +68,10 @@ public:
         }
     }
     /*! @brief Make this array to hold a new set of garbage data
-     *
+     * 
      * The array creates a new block of garbage data.
      * It becomes the first owner of the data.
-     *
+     * 
      * @param len: Number of elements in this array
      */
     void setData(size_t len = 0) {
@@ -80,7 +79,7 @@ public:
     }
 
     /*! @brief Make this array the owner of a set of data
-     *
+     * 
      * @pre: All previous ownership of data is now invalidated
      * @tparam T: Array object type
      * @param data: Pointer to a block of element data
@@ -93,11 +92,11 @@ public:
     }
 
     /*! @brief Obtain a reference to an element in the array.
-     *
+     * 
      * There is no bounds checking performed on the input. If
      * the array is destroyed (all sharing Arrays), any pointers referring to the element
      * are invalid.
-     *
+     * 
      * @tparam T: Type of element to be obtained
      * @param i: Index of the element
      * @return Element reference
@@ -149,7 +148,6 @@ public:
     const T& at(const size_t& i) const {
         return ((T*)m_data)[i];
     }
-
 protected:
     std::shared_ptr<ui8> m_sharedData; ///< Shared data pointer to allow for automatic memory management
     void* m_data = nullptr; ///< Cached pointer from the shared data
@@ -158,25 +156,24 @@ protected:
 };
 
 /*! @brief An array filled with known element types.
- *
+ * 
  * @tparam T: The type of element found in the array
  */
 template<typename T>
 class Array : public ArrayBase {
-
 public:
     /*! @brief Empty array constructor.
-     *
+     * 
      * This constructor correctly intializes element size.
      */
     Array() : ArrayBase(sizeof(T)) {
         // Empty
     }
     /*! @brief Construct an array with from existing data.
-     *
+     * 
      * The array copies over all the data found within the data block.
      * It becomes the first owner of the data.
-     *
+     * 
      * @param d: Pointer to a block of data (garbage if nullptr)
      * @param l: Number of elements found in the data
      */
@@ -184,10 +181,10 @@ public:
         // Empty
     }
     /*! @brief Make this array a shadow copy of another array.
-     *
+     * 
      * This array co-owns the data stored in the input array at the
      * time of the copy.
-     *
+     * 
      * @param arr: Array reference for co-ownership
      */
     Array(const ArrayBase& arr) {
@@ -249,7 +246,7 @@ public:
 };
 
 /*! \example "Vorb Array Usage"
- *
+ * 
  * Due to the lack of an array type in C++, an Array(Base) class has been implemented for simple use cases.
  * \include VorbArray.cpp
  *

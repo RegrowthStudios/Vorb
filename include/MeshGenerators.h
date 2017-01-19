@@ -24,6 +24,11 @@
 #include "types.h"
 #endif // !VORB_USING_PCH
 
+#include <vector>
+#include "types.h"
+
+using namespace std;
+
 namespace vorb {
     namespace core {
         namespace mesh {

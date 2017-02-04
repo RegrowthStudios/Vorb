@@ -363,6 +363,173 @@ Delegate<Args...>* makeFunctor(T& obj, void(T::*f)(Args...)) {
     return Delegate<Args...>::createCopy<T>(&obj, f);
 }
 
+/// An event that invokes methods taking certain arguments. Listeners
+/// are given priority values and listeners are called in ascending order
+/// of these values. Listeners may signal that no further listeners should
+/// be called for a given event trigger instance. The last-called listener 
+/// can also return data of type Ret to the sender.
+/// @tparam Ret: Data sent back to the sender from the last-called listener.
+/// @tparam Params: Metadata sent in event invocation
+template <typename Ret, typename... Params>
+class RPriorityEvent {
+    typedef struct {
+        bool shouldContinue;
+        std::enable_if_t<!std::is_void<Ret>::value, Ret> data;
+    } RetStruct; ///< Structure for return type of listeners if Ret is not void.
+public:
+    typedef typename std::conditional<std::is_void<Ret>::value, bool, RetStruct>::type Return; ///< If Ret is void, return type of listeners is simply a bool.
+    typedef RDelegate<Return, Sender, Params...> Listener; ///< Delegate callback type.
+    typedef std::pair<ui32, Listener> PriorityListener; ///< Pairing of a callback with its priority.
+
+    /// Create an event with a sender attached to it.
+    /// @param sender: Owner object sent with each invocation.
+    RPriorityEvent(Sender sender = nullptr) :
+        m_sender(sender) {
+        // Empty
+    }
+
+    /*! @brief Reset the sender value of this event to another.
+    *
+    * @warning Resetting a sender of an event could cause harm to existing listeners.
+    *
+    * @param sender: New sender pointer.
+    */
+    void setSender(Sender sender) {
+        m_sender sender;
+    }
+
+    /// Call all bound methods.
+    /// @param params: Arguments used in function calls.
+    void send(Params... params) {
+        Return ret;
+        for (auto& listener : m_listeners) {
+            ret = listener.second(m_sender, params...);
+            if (!ret.shouldContinue) break;
+        }
+        return ret;
+    }
+
+    /// Call all bound methods.
+    /// @param params: Arguments used in function calls.
+    Return operator()(Params... params) {
+        return this->send(params);
+    }
+
+    /// Add a callback to this event.
+    /// @param listener: Callback provided by a subscriber, and its priority.
+    /// @return The event instance for chaining.
+    RPriorityEvent* add(PriorityListener listener) {
+        listener.second.neuter();
+        m_listeners.insert(listener);
+        return *this;
+    }
+    /// Add a callback to this event.
+    /// @param listener: Callback provided by a subscriber.
+    /// @param priority: Priority of the callback.
+    /// @return The event instance for chaining.
+    RPriorityEvent* add(Listener listener, ui32 priority) {
+        return this->add(PriorityListener(priority, listener));
+    }
+
+    /// Add a functor callback to this event.
+    /// @param f: An unknown-type callback provided by a subscriber.
+    /// @param priority: Priority of the callback.
+    /// @tparam F: Functor type.
+    /// @return The newly made delegate (CALLER DELETE).
+    template<typename F>
+    Listener* addFunctor(F f, ui32 priority) {
+        Listener* functor = makeRFunctor(f);
+        this->add(*functor, priority);
+        return functor;
+    }
+
+    /// Add a callback to this event.
+    /// @param listener: Callback provided by a subscriber, and its priority.
+    /// @return The event instance for chaining.
+    Event& operator+=(const PriorityListener& f) {
+        return add(f);
+    }
+
+    // TODO(Matthew): Surely there's a better way to do this?
+    /// Removes all subscriptions with the provided callback function.
+    /// @param listener: The callback to remove all instances of.
+    RPriorityEvent& remove(Listener listener) {
+        for (auto& it = m_listeners.begin(); it != m_listeners.end(); ++it) {
+            if ((*it).second == listener) {
+                m_listeners.erase(it);
+                this->removeAll(listener);
+                return *this;
+            }
+        }
+    }
+
+    /// Removes all subscriptions with the provided callback function.
+    /// @param listener: The callback to remove all instances of.
+    RPriorityEvent& operator-=(Listener listener) {
+        return remove(listener);
+    }
+
+    /// Removes one instance of a callback that has the provided priority.
+    /// @param listener: The callback and its priority for which one instance will be removed.
+    RPriorityEvent& remove(PriorityListener listener) {
+        for (auto& it = m_listeners.lower_bound(listener); it != m_listeners.upper_bound(listener); ++it) {
+            if ((*it).second == listener.second) {
+                m_listeners.erase(it);
+                return *this;
+            }
+        }
+    }
+
+    /// Removes one instance of a callback that has the provided priority.
+    /// @param listener: The callback and its priority for which one instance will be removed.
+    RPriorityEvent& operator-=(PriorityListener listener) {
+        return remove(listener);
+    }
+
+    /// Compares two priority listeners and returns a boolean indicating if the first
+    /// has priority over the second.
+    /// @param a: The first listener to compare.
+    /// @param b: The second listener to compare.
+    static bool compare(const PriorityListener& a, const PriorityListener& b) {
+        return a.first < b.first;
+    }
+protected:
+    Sender m_sender; ///< Event owner.
+
+    typedef std::multiset<PriorityListener, decltype(&compare)> PriorityListenerSet; ///< Set type holding listeners.
+    PriorityListenerSet m_listeners = PriorityListenerSet(&RPriorityEvent::compare); ///< Set of listeners.
+};
+
+/// An event that invokes methods taking certain arguments. Listeners
+/// are given priority values and listeners are called in ascending order
+/// of these values. Listeners may signal that no further listeners should
+/// be called for a given event trigger instance.
+/// @tparam Params: Metadata sent in event invocation
+template <typename... Params>
+class PriorityEvent : public RPriorityEvent<void, Params...> {
+public:
+    /// Create an event with a sender attached to it.
+    /// @param sender: Owner object sent with each invocation.
+    PriorityEvent(Sender sender = nullptr) {
+        m_sender = sender;
+    }
+
+    /// Call all bound methods.
+    /// @param params: Arguments used in function calls.
+    void send(Params... params) {
+        for (auto& listener : m_listeners) {
+            bool ret = listener.second(m_sender, params...);
+            if (!ret) return;
+        }
+    }
+
+    /// Call all bound methods.
+    /// @param params: Arguments used in function calls.
+    void operator()(Params... params) {
+        this->send(params...);
+    }
+};
+
 /// An event that invokes methods taking certain arguments
 /// @tparam Params: Metadata sent in event invocation
 template<typename... Params>

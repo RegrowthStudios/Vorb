@@ -279,6 +279,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="include\Delegate.cpp" />
     <ClCompile Include="src/colors.cpp" />
     <ClCompile Include="src/ecs/ComponentTableBase.cpp" />
     <ClCompile Include="src/ecs/ECS.cpp" />
@@ -416,6 +417,8 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include/io/IOManager.h" />
     <ClInclude Include="include\Asset.h" />
     <ClInclude Include="include\AssetLoader.h" />
+    <ClInclude Include="include\Delegate.hpp" />
+    <ClInclude Include="include\Event.hpp" />
     <ClInclude Include="include\graphics\Frustum.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />

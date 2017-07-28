@@ -279,6 +279,9 @@
     <ClCompile Include="doxygen\examples\VorbPtrRecycler.cpp">
       <Filter>Examples</Filter>
     </ClCompile>
+    <ClCompile Include="include\Delegate.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include/compat.h" />
@@ -714,6 +717,12 @@
     <ClInclude Include="include\os.h" />
     <ClInclude Include="include\math\TweeningMath.hpp">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Event.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Delegate.hpp">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

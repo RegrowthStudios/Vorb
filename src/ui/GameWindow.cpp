@@ -357,7 +357,7 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
-        InputDispatcher::window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
+        InputDispatcher::window.onResize({ (ui32)w, (ui32)h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
 #elif defined(VORB_IMPL_UI_GLFW)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)

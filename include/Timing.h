@@ -1,26 +1,39 @@
-///
-/// Timing.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 8 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Different timers
-///
+//
+// Timing.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 8 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Timing.h
+ * @brief Different timers.
+ */
 
 #pragma once
 
-#ifndef Timing_h__
-#define Timing_h__
+#ifndef Vorb_Timing_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Timing_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <map>
+#include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 #include <chrono>
 
 class PreciseTimer {
 public:
+    PreciseTimer() {
+        start();
+    }
     void start();
-    f32 stop();
+    f64 stop();
 
     const bool& isRunning() const {
         return m_timerRunning;
@@ -33,19 +46,19 @@ private:
 class AccumulationTimer {
 public:
     void start(const nString& tag);
-    f32 stop();
+    f64 stop();
 
     void clear();
     void printAll(bool averages);
 private:
     class AccumNode {
     public:
-        void addSample(f32 sample) {
+        void addSample(f64 sample) {
             numSamples++;
             time += sample;
         }
         i32 numSamples = 0;
-        f32 time = 0.0f;
+        f64 time = 0.0f;
     };
 
     bool m_timerRunning = false;
@@ -72,7 +85,7 @@ private:
         };
         
         nString tag;
-        f32 time = 0.0f;
+        f64 time = 0.0f;
     };
 
     i32 m_samples = 0;
@@ -123,4 +136,4 @@ private:
     f32 m_maxFPS = DEFAULT_MAX_FPS;
 };
 
-#endif // Timing_h__
+#endif // !Vorb_Timing_h__

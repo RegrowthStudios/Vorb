@@ -1,21 +1,26 @@
-///
-/// File.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 31 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A file wrapper
-///
+//
+// File.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 31 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file File.h
+ * @brief A file wrapper.
+ */
 
 #pragma once
 
-#ifndef File_h__
-#define File_h__
+#ifndef Vorb_File_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_File_h__
+//! @endcond
 
-#include <memory>
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Path.h"
 
@@ -105,4 +110,4 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::File vfile; ///< File shorthand
 
-#endif // File_h__
+#endif // !Vorb_File_h__

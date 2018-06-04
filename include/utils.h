@@ -1,19 +1,26 @@
-///
-/// utils.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 7 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Simple utility functions
-///
+//
+// utils.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 7 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file utils.h
+ * @brief Simple utility functions.
+ */
 
 #pragma once
 
-#ifndef utils_h__
-#define utils_h__
+#ifndef Vorb_utils_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_utils_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 // Used for excluding complex utilities
 #ifdef UTIL_SIMPLE
@@ -33,7 +40,7 @@
 #include "BufferUtils.inl"
 #endif
 #ifndef NO_UTIL_INTERSECTION
-#include "IntersectionUtils.inl"
+#include "IntersectionUtils.hpp"
 #endif
 
 // Inlined math functions
@@ -41,6 +48,13 @@
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define ABS(a) (((a) < 0) ?(-(a)):(a))
 #define INTERPOLATE(a, min, max) (((max)-(min))*(a)+(min))
+
+#ifdef CONSTEXPR
+constexpr minEvenAlignment(size_t minSize, size_t bits) {
+    size_t bitmask = (1 << bits) - 1;
+    return (minSize & bitmask) ? ((minSize | bitmask) + 1) : minSize;
+}
+#endif
 
 /************************************************************************/
 /* Type Ranges                                                          */
@@ -62,24 +76,24 @@ RANGE_STRUCT(F64, f64);
 /* String Utilites                                                      */
 /************************************************************************/
 inline void convertWToMBString(const cwString ws, nString& resultString) {
-    i32 l = wcslen(ws);
+    size_t l = wcslen(ws);
     resultString.resize(l + 1);
     size_t numConverted = 0;
     #if defined(__APPLE__) || defined(__linux__)
     wcstombs(&(resultString[0]), ws, numConverted);
-    #elif defined(WIN32) || defined(WIN64)
+    #elif defined(VORB_OS_WINDOWS)
     wcstombs_s(&numConverted, &(resultString[0]), l + 1, ws, l);
     #endif   // win32
 
     resultString[l] = '\0';
 }
 inline const cwString convertMBToWString(const cString s) {
-    i32 l = strlen(s);
+    size_t l = strlen(s);
     cwString resultString = new wchar_t[l + 1];
     size_t numConverted = 0;
 #if defined(__APPLE__) || defined(__linux__)
     wcstombs((char *)&(resultString[0]), (const wchar_t *)s, numConverted);
-#elif defined(WIN32) || defined(WIN64)
+#elif defined(VORB_OS_WINDOWS)
     mbstowcs(resultString, s, l);
 #endif   // win32
 
@@ -148,8 +162,8 @@ inline T upSampleArray(size_t i1, size_t i2, size_t i3, T (&data)[N1][N2][N3]) {
 }
 
 /// Simple hermite interpolater for smoothing the range 0-1
-inline float hermite(float f) { return 3.0f * (f * f) - 2.0f * (f * f * f); }
-inline double hermite(double f) { return 3.0 * (f * f) - 2.0 * (f * f * f); }
+template<typename T>
+inline T hermite(const T& v) { return static_cast<T>(3.0) * (v * v) - static_cast<T>(2.0) * (v * v * v); }
 
 /************************************************************************/
 /* Quaternion Utilities                                                 */
@@ -161,12 +175,12 @@ inline double hermite(double f) { return 3.0 * (f * f) - 2.0 * (f * f * f); }
 /// @pre: v1 != -v2
 inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     f64q q;
-    f64v3 a = glm::cross(v1, v2);
+    f64v3 a = vmath::cross(v1, v2);
     q.x = a.x;
     q.y = a.y;
     q.z = a.z;
-    q.w = 1.0 + glm::dot(v1, v2);
-    return glm::normalize(q);
+    q.w = 1.0 + vmath::dot(v1, v2);
+    return vmath::normalize(q);
 }
 /// Finds the shortest arc rotation quat between two directions
 /// @param v1: Starting direction
@@ -175,17 +189,99 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
 /// @pre: v1 != -v2
 inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
     f32q q;
-    f32v3 a = glm::cross(v1, v2);
+    f32v3 a = vmath::cross(v1, v2);
     q.x = a.x;
     q.y = a.y;
     q.z = a.z;
-    f32 l1 = glm::length(v1);
-    f32 l2 = glm::length(v2);
-    q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
-    return glm::normalize(q);
+    f32 l1 = vmath::length(v1);
+    f32 l2 = vmath::length(v2);
+    q.w = sqrt((l1 * l1) * (l2 * l2)) + vmath::dot(v1, v2);
+    return vmath::normalize(q);
 }
-
-
+/************************************************************************/
+/* Clip utilities                                                       */
+/************************************************************************/
+/*! @brief Computes clipping of a rect.
+ * 
+ * @param clipRect: The clipping rectangle
+ * @param position: The rectangle position to check. Will be clipped. 
+ * @param position: The rectangle size to check. Will be clipped.
+ * @param uvRect: The rectangle UVs. Will be clipped.
+ * @return true if it clipped.
+ */
+inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size, f32v4& uvRect) {
+    bool rv = false;
+    if (position.x < clipRect.x) {
+        f32 t = clipRect.x - position.x;
+        uvRect.x += uvRect.z * (t / size.x);
+        uvRect.z *= 1.0f - (t / size.x);
+        position.x = clipRect.x;
+        size.x -= t;
+        rv = true;
+    }
+    if (position.x + size.x > clipRect.x + clipRect.z) {
+        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
+        uvRect.z *= 1.0f - (t / size.x);
+        size.x -= t;
+        rv = true;
+    }
+    if (position.y < clipRect.y) {
+        f32 t = clipRect.y - position.y;
+        uvRect.y += uvRect.w * (t / size.y);
+        uvRect.w *= 1.0f - (t / size.y);
+        position.y = clipRect.y;
+        size.y -= t;
+        rv = true;
+    }
+    if (position.y + size.y > clipRect.y + clipRect.w) {
+        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
+        uvRect.w *= 1.0f - (t / size.y);
+        size.y -= t;
+        rv = true;
+    }
+    return rv;
+}
+inline bool computeClipping(const f32v4& clipRect, f32v2& position, f32v2& size) {
+    bool rv = false;
+    if (position.x < clipRect.x) {
+        f32 t = clipRect.x - position.x;
+        position.x = clipRect.x;
+        size.x -= t;
+        rv = true;
+    }
+    if (position.x + size.x > clipRect.x + clipRect.z) {
+        f32 t = position.x + size.x - (clipRect.x + clipRect.z);
+        size.x -= t;
+        rv = true;
+    }
+    if (position.y < clipRect.y) {
+        f32 t = clipRect.y - position.y;
+        position.y = clipRect.y;
+        size.y -= t;
+        rv = true;
+    }
+    if (position.y + size.y > clipRect.y + clipRect.w) {
+        f32 t = position.y + size.y - (clipRect.y + clipRect.w);
+        size.y -= t;
+        rv = true;
+    }
+    return rv;
+}
+inline bool computeClipping(f32 clipPos, f32 clipWidth, f32& position, f32& width) {
+    bool rv = false;
+    if (position < clipPos) {
+        f32 t = clipPos - position;
+        position = clipPos;
+        width -= t;
+        rv = true;
+    }
+    if (position + width > clipPos + clipWidth) {
+        f32 t = position + width - (clipPos + clipWidth);
+        width -= t;
+        rv = true;
+    }
+    return rv;
+}
 /************************************************************************/
 /* Hash functions                                                       */
 /************************************************************************/
@@ -234,4 +330,4 @@ struct std::hash<ui32v2> {
     }
 };
 
-#endif // utils_h__
+#endif // !Vorb_utils_h__

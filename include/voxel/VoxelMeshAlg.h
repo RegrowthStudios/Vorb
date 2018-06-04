@@ -1,19 +1,26 @@
-///
-/// VoxelMeshAlg.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 27 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Defines general API for voxel mesh algorithms
-///
+//
+// VoxelMeshAlg.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 27 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file VoxelMeshAlg.h
+ * @brief Defines general API for voxel mesh algorithms.
+ */
 
 #pragma once
 
-#ifndef VoxelMeshAlg_h__
-#define VoxelMeshAlg_h__
+#ifndef Vorb_VoxelMeshAlg_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_VoxelMeshAlg_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "VoxCommon.h"
 
@@ -62,4 +69,4 @@ namespace vorb {
 }
 namespace vvox = vorb::voxel;
 
-#endif // VoxelMeshAlg_h__
+#endif // !Vorb_VoxelMeshAlg_h__

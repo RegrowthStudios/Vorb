@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "ecs/ComponentTableBase.h"
 
-vcore::ComponentTableBase::ComponentTableBase() :
+#include "ecs/ECS.h"
+
+vecs::ComponentTableBase::ComponentTableBase() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Empty
 }
 
-vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
+vecs::ComponentID vecs::ComponentTableBase::add(EntityID eID) {
     // Check that this entity does not exist
     auto cBind = _components.find(eID);
     if (cBind != _components.end()) {
@@ -40,7 +42,7 @@ vcore::ComponentID vcore::ComponentTableBase::add(EntityID eID) {
 
     return id;
 }
-bool vcore::ComponentTableBase::remove(EntityID eID) {
+bool vecs::ComponentTableBase::remove(EntityID eID) {
     // Find the entity
     auto cBind = _components.find(eID);
     if (cBind == _components.end()) return false;
@@ -57,4 +59,35 @@ bool vcore::ComponentTableBase::remove(EntityID eID) {
     _components.erase(cBind);
 
     return true;
+}
+
+void vecs::ComponentTableBase::unsafeSetSize(size_t n) {
+    { // Remove old components
+        std::vector<vecs::EntityID> entities(getComponentCount());
+        for (auto& ec : _components) entities.emplace_back(ec.first);
+        for (auto& e : entities) remove(e);
+        _genComponent.reset();
+    }
+
+    { // Generate new components
+        bool shouldPush = false;
+        for (size_t i = 0; i < n; i++) {
+            ComponentID id = _genComponent.generate(&shouldPush);
+            addComponent(id, 0);
+        }
+    }
+}
+
+void vecs::ComponentTableBase::unsafeSetLink(vecs::ECS& ecs, vecs::EntityID eID, vecs::ComponentID cID) {
+    if (eID == 0) {
+        // Recycle ID
+        _genComponent.recycle(cID);
+    } else {
+        // Setup component
+        _components[eID] = cID;
+        setComponent(cID, eID);
+        initComponent(cID, eID);
+        onEntityAdded(cID, eID);
+        ecs.m_entityComponents.setTrue(eID - 1, getID() - 1);
+    }
 }

@@ -41,14 +41,14 @@ namespace vorb {
             }
             /// Deletes the character behind the caret
             void back() {
-                if (m_caret > 0 && m_input.size() > 1) {
+                if (m_caret > 0 && (m_input.size() > 1)) {
                     m_caret--;
                     m_input.erase(m_input.begin() + m_caret);
                 }
             }
             /// Deletes the character in front of the caret
             void del() {
-                if (m_caret < m_input.size() - 1) {
+                if (m_caret < (m_input.size() - 1)) {
                     m_input.erase(m_input.begin() + m_caret);
                 }
             }
@@ -61,7 +61,7 @@ namespace vorb {
             }
             /// Empties the string contents
             void clear() {
-                m_input.swap(std::vector<T>());
+                std::vector<T>().swap(m_input);
                 m_input.push_back(0);
                 m_caret = 0;
             }
@@ -73,7 +73,7 @@ namespace vorb {
 
             /// @return Conversion into string of target character type
             explicit operator const T*() const {
-                return &m_input.front();
+                return (T*)m_input.data();
             }
         private:
             std::vector<T> m_input; ///< String storage
@@ -107,7 +107,7 @@ namespace vorb {
         public:
             /// Begin receiving events
             void start() {
-                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onKeyDown, [&] (Sender sender, const vui::KeyEvent& e) {
+                m_delegatePool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender sender, const vui::KeyEvent& e) {
                     switch (e.keyCode) {
                     case VKEY_BACKSPACE:
                         m_text.back();
@@ -133,7 +133,7 @@ namespace vorb {
                         break;
                     }
                 });
-                m_delegatePool.addAutoHook(&vui::InputDispatcher::key.onText, [&] (Sender sender, const vui::TextEvent& e) {
+                m_delegatePool.addAutoHook(vui::InputDispatcher::key.onText, [&] (Sender sender, const vui::TextEvent& e) {
                     m_text.insert(e.text);
                     onTextChange((const T*)m_text);
                 });

@@ -1,47 +1,78 @@
+//
+// GraphicsDevice.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file GraphicsDevice.h
+ * @brief Stores information about the graphics device.
+ */
+
 #pragma once
-struct SDL_Window;
 
-struct GraphicsDeviceProperties {
-public:
-    i32 maxColorSamples;
-    i32 maxDepthSamples;
-    
-    i32 maxVertexAttributes;
+#ifndef Vorb_GraphicsDevice_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_GraphicsDevice_h__
+//! @endcond
 
-    i32 maxTextureUnits;
-    i32 maxTextureSize;
-    i32 max3DTextureSize;
-    i32 maxArrayTextureLayers;
-    
-    i32 nativeScreenWidth;
-    i32 nativeScreenHeight;
-    i32 nativeRefreshRate;
-    std::vector<ui32v2> resolutionOptions;
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
-    const cString glVendor;
-    const cString glVersion;
-    i32 glVersionMajor;
-    i32 glVersionMinor;
-    const cString glslVersion;
-};
+namespace vorb {
+    namespace graphics {
+        struct GraphicsDeviceProperties {
+        public:
+            i32 maxColorSamples;
+            i32 maxDepthSamples;
 
-class GraphicsDevice {
-public:
-    GraphicsDevice(SDL_Window* w);
+            i32 maxVertexAttributes;
 
-    static GraphicsDevice* getCurrent() {
-        return _current;
+            i32 maxTextureUnits;
+            i32 maxTextureSize;
+            i32 max3DTextureSize;
+            i32 maxArrayTextureLayers;
+
+            i32 nativeScreenWidth;
+            i32 nativeScreenHeight;
+            i32 nativeRefreshRate;
+            std::vector<ui32v2> resolutionOptions;
+
+            const cString glVendor;
+            const cString glVersion;
+            i32 glVersionMajor;
+            i32 glVersionMinor;
+            const cString glslVersion;
+        };
+
+        class GraphicsDevice {
+        public:
+            GraphicsDevice();
+
+            static GraphicsDevice* getCurrent() {
+                if (!_current) {
+                    _current = new GraphicsDevice();
+                    _current->refreshInformation();
+                }
+                return _current;
+            }
+
+            void initResolutions(void* w);
+            void refreshInformation();
+
+            const GraphicsDeviceProperties& getProperties() const {
+                return _props;
+            }
+        private:
+            GraphicsDeviceProperties _props;
+
+            static GraphicsDevice* _current;
+        };
     }
+}
+namespace vg = vorb::graphics;
 
-    void refreshInformation();
-
-    const GraphicsDeviceProperties& getProperties() const {
-        return _props;
-    }
-private:
-    void initResolutions(SDL_Window* w);
-
-    GraphicsDeviceProperties _props;
-
-    static GraphicsDevice* _current;
-};
+#endif // !Vorb_GraphicsDevice_h__

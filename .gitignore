@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+*.opendb
 
 # Build results
 [Dd]ebug/
@@ -180,3 +181,8 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# Doxygen output
+docs/
+*.dox.txt
+UnitTester/app.config

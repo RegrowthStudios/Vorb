@@ -1,27 +1,53 @@
 #include "stdafx.h"
 #include "graphics/GraphicsDevice.h"
 
-#if defined(WIN32) || defined(WIN64)
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+
+#include "compat.h"
+#endif // !VORB_USING_PCH
+
+#if defined(VORB_IMPL_UI_SDL)
+#if defined(VORB_OS_WINDOWS)
 #include <SDL/SDL.h>
 #else
 #include <SDL2/SDL.h>
 #endif
+#elif defined(VORB_IMPL_UI_GLFW)
+#include <GLFW/glfw3.h>
+#elif defined(VORB_IMPL_UI_SFML)
+#include <SFML/Window/VideoMode.hpp>
+#endif
 
-GraphicsDevice::GraphicsDevice(SDL_Window* w) :
+
+vg::GraphicsDevice::GraphicsDevice() :
 _props({}) {
-    initResolutions(w);
+    // Empty
 }
 
-void GraphicsDevice::refreshInformation() {
+void vg::GraphicsDevice::refreshInformation() {
     // Whenever Information Is Refreshed, The Current Device Is Refreshed
     _current = this;
 
     // Get Display Information
+#if defined(VORB_IMPL_UI_SDL)
     SDL_DisplayMode displayMode;
     SDL_GetCurrentDisplayMode(0, &displayMode);
     _props.nativeScreenWidth = displayMode.w;
     _props.nativeScreenHeight = displayMode.h;
     _props.nativeRefreshRate = displayMode.refresh_rate;
+#elif defined(VORB_IMPL_UI_GLFW)
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    auto& displayMode = *glfwGetVideoMode(monitor);
+    _props.nativeScreenWidth = displayMode.width;
+    _props.nativeScreenHeight = displayMode.height;
+    _props.nativeRefreshRate = displayMode.refreshRate;
+#elif defined(VORB_IMPL_UI_SFML)
+    auto displayMode = sf::VideoMode::getDesktopMode();
+    _props.nativeScreenWidth = displayMode.width;
+    _props.nativeScreenHeight = displayMode.height;
+    _props.nativeRefreshRate = 60; // This is what Laurent says about monitors, so it must be true...
+#endif
 
     // Get The OpenGL Implementation Information
     _props.glVendor = (const cString)glGetString(GL_VENDOR);
@@ -63,14 +89,29 @@ void GraphicsDevice::refreshInformation() {
 #endif // DEBUG
 }
 
-void GraphicsDevice::initResolutions(SDL_Window* w) {
-    i32 dispIndex = SDL_GetWindowDisplayIndex(w);
+void vg::GraphicsDevice::initResolutions(void* w) {
+#if defined(VORB_IMPL_UI_SDL)
+    i32 dispIndex = SDL_GetWindowDisplayIndex((SDL_Window*)w);
     i32 dispCount = SDL_GetNumDisplayModes(dispIndex);
     SDL_DisplayMode dMode;
     for (i32 dmi = 0; dmi < dispCount; dmi++) {
         SDL_GetDisplayMode(dispIndex, dmi, &dMode);
         _props.resolutionOptions.push_back(ui32v2(dMode.w, dMode.h));
     }
+#elif defined(VORB_IMPL_UI_GLFW)
+    int dispCount;
+    GLFWmonitor* monitor = glfwGetWindowMonitor((GLFWwindow*)w);
+    if (!monitor) monitor = glfwGetPrimaryMonitor();
+    auto dmodes = glfwGetVideoModes(monitor, &dispCount);
+    for (i32 dmi = 0; dmi < dispCount; dmi++) {
+        _props.resolutionOptions.push_back(ui32v2(dmodes[dmi].width, dmodes[dmi].height));
+    }
+#elif defined(VORB_IMPL_UI_SFML)
+    auto modes = sf::VideoMode::getFullscreenModes();
+    for (auto& mode : modes) _props.resolutionOptions.push_back(ui32v2(mode.width, mode.height));
+#endif
+
+    // Sort display modes
     std::sort(_props.resolutionOptions.begin(), _props.resolutionOptions.end(), [] (const ui32v2& r1, const ui32v2& r2) {
         if (r1.x == r2.x) return r1.y > r2.y;
         else return r1.x > r2.x;
@@ -79,4 +120,4 @@ void GraphicsDevice::initResolutions(SDL_Window* w) {
     _props.resolutionOptions.resize(iter - _props.resolutionOptions.begin());
 }
 
-GraphicsDevice* GraphicsDevice::_current = nullptr;
+vg::GraphicsDevice* vg::GraphicsDevice::_current = nullptr;

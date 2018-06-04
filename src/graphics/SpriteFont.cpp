@@ -3,15 +3,38 @@
 
 #include <boost/filesystem.hpp>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(VORB_IMPL_FONT_SDL)
+#if defined(VORB_OS_WINDOWS)
 #include <TTF/SDL_ttf.h>
 #else
 #include <SDL2_ttf/SDL_ttf.h>
+#endif
 #endif
 
 #include "graphics/GraphicsDevice.h"
 #include "graphics/ImageIO.h"
 #include "graphics/SpriteBatch.h"
+#include "utils.h"
+
+// X Offset multipliers for vg::TextAlign
+const f32 X_OFF_MULTS[9] = {
+    0.0f, // LEFT
+    0.0f, // TOP_LEFT
+    -0.5f, // TOP
+    -1.0f, // TOP_RIGHT
+    -1.0f, // RIGHT
+    -1.0f, // BOTTOM_RIGHT
+    -0.5f, // BOTTOM
+    0.0f, // BOTTOM_LEFT
+    -0.5f // CENTER
+};
+
+// Used for alignment
+struct GlyphToRender {
+    GlyphToRender(size_t gi, f32 x) : gi(gi), x(x) {}
+    size_t gi;
+    f32 x;
+};
 
 i32 closestPow2(i32 i) {
     i--;
@@ -23,23 +46,29 @@ i32 closestPow2(i32 i) {
     return pi;
 }
 
-SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
+void vg::SpriteFont::init(const cString font, ui32 size, char cs, char ce) {
+#if defined(VORB_IMPL_FONT_SDL)
     TTF_Font* f = TTF_OpenFont(font, size);
     if (!f) {
         std::cerr << "Failed to open font " << font << "\n";
-        throw 88;
+        std::cerr << "Error: " << TTF_GetError() << std::endl;
+        return;
     }
-    _fontHeight = TTF_FontHeight(f);
-    _regStart = cs;
-    _regLength = ce - cs + 1;
+    m_fontHeight = TTF_FontHeight(f);
+    SDL_Color fg = { 255, 255, 255, 255 };
+#endif
+    m_regStart = cs;
+    m_regLength = ce - cs + 1;
     ui32 padding = size / 8;
 
     // First Measure All The Regions
-    i32v4* glyphRects = new i32v4[_regLength];
+    i32v4* glyphRects = new i32v4[m_regLength];
     size_t i = 0;
     i32 advance;
     for (char c = cs; c <= ce; c++) {
+#if defined(VORB_IMPL_FONT_SDL)
         TTF_GlyphMetrics(f, c, &glyphRects[i].x, &glyphRects[i].z, &glyphRects[i].y, &glyphRects[i].w, &advance);
+#endif
         glyphRects[i].z -= glyphRects[i].x;
         glyphRects[i].x = 0;
         glyphRects[i].w -= glyphRects[i].y;
@@ -50,9 +79,9 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     // Find Best Partitioning Of Glyphs
     ui32 rows = 1, w, h, bestWidth = 0, bestHeight = 0, area = 4096 * 4096, bestRows = 0;
     std::vector<ui32>* bestPartition = nullptr;
-    while (rows <= _regLength) {
-        h = rows * (padding + _fontHeight) + padding;
-        auto gr = createRows(glyphRects, _regLength, rows, padding, w);
+    while (rows <= m_regLength) {
+        h = rows * (padding + m_fontHeight) + padding;
+        auto gr = createRows(glyphRects, m_regLength, rows, padding, w);
 
         // Desire A Power Of 2 Texture
         w = closestPow2(w);
@@ -85,20 +114,19 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     if (!bestPartition) return;
 
     // Create The Texture
-    glGenTextures(1, &_texID);
-    glBindTexture(GL_TEXTURE_2D, _texID);
+    glGenTextures(1, &m_texID);
+    glBindTexture(GL_TEXTURE_2D, m_texID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bestWidth, bestHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Now Draw All The Glyphs
-    SDL_Color fg = { 255, 255, 255, 255 };
     ui32 ly = padding;
     for (size_t ri = 0; ri < bestRows; ri++) {
         ui32 lx = padding;
         for (size_t ci = 0; ci < bestPartition[ri].size(); ci++) {
             ui32 gi = bestPartition[ri][ci];
 
+#if defined(VORB_IMPL_FONT_SDL)
             SDL_Surface* glyphSurface = TTF_RenderGlyph_Blended(f, (char)(cs + gi), fg);
-
             // Pre-multiplication Occurs Here
             ubyte* sp = (ubyte*)glyphSurface->pixels;
             ui32 cp = glyphSurface->w * glyphSurface->h * 4;
@@ -118,10 +146,11 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
 
             SDL_FreeSurface(glyphSurface);
             glyphSurface = nullptr;
+#endif
 
             lx += glyphRects[gi].z + padding;
         }
-        ly += _fontHeight + padding;
+        ly += m_fontHeight + padding;
     }
 
     // Draw The Unsupported Glyph
@@ -133,20 +162,20 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     pureWhiteSquare = nullptr;
 
     // Create SpriteBatch Glyphs
-    _glyphs = new CharGlyph[_regLength + 1];
-    for (i = 0; i < _regLength; i++) {
-        _glyphs[i].character = (char)(cs + i);
-        _glyphs[i].size = f32v2(glyphRects[i].z, glyphRects[i].w);
-        _glyphs[i].uvRect = f32v4(
+    m_glyphs = new CharGlyph[m_regLength + 1];
+    for (i = 0; i < m_regLength; i++) {
+        m_glyphs[i].character = (char)(cs + i);
+        m_glyphs[i].size = f32v2((f32)glyphRects[i].z, (f32)glyphRects[i].w);
+        m_glyphs[i].uvRect = f32v4(
             (f32)glyphRects[i].x / (f32)bestWidth,
             (f32)glyphRects[i].y / (f32)bestHeight,
             (f32)glyphRects[i].z / (f32)bestWidth,
             (f32)glyphRects[i].w / (f32)bestHeight
             );
     }
-    _glyphs[_regLength].character = ' ';
-    _glyphs[_regLength].size = _glyphs[0].size;
-    _glyphs[_regLength].uvRect = f32v4(0.0f, 0.0f, (f32)rs / (f32)bestWidth, (f32)rs / (f32)bestHeight);
+    m_glyphs[m_regLength].character = ' ';
+    m_glyphs[m_regLength].size = m_glyphs[0].size;
+    m_glyphs[m_regLength].uvRect = f32v4(0.0f, 0.0f, (f32)rs / (f32)bestWidth, (f32)rs / (f32)bestHeight);
 
 #ifdef DEBUG
     // Save An Image
@@ -155,30 +184,34 @@ SpriteFont::SpriteFont(const cString font, ui32 size, char cs, char ce) {
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
     char buffer[512];
     sprintf(buffer, "SFont_%s_%s_%d.png", TTF_FontFaceFamilyName(f), TTF_FontFaceStyleName(f), size);
-    vio::ImageIO().savePng(pixels, buffer, bestWidth, bestHeight);
+    vg::ImageIO().save(buffer, pixels.data(), bestWidth, bestHeight, vg::ImageIOFormat::RGBA_UI8);
 #endif // DEBUG
 
     glBindTexture(GL_TEXTURE_2D, 0);
     delete[] glyphRects;
     delete[] bestPartition;
+
+#if defined(VORB_IMPL_FONT_SDL)
     TTF_CloseFont(f);
+#endif
 }
 
-void SpriteFont::dispose() {
-    if (_texID != 0) {
-        glDeleteTextures(1, &_texID);
-        _texID = 0;
+void vg::SpriteFont::dispose() {
+    if (m_texID != 0) {
+        glDeleteTextures(1, &m_texID);
+        m_texID = 0;
     }
-    if (_glyphs) {
-        _glyphs = nullptr;
-        delete[] _glyphs;
+    if (m_glyphs) {
+        m_glyphs = nullptr;
+        delete[] m_glyphs;
     }
 }
 
-void SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionary) {
+void vg::SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionary) {
 #ifdef DEBUG
     ui32 startTime = SDL_GetTicks(), searchCount = 0;
 #endif // DEBUG
+
     boost::filesystem::path fontDirectory(getenv("SystemRoot"));
     fontDirectory /= "Fonts";
     boost::filesystem::directory_iterator dirIter(fontDirectory);
@@ -215,7 +248,7 @@ void SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDictionar
     return;
 }
 
-std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w) {
+std::vector<ui32>* vg::SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r, ui32 padding, ui32& w) {
     // Blank Initialize
     std::vector<ui32>* l = new std::vector<ui32>[r]();
     ui32* cw = new ui32[r]();
@@ -224,7 +257,7 @@ std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r
     }
 
     // Loop Through All Glyphs
-    for (size_t i = 0; i < rectsLength; i++) {
+    for (ui32 i = 0; i < rectsLength; i++) {
         // Find Row For Placement
         size_t ri = 0;
         for (size_t rii = 1; rii < r; rii++)
@@ -246,22 +279,22 @@ std::vector<ui32>* SpriteFont::createRows(i32v4* rects, ui32 rectsLength, ui32 r
     return l;
 }
 
-f32v2 SpriteFont::measure(const cString s) {
-    f32v2 size(0, _fontHeight);
+f32v2 vg::SpriteFont::measure(const cString s) const {
+    f32v2 size((f32)0, (f32)m_fontHeight);
     float cw = 0;
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];
         if (s[si] == '\n') {
-            size.y += _fontHeight;
+            size.y += m_fontHeight;
             if (size.x < cw)
                 size.x = cw;
             cw = 0;
         } else {
             // Check For Correct Glyph
-            size_t gi = c - _regStart;
-            if (gi >= _regLength)
-                gi = _regLength;
-            cw += _glyphs[gi].size.x;
+            size_t gi = c - m_regStart;
+            if (gi >= m_regLength)
+                gi = m_regLength;
+            cw += m_glyphs[gi].size.x;
         }
     }
     if (size.x < cw)
@@ -269,20 +302,141 @@ f32v2 SpriteFont::measure(const cString s) {
     return size;
 }
 
-void SpriteFont::draw(SpriteBatch* batch, const cString s, f32v2 position, f32v2 scaling, color4 tint, f32 depth) {
-    f32v2 tp = position;
+void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& position, const f32v2& scaling, const color4& tint, TextAlign align, f32 depth, const f32v4& clipRect, bool shouldWrap) const {
+    f32v2 pos = position;
+    pos.y += getInitialYOffset(align) * scaling.y;
+    if (pos.x < clipRect.x) pos.x = clipRect.x;
+    f32 gx = 0.0f;
+    std::vector <std::vector<GlyphToRender> > rows(1); // Rows of glyphs
+    std::vector <f32> rightEdges(1, 0.0f); // Right edge positions for rows
     for (int si = 0; s[si] != 0; si++) {
         char c = s[si];
         if (s[si] == '\n') {
-            tp.y += _fontHeight * scaling.y;
-            tp.x = position.x;
+            // Go to new row on newlines
+            rightEdges.back() = gx;
+            rightEdges.push_back(0.0f);
+            rows.emplace_back();
+            gx = 0.0f;
         } else {
+            bool useGlyph = true;
             // Check For Correct Glyph
-            size_t gi = c - _regStart;
-            if (gi >= _regLength)
-                gi = _regLength;
-            batch->draw(_texID, &_glyphs[gi].uvRect, tp, _glyphs[gi].size * scaling, tint, depth);
-            tp.x += _glyphs[gi].size.x * scaling.x;
+            size_t gi = c - m_regStart;
+            if (gi >= m_regLength) gi = m_regLength;
+
+            // Get glyph width
+            f32 gWidth = m_glyphs[gi].size.x * scaling.x;
+
+            // Check for wrapping
+            if (shouldWrap) { 
+                bool isOut;
+                switch (align) {
+                    case vg::TextAlign::TOP:
+                    case vg::TextAlign::CENTER:
+                    case vg::TextAlign::BOTTOM:
+                        isOut = ((pos.x + (gx + gWidth) / 2.0f > clipRect.x + clipRect.z)); break;
+                    case vg::TextAlign::TOP_RIGHT:
+                    case vg::TextAlign::RIGHT:
+                    case vg::TextAlign::BOTTOM_RIGHT:
+                        isOut = ((pos.x - gx - gWidth < clipRect.x)); break;
+                    default:
+                        isOut = ((pos.x + gx + gWidth > clipRect.x + clipRect.z)); break;
+                }
+         
+                // If the glyph is out of the clip rect, may need to go to new row
+                if (isOut) {
+                    // TODO(Ben): Check input clipping characters
+                    if (c == ' ') {
+                        useGlyph = false;
+                    } else {
+                        // Count the word size
+                        int numChars = 0;
+                        while (s[si - numChars] != ' ' && si - numChars != 0) numChars++;
+
+                        if (si - numChars > 0) {
+                            for (int i = 0; i < numChars; i++) {
+                                gx -= m_glyphs[si - i].size.x * scaling.x;
+                            }
+                            si -= (numChars + 1); // -1 to counter ++ later.
+                            rightEdges.back() = gx;
+                            gx = 0.0f;
+                            useGlyph = false; // TODO(Ben): Is this right?
+                        } else {
+                            rightEdges.back() = gx;
+                        }
+                    }
+                    // Go to new row
+                    rightEdges.push_back(0.0f);
+                    rows.emplace_back();
+                    gx = 0.0f;
+                }
+            }
+            // Add glyph to the row
+            if (useGlyph) {
+                rows.back().emplace_back(gi, gx);
+                gx += gWidth;
+            }
         }
     }
+    rightEdges.back() = gx;
+    // Get y offset
+    f32 yOff = getYOffset(rows.size(), align) * scaling.y;
+    // Render each row
+    for (size_t y = 0; y < rows.size(); y++) {
+        f32 rightEdge = rightEdges[y];
+        for (auto& g : rows[y]) {   
+            f32v2 position = pos + f32v2(g.x + rightEdges[y] * X_OFF_MULTS[(int)align], yOff + y * m_fontHeight * scaling.y);
+            f32v2 size = m_glyphs[g.gi].size * scaling;
+            f32v4 uvRect = m_glyphs[g.gi].uvRect;
+            // Clip the glyphs with clipRect
+            computeClipping(clipRect, position, size, uvRect);
+            // Don't draw the glyph if its too small after clipping
+            if (size.x > 0.0f && size.y > 0.0f) {
+                batch->draw(m_texID, &uvRect, position, size, tint, depth);
+            }
+        }
+    }
+}
+
+f32 vg::SpriteFont::getInitialYOffset(TextAlign textAlign) const {
+    // No need to measure top left
+    if (textAlign == vg::TextAlign::TOP_LEFT) return 0.0f;
+    switch (textAlign) {
+        case vg::TextAlign::LEFT:
+            return -(f32)m_fontHeight / 2.0f;
+        case vg::TextAlign::TOP_LEFT:
+            return 0.0f;
+        case vg::TextAlign::TOP:
+            return 0.0f;
+        case vg::TextAlign::TOP_RIGHT:
+            return 0.0f;
+        case vg::TextAlign::RIGHT:
+            return -(f32)m_fontHeight / 2.0f;
+        case vg::TextAlign::BOTTOM_RIGHT:
+            return -(f32)m_fontHeight;
+        case vg::TextAlign::BOTTOM:
+            return -(f32)m_fontHeight;
+        case vg::TextAlign::BOTTOM_LEFT:
+            return -(f32)m_fontHeight;
+        case vg::TextAlign::CENTER:
+            return -(f32)m_fontHeight / 2.0f;
+        default:
+            return 0.0f; // Should never happen
+    }
+    return 0.0f;
+}
+
+f32 vg::SpriteFont::getYOffset(size_t numRows, vg::TextAlign align) const {
+    switch (align) {
+        case vg::TextAlign::TOP_LEFT:
+        case vg::TextAlign::TOP:
+        case vg::TextAlign::TOP_RIGHT:
+            return 0.0f;
+        case vg::TextAlign::LEFT:
+        case vg::TextAlign::CENTER:
+        case vg::TextAlign::RIGHT:
+            return -((f32)(numRows - 1) * m_fontHeight / 2.0f);
+        default:
+            return -((f32)(numRows - 1) * m_fontHeight);
+    }
+    return 0.0f; // Should never happen
 }

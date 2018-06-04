@@ -6,9 +6,11 @@
 
 #include <include/IO.h>
 #include <include/graphics/ModelIO.h>
+#include <include/graphics/ImageIO.h>
 #include <include/io/IOManager.h>
 #include <include/Vorb.h>
 #include <include/Timing.h>
+#include "tiny_obj_loader.h"
 
 TEST(Path) {
     vpath path = ".";
@@ -37,7 +39,7 @@ TEST(DirectoryEnum) {
     vdir dir;
     if (!path.asDirectory(&dir)) return false;
 
-    dir.forEachEntry(createDelegate<const vpath&>([=] (Sender s, const vpath& e) {
+    dir.forEachEntry(makeFunctor([=] (Sender s, const vpath& e) {
         if (!e.isValid()) return;
         printf("Entry: %s\n", e.getCString());
     }));
@@ -110,22 +112,141 @@ TEST(ModelIO) {
 
         vfstream fs = file.openReadOnly(false);
         vio::FileSeekOffset l = fs.length();
-        cString data = new char[l];
+        cString data = new char[l + 1];
         l = (size_t)fs.read(l, 1, data);
         data[l] = 0;
         fs.close();
 
-        vio::OBJMesh mesh;
+        vg::OBJMesh mesh;
         timer.start();
-        vio::ModelIO::loadOBJ(data, mesh);
-        f32 ms = timer.stop();
+        vg::ModelIO::loadOBJ(data, mesh);
+        f64 ms = timer.stop();
         delete[] data;
 
         printf("Model: %s\n", file.getPath().getCString());
         printf("Verts: %d\n", mesh.vertices.size());
         printf("Inds: %d\n", mesh.triangles.size() * 3);
-        printf("Load Time (MS): %f\n", ms);
+        printf("Load Time (MS): %lf\n", ms);
     });
 
+    return true;
+}
+
+TEST(VRAW) {
+    vpath path = "data/models/VRAW";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(true);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l + 1];
+        l = (size_t)fs.read(l, 1, data);
+        fs.close();
+
+        timer.start();
+        vg::MeshDataRaw mesh;
+        for (size_t i = 0; i < 1; i++) {
+            vg::VertexDeclaration vdecl;
+            ui32 indexSize;
+            mesh = vg::ModelIO::loadRAW(data, vdecl, indexSize);
+            delete[] mesh.vertices;
+            delete[] mesh.indices;
+        }
+        f64 ms = timer.stop();
+        delete[] data;
+
+        printf("Model: %s\n", file.getPath().getCString());
+        printf("Verts: %d\n", mesh.vertexCount);
+        printf("Inds: %d\n", mesh.indexCount);
+        printf("Load Time (MS): %lf\n", ms);
+    });
+
+    return true;
+}
+
+TEST(TINYOBJ) {
+    vpath path = "data/models/WaveOBJ";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(false);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l + 1];
+        l = (size_t)fs.read(l, 1, data);
+        data[l] = 0;
+        fs.close();
+        std::stringstream ss(data);
+        tinyobj::MaterialFileReader mr { path.getString() };
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> mats;
+        timer.start();
+        tinyobj::LoadObj(shapes, mats, ss, mr);
+        f64 ms = timer.stop();
+        delete[] data;
+
+        printf("Model: %s\n", file.getPath().getCString());
+        printf("Verts: %d\n", shapes[0].mesh.positions.size());
+        printf("Inds: %d\n", shapes[0].mesh.indices.size() * 3);
+        printf("Load Time (MS): %lf\n", ms);
+    });
+
+    return true;
+}
+
+TEST(Animation) {
+    vpath path = "data/animation/";
+    vio::DirectoryEntries entries;
+    vdir dir;
+    path.asDirectory(&dir);
+
+    dir.forEachEntry([] (Sender s, const vpath& path) {
+        PreciseTimer timer;
+
+        vfile file;
+        if (!path.asFile(&file)) return;
+
+        vfstream fs = file.openReadOnly(true);
+        vio::FileSeekOffset l = fs.length();
+        cString data = new char[l];
+        l = (size_t)fs.read(l, 1, data);
+        fs.close();
+
+        vg::Skeleton skeleton;
+        timer.start();
+        skeleton = vg::ModelIO::loadAnim(data);
+        f64 ms = timer.stop();
+        delete[] data;
+
+        printf("Animation: %s\n", file.getPath().getCString());
+        printf("Bones:  %d\n", skeleton.numBones);
+        printf("Frames: %d\n", skeleton.numFrames);
+        printf("Load Time (MS): %lf\n", ms);
+    });
+
+    return true;
+}
+
+TEST(ImageIO) {
+    vorb::init(vorb::InitParam::ALL);
+    // Test for damn memory leaks
+    for (size_t i = 0; i < 100; i++) {
+        auto bmp = vg::ImageIO().load("data/BigImage.png");
+        vg::ImageIO::free(bmp);
+    }
+    vorb::dispose(vorb::InitParam::ALL);
     return true;
 }

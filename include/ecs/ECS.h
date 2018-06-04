@@ -1,19 +1,29 @@
-///
-/// ECS.h
-/// Seed of Andromeda
-///
-/// Created by Cristian Zaloj on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// The main ECS class
-///
+//
+// ECS.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ECS.h
+ * @brief The main ECS class.
+ */
 
 #pragma once
 
-#ifndef ECS_h__
-#define ECS_h__
+#ifndef Vorb_ECS_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ECS_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "BitTable.hpp"
@@ -21,7 +31,7 @@
 #include "../IDGenerator.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         class ComponentTableBase;
         
         typedef std::pair<nString, ComponentTableBase*> NamedComponent; ///< A component table paired with its name
@@ -30,21 +40,22 @@ namespace vorb {
 
         /// Entity Component System
         class ECS {
+            friend class ComponentTableBase;
         public:
             /// Default constructor which initializes events
             ECS();
 
             /// @return Set of entities for iteration
             const EntitySet& getEntities() const {
-                return _entities;
+                return m_entities;
             }
             /// @return Number of entities that are active
             size_t getActiveEntityCount() const {
-                return _genEntity.getActiveCount();
+                return m_genEntity.getActiveCount();
             }
             /// @return The dictionary of NamedComponents
             const ComponentSet& getComponents() const {
-                return _components;
+                return m_components;
             }
 
             /// @return The ID of a newly generated entity
@@ -102,19 +113,19 @@ namespace vorb {
             Event<EntityID> onEntityRemoved; ///< Called when an entity is removed from this system
             Event<NamedComponent> onComponentAdded; ///< Called when a component table is added to this system
         private:
-            typedef std::pair<ComponentTableBase*, std::shared_ptr<IDelegate<EntityID>>> ComponentSubscriber;
+            typedef std::pair<ComponentTableBase*, std::shared_ptr<Delegate<Sender, EntityID>>> ComponentSubscriber;
             typedef std::unordered_map<nString, ComponentSubscriber> ComponentSubscriberSet;
 
-            EntitySet _entities; ///< List of entities
+            EntitySet m_entities; ///< List of entities
             EntityID m_eidHighest = 0; ///< Highest generated entity ID
-            vecs::BitTable m_entityComponents; ///< Truth table for components that an entity holds
+            BitTable m_entityComponents; ///< Truth table for components that an entity holds
 
-            IDGenerator<EntityID> _genEntity; ///< Unique ID generator for entities
-            ComponentSet _components; ///< List of component tables
+            vcore::IDGenerator<EntityID> m_genEntity; ///< Unique ID generator for entities
+            ComponentSet m_components; ///< List of component tables
             ComponentList m_componentList; ///< Component tables organized by their id
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
-#endif // ECS_h__
+#endif // !Vorb_ECS_h__

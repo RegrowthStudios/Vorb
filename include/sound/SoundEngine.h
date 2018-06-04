@@ -1,19 +1,28 @@
-///
-/// SoundEngine.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 3 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// The main interface to keeping track of sounds
-///
+//
+// SoundEngine.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 3 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SoundEngine.h
+ * @brief The main interface to keeping track of sounds.
+ */
 
 #pragma once
 
-#ifndef SoundEngine_h__
-#define SoundEngine_h__
+#ifndef Vorb_SoundEngine_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SoundEngine_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "ISoundImpl.h"
 #include "../io/Path.h"
@@ -40,9 +49,9 @@ namespace vorb {
             /// @return True if no error occurred and properly disposed
             bool dispose();
 
-            /// @return True if this engine is currently initialized
+            /// @return True if this engine is not initialized or has been disposed
             bool isDisposed() const {
-                return (m_alive.get() == nullptr) || *m_alive;
+                return (m_alive.get() == nullptr) || !(*m_alive);
             }
 
             /// Load a sound resource into this engine
@@ -87,4 +96,4 @@ namespace vorb {
 }
 namespace vsound = vorb::sound;
 
-#endif // SoundEngine_h__
+#endif // !Vorb_SoundEngine_h__

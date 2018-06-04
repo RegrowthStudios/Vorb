@@ -3,11 +3,11 @@
 
 #include "ecs/ComponentTableBase.h"
 
-vcore::MultipleComponentSet::MultipleComponentSet() :
+vecs::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Entity added handler
-    _fEntityAdded.reset(createDelegate<ComponentID, EntityID>([=] (Sender sender, ComponentID, EntityID eID) -> void {
+    _fEntityAdded.reset(makeFunctor([=] (Sender sender, ComponentID, EntityID eID) -> void {
         for (ComponentTableBase* table : this->_tables) {
             // See if a table doesn't contain the entity
             if (table == sender) continue;
@@ -18,7 +18,7 @@ vcore::MultipleComponentSet::MultipleComponentSet() :
     }));
 
     // Entity removed handler
-    _fEntityRemoved.reset(createDelegate<ComponentID, EntityID>([=] (Sender, ComponentID, EntityID eID) -> void {
+    _fEntityRemoved.reset(makeFunctor([=] (Sender, ComponentID, EntityID eID) -> void {
         // Always remove the entity from this list
         auto entity = this->_entities.find(eID);
         if (entity != _entities.end()) {
@@ -27,23 +27,23 @@ vcore::MultipleComponentSet::MultipleComponentSet() :
         }
     }));
 }
-vcore::MultipleComponentSet::~MultipleComponentSet() {
+vecs::MultipleComponentSet::~MultipleComponentSet() {
     // Remove event hooks for last copy of set
     if (_fEntityAdded.unique()) {
         for (ComponentTableBase* table : _tables) {
-            table->onEntityAdded.remove(_fEntityAdded.get());
-            table->onEntityRemoved.remove(_fEntityRemoved.get());
+            table->onEntityAdded.remove(*_fEntityAdded.get());
+            table->onEntityRemoved.remove(*_fEntityRemoved.get());
         }
     }
 }
 
-void vcore::MultipleComponentSet::addRequirement(ComponentTableBase* component) {
+void vecs::MultipleComponentSet::addRequirement(ComponentTableBase* component) {
     // Check for existing requirement
     auto c = std::find(_tables.begin(), _tables.end(), component);
     if (c != _tables.end()) return;
 
     // Add handlers
-    component->onEntityAdded.add(_fEntityAdded.get());
-    component->onEntityRemoved.add(_fEntityRemoved.get());
+    component->onEntityAdded.add(*_fEntityAdded.get());
+    component->onEntityRemoved.add(*_fEntityRemoved.get());
     _tables.push_back(component);
 }

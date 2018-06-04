@@ -1,21 +1,31 @@
-///
-/// ModelIO.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 18 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Handles loading models into indexed-interleaved-vertex meshes
-///
+//
+// ModelIO.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 18 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ModelIO.h
+ * @brief Handles loading models into indexed-interleaved-vertex meshes.
+ */
 
 #pragma once
 
-#ifndef ModelIO_h__
-#define ModelIO_h__
+#ifndef Vorb_ModelIO_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ModelIO_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "MeshData.h"
+#include "AnimationData.h"
 #include "../utils.h"
 
 namespace std {
@@ -23,7 +33,7 @@ namespace std {
 }
 
 namespace vorb {
-    namespace io {
+    namespace graphics {
 
         struct OBJMesh {
         public:
@@ -38,10 +48,12 @@ namespace vorb {
         class ModelIO {
         public:
             static ui32v2 loadOBJ(CALLER_DELETE const cString data, OUT OBJMesh& mesh);
-            static CALLER_DELETE vg::MeshDataRaw loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT size_t& indexSize);
+            static CALLER_DELETE vg::MeshDataRaw loadRAW(CALLER_DELETE const void* data, OUT vg::VertexDeclaration& decl, OUT ui32& indexSize);
+
+            static CALLER_DELETE vg::Skeleton loadAnim(CALLER_DELETE const void* data);
         };
     }
 }
-namespace vio = vorb::io;
+namespace vg = vorb::graphics;
 
-#endif // ModelIO_h__
+#endif // !Vorb_ModelIO_h__

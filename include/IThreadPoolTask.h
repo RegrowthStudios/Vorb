@@ -1,19 +1,26 @@
-///
-/// IThreadPoolTask.h
-/// Seed of Andromeda
-///
-/// Created by Benjamin Arnold on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// This file provides a thread pool task interface
-///
+//
+// IThreadPoolTask.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file IThreadPoolTask.h
+ * @brief This file provides a thread pool task interface.
+ */
 
 #pragma once
 
-#ifndef ThreadPoolTask_h__
-#define ThreadPoolTask_h__
+#ifndef Vorb_IThreadPoolTask_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_IThreadPoolTask_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace core {
@@ -23,9 +30,8 @@ namespace vorb {
         public:
             /// Constructor
             /// @param taskId: Optional unique identifier for task type.
-            IThreadPoolTask(bool shouldAddToFinishedTasks = false, i32 taskId = -1) :
-                _shouldAddToFinishedTasks(shouldAddToFinishedTasks),
-                _taskId(taskId) {
+            IThreadPoolTask(i32 taskId = -1) :
+                m_taskId(taskId) {
                 /* Empty */
             }
 
@@ -34,26 +40,18 @@ namespace vorb {
             /// Executes the task
             virtual void execute(T* workerData) = 0;
 
-            /// Checks if this should be stored in a finished tasks queue
-            virtual const bool& shouldAddToFinishedTasks() const { return _shouldAddToFinishedTasks; }
-
-            /// Setters
-            void setIsFinished(bool isFinished) { _isFinished = isFinished; }
-            void setShouldAddToFinishedtasks(bool shouldAdd) { _shouldAddToFinishedTasks = shouldAdd; }
-
+            /// Last thing that runs. Can delete or recycle the task here if you want.
+            virtual void cleanup() {};
+           
             /// Getters
-            const i32& getTaskId() const { return _taskId; }
-            const bool& getIsFinished() const { return _isFinished; }
+            const i32& getTaskId() const { return m_taskId; }
 
+            volatile bool isFinished = false;
         protected:
-            i32 _taskId;
-            bool _isFinished = false;
-            bool _shouldAddToFinishedTasks; ///< SHould it be stored in a finished tasks queue
+            i32 m_taskId;
         };
     }
 }
-
-// Namespace alias
 namespace vcore = vorb::core;
 
-#endif // ThreadPoolTask_h__
+#endif // !Vorb_IThreadPoolTask_h__

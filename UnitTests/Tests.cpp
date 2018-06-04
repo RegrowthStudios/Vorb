@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Tests.h"
 
+#define VORB_IMPL_UI_SDL
+#define VORB_IMPL_SOUND_FMOD
+#define VORB_IMPL_FONT_SDL
+#include <include/VorbLibs.h>
+
 typedef bool(*TestFunc)();
 
 bool isInit = false;
@@ -23,6 +28,9 @@ bool UnitTests::Tests::runTest(const nString& name) {
     TestFunc f = (TestFunc)ptrFunc;
     try {
         return f();
+    } catch (std::exception e) {
+        puts(e.what());
+        return false;
     } catch (...) {
         return false;
     }

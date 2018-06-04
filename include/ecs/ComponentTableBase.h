@@ -1,26 +1,33 @@
-///
-/// ComponentTableBase.h
-/// Seed of Andromeda
-///
-/// Created by Cristian Zaloj on 9 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Base class for storing entity-component mappings
-///
+//
+// ComponentTableBase.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 9 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ComponentTableBase.h
+ * @brief Base class for storing entity-component mappings.
+ */
 
 #pragma once
 
-#ifndef ComponentTableBase_h__
-#define ComponentTableBase_h__
+#ifndef Vorb_ComponentTableBase_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ComponentTableBase_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "../Events.hpp"
 #include "../IDGenerator.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         class ComponentTableBase {
             friend class ECS;
         public:
@@ -63,6 +70,9 @@ namespace vorb {
                 return _components.size(); // This should be equal to _genComponent.getActiveCount()
             }
 
+            void unsafeSetSize(size_t n);
+            void unsafeSetLink(ECS& ecs, EntityID, ComponentID);
+
             Event<ComponentID, EntityID> onEntityAdded; ///< Called when an entity is added to this table
             Event<ComponentID, EntityID> onEntityRemoved; ///< Called when an entity is removed from this table
         protected:
@@ -84,11 +94,10 @@ namespace vorb {
 
             TableID m_id; ///< ID within a system
             ComponentBindingSet _components; ///< List of (entity ID, component ID) pairings
-            IDGenerator<ComponentID> _genComponent; ///< Unique ID generator
+            vcore::IDGenerator<ComponentID> _genComponent; ///< Unique ID generator
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
-#endif // ComponentTableBase_h__
-
+#endif // !Vorb_ComponentTableBase_h__

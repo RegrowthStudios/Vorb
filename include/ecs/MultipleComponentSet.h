@@ -1,25 +1,35 @@
-///
-/// MultipleComponentSet.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 30 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Tracks entities with similar components
-///
+//
+// MultipleComponentSet.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 30 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MultipleComponentSet.h
+ * @brief Tracks entities with similar components
+ */
 
 #pragma once
 
-#ifndef MultipleComponentSet_h__
-#define MultipleComponentSet_h__
+#ifndef Vorb_MultipleComponentSet_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MultipleComponentSet_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <memory>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "Entity.h"
 #include "../Events.hpp"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         class ComponentTableBase;
 
         /// Listener class that tracks entities that meet component requirements
@@ -58,11 +68,11 @@ namespace vorb {
             EntityIDSet _entities; ///< List of entity IDs that meet requirements
             std::vector<ComponentTableBase*> _tables; ///< List of required component tables
         private:
-            std::shared_ptr<IDelegate<ComponentID, EntityID>> _fEntityAdded;
-            std::shared_ptr<IDelegate<ComponentID, EntityID>> _fEntityRemoved;
+            std::shared_ptr<Delegate<Sender, ComponentID, EntityID>> _fEntityAdded;
+            std::shared_ptr<Delegate<Sender, ComponentID, EntityID>> _fEntityRemoved;
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
-#endif // MultipleComponentSet_h__
+#endif // !Vorb_MultipleComponentSet_h__

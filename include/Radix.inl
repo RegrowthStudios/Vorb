@@ -14,7 +14,7 @@ void radixSort(TIndex* indices, TData* data, i32 n, i32(*converter)(TData*), i32
     // Create The Indices And Converted Values
     TIndex* inds = indices;
     ui32* converted = new ui32[n];
-    REGISTER i32 i = 0;
+    i32 i = 0;
     for (; i < n; i++) {
         inds[i] = i;
         converted[i] = converter(data + i) + 0x80000000;
@@ -24,7 +24,7 @@ void radixSort(TIndex* indices, TData* data, i32 n, i32(*converter)(TData*), i32
     ui32* convertedBuf = new ui32[n];
     // For The Count Sorting
     i32* binCounts = new i32[bins];
-    REGISTER i32 bin;
+    i32 bin;
     bool isUnsorted;
     // Sort All Of The Bits
     while (maxBits > 0) {
@@ -96,7 +96,7 @@ void radixSort(TData* data, i32 n, i32(*converter)(TData*), i32 maxBits) {
     // Create The Indices And Converted Values
     TData* dBuf1 = data;
     ui32* converted = new ui32[n];
-    REGISTER i32 i = 0;
+    i32 i = 0;
     for (; i < n; i++) {
         converted[i] = converter(data + i) + 0x80000000;
     }
@@ -105,7 +105,7 @@ void radixSort(TData* data, i32 n, i32(*converter)(TData*), i32 maxBits) {
     ui32* convertedBuf = new ui32[n];
     // For The Count Sorting
     i32* binCounts = new i32[bins];
-    REGISTER i32 bin;
+    i32 bin;
     bool isUnsorted;
     // Sort All Of The Bits
     while (maxBits > 0) {

@@ -2,11 +2,30 @@
 #include "Vorb.h"
 
 #include <boost/filesystem.hpp>
+#include <enet/enet.h>
+#include <FreeImage.h>
+#if defined(VORB_IMPL_FONT_SDL)
+#if defined(VORB_OS_WINDOWS)
+#include <TTF/SDL_ttf.h>
+#else
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
+#else
+// TODO: FreeType?
+#endif
 
 #include "graphics/ConnectedTextures.h"
+#include "graphics/SpriteBatch.h"
 #include "io/IOManager.h"
 #include "sound/SoundEngine.h"
 #include "utils.h"
+#include "VorbLibs.h"
+#include "Events.hpp"
+
+void doNothing(void*) { 
+    // Empty
+}
+std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
 
 namespace vorb {
     // Current system settings
@@ -24,6 +43,15 @@ namespace vorb {
             return InitParam::GRAPHICS;
         }
 
+#if defined(VORB_IMPL_FONT_SDL)
+        if (TTF_Init() == -1) {
+            printf("TTF_Init Error: %s\n", TTF_GetError());
+            return InitParam::NONE;
+        }
+#else
+        // TODO(Cristian): FreeType
+#endif
+        FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
@@ -34,10 +62,10 @@ namespace vorb {
         }
 
         // Correctly retrieve initial path
-        vpath path = boost::filesystem::initial_path().string();
+        vio::Path path = boost::filesystem::initial_path().string();
 
         // Set the executable directory
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
         {
             nString buf(1024, 0);
             GetModuleFileName(nullptr, &buf[0], 1024 * sizeof(TCHAR));
@@ -75,6 +103,16 @@ namespace vorb {
 
         return InitParam::SOUND;
     }
+    InitParam initNet() {
+        // Check for previous initialization
+        if (isSystemInitialized(InitParam::NET)) {
+            return InitParam::NET;
+        }
+
+        auto err = enet_initialize();
+        if (err != 0) return InitParam::NONE;
+        return InitParam::NET;
+    }
     
     /************************************************************************/
     /* Disposers                                                            */
@@ -84,6 +122,14 @@ namespace vorb {
         if (!isSystemInitialized(InitParam::GRAPHICS)) {
             return InitParam::GRAPHICS;
         }
+
+#if defined(VORB_IMPL_FONT_SDL)
+        TTF_Quit();
+#else
+        // TODO(Cristian): FreeType
+#endif
+        FreeImage_DeInitialise();
+        vg::SpriteBatch::disposeProgram();
 
         return InitParam::GRAPHICS;
     }
@@ -105,6 +151,16 @@ namespace vorb {
 
         return InitParam::SOUND;
     }
+    InitParam disposeNet() {
+        // Check for existence
+        if (!isSystemInitialized(InitParam::NET)) {
+            return InitParam::NET;
+        }
+
+        enet_deinitialize();
+
+        return InitParam::NET;
+    }
 }
 
 vorb::InitParam vorb::init(const InitParam& p) {
@@ -114,6 +170,7 @@ vorb::InitParam vorb::init(const InitParam& p) {
     if (HAS(p, InitParam::SOUND)) succeeded |= initSound();
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= initGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= initIO();
+    if (HAS(p, InitParam::NET)) succeeded |= initNet();
 
     // Add system flags
     currentSettings |= succeeded;
@@ -129,6 +186,7 @@ vorb::InitParam vorb::dispose(const InitParam& p) {
     if (HAS(p, InitParam::SOUND)) succeeded |= disposeSound();
     if (HAS(p, InitParam::GRAPHICS)) succeeded |= disposeGraphics();
     if (HAS(p, InitParam::IO)) succeeded |= disposeIO();
+    if (HAS(p, InitParam::NET)) succeeded |= disposeNet();
 
     // Remove system flags
     currentSettings &= (InitParam)(~(ui64)succeeded);

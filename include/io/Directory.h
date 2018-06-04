@@ -1,19 +1,28 @@
-///
-/// Directory.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A directory wrapper
-///
+//
+// Directory.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 29 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Directory.h
+ * @brief A directory wrapper.
+ */
 
 #pragma once
 
-#ifndef Directory_h__
-#define Directory_h__
+#ifndef Vorb_Directory_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Directory_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "../Events.hpp"
 #include "Path.h"
@@ -21,7 +30,7 @@
 namespace vorb {
     namespace io {
         typedef std::vector<Path> DirectoryEntries; ///< A list of directory entries
-        typedef IDelegate<const Path&> DirectoryEntryCallback; ///< Type for a callback function
+        typedef Delegate<Sender, const Path&> DirectoryEntryCallback; ///< Type for a callback function
 
         /// Represents a directory that houses paths
         class Directory {
@@ -44,14 +53,14 @@ namespace vorb {
             /// Iterate the directory, placing entries into a list
             /// @param l: List where entries will be placed
             /// @return Number of added entries
-            ui32 appendEntries(OUT DirectoryEntries& l) const;
+            size_t appendEntries(OUT DirectoryEntries& l) const;
             /// Iterate a directory, invoking a function on each entry
             /// @pre: f may not be null
             /// @param f: Invokable function
             void forEachEntry(DirectoryEntryCallback* f) const;
             template<typename F>
             void forEachEntry(F f) const {
-                DirectoryEntryCallback* fDel = createDelegate<const Path&>(f);
+                DirectoryEntryCallback* fDel = makeFunctor(f);
                 forEachEntry(fDel);
                 delete fDel;
             }
@@ -70,4 +79,4 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::Directory vdir; ///< Directory shorthand
 
-#endif // Directory_h__
+#endif // !Vorb_Directory_h__

@@ -1,24 +1,34 @@
-///
-/// ComponentTable.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 10 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Common abstract implementation of ComponentTableBase for any component type
-///
+//
+// ComponentTable.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 10 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ComponentTable.hpp
+ * @brief Common abstract implementation of ComponentTableBase for any component type.
+ */
 
 #pragma once
 
-#ifndef ComponentTable_h__
-#define ComponentTable_h__
+#ifndef Vorb_ComponentTable_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ComponentTable_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <utility>
+#include <vector>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "ComponentTableBase.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         /// Component table that stores a specific component type
         template<typename T>
         class ComponentTable : public ComponentTableBase {
@@ -28,7 +38,7 @@ namespace vorb {
 
             /// Constructor that requires a blank component for reference
             /// @param defaultData: Blank component data
-            ComponentTable(T defaultData) : ComponentTableBase() {
+            ComponentTable(const T& defaultData) : ComponentTableBase() {
                 // Default data goes in the first slot
                 _components.emplace_back(ID_GENERATOR_NULL_ID, defaultData);
             }
@@ -95,8 +105,9 @@ namespace vorb {
 
         protected:
             virtual void addComponent(ComponentID cID, EntityID eID) override {
-                T val = getDefaultData();
-                _components.emplace_back(eID, val);
+                if (cID >= _components.size()) _components.resize(cID + 1);
+                _components[cID].first = eID;
+                _components[cID].second = getDefaultData();
             }
             virtual void setComponent(ComponentID cID, EntityID eID) override {
                 _components[cID].first = eID;
@@ -114,6 +125,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
-#endif // ComponentTable_h__
+#endif // !Vorb_ComponentTable_hpp__

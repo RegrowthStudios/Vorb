@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "io/MemFile.h"
-#include <stdio.h>
+
+#include "os.h"
 
 MemFile::MemFile() {
     m_file = tmpfile();
 
-#ifdef OS_WINDOWS
+#ifdef VORB_OS_WINDOWS
     m_fileDescriptor = _fileno(m_file);
     HANDLE fm;
     HANDLE h = (HANDLE)_get_osfhandle(m_fileDescriptor);

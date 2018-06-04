@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "graphics/DepthState.h"
 
-DepthState::DepthState(bool read, DepthFunction depthFunction, bool write) :
+vg::DepthState::DepthState(bool read, DepthFunction depthFunction, bool write) :
 shouldRead(read),
 shouldWrite(write),
 depthFunc(depthFunction) {}
 
-void DepthState::set() const {
+void vg::DepthState::set() const {
     if (shouldRead || shouldWrite) {
         glEnable(GL_DEPTH_TEST);
         glDepthMask(shouldWrite);
@@ -16,8 +16,8 @@ void DepthState::set() const {
     }
 }
 
-const DepthState DepthState::FULL(true, DepthFunction::LESS_THAN, true);
-const DepthState DepthState::WRITE(false, DepthFunction::ALWAYS, true);
-const DepthState DepthState::READ(true, DepthFunction::LESS_THAN, false);
-const DepthState DepthState::NONE(false, DepthFunction::ALWAYS, false);
+const vg::DepthState vg::DepthState::FULL(true, vg::DepthFunction::LESS, true);
+const vg::DepthState vg::DepthState::WRITE(false, vg::DepthFunction::ALWAYS, true);
+const vg::DepthState vg::DepthState::READ(true, vg::DepthFunction::LESS, false);
+const vg::DepthState vg::DepthState::NONE(false, vg::DepthFunction::ALWAYS, false);
 

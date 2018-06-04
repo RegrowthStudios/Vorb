@@ -1,21 +1,26 @@
-///
-/// Path.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// A wrapper for a path utility
-///
+//
+// Path.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 29 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file Path.h
+ * @brief A wrapper for a path utility.
+ */
 
 #pragma once
 
-#ifndef Path_h__
-#define Path_h__
+#ifndef Vorb_Path_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Path_h__
+//! @endcond
 
-/// TODO: Add caller-checked preconditions for speedups?
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 namespace vorb {
     namespace io {
@@ -138,6 +143,9 @@ namespace vorb {
                 ret.concatenate(p.m_path);
                 return ret;
             }
+            bool operator==(const Path& other) const {
+                return getString() == other.getString();
+            }
             
             /// Trims the last entry of this path away
             /// @return Self
@@ -167,4 +175,12 @@ namespace vorb {
 namespace vio = vorb::io;
 typedef vio::Path vpath; ///< Path shorthand
 
-#endif // Path_h__
+namespace std {
+    template<>
+    struct hash<vio::Path> : private hash<nString>{
+    public:
+        size_t operator() (const vio::Path& path) const;
+    };
+}
+
+#endif // !Vorb_Path_h__

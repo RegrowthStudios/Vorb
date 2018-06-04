@@ -1,19 +1,28 @@
-///
-/// gtypes.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 26 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Typenames for general graphics types
-///
+//
+// gtypes.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 26 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file gtypes.h
+ * @brief Typenames for general graphics types.
+ */
 
 #pragma once
 
-#ifndef gtypes_h__
-#define gtypes_h__
+#ifndef Vorb_gtypes_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_gtypes_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <GL/glew.h>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 /************************************************************************/
 /* Objects                                                              */
@@ -42,5 +51,6 @@ typedef VGObject VGQuery;
 typedef GLint VGAttribute;
 typedef GLint VGUniform;
 typedef GLenum VGEnum;
+typedef ui32 VGSemantic;
 
-#endif // gtypes_h__
+#endif // !Vorb_gtypes_h__

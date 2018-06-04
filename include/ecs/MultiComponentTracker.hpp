@@ -1,24 +1,34 @@
-///
-/// MultiComponentTracker.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 1 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// An extended entity tracker
-///
+//
+// MultiComponentTracker.hpp
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 1 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file MultiComponentTracker.hpp
+ * @brief An extended entity tracker.
+ */
 
 #pragma once
 
-#ifndef MultiComponentTracker_h__
-#define MultiComponentTracker_h__
+#ifndef Vorb_MultiComponentTracker_hpp__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_MultiComponentTracker_hpp__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include <memory>
+#include <unordered_map>
+
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "MultipleComponentSet.h"
 
 namespace vorb {
-    namespace core {
+    namespace ecs {
         /// Tracks entities in specified component sets as well as their component IDs
         template<size_t N> 
         class MultiComponentTracker : public MultipleComponentSet {
@@ -78,6 +88,6 @@ namespace vorb {
         };
     }
 }
-namespace vcore = vorb::core;
+namespace vecs = vorb::ecs;
 
-#endif // MultiComponentTracker_h__
+#endif // !Vorb_MultiComponentTracker_hpp__

@@ -24,6 +24,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>Required Files</Filter>
     </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TestClasses.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,7 +36,13 @@
     <ClCompile Include="Tests.cpp">
       <Filter>Required Files</Filter>
     </ClCompile>
-    <ClCompile Include="Types.cpp">
+    <ClCompile Include="VorbUI.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Example.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Keg.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Lua.cpp">
@@ -41,7 +51,13 @@
     <ClCompile Include="OS.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Types.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="Utils.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Vorb.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="VorbCoreECS.cpp">
@@ -50,13 +66,26 @@
     <ClCompile Include="VorbIO.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Example.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="VorbSound.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Vorb.cpp">
+    <ClCompile Include="VorbGraphics.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="VorbScript.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="QD.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cpp" />
+    <ClCompile Include="VorbVoxel.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="DelegateEvents.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="VorbMath.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

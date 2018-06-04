@@ -1,19 +1,26 @@
-///
-/// VoxelMesher.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 27 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Contains various algorithms for voxel meshing
-///
+//
+// VoxelMesherCulled.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 27 Dec 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file VoxelMesherCulled.h
+ * @brief Contains various algorithms for voxel meshing.
+ */
 
 #pragma once
 
-#ifndef VoxelMesher_h__
-#define VoxelMesher_h__
+#ifndef Vorb_VoxelMesherCulled_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_VoxelMesherCulled_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
 
 #include "VoxCommon.h"
 #include "VoxelMeshAlg.h"
@@ -81,4 +88,4 @@ namespace vorb {
 }
 namespace vvox = vorb::voxel;
 
-#endif // VoxelMesher_h__
+#endif // !Vorb_VoxelMesherCulled_h__

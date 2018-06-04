@@ -1,21 +1,29 @@
-///
-/// SoundInstance.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 3 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// An instance of a sound - the active part that is played
-/// TODO: Is it possible to cache results?
-/// TODO: Use relative frequency?
-///
+//
+// SoundInstance.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 3 Jan 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file SoundInstance.h
+ * @brief An instance of a sound - the active part that is played
+ */
 
 #pragma once
 
-#ifndef SoundInstance_h__
-#define SoundInstance_h__
+#ifndef Vorb_SoundInstance_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_SoundInstance_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
+
+// TODO: Is it possible to cache results?
+// TODO: Use relative frequency?
 
 #include "ISoundImpl.h"
 #include "SoundEngine.h"
@@ -84,4 +92,4 @@ namespace vorb {
 }
 namespace vsound = vorb::sound;
 
-#endif // SoundInstance_h__
+#endif // !Vorb_SoundInstance_h__

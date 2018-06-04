@@ -1,33 +1,32 @@
-///
-/// stdafx.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 29 Dec 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// PCH for Vorb
-///
+//
+// stdafx.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 16 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file stdafx.h
+ * @brief Vorb's precompiled header, should you wish to use it.
+ */
 
 #pragma once
 
-#ifndef stdafx_h__Vorb
-#define stdafx_h__Vorb
+// Perform a sanity check when not using precompiled headers
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#ifndef VORB_USING_PCH
+#define Vorb_stdafx_h__
+#endif // !VORB_USING_PCH
+//! @endcond
+
+#ifndef Vorb_stdafx_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_stdafx_h__
+//! @endcond
 
 // Create cross-compatibility information
 #include "compat.h"
-
-// Correctly define all debug variables
-#if defined(DEBUG) && !defined(_DEBUG)
-#define _DEBUG
-#endif
-#if defined(_DEBUG) && !defined(DEBUG)
-#define DEBUG
-#endif
-
-#define MACRO_PARAN_L {
-#define MACRO_PARAN_R }
 
 /************************************************************************/
 /* C Libraries                                                          */
@@ -64,6 +63,20 @@
 /* Vorb common files                                                    */
 /************************************************************************/
 #include "decorators.h"
+#include "VorbAssert.hpp"
 #include "types.h"
+#include "math/VorbMath.hpp"
 
-#endif // stdafx_h__Vorb
+/************************************************************************/
+/* Graphics Implementation                                              */
+/************************************************************************/
+#if !defined(VORB_IMPL_GRAPHICS_OPENGL) && !defined(VORB_IMPL_GRAPHICS_D3D)
+#error Please define VORB_IMPL_GRAPHICS (OPENGL | D3D)
+#endif
+#if defined(VORB_IMPL_GRAPHICS_D3D)
+#if !defined(VORB_DX_9) && !defined(VORB_DX_11)
+#define VORB_DX_9
+#endif
+#endif
+
+#endif // !Vorb_stdafx_h__

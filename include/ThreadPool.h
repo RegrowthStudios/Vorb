@@ -1,26 +1,35 @@
-///
-/// ThreadPool.h
-/// Vorb Engine
-///
-/// Created by Benjamin Arnold on 13 Nov 2014
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Provides a general threadpool implementation for
-/// distributing work.
-///
+//
+// ThreadPool.h
+// Vorb Engine
+//
+// Created by Benjamin Arnold on 13 Nov 2014
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file ThreadPool.h
+ * @brief Provides a general threadpool implementation for distributing work.
+ */
 
 #pragma once
 
-#ifndef ThreadPool_h__
-#define ThreadPool_h__
+#ifndef Vorb_ThreadPool_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_ThreadPool_h__
+//! @endcond
 
+#ifndef VORB_USING_PCH
 #include <vector>
+
+#include "types.h"
+#endif // !VORB_USING_PCH
+
 #include <thread>
 #include <condition_variable>
 
-#include "concurrentqueue.h"
+#include <concurrentqueue.h>
+#include <blockingconcurrentqueue.h>
+
 #include "IThreadPoolTask.h"
 
 class CAEngine;
@@ -37,7 +46,7 @@ namespace vorb {
         template<typename T>
         class ThreadPool {
         public:
-            ThreadPool();
+            ThreadPool() {};
             ~ThreadPool();
 
             /// Initializes the threadpool
@@ -53,42 +62,21 @@ namespace vorb {
             /// Adds a task to the task queue
             /// @param task: The task to add
             void addTask(IThreadPoolTask<T>* task) {
-                _tasks.enqueue(task);
-                _cond.notify_one();
+                m_tasks.enqueue(task);
             }
 
             /// Add an array of tasks to the task queue
             /// @param tasks: The array of tasks to add
             /// @param size: The size of the array
             void addTasks(IThreadPoolTask<T>* tasks[], size_t size) {
-                _tasks.enqueue_bulk(tasks, size);
-                _cond.notify_all();
+                m_tasks.enqueue_bulk(tasks, size);
             }
-
-            /// Adds a vector of tasks to the task queue
-            /// @param tasks: The vector of tasks to add
-            void addTasks(std::vector<IThreadPoolTask<T>*> tasks) {
-                _tasks.enqueue_bulk(tasks.data(), tasks.size());
-                _cond.notify_all();
-            }
-
-            /// Gets a bulk of tasks from the finished tasks
-            /// @param taskBuffer: Buffer to store the tasks
-            /// @param maxSize: Max tasks to deque
-            /// @return: The number of dequeued tasks
-            size_t getFinishedTasks(IThreadPoolTask<T>** taskBuffer, size_t maxSize) {
-                return _finishedTasks.try_dequeue_bulk(taskBuffer, maxSize);
-            }
-
-            /// Checks if the threadpool is finished with all it's work
-            /// @return true when all threads are sleeping and all work is done
-            bool isFinished();
 
             /// Getters
-            i32 getSize() const { return _workers.size(); }
-            size_t getTasksSizeApprox() const { return _tasks.size_approx(); }
-            size_t getFinishedTasksSizeApprox() const { return _finishedTasks.size_approx(); }
+            i32 getNumWorkers() const { return m_workers.size(); }
+            size_t getTasksSizeApprox() const { return m_tasks.size_approx(); }
         private:
+            VORB_NON_COPYABLE(ThreadPool);
             // Typedef for func ptr
             typedef void (ThreadPool<T>::*workerFunc)(T*);
 
@@ -115,20 +103,22 @@ namespace vorb {
             void workerThreadFunc(T* data);
 
             /// Lock free task queues
-            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _tasks; ///< Holds tasks to execute
-            moodycamel::ConcurrentQueue<IThreadPoolTask<T>*> _finishedTasks; ///< Holds finished tasks
-
-            std::mutex _condMutex; ///< Mutex for the conditional variable
-            std::condition_variable _cond; ///< Conditional variable that workers block on
-
-            bool _isInitialized = false; ///< true when the pool has been initialized
-            std::vector<WorkerThread*> _workers; ///< All the worker threads
+            moodycamel::BlockingConcurrentQueue<IThreadPoolTask<T>*> m_tasks; ///< Holds tasks to execute
+           
+            bool m_isInitialized = false; ///< true when the pool has been initialized
+            std::vector<WorkerThread*> m_workers; ///< All the worker threads
         };
 
+        template<typename T>
+        class QuitThreadPoolTask : public IThreadPoolTask<T> {
+            virtual void execute(T* workerData) override {
+                workerData->stop = true;
+            }
+        };
     }
 }
 namespace vcore = vorb::core;
 
 #include "ThreadPool.inl"
 
-#endif // ThreadPool_h__
+#endif // !Vorb_ThreadPool_h__

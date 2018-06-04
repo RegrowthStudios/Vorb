@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "graphics/GpuMemory.h"
 
+#ifndef VORB_USING_PCH
 #include <GL/glew.h>
+#endif // !VORB_USING_PCH
 
 #include "graphics/ImageIO.h"
 #include "graphics/SamplerState.h"
+#include "graphics/ImageIO.h"
 #include "utils.h"
 
 #define RGBA_BYTES 4
@@ -17,13 +20,15 @@ std::unordered_map<VGTexture, ui32> vg::GpuMemory::m_textures;
 std::unordered_map<VGBuffer, ui32> vg::GpuMemory::m_buffers;
 
 void vg::GpuMemory::uploadTexture(VGTexture texture,
-                          const ui8* pixels,
-                          ui32 width,
-                          ui32 height,
-                          SamplerState* samplingParameters,
-                          vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
-                          vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
-                          i32 mipmapLevels /* = INT_MAX */) {
+                                  const void* data,
+                                  ui32 width,
+                                  ui32 height,
+                                  TexturePixelType texturePixelType /*= TexturePixelType::UNSIGNED_BYTE*/,
+                                  vg::TextureTarget textureTarget /*= vg::TextureTarget::TEXTURE_2D*/,
+                                  vg::SamplerState* samplingParameters /*= &SamplerState::LINEAR_CLAMP_MIPMAP*/,
+                                  vg::TextureInternalFormat internalFormat /* = vg::TextureInternalFormat::RGBA*/,
+                                  vg::TextureFormat textureFormat /* = vg::TextureFormat::RGBA */,
+                                  i32 mipmapLevels /* = INT_MAX */) {
     // Determine The Maximum Number Of Mipmap Levels Available
     i32 maxMipmapLevels = 0;
     i32 size = MIN(width, height);
@@ -33,11 +38,18 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
     }
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, (VGEnum)internalFormat, width, height, 0, (VGEnum)textureFormat, GL_UNSIGNED_BYTE, pixels);
-
+    glBindTexture(static_cast<GLenum>(textureTarget), texture);
+    switch (textureTarget) {
+        case TextureTarget::TEXTURE_1D:
+        case TextureTarget::PROXY_TEXTURE_1D:
+            glTexImage1D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, width, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, data);
+            break;
+        default:
+            glTexImage2D((VGEnum)textureTarget, 0, (VGEnum)internalFormat, width, height, 0, (VGEnum)textureFormat, (VGEnum)texturePixelType, data);
+            break;
+    }
     // Setup Texture Sampling Parameters
-    samplingParameters->set(GL_TEXTURE_2D);
+    samplingParameters->set((VGEnum)textureTarget);
 
     // Get the number of mipmaps for this image
     mipmapLevels = MIN(mipmapLevels, maxMipmapLevels);
@@ -45,13 +57,13 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
     // Create Mipmaps If Necessary
     if (mipmapLevels > 0) {
         glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, mipmapLevels);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
-        glEnable(GL_TEXTURE_2D);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri((VGEnum)textureTarget, GL_TEXTURE_MAX_LOD, mipmapLevels);
+        glTexParameteri((VGEnum)textureTarget, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
+        glEnable((VGEnum)textureTarget);
+        glGenerateMipmap((VGEnum)textureTarget);
     }
 
-    // Calculate memory usage
+    // Calculate memory usage TODO(Ben): This depends on internal format!!!
     ui32 vramUsage = width * height * RGBA_BYTES;
 
     // If this texture already exists, change its vram usage
@@ -65,6 +77,21 @@ void vg::GpuMemory::uploadTexture(VGTexture texture,
     m_textures[texture] = vramUsage;
     m_totalVramUsage += vramUsage;
     m_textureVramUsage += vramUsage;
+    // Unbind texture
+    glBindTexture((VGEnum)textureTarget, texture);
+}
+
+void vg::GpuMemory::uploadTexture(VGTexture texture,
+                                       const BitmapResource* res,
+                                       TexturePixelType texturePixelType /*= TexturePixelType::UNSIGNED_BYTE*/,
+                                       TextureTarget textureTarget /*= TextureTarget::TEXTURE_2D*/,
+                                       SamplerState* samplingParameters /*= &SamplerState::LINEAR_CLAMP_MIPMAP*/,
+                                       TextureInternalFormat internalFormat /*= TextureInternalFormat::RGBA*/,
+                                       TextureFormat textureFormat /*= TextureFormat::RGBA*/,
+                                       i32 mipmapLevels /*= INT_MAX*/) {
+    uploadTexture(texture, res->data, res->width, res->height, texturePixelType,
+                         textureTarget, samplingParameters,
+                         internalFormat, textureFormat, mipmapLevels);
 }
 
 void vg::GpuMemory::freeTexture(VGTexture& textureID) {

@@ -1,19 +1,22 @@
-///
-/// IO.h
-/// Vorb Engine
-///
-/// Created by Cristian Zaloj on 2 Jan 2015
-/// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
-///
-/// Summary:
-/// Collection of commonly used IO headers
-///
+//
+// IO.h
+// Vorb Engine
+//
+// Created by Cristian Zaloj on 22 Feb 2015
+// Copyright 2014 Regrowth Studios
+// All Rights Reserved
+//
+
+/*! \file IO.h
+ * @brief IO headers.
+ */
 
 #pragma once
 
-#ifndef IO_h__
-#define IO_h__
+#ifndef Vorb_IO_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_IO_h__
+//! @endcond
 
 #include "io/Directory.h"
 #include "io/File.h"
@@ -21,4 +24,4 @@
 #include "io/FileStream.h"
 #include "io/Path.h"
 
-#endif // IO_h__
+#endif // !Vorb_IO_h__

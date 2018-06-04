@@ -15,7 +15,7 @@ bool vio::Directory::isEmpty() const {
     return fs::is_empty(p);
 }
 
-ui32 vio::Directory::appendEntries(DirectoryEntries& l) const {
+size_t vio::Directory::appendEntries(DirectoryEntries& l) const {
     fs::path p(m_path.getString());
 
     size_t c = l.size();

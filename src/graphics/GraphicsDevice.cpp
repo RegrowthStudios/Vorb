@@ -8,16 +8,18 @@
 #endif // !VORB_USING_PCH
 
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
+//#if defined(VORB_OS_WINDOWS)
+//#include <SDL/SDL.h>
+//#else
 #include <SDL2/SDL.h>
-#endif
+//#endif
 #elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>
 #elif defined(VORB_IMPL_UI_SFML)
 #include <SFML/Window/VideoMode.hpp>
 #endif
+
+#include <algorithm>
 
 
 vg::GraphicsDevice::GraphicsDevice() :

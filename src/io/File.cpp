@@ -2,7 +2,8 @@
 #include "io/File.h"
 
 #include <boost/filesystem/operations.hpp>
-#include <sha256/sha256sum.h>
+//#include <sha256/sha256sum.h>
+#include <openssl/sha.h>
 
 #include "io/FileOps.h"
 #include "io/FileStream.h"
@@ -47,11 +48,11 @@ void vorb::io::File::computeSum(vio::SHA256Sum* sum) const {
     }
 
     { // Compute sum
-        _SHA256Context context;
-        SHA256Init(&context);
-        SHA256Update(&context, data, (ui32)l);
-        SHA256Final(&context, nullptr);
-        memcpy(sum, context.hash, 32);
+        SHA256_CTX context;
+        SHA256_Init(&context);
+        SHA256_Update(&context, data, (ui32)l);
+        SHA256_Final((unsigned char *)sum, &context);
+//        memcpy(sum, context.hash, 32);
     }
 
     delete[] data;

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ui/LuaDevConsole.h"
 
+#ifdef VORB_LUA
+
 #include <OOLua/oolua.h>
 extern "C" {
     #include <OOLua/lua/lua.h>
@@ -54,3 +56,5 @@ void vorb::ui::LuaDevConsole::invokeCommand(const nString& c) {
 const nString& vorb::ui::LuaDevConsole::getCommand(const size_t& i) const {
     return m_storedCommands.at(i);
 }
+
+#endif

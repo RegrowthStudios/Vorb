@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "ui/Button.h"
 #include "ui/CheckBox.h"

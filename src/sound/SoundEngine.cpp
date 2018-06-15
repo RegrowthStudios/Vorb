@@ -9,6 +9,8 @@
 // Include sound engine implementation details
 #include "sound/SoundImpl.hpp"
 
+#include <mutex>
+
 namespace vorb {
     namespace sound {
         namespace impl {
@@ -37,8 +39,8 @@ bool vsound::impl::disposeSystem() {
 }
 
 #if defined(VORB_IMPL_SOUND_FMOD)
-#include <fmod/fmod.hpp>
-#include <fmod/fmod_errors.h>
+//#include <fmod/fmod.hpp>
+//#include <fmod/fmod_errors.h>
 
 bool vsound::Engine::init() {
     if (!isDisposed()) return true;
@@ -46,24 +48,24 @@ bool vsound::Engine::init() {
     // Allocate new data
     m_data = new impl::EngineData;
 
-    FMOD_RESULT result = FMOD::System_Create(&m_data->system);      // Create the main system object.
-    if (result != FMOD_OK) {
-#ifdef DEBUG
-        printf("FMOD Create Error:\n(%d) %s\n", result, FMOD_ErrorString(result));
-#endif // DEBUG
-        delete m_data;
-        return false;
-    }
-
-    result = m_data->system->init(VORB_SOUND_ENGINE_MAX_CHANNELS, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);    // Initialize FMOD.
-    if (result != FMOD_OK) {
-#ifdef DEBUG
-        printf("FMOD Init Error:\n(%d) %s\n", result, FMOD_ErrorString(result));
-#endif // DEBUG
-        m_data->system->release();
-        delete m_data;
-        return false;
-    }
+//    FMOD_RESULT result = FMOD::System_Create(&m_data->system);      // Create the main system object.
+//    if (result != FMOD_OK) {
+//#ifdef DEBUG
+//        printf("FMOD Create Error:\n(%d) %s\n", result, FMOD_ErrorString(result));
+//#endif // DEBUG
+//        delete m_data;
+//        return false;
+//    }
+//
+//    result = m_data->system->init(VORB_SOUND_ENGINE_MAX_CHANNELS, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);    // Initialize FMOD.
+//    if (result != FMOD_OK) {
+//#ifdef DEBUG
+//        printf("FMOD Init Error:\n(%d) %s\n", result, FMOD_ErrorString(result));
+//#endif // DEBUG
+//        m_data->system->release();
+//        delete m_data;
+//        return false;
+//    }
 
     // Update liveliness
     m_alive.reset(new bool(true));
@@ -79,16 +81,16 @@ bool vsound::Engine::dispose() {
     }
     m_resources.clear();
 
-    m_data->system->close();
-    FMOD_RESULT result = m_data->system->release();      // Delete the main system object.
-    if (result != FMOD_OK) {
-#ifdef DEBUG
-        printf("FMOD Release Error!\n(%d) %s\n", result, FMOD_ErrorString(result));
-#endif // DEBUG
-        return false;
-    }
+//    m_data->system->close();
+//    FMOD_RESULT result = m_data->system->release();      // Delete the main system object.
+//    if (result != FMOD_OK) {
+//#ifdef DEBUG
+//        printf("FMOD Release Error!\n(%d) %s\n", result, FMOD_ErrorString(result));
+//#endif // DEBUG
+//        return false;
+//    }
 
-    m_data->system = nullptr;
+//    m_data->system = nullptr;
     delete m_data;
     m_data = nullptr;
 
@@ -112,11 +114,11 @@ vsound::Resource vsound::Engine::loadSound(const vio::Path& path, bool is3D /*= 
     m_resources[id] = sound;
 
     // Create sound data
-    FMOD_MODE mode = FMOD_LOOP_NORMAL;
-    mode |= is3D ? FMOD_3D : FMOD_2D;
-    mode |= isStream ? FMOD_CREATESTREAM : FMOD_CREATESAMPLE;
-    m_data->system->createSound(path.getCString(), mode, nullptr, &sound.m_data->sound);
-    sound.m_data->sound->setLoopCount(1);
+//    FMOD_MODE mode = FMOD_LOOP_NORMAL;
+//    mode |= is3D ? FMOD_3D : FMOD_2D;
+//    mode |= isStream ? FMOD_CREATESTREAM : FMOD_CREATESAMPLE;
+//    m_data->system->createSound(path.getCString(), mode, nullptr, &sound.m_data->sound);
+//    sound.m_data->sound->setLoopCount(1);
     return sound;
 }
 void vsound::Engine::disposeSound(Resource& sound) {
@@ -127,7 +129,7 @@ void vsound::Engine::disposeSound(Resource& sound) {
     sound.m_id = ID_GENERATOR_NULL_ID;
 
     // Dispose sound data
-    auto res = sound.m_data->sound->release();
+//    auto res = sound.m_data->sound->release();
     delete sound.m_data;
     sound.m_data = nullptr;
 }
@@ -135,27 +137,27 @@ void vsound::Engine::disposeSound(Resource& sound) {
 vsound::Instance vsound::Engine::createInstance(const Resource& sound) {
     Instance inst;
 
-    m_data->currentChannel++;
-    if (m_data->currentChannel >= VORB_SOUND_ENGINE_MAX_CHANNELS) m_data->currentChannel = 0;
-
-    inst.m_data = &m_data->channels[m_data->currentChannel];
-    #if defined(VORB_OS_WINDOWS)
-    m_data->system->playSound(FMOD_CHANNEL_FREE, sound.m_data->sound, true, &inst.m_data->channel);
-    #else
-    m_data->system->playSound(sound.m_data->sound, nullptr, true, &inst.m_data->channel);
-    #endif
+//    m_data->currentChannel++;
+//    if (m_data->currentChannel >= VORB_SOUND_ENGINE_MAX_CHANNELS) m_data->currentChannel = 0;
+//
+//    inst.m_data = &m_data->channels[m_data->currentChannel];
+//    #if defined(VORB_OS_WINDOWS)
+//    m_data->system->playSound(FMOD_CHANNEL_FREE, sound.m_data->sound, true, &inst.m_data->channel);
+//    #else
+//    m_data->system->playSound(sound.m_data->sound, nullptr, true, &inst.m_data->channel);
+//    #endif
     return inst;
 }
 
 void vsound::Engine::update(const Listener& listener) {
-    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs
-        (FMOD_VECTOR*)&listener.position,
-        (FMOD_VECTOR*)&listener.velocity,
-        (FMOD_VECTOR*)&listener.forward,
-        (FMOD_VECTOR*)&listener.up
-        );
+//    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs
+//        (FMOD_VECTOR*)&listener.position,
+//        (FMOD_VECTOR*)&listener.velocity,
+//        (FMOD_VECTOR*)&listener.forward,
+//        (FMOD_VECTOR*)&listener.up
+//        );
 
-    m_data->system->update();
+//    m_data->system->update();
 }
 #endif // VORB_IMPL_SOUND
 

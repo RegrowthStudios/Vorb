@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../include/RPC.h"
+#include "utils/RPC.h"
 
 void vcore::RPCManager::invoke(RPC* so, bool blockUntilFinished /*= true*/) {
     m_queue.add(so, blockUntilFinished);

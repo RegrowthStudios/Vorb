@@ -17,20 +17,20 @@ namespace YAML {
             return success;
         }
     };
-    template<>
-    struct convert<i8> {
-        static Node encode(const i8& rhs) {
-            Node node;
-            node.push_back(rhs);
-            return node;
-        }
-        static bool decode(const Node& node, i8& rhs) {
-            ui16 v;
-            bool success = convert<ui16>::decode(node, v);
-            if (success) rhs = static_cast<i8>(v);
-            return success;
-        }
-    };
+//    template<>
+//    struct convert<i8> {
+//        static Node encode(const i8& rhs) {
+//            Node node;
+//            node.push_back(rhs);
+//            return node;
+//        }
+//        static bool decode(const Node& node, i8& rhs) {
+//            ui16 v;
+//            bool success = convert<ui16>::decode(node, v);
+//            if (success) rhs = static_cast<i8>(v);
+//            return success;
+//        }
+//    };
     template<typename T, typename T_True, typename T_Comp, i32 C>
     struct convertVec {
         static Node encode(const T& rhs) {

@@ -5,11 +5,11 @@
 #include "compat.h"
 #endif // !VORB_USING_PCH
 
-#if defined(VORB_OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
+//#if defined(VORB_OS_WINDOWS)
+//#include <SDL/SDL.h>
+//#else
 #include <SDL2/SDL.h>
-#endif
+//#endif
 
 typedef std::chrono::milliseconds ms;
 

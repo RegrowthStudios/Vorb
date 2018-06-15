@@ -175,12 +175,12 @@ inline T hermite(const T& v) { return static_cast<T>(3.0) * (v * v) - static_cas
 /// @pre: v1 != -v2
 inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
     f64q q;
-    f64v3 a = vmath::cross(v1, v2);
+    f64v3 a = glm::cross(v1, v2);
     q.x = a.x;
     q.y = a.y;
     q.z = a.z;
-    q.w = 1.0 + vmath::dot(v1, v2);
-    return vmath::normalize(q);
+    q.w = 1.0 + glm::dot(v1, v2);
+    return glm::normalize(q);
 }
 /// Finds the shortest arc rotation quat between two directions
 /// @param v1: Starting direction
@@ -189,14 +189,14 @@ inline f64q quatBetweenVectors(const f64v3& v1, const f64v3& v2) {
 /// @pre: v1 != -v2
 inline f32q quatBetweenVectors(const f32v3& v1, const f32v3& v2) {
     f32q q;
-    f32v3 a = vmath::cross(v1, v2);
+    f32v3 a = glm::cross(v1, v2);
     q.x = a.x;
     q.y = a.y;
     q.z = a.z;
-    f32 l1 = vmath::length(v1);
-    f32 l2 = vmath::length(v2);
-    q.w = sqrt((l1 * l1) * (l2 * l2)) + vmath::dot(v1, v2);
-    return vmath::normalize(q);
+    f32 l1 = glm::length(v1);
+    f32 l2 = glm::length(v2);
+    q.w = sqrt((l1 * l1) * (l2 * l2)) + glm::dot(v1, v2);
+    return glm::normalize(q);
 }
 /************************************************************************/
 /* Clip utilities                                                       */

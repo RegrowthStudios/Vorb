@@ -28,6 +28,9 @@
 #include "Matrix.hpp"
 #include "Quaternion.hpp"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
+
 /************************************************************************/
 /* Integer values                                                       */
 /************************************************************************/
@@ -262,7 +265,8 @@ typedef vorb::Vector3<ui64> ui64v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef vorb::Vector3<f32> f32v3;
+//typedef vorb::Vector3<f32> f32v3;
+typedef glm::vec3 f32v3;
 /*! @brief 64-bit floating point (double) 3-value vector.
  *
  * Elements can be accessed via: @n
@@ -273,7 +277,8 @@ typedef vorb::Vector3<f32> f32v3;
  *  s  ,  t  ,  p
  * </pre>
  */
-typedef vorb::Vector3<f64> f64v3;
+//typedef vorb::Vector3<f64> f64v3;
+typedef glm::dvec3 f64v3;
 /*! @brief 8-bit signed integer 4-value vector.
  *
  * Elements can be accessed via: @n
@@ -392,7 +397,8 @@ typedef vorb::Vector4<f64> f64v4;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef vorb::Quaternion<f32> f32q;
+//typedef vorb::Quaternion<f32> f32q;
+typedef glm::quat f32q;
 /*! @brief 64-bit floating point (double) quaternion.
  *
  * Elements can be accessed via: @n
@@ -401,7 +407,8 @@ typedef vorb::Quaternion<f32> f32q;
  *  x  ,  y  ,  z  ,  w
  * </pre>
  */
-typedef vorb::Quaternion<f64> f64q;
+//typedef vorb::Quaternion<f64> f64q;
+typedef glm::dquat f64q;
 /*! @brief 32-bit floating point (single) 2x2 matrix.
  *
  * Elements are stored in column major order and column vector notation.

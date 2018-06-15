@@ -332,13 +332,13 @@ inline typename Matrix3<T>::RowType operator/(typename const Matrix3<T>::ColType
 
 template<typename T>
 inline typename Matrix4<T>::ColType& Matrix4<T>::operator[](int i) {
-    vorb_assert(i >= 0 && i < 4, "Index out of range");
+//    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 
 template<typename T>
 inline typename const Matrix4<T>::ColType& Matrix4<T>::operator[](int i) const {
-    vorb_assert(i >= 0 && i < 4, "Index out of range");
+//    vorb_assert(i >= 0 && i < 4, "Index out of range");
     return data[i];
 }
 

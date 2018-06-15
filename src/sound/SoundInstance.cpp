@@ -12,7 +12,7 @@ vsound::Instance::Instance(Engine& engine) :
     // Empty
 }
 
-#if defined(VORB_IMPL_SOUND_FMOD)
+#if 0//defined(VORB_IMPL_SOUND_FMOD)
 void vsound::Instance::play() {
     m_data->channel->setPaused(false);
 }
@@ -101,5 +101,67 @@ f32 vsound::Instance::getLength() const {
     m_data->channel->getCurrentSound(&sound);
     sound->getLength(&frames, FMOD_TIMEUNIT_MS);
     return (f32)frames / 1000.0f;
+}
+#else
+void vsound::Instance::play()
+{
+}
+void vsound::Instance::pause()
+{
+}
+void vsound::Instance::setLooped(const bool& loop)
+{
+}
+void vsound::Instance::setCursor(const f32& seconds)
+{
+}
+void vsound::Instance::setPosition(const f32v3& pos)
+{
+}
+void vsound::Instance::setVelocity(const f32v3& vel)
+{
+}
+void vsound::Instance::setBoundsRadii(const f32& min, const f32& max)
+{
+}
+void vsound::Instance::setVolume(const f32& v)
+{
+}
+void vsound::Instance::setFrequency(const f32& freq)
+{
+}
+
+bool vsound::Instance::isPlaying() const
+{
+    return false;
+}
+bool vsound::Instance::isLooped() const
+{
+    return false;
+}
+
+f32v3 vsound::Instance::getPosition() const
+{
+    return f32v3(0.0f, 0.0f, 0.0f);
+}
+f32v3 vsound::Instance::getVelocity() const
+{
+    return f32v3(0.0f, 0.0f, 0.0f);
+}
+f32v2 vsound::Instance::getBoundsRadii() const
+{
+    return f32v2(0.0f, 0.0f);
+}
+f32 vsound::Instance::getVolume() const
+{
+    return 0.0f;
+}
+f32 vsound::Instance::getFrequency() const
+{
+    return 0.0f;
+}
+f32 vsound::Instance::getLength() const
+{
+    return 0.0f;
 }
 #endif // VORB_IMPL_SOUND

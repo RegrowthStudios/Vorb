@@ -10,6 +10,8 @@
 #include "graphics/ShaderManager.h"
 #include "SpriteBatchShader.inl"
 
+#include <algorithm>
+
 #define VERTS_PER_QUAD 4
 #define INDICES_PER_QUAD 6
 

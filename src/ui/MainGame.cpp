@@ -4,11 +4,11 @@
 #include <thread>
 
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
+//#if defined(VORB_OS_WINDOWS)
+//#include <SDL/SDL.h>
+//#else
 #include <SDL2/SDL.h>
-#endif
+//#endif
 #define MS_TIME (SDL_GetTicks())
 #elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>

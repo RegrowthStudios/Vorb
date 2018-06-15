@@ -10,11 +10,11 @@
 
 #include "os.h"
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
+//#if defined(VORB_OS_WINDOWS)
+//#include <SDL/SDL.h>
+//#else
 #include <SDL2/SDL.h>
-#endif
+//#endif
 #define VUI_WINDOW_HANDLE(WINDOW_VAR) ( (SDL_Window*) WINDOW_VAR )
 #elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>
@@ -357,7 +357,7 @@ void vui::GameWindow::setScreenSize(i32 w, i32 h, bool overrideCheck /*= false*/
         m_displayMode.screenHeight = h;
 #if defined(VORB_IMPL_UI_SDL)
         SDL_SetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
-        InputDispatcher::window.onResize({ w, h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
+        InputDispatcher::window.onResize({(ui32)w, (ui32)h }); // TODO(Ben): This feels so dirty, but is necessary for LUA UI
 #elif defined(VORB_IMPL_UI_GLFW)
         glfwSetWindowSize(VUI_WINDOW_HANDLE(m_window), m_displayMode.screenWidth, m_displayMode.screenHeight);
 #elif defined(VORB_IMPL_UI_SFML)

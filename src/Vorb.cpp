@@ -3,13 +3,13 @@
 
 #include <boost/filesystem.hpp>
 #include <enet/enet.h>
-#include <FreeImage.h>
+//#include <FreeImage.h>
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <TTF/SDL_ttf.h>
-#else
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
+//#if defined(VORB_OS_WINDOWS)
+//#include <TTF/SDL_ttf.h>
+//#else
+#include <SDL_ttf/SDL_ttf.h>
+//#endif
 #else
 // TODO: FreeType?
 #endif
@@ -51,7 +51,7 @@ namespace vorb {
 #else
         // TODO(Cristian): FreeType
 #endif
-        FreeImage_Initialise();
+//        FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
@@ -128,7 +128,7 @@ namespace vorb {
 #else
         // TODO(Cristian): FreeType
 #endif
-        FreeImage_DeInitialise();
+//        FreeImage_DeInitialise();
         vg::SpriteBatch::disposeProgram();
 
         return InitParam::GRAPHICS;

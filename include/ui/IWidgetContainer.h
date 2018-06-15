@@ -28,6 +28,9 @@
 #include "../script/Function.h"
 #endif
 
+#include "Events.hpp"
+#include <vector>
+
 namespace vorb {
     namespace ui {
 

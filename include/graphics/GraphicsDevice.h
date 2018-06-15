@@ -21,6 +21,7 @@
 #ifndef VORB_USING_PCH
 #include "../types.h"
 #endif // !VORB_USING_PCH
+#include <vector>
 
 namespace vorb {
     namespace graphics {

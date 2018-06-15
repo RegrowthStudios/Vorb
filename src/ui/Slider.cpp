@@ -101,7 +101,7 @@ void vui::Slider::setSlideHoverColor(const color4& color) {
 
 void vui::Slider::setValue(int value) {
     int old = m_value;
-    m_value = vmath::clamp(value, m_min, m_max);
+    m_value = glm::clamp(value, m_min, m_max);
     if (old != m_value) ValueChange(m_value);
     updatePosition();
 }
@@ -226,9 +226,9 @@ void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
         const f32v2& dims = m_drawableBar.getDimensions();
         float v;
         if (m_isVertical) {
-            v = vmath::clamp((e.y - pos.y) / dims.y, 0.0f, 1.0f);
+            v = glm::clamp((e.y - pos.y) / dims.y, 0.0f, 1.0f);
         } else {
-            v = vmath::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
+            v = glm::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
         }
         // TODO(Ben): Faster round
         int newValue = (int)round(v * (m_max - m_min)) + m_min;

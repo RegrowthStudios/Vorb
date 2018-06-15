@@ -20,7 +20,7 @@ namespace vorb {
 #endif
 
 
-            typedef void(*BMPConvFunc)(FIBITMAP*, vg::BitmapResource&);
+//            typedef void(*BMPConvFunc)(FIBITMAP*, vg::BitmapResource&);
 
             namespace flip {
 #define SCAN_Y(Y, H) (Y)

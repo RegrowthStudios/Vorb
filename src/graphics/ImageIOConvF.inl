@@ -1,3 +1,4 @@
+/*
 template<typename FROM, typename TO>
 void convertToRGB(FIBITMAP* bmp, vg::BitmapResource& res) {
     size_t i = 0;
@@ -608,3 +609,4 @@ BMPConvFunc convRGBAF[] = {
     convertRGBAFToRGBF<f32, f64>,
     convertRGBAFToRGBAF<f32, f64>
 };
+*/

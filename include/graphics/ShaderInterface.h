@@ -37,7 +37,7 @@ namespace vorb {
             VGAttribute location;
             VGSemantic semantic;
             ui32 stride;
-            ui32 offset;
+            size_t offset;
             i32 size;
             vg::VertexAttribPointerType type;
             bool normalized;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "io/MemFile.h"
+#include <io.h>
 
 #include "os.h"
 

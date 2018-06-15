@@ -4,17 +4,18 @@
 #include <boost/filesystem.hpp>
 
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <TTF/SDL_ttf.h>
-#else
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
+//#if defined(VORB_OS_WINDOWS)
+//#include <TTF/SDL_ttf.h>
+//#else
+#include <SDL_ttf/SDL_ttf.h>
+//#endif
 #endif
 
 #include "graphics/GraphicsDevice.h"
 #include "graphics/ImageIO.h"
 #include "graphics/SpriteBatch.h"
 #include "utils.h"
+#include <iostream>
 
 // X Offset multipliers for vg::TextAlign
 const f32 X_OFF_MULTS[9] = {

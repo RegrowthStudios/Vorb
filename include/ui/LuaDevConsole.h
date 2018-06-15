@@ -15,6 +15,7 @@
 #ifndef LuaDevConsole_h__
 #define LuaDevConsole_h__
 
+#ifdef VORB_LUA
 
 #include "../Events.hpp"
 #include "../io/MemFile.h"
@@ -51,5 +52,7 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+#endif
 
 #endif // LuaDevConsole_h__

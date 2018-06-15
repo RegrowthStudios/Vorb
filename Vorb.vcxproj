@@ -294,6 +294,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClCompile Include="src/graphics/GLRenderTarget.cpp" />
     <ClCompile Include="src/graphics/GpuMemory.cpp" />
     <ClCompile Include="src/graphics/GraphicsDevice.cpp" />
+    <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\Frustum.cpp" />
     <ClCompile Include="src/graphics/RasterizerState.cpp" />
     <ClCompile Include="src/graphics/SamplerState.cpp" />
@@ -314,6 +315,9 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClCompile Include="src/sound/SoundInstance.cpp" />
     <ClCompile Include="src/Timing.cpp" />
     <ClCompile Include="src/ui/LuaDevConsole.cpp" />
+    <ClCompile Include="src\graphics\PostProcess.cpp" />
+    <ClCompile Include="src\graphics\Renderer.cpp" />
+    <ClCompile Include="src\graphics\Scene.cpp" />
     <ClCompile Include="src\graphics\ShaderInterface.cpp" />
     <ClCompile Include="src\graphics\ShaderManager.cpp" />
     <ClCompile Include="src\graphics\ShaderParser.cpp" />
@@ -352,6 +356,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClCompile Include="src\ui\Button.cpp" />
     <ClCompile Include="src\ui\Drawables.cpp" />
     <ClCompile Include="src\ui\GameWindowScriptFuncs.cpp" />
+    <ClCompile Include="src\ui\InputMapper.cpp" />
     <ClCompile Include="src\ui\IWidgetContainer.cpp" />
     <ClCompile Include="src\ui\Label.cpp" />
     <ClCompile Include="src\ui\LabelScriptFuncs.cpp" />
@@ -416,6 +421,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include/io/IOManager.h" />
     <ClInclude Include="include\Asset.h" />
     <ClInclude Include="include\AssetLoader.h" />
+    <ClInclude Include="include\graphics\Camera.h" />
     <ClInclude Include="include\graphics\Frustum.h" />
     <ClInclude Include="include/IThreadPoolTask.h" />
     <ClInclude Include="include/io/Keg.h" />
@@ -430,6 +436,9 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include/ui/ScreenList.h" />
     <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\graphics\AnimationData.h" />
+    <ClInclude Include="include\graphics\PostProcess.h" />
+    <ClInclude Include="include\graphics\Scene.h" />
+    <ClInclude Include="include\graphics\Renderer.h" />
     <ClInclude Include="include\graphics\ShaderInterface.h" />
     <ClInclude Include="include\graphics\ShaderManager.h" />
     <ClInclude Include="include\graphics\ShaderParser.h" />
@@ -498,6 +507,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include\ui\Button.h" />
     <ClInclude Include="include\ui\Drawables.h" />
     <ClInclude Include="include\ui\GameWindowScriptFuncs.h" />
+    <ClInclude Include="include\ui\InputMapper.h" />
     <ClInclude Include="include\ui\IWidgetContainer.h" />
     <ClInclude Include="include\ui\Label.h" />
     <ClInclude Include="include\ui\LabelScriptFuncs.h" />
@@ -517,7 +527,10 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <ClInclude Include="include\VorbAssert.hpp" />
     <ClInclude Include="include\VorbLibs.h" />
     <ClInclude Include="include\VorbMemory.h" />
+    <ClInclude Include="include\voxel\Chunk.h" />
+    <ClInclude Include="include\voxel\BlockPack.h" />
     <ClInclude Include="include\voxel\IntervalTree.h" />
+    <ClInclude Include="include\voxel\SmartVoxelContainer.hpp" />
     <ClInclude Include="include\voxel\VoxelTextureStitcher.h" />
     <ClInclude Include="src/sound/SoundImpl.hpp" />
     <ClInclude Include="src\io\YAMLImpl.h" />
@@ -537,6 +550,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
+    <None Include="include\graphics\ShaderCommon.inl" />
     <None Include="include\math\MatrixMath.hpp" />
     <None Include="include\Matrix.inl" />
     <None Include="include\Quaternion.inl" />

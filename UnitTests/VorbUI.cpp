@@ -30,39 +30,41 @@ struct Vertex {
 
 class TestScreen : public vui::IGameScreen {
 public:
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual void build() {
+    virtual void build() override {
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
     }
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
     }
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
+    }
+    virtual void update(const vui::GameTime& gameTime) override {
     }
 };
 
 class WidgetTestScreen : public vui::IGameScreen {
 public:
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual void build() {
+    virtual void build() override {
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
     }
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         font.init("Data/chintzy.ttf", 32);
         form.init("main", this, f32v4(0.0f, 0.0f, (f32)m_viewportDims.x, (f32)m_viewportDims.y));
 
@@ -90,14 +92,17 @@ public:
      //   env.init(&form, &m_game->getWindow());
      //   env.loadForm("data/scripts/Form1.lua");
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         form.dispose();
        // font.dispose();
     }
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
+        // Empty
+    }
+    virtual void update(const vui::GameTime& gameTime) override {
       //  form.update();
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         form.draw();
     }

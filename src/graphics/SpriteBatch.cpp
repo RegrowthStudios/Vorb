@@ -372,7 +372,7 @@ void vg::SpriteBatch::generateBatches() {
             m_batches.back().set(indexCount, g->tex);
         }
         // Call builder function
-        (this->*g->func)(g, verts + vi);
+        g->func(g, verts + vi);
         vi += VERTS_PER_QUAD;
         indexCount += INDICES_PER_QUAD;
     }

@@ -69,17 +69,16 @@ namespace vorb {
 
             /// Create the value-based render targets
             /// @return Self
-            GBuffer& init(const Array<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat);
+            GBuffer& init(const std::vector<GBufferAttachment>& attachments, vg::TextureInternalFormat lightFormat);
             /// Attach a depth buffer to this GBuffer
             /// @param depthFormat: Precision used for depth buffer
             /// @return Self
             GBuffer& initDepth(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH_COMPONENT32);
-            /// Attack a depth and stencil buffer to this GBuffer
+            /// Attach a depth and stencil buffer to this GBuffer
             /// @param depthFormat: Precision used for depth and stencil buffer
             /// @return Self
             GBuffer& initDepthStencil(TextureInternalFormat depthFormat = TextureInternalFormat::DEPTH24_STENCIL8);
 
-            void initTarget(const ui32v2& _size, const ui32& texID, const GBufferAttachment& attachment);
             /// Destroy all render targets
             void dispose();
 
@@ -139,12 +138,15 @@ namespace vorb {
                 return m_texDepth;
             }
         private:
+
+            void initTarget(const ui32v2& _size, const ui32& texID, const GBufferAttachment& attachment);
+
             ui32v2 m_size; ///< The width and height of the GBuffer
 
-            VGFramebuffer m_fboGeom; ///< The rendering target for geometry
-            VGFramebuffer m_fboLight; ///< The rendering target for light
-            Array<VGTexture> m_textures; ///< An array of all the textures
-            VGTexture m_texDepth = 0; ///< Depth texture of GBuffer
+            VGFramebuffer          m_fboGeom; ///< The rendering target for geometry
+            VGFramebuffer          m_fboLight; ///< The rendering target for light
+            std::vector<VGTexture> m_textures; ///< An array of all the textures
+            VGTexture              m_texDepth = 0; ///< Depth texture of GBuffer
         };
     }
 }

@@ -193,6 +193,7 @@ namespace vorb {
             void setPosition(int x, int y);
             void setMaxFPS(f32 fpsLimit);
             void setTitle(const cString title) const;
+            void setRelativeMouseMode(bool relative) const;
         
             void sync(ui32 frameTime);
 

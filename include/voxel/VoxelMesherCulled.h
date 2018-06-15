@@ -28,6 +28,11 @@
 namespace vorb {
     namespace voxel {
         namespace meshalg {
+            enum class VoxelOcclusion {
+                DRAW_A = 0,
+                DRAW_B = 1,
+                OCCLUDE = 2
+            };
             /// Construct a voxel mesh, generating and culling desired face pairs
             /// @tparam T: Voxel data type
             /// @tparam API: Type of API object that handles culled meshing
@@ -48,8 +53,8 @@ namespace vorb {
                 };
 
                 ui32v3 pos;
-                size_t l1 = size.x;
-                size_t l2 = l1 * size.z;
+                size_t rowSize = size.x;
+                size_t layerSize = rowSize * size.z;
 
                 for (size_t axis = 0; axis < 3; axis++) {
                     ui32& fAxis = pos[SWEEPS[axis].x];
@@ -58,31 +63,34 @@ namespace vorb {
                     ui32v3 sizes(size[SWEEPS[axis].x], size[SWEEPS[axis].y], size[SWEEPS[axis].z]);
 
                     VoxelQuad qNeg, qPos;
-                    qPos.direction = toCardinal(AXES[axis], true);
-                    qNeg.direction = toCardinal(AXES[axis], false);
+                    qPos.direction = toCardinalPositive(AXES[axis]);
+                    qNeg.direction = toCardinalNegative(AXES[axis]);
                     qNeg.size = qPos.size = ui32v2(1, 1);
 
-                    for (fAxis = 1; fAxis < sizes.x; fAxis++) {
-                        for (uAxis = 1; uAxis < sizes.y - 1; uAxis++) {
-                            for (vAxis = 1; vAxis < sizes.z - 1; vAxis++) {
+                    for (fAxis = 1; fAxis < sizes.x - 1; fAxis++) {
+                        for (uAxis = 0; uAxis < sizes.y; uAxis++) {
+                            for (vAxis = 0; vAxis < sizes.z; vAxis++) {
                                 fAxis--;
                                 qPos.voxelPosition = pos;
-                                qPos.startIndex = pos.y * l2 + pos.z * l1 + pos.x;
+                                qPos.startIndex = pos.y * layerSize + pos.z * rowSize + pos.x;
                                 const T& v1 = data[qPos.startIndex];
 
                                 fAxis++;
                                 qNeg.voxelPosition = pos;
-                                qNeg.startIndex = pos.y * l2 + pos.z * l1 + pos.x;
+                                qNeg.startIndex = pos.y * layerSize + pos.z * rowSize + pos.x;
                                 const T& v2 = data[qNeg.startIndex];
 
                                 VoxelFaces f = api->occludes(v1, v2, AXES[axis]);
-                                if (f.block1Face && fAxis != 1) api->result(qPos);
-                                if (f.block2Face && fAxis != sizes.x - 1) api->result(qNeg);
+                                if (f.face1) api->result(qPos, v1);
+                                if (f.face2) api->result(qNeg, v2);
                             }
                         }
                     }
+
+                    //TODO(Ben) Outer Edge
                 }
             }
+
         }
     }
 }

@@ -33,19 +33,19 @@ public:
 
 class ImageViewer : public vui::IGameScreen {
 public:
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
 
-    virtual void build() {
+    virtual void build() override {
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
     }
 
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         m_imageFormat = m_testFormats[0];
         m_hooks.addAutoHook(vui::InputDispatcher::window.onFile, [&] (Sender, const vui::WindowFileEvent& e) {
             auto bmp = vg::ImageIO().load(e.file, m_imageFormat.format);
@@ -95,13 +95,16 @@ public:
         vg::SamplerState::LINEAR_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         m_sb.dispose();
         if (m_bmp.data) vg::ImageIO::free(m_bmp);
         if (m_tex.id != 0) glDeleteTextures(1, &m_tex.id);
     }
 
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
+    virtual void update(const vui::GameTime& gameTime) override {
         if (m_bmp.data) {
             glBindTexture(GL_TEXTURE_2D, m_tex.id);
             m_tex.width = m_bmp.width;
@@ -117,7 +120,7 @@ public:
             m_bmp = {};
         }
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -183,26 +186,29 @@ public:
         return SCREEN_INDEX_NO_SCREEN;
     }
 
-    virtual void build() {
+    virtual void build() override {
         // Empty
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
         // Empty
     }
 
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         batch.init();
         font.init("Data/chintzy.ttf", 32);
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         batch.dispose();
         font.dispose();
     }
 
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
+    virtual void update(const vui::GameTime& gameTime) override {
         // Empty
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         batch.begin();
@@ -217,14 +223,14 @@ public:
 
 class TorusViewer : public vui::IGameScreen {
 public:
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
 
-    virtual void build() {
+    virtual void build() override {
         pitchInput = 0;
         yawInput = 0;
         pool.addAutoHook(vui::InputDispatcher::key.onKeyDown, [&] (Sender, const vui::KeyEvent& e) {
@@ -245,11 +251,11 @@ public:
             }
         });
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
         pool.dispose();
     }
 
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         glGenBuffers(1, &verts);
         glGenBuffers(1, &inds);
         glGenVertexArrays(1, &vdecl);
@@ -307,7 +313,7 @@ void main() {
 
         spriteBatch.init();
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         glDeleteBuffers(1, &verts);
         glDeleteBuffers(1, &inds);
         glDeleteVertexArrays(1, &vdecl);
@@ -315,13 +321,16 @@ void main() {
         program.dispose();
     }
 
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
+    virtual void update(const vui::GameTime& gameTime) override {
         yaw += (f32)(gameTime.elapsed * yawInput);
         pitch += (f32)(gameTime.elapsed * pitchInput);
         yaw = fmod(yaw + 6.28f, 6.28f);
         pitch = fmod(pitch + 6.28f, 6.28f);
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         f32v3 eye;
@@ -376,21 +385,21 @@ void main() {
 
 class SpriteBatchTester : public vui::IGameScreen {
 public:
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
 
-    virtual void build() {
+    virtual void build() override {
         // Empty
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
         // Empty
     }
 
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         batch.init();
 
         // Init sprites
@@ -414,14 +423,17 @@ public:
         vg::SamplerState::POINT_WRAP.set(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         batch.dispose();
     }
 
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
+    }
+
+    virtual void update(const vui::GameTime& gameTime) override {
         angle += 0.1f;
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         timer.start();
@@ -521,19 +533,19 @@ public:
         mWorld[bone.index] = mWorld[bone.index] * mRestInv[bone.index];
     }
 
-    virtual i32 getNextScreen() const {
+    virtual i32 getNextScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
-    virtual i32 getPreviousScreen() const {
+    virtual i32 getPreviousScreen() const override {
         return SCREEN_INDEX_NO_SCREEN;
     }
 
-    virtual void build() {
+    virtual void build() override {
     }
-    virtual void destroy(const vui::GameTime& gameTime) {
+    virtual void destroy(const vui::GameTime& gameTime) override {
     }
 
-    virtual void onEntry(const vui::GameTime& gameTime) {
+    virtual void onEntry(const vui::GameTime& gameTime) override {
         std::unordered_map<ui8, VGAttribute> attrmap;
         vg::VertexAttributeIndexed vai;
         vai.type = vg::VertexAttributeUsage::Position;
@@ -665,7 +677,7 @@ void main() {
         glClearColor(1, 1, 1, 1);
         glClearDepth(1.0);
     }
-    virtual void onExit(const vui::GameTime& gameTime) {
+    virtual void onExit(const vui::GameTime& gameTime) override {
         delete[] skeleton.bones;
         delete[] skeleton.frames;
         delete[] skeleton.childrenArray;
@@ -673,9 +685,12 @@ void main() {
         delete[] mRestInv;
     }
 
-    virtual void update(const vui::GameTime& gameTime) {
+    virtual void registerRendering(vg::Renderer& renderer) override {
     }
-    virtual void draw(const vui::GameTime& gameTime) {
+
+    virtual void update(const vui::GameTime& gameTime) override {
+    }
+    virtual void onRenderFrame(const vui::GameTime& gameTime) override {
         vg::DepthState::FULL.set();
         vg::RasterizerState::CULL_NONE.set();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

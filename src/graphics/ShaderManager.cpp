@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "graphics/ShaderManager.h"
-#include "graphics/GLProgram.h"
 #include "graphics/ShaderParser.h"
 #include "io/IOManager.h"
 
@@ -13,6 +12,7 @@ vg::GLProgramMap vg::ShaderManager::m_programMap;
 vg::GLProgram vg::ShaderManager::m_nilProgram;
 
 vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc,
+                                               ShaderLanguageVersion version /*= DEFAULT_SHADING_LANGUAGE_VERSION*/,
                                                vio::IOManager* vertIOM /*= nullptr*/,
                                                vio::IOManager* fragIOM /*= nullptr*/,
                                                cString defines /*= nullptr*/) {
@@ -38,6 +38,7 @@ vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cStr
     // Create vertex shader
     ShaderSource srcVert;
     srcVert.stage = vg::ShaderType::VERTEX_SHADER;
+    srcVert.version = version;
     if (defines) srcVert.sources.push_back(defines);
     srcVert.sources.push_back(parsedVertSrc.c_str());
     if (!program.addShader(srcVert)) {
@@ -51,6 +52,7 @@ vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cStr
     // Create the fragment shader
     ShaderSource srcFrag;
     srcFrag.stage = vg::ShaderType::FRAGMENT_SHADER;
+    srcFrag.version = version;
     if (defines) srcFrag.sources.push_back(defines);
     srcFrag.sources.push_back(parsedFragSrc.c_str());
     if (!program.addShader(srcFrag)) {
@@ -74,6 +76,7 @@ vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cStr
 }
 
 vg::GLProgram vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
+                                                       ShaderLanguageVersion version /*= DEFAULT_SHADING_LANGUAGE_VERSION*/,
                                                        vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
     vio::Path vertSearchDir;
@@ -110,7 +113,7 @@ vg::GLProgram vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath
         return m_nilProgram;
     }
 
-    return createProgram(vertSrc.c_str(), fragSrc.c_str(), &vertIOM, &fragIOM, defines);
+    return createProgram(vertSrc.c_str(), fragSrc.c_str(), version, &vertIOM, &fragIOM, defines);
 }
 
 void vg::ShaderManager::disposeAllPrograms() {

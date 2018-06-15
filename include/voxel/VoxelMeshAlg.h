@@ -30,8 +30,8 @@ namespace vorb {
             /// Two flags specifying which faces are visible
             struct VoxelFaces {
             public:
-                bool block1Face : 1; ///< First block face's visibility
-                bool block2Face : 1; ///< Second block face's visibility
+                bool face1; ///< First block face's visibility
+                bool face2; ///< Second block face's visibility
             };
 
             /// A quad created in a voxel mesh surface
@@ -49,20 +49,19 @@ namespace vorb {
             /// @param startIndex: The index of the first vertex
             /// @return Array of quad vertex indices
             template<typename T>
-            CALLER_DELETE T* generateQuadIndices(const ui32& quads, T startIndex = 0) {
+            void generateQuadIndices(OUT std::vector<T>& inds, ui32 quads, T startIndex = 0) {
                 size_t ic = quads * 6;
-                T* inds = new T[ic];
+                inds.resize(ic);
                 T vi = startIndex;
                 for (size_t ii = 0; ii < ic;) {
                     inds[ii++] = vi;
+                    inds[ii++] = vi + 1;
                     inds[ii++] = vi + 2;
-                    inds[ii++] = vi + 1;
-                    inds[ii++] = vi + 1;
                     inds[ii++] = vi + 2;
                     inds[ii++] = vi + 3;
+                    inds[ii++] = vi;
                     vi += 4;
                 }
-                return inds;
             }
         }
     }

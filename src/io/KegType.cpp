@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "io/KegType.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/KegType.h"
 
-#include "io/Keg.h"
+#include "Vorb/io/Keg.h"
 
 keg::Type::Type() :
     m_sizeInBytes(0),

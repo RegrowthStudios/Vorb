@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "io/YAMLConverters.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/YAMLConverters.h"
 
-#include "YAMLImpl.h"
-#include "YAMLInternal.inl"
+#include "Vorb/io/YAMLImpl.h"
+#include "Vorb/io/YAMLInternal.inl"
 
 #define KEG_CONVERT_YAML_AS(TYPE) \
     TYPE keg::NodeValueConverter<TYPE>::convert(Node node) { \

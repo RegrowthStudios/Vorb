@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "graphics/ShaderManager.h"
-#include "graphics/GLProgram.h"
-#include "graphics/ShaderParser.h"
-#include "io/IOManager.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ShaderManager.h"
+#include "Vorb/graphics/GLProgram.h"
+#include "Vorb/graphics/ShaderParser.h"
+#include "Vorb/io/IOManager.h"
 
 #include <errno.h>
 

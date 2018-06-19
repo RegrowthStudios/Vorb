@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/LuaDevConsole.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/LuaDevConsole.h"
 
 #ifdef VORB_LUA
 

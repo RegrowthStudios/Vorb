@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/Form.h"
-#include "ui/Widget.h"
-#include "ui/GameWindow.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/Form.h"
+#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/GameWindow.h"
 
 vui::Form::Form() : IWidgetContainer() {
     // Empty

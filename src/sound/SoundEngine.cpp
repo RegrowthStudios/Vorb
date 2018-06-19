@@ -1,13 +1,13 @@
-#include "stdafx.h"
-#include "sound/SoundEngine.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/sound/SoundEngine.h"
 
-#include "IDGenerator.h"
-#include "sound/SoundInstance.h"
-#include "sound/SoundListener.h"
-#include "sound/SoundResource.h"
+#include "Vorb/IDGenerator.h"
+#include "Vorb/sound/SoundInstance.h"
+#include "Vorb/sound/SoundListener.h"
+#include "Vorb/sound/SoundResource.h"
 
 // Include sound engine implementation details
-#include "sound/SoundImpl.hpp"
+#include "Vorb/sound/SoundImpl.hpp"
 
 #include <mutex>
 

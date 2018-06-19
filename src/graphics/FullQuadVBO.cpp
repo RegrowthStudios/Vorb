@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/FullQuadVBO.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/FullQuadVBO.h"
 
 #ifndef VORB_USING_PCH
 #include <GL/glew.h>

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "colors.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/colors.h"
 
 #ifndef VORB_USING_PCH
 #undef min

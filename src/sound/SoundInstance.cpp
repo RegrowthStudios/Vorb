@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "sound/SoundInstance.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/sound/SoundInstance.h"
 
 // Include sound engine implementation details
-#include "sound/SoundImpl.hpp"
+#include "Vorb/sound/SoundImpl.hpp"
 
 vsound::Instance::Instance() {
     // Empty

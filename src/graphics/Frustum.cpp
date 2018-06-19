@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "graphics/Frustum.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/Frustum.h"
 
-#include "Constants.h"
+#include "Vorb/Constants.h"
 
 void vg::Frustum::Plane::setNormalAndPoint(const f32v3 &normal, const f32v3 &point) {
     this->normal = glm::normalize(normal);

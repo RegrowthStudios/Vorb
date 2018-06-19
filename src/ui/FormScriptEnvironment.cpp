@@ -1,16 +1,16 @@
-#include "stdafx.h"
+#include "Vorb/stdafx.h"
 
 #include <SDL2/SDL.h>
 
-#include "ui/Button.h"
-#include "ui/CheckBox.h"
-#include "ui/ComboBox.h"
-#include "ui/Form.h"
-#include "ui/FormScriptEnvironment.h"
-#include "ui/Label.h"
-#include "ui/Panel.h"
-#include "ui/Slider.h"
-#include "ui/WidgetList.h"
+#include "Vorb/ui/Button.h"
+#include "Vorb/ui/CheckBox.h"
+#include "Vorb/ui/ComboBox.h"
+#include "Vorb/ui/Form.h"
+#include "Vorb/ui/FormScriptEnvironment.h"
+#include "Vorb/ui/Label.h"
+#include "Vorb/ui/Panel.h"
+#include "Vorb/ui/Slider.h"
+#include "Vorb/ui/WidgetList.h"
 
 #define INIT_FUNCTION_NAME "init"
 #define OPTIONS_CHANGE_FUNCTION_NAME "onOptionsChanged"

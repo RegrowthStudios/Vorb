@@ -1,10 +1,12 @@
-#include "stdafx.h"
-#include "script/ScriptValueSenders.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/ScriptValueSenders.h"
+
+#define LUA_COMPAT_APIINTCASTS
 
 extern "C" {
-#include "OOLua/lua/lua.h"
-#include "OOLua/lua/lualib.h"
-#include "OOLua/lua/lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
 /************************************************************************/

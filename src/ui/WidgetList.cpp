@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/WidgetList.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/WidgetList.h"
 
 vui::WidgetList::WidgetList() : Widget() {
     addWidget(&m_panel);

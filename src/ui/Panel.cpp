@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "ui/Panel.h"
-#include "ui/MouseInputDispatcher.h"
-#include "ui/UIRenderer.h"
-#include "utils.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/Panel.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/UIRenderer.h"
+#include "Vorb/utils.h"
 
 const int SLIDER_VAL_MAX = 10000;
 

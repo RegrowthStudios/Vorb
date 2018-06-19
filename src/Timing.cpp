@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "Timing.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/Timing.h"
 
 #ifndef VORB_USING_PCH
-#include "compat.h"
+#include "Vorb/compat.h"
 #endif // !VORB_USING_PCH
 
 //#if defined(VORB_OS_WINDOWS)

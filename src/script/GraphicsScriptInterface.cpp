@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "script/GraphicsScriptInterface.h"
-#include "graphics/SamplerState.h"
-#include "graphics/GLEnums.h"
-#include "graphics/SpriteBatch.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/GraphicsScriptInterface.h"
+#include "Vorb/graphics/SamplerState.h"
+#include "Vorb/graphics/GLEnums.h"
+#include "Vorb/graphics/SpriteBatch.h"
 
 void vscript::GraphicsScriptInterface::registerGraphics(vscript::Environment& env) {
     env.setNamespaces();

@@ -1,14 +1,14 @@
-#include "stdafx.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/Environment.h"
 
 extern "C" {
-#include <OOLua/lua/lua.h>
-#include <OOLua/lua/lualib.h>
-#include <OOLua/lua/lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
-#include "io/File.h"
-#include "io/FileStream.h"
+#include "Vorb/io/File.h"
+#include "Vorb/io/FileStream.h"
 
 #define VORB_SCRIPT_ENVIRONMENT_TABLE "VORB_VALUE_TABLE"
 #define VORB_SCRIPT_ENVIRONMENT_VALUE_FORMAT "VORB_VALUE_%d"

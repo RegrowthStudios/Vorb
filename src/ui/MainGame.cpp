@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/MainGame.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/MainGame.h"
 
 #include <thread>
 
@@ -26,16 +26,16 @@ static ui32 getCurrentTime() {
 #define MS_TIME getCurrentTime()
 #endif
 
-#include "../ImplGraphicsH.inl"
+#include "Vorb/ImplGraphicsH.inl"
 
-#include "graphics/GLStates.h"
-#include "ui/IGameScreen.h"
-#include "ui/InputDispatcher.h"
-#include "graphics/GraphicsDevice.h"
-#include "ui/ScreenList.h"
-#include "utils.h"
-#include "Timing.h"
-#include "InputDispatcherEventCatcher.h"
+#include "Vorb/graphics/GLStates.h"
+#include "Vorb/ui/IGameScreen.h"
+#include "Vorb/ui/InputDispatcher.h"
+#include "Vorb/graphics/GraphicsDevice.h"
+#include "Vorb/ui/ScreenList.h"
+#include "Vorb/utils.h"
+#include "Vorb/Timing.h"
+#include "Vorb/ui/InputDispatcherEventCatcher.h"
 
 vui::MainGame::MainGame() :
     m_screenList(this) {

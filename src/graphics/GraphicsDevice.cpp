@@ -1,10 +1,10 @@
-#include "stdafx.h"
-#include "graphics/GraphicsDevice.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/GraphicsDevice.h"
 
 #ifndef VORB_USING_PCH
 #include <GL/glew.h>
 
-#include "compat.h"
+#include "Vorb/compat.h"
 #endif // !VORB_USING_PCH
 
 #if defined(VORB_IMPL_UI_SDL)

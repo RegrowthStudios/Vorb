@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/SpriteFont.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/SpriteFont.h"
 
 #include <boost/filesystem.hpp>
 
@@ -11,10 +11,10 @@
 //#endif
 #endif
 
-#include "graphics/GraphicsDevice.h"
-#include "graphics/ImageIO.h"
-#include "graphics/SpriteBatch.h"
-#include "utils.h"
+#include "Vorb/graphics/GraphicsDevice.h"
+#include "Vorb/graphics/ImageIO.h"
+#include "Vorb/graphics/SpriteBatch.h"
+#include "Vorb/utils.h"
 #include <iostream>
 
 // X Offset multipliers for vg::TextAlign

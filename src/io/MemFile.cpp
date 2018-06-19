@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "io/MemFile.h"
-#include <io.h>
+#include "Vorb/stdafx.h"
+#include "Vorb/io/MemFile.h"
 
-#include "os.h"
+#include <io.h>
+#include "Vorb/os.h"
 
 MemFile::MemFile() {
     m_file = tmpfile();

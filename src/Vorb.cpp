@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Vorb.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/Vorb.h"
 
 #include <boost/filesystem.hpp>
 #include <enet/enet.h>
@@ -14,13 +14,13 @@
 // TODO: FreeType?
 #endif
 
-#include "graphics/ConnectedTextures.h"
-#include "graphics/SpriteBatch.h"
-#include "io/IOManager.h"
-#include "sound/SoundEngine.h"
-#include "utils.h"
-#include "VorbLibs.h"
-#include "Events.hpp"
+#include "Vorb/graphics/ConnectedTextures.h"
+#include "Vorb/graphics/SpriteBatch.h"
+#include "Vorb/io/IOManager.h"
+#include "Vorb/sound/SoundEngine.h"
+#include "Vorb/utils.h"
+#include "Vorb/VorbLibs.h"
+#include "Vorb/Events.hpp"
 
 void doNothing(void*) { 
     // Empty

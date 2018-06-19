@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/WidgetListScriptFuncs.h"
-#include "ui/WidgetList.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/WidgetListScriptFuncs.h"
+#include "Vorb/ui/WidgetList.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetListScriptFuncs::name));

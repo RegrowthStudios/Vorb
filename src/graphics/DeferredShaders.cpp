@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/DeferredShaders.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/DeferredShaders.h"
 
 vg::DeferredShaders::DeferredShaders() :
     clear(false),

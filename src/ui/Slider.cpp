@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "ui/Slider.h"
-#include "ui/MouseInputDispatcher.h"
-#include "ui/UIRenderer.h"
-#include "utils.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/Slider.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/UIRenderer.h"
+#include "Vorb/utils.h"
 
 vui::Slider::Slider() : Widget() {
     ValueChange.setSender(this);

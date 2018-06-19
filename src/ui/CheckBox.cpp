@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/CheckBox.h"
-#include "ui/MouseInputDispatcher.h"
-#include "ui/UIRenderer.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/CheckBox.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/UIRenderer.h"
 
 vui::CheckBox::CheckBox() : Widget() {
     ValueChange.setSender(this);

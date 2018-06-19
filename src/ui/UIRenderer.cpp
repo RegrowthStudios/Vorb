@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/UIRenderer.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/UIRenderer.h"
 
-#include "ui/GameWindow.h"
+#include "Vorb/ui/GameWindow.h"
 
 vui::UIRenderer::UIRenderer() {
     // Empty

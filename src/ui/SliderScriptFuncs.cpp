@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/SliderScriptFuncs.h"
-#include "ui/Slider.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/SliderScriptFuncs.h"
+#include "Vorb/ui/Slider.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &SliderScriptFuncs::name));

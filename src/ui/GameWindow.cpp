@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/GameWindow.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/GameWindow.h"
 
 #ifndef VORB_USING_PCH
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #endif // !VORB_USING_PCH
 
-#include "os.h"
+#include "Vorb/os.h"
 #if defined(VORB_IMPL_UI_SDL)
 //#if defined(VORB_OS_WINDOWS)
 //#include <SDL/SDL.h>
@@ -26,9 +26,9 @@
 #define VUI_WINDOW_HANDLE(WINDOW_VAR) ( (sf::RenderWindow*) WINDOW_VAR )
 #endif
 
-#include "../ImplGraphicsH.inl"
-#include "io/IOManager.h"
-#include "ui/InputDispatcher.h"
+#include "Vorb/ImplGraphicsH.inl"
+#include "Vorb/io/IOManager.h"
+#include "Vorb/ui/InputDispatcher.h"
 
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)

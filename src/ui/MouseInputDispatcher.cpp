@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/MouseInputDispatcher.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
 
 void vorb::ui::MouseEventDispatcher::getPosition(i32* x, i32* y) const {
     *x = std::atomic_load(&m_x);

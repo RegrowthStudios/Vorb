@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "io/Directory.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/Directory.h"
 
 #include <boost/filesystem.hpp>
 

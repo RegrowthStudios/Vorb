@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/GameWindowScriptFuncs.h"
-#include "ui/GameWindow.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/GameWindowScriptFuncs.h"
+#include "Vorb/ui/GameWindow.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &GameWindowScriptFuncs::name));

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/FocusController.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/FocusController.h"
 
 vui::FocusController::FocusController() {
 

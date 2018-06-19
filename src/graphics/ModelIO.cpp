@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/ModelIO.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ModelIO.h"
 
 namespace vorb {
     namespace graphics {

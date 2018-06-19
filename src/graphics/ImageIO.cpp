@@ -1,9 +1,9 @@
-#include "stdafx.h"
-#include "graphics/ImageIO.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ImageIO.h"
 
 //#include <FreeImage.h>
 
-#include "ImageIOConv.inl"
+#include "Vorb/graphics/ImageIOConv.inl"
 
 namespace vorb {
     namespace graphics {

@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "io/KegValue.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/KegValue.h"
 
-#include "io/KegBasic.h"
+#include "Vorb/io/KegBasic.h"
 
 keg::Value keg::Value::basic(size_t off, BasicType t) {
     Value kv = {};

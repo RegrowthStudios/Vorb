@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "ui/ScreenList.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/ScreenList.h"
 
-#include "ui/IGameScreen.h"
-#include "ui/MainGame.h"
+#include "Vorb/ui/IGameScreen.h"
+#include "Vorb/ui/MainGame.h"
 
 vui::ScreenList::ScreenList(MainGame* g) {
     _game = g;

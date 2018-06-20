@@ -1,14 +1,14 @@
-#include "stdafx.h"
-#include "graphics/GpuMemory.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/GpuMemory.h"
 
 #ifndef VORB_USING_PCH
 #include <GL/glew.h>
 #endif // !VORB_USING_PCH
 
-#include "graphics/ImageIO.h"
-#include "graphics/SamplerState.h"
-#include "graphics/ImageIO.h"
-#include "utils.h"
+#include "Vorb/graphics/ImageIO.h"
+#include "Vorb/graphics/SamplerState.h"
+#include "Vorb/graphics/ImageIO.h"
+#include "Vorb/utils.h"
 
 #define RGBA_BYTES 4
 

@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "io/KegEnum.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/KegEnum.h"
 
-#include "io/KegEnvironment.h"
+#include "Vorb/io/KegEnvironment.h"
 
 keg::Enum::Enum(size_t sizeInBytes, const nString& name, Environment* env) :
 _sizeInBytes(sizeInBytes) {

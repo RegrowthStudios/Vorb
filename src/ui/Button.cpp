@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/Button.h"
-#include "ui/MouseInputDispatcher.h"
-#include "ui/UIRenderer.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/Button.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/UIRenderer.h"
 
 vui::Button::Button() : Widget() {
     updateColor();

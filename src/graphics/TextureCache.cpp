@@ -1,11 +1,11 @@
-#include "stdafx.h"
-#include "graphics/TextureCache.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/TextureCache.h"
 
-#include "io/IOManager.h"
-#include "graphics/GpuMemory.h"
+#include "Vorb/io/IOManager.h"
+#include "Vorb/graphics/GpuMemory.h"
 
 #ifdef VORB_USING_SCRIPT
-#include "script/Environment.h"
+#include "Vorb/script/Environment.h"
 #endif
 
 vg::TextureCache::TextureCache() {

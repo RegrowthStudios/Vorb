@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "ui/IWidgetContainer.h"
-#include "UI/InputDispatcher.h"
-#include "UI/Widget.h"
-#include "utils.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/IWidgetContainer.h"
+#include "Vorb/ui/InputDispatcher.h"
+#include "Vorb/ui/Widget.h"
+#include "Vorb/utils.h"
 
 vui::IWidgetContainer::IWidgetContainer() :
     MouseClick(this),

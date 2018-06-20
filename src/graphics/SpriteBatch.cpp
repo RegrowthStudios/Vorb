@@ -1,14 +1,16 @@
-#include "stdafx.h"
-#include "graphics/SpriteBatch.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/SpriteBatch.h"
 
-#include "graphics/DepthState.h"
-#include "graphics/GLEnums.h"
-#include "graphics/GLProgram.h"
-#include "graphics/RasterizerState.h"
-#include "graphics/SamplerState.h"
-#include "graphics/SpriteFont.h"
-#include "graphics/ShaderManager.h"
-#include "SpriteBatchShader.inl"
+#include "Vorb/graphics/DepthState.h"
+#include "Vorb/graphics/GLEnums.h"
+#include "Vorb/graphics/GLProgram.h"
+#include "Vorb/graphics/RasterizerState.h"
+#include "Vorb/graphics/SamplerState.h"
+#include "Vorb/graphics/SpriteFont.h"
+#include "Vorb/graphics/ShaderManager.h"
+#include "Vorb/graphics/SpriteBatchShader.inl"
+
+#include <algorithm>
 
 #define VERTS_PER_QUAD 4
 #define INDICES_PER_QUAD 6

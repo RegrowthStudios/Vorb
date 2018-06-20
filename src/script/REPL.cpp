@@ -1,14 +1,15 @@
-#include "stdafx.h"
-#include "script/REPL.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/REPL.h"
 
-#include "os.h"
+#include "Vorb/os.h"
+
 extern "C" {
-#include <OOLua/lua/lua.h>
-#include <OOLua/lua/lualib.h>
-#include <OOLua/lua/lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
-#include "script/Environment.h"
+#include "Vorb/script/Environment.h"
 
 vscript::REPL::REPL(vscript::Environment* env /*= nullptr*/, size_t storageSize /*= VORB_REPL_NUM_COMMANDS_STORED*/) :
     m_storedCommands(storageSize) {

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/DepthState.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/DepthState.h"
 
 vg::DepthState::DepthState(bool read, DepthFunction depthFunction, bool write) :
 shouldRead(read),

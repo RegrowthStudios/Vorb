@@ -1,9 +1,9 @@
-#include "stdafx.h"
-#include "graphics/ShaderParser.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ShaderParser.h"
 
 #include <sstream>
 
-#include "io/IOManager.h"
+#include "Vorb/io/IOManager.h"
 
 // Static definitions
 Event<nString> vg::ShaderParser::onParseError;

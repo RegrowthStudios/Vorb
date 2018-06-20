@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/Label.h"
-#include "ui/UIRenderer.h"
-#include "utils.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/Label.h"
+#include "Vorb/ui/UIRenderer.h"
+#include "Vorb/utils.h"
 
 vui::Label::Label() : Widget() {
     refreshDrawables();

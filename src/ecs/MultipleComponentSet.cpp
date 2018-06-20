@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ecs/MultipleComponentSet.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ecs/MultipleComponentSet.h"
 
-#include "ecs/ComponentTableBase.h"
+#include "Vorb/ecs/ComponentTableBase.h"
 
 vecs::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),

@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "UI/Drawables.h"
-#include "utils.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/UI/Drawables.h"
+#include "Vorb/utils.h"
 
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {
     f32v4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);

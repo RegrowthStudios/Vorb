@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "graphics/ShaderInterface.h"
-#include "graphics/GLProgram.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ShaderInterface.h"
+#include "Vorb/graphics/GLProgram.h"
 
 i32 vg::ShaderInterface::build(const AttributeSemBinding& semBinds) {
     int numLinked = 0;

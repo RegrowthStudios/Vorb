@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/ConnectedTextures.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/ConnectedTextures.h"
 
 #ifndef VORB_USING_PCH
 #include <memory>

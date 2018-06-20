@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "voxel/VoxCommon.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/voxel/VoxCommon.h"
 
 vvox::Cardinal vvox::toCardinal(const Axis& a, const bool& positive) {
     return (Cardinal)(a << 1) | (positive ? Cardinal::POSITIVE : Cardinal::NEGATIVE);

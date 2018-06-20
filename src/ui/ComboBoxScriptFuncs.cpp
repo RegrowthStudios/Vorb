@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/ComboBoxScriptFuncs.h"
-#include "ui/ComboBox.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/ComboBoxScriptFuncs.h"
+#include "Vorb/ui/ComboBox.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &ComboBoxScriptFuncs::name));

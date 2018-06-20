@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/ScriptedUI.h"
-#include "ui/Form.h"
-#include "ui/FormScriptEnvironment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/ScriptedUI.h"
+#include "Vorb/ui/Form.h"
+#include "Vorb/ui/FormScriptEnvironment.h"
 
 vui::ScriptedUI::ScriptedUI() {
     // Empty

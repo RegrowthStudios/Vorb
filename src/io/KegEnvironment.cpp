@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "io/KegEnvironment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/KegEnvironment.h"
 
-#include "io/KegBasic.h"
-#include "io/KegTypes.h"
+#include "Vorb/io/KegBasic.h"
+#include "Vorb/io/KegTypes.h"
 
 keg::Environment::Environment() :
     _uuid(KEG_BAD_TYPE_ID) {

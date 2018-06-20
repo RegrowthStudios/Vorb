@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "graphics/SamplerState.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/SamplerState.h"
 
 #ifdef VORB_USING_SCRIPT
-#include "script/Environment.h"
+#include "Vorb/script/Environment.h"
 #endif
 
 vg::SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter,

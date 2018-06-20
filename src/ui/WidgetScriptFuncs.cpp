@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/WidgetScriptFuncs.h"
-#include "script/Environment.h"
-#include "ui/MouseInputDispatcher.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/script/Environment.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));

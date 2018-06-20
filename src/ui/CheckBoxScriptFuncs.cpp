@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/CheckBoxScriptFuncs.h"
-#include "ui/CheckBox.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/CheckBoxScriptFuncs.h"
+#include "Vorb/ui/CheckBox.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &CheckBoxScriptFuncs::name));

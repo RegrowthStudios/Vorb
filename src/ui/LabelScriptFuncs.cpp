@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/LabelScriptFuncs.h"
-#include "ui/Label.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/LabelScriptFuncs.h"
+#include "Vorb/ui/Label.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &LabelScriptFuncs::name));

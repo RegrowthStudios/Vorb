@@ -1,26 +1,26 @@
-#include "stdafx.h"
-#include "Vorb.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/Vorb.h"
 
 #include <boost/filesystem.hpp>
 #include <enet/enet.h>
-#include <FreeImage.h>
+//#include <FreeImage.h>
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <TTF/SDL_ttf.h>
-#else
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
+//#if defined(VORB_OS_WINDOWS)
+//#include <TTF/SDL_ttf.h>
+//#else
+#include <SDL_ttf/SDL_ttf.h>
+//#endif
 #else
 // TODO: FreeType?
 #endif
 
-#include "graphics/ConnectedTextures.h"
-#include "graphics/SpriteBatch.h"
-#include "io/IOManager.h"
-#include "sound/SoundEngine.h"
-#include "utils.h"
-#include "VorbLibs.h"
-#include "Events.hpp"
+#include "Vorb/graphics/ConnectedTextures.h"
+#include "Vorb/graphics/SpriteBatch.h"
+#include "Vorb/io/IOManager.h"
+#include "Vorb/sound/SoundEngine.h"
+#include "Vorb/utils.h"
+#include "Vorb/VorbLibs.h"
+#include "Vorb/Events.hpp"
 
 void doNothing(void*) { 
     // Empty
@@ -51,7 +51,7 @@ namespace vorb {
 #else
         // TODO(Cristian): FreeType
 #endif
-        FreeImage_Initialise();
+//        FreeImage_Initialise();
         vg::ConnectedTextureHelper::init();
         return InitParam::GRAPHICS;
     }
@@ -128,7 +128,7 @@ namespace vorb {
 #else
         // TODO(Cristian): FreeType
 #endif
-        FreeImage_DeInitialise();
+//        FreeImage_DeInitialise();
         vg::SpriteBatch::disposeProgram();
 
         return InitParam::GRAPHICS;

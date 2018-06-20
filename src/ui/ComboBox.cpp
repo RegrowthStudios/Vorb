@@ -1,13 +1,13 @@
-#include "stdafx.h"
-#include "ui/ComboBox.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/ComboBox.h"
 
 #ifndef VORB_USING_PCH
 #undef min
 #endif // !VORB_USING_PCH
 
-#include "ui/MouseInputDispatcher.h"
-#include "ui/UIRenderer.h"
-#include "utils.h"
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/UIRenderer.h"
+#include "Vorb/utils.h"
 
 
 vui::ComboBox::ComboBox() : Widget() {
@@ -71,7 +71,7 @@ void vui::ComboBox::updatePosition() {
     if (m_isDropped) {
         m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
         f32v2 dims = getDimensions() * f32v2(1.0f, (f32)m_items.size());
-        dims.y = vmath::min(dims.y, m_maxDropHeight);
+        dims.y = glm::min(dims.y, m_maxDropHeight);
         m_dropPanel.setDimensions(dims);
     } else {
         m_dropPanel.setDimensions(f32v2(0.0f));

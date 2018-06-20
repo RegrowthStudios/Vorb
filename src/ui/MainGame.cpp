@@ -1,14 +1,14 @@
-#include "stdafx.h"
-#include "ui/MainGame.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/MainGame.h"
 
 #include <thread>
 
 #if defined(VORB_IMPL_UI_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <SDL/SDL.h>
-#else
+//#if defined(VORB_OS_WINDOWS)
+//#include <SDL/SDL.h>
+//#else
 #include <SDL2/SDL.h>
-#endif
+//#endif
 #define MS_TIME (SDL_GetTicks())
 #elif defined(VORB_IMPL_UI_GLFW)
 #include <GLFW/glfw3.h>
@@ -26,16 +26,16 @@ static ui32 getCurrentTime() {
 #define MS_TIME getCurrentTime()
 #endif
 
-#include "../ImplGraphicsH.inl"
+#include "Vorb/ImplGraphicsH.inl"
 
-#include "graphics/GLStates.h"
-#include "ui/IGameScreen.h"
-#include "ui/InputDispatcher.h"
-#include "graphics/GraphicsDevice.h"
-#include "ui/ScreenList.h"
-#include "utils.h"
-#include "Timing.h"
-#include "InputDispatcherEventCatcher.h"
+#include "Vorb/graphics/GLStates.h"
+#include "Vorb/ui/IGameScreen.h"
+#include "Vorb/ui/InputDispatcher.h"
+#include "Vorb/graphics/GraphicsDevice.h"
+#include "Vorb/ui/ScreenList.h"
+#include "Vorb/utils.h"
+#include "Vorb/Timing.h"
+#include "Vorb/ui/InputDispatcherEventCatcher.h"
 
 vui::MainGame::MainGame() :
     m_screenList(this) {

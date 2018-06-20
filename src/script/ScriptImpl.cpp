@@ -1,14 +1,14 @@
-#include "stdafx.h"
-#include "script/ScriptImpl.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/ScriptImpl.h"
 
 extern "C" {
-#include "OOLua/lua/lua.h"
-#include "OOLua/lua/lualib.h"
-#include "OOLua/lua/lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
-#include "script/Function.h"
-#include "script/Environment.h"
+#include "Vorb/script/Function.h"
+#include "Vorb/script/Environment.h"
 
 void vscript::impl::pushToTop(EnvironmentHandle h, const Function& f) {
     lua_getfield(h, LUA_REGISTRYINDEX, VORB_SCRIPT_FUNCTION_TABLE);

@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "io/IOManager.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/IOManager.h"
 
-#include "io/FileOps.h"
-#include "utils.h"
+#include "Vorb/io/FileOps.h"
+#include "Vorb/utils.h"
 
 vio::IOManager::IOManager() :
     m_pathSearch("") {

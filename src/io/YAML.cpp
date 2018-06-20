@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "io/YAML.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/YAML.h"
 
-#include "YAMLImpl.h"
+#include "Vorb/io/YAMLImpl.h"
 
 void keg::YAMLReader::init(const cString data) {
     m_first = new YAMLNode;

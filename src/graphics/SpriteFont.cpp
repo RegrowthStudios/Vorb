@@ -1,20 +1,21 @@
-#include "stdafx.h"
-#include "graphics/SpriteFont.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/SpriteFont.h"
 
 #include <boost/filesystem.hpp>
 
 #if defined(VORB_IMPL_FONT_SDL)
-#if defined(VORB_OS_WINDOWS)
-#include <TTF/SDL_ttf.h>
-#else
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
+//#if defined(VORB_OS_WINDOWS)
+//#include <TTF/SDL_ttf.h>
+//#else
+#include <SDL_ttf/SDL_ttf.h>
+//#endif
 #endif
 
-#include "graphics/GraphicsDevice.h"
-#include "graphics/ImageIO.h"
-#include "graphics/SpriteBatch.h"
-#include "utils.h"
+#include "Vorb/graphics/GraphicsDevice.h"
+#include "Vorb/graphics/ImageIO.h"
+#include "Vorb/graphics/SpriteBatch.h"
+#include "Vorb/utils.h"
+#include <iostream>
 
 // X Offset multipliers for vg::TextAlign
 const f32 X_OFF_MULTS[9] = {

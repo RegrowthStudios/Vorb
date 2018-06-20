@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ui/KeyboardEventDispatcher.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/KeyboardEventDispatcher.h"
 
 vui::KeyboardEventDispatcher::KeyboardEventDispatcher() {
     for (auto& key : m_presses) std::atomic_init(&key, 0);

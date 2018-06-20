@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "io/Keg.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/Keg.h"
 
-#include "io/YAML.h"
-#include "io/KegFuncs.h"
+#include "Vorb/io/YAML.h"
+#include "Vorb/io/KegFuncs.h"
 
 namespace keg {
     Type* getCorrectType(keg::Node& node, ReadContext& context, Type* previous) {

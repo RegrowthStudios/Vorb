@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ecs/ECS.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ecs/ECS.h"
 
-#include "ecs/ComponentTableBase.h"
+#include "Vorb/ecs/ComponentTableBase.h"
 
 vecs::ECS::ECS() :
     onEntityAdded(this),

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "graphics/RasterizerState.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/graphics/RasterizerState.h"
 
 vg::RasterizerState::RasterizerState(bool use, CullFaceMode cullFaceMode, FrontFaceDirection frontFaceDirection) :
 useCulling(use),

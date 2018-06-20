@@ -1,8 +1,9 @@
 // Written by Frank McCoy
-#include "stdafx.h"
-#include "MeshGenerators.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/MeshGenerators.h"
 
-#include "graphics/GpuMemory.h"
+#include "Vorb/graphics/GpuMemory.h"
+#include "glm/glm.hpp"
 
 const static float GOLDEN_RATIO = 1.61803398875f;
 
@@ -63,7 +64,7 @@ public:
 };
 
 inline f32v3 findMidpoint(const f32v3& vertex1, const f32v3& vertex2) {
-    return vmath::normalize(f32v3((vertex1.x + vertex2.x) / 2.0f, (vertex1.y + vertex2.y) / 2.0f, (vertex1.z + vertex2.z) / 2.0f));
+    return glm::normalize(f32v3((vertex1.x + vertex2.x) / 2.0f, (vertex1.y + vertex2.y) / 2.0f, (vertex1.z + vertex2.z) / 2.0f));
 }
 
 void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vector<f32v3>& positions) {
@@ -78,8 +79,8 @@ void vmesh::generateIcosphereMesh(int lod, std::vector<ui32>& indices, std::vect
     }
     positions.resize(NUM_ICOSOHEDRON_VERTICES);
     for (ui32 i = 0; i < NUM_ICOSOHEDRON_VERTICES; i++) {
-        positions[i] = vmath::normalize(ICOSOHEDRON_VERTICES[i]);
-        vertexLookup[vmath::normalize(ICOSOHEDRON_VERTICES[i])] = i;
+        positions[i] = glm::normalize(ICOSOHEDRON_VERTICES[i]);
+        vertexLookup[glm::normalize(ICOSOHEDRON_VERTICES[i])] = i;
     }
 
     for (ui32 i = 0; i < (ui32)lod; i++) {

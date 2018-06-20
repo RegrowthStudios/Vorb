@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Random.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/Random.h"
 
 #include <ctime>
 

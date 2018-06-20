@@ -1,9 +1,9 @@
-#include "stdafx.h"
-#include "io/Keg.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/io/Keg.h"
 
-#include "io/KegFuncs.h"
-#include "io/KegTypes.h"
-#include "io/YAML.h"
+#include "Vorb/io/KegFuncs.h"
+#include "Vorb/io/KegTypes.h"
+#include "Vorb/io/YAML.h"
 
 namespace keg {
 #define KEG_BASIC_NUM_MAP(TYPE) \

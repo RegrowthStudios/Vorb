@@ -1,7 +1,7 @@
-#include "stdafx.h"
-#include "ui/PanelScriptFuncs.h"
-#include "ui/Panel.h"
-#include "script/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/PanelScriptFuncs.h"
+#include "Vorb/ui/Panel.h"
+#include "Vorb/script/Environment.h"
 
 // Helper macros for smaller code
 #define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &PanelScriptFuncs::name));

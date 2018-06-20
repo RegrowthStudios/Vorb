@@ -1,11 +1,11 @@
-#include "stdafx.h"
-#include "ui/InputDispatcher.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/InputDispatcher.h"
 
-#include "os.h"
+#include "Vorb/os.h"
 
-#include "InputDispatcherEventCatcher.h"
-#include "ui/GameWindow.h"
-#include "KeyMappings.inl"
+#include "Vorb/ui/InputDispatcherEventCatcher.h"
+#include "Vorb/ui/GameWindow.h"
+#include "Vorb/ui/KeyMappings.inl"
 
 #if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};

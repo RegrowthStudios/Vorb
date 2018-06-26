@@ -15,13 +15,20 @@ class ArrayBase {
 public:
     /*! @brief Default array constructor with no data
      */
-    ArrayBase() = default;
+    ArrayBase():
+        m_data(nullptr),
+        m_elementSize(0),
+        m_length(0)
+    {}
     /*! @brief Construct an array with element information.
      *
      * @param elemSize: Size of an element in bytes
      */
     ArrayBase(size_t elemSize) :
-        m_elementSize(elemSize) {
+        m_data(nullptr),
+        m_elementSize(elemSize),
+        m_length(0)
+    {
         // Empty
     }
     /*! @brief Construct an array with element information and give it existing data.
@@ -152,9 +159,9 @@ public:
 
 protected:
     std::shared_ptr<ui8> m_sharedData; ///< Shared data pointer to allow for automatic memory management
-    void* m_data = nullptr; ///< Cached pointer from the shared data
-    size_t m_elementSize = 0; ///< The size of the elements in bytes
-    size_t m_length = 0; ///< The length of the array in elements
+    void* m_data; ///< Cached pointer from the shared data
+    size_t m_elementSize; ///< The size of the elements in bytes
+    size_t m_length; ///< The length of the array in elements
 };
 
 /*! @brief An array filled with known element types.

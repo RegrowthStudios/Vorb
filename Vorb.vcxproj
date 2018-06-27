@@ -537,6 +537,7 @@ $(SolutionDir)DepsBuildCopy.bat</Command>
     <None Include="include/typesArray.inl" />
     <None Include="include/typesColor.inl" />
     <None Include="include\AssetLoader.inl" />
+    <None Include="include\Bitfields.inl" />
     <None Include="include\math\MatrixMath.hpp" />
     <None Include="include\Matrix.inl" />
     <None Include="include\Quaternion.inl" />

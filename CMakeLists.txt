@@ -50,6 +50,8 @@ hunter_add_package(yaml-cpp)
 find_package(yaml-cpp CONFIG REQUIRED)
 hunter_add_package(OpenSSL)
 find_package(OpenSSL REQUIRED)
+hunter_add_package(PNG)
+find_package(PNG CONFIG REQUIRED)
 
 verify_folder_structure()
 initialize_for_platform()
@@ -393,6 +395,7 @@ target_link_libraries(vorb
     OpenSSL::SSL
     OpenSSL::Crypto
     Lua::lua_lib
+    PNG::png
 )
 
 target_include_directories(vorb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

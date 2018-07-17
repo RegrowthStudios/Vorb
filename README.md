@@ -26,12 +26,6 @@ we support all three major operating systems:
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
 *  CMake: [Cmake](http://www.cmake.org/download/)
 
-#### Vorb Dependencies
-*  SDL v2: [Github](https://github.com/spurious/SDL-mirror.git)
-*  GLEW v1.11.0: [Github](https://github.com/nigels-com/glew.git)
-*  Boost v1.57.0: [Github](https://github.com/boostorg/boost.git)
-*  Lodepng vN/A: [Github](https://github.com/lvandeve/lodepng.git)
-
 ### Installation
 1. Open a dos window.
 ```

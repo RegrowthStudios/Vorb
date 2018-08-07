@@ -30,6 +30,8 @@
 #include "Vorb/io/IOManager.h"
 #include "Vorb/ui/InputDispatcher.h"
 
+#include <thread>
+
 #if defined(VORB_IMPL_GRAPHICS_OPENGL)
 #define DEFAULT_WINDOW_FLAGS (SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
 #elif defined(VORB_IMPL_GRAPHICS_D3D)
@@ -479,7 +481,7 @@ void vui::GameWindow::sync(ui32 frameTime) {
     if (m_displayMode.swapInterval == GameSwapInterval::USE_VALUE_CAP) {
         f32 desiredFPS = 1000.0f / (f32)m_displayMode.maxFPS;
         ui32 sleepTime = (ui32)(desiredFPS - frameTime);
-        if (desiredFPS > frameTime && sleepTime > 0) Sleep(sleepTime);
+        if (desiredFPS > frameTime && sleepTime > 0) std::this_thread::sleep_for (std::chrono::milliseconds(sleepTime));
     }
 }
 

@@ -27,8 +27,13 @@
 #include "../Events.hpp"
 #include "../Vorb.h"
 #include "gtypes.h"
-#include "GLenums.h"
+#include "GLEnums.h"
 #include "ShaderInterface.h"
+
+#if defined(VORB_COMPILER_GCC) || defined(VORB_COMPILER_CLANG)
+#undef major
+#undef minor
+#endif//VORB_COMPILER_GCC
 
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MAJOR 1
 #define GL_PROGRAM_DEFAULT_SHADER_VERSION_MINOR 3

@@ -49,7 +49,7 @@ bool vui::WidgetList::addItemAtIndex(int index, Widget* w) {
 }
 
 bool vui::WidgetList::removeItem(Widget* w) {
-    for (auto& it = m_listedWidgets.begin(); it != m_listedWidgets.end(); it++) {
+    for (auto it = m_listedWidgets.begin(); it != m_listedWidgets.end(); it++) {
         if (*it == w) {
             w->removeDrawables();
             m_listedWidgets.erase(it);
@@ -63,7 +63,7 @@ bool vui::WidgetList::removeItem(Widget* w) {
 
 bool vui::WidgetList::removeItem(int index) {
     if (index > (int)m_listedWidgets.size()) return false;
-    auto& it = (m_listedWidgets.begin() + index);
+    auto it = (m_listedWidgets.begin() + index);
     (*it)->removeDrawables();
     m_panel.removeWidget(*it);
     m_listedWidgets.erase(it);

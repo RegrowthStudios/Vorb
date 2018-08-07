@@ -28,6 +28,9 @@ namespace vorb {
     namespace script {
         class Environment;
 
+        template<typename Ret>
+        class RFunction;
+
         class Function {
             friend class Environment;
             template<typename Ret> friend class RFunction;
@@ -46,24 +49,24 @@ namespace vorb {
             RFunction<Ret> as() const;
 
             template<typename... Args>
-            void call(Args... args) const {
-                EnvironmentHandle hnd = m_env->getHandle();
-
-                impl::pushToTop(hnd, *this);
-                impl::pushArgs(hnd, args...);
-                impl::call(hnd, sizeof...(Args), 0);
-                impl::popStack(hnd);
-            }
+            void call(Args... args) const;// {
+//                EnvironmentHandle hnd = m_env->getHandle();
+//
+//                impl::pushToTop(hnd, *this);
+//                impl::pushArgs(hnd, args...);
+//                impl::call(hnd, sizeof...(Args), 0);
+//                impl::popStack(hnd);
+//            }
             template<typename Ret, typename... Args>
-            void rcall(OUT Ret* retValue, Args... args) const {
-                EnvironmentHandle hnd = m_env->getHandle();
-
-                impl::pushToTop(hnd, *this);
-                impl::pushArgs(hnd, args...);
-                impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
-                *retValue = impl::popValue<Ret>(hnd);
-                impl::popStack(hnd);
-            }
+            void rcall(OUT Ret* retValue, Args... args) const; //{
+//                EnvironmentHandle hnd = m_env->getHandle();
+//
+//                impl::pushToTop(hnd, *this);
+//                impl::pushArgs(hnd, args...);
+//                impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
+//                *retValue = impl::popValue<Ret>(hnd);
+//                impl::popStack(hnd);
+//            }
 
             template<typename... Args>
             void operator()(Args... args) const {

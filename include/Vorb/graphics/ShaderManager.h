@@ -51,7 +51,7 @@ namespace vorb {
             static GLProgram createProgram(const cString vertSrc, const cString fragSrc,
                                            vio::IOManager* vertIOM = nullptr,
                                            vio::IOManager* fragIOM = nullptr,
-                                           cString defines = nullptr);
+                                           const cString defines = nullptr);
             /// Creates a GLProgram from files.
             /// Does not register to global cache.
             /// @param vertPath: Path to vertex shader
@@ -60,7 +60,7 @@ namespace vorb {
             /// @param defines: #defines for the program
             /// @return the created program.
             static GLProgram createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
-                                                   vio::IOManager* iom = nullptr, cString defines = nullptr);
+                                                   vio::IOManager* iom = nullptr, const cString defines = nullptr);
 
             /// Disposes and deallocates all globally cached programs and clears the cache
             static void disposeAllPrograms();

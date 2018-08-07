@@ -45,12 +45,6 @@ namespace vorb {
             template<typename... T>
             struct index_sequence_for : make_index_sequence<sizeof...(T)> {};
 
-            template<typename... T>
-            std::tuple<T...> popArgs(EnvironmentHandle h) {
-                std::tuple<T...> tValue { ScriptValueSender<T>::defaultValue()... };
-                popArgsR<T...>(h, &tValue);
-                return std::move(tValue);
-            }
             template<typename T>
             void popArgsR(EnvironmentHandle h, std::tuple<T>* v) {
                 T tValue = popValue<T>(h);
@@ -62,15 +56,31 @@ namespace vorb {
                 void* tValue = popValue<void*>(h);
                 memcpy(v, &tValue, sizeof(void*));
             }
+
+#ifdef _MSC_VER
             template<typename V, typename... T>
             void popArgsR(EnvironmentHandle h, std::tuple<V, T...>* v) {
-                std::tuple<T...> tPopped { ScriptValueSender<T>::defaultValue()... };
+                std::tuple<T...> tPopped{ScriptValueSender<T>::defaultValue()...};
                 popArgsR<T...>(h, &tPopped);
+#else
+            template<typename V, typename U, typename... T>
+            void popArgsR(EnvironmentHandle h, std::tuple<V, U, T...>* v) {
+                std::tuple<U, T...> tPopped { ScriptValueSender<U>::defaultValue(), ScriptValueSender<T>::defaultValue()... };
+                popArgsR<U, T...>(h, &tPopped);
+#endif
                 std::tuple<V> tValue { ScriptValueSender<V>::defaultValue() };
                 popArgsR<V>(h, &tValue);
-                std::swap(*v, std::tuple_cat(tValue, tPopped));
-            }
+                auto cat_result = std::tuple_cat(tValue, tPopped);
+                std::swap(*v, cat_result); //why are we swapping and not just assigning?
+            }            
 
+            template<typename... T>
+            std::tuple<T...> popArgs(EnvironmentHandle h) {
+                std::tuple<T...> tValue { ScriptValueSender<T>::defaultValue()... };
+                popArgsR<T...>(h, &tValue);
+                return std::move(tValue);
+            }
+            
             template <typename Ret, typename F, typename Tuple, size_t... Is>
             Ret invokeCall(F f, Tuple& t, index_sequence<Is...>) {
                 return f(std::get<Is>(t)...);
@@ -107,10 +117,10 @@ namespace vorb {
                 return 0;
             }
 
-            template<typename Ret, typename... Args>
-            i32 fRCall(EnvironmentHandle h, RDelegate<Ret, Args...>* del) {
-                std::tuple<Args...> tValue = popArgs<Args...>(h);
-                Ret retValue = invoke<Ret>(del, tValue, index_sequence_for<Args...>());
+            template<typename Ret, typename Arg1, typename... Args>
+            i32 fRCall(EnvironmentHandle h, RDelegate<Ret, Arg1, Args...>* del) {
+                std::tuple<Arg1, Args...> tValue = popArgs<Arg1, Args...>(h);
+                Ret retValue = invoke<Ret>(del, tValue, index_sequence_for<Arg1, Args...>());
                 return ScriptValueSender<Ret>::push(h, retValue);
             }
             template<typename Ret>

@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/UI/Drawables.h"
+#include "Vorb/ui/Drawables.h"
 #include "Vorb/utils.h"
 
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {

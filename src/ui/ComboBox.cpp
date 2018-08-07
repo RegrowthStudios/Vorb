@@ -104,7 +104,7 @@ bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
 
 bool vui::ComboBox::removeItem(const nString& item) {
     // TODO(Ben): This is certainly wrong. It leaves button.
-    for (auto& it = m_items.begin(); it != m_items.end(); it++) {
+    for (auto it = m_items.begin(); it != m_items.end(); it++) {
         if (*it == item) {
             m_items.erase(it);
             return true;

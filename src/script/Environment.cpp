@@ -91,16 +91,16 @@ bool vscript::Environment::load(const vio::Path& file) {
 }
 
 bool vscript::Environment::hasFunction(const nString& name) {
-    auto& kvp = m_functions.find(name);
+    auto kvp = m_functions.find(name);
     return (kvp != m_functions.end());
 }
 
 vscript::Function& vscript::Environment::operator[](const nString& name) {
-    auto& kvp = m_functions.find(name);
+    auto kvp = m_functions.find(name);
     return kvp == m_functions.end() ? Function::nil : kvp->second;
 }
 const vscript::Function& vscript::Environment::operator[](const nString& name) const {
-    auto& kvp = m_functions.find(name);
+    auto kvp = m_functions.find(name);
     return kvp == m_functions.end() ? Function::nil : kvp->second;
 }
 

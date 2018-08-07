@@ -53,7 +53,7 @@ vg::Texture vg::TextureCache::addTexture(const vio::Path& filePath,
     if (texture.id) return texture;
 
     // Load the pixel data
-    vg::ScopedBitmapResource rs = vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8, flipV);
+    vg::ScopedBitmapResource rs(vg::ImageIO().load(texPath.getString(), vg::ImageIOFormat::RGBA_UI8, flipV));
     if (!rs.data) return Texture();
     texture.width = rs.width;
     texture.height = rs.height;

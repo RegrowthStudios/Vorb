@@ -33,12 +33,15 @@ macro(initialize_for_platform)
                    # "-Wno-missing-braces"
                    "-Wno-unknown-pragmas"
                    )
-      ADD_DEFINITIONS(
-          -std=c++11
-          -stdlib=libc++
+        ADD_DEFINITIONS(
+#          -std=c++11
+#          -stdlib=libc++
           # Other flags
           ${warnings}
       )
+      set(CMAKE_CXX_STANDARD 11)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
   elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
       set(warnings "/W4 /WX /EHsc")
   endif()

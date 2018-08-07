@@ -15,7 +15,7 @@ vg::GLProgram vg::ShaderManager::m_nilProgram;
 vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cString fragSrc,
                                                vio::IOManager* vertIOM /*= nullptr*/,
                                                vio::IOManager* fragIOM /*= nullptr*/,
-                                               cString defines /*= nullptr*/) {
+                                               const cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
     // Use default ioManager
     if (!vertIOM) vertIOM = &ioManager;
@@ -74,7 +74,7 @@ vg::GLProgram vg::ShaderManager::createProgram(const cString vertSrc, const cStr
 }
 
 vg::GLProgram vg::ShaderManager::createProgramFromFile(const vio::Path& vertPath, const vio::Path& fragPath,
-                                                       vio::IOManager* iom /*= nullptr*/, cString defines /*= nullptr*/) {
+                                                       vio::IOManager* iom /*= nullptr*/, const cString defines /*= nullptr*/) {
     vio::IOManager ioManager;
     vio::Path vertSearchDir;
     vio::Path fragSearchDir;
@@ -121,21 +121,21 @@ void vg::ShaderManager::disposeAllPrograms() {
 }
 
 bool vg::ShaderManager::registerProgram(const nString& name, const GLProgram& program) {
-    auto& it = m_programMap.find(name);
+    auto it = m_programMap.find(name);
     if (it != m_programMap.end()) return false;
     m_programMap[name] = program;
     return true;
 }
 
 CALLER_DELETE vg::GLProgram vg::ShaderManager::unregisterProgram(const nString& name) {
-    auto& it = m_programMap.find(name);
+    auto it = m_programMap.find(name);
     GLProgram rv = it->second;
     m_programMap.erase(it);
     return rv;
 }
 
 bool vg::ShaderManager::unregisterProgram(const GLProgram& program) {
-    for (auto& it = m_programMap.begin(); it != m_programMap.end(); it++) {
+    for (auto it = m_programMap.begin(); it != m_programMap.end(); it++) {
         if (it->second.getID() == program.getID()) {
             m_programMap.erase(it);
             return true;
@@ -145,7 +145,7 @@ bool vg::ShaderManager::unregisterProgram(const GLProgram& program) {
 }
 
 vg::GLProgram& vg::ShaderManager::getProgram(const nString& name) {
-    auto& it = m_programMap.find(name);
+    auto it = m_programMap.find(name);
     if (it == m_programMap.end()) return m_nilProgram;
     return it->second;
 }

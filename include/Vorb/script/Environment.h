@@ -66,7 +66,7 @@ namespace vorb {
             bool hasFunction(const nString& name);
             void addCFunction(const nString& name, int(*f)(EnvironmentHandle));
             template<typename... Args>
-            void addCDelegate(const nString& name, RDelegate<void, Args...>& del) {
+            void addCDelegate(const nString& name, const RDelegate<void, Args...>& del) {
                 typedef RDelegate<void, Args...> DelegateType;
                 m_cFuncs.emplace_back(new DelegateType(del));
                 ScriptFunc f = fromDelegate<Args...>();
@@ -74,7 +74,7 @@ namespace vorb {
                 addCClosure(name, f);
             }
             template<typename Ret, typename... Args>
-            void addCRDelegate(const nString& name, RDelegate<Ret, Args...>& del) {
+            void addCRDelegate(const nString& name, const RDelegate<Ret, Args...>& del) {
                 typedef RDelegate<Ret, Args...> DelegateType;
                 m_cFuncs.emplace_back(new DelegateType(del));
                 ScriptFunc f = fromRDelegate<Ret, Args...>();
@@ -118,6 +118,10 @@ namespace vorb {
 }
 namespace vscript = vorb::script;
 
+#include "Function.inl"
+
 #endif//VORB_USING_SCRIPT
 
 #endif // !Vorb_Environment_h__
+
+

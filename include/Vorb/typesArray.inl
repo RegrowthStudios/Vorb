@@ -9,6 +9,8 @@
  * length information. It is recommended that only POD data types are
  * used since no constructors or destructors are called.
  */
+ #include <cstring>
+
 class ArrayBase {
     template <typename T> friend class Array;
 

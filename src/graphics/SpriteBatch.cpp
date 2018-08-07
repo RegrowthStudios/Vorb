@@ -15,7 +15,7 @@
 #define VERTS_PER_QUAD 4
 #define INDICES_PER_QUAD 6
 
-vg::GLProgram vg::SpriteBatch::m_program = nullptr;
+vg::GLProgram vg::SpriteBatch::m_program;
 
 vg::SpriteBatch::Vertex::Vertex(const f32v3& pos, const f32v2& uv, const f32v4& uvr, const ColorRGBA8& color) :
     position(pos),

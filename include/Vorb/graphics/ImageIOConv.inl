@@ -16,7 +16,7 @@ namespace vorb {
 #define G_OFFSET 1
 #define B_OFFSET 2
 #define A_OFFSET 3
-#error Please research and test wtf is FreeImage doing?
+//#error Please research and test wtf is FreeImage doing?
 #endif
 
 

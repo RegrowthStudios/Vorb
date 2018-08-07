@@ -27,6 +27,8 @@
 #include "KegValue.h"
 #include "../Events.hpp"
 
+#define offsetOf(Class, Member) ((char*)&((Class*)nullptr)->Member - (char*)nullptr)
+
 namespace keg {
     class Environment;
     struct Value;
@@ -35,7 +37,6 @@ namespace keg {
     typedef void* (*AllocatorFunction)();
     typedef void* (*AllocatorArrayFunction)(size_t s);
     typedef void (*DeallocatorFunction)(void* p);
-
 
     /*! @brief Custom YAML-mapped data type
      */

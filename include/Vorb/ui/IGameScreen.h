@@ -45,7 +45,7 @@ namespace vorb {
                 // empty
             }
         
-            ~IGameScreen() {
+            virtual ~IGameScreen() {
                 // empty
             }
         

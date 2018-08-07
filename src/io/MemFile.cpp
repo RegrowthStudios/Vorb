@@ -1,7 +1,10 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/MemFile.h"
 
+#ifdef VORB_OS_WINDOWS
 #include <io.h>
+#endif//VORB_OS_WINDOWS
+
 #include "Vorb/os.h"
 
 MemFile::MemFile() {

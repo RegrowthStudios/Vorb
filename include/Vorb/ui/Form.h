@@ -22,7 +22,7 @@
 
 #ifndef VORB_USING_PCH
 #include "Vorb/types.h"
-#endif // !VORB_USING_PCH\
+#endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/IWidgetContainer.h"

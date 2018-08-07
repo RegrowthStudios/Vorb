@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Entity.h"
+#include "ECS.h"
 #include "../Events.hpp"
 #include "../IDGenerator.h"
 

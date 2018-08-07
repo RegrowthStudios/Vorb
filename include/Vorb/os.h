@@ -22,7 +22,9 @@
 
 #define NOMINMAX
 
+#ifdef _WINDOWS
 #define _WINSOCKAPI_
 #include <Windows.h>
+#endif//VORB_OS_WINDOWS
 
 #endif // !Vorb_os_h__

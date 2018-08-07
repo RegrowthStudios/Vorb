@@ -43,7 +43,7 @@ bool vui::IWidgetContainer::addWidget(Widget* child) {
 }
 
 bool vui::IWidgetContainer::removeWidget(Widget* child) {
-    for (auto& it = m_widgets.begin(); it != m_widgets.end(); it++) {
+    for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
             if (removeChildFromDock(child)) recalculateDockedWidgets();
             m_widgets.erase(it);
@@ -106,7 +106,7 @@ bool vui::IWidgetContainer::removeChildFromDock(Widget* widget) {
     int dockIndex = (int)widget->m_dock - 1;
     // Remove it from its current dock
     if (dockIndex != -1) {
-        for (auto& w = m_dockedWidgets[dockIndex].begin(); w != m_dockedWidgets[dockIndex].end(); w++) {
+        for (auto w = m_dockedWidgets[dockIndex].begin(); w != m_dockedWidgets[dockIndex].end(); w++) {
             if (*w == widget) {
                 m_dockedWidgets[dockIndex].erase(w);
                 // Subtract size

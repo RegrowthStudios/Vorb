@@ -100,8 +100,8 @@ public:
         typedef Node* pointer;
         const_iterator(pointer ptr, std::vector <Node>* tree);
         self_type operator++();
-        const reference operator*() { return *m_ptr; }
-        const pointer operator->() { return m_ptr; }
+        const Node &operator*() { return *m_ptr; }
+        const Node *operator->() { return m_ptr; }
         bool operator==(const self_type& rhs) { return m_ptr == rhs.m_ptr; }
         bool operator!=(const self_type& rhs) { return m_ptr != rhs.m_ptr; }
     private:

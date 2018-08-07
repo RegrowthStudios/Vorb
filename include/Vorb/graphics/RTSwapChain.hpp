@@ -92,7 +92,7 @@ namespace vorb {
             /// Unuse SwapChain and bind default framebuffer
             /// @param w: Width for setting viewport
             /// @param h: Height for setting viewport
-            const void unuse(ui32 w, ui32 h) {
+            void unuse(ui32 w, ui32 h) {
                 getCurrent().unuse(w, h);
             }
             /*! @brief Binds the texture from the previous swapchain stage

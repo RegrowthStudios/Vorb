@@ -7,7 +7,7 @@ template<typename T>
 CALLEE_DELETE T* AssetLoader<T>::load(const nString& name, const vpath& path) {
     T* asset = nullptr;
     {
-        std::unique_lock<std::mutex>(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         auto kvp = m_assets.find(name);
         if (kvp != m_assets.end()) return kvp->second;
 
@@ -24,7 +24,7 @@ CALLEE_DELETE T* AssetLoader<T>::load(const nString& name, const vpath& path) {
         (loader->m_context)->create(path, asset, loader->m_rpc);
 
         {
-            std::unique_lock<std::mutex>(loader->m_mutex);
+            std::unique_lock<std::mutex> lock(loader->m_mutex);
 
             // Inform listeners of loading status
             asset->isLoaded = true;
@@ -44,7 +44,7 @@ CALLEE_DELETE T* AssetLoader<T>::load(const nString& name, const vpath& path) {
 
 template<typename T>
 void AssetLoader<T>::free(const nString& name) {
-    std::unique_lock<std::mutex>(m_mutex);
+    std::unique_lock<std::mutex> lock(m_mutex);
     auto kvp = m_assets.find(name);
     if (kvp == m_assets.end()) return;
 
@@ -59,7 +59,7 @@ void AssetLoader<T>::free(const nString& name) {
 }
 template<typename T>
 void AssetLoader<T>::freeAll() {
-    std::unique_lock<std::mutex>(m_mutex);
+    std::unique_lock<std::mutex> lock(m_mutex);
     for (auto kvp : m_assets) {
         m_context->destroy(kvp.second);
         delete kvp.second;
@@ -75,7 +75,7 @@ void AssetLoader<T>::updateGL() {
 
 template<typename T>
 CALLEE_DELETE T* AssetLoader<T>::get(const nString& name) const {
-    std::unique_lock<std::mutex>(m_mutex);
+    std::unique_lock<std::mutex> lock(m_mutex);
     auto kvp = m_assets.find(name);
     return kvp == m_assets.end() ? nullptr : kvp->second;
 }

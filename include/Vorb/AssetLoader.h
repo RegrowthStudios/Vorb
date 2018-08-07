@@ -30,6 +30,7 @@
 #include "Vorb/Asset.h"
 
 #include <memory>
+#include <mutex>
 
 namespace vorb {
     namespace core {
@@ -66,7 +67,7 @@ namespace vorb {
 
             void updateGL();
         private:
-            std::mutex m_mutex{};
+            std::mutex m_mutex;
             RPCManager m_rpc;
             AssetBuilder<T>* m_context = nullptr;
             std::unordered_map<nString, T*> m_assets;

@@ -1,12 +1,12 @@
 template <typename T>
-inline void IntervalTree<typename T>::initSingle(T data, size_t length) {
+inline void IntervalTree<T>::initSingle(T data, size_t length) {
     m_root = 0;
     m_tree.emplace_back(data, 0, length);
     m_tree[0].paintBlack();
 }
 
 template <typename T>
-void IntervalTree<typename T>::initFromSortedArray(const std::vector <LNode>& data) {
+void IntervalTree<T>::initFromSortedArray(const std::vector <LNode>& data) {
     m_tree.resize(data.size());
     for (size_t i = 0; i < m_tree.size(); i++) {
         m_tree[i].setStart(data[i].start);
@@ -17,7 +17,7 @@ void IntervalTree<typename T>::initFromSortedArray(const std::vector <LNode>& da
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::initFromSortedArray(const LNode data[], size_t size) {
+inline void IntervalTree<T>::initFromSortedArray(const LNode data[], size_t size) {
     m_tree.resize(size);
     for (size_t i = 0; i < size; i++) {
         m_tree[i].setStart(data[i].start);
@@ -28,7 +28,7 @@ inline void IntervalTree<typename T>::initFromSortedArray(const LNode data[], si
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::clear() {
+inline void IntervalTree<T>::clear() {
     std::vector<Node>().swap(m_tree);
     std::vector<NodeToAdd>().swap(m_nodesToAdd);
     std::vector<ui16>().swap(m_nodesToRemove);
@@ -36,13 +36,13 @@ inline void IntervalTree<typename T>::clear() {
 }
 
 template <typename T>
-inline const T& IntervalTree<typename T>::getData(size_t index) const {
+inline const T& IntervalTree<T>::getData(size_t index) const {
     return m_tree[getInterval(index)].data;
 }
 
 //Get the enclosing interval for a given point
 template <typename T>
-i16 IntervalTree<typename T>::getInterval(size_t index) const {
+i16 IntervalTree<T>::getInterval(size_t index) const {
     i32 interval = m_root;
     while (true) {
 
@@ -66,10 +66,10 @@ i16 IntervalTree<typename T>::getInterval(size_t index) const {
 }
 
 template <typename T>
-bool IntervalTree<typename T>::treeInsert(int index, T data, int &newIndex) {
+bool IntervalTree<T>::treeInsert(int index, T data, int &newIndex) {
     int interval = m_root;
     Node* enclosingInterval = nullptr;
-    int enclosingIndex = -1;
+//    int enclosingIndex = -1;
     while (true) {
         Node& node = m_tree[interval];
 
@@ -148,7 +148,7 @@ bool IntervalTree<typename T>::treeInsert(int index, T data, int &newIndex) {
                 //If we get here, then we must continue along to the left to do the proper insertion
                 interval = node.left;
             } else {
-                enclosingIndex = interval;
+//                enclosingIndex = interval;
                 enclosingInterval = &node;
                 //go right
                 //Check if we are at the leaf
@@ -192,7 +192,7 @@ bool IntervalTree<typename T>::treeInsert(int index, T data, int &newIndex) {
 }
 
 template <typename T>
-inline int IntervalTree<typename T>::getGrandparent(Node* node) {
+inline int IntervalTree<T>::getGrandparent(Node* node) {
     if (node->parent != -1) {
         return m_tree[node->parent].parent;
     } else {
@@ -201,7 +201,7 @@ inline int IntervalTree<typename T>::getGrandparent(Node* node) {
 }
 
 template <typename T>
-inline int IntervalTree<typename T>::getUncle(Node* node, Node** grandParent) {
+inline int IntervalTree<T>::getUncle(Node* node, Node** grandParent) {
     int grandparentIndex = getGrandparent(node);
     if (grandparentIndex == -1) {
         *grandParent = nullptr;
@@ -219,7 +219,7 @@ inline int IntervalTree<typename T>::getUncle(Node* node, Node** grandParent) {
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::rotateParentLeft(int index, Node* grandParent) {
+inline void IntervalTree<T>::rotateParentLeft(int index, Node* grandParent) {
     Node& node = m_tree[index];
     i16 parentIndex = node.parent;
     Node& parent = m_tree[parentIndex];
@@ -237,7 +237,7 @@ inline void IntervalTree<typename T>::rotateParentLeft(int index, Node* grandPar
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::rotateParentRight(int index, Node* grandParent) {
+inline void IntervalTree<T>::rotateParentRight(int index, Node* grandParent) {
     Node& node = m_tree[index];
     i16 parentIndex = node.parent;
     Node& parent = m_tree[parentIndex];
@@ -254,7 +254,7 @@ inline void IntervalTree<typename T>::rotateParentRight(int index, Node* grandPa
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::rotateRight(int index) {
+inline void IntervalTree<T>::rotateRight(int index) {
 
     Node& node = m_tree.at(index);
     Node& left = m_tree.at(node.left);
@@ -281,7 +281,7 @@ inline void IntervalTree<typename T>::rotateRight(int index) {
 }
 
 template <typename T>
-inline void IntervalTree<typename T>::rotateLeft(int index) {
+inline void IntervalTree<T>::rotateLeft(int index) {
 
     Node& node = m_tree.at(index);
     Node& right = m_tree.at(node.right);
@@ -307,7 +307,7 @@ inline void IntervalTree<typename T>::rotateLeft(int index) {
 }
 
 template <typename T>
-void IntervalTree<typename T>::uncompressTraversal(int index, int& bufferIndex, T* buffer) {
+void IntervalTree<T>::uncompressTraversal(int index, int& bufferIndex, T* buffer) {
     if (m_tree[index].left != -1) {
         uncompressTraversal(m_tree[index].left, bufferIndex, buffer);
     }
@@ -320,13 +320,13 @@ void IntervalTree<typename T>::uncompressTraversal(int index, int& bufferIndex, 
 }
 
 template <typename T>
-void IntervalTree<typename T>::uncompressIntoBuffer(T* buffer) {
+void IntervalTree<T>::uncompressIntoBuffer(T* buffer) {
     int bufferIndex = 0;
     uncompressTraversal(m_root, bufferIndex, buffer);
 }
 
 template <typename T>
-typename IntervalTree<typename T>::Node* IntervalTree<typename T>::insert(size_t index, T data) {
+typename IntervalTree<T>::Node* IntervalTree<T>::insert(size_t index, T data) {
 
     int nodeIndex;
     if (!treeInsert(index, data, nodeIndex)) {
@@ -424,13 +424,13 @@ typename IntervalTree<typename T>::Node* IntervalTree<typename T>::insert(size_t
 
 // Iterators
 template <typename T>
-IntervalTree<typename T>::iterator::iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
+IntervalTree<T>::iterator::iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
     if (m_ptr == nullptr) return;
     while (m_ptr->left != -1) m_ptr = &m_tree->operator[](m_ptr->left);
 }
 
 template <typename T>
-typename IntervalTree<typename T>::iterator::self_type IntervalTree<typename T>::iterator::operator++() {
+typename IntervalTree<T>::iterator::self_type IntervalTree<T>::iterator::operator++() {
     if (m_ptr == nullptr) throw std::runtime_error("Attempted to increment iterator at end.");
     self_type i = *this;
     pointer r = m_ptr;
@@ -457,13 +457,13 @@ typename IntervalTree<typename T>::iterator::self_type IntervalTree<typename T>:
 }
 
 template <typename T>
-IntervalTree<typename T>::const_iterator::const_iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
+IntervalTree<T>::const_iterator::const_iterator(pointer ptr, std::vector <Node>* tree) : m_ptr(ptr), m_tree(tree) {
     if (m_ptr == nullptr) return;
     while (m_ptr->left != -1) m_ptr = &m_tree->operator[](m_ptr->left);
 }
 
 template <typename T>
-typename IntervalTree<typename T>::const_iterator::self_type IntervalTree<typename T>::const_iterator::operator++() {
+typename IntervalTree<T>::const_iterator::self_type IntervalTree<T>::const_iterator::operator++() {
     if (m_ptr == nullptr) throw std::runtime_error("Attempted to increment const_iterator at end.");
     self_type i = *this;
     pointer r = m_ptr;

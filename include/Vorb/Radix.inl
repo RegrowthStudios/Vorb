@@ -68,14 +68,14 @@ void radixSort(TIndex* indices, TData* data, i32 n, i32(*converter)(TData*), i32
         converted = sbuf2;
     }
     // Delete Temporary Data Buffers
-    delete converted;
-    delete convertedBuf;
+    delete[] converted;
+    delete[] convertedBuf;
     // Make Sure Initial Entry Is Modified
     if (inds != indices) {
         memcpy_s(indices, n * sizeof(TIndex), inds, n * sizeof(TIndex));
         delete inds;
     } else {
-        delete indsBuf;
+        delete[] indsBuf;
     }
 }
 // Radix Sort That Sorts In Place
@@ -147,13 +147,13 @@ void radixSort(TData* data, i32 n, i32(*converter)(TData*), i32 maxBits) {
         ui32* sbuf2 = convertedBuf; convertedBuf = converted; converted = sbuf2;
     }
     // Delete Temporary Data Buffers
-    delete converted;
-    delete convertedBuf;
+    delete[] converted;
+    delete[] convertedBuf;
     // Make Sure Initial Entry Is Modified
     if (dBuf1 != data) {
         memcpy_s(data, n * sizeof(TData), dBuf1, n * sizeof(TData));
         delete dBuf1;
     } else {
-        delete dBuf2;
+        delete[] dBuf2;
     }
 }

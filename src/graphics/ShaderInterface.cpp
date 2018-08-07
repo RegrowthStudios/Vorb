@@ -9,7 +9,7 @@ i32 vg::ShaderInterface::build(const AttributeSemBinding& semBinds) {
     glBindVertexArray(m_vao);
     // Loop through bindings
     for (auto& bind : m_bindings) {
-        auto& it = semBinds.find(bind.semantic);
+        auto it = semBinds.find(bind.semantic);
         if (it != semBinds.end()) {
             bind.location = it->second;
             numLinked++;

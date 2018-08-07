@@ -64,7 +64,8 @@
 #elif defined(_WIN64)
 #define VORB_ARCH_64
 #else
-#error Unknown compilation target to determine size
+//let the compilier options figure it out
+//#error Unknown compilation target to determine size
 #endif
 
 // Detect OS
@@ -80,6 +81,18 @@
 /* Clang/LLVM. ---------------------------------------------- */
 #define VORB_COMPILER_CLANG
 
+#ifdef __i386__
+#ifdef __x86_64__
+#define VORB_ARCH_64
+#define VORB_ARCH_X86_64
+#else
+#define VORB_ARCH_32
+#define VORB_ARCH_X86_32
+#endif
+#elif defined(__arm__)
+#error ARM 32-bit and 64-bit architectures must be defined
+#endif
+
 #elif defined(__ICC) || defined(__INTEL_COMPILER)
 /* Intel ICC/ICPC. ------------------------------------------ */
 #error Intel ICC/ICPC compiler is not supported by Vorb
@@ -87,6 +100,18 @@
 #elif defined(__GNUC__) || defined(__GNUG__)
 /* GNU GCC/G++. --------------------------------------------- */
 #define VORB_COMPILER_GCC
+
+#ifdef __i386__
+#ifdef __x86_64__
+#define VORB_ARCH_64
+#define VORB_ARCH_X86_64
+#else
+#define VORB_ARCH_32
+#define VORB_ARCH_X86_32
+#endif
+#elif defined(__arm__)
+#error ARM 32-bit and 64-bit architectures must be defined
+#endif
 
 #elif defined(__HP_cc) || defined(__HP_aCC)
 /* Hewlett-Packard C/aC++. ---------------------------------- */

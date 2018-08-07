@@ -43,11 +43,13 @@ namespace vorb {
         class BitmapResource {
             friend class ImageIO;
         public:
+            BitmapResource():width(0), height(0), data(nullptr){}
             virtual ~BitmapResource() {};
-            ui32 width = 0;
-            ui32 height = 0;
+
+            ui32 width;
+            ui32 height;
             union {
-                void* data = nullptr;
+                void* data;
                 ui8* bytesUI8;
                 ui8v2* bytesUI8v2;
                 ui8v3* bytesUI8v3;
@@ -86,13 +88,19 @@ namespace vorb {
         public:
             ScopedBitmapResource() {};
             ScopedBitmapResource(const BitmapResource& rs) {
-                memcpy(this, &rs, sizeof(BitmapResource));
+//                memcpy(this, &rs, sizeof(BitmapResource));
+                this->width=rs.width;
+                this->height=rs.height;
+                this->data=rs.data;
             }
             virtual ~ScopedBitmapResource() {
                 ImageIO::free(*this);
             }
             ScopedBitmapResource& operator=(const BitmapResource& rs) {
-                memcpy(this, &rs, sizeof(BitmapResource));
+//                memcpy(this, &rs, sizeof(BitmapResource));
+                this->width=rs.width;
+                this->height=rs.height;
+                this->data=rs.data;
                 return *this;
             }
         private:

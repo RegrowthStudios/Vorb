@@ -242,7 +242,7 @@ nString vg::ShaderParser::tryParseAttribute(const cString s, size_t i, OUT VGSem
         if (s[i] == '\0') return name;
         semanticName += s[i++];
     }
-    auto& it = m_semantics.find(semanticName);
+    auto it = m_semantics.find(semanticName);
     if (it == m_semantics.end()) return name;
 
     // Get the number

@@ -47,7 +47,7 @@ namespace keg {
             kv.typeName.clear();
             kv.evaluator = evaluate<T>;
             kv.outputter = output<T>;
-            return std::move(kv);
+            return kv;
         }
         template<typename T, typename M>
         static Value value(M T::* member) {
@@ -57,7 +57,7 @@ namespace keg {
             kv.typeName.clear();
             kv.evaluator = evaluate<M>;
             kv.outputter = output<M>;
-            return std::move(kv);
+            return kv;
         }
         template<typename T, typename... Types, typename M, typename... Members>
         static Value value(M T::* member, Members Types ::*... children) {

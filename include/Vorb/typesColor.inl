@@ -203,10 +203,10 @@ public:
     }
 
     union {
-        struct {
+        struct{
             ColorRGB8 rgb; ///< RGB value
             ui8 rgb_padding; ///< RGBA alpha remainder value from RGB padding
-        };
+        } color;
         struct {
             ui8 r; ///< Red value
             ui8 g; ///< Green value

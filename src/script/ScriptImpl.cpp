@@ -14,8 +14,8 @@ void vscript::impl::pushToTop(EnvironmentHandle h, const Function& f) {
     lua_getfield(h, LUA_REGISTRYINDEX, VORB_SCRIPT_FUNCTION_TABLE);
     lua_getfield(h, -1, f.getName().c_str());
 }
-void vscript::impl::call(EnvironmentHandle h, size_t n, size_t r) {
-    lua_pcall(h, (int)n, (int)r, 1);
+int vscript::impl::call(EnvironmentHandle h, size_t n, size_t r) {
+    return lua_pcall(h, (int)n, (int)r, 0);
 }
 void vorb::script::impl::popStack(EnvironmentHandle h) {
     lua_pop(h, 1);
@@ -70,7 +70,7 @@ void vorb::script::impl::dumpStack(EnvironmentHandle h) {
             printf("%5d: Number=  %g\n", i, lua_tonumber(h, i));
             break;
         case LUA_TLIGHTUSERDATA:
-            printf("%5d: UserPtr= %d\n", i, (ptrdiff_t)lua_touserdata(h, i));
+            printf("%5d: UserPtr= %td\n", i, (ptrdiff_t)lua_touserdata(h, i));
             break;
         default:
             printf("%5d: %s\n", i, lua_typename(h, t));

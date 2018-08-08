@@ -6,7 +6,17 @@ namespace vorb {
 
             impl::pushToTop(hnd, *this);
             impl::pushArgs(hnd, args...);
-            impl::call(hnd, sizeof...(Args), 0);
+            
+            int error=impl::call(hnd, sizeof...(Args), 0);
+            
+            if(error!=0)
+            {
+                const cString errorMsg=impl::popValue<const cString>(hnd);
+                printf("Error: \"%s\"\n", errorMsg);
+
+                return;
+            }
+
             impl::popStack(hnd);
         }
         template<typename Ret, typename... Args>
@@ -15,7 +25,15 @@ namespace vorb {
 
             impl::pushToTop(hnd, *this);
             impl::pushArgs(hnd, args...);
-            impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
+            int error=impl::call(hnd, sizeof...(Args), ScriptValueSender<Ret>::getNumValues());
+
+            if(error!=0)
+            {
+                const cString errorMsg=impl::popValue<const cString>(hnd);
+                printf("Error: \"%s\"\n", errorMsg);
+
+                return;
+            }
             *retValue = impl::popValue<Ret>(hnd);
             impl::popStack(hnd);
         }

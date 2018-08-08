@@ -59,7 +59,7 @@ namespace vorb {
             bool objectHasField(EnvironmentHandle h, const nString& name);
 
             void pushToTop(EnvironmentHandle h, const Function& f);
-            void call(EnvironmentHandle h, size_t n, size_t r);
+            int call(EnvironmentHandle h, size_t n, size_t r);
             void popStack(EnvironmentHandle h);
             void* popUpvalueObject(EnvironmentHandle h);
 

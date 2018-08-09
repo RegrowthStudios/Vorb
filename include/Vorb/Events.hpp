@@ -80,7 +80,7 @@ template<typename... Params> class Event;
 class DelegateBase {
 public:
     typedef void* Caller;
-    typedef void* Function;
+    typedef void (*Function)();
     typedef void (TypelessMember::*MemberFunction)();
     typedef void (*Deleter)(Caller);
     typedef void* UnknownStub;

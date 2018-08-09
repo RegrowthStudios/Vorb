@@ -26,9 +26,9 @@ namespace keg {
     class TypeValueIterator {
     public:
         TypeValueIterator(ui8* dest, Type* t, ReadContext& context) :
+            m_context(&context),
             m_dest(dest),
-            m_type(t),
-            m_context(&context) {
+            m_type(t) {
             // Empty
         }
 

@@ -252,6 +252,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         vui::InputDispatcher::window.onFile(ie.windowFile);
         vui::InputDispatcher::window.onEvent();
         SDL_free(e->drop.file);
+        break;
     default:
         // Unrecognized event
         return 1;

@@ -23,6 +23,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_files")
 
 option(VORB_USE_SCRIPTING "Support for Lua scripting" ON)
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
+
 #setup_project()
 #create_project_library()
 #run_project_testing()

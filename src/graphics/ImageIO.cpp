@@ -183,8 +183,8 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
 
     int width, height;
     png_byte color_type;
-    png_byte bit_depth;
-    int number_of_passes;
+    //png_byte bit_depth;
+    //int number_of_passes;
 
     png_init_io(png_ptr, file);
     png_set_sig_bytes(png_ptr, 8);
@@ -193,9 +193,9 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
     width=png_get_image_width(png_ptr, info_ptr);
     height=png_get_image_height(png_ptr, info_ptr);
     color_type=png_get_color_type(png_ptr, info_ptr);
-    bit_depth=png_get_bit_depth(png_ptr, info_ptr);
+    //bit_depth=png_get_bit_depth(png_ptr, info_ptr);
 
-    number_of_passes=png_set_interlace_handling(png_ptr);
+    //number_of_passes=png_set_interlace_handling(png_ptr);
 
     if(color_type==PNG_COLOR_TYPE_PALETTE)
     {
@@ -256,7 +256,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
     }
 
     std::vector<png_bytep> row_pointers(height);
-    ImageIOFormat imageIoFormat=pngToImageIoFormat(color_type, bit_depth);
+    //ImageIOFormat imageIoFormat=pngToImageIoFormat(color_type, bit_depth);
 
     res=alloc(width, height, requestedformat);
     png_byte *imageData=(png_byte *)res.data;

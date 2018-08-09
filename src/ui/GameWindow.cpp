@@ -216,7 +216,11 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 
     // Check for a valid context
     if (m_glc == nullptr) {
-        printf("Could Not Create OpenGL Context");
+        #if defined(VORB_IMPL_UI_SDL)
+            printf("%s", SDL_GetError());
+        #else
+            printf("Could Not Create OpenGL Context");
+        #endif
         return false;
     }
 

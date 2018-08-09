@@ -21,19 +21,8 @@ macro(initialize_for_platform)
   # setup compilers
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(warnings "-Wall"
-                   "-Wextra"
-                   # "-Wformat=2"
-                   # "-Wno-format-nonliteral"
-                   # "-Wshadow"
-                   # "-Wshorten-64-to-32"
-                   # "-Wpointer-arith"
-                   # "-Wcast-qual"
-                   # "-Wmissing-prototypes"
-                   # "-Wno-missing-braces"
-                   "-Wno-unknown-pragmas"
-                   )
-        ADD_DEFINITIONS(
+      set(warnings "-Wall -Wextra -Wno-class-memaccess -Wno-reorder -Wno-unknown-pragmas -Wno-attributes")
+      ADD_DEFINITIONS(
 #          -std=c++11
 #          -stdlib=libc++
           # Other flags

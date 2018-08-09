@@ -23,10 +23,32 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_files")
 
 option(VORB_USE_SCRIPTING "Support for Lua scripting" ON)
 
+# TODO(Matthew): Support MSVC with these?
+option(USING_GDB "Are we using gdb to debug?" ON)
+option(EXTRA_DEBUG "Should we add extra debug symbols?" ON)
+option(OPTIMISE_ON_DEBUG "Should we optimise a debug target?" ON)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    if (${USING_GDB})
+        if (${EXTRA_DEBUG})
+            set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3")
+        else()
+            set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
+        endif()
+    else()
+        if (${EXTRA_DEBUG})
+            set(CMAKE_CXX_FLAGS_DEBUG "-g3")
+        else()
+            set(CMAKE_CXX_FLAGS_DEBUG "-g")
+        endif()
+    endif ()
+    if (${OPTIMISE_ON_DEBUG})
+        # This is supported by both Clang and GCC as long as we are up-to-date.
+        # Should be fine going back as far as Ubuntu 17.10, and deffo fine on Arch.
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
+    endif()
 endif()
 
 #setup_project()

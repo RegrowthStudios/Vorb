@@ -80,9 +80,9 @@ template<typename... Params> class Event;
 class DelegateBase {
 public:
     typedef void* Caller;
-    typedef void (*Function)();
+    typedef void* Function;
     typedef void (TypelessMember::*MemberFunction)();
-    typedef void(*Deleter)(Caller);
+    typedef void (*Deleter)(Caller);
     typedef void* UnknownStub;
 
     static_assert(sizeof(Deleter) == sizeof(ptrdiff_t), "Integral pointer conversion is flawed");
@@ -139,7 +139,7 @@ public:
 
     static RDelegate create(Ret(*f)(Args...)) {
         RDelegate value = {};
-        value.m_func = (DelegateBase::Function)f;
+        value.m_func = *(Function*)&f;
         value.m_caller = nullptr;
         value.m_deleter = 0;
         value.m_flagIsObject = false;
@@ -149,7 +149,7 @@ public:
     template<typename T>
     static RDelegate create(const T* o, Ret(T::*f)(Args...) const) {
         RDelegate value = {};
-        value.m_memberFunc = (MemberFunction)f;
+        value.m_memberFunc = *(MemberFunction*)&f;
         value.m_caller = const_cast<T*>(o);
         value.m_deleter = 0;
         value.m_flagIsObject = true;
@@ -159,7 +159,7 @@ public:
     template<typename T>
     static RDelegate* createCopy(const T* o, Ret(T::*f)(Args...) const) {
         RDelegate* value = new RDelegate();
-        value->m_memberFunc = (MemberFunction)f;
+        value->m_memberFunc = *(MemberFunction*)&f;
         value->m_caller = new T(*const_cast<T*>(o));
         value->m_deleter = deleterID<T>();
         value->m_flagIsObject = true;
@@ -169,7 +169,7 @@ public:
     template<typename T>
     static RDelegate create(T* o, Ret(T::*f)(Args...)) {
         RDelegate value = {};
-        value.m_memberFunc = (MemberFunction)f;
+        value.m_memberFunc = *(MemberFunction*)&f;
         value.m_caller = o;
         value.m_deleter = 0;
         value.m_flagIsObject = true;
@@ -179,7 +179,7 @@ public:
     template<typename T>
     static RDelegate* createCopy(T* o, Ret(T::*f)(Args...)) {
         RDelegate* value = new RDelegate();
-        value->m_memberFunc = (MemberFunction)f;
+        value->m_memberFunc = *(MemberFunction*)&f;
         value->m_caller = new T(*o);
         value->m_deleter = deleterID<T>();
         value->m_flagIsObject = true;
@@ -191,7 +191,8 @@ public:
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            auto blankedFunction = (Ret(TypelessMember::*)(Args...))m_memberFunc;
+            using BlankedFunction = Ret(TypelessMember::*)(Args...);
+            auto blankedFunction = *(BlankedFunction*)&m_memberFunc;
             return (((TypelessMember*)m_caller)->*blankedFunction)(args...);
         }
     }
@@ -199,7 +200,8 @@ public:
         if (m_flagIsObject == 0) {
             return ((Ret(*)(Args...))m_func)(args...);
         } else {
-            auto blankedFunction = (Ret(TypelessMember::*)(Args...))m_memberFunc;
+            using BlankedFunction = Ret(TypelessMember::*)(Args...);
+            auto blankedFunction = *(BlankedFunction*)&m_memberFunc;
             return (((TypelessMember*)m_caller)->*blankedFunction)(args...);
         }
     }
@@ -238,15 +240,15 @@ class Delegate : public RDelegate<void, Args...> {
 public:
     static Delegate create(void(*f)(Args...)) {
         Delegate value = {};
-        value.m_func = (DelegateBase::Function)f;
+        value.m_func = *(DelegateBase::Function*)&f;
         value.m_caller = nullptr;
         value.m_deleter = 0;
         return value;
     }
-    template<typename F, typename Ret=decltype(F(std::declval<Args>()...))>
+    template<typename F, typename Ret = decltype(F(std::declval<Args>()...))>
     static Delegate create(F f) {
         Delegate value = {};
-        value.m_func = (DelegateBase::Function)f;
+        value.m_func = *(DelegateBase::Function*)&f;
         value.m_caller = nullptr;
         value.m_deleter = 0;
         return value;
@@ -321,13 +323,13 @@ RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)const) {
 }
 template<typename T, typename Ret, typename... Args>
 RDelegate<Ret, Args...> makeRDelegate(T& obj, Ret(T::*f)(Args...)) {
-    return RDelegate<Ret, Args...>::template create<T>(&obj, f);
+    return RDelegate<Ret, Args...>::template  create<T>(&obj, f);
 }
 template<typename Ret, typename... Args, typename F>
 RDelegate<Ret, Args...> makeRDelegate(F& obj) {
     typedef Ret(F::*fType)(Args...) const;
     fType f = &F::operator();
-    return RDelegate<Ret, Args...>::template create<F>(&obj, f);
+    return RDelegate<Ret, Args...>::template  create<F>(&obj, f);
 }
 
 template<typename F>
@@ -343,16 +345,10 @@ RDelegate<Ret, Args...>* makeRFunctor(T& obj, Ret(T::*f)(Args...)) {
     return RDelegate<Ret, Args...>::template createCopy<T>(&obj, f);
 }
 
-
 template<typename... Args>
 Delegate<Args...> makeDelegate(void(*f)(Args...)) {
     return Delegate<Args...>::create(f);
 }
-//// -> void_t<decltype(f(std::declval<Args>()...))> 
-//template<typename... Args, typename F, typename Ret=decltype(F::operator()(std::declval<Args>()...))>
-//Delegate<Args...> makeDelegate(F f) {
-//    return Delegate<Args...>::create(f);
-//}
 template<typename T, typename... Args>
 Delegate<Args...> makeDelegate(T& obj, void(T::*f)(Args...)const) {
     return Delegate<Args...>::template create<T>(&obj, f);

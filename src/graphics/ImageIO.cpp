@@ -485,7 +485,7 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
     size_t pos=0;
     size_t stride=w*channels*depth;
 
-    for(int y=0; y<h; y++)
+    for(size_t y = 0; y < h; y++)
     {
         row_pointers[y]=&imageData[pos];
         pos+=stride;

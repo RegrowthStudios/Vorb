@@ -91,7 +91,7 @@ namespace vorb {
             *
             * @param dt: The TimeStep
             */
-            virtual void update(f32 dt = 1.0f) { }
+            virtual void update(f32 dt [[maybe_unused]] = 1.0f) { }
 
             /*! @brief Updates the position relative to parent */
             virtual void updatePosition() override;    

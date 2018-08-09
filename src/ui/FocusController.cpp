@@ -1,6 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/FocusController.h"
 
+//TODO: Implement all of this!
 vui::FocusController::FocusController() {
 
 }
@@ -17,22 +18,22 @@ void vui::FocusController::dispose() {
 
 }
 
-void vui::FocusController::addObject(FocusObject* obj) {
+void vui::FocusController::addObject(FocusObject* obj [[maybe_unused]]) {
 
 }
 
-bool vui::FocusController::removeObject(const FocusObject* obj) {
+bool vui::FocusController::removeObject(const FocusObject* obj [[maybe_unused]]) {
     return false;
 }
 
-void vui::FocusController::onMouseDown(Sender s, const MouseButtonEvent& e) {
+void vui::FocusController::onMouseDown(Sender s [[maybe_unused]], const MouseButtonEvent& e [[maybe_unused]]) {
 
 }
 
-void vui::FocusController::onMouseUp(Sender s, const MouseButtonEvent& e) {
+void vui::FocusController::onMouseUp(Sender s [[maybe_unused]], const MouseButtonEvent& e [[maybe_unused]]) {
 
 }
 
-void vui::FocusController::onMouseMove(Sender s, const MouseMotionEvent& e) {
+void vui::FocusController::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent& e [[maybe_unused]]) {
 
 }

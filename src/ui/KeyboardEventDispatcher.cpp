@@ -13,7 +13,7 @@ bool vui::KeyboardEventDispatcher::hasFocus() const {
 }
 
 void vui::KeyboardEventDispatcher::addPress(VirtualKey k) {
-
+    m_presses[k]++; // ++ is overloaded as an atomic operation so this is (read, should be) fine.
 }
 void vui::KeyboardEventDispatcher::release(VirtualKey k) {
     std::atomic_store(&m_presses[k], 0);

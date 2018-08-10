@@ -186,16 +186,16 @@ bool vui::WidgetScriptFuncs::isMouseIn(Widget* w) const {
     return w->isMouseIn();
 }
 
-i32 vui::WidgetScriptFuncs::getAnchor(Widget* w) const {
-    return 0; // TODO(Ben): Implement
+i32 vui::WidgetScriptFuncs::getAnchor(Widget* w VORB_UNUSED) const {
+    return 0; //TODO(Ben): Implement
 }
 
-i32 vui::WidgetScriptFuncs::getStyle(Widget* w) const {
-    return 0; // TODO(Ben): Implement
+i32 vui::WidgetScriptFuncs::getStyle(Widget* w VORB_UNUSED) const {
+    return 0; //TODO(Ben): Implement
 }
 
-i32 vui::WidgetScriptFuncs::getDock(Widget* w) const {
-    return 0; // TODO(Ben): Implement
+vui::DockStyle vui::WidgetScriptFuncs::getDock(Widget* w) const {
+    return w->getDock();
 }
 
 i32 vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
@@ -270,8 +270,8 @@ vui::WidgetAlign vui::WidgetScriptFuncs::getWidgetAlign(Widget* w) const {
     return w->getWidgetAlign();
 }
 
-void vui::WidgetScriptFuncs::setAnchor(Widget* w, int anchor) const {
-    // TODO(Ben): Implement
+void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_UNUSED, int anchor VORB_UNUSED) const {
+    //TODO(Ben): Implement
 }
 
 void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) const {
@@ -306,8 +306,8 @@ void vui::WidgetScriptFuncs::setSelectable(Widget* w, bool selectable) const {
     w->setSelectable(selectable);
 }
 
-void vui::WidgetScriptFuncs::setStyle(Widget* w, int style) const {
-    // TODO(Ben): Implement
+void vui::WidgetScriptFuncs::setStyle(Widget* w VORB_UNUSED, int style VORB_UNUSED) const {
+    //TODO(Ben): Implement
 }
 
 void vui::WidgetScriptFuncs::setWidth(Widget* w, f32 width) const {

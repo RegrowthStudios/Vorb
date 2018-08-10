@@ -188,14 +188,14 @@ void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MA
     computeChildClipRects();
 }
 
-void vui::Slider::onMouseDown(Sender s, const MouseButtonEvent& e) {
+void vui::Slider::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (m_isMouseIn) {
         MouseDown(e);
         m_isClicking = true;
     }
 }
 
-void vui::Slider::onMouseUp(Sender s, const MouseButtonEvent& e) {
+void vui::Slider::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (m_isMouseIn) {
         MouseUp(e);
         if (m_isClicking) MouseClick(e);
@@ -203,7 +203,7 @@ void vui::Slider::onMouseUp(Sender s, const MouseButtonEvent& e) {
     m_isClicking = false;
 }
 
-void vui::Slider::onMouseMove(Sender s, const MouseMotionEvent& e) {
+void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {

@@ -19,27 +19,22 @@ macro(initialize_for_platform)
 #   set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
 # endif(APPLE)
   # setup compilers
+    option(TARGET_CXX_17 OFF)
+    
+    if (TARGET_CXX_17)
+        set(CMAKE_CXX_STANDARD 17)
+    else()
+        set(CMAKE_CXX_STANDARD 14)
+    endif()
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(warnings "-Wall"
-                   "-Wextra"
-                   # "-Wformat=2"
-                   # "-Wno-format-nonliteral"
-                   # "-Wshadow"
-                   # "-Wshorten-64-to-32"
-                   # "-Wpointer-arith"
-                   # "-Wcast-qual"
-                   # "-Wmissing-prototypes"
-                   # "-Wno-missing-braces"
-                   "-Wno-unknown-pragmas"
-                   )
-        ADD_DEFINITIONS(
+      set(warnings "-Wall -Wextra -Wno-class-memaccess -Wno-reorder -Wno-unknown-pragmas -Wno-attributes")
+      ADD_DEFINITIONS(
 #          -std=c++11
 #          -stdlib=libc++
           # Other flags
           ${warnings}
       )
-      set(CMAKE_CXX_STANDARD 14)
       #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
   elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

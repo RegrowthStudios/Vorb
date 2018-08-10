@@ -109,25 +109,25 @@ void vsound::Instance::play()
 void vsound::Instance::pause()
 {
 }
-void vsound::Instance::setLooped(const bool& loop)
+void vsound::Instance::setLooped(const bool& loop VORB_UNUSED)
 {
 }
-void vsound::Instance::setCursor(const f32& seconds)
+void vsound::Instance::setCursor(const f32& seconds VORB_UNUSED)
 {
 }
-void vsound::Instance::setPosition(const f32v3& pos)
+void vsound::Instance::setPosition(const f32v3& pos VORB_UNUSED)
 {
 }
-void vsound::Instance::setVelocity(const f32v3& vel)
+void vsound::Instance::setVelocity(const f32v3& vel VORB_UNUSED)
 {
 }
-void vsound::Instance::setBoundsRadii(const f32& min, const f32& max)
+void vsound::Instance::setBoundsRadii(const f32& min VORB_UNUSED, const f32& max VORB_UNUSED)
 {
 }
-void vsound::Instance::setVolume(const f32& v)
+void vsound::Instance::setVolume(const f32& v VORB_UNUSED)
 {
 }
-void vsound::Instance::setFrequency(const f32& freq)
+void vsound::Instance::setFrequency(const f32& freq VORB_UNUSED)
 {
 }
 

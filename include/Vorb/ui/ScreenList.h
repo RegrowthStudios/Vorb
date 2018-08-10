@@ -35,7 +35,7 @@ namespace vorb {
             ScreenList(MainGame* g);
         
             IGameScreen* getCurrent() const {
-                const i32 screen_size = static_cast<const i32>(_screens.size());
+                const i32 screen_size = static_cast<i32>(_screens.size());
                 if (_current < 0 || _current >= screen_size) {
                     return nullptr;
                 }

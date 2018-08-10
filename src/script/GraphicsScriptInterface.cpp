@@ -230,6 +230,7 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
     env.setNamespaces();
 }
 
-void vscript::GraphicsScriptInterface::registerFunctions(vscript::Environment& env) {
+// TODO: Complete this and reevaluate parameter attribute.
+void vscript::GraphicsScriptInterface::registerFunctions(vscript::Environment& env VORB_UNUSED) {
     // Empty for now
 }

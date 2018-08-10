@@ -155,19 +155,20 @@ const color4 color::YellowGreen = color4(154, 205, 50, 255);
 #define HSV_ANGULAR_SCALING (PI / 3.0f)
 
 f32v3 color::convertRGBToHSL(const f32v3& val) {
-    f32 minVal, delta;
+    // TODO: delta is not being used right now, is this what we want?
+    f32 minVal;//, delta;
     f32v3 ret;
 
     if (val.r > val.g && val.r > val.b) {
         // R max
         minVal =glm::min(val.g, val.b);
-        delta = val.r - minVal;
+        //delta = val.r - minVal;
         ret.r = HSV_ANGULAR_SCALING * std::fmod(((val.g - val.b) / minVal), 6.0f);
         ret.b = (val.r + minVal) * 0.5f;
     } else if (val.g > val.b) {
         // G max
         minVal = glm::min(val.r, val.b);
-        delta = val.r - minVal;
+        //delta = val.r - minVal;
         ret.r = HSV_ANGULAR_SCALING * (((val.b - val.r) / minVal) + 2.0f);
         ret.b = (val.g + minVal) * 0.5f;
     } else {
@@ -180,7 +181,7 @@ f32v3 color::convertRGBToHSL(const f32v3& val) {
         } else {
             // B max
             minVal = glm::min(val.r, val.g);
-            delta = val.r - minVal;
+            //delta = val.r - minVal;
             ret.r = HSV_ANGULAR_SCALING * (((val.r - val.g) / minVal) + 4.0f);
             ret.b = (val.b + minVal) * 0.5f;
         }

@@ -231,6 +231,6 @@ void vscript::GraphicsScriptInterface::registerConstants(vscript::Environment& e
 }
 
 // TODO: Complete this and reevaluate parameter attribute.
-void vscript::GraphicsScriptInterface::registerFunctions(vscript::Environment& env [[maybe_unused]]) {
+void vscript::GraphicsScriptInterface::registerFunctions(vscript::Environment& env VORB_UNUSED) {
     // Empty for now
 }

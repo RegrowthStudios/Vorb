@@ -100,7 +100,7 @@ bool vsound::Engine::dispose() {
 }
 
 // TODO: Complete this and reevaluate parameter attributes.
-vsound::Resource vsound::Engine::loadSound(const vio::Path& path [[maybe_unused]], bool is3D [[maybe_unused]] /*= true*/, bool isStream [[maybe_unused]] /*= false*/) {
+vsound::Resource vsound::Engine::loadSound(const vio::Path& path VORB_UNUSED, bool is3D VORB_UNUSED /*= true*/, bool isStream VORB_UNUSED /*= false*/) {
     Resource sound;
     ResourceID id;
 
@@ -136,7 +136,7 @@ void vsound::Engine::disposeSound(Resource& sound) {
 }
 
 // TODO: Complete this and reevaluate parameter attribute.
-vsound::Instance vsound::Engine::createInstance(const Resource& sound [[maybe_unused]]) {
+vsound::Instance vsound::Engine::createInstance(const Resource& sound VORB_UNUSED) {
     Instance inst;
 
 //    m_data->currentChannel++;
@@ -152,7 +152,7 @@ vsound::Instance vsound::Engine::createInstance(const Resource& sound [[maybe_un
 }
 
 // TODO: Complete this and reevaluate parameter attribute.
-void vsound::Engine::update(const Listener& listener [[maybe_unused]]) {
+void vsound::Engine::update(const Listener& listener VORB_UNUSED) {
 //    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs
 //        (FMOD_VECTOR*)&listener.position,
 //        (FMOD_VECTOR*)&listener.velocity,

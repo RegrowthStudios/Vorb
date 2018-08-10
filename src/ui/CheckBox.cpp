@@ -254,7 +254,7 @@ void vui::CheckBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_
     computeChildClipRects();
 }
 
-void vui::CheckBox::onMouseUp(Sender s [[maybe_unused]], const MouseButtonEvent& e) {
+void vui::CheckBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
@@ -267,7 +267,7 @@ void vui::CheckBox::onMouseUp(Sender s [[maybe_unused]], const MouseButtonEvent&
     updateColor();
 }
 
-void vui::CheckBox::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent& e) {
+void vui::CheckBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {

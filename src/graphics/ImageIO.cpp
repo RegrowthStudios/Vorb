@@ -132,7 +132,7 @@ std::pair<png_byte,png_byte> ImageIoFormatToPng(const vg::ImageIOFormat &format)
 // TODO: Get this in working order. Reevaluate parameter attribute once done.
 vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
                                      const ImageIOFormat& requestedformat /* = ImageIOFormat::RGBA_UI8 */,
-                                     bool flipV /*= false*/ [[maybe_unused]]) {
+                                     bool flipV /*= false*/ VORB_UNUSED) {
     BitmapResource res = {};
     res.data = nullptr;
 

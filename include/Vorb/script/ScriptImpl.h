@@ -45,7 +45,7 @@ namespace vorb {
              */
             void pushGlobalNamespace(EnvironmentHandle h);
             void pushNamespace(EnvironmentHandle h, const nString& name);
-            inline void pushNamespaces(EnvironmentHandle h [[maybe_unused]]) {
+            inline void pushNamespaces(EnvironmentHandle h VORB_UNUSED) {
                 // Empty
             }
             template<typename Arg, typename... Args>
@@ -72,7 +72,7 @@ namespace vorb {
                 i32 val = ScriptValueSender<Arg>::push(h, a);
                 return val + pushArgs<Args...>(h, other...);
             }
-            inline i32 pushArgs(EnvironmentHandle h [[maybe_unused]]) {
+            inline i32 pushArgs(EnvironmentHandle h VORB_UNUSED) {
                 return 0;
             }
 

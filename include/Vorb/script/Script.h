@@ -112,7 +112,7 @@ namespace vorb {
                 invokeNone(del, tValue, index_sequence_for<Args...>());
                 return 0;
             }
-            inline i32 fCall(EnvironmentHandle h [[maybe_unused]], RDelegate<void>* del) {
+            inline i32 fCall(EnvironmentHandle h VORB_UNUSED, RDelegate<void>* del) {
                 del->invoke();
                 return 0;
             }

@@ -194,7 +194,7 @@ void vui::IWidgetContainer::updateChildPositions() {
     }
 }
 
-void vui::IWidgetContainer::onMouseDown(Sender s [[maybe_unused]], const MouseButtonEvent& e) {
+void vui::IWidgetContainer::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseDown(e);
@@ -202,7 +202,7 @@ void vui::IWidgetContainer::onMouseDown(Sender s [[maybe_unused]], const MouseBu
     }
 }
 
-void vui::IWidgetContainer::onMouseUp(Sender s [[maybe_unused]], const MouseButtonEvent& e) {
+void vui::IWidgetContainer::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
@@ -211,7 +211,7 @@ void vui::IWidgetContainer::onMouseUp(Sender s [[maybe_unused]], const MouseButt
     m_isClicking = false;
 }
 
-void vui::IWidgetContainer::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent& e) {
+void vui::IWidgetContainer::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
@@ -225,7 +225,7 @@ void vui::IWidgetContainer::onMouseMove(Sender s [[maybe_unused]], const MouseMo
     }
 }
 
-void vui::IWidgetContainer::onMouseFocusLost(Sender s [[maybe_unused]], const MouseEvent& e) {
+void vui::IWidgetContainer::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         m_isMouseIn = false;

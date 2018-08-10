@@ -18,22 +18,22 @@ void vui::FocusController::dispose() {
 
 }
 
-void vui::FocusController::addObject(FocusObject* obj [[maybe_unused]]) {
+void vui::FocusController::addObject(FocusObject* obj VORB_UNUSED) {
 
 }
 
-bool vui::FocusController::removeObject(const FocusObject* obj [[maybe_unused]]) {
+bool vui::FocusController::removeObject(const FocusObject* obj VORB_UNUSED) {
     return false;
 }
 
-void vui::FocusController::onMouseDown(Sender s [[maybe_unused]], const MouseButtonEvent& e [[maybe_unused]]) {
+void vui::FocusController::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e VORB_UNUSED) {
 
 }
 
-void vui::FocusController::onMouseUp(Sender s [[maybe_unused]], const MouseButtonEvent& e [[maybe_unused]]) {
+void vui::FocusController::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e VORB_UNUSED) {
 
 }
 
-void vui::FocusController::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent& e [[maybe_unused]]) {
+void vui::FocusController::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e VORB_UNUSED) {
 
 }

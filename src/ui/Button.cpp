@@ -224,7 +224,7 @@ void vui::Button::refreshDrawables() {
     m_drawnRect = m_drawableRect;
 }
 
-void vui::Button::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent& e) {
+void vui::Button::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
@@ -242,7 +242,7 @@ void vui::Button::onMouseMove(Sender s [[maybe_unused]], const MouseMotionEvent&
     }
 }
 
-void vui::Button::onMouseFocusLost(Sender s [[maybe_unused]], const MouseEvent& e) {
+void vui::Button::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         m_isMouseIn = false;

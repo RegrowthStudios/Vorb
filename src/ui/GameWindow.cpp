@@ -549,7 +549,7 @@ void vui::GameWindow::pollInput() {
 #endif
 }
 
-void vorb::ui::GameWindow::onResize(Sender s [[maybe_unused]], const WindowResizeEvent& e) {
+void vorb::ui::GameWindow::onResize(Sender s VORB_UNUSED, const WindowResizeEvent& e) {
     m_displayMode.screenWidth = e.w;
     m_displayMode.screenHeight = e.h;
 }

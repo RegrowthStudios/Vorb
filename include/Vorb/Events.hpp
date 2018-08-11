@@ -39,6 +39,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
+#include "compat.h"
 #include <vector>
 #include <algorithm>
 #endif // !VORB_USING_PCH
@@ -224,7 +225,7 @@ protected:
         // Call function using object
         return (p->*f)(args...);
     }
-    static Ret simpleCall(Caller obj, Function func, Args... args) {
+    static Ret simpleCall(Caller obj VORB_UNUSED, Function func, Args... args) {
         typedef Ret(*fType)(Args...);
 
         // Call function

@@ -217,8 +217,8 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
         return res;
     }
 
-    int channels;
-    int depth;
+    int channels = 0;
+    int depth = 0;
 
 //    if(color_type==PNG_COLOR_TYPE_GRAY)
 //        channels=1;
@@ -459,8 +459,8 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
     );
     png_write_info(png, info);
 
-    int channels;
-    int depth;
+    int channels = 0;
+    int depth = 0;
 
     if(color_type==PNG_COLOR_TYPE_GRAY)
         channels=1;

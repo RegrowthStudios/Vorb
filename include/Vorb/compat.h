@@ -99,7 +99,7 @@
 #if __cplusplus >= 201703L && ( (__clang_major__ == 3 && __clang_minor__ >= 9) || __clang_major__ > 3 )
 #define VORB_UNUSED [[maybe_unused]]
 #else
-#define VORB_UNUSED 
+#define VORB_UNUSED [[gnu::unused]]
 #endif
 #endif
 
@@ -139,7 +139,7 @@
 #if __cplusplus >= 201703L && __GNUC__ >= 7
 #define VORB_UNUSED [[maybe_unused]]
 #elif (__GNUC__ == 4 && __GNUC_MINOR__ >= 8) || __GNUC__ > 4
-#define VORB_UNUSED [[gnu::maybe_unused]]
+#define VORB_UNUSED [[gnu::unused]]
 #else
 #define VORB_UNUSED 
 #endif

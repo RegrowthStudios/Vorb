@@ -144,4 +144,11 @@
 
 #endif
 
+// Include UNIX threading and scheduling headers if not compiling on Windows. 
+// Currently all OS's supported (and plenty not) that are not Windows are UNIX-based.
+#ifndef _WINDOWS
+#include <pthread.h>
+#include <sched.h>
+#endif//_WINDOWS
+
 #endif // !Vorb_compat_h__

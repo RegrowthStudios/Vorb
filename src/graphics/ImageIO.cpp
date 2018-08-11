@@ -129,9 +129,10 @@ std::pair<png_byte,png_byte> ImageIoFormatToPng(const vg::ImageIOFormat &format)
     return value;
 }
 
+// TODO: Get this in working order. Reevaluate parameter attribute once done.
 vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
                                      const ImageIOFormat& requestedformat /* = ImageIOFormat::RGBA_UI8 */,
-                                     bool flipV /*= false*/) {
+                                     bool flipV /*= false*/ VORB_UNUSED) {
     BitmapResource res = {};
     res.data = nullptr;
 
@@ -182,8 +183,8 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
 
     int width, height;
     png_byte color_type;
-    png_byte bit_depth;
-    int number_of_passes;
+    //png_byte bit_depth;
+    //int number_of_passes;
 
     png_init_io(png_ptr, file);
     png_set_sig_bytes(png_ptr, 8);
@@ -192,9 +193,9 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
     width=png_get_image_width(png_ptr, info_ptr);
     height=png_get_image_height(png_ptr, info_ptr);
     color_type=png_get_color_type(png_ptr, info_ptr);
-    bit_depth=png_get_bit_depth(png_ptr, info_ptr);
+    //bit_depth=png_get_bit_depth(png_ptr, info_ptr);
 
-    number_of_passes=png_set_interlace_handling(png_ptr);
+    //number_of_passes=png_set_interlace_handling(png_ptr);
 
     if(color_type==PNG_COLOR_TYPE_PALETTE)
     {
@@ -216,8 +217,8 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
         return res;
     }
 
-    int channels;
-    int depth;
+    int channels = 0;
+    int depth = 0;
 
 //    if(color_type==PNG_COLOR_TYPE_GRAY)
 //        channels=1;
@@ -255,7 +256,7 @@ vg::BitmapResource vg::ImageIO::load(const vio::Path& path,
     }
 
     std::vector<png_bytep> row_pointers(height);
-    ImageIOFormat imageIoFormat=pngToImageIoFormat(color_type, bit_depth);
+    //ImageIOFormat imageIoFormat=pngToImageIoFormat(color_type, bit_depth);
 
     res=alloc(width, height, requestedformat);
     png_byte *imageData=(png_byte *)res.data;
@@ -458,8 +459,8 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
     );
     png_write_info(png, info);
 
-    int channels;
-    int depth;
+    int channels = 0;
+    int depth = 0;
 
     if(color_type==PNG_COLOR_TYPE_GRAY)
         channels=1;
@@ -484,7 +485,7 @@ bool vg::ImageIO::save(const vio::Path& path, const void* inData, const ui32& w,
     size_t pos=0;
     size_t stride=w*channels*depth;
 
-    for(int y=0; y<h; y++)
+    for(size_t y = 0; y < h; y++)
     {
         row_pointers[y]=&imageData[pos];
         pos+=stride;

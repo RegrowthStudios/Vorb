@@ -150,10 +150,10 @@ vg::GLProgram& vg::ShaderManager::getProgram(const nString& name) {
     return it->second;
 }
 
-void vg::ShaderManager::triggerShaderCompilationError(Sender s, const nString& n) {
+void vg::ShaderManager::triggerShaderCompilationError(Sender s VORB_UNUSED, const nString& n) {
     onShaderCompilationError(n);
 }
 
-void vg::ShaderManager::triggerProgramLinkError(Sender s, const nString& n) {
+void vg::ShaderManager::triggerProgramLinkError(Sender s VORB_UNUSED, const nString& n) {
     onProgramLinkError(n);
 }

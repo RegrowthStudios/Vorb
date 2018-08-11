@@ -33,7 +33,7 @@ namespace vorb {
 
         class FocusObject {
         public:
-            virtual bool inBounds(f32 mouseX, f32 mouseY) { return true; }
+            virtual bool inBounds(f32 mouseX VORB_UNUSED, f32 mouseY VORB_UNUSED) { return true; }
             /* Events */
             Event<const MouseButtonEvent&> MouseDown; ///< Occurs when mouse button is pressed over container.
             Event<const MouseButtonEvent&> MouseUp; ///< Occurs when mouse button is released over container.

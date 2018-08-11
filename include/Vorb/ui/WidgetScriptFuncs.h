@@ -75,7 +75,7 @@ namespace vorb {
             virtual bool isMouseIn(Widget* w) const;
             virtual i32 getAnchor(Widget* w) const;
             virtual i32 getStyle(Widget* w) const;
-            virtual i32 getDock(Widget* w) const;
+            virtual vui::DockStyle getDock(Widget* w) const;
             virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
             virtual bool getClippingEnabled(Widget* w) const;

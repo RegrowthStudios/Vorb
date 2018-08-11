@@ -101,7 +101,7 @@ namespace vorb {
                 return 0;
             }
             template<typename F>
-            i32 cCall(EnvironmentHandle h, void(*func)()) {
+            i32 cCall(EnvironmentHandle h VORB_UNUSED, void(*func)()) {
                 func();
                 return 0;
             }
@@ -112,7 +112,7 @@ namespace vorb {
                 invokeNone(del, tValue, index_sequence_for<Args...>());
                 return 0;
             }
-            inline i32 fCall(EnvironmentHandle h, RDelegate<void>* del) {
+            inline i32 fCall(EnvironmentHandle h VORB_UNUSED, RDelegate<void>* del) {
                 del->invoke();
                 return 0;
             }
@@ -148,7 +148,7 @@ namespace vorb {
 
         typedef int(*ScriptFunc)(EnvironmentHandle s);
         template<void* f, typename... Args>
-        ScriptFunc fromFunction(void(*func)(Args...)) {
+        ScriptFunc fromFunction(void(*func VORB_UNUSED)(Args...)) {
             typedef void(*FuncType)(Args...);
             return impl::luaCall<FuncType, (FuncType)f, Args...>;
         }

@@ -383,7 +383,8 @@ void vg::SpriteFont::draw(SpriteBatch* batch, const cString s, const f32v2& posi
     f32 yOff = getYOffset(rows.size(), align) * scaling.y;
     // Render each row
     for (size_t y = 0; y < rows.size(); y++) {
-        f32 rightEdge = rightEdges[y];
+        // TODO(Matthew): This value isn't used, use or kill.
+        //f32 rightEdge = rightEdges[y];
         for (auto& g : rows[y]) {   
             f32v2 position = pos + f32v2(g.x + rightEdges[y] * X_OFF_MULTS[(int)align], yOff + y * m_fontHeight * scaling.y);
             f32v2 size = m_glyphs[g.gi].size * scaling;

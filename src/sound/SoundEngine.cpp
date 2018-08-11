@@ -99,7 +99,8 @@ bool vsound::Engine::dispose() {
     return true;
 }
 
-vsound::Resource vsound::Engine::loadSound(const vio::Path& path, bool is3D /*= true*/, bool isStream /*= false*/) {
+// TODO: Complete this and reevaluate parameter attributes.
+vsound::Resource vsound::Engine::loadSound(const vio::Path& path VORB_UNUSED, bool is3D VORB_UNUSED /*= true*/, bool isStream VORB_UNUSED /*= false*/) {
     Resource sound;
     ResourceID id;
 
@@ -134,7 +135,8 @@ void vsound::Engine::disposeSound(Resource& sound) {
     sound.m_data = nullptr;
 }
 
-vsound::Instance vsound::Engine::createInstance(const Resource& sound) {
+// TODO: Complete this and reevaluate parameter attribute.
+vsound::Instance vsound::Engine::createInstance(const Resource& sound VORB_UNUSED) {
     Instance inst;
 
 //    m_data->currentChannel++;
@@ -149,7 +151,8 @@ vsound::Instance vsound::Engine::createInstance(const Resource& sound) {
     return inst;
 }
 
-void vsound::Engine::update(const Listener& listener) {
+// TODO: Complete this and reevaluate parameter attribute.
+void vsound::Engine::update(const Listener& listener VORB_UNUSED) {
 //    m_data->system->set3DListenerAttributes(0, // TODO: Use listener IDs
 //        (FMOD_VECTOR*)&listener.position,
 //        (FMOD_VECTOR*)&listener.velocity,

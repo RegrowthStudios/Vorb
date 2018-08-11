@@ -34,6 +34,7 @@ namespace vorb {
                     ui32 w = 0u,
                     ui32 h = 0u,
                     vg::TextureTarget target = vg::TextureTarget::TEXTURE_2D) :
+                textureTarget(target),
                 id(id),
                 width(w),
                 height(h) {
@@ -42,10 +43,10 @@ namespace vorb {
             void bind();
             void unbind();
 
-            vg::TextureTarget textureTarget = vg::TextureTarget::TEXTURE_2D;
-            VGTexture id = 0; ///< OpenGL texture ID
-            ui32 width = 0; ///< Texture width in pixels
-            ui32 height = 0; ///< Texture height in pixels
+            vg::TextureTarget textureTarget;
+            VGTexture id; ///< OpenGL texture ID
+            ui32 width; ///< Texture width in pixels
+            ui32 height; ///< Texture height in pixels
         };
     }
 }

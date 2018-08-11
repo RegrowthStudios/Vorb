@@ -168,7 +168,8 @@ namespace vorb {
             /// @param fullPath: resulting path. Will be equal to path if m_ioManager == nullptr
             void resolvePath(const vio::Path& path, OUT vio::Path& fullPath);
 
-            bool m_ownsIoManager = false; ///< True when the cache should deallocate the iomanager
+            // TODO: This is currently unused!
+            //bool m_ownsIoManager = false; ///< True when the cache should deallocate the iomanager
             vio::IOManager* m_ioManager = nullptr; ///< Handles the IO
 
             /// We store two maps here so that users can free textures using either the ID or filePath

@@ -256,7 +256,7 @@ void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_
     computeChildClipRects();
 }
 
-void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
+void vui::ComboBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
@@ -270,7 +270,7 @@ void vui::ComboBox::onMouseMove(Sender s, const MouseMotionEvent& e) {
     }
 }
 
-void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
+void vui::ComboBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         MouseUp(e);
@@ -285,7 +285,7 @@ void vui::ComboBox::onMouseUp(Sender s, const MouseButtonEvent& e) {
     m_isClicking = false;
 }
 
-void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent& e) {
+void vui::ComboBox::onSubButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e VORB_UNUSED) {
     vui::Button* b = (vui::Button*)s;
     const nString& text = b->getText();
     if (m_mainButton.getText() != text) {
@@ -294,7 +294,7 @@ void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent& e) {
     }
 }
 
-void vui::ComboBox::onMainButtonClick(Sender s, const MouseButtonEvent& e) {
+void vui::ComboBox::onMainButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     MouseClick(e);
     m_isDropped = !m_isDropped;
     updatePosition();

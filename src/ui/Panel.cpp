@@ -258,7 +258,7 @@ void vui::Panel::refreshDrawables() {
     m_drawnRect = m_drawableRect;
 }
 
-void vui::Panel::onMouseMove(Sender s, const MouseMotionEvent& e) {
+void vui::Panel::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_isMouseIn) {
@@ -276,7 +276,7 @@ void vui::Panel::onMouseMove(Sender s, const MouseMotionEvent& e) {
     }
 }
 
-void vui::Panel::onMouseFocusLost(Sender s, const MouseEvent& e) {
+void vui::Panel::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
     if (!m_isEnabled) return;
     if (m_isMouseIn) {
         m_isMouseIn = false;

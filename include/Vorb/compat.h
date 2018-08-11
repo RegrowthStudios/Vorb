@@ -34,6 +34,7 @@
 #define MACRO_PARAN_L {
 #define MACRO_PARAN_R }
 
+
 /* 
  * The purpose of the following statements is to detect what kind of computer architecture we are targeting as well as
  * what compiler we are dealing with. The following is the list of enums that we search for:
@@ -93,6 +94,26 @@
 #error ARM 32-bit and 64-bit architectures must be defined
 #endif
 
+// Define maybe_unused attribute macro
+#ifdef __cplusplus
+#if __cplusplus >= 201703L && ( (__clang_major__ == 3 && __clang_minor__ >= 9) || __clang_major__ > 3 )
+#define VORB_UNUSED [[maybe_unused]]
+#else
+#define VORB_UNUSED [[gnu::unused]]
+#endif
+#endif
+
+// Define fallthrough attribute macro
+#if defined(__cplusplus)
+#if __cplusplus >= 201703L && ( (__clang_major__ == 3 && __clang_minor__ >= 9) || __clang_major__ > 3 )
+#define VORB_FALLTHROUGH [[fallthrough]];
+#elif __cplusplus >= 201103L && __clang_major__ >= 3 && __clang_minor__ >= 3
+#define VORB_FALLTHROUGH [[clang::fallthrough]];
+#else
+#define VORB_FALLTHROUGH
+#endif
+#endif
+
 #elif defined(__ICC) || defined(__INTEL_COMPILER)
 /* Intel ICC/ICPC. ------------------------------------------ */
 #error Intel ICC/ICPC compiler is not supported by Vorb
@@ -111,6 +132,28 @@
 #endif
 #elif defined(__arm__)
 #error ARM 32-bit and 64-bit architectures must be defined
+#endif
+
+// Define maybe_unused attribute macro
+#ifdef __cplusplus
+#if __cplusplus >= 201703L && __GNUC__ >= 7
+#define VORB_UNUSED [[maybe_unused]]
+#elif (__GNUC__ == 4 && __GNUC_MINOR__ >= 8) || __GNUC__ > 4
+#define VORB_UNUSED [[gnu::unused]]
+#else
+#define VORB_UNUSED 
+#endif
+#endif
+
+// Define fallthrough attribute macro
+#if defined(__cplusplus)
+#if __cplusplus >= 201703L && __GNUC__ >= 7
+#define VORB_FALLTHROUGH [[fallthrough]];
+#elif __cplusplus >= 201103L && __GNUC__ >= 7
+#define VORB_FALLTHROUGH [[gnu::fallthrough]];
+#else
+#define VORB_FALLTHROUGH __attribute__ ((fallthrough));
+#endif
 #endif
 
 #elif defined(__HP_cc) || defined(__HP_aCC)
@@ -132,6 +175,24 @@
 #endif
 #elif defined(_M_ARM)
 #error ARM 32-bit and 64-bit architectures must be defined
+#endif
+
+// Define maybe_unused attribute macro
+#ifdef __cplusplus
+#if __cplusplus >= 201703L && _MSC_VER >= 1911
+#define VORB_UNUSED [[maybe_unused]]
+#else
+#define VORB_UNUSED 
+#endif
+#endif
+
+// Define fallthrough attribute macro
+#if defined(__cplusplus)
+#if __cplusplus >= 201703L && _MSC_VER >= 1911
+#define VORB_FALLTHROUGH [[fallthrough]];
+#else
+#define VORB_FALLTHROUGH
+#endif
 #endif
 
 #elif defined(__PGI)

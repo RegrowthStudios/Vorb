@@ -56,7 +56,7 @@ public:
     class Node {
     public:
         Node() : left(-1), right(-1), parent(-2) {}
-        Node(T Data, ui16 start, ui16 Length) : data(Data), m_start(start | COLOR_BIT), length(Length), left(-1), right(-1), parent(-1) {}
+        Node(T Data, ui16 start, ui16 Length) : length(Length), left(-1), right(-1), parent(-1), m_start(start | COLOR_BIT), data(Data)  {}
 
         inline void incrementStart() { ++m_start; }
         inline void decrementStart() { --m_start; }

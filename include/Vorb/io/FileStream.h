@@ -73,7 +73,14 @@ namespace vorb {
             /// @param args: Format arguments
             template<typename... Args>
             void write(const cString format, Args... args) const {
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-security"
+#endif
                 fprintf(m_fileCached, format, args...);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
             }
 
             /// Read data to a buffer

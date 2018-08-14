@@ -2,31 +2,38 @@
 This repository contains the source code for Regrowth Studios Vorb Game Engine.
 
 ## Getting Started
+**NOTE**: If you are wanting to set up Vorb to work with Seed of Andromeda, 
+then visit follow the intructions on the [SoA github page](https://github.com/RegrowthStudios/SoACode-Public).
+
 This guide will walk you through setting up as a developer for
-Vorb.  There is a basic requirement of having several
+Vorb. There is a basic requirement of having several
 packages installed prior to being able to develop.  In addition,
 we support all three major operating systems:
 
-### Installing and building:
-* [Windows](#Windows)
-* [Mac](#Mac)
-* [Linux](#Linux)
+### Setting Up:
+* [Windows](#windows)
+* [Mac](#mac)
+* [Linux](#linux)
+
+### Building:
+* [Building](#building-1)
  
 ### Contributing
-* [Wiki](https://github.com/RegrowthStudios/SoACode/wiki)
-* [Issues](https://github.com/RegrowthStudios/SoACode/issues)
+* [Wiki](https://github.com/RegrowthStudios/SoACode-Public/wiki)
+* [Issues](https://github.com/RegrowthStudios/SoACode-Public/issues)
 
 
-## Windows
+## Setting Up
 
-### Required pre-setup
-#### Tools
-*  Compiler: [Microsoft Visual Studio Community Edition](http://www.visualstudio.com/)
+### Windows
+
+#### Prerequisites
+*  Compiler: [Microsoft Visual Studio 2015+](https://visualstudio.microsoft.com/)
 *  Software Version Control:  [Git](http://git-scm.com/downloads)
 *  MSVS SVC Plugin:  [MSVS Git Plugin](http://msdn.microsoft.com/en-us/library/hh850437.aspx)
 *  CMake: [Cmake](http://www.cmake.org/download/)
 
-### Installation
+#### Setup
 1. Open a dos window.
 ```
 Windows + R
@@ -44,22 +51,10 @@ cd c:\repos
 git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ```
 
-### Building
-1. Pull latest code
-```
-cd c:\repos\soa
-git checkout develop
-git pull --recurse-submodules
-```
-2. Run build script
-```
-build.bat
-```
 
+### Mac
 
-## Mac
-
-### Required pre-setup
+#### Prerequisites
 1. Compiler: [Xcode](https://developer.apple.com/xcode/)
 * Software Version Control: [Git](http://git-scm.com/downloads)
     Optionally, with [Homebrew](http://brew.sh/):
@@ -74,38 +69,25 @@ build.bat
     * [SublimeLinter-pep8](https://sublime.wbond.net/packages/SublimeLinter-pep8) - SublimeLinter plugin for python, using pep8.
     * [SublimeLinter-contrib-clang](https://sublime.wbond.net/packages/SublimeLinter-contrib-clang) - https://sublime.wbond.net/packages/SublimeLinter-contrib-clang
 
-### Installation
+#### Installation
 1. Open a terminal.
 ```
 cmd + space
 Terminal
 ```
-2. Create a folder to hold the repositories
+2. Create a folder to hold the repository
 ```
 mkdir ~/repos
 ```
-3. Clone the Seed of Andromeda repositories
+3. Clone the Vorb repositories
 ```
 cd ~/repos
-git clone --recurse-submodules git@github.com:RegrowthStudios/SoACode.git soa
+git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ```
 
-### Building
-1. Pull latest code
-```
-cd ~/repos/soa
-git checkout develop
-git pull --recurse-submodules
-```
-2. Run build script
-```
-./build.sh
-```
+### Linux
 
-
-## Linux
-
-### Required pre-setup
+#### Prerequisites
 1. Compiler: gcc or clang
     * Install per your preferred operating system package control...
     * Portage:
@@ -146,31 +128,32 @@ git pull --recurse-submodules
     sudo yum install git
     ```
 
-### Installation
+#### Setup
 1. Open a terminal.
 2. Create a folder to hold the repositories
 ```
 mkdir ~/repos
 ```
-3. Clone the Seed of Andromeda repositories
+3. Clone the Vorb repository
 ```
 cd ~/repos
-git clone --recurse-submodules git@github.com:RegrowthStudios/SoACode.git soa
+git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ```
 
-### Building
+## Building
 1. Pull latest code
 ```
 cd ~/repos/soa
-git checkout develop
+git checkout develop    # or whichever branch you want
 git pull --recurse-submodules
 ```
-2. Make sure you have required development libraries
-    * Apt:
-    ```
-    sudo apt-get install libglew-dev libglfw-dev libglm-dev
-    ```
-3. Run build script
+2. Run CMake
 ```
-./build.sh
+mkdir build
+cd build
+cmake ../    # plus whatever options you'd like to select.
+```
+3. Build with CMake
+```
+cmake --build ./    # plus whatever options you'd like to select (e.g. --clean-first)
 ```

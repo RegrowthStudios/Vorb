@@ -114,10 +114,10 @@ namespace vorb {
                 _components[cID].second = getDefaultData();
             }
 
-            virtual void initComponent(ComponentID cID, EntityID eID) override {
+            virtual void initComponent(ComponentID cID VORB_UNUSED, EntityID eID VORB_UNUSED) override {
                 // Empty
             }
-            virtual void disposeComponent(ComponentID cID, EntityID eID) override {
+            virtual void disposeComponent(ComponentID cID VORB_UNUSED, EntityID eID VORB_UNUSED) override {
                 // Empty
             }
 

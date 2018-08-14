@@ -4,6 +4,7 @@ This repository contains the source code for Regrowth Studios Vorb Game Engine.
 ## Getting Started
 **NOTE**: If you are wanting to set up Vorb to work with Seed of Andromeda, 
 then visit follow the intructions on the [SoA github page](https://github.com/RegrowthStudios/SoACode-Public).
+
 This guide will walk you through setting up as a developer for
 Vorb. There is a basic requirement of having several
 packages installed prior to being able to develop.  In addition,
@@ -15,7 +16,7 @@ we support all three major operating systems:
 * [Linux](#linux)
 
 ### Building:
-* [Building](#building)
+* [Building](#building-1)
  
 ### Contributing
 * [Wiki](https://github.com/RegrowthStudios/SoACode-Public/wiki)
@@ -142,20 +143,8 @@ git clone --recurse-submodules git@github.com:RegrowthStudios/Vorb.git vorb
 ## Building
 1. Pull latest code
 ```
-cd c:\repos\vorb
-git checkout develop
-git pull --recurse-submodules
-```
-2. Run build script
-```
-build.bat
-```
-
-### Building
-1. Pull latest code
-```
 cd ~/repos/soa
-git checkout develop
+git checkout develop    # or whichever branch you want
 git pull --recurse-submodules
 ```
 2. Run CMake

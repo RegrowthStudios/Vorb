@@ -364,11 +364,11 @@ typename IntervalTree<T>::Node* IntervalTree<T>::insert(size_t index, T data) {
 
         }
 
-
-        int dbg = 4;
-        int npar = node->parent;
-        int nl = node->left;
-        int nr = node->right;
+        // TODO: These were unused, why?
+        // int dbg = 4;
+        // int npar = node->parent;
+        // int nl = node->left;
+        // int nr = node->right;
         //Case 4: Parent is red, uncle is black.
         if (newIndex == m_tree[node->parent].right && node->parent == grandparent->left) {
             rotateParentLeft(newIndex, grandparent);

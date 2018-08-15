@@ -10,7 +10,7 @@ keg::Value keg::Value::basic(size_t off, BasicType t) {
     kv.typeName.clear();
     kv.evaluator = simpleEvaluators[(size_t)t];
     kv.outputter = simpleOutputters[(size_t)t];
-    return std::move(kv);
+    return kv;
 }
 keg::Value keg::Value::custom(size_t off, const nString& t, bool isEnum /*= false*/) {
     Value kv = {};
@@ -19,7 +19,7 @@ keg::Value keg::Value::custom(size_t off, const nString& t, bool isEnum /*= fals
     kv.typeName = t;
     kv.evaluator = nullptr;
     kv.outputter = nullptr;
-    return std::move(kv);
+    return kv;
 }
 keg::Value keg::Value::array(size_t off, const Value& interior) {
     Value kv = {};
@@ -29,7 +29,7 @@ keg::Value keg::Value::array(size_t off, const Value& interior) {
     kv.interiorValue.reset(new Value(interior));
     kv.evaluator = nullptr;
     kv.outputter = nullptr;
-    return std::move(kv);
+    return kv;
 }
 keg::Value keg::Value::array(size_t off, const BasicType& t) {
     return array(off, Value::basic(0, t));
@@ -42,7 +42,7 @@ keg::Value keg::Value::ptr(size_t off, const Value& interior) {
     kv.interiorValue.reset(new Value(interior));
     kv.evaluator = nullptr;
     kv.outputter = nullptr;
-    return std::move(kv);
+    return kv;
 }
 keg::Value keg::Value::ptr(size_t off, const BasicType& t) {
     return ptr(off, Value::basic(0, t));

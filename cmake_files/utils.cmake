@@ -28,7 +28,7 @@ macro(initialize_for_platform)
     endif()
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
       "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set(warnings "-Wall -Wextra -Wno-reorder -Wno-unknown-pragmas -Wno-attributes -Wno-strict-aliasing")
+      set(warnings "-Wall -Wextra -Wno-unknown-pragmas -Wno-strict-aliasing")
       if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # This warning only exists for GCC.
         set(warnings "${warnings} -Wno-class-memaccess")

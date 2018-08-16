@@ -10,11 +10,18 @@ Vorb project. There is a basic requirement of having several
 packages installed prior to being able to develop. We support all three
 major operating systems: Windows, Mac and Linux.
 
+### Using
+If you're intending to just use the Vorb engine, great! Be sure to check out the Vorb wiki and
+feel free to add any issues you have with the engine for the awareness of the engine contributors.
+* [Wiki](https://github.com/RegrowthStudios/Vorb/wiki)
+* [Issues](https://github.com/RegrowthStudios/Vorb/issues)
+
 ### Contributing
-Before beginning your SoA journey, please take a moment to use the following resources
+Before beginning to make pull requests for the engine, please take a moment to use the following resources
 to get an idea of how to contribute, what you might be able to contribute to specifically,
 and to meet some of the other contributors.
-* [Wiki](https://github.com/RegrowthStudios/Vorb/wiki)
+* [SoA Wiki - Information on contributing.](https://github.com/RegrowthStudios/SoACode-Public/wiki)
+* [Vorb Wiki - Particular details of Vorb.](https://github.com/RegrowthStudios/Vorb/wiki)
 * [Issues](https://github.com/RegrowthStudios/Vorb/issues)
 * [Discord](https://discord.gg/b2bf775)
 

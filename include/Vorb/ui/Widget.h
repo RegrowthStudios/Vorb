@@ -50,8 +50,8 @@ namespace vorb {
          * \brief Enum of ways a widget may be positioned.
          * 
          * Two kinds of positioning:
-         *     Static   -> Raw size and dimensions defined by preprocessed sizes, dimensions and margins.
-         *     Relative -> Raw size and dimensions defined by preprocessed sizes, dimensions and {left, top, right, bottom} directives.
+         *     Static   -> Raw size and dimensions defined by unprocessed sizes, dimensions and margins.
+         *     Relative -> Raw size and dimensions defined by unprocessed {left, top, right, bottom} directives.
          * Relative to three objects:
          *     Window   -> The viewport through which the player sees the game (i.e. the monitor).
          *     Canvas   -> The top-level widget of this widget's ancestors.

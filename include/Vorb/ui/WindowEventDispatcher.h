@@ -4,7 +4,7 @@
 ///
 /// Created by Cristian Zaloj on 10 Dec 2014
 /// Copyright 2014 Regrowth Studios
-/// All Rights Reserved
+/// MIT License
 ///
 /// Summary:
 /// Dispatches events related to the application window handle

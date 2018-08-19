@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 16 Feb 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file Vorb.h

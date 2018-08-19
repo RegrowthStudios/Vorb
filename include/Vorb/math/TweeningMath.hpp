@@ -4,7 +4,7 @@
 //
 // Created by Matthew Marshall on 02 Nov 2015
 // Copyright 2015 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file TweeningMath.hpp

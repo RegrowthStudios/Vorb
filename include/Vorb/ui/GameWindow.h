@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 22 Jan 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file GameWindow.h

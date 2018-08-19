@@ -4,7 +4,7 @@
 //
 // Created by Benjamin Arnold on 13 Nov 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file ThreadPool.h

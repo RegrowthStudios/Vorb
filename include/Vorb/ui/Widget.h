@@ -27,7 +27,7 @@
 #include <vector>
 #include "Vorb/Events.hpp"
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/ui/IWidgetContainer.h"
+#include "Vorb/ui/IWidget.h"
 
 DECL_VG(class SpriteFont)
 
@@ -49,9 +49,9 @@ namespace vorb {
         // Forward Declarations
         class UIRenderer;
 
-        class Widget : public IWidgetContainer {
+        class Widget : public IWidget {
             friend class WidgetScriptFuncs;
-            friend class IWidgetContainer;
+            friend class IWidget;
         public:
             /*! @brief Default constructor. */
             Widget();
@@ -69,7 +69,7 @@ namespace vorb {
              * @param name: Name of the control.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Widget(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
             /*! @brief Releases all resources used by the Widget.
@@ -101,7 +101,7 @@ namespace vorb {
             /************************************************************************/ 
             virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             virtual const DockStyle& getDock() const { return m_dock; }
-            virtual const IWidgetContainer* getParent() const { return m_parent; }
+            virtual const IWidget* getParent() const { return m_parent; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
@@ -118,7 +118,7 @@ namespace vorb {
             virtual void setDock(const DockStyle& dock);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
-            virtual void setParent(IWidgetContainer* parent);
+            virtual void setParent(IWidget* parent);
             virtual void setPositionPercentage(const f32v2& positionPercentage) { m_positionPercentage = positionPercentage; updatePosition(); }
             virtual void setDimensionsPercentage(const f32v2& dimensionsPercentage) { m_dimensionsPercentage = dimensionsPercentage; updateDimensions(); }
             virtual void setXPercentage(f32 xPercentage) { m_positionPercentage.x = xPercentage; updatePosition(); }

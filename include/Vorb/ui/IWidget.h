@@ -40,12 +40,12 @@ namespace vorb {
         struct MouseEvent;
         class Widget;
 
-        //! Bitfield of container styling flags
-        struct ContainerStyle {
-            bool fixedHeight : 1; ///< If true, the control has fixed height when auto-scaled.
-            bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
-            bool selectable : 1; ///< If true, the control can receive focus.
-        };
+        // //! Bitfield of container styling flags
+        // struct ContainerStyle {
+        //     bool fixedHeight : 1; ///< If true, the control has fixed height when auto-scaled.
+        //     bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
+        //     bool selectable : 1; ///< If true, the control can receive focus.
+        // };
         //! Bitfield of anchor flags
         struct AnchorStyle {
             bool left : 1; ///< If true, anchored to the left of parent
@@ -58,30 +58,30 @@ namespace vorb {
             NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
         };
 
-        class IWidgetContainer {
+        class IWidget {
         public:
             /*! @brief Default constructor. */
-            IWidgetContainer();
+            IWidget();
             /*! @brief Constructor that sets name, position, and dimensions.
              *
-             * @param name: Name of the container.
+             * @param name: Name of the widget.
              * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
              */
-            IWidgetContainer(const nString& name, const f32v4& destRect = f32v4(0));     
+            IWidget(const nString& name, const f32v4& destRect = f32v4(0));     
             /*! @brief Destructor that unhooks events */
-            virtual ~IWidgetContainer();
+            virtual ~IWidget();
             /*! @brief Releases all resources used by the Widget.
              *
              * Gets called in the destructor.
              */
             virtual void dispose();
-            /*! @brief Adds a child Widget to the container
+            /*! @brief Childs another widget to this widget.
              *
              * @param child: The Widget to add
              * @return true on success.
              */
             virtual bool addWidget(Widget* child);
-            /*! @brief Removes a Widget from the container
+            /*! @brief Unchilds a child widget of this widget.
             *
             * @param child: The Widget to remove
             * @return true on success.
@@ -104,46 +104,46 @@ namespace vorb {
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
 
-            virtual void setChildDock(Widget* widget, DockStyle dockStyle);
+            // virtual void setChildDock(Widget* widget, DockStyle dockStyle);
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual bool getFixedHeight() const { return m_style.fixedHeight; }
-            virtual bool getFixedWidth() const { return m_style.fixedWidth; }
-            virtual bool getSelectable() const { return m_style.selectable; }
+            // virtual bool getFixedHeight() const { return m_style.fixedHeight; }
+            // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
+            // virtual bool getSelectable() const { return m_style.selectable; }
             virtual bool isMouseIn() const { return m_isMouseIn; }      
-            virtual const ContainerStyle& getStyle() const { return m_style; }
+            // virtual const ContainerStyle& getStyle() const { return m_style; }
             virtual const bool& isEnabled() const { return m_isEnabled; }
-            virtual const f32& getHeight() const { return m_dimensions.y; }
-            virtual const f32& getWidth() const { return m_dimensions.x; }
-            virtual const f32& getX() const { return m_position.x; }
-            virtual const f32& getY() const { return m_position.y; }
-            virtual const f32v2& getDimensions() const { return m_dimensions; }
-            virtual const f32v2& getPosition() const { return m_position; }
-            virtual const f32v2& getRelativePosition() const { return m_relativePosition; }
+            virtual const f32& getRawHeight() const { return m_rawSize.y; }
+            virtual const f32& getRawWidth() const { return m_rawSize.x; }
+            virtual const f32& getRawX() const { return m_rawPosition.x; }
+            virtual const f32& getRawY() const { return m_rawPosition.y; }
+            virtual const f32v2& getRawSize() const { return m_rawSize; }
+            virtual const f32v2& getRawPosition() const { return m_rawPosition; }
+            virtual const f32v2& getRelativeRawPosition() const { return m_relativeRawPosition; }
             virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
             virtual const nString& getName() const { return m_name; }
-            virtual f32v4 getDestRect() const { return f32v4(m_position.x, m_position.y, m_dimensions.x, m_dimensions.y); }
+            virtual f32v4 getDestRect() const { return f32v4(m_rawPosition.x, m_rawPosition.y, m_rawSize.x, m_rawSize.y); }
             virtual f32v4 getClipRect() const { return m_clipRect; }
-            virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
+            // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/         
-            virtual void setDestRect(const f32v4& destRect);
-            virtual void setDimensions(const f32v2& dimensions) { m_dimensions = dimensions; updateChildPositions(); }
-            virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
-            virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
-            virtual void setHeight(f32 height) { m_dimensions.y = height;  updateChildPositions(); }
-            virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
-            virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
-            virtual void setStyle(const ContainerStyle& style) { m_style = style; }
-            virtual void setWidth(f32 width) { m_dimensions.x = width;  updateChildPositions(); }
-            virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
-            virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
+            // virtual void setDestRect(const f32v4& destRect);
+            // virtual void setRawSize(const f32v2& size) { m_rawSize = size; updateChildPositions(); }
+            // virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
+            // virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
+            // virtual void setRawWidth(f32 width) { m_rawSize.x = width;  updateChildPositions(); }
+            // virtual void setRawHeight(f32 height) { m_rawSize.y = height;  updateChildPositions(); }
+            // virtual void setRawPosition(const f32v2& position) { m_relativeRawPosition = position; updatePosition(); }
+            // virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
+            // virtual void setStyle(const ContainerStyle& style) { m_style = style; }
+            // virtual void setX(f32 x) { m_relativeRawPosition.x = x; updatePosition(); }
+            // virtual void setY(f32 y) { m_relativeRawPosition.y = y; updatePosition(); }
             virtual void setName(const nString& name) { m_name = name; }
-            virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
+            // virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -158,12 +158,12 @@ namespace vorb {
 
         protected:
             /*! Removes a widget from a dock and returns true on success. */
-            bool removeChildFromDock(Widget* widget);
+            // bool removeChildFromDock(Widget* widget);
             /*! Refreshes all docked widget positions and sizes. */
-            void recalculateDockedWidgets();
+            // void recalculateDockedWidgets();
             /*! Computes clipping for rendering and propagates through children. */
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
-            virtual void computeChildClipRects();
+            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
+            // virtual void computeChildClipRects();
             virtual void updateChildPositions();
             /************************************************************************/
             /* Event Handlers                                                       */
@@ -188,22 +188,22 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/      
-            ContainerStyle m_style; ///< The current style.
-            std::vector<Widget*> m_widgets; ///< All child widgets.
-            std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            f32v4 m_clipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX);
-            f32v4 m_dockSizes = f32v4(0.0f); ///< Total size of each dock other than fill.
-            f32v2 m_relativePosition = f32v2(0.0f); ///< Position relative to parent.
-            f32v2 m_position = f32v2(0.0f); ///< The position and dimensions.
-            f32v2 m_dimensions = f32v2(0.0f); ///< The position and dimensions.
-            nString m_name = ""; ///< Display name of the container.
+            // ContainerStyle       m_style;               ///< The current style.
+            std::vector<Widget*> m_widgets;             ///< Collection of child widgets.
+            // std::vector<Widget*> m_dockedWidgets[5];    ///< Widgets that are docked. TODO(Ben): Linked list instead?
+            f32v4                m_clipRect;            ///< Clipping rectangle for rendering.
+            // f32v4                m_dockSizes;           ///< Total size of each dock other than fill.
+            f32v2                m_relativeRawPosition; ///< Position of widget relative to parent in pixels.
+            f32v2                m_rawPosition;         ///< Position of widget relative to window in pixels.
+            f32v2                m_rawSize;             ///< Size of the widget in pixels.
+            nString              m_name;                ///< Display name of the container.
 
-            bool m_isClippingEnabled = true;
+            // bool m_isClippingEnabled = true;
 
             // TODO(Ben): Bitfield for memory reduction?.
-            bool m_isClicking = false; ///< Used for click event tracking.
-            bool m_isEnabled = false; ///< True when events are enabled.
-            bool m_isMouseIn = false; ///< Used for motion event tracking.
+            bool m_isClicking; ///< Used for click event tracking.
+            bool m_isEnabled; ///< True when events are enabled.
+            bool m_isMouseIn; ///< Used for motion event tracking.
         };
     }
 }

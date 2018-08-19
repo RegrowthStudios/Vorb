@@ -154,30 +154,30 @@ namespace vorb {
 
             /************************************************************************/
             /* Getters                                                              */
-            /************************************************************************/ 
+            /************************************************************************/
+            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             // virtual const DockStyle& getDock() const { return m_dock; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
-            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const Length2& getMinSize() const { return m_minSize; }
             virtual const Length2& getMaxSize() const { return m_maxSize; }
             virtual PositionType getPositionType() const { return m_positionType; }
-            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
+            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            // TODO(Matthew): Think how this actually works with position type system.
+            // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
-            virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setPositionType(PositionType positionType) { m_positionType = positionType; updatePosition(); }
             // TODO(Matthew): Depending on position type may need to update position.
             virtual void setMaxSize(const Length2& maxSize) { m_maxSize = maxSize; updateSize(); }
             virtual void setMinSize(const Length2& minSize) { m_minSize = minSize; updateSize(); }
-            // TODO(Matthew): Think how this actually works with position type system.
-            // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
+            virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             
         protected:
             virtual f32v2 getWidgetAlignOffset();

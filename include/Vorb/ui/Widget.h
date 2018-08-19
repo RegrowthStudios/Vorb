@@ -189,12 +189,12 @@ namespace vorb {
             DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
-            f32v2 m_minSize = f32v2(0.0f);
-            f32v2 m_maxSize = f32v2(FLT_MAX);
-            f32v2 m_positionPercentage = f32v2(-1.0f); ///< Position as percentage of parent dims
-            f32v2 m_dimensionsPercentage = f32v2(-1.0f); ///< Dims as percentage of parent dims
             IWidget* m_parent = nullptr; ///< Parent container
+            Length2 m_minSize = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Minimum size 
+            Length2 m_maxSize = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } };
             PositionType m_positionType;
+            Length2 m_position = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Position of element in specified dimensions.
+            Length2 m_size = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Dimensions of element in specified dimensions.
             volatile bool m_needsDrawableReload = false;
         };
     }

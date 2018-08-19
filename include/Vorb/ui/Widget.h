@@ -192,7 +192,7 @@ namespace vorb {
             UIRenderer* m_renderer = nullptr;
             Length2 m_minSize = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Minimum size
             Length2 m_maxSize = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } };
-            PositionType m_positionType;
+            PositionType m_positionType = PositionType::STATIC_TO_PARENT;
             Length2 m_position = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Position of element in specified dimensions.
             Length2 m_size = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Dimensions of element in specified dimensions.
             volatile bool m_needsDrawableReload = false;

@@ -146,6 +146,11 @@ namespace vorb {
             // virtual void setX(f32 x) { m_relativeRawPosition.x = x; updatePosition(); }
             // virtual void setY(f32 y) { m_relativeRawPosition.y = y; updatePosition(); }
             // virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
+            /*!
+             * \brief Sets the parent widget of this widget.
+             * 
+             * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
+             */
             virtual void setParent(IWidget* parent);
             virtual void setName(const nString& name) { m_name = name; }
 

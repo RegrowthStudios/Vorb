@@ -2,6 +2,7 @@
 #include "Vorb/ui/IWidget.h"
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/Widget.h"
+#include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
 vui::IWidget::IWidget() :
@@ -11,10 +12,12 @@ vui::IWidget::IWidget() :
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this),
+    m_font(nullptr),
+    m_renderer(nullptr),
+    m_canvas(nullptr),
     m_parent(nullptr),
     m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
-    m_relativePosition(f32v2(0.0f)),
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_name(""),
@@ -92,6 +95,23 @@ void vui::IWidget::disable() {
 bool vui::IWidget::isInBounds(f32 x, f32 y) const {
     return (x >= m_position.x && x < m_position.x + m_size.x &&
             y >= m_position.y && y < m_position.y + m_size.y);
+}
+
+void vui::IWidget::addDrawables(UIRenderer* renderer) {
+    m_renderer = renderer;
+    for (auto& w : m_widgets) {
+        w->addDrawables(m_renderer);
+    }
+}
+
+void vui::IWidget::removeDrawables() {
+    if (m_renderer) {
+        m_renderer->remove(this);
+        m_renderer = nullptr;
+    }
+    for (auto& w : m_widgets) {
+        w->removeDrawables();
+    }
 }
 
 void vui::IWidget::setParent(IWidget* parent) {
@@ -222,9 +242,9 @@ void vui::IWidget::setParent(IWidget* parent) {
 //     }
 // }
 
-void vui::IWidget::updateChildPositions() {
-    for (auto& w : m_widgets) {
-        w->updatePosition();
+void vui::IWidget::updateChildDimensions() {
+    for (IWidget* widget : m_widgets) {
+        widget->updateDimensions();
     }
 }
 

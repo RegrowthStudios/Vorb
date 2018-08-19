@@ -26,10 +26,7 @@
 
 #include <vector>
 #include "Vorb/Events.hpp"
-#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/IWidget.h"
-
-DECL_VG(class SpriteFont)
 
 namespace vorb {
     namespace ui {
@@ -50,11 +47,11 @@ namespace vorb {
          * \brief Enum of ways a widget may be positioned.
          * 
          * Two kinds of positioning:
-         *     Static   -> Raw size and dimensions defined by unprocessed sizes, dimensions and margins.
-         *     Relative -> Raw size and dimensions defined by unprocessed {left, top, right, bottom} directives.
+         *     Static   -> Raw size and positions defined by unprocessed sizes, positions and margins;
+         *     Relative -> Raw size and positions defined by unprocessed {left, top, right, bottom} directives.
          * Relative to three objects:
-         *     Window   -> The viewport through which the player sees the game (i.e. the monitor).
-         *     Canvas   -> The top-level widget of this widget's ancestors.
+         *     Window   -> The viewport through which the player sees the game (i.e. the monitor);
+         *     Canvas   -> The top-level widget of this widget's ancestors;
          *     Parent   -> The parent widget of this widget.
          */
         enum class PositionType {
@@ -68,18 +65,45 @@ namespace vorb {
 
         /*!
          * \brief Enum of ways the dimensions of a widget may be measured.
+         * 
+         * Dimension types are (where X is the length considered):
+         *     Pixel                    -> X is directly the number of pixels;
+         *     Width Percentage         -> X is the percentage of the width of the widget to which this widget is statically or relatively positioned.
+         *     Height Percentage        -> X is the percentage of the height of the widget to which this widget is statically or relatively positioned.
+         *     Min Percentage           -> X is the percentage of the minimum of width and height of the widget to which this widget is statically or relatively positioned.
+         *     Max Percentage           -> X is the percentage of the maximum of width and height of the widget to which this widget is statically or relatively positioned.
+         *     Parent Width Percentage  -> X is the percentage of the parent widget's width;
+         *     Parent Height Percentage -> X is the percentage of the parent widget's height;
+         *     Parent Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
+         *     Parent Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
+         *     Canvas Width Percentage  -> X is the percentage of the parent widget's width;
+         *     Canvas Height Percentage -> X is the percentage of the parent widget's height;
+         *     Canvas Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
+         *     Canvas Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
+         *     Window Width Percentage  -> X is the percentage of the parent widget's width;
+         *     Window Height Percentage -> X is the percentage of the parent widget's height;
+         *     Window Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
+         *     Window Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
+         * Note that we are talking pre-normalised percentage - i.e. a value of 1.0 = 100%.
          */
         enum class DimensionType {
             PIXEL,
-            PERCENTAGE,
-            FORM_WIDTH_PERCENTAGE,
-            FORM_HEIGHT_PERCENTAGE,
-            FORM_MIN_PERCENTAGE,
-            FORM_MAX_PERCENTAGE,
+            WIDTH_PERCENTAGE,
+            HEIGHT_PERCENTAGE,
+            MIN_PERCENTAGE,
+            MAX_PERCENTAGE,
+            PARENT_WIDTH_PERCENTAGE,
+            PARENT_HEIGHT_PERCENTAGE,
+            PARENT_MIN_PERCENTAGE,
+            PARENT_MAX_PERCENTAGE,
+            CANVAS_WIDTH_PERCENTAGE,
+            CANVAS_HEIGHT_PERCENTAGE,
+            CANVAS_MIN_PERCENTAGE,
+            CANVAS_MAX_PERCENTAGE,
             WINDOW_WIDTH_PERCENTAGE,
             WINDOW_HEIGHT_PERCENTAGE,
             WINDOW_MIN_PERCENTAGE,
-            WINDOW_MAX_PERCENTAGE,
+            WINDOW_MAX_PERCENTAGE
         };
 
         /*!
@@ -108,8 +132,6 @@ namespace vorb {
         class Widget : public IWidget {
             friend class WidgetScriptFuncs;
             friend class IWidget;
-
-            using Font = vorb::graphics::SpriteFont;
         public:
             /*! @brief Default constructor. */
             Widget();
@@ -136,23 +158,14 @@ namespace vorb {
             */
             virtual void dispose() override;
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to.
-            */
-            virtual void addDrawables(UIRenderer* renderer);
-
-            /*! @brief Removes all drawables from the UIRenderer */
-            virtual void removeDrawables();
-
             /*! @brief Updates the widget. Can be used for animation.
             *
             * @param dt: The TimeStep
             */
             virtual void update(f32 dt VORB_UNUSED = 1.0f) { }
 
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;    
+            /*! @brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
+            virtual void updateDimensions() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -160,8 +173,6 @@ namespace vorb {
             // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             // virtual const DockStyle& getDock() const { return m_dock; }
-            virtual          const Font* getFont()             const { return m_font; }
-            virtual    const UIRenderer* getRenderer()         const { return m_renderer; }
             virtual         PositionType getPositionType()     const { return m_positionType; }
             virtual       const Length2& getRawPosition()      const { return m_rawPosition; }
             virtual       const Length2& getRawSize()          const { return m_rawSize; }
@@ -176,7 +187,6 @@ namespace vorb {
             // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
-            virtual void setFont(const Font* font)                        { m_font = font; }
             virtual void setPositionType(PositionType positionType)       { m_positionType = positionType; updatePosition(); }
             // TODO(Matthew): Depending on position type may need to update position and size in each of these.
             virtual void setRawPosition(const Length2& rawPosition)       { m_rawPosition = rawPosition; updatePosition(); }
@@ -186,7 +196,31 @@ namespace vorb {
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             
         protected:
-            virtual f32v2 getWidgetAlignOffset();
+            // virtual f32v2 getWidgetAlignOffset();
+
+            /*!
+             * \brief Processes a given raw length based on this widget's ancestors.
+             * 
+             * \param length: The raw length to be processed.
+             * 
+             * \returns The processed length.
+             */
+            f32   processLength(Length  length);
+            /*!
+             * \brief Processes a given raw length based on this widget's ancestors.
+             * 
+             * \param length: The raw length to be processed.
+             * 
+             * \returns The processed length.
+             */
+            f32v2 processLength(Length2 length);
+
+            /*!
+             * \brief Applies the minimum and maximum sizes specified for the widget.
+             */
+            void applyMinMaxSizes();
+
+            virtual void updatePosition();
             virtual void updateSize();
             /************************************************************************/
             /* Members                                                              */
@@ -194,8 +228,6 @@ namespace vorb {
             // WidgetAlign   m_align               = WidgetAlign::TOP_LEFT;
             // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
             // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
-            const Font*   m_font                = nullptr;                                                              ///< Font for rendering.
-            UIRenderer*   m_renderer            = nullptr;                                                              ///< Renderer to use for drawing widget.
             PositionType  m_positionType        = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
             Length2       m_rawPosition         = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Position of element in specified dimensions.
             Length2       m_rawSize             = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Dimensions of element in specified dimensions.

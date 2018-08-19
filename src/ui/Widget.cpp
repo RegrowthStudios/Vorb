@@ -5,7 +5,7 @@
 
 vui::Widget::Widget() : IWidget() {
     enable();
-    m_anchor = {};
+    // m_anchor = {};
 }
 
 vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget(name, destRect) {
@@ -25,108 +25,211 @@ void vui::Widget::dispose() {
     IWidget::dispose();
 }
 
-void vui::Widget::addDrawables(UIRenderer* renderer) {
-    m_renderer = renderer;
-    for (auto& w : m_widgets) {
-        w->addDrawables(m_renderer);
-    }
-}
+void vui::Widget::updateDimensions() {
+    updatePosition();
 
-void vui::Widget::removeDrawables() {
-    if (m_renderer) {
-        m_renderer->remove(this);
-        m_renderer = nullptr;
-    }
-    for (auto& w : m_widgets) {
-        w->removeDrawables();
-    }
-}
-
-void vui::Widget::updatePosition() {
-    f32v2 newPos = m_relativePosition;
-    if (m_parent) {
-        // Handle percentages
-        if (m_positionPercentage.x >= 0.0f) {
-            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
-        }
-        if (m_positionPercentage.y >= 0.0f) {
-            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
-        }
-        m_relativePosition = newPos;
-        newPos += m_parent->getPosition();
-    }
-    newPos += getWidgetAlignOffset();
-    m_position = newPos;
-    
-    // Update relative dimensions
     updateDimensions();
 
-    if (m_parent) computeClipRect(m_parent->getClipRect());
-    
-    updateChildPositions();
+    updateChildDimensions();
 }
 
-void vui::Widget::setAnchor(const AnchorStyle& anchor) {
-    m_anchor = anchor;
-}
+// void vui::Widget::setAnchor(const AnchorStyle& anchor) {
+//     m_anchor = anchor;
+// }
 
-void vui::Widget::setDock(const DockStyle& dock) {
-    if (m_parent) {
-        m_parent->setChildDock(this, dock);
-    } else {
-        m_dock = dock;
+// void vui::Widget::setDock(const DockStyle& dock) {
+//     if (m_parent) {
+//         m_parent->setChildDock(this, dock);
+//     } else {
+//         m_dock = dock;
+//     }
+// }
+
+
+// f32v2 vui::Widget::getWidgetAlignOffset() {
+//     switch (m_align) {
+//         case WidgetAlign::LEFT:
+//             return f32v2(0, -m_dimensions.y * 0.5f);
+//         case WidgetAlign::TOP_LEFT:
+//             return f32v2(0.0f);
+//         case WidgetAlign::TOP:
+//             return f32v2(-m_dimensions.x * 0.5f, 0.0f);
+//         case WidgetAlign::TOP_RIGHT:
+//             return f32v2(-m_dimensions.x, 0.0f);
+//         case WidgetAlign::RIGHT:
+//             return f32v2(-m_dimensions.x, -m_dimensions.y * 0.5f);
+//         case WidgetAlign::BOTTOM_RIGHT:
+//             return f32v2(-m_dimensions.x, -m_dimensions.y);
+//         case WidgetAlign::BOTTOM:
+//             return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y);
+//         case WidgetAlign::BOTTOM_LEFT:
+//             return f32v2(0.0f, -m_dimensions.y);
+//         case WidgetAlign::CENTER:
+//             return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
+//     }
+//     return f32v2(0.0f); // Should never happen
+// }
+
+f32 vui::Widget::processLength(Length length) {
+    switch (length.dimension.x) {
+        case DimensionType::PIXEL:
+            return length.x;
+        case DimensionType::WIDTH_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * m_parent->getWidth();
+                case PositionType::STATIC_TO_CANVAS:
+                case PositionType::RELATIVE_TO_CANVAS:
+                    return length.x * m_canvas->getWidth();
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    // TODO(Matthew): Get window dimensions...
+                    assert (false);
+            }
+        case DimensionType::HEIGHT_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * m_parent->getHeight();
+                case PositionType::STATIC_TO_CANVAS:
+                case PositionType::RELATIVE_TO_CANVAS:
+                    return length.x * m_canvas->getHeight();
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    // TODO(Matthew): Get window dimensions...
+                    assert (false);
+            }
+        case DimensionType::MIN_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
+                case PositionType::STATIC_TO_CANVAS:
+                case PositionType::RELATIVE_TO_CANVAS:
+                    return length.x * glm::min(m_canvas->getWidth(), m_canvas->getHeight());
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    // TODO(Matthew): Get window dimensions...
+                    assert (false);
+            }
+        case DimensionType::MAX_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
+                case PositionType::STATIC_TO_CANVAS:
+                case PositionType::RELATIVE_TO_CANVAS:
+                    return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    // TODO(Matthew): Get window dimensions...
+                    assert (false);
+            }
+        case DimensionType::PARENT_WIDTH_PERCENTAGE:
+            return length.x * m_parent->getWidth();
+        case DimensionType::PARENT_HEIGHT_PERCENTAGE: 
+            return length.x * m_parent->getHeight();
+        case DimensionType::PARENT_MIN_PERCENTAGE:
+            return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
+        case DimensionType::PARENT_MAX_PERCENTAGE:
+            return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
+        case DimensionType::CANVAS_WIDTH_PERCENTAGE:
+            return length.x * m_canvas->getWidth();
+        case DimensionType::CANVAS_HEIGHT_PERCENTAGE:
+            return length.x * m_canvas->getHeight();
+        case DimensionType::CANVAS_MIN_PERCENTAGE:
+            return length.x * glm::min(m_canvas->getWidth(), m_canvas->getHeight());
+        case DimensionType::CANVAS_MAX_PERCENTAGE:
+            return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
+        case DimensionType::WINDOW_WIDTH_PERCENTAGE:
+            // TODO(Matthew): Get window dimensions...
+        case DimensionType::WINDOW_HEIGHT_PERCENTAGE:
+            // TODO(Matthew): Get window dimensions...
+        case DimensionType::WINDOW_MIN_PERCENTAGE:
+            // TODO(Matthew): Get window dimensions...
+        case DimensionType::WINDOW_MAX_PERCENTAGE:
+            // TODO(Matthew): Get window dimensions...
+        default:
+            // Shouldn't get here.
+            assert(false);
     }
 }
 
+f32v2 vui::Widget::processLength(Length2 length) {
+    return f32v2(
+        processLength({ length.x, length.dimension.x }),
+        processLength({ length.y, length.dimension.y })
+    );
+}
 
-f32v2 vui::Widget::getWidgetAlignOffset() {
-    switch (m_align) {
-        case WidgetAlign::LEFT:
-            return f32v2(0, -m_dimensions.y * 0.5f);
-        case WidgetAlign::TOP_LEFT:
-            return f32v2(0.0f);
-        case WidgetAlign::TOP:
-            return f32v2(-m_dimensions.x * 0.5f, 0.0f);
-        case WidgetAlign::TOP_RIGHT:
-            return f32v2(-m_dimensions.x, 0.0f);
-        case WidgetAlign::RIGHT:
-            return f32v2(-m_dimensions.x, -m_dimensions.y * 0.5f);
-        case WidgetAlign::BOTTOM_RIGHT:
-            return f32v2(-m_dimensions.x, -m_dimensions.y);
-        case WidgetAlign::BOTTOM:
-            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y);
-        case WidgetAlign::BOTTOM_LEFT:
-            return f32v2(0.0f, -m_dimensions.y);
-        case WidgetAlign::CENTER:
-            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
+void vui::Widget::applyMinMaxSizes() {
+    f32v2 processedMinSize = processLength(m_minRawSize);
+    f32v2 processedMaxSize = processLength(m_maxRawSize);
+
+    if (m_position.x < processedMinSize.x) {
+        m_position.x = processedMinSize.x;
+    } else if (m_position.x > processedMaxSize.x) {
+        m_position.x = processedMaxSize.x;
     }
-    return f32v2(0.0f); // Should never happen
+    if (m_position.y < processedMinSize.y) {
+        m_position.y = processedMinSize.y;
+    } else if (m_position.y > processedMaxSize.y) {
+        m_position.y = processedMaxSize.y;
+    }
+}
+
+// TODO(Matthew): Clean up these update functions once all features are implemented.
+void vui::Widget::updatePosition() {
+    // TODO(Matthew): Implement margins...
+    switch(m_positionType) {
+        case PositionType::STATIC_TO_WINDOW:
+            f32v2 processedPosition = processLength(m_rawPosition);
+            m_position = processedPosition;
+            break;
+        case PositionType::STATIC_TO_CANVAS:
+            f32v2 processedPosition = processLength(m_rawPosition);
+            m_position = processedPosition + m_canvas->getPosition();
+            break;
+        case PositionType::STATIC_TO_PARENT:
+            f32v2 processedPosition = processLength(m_rawPosition);
+            m_position = processedPosition + m_parent->getPosition();
+            break;
+        case PositionType::RELATIVE_TO_WINDOW:
+            // TODO(Matthew): Implement {left, top, right, bottom} directives...
+        case PositionType::RELATIVE_TO_CANVAS:
+            // TODO(Matthew): Implement {left, top, right, bottom} directives...
+        case PositionType::RELATIVE_TO_PARENT:
+            // TODO(Matthew): Implement {left, top, right, bottom} directives...
+        default:
+            // Shouldn't get here.
+            assert(false);
+    }
+
+    // TODO(Matthew): Implement this once we've implemented overflow.
+    // if (m_parent) computeClipRect(m_parent->getClipRect());
 }
 
 void vui::Widget::updateSize() {
-    f32v2 newDims = m_dimensions;
-    // Check parent relative dimensions
-    if (m_parent) {      
-        if (m_dimensionsPercentage.x > 0.0f) {
-            newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
-        }
-        if (m_dimensionsPercentage.y > 0.0f) {
-            newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
-        } 
+    // TODO(Matthew): Implement margins...
+    switch(m_positionType) {
+        case PositionType::STATIC_TO_WINDOW:
+        case PositionType::STATIC_TO_CANVAS:
+        case PositionType::STATIC_TO_PARENT:
+            f32v2 processedSize    = processLength(m_rawSize);
+            m_position = processedSize;
+
+            applyMinMaxSizes();
+
+            break;
+        case PositionType::RELATIVE_TO_WINDOW:
+        case PositionType::RELATIVE_TO_CANVAS:
+        case PositionType::RELATIVE_TO_PARENT:
+            // TODO(Matthew): Implement {left, top, right, bottom} directives...
+        default:
+            // Shouldn't get here.
+            assert(false);
     }
-    // Check min/max size
-    if (newDims.x < m_minSize.x) {
-        newDims.x = m_minSize.x;
-    } else if (newDims.x > m_maxSize.x) {
-        newDims.x = m_maxSize.x;
-    }
-    if (newDims.y < m_minSize.y) {
-        newDims.y = m_minSize.y;
-    } else if (newDims.y > m_maxSize.y) {
-        newDims.y = m_maxSize.y;
-    }
-    // Only set if it changed
-    if (newDims != m_dimensions) {
-        setDimensions(newDims);
-    }
+
+    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 }

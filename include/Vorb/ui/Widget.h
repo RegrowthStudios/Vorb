@@ -154,6 +154,7 @@ namespace vorb {
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const f32v2& getMinSize() const { return m_minSize; }
             virtual const f32v2& getMaxSize() const { return m_maxSize; }
+            virtual PositionType getPositionType() const { return m_positionType; }
             virtual const f32v2& getPositionPercentage() const { return m_positionPercentage; }
             virtual const f32v2& getDimensionsPercentage() const { return m_dimensionsPercentage; }
             virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
@@ -166,6 +167,7 @@ namespace vorb {
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setParent(IWidget* parent);
+            virtual void setPositionType(PositionType positionType) { m_positionType = positionType; updatePosition(); }
             virtual void setPositionPercentage(const f32v2& positionPercentage) { m_positionPercentage = positionPercentage; updatePosition(); }
             virtual void setDimensionsPercentage(const f32v2& dimensionsPercentage) { m_dimensionsPercentage = dimensionsPercentage; updateDimensions(); }
             virtual void setXPercentage(f32 xPercentage) { m_positionPercentage.x = xPercentage; updatePosition(); }
@@ -187,11 +189,12 @@ namespace vorb {
             DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
-            IWidgetContainer* m_parent = nullptr; ///< Parent container
             f32v2 m_minSize = f32v2(0.0f);
             f32v2 m_maxSize = f32v2(FLT_MAX);
             f32v2 m_positionPercentage = f32v2(-1.0f); ///< Position as percentage of parent dims
             f32v2 m_dimensionsPercentage = f32v2(-1.0f); ///< Dims as percentage of parent dims
+            IWidget* m_parent = nullptr; ///< Parent container
+            PositionType m_positionType;
             volatile bool m_needsDrawableReload = false;
         };
     }

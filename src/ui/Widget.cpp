@@ -3,16 +3,16 @@
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
 
-vui::Widget::Widget() : IWidgetContainer() {
+vui::Widget::Widget() : IWidget() {
     enable();
     m_anchor = {};
 }
 
-vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect) {
+vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget(name, destRect) {
     enable();
 }
 
-vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
     setParent(parent);
 }
 
@@ -22,7 +22,7 @@ vui::Widget::~Widget() {
 
 void vui::Widget::dispose() {
     removeDrawables();
-    IWidgetContainer::dispose();
+    IWidget::dispose();
 }
 
 void vui::Widget::addDrawables(UIRenderer* renderer) {
@@ -78,10 +78,6 @@ void vui::Widget::setDock(const DockStyle& dock) {
     }
 }
 
-void vui::Widget::setParent(IWidgetContainer* parent) {
-    if (m_parent) m_parent->removeWidget(this);
-    if (parent) parent->addWidget(this);
-}
 
 f32v2 vui::Widget::getWidgetAlignOffset() {
     switch (m_align) {
@@ -107,7 +103,7 @@ f32v2 vui::Widget::getWidgetAlignOffset() {
     return f32v2(0.0f); // Should never happen
 }
 
-void vui::Widget::updateDimensions() {
+void vui::Widget::updateSize() {
     f32v2 newDims = m_dimensions;
     // Check parent relative dimensions
     if (m_parent) {      

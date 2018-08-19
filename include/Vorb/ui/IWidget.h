@@ -59,6 +59,7 @@ namespace vorb {
         };
 
         class IWidget {
+            using IWidgets = std::vector<IWidget*>;
         public:
             /*! @brief Default constructor. */
             IWidget();
@@ -80,13 +81,13 @@ namespace vorb {
              * @param child: The Widget to add
              * @return true on success.
              */
-            virtual bool addWidget(Widget* child);
+            virtual bool addWidget(IWidget* child);
             /*! @brief Unchilds a child widget of this widget.
             *
             * @param child: The Widget to remove
             * @return true on success.
             */
-            virtual bool removeWidget(Widget* child);
+            virtual bool removeWidget(IWidget* child);
 
             /*! @brief Defines how relative position is used to update position.
              *  The simplest form could be m_position = m_relativePosition;
@@ -112,21 +113,23 @@ namespace vorb {
             // virtual bool getFixedHeight() const { return m_style.fixedHeight; }
             // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             // virtual bool getSelectable() const { return m_style.selectable; }
-            virtual bool isMouseIn() const { return m_isMouseIn; }      
             // virtual const ContainerStyle& getStyle() const { return m_style; }
-            virtual const bool& isEnabled() const { return m_isEnabled; }
-            virtual const f32& getRawHeight() const { return m_rawSize.y; }
-            virtual const f32& getRawWidth() const { return m_rawSize.x; }
-            virtual const f32& getRawX() const { return m_rawPosition.x; }
-            virtual const f32& getRawY() const { return m_rawPosition.y; }
-            virtual const f32v2& getRawSize() const { return m_rawSize; }
-            virtual const f32v2& getRawPosition() const { return m_rawPosition; }
-            virtual const f32v2& getRelativeRawPosition() const { return m_relativeRawPosition; }
-            virtual const std::vector<Widget*>& getWidgets() const { return m_widgets; }
-            virtual const nString& getName() const { return m_name; }
-            virtual f32v4 getDestRect() const { return f32v4(m_rawPosition.x, m_rawPosition.y, m_rawSize.x, m_rawSize.y); }
-            virtual f32v4 getClipRect() const { return m_clipRect; }
+            virtual        IWidget* getCanvas()              const { return m_canvas; }
+            virtual        IWidget* getParent()              const { return m_parent; }
+            virtual const IWidgets& getWidgets()             const { return m_widgets; }
+            virtual           f32v4 getClipRect()            const { return m_clipRect; }
+            virtual    const f32v2& getRelativeRawPosition() const { return m_relativeRawPosition; }
+            virtual           f32v4 getDestRect()            const { return f32v4(m_rawPosition.x, m_rawPosition.y, m_rawSize.x, m_rawSize.y); }
+            virtual      const f32& getRawX()                const { return m_rawPosition.x; }
+            virtual      const f32& getRawY()                const { return m_rawPosition.y; }
+            virtual    const f32v2& getRawPosition()         const { return m_rawPosition; }
+            virtual      const f32& getRawWidth()            const { return m_rawSize.x; }
+            virtual      const f32& getRawHeight()           const { return m_rawSize.y; }
+            virtual    const f32v2& getRawSize()             const { return m_rawSize; }
+            virtual  const nString& getName()                const { return m_name; }
             // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
+            virtual     const bool& isEnabled()              const { return m_isEnabled; }
+            virtual            bool isMouseIn()              const { return m_isMouseIn; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -142,8 +145,9 @@ namespace vorb {
             // virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             // virtual void setX(f32 x) { m_relativeRawPosition.x = x; updatePosition(); }
             // virtual void setY(f32 y) { m_relativeRawPosition.y = y; updatePosition(); }
-            virtual void setName(const nString& name) { m_name = name; }
             // virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
+            virtual void setParent(IWidget* parent);
+            virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/
             /* Events                                                               */
@@ -164,7 +168,14 @@ namespace vorb {
             /*! Computes clipping for rendering and propagates through children. */
             // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
             // virtual void computeChildClipRects();
+            /*!
+             * \brief Updates all child widgets' positions.
+             */
             virtual void updateChildPositions();
+            /*!
+             * \brief Updates all child widgets' canvas fields.
+             */
+            virtual void updateChildCanvases(IWidget* canvas = nullptr);
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -189,14 +200,16 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/      
             // ContainerStyle       m_style;               ///< The current style.
-            std::vector<Widget*> m_widgets;             ///< Collection of child widgets.
+            IWidget* m_canvas;              ///< Canvas widget - i.e. the oldest ancestor of this widget.
+            IWidget* m_parent;              ///< Parent widget.
+            IWidgets m_widgets;             ///< Collection of child widgets.
             // std::vector<Widget*> m_dockedWidgets[5];    ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            f32v4                m_clipRect;            ///< Clipping rectangle for rendering.
+            f32v4    m_clipRect;            ///< Clipping rectangle for rendering.
             // f32v4                m_dockSizes;           ///< Total size of each dock other than fill.
-            f32v2                m_relativeRawPosition; ///< Position of widget relative to parent in pixels.
-            f32v2                m_rawPosition;         ///< Position of widget relative to window in pixels.
-            f32v2                m_rawSize;             ///< Size of the widget in pixels.
-            nString              m_name;                ///< Display name of the container.
+            f32v2    m_relativeRawPosition; ///< Position of widget relative to parent in pixels.
+            f32v2    m_rawPosition;         ///< Position of widget relative to window in pixels.
+            f32v2    m_rawSize;             ///< Size of the widget in pixels.
+            nString  m_name;                ///< Display name of the container.
 
             // bool m_isClippingEnabled = true;
 

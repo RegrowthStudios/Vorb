@@ -11,6 +11,7 @@ vui::IWidget::IWidget() :
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this),
+    m_parent(nullptr),
     m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
     m_relativeRawPosition(f32v2(0.0f)),
@@ -37,24 +38,25 @@ void vui::IWidget::dispose() {
     for (auto& w : m_widgets) {
         w->dispose();
     }
-    std::vector<Widget*>().swap(m_widgets);
-    for (int i = 0; i < 5; i++) std::vector<Widget*>().swap(m_dockedWidgets[i]);
+    IWidgets().swap(m_widgets);
+    // for (int i = 0; i < 5; i++) IWidgets().swap(m_dockedWidgets[i]);
 
     disable();
     
 }
 
-bool vui::IWidget::addWidget(Widget* child) {
+// TODO(Matthew): This needs updating later - updatePosition will need replacing.
+bool vui::IWidget::addWidget(IWidget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
     child->updatePosition();
     return true; // TODO(Ben): Is this needed?
 }
 
-bool vui::IWidget::removeWidget(Widget* child) {
+bool vui::IWidget::removeWidget(IWidget* child) {
     for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
-            if (removeChildFromDock(child)) recalculateDockedWidgets();
+            // if (removeChildFromDock(child)) recalculateDockedWidgets();
             m_widgets.erase(it);
             return true;
         }
@@ -90,6 +92,29 @@ void vui::IWidget::disable() {
 bool vui::IWidget::isInBounds(f32 x, f32 y) const {
     return (x >= m_rawPosition.x && x < m_rawPosition.x + m_rawSize.x &&
             y >= m_rawPosition.y && y < m_rawPosition.y + m_rawSize.y);
+}
+
+void vui::IWidget::setParent(IWidget* parent) {
+    // Remove this widget from any previous parent it may have had.
+    if (m_parent) m_parent->removeWidget(this);
+    // Are we are setting a new parent?
+    if (parent) {
+        // Add widget to the new parent (which will set the m_parent field).
+        parent->addWidget(this);
+
+        // Traverse up the parent's ancestors until we reach the top.
+        while (parent->getParent()) {
+            parent = parent->getParent();
+        }
+
+        // Set the new canvas widget of this widget.
+        m_canvas = parent;
+        // Propagate the new canvas widget to children.
+        updateChildCanvases();
+    } else {
+        // Update children - this widget is the new canvas widget.
+        updateChildCanvases(this);
+    }
 }
 
 // void vui::IWidget::setChildDock(Widget* widget, DockStyle dockStyle) {
@@ -200,6 +225,13 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
 void vui::IWidget::updateChildPositions() {
     for (auto& w : m_widgets) {
         w->updatePosition();
+    }
+}
+
+void vui::IWidget::updateChildCanvases(IWidget* canvas /*= nullptr*/) {
+    for (IWidget* widget : m_widgets) {
+        widget->m_canvas = canvas ? canvas : m_canvas;
+        widget->updateChildCanvases(canvas);
     }
 }
 

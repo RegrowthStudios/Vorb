@@ -108,6 +108,8 @@ namespace vorb {
         class Widget : public IWidget {
             friend class WidgetScriptFuncs;
             friend class IWidget;
+
+            using Font = vorb::graphics::SpriteFont;
         public:
             /*! @brief Default constructor. */
             Widget();
@@ -158,12 +160,14 @@ namespace vorb {
             // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             // virtual const DockStyle& getDock() const { return m_dock; }
+            virtual          const Font* getFont()             const { return m_font; }
+            virtual    const UIRenderer* getRenderer()         const { return m_renderer; }
+            virtual         PositionType getPositionType()     const { return m_positionType; }
+            virtual       const Length2& getRawPosition()      const { return m_rawPosition; }
+            virtual       const Length2& getRawSize()          const { return m_rawSize; }
+            virtual       const Length2& getMinRawSize()       const { return m_minRawSize; }
+            virtual       const Length2& getMaxRawSize()       const { return m_maxRawSize; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
-            virtual const UIRenderer* getRenderer() const { return m_renderer; }
-            virtual const Length2& getMinSize() const { return m_minSize; }
-            virtual const Length2& getMaxSize() const { return m_maxSize; }
-            virtual PositionType getPositionType() const { return m_positionType; }
-            virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -172,11 +176,13 @@ namespace vorb {
             // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
-            virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
-            virtual void setPositionType(PositionType positionType) { m_positionType = positionType; updatePosition(); }
-            // TODO(Matthew): Depending on position type may need to update position.
-            virtual void setMaxSize(const Length2& maxSize) { m_maxSize = maxSize; updateSize(); }
-            virtual void setMinSize(const Length2& minSize) { m_minSize = minSize; updateSize(); }
+            virtual void setFont(const Font* font)                        { m_font = font; }
+            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType; updatePosition(); }
+            // TODO(Matthew): Depending on position type may need to update position and size in each of these.
+            virtual void setRawPosition(const Length2& rawPosition)       { m_rawPosition = rawPosition; updatePosition(); }
+            virtual void setRawSize(const Length2& rawSize)               { m_rawSize = rawSize; updateSize(); }
+            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize; updateSize(); }
+            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize; updateSize(); }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             
         protected:
@@ -185,17 +191,17 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            // WidgetAlign m_align = WidgetAlign::TOP_LEFT;
-            // AnchorStyle m_anchor; ///< The anchor data.
-            // DockStyle m_dock = DockStyle::NONE; ///< The dock type.
-            const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
-            UIRenderer* m_renderer = nullptr;
-            Length2 m_minSize = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Minimum size
-            Length2 m_maxSize = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } };
-            PositionType m_positionType = PositionType::STATIC_TO_PARENT;
-            Length2 m_position = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Position of element in specified dimensions.
-            Length2 m_size = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Dimensions of element in specified dimensions.
-            volatile bool m_needsDrawableReload = false;
+            // WidgetAlign   m_align               = WidgetAlign::TOP_LEFT;
+            // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
+            // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
+            const Font*   m_font                = nullptr;                                                              ///< Font for rendering.
+            UIRenderer*   m_renderer            = nullptr;                                                              ///< Renderer to use for drawing widget.
+            PositionType  m_positionType        = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
+            Length2       m_rawPosition         = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Position of element in specified dimensions.
+            Length2       m_rawSize             = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Dimensions of element in specified dimensions.
+            Length2       m_minRawSize          = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Minimum size of widget.
+            Length2       m_maxRawSize          = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
+            volatile bool m_needsDrawableReload = false;                                                                ///< TODO(Matthew): Write valid description.
         };
     }
 }

@@ -14,9 +14,9 @@ vui::IWidget::IWidget() :
     m_parent(nullptr),
     m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
-    m_relativeRawPosition(f32v2(0.0f)),
-    m_rawPosition(f32v2(0.0f)),
-    m_rawSize(f32v2(0.0f)),
+    m_relativePosition(f32v2(0.0f)),
+    m_position(f32v2(0.0f)),
+    m_size(f32v2(0.0f)),
     m_name(""),
     m_isClicking(false),
     m_isEnabled(false),
@@ -90,8 +90,8 @@ void vui::IWidget::disable() {
 }
 
 bool vui::IWidget::isInBounds(f32 x, f32 y) const {
-    return (x >= m_rawPosition.x && x < m_rawPosition.x + m_rawSize.x &&
-            y >= m_rawPosition.y && y < m_rawPosition.y + m_rawSize.y);
+    return (x >= m_position.x && x < m_position.x + m_size.x &&
+            y >= m_position.y && y < m_position.y + m_size.y);
 }
 
 void vui::IWidget::setParent(IWidget* parent) {
@@ -204,8 +204,8 @@ void vui::IWidget::setParent(IWidget* parent) {
 
 // void vui::IWidget::computeClipRect(const f32v4& parentClipRect /*= f32v4(-FLT_MAX / 2.0f, -FLT_MAX / 2.0f, FLT_MAX, FLT_MAX)*/) {
 //     if (m_isClippingEnabled) {
-//         f32v2 pos = m_rawPosition;
-//         f32v2 dims = m_rawSize;
+//         f32v2 pos = m_position;
+//         f32v2 dims = m_size;
 //         computeClipping(parentClipRect, pos, dims);
 //         if (dims.x < 0) dims.x = 0;
 //         if (dims.y < 0) dims.y = 0;

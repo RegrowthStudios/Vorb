@@ -34,17 +34,17 @@ DECL_VG(class SpriteFont)
 namespace vorb {
     namespace ui {
 
-        enum class WidgetAlign {
-            LEFT,
-            TOP_LEFT,
-            TOP,
-            TOP_RIGHT,
-            RIGHT,
-            BOTTOM_RIGHT,
-            BOTTOM,
-            BOTTOM_LEFT,
-            CENTER
-        };
+        // enum class WidgetAlign {
+        //     LEFT,
+        //     TOP_LEFT,
+        //     TOP,
+        //     TOP_RIGHT,
+        //     RIGHT,
+        //     BOTTOM_RIGHT,
+        //     BOTTOM,
+        //     BOTTOM_LEFT,
+        //     CENTER
+        // };
 
         /*!
          * \brief Enum of ways a widget may be positioned.
@@ -155,21 +155,21 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/ 
-            virtual const AnchorStyle& getAnchor() const { return m_anchor; }
-            virtual const DockStyle& getDock() const { return m_dock; }
+            // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
+            // virtual const DockStyle& getDock() const { return m_dock; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
             virtual const vorb::graphics::SpriteFont* getFont() const { return m_font; }
             virtual const UIRenderer* getRenderer() const { return m_renderer; }
             virtual const Length2& getMinSize() const { return m_minSize; }
             virtual const Length2& getMaxSize() const { return m_maxSize; }
             virtual PositionType getPositionType() const { return m_positionType; }
-            virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
+            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setAnchor(const AnchorStyle& anchor);
-            virtual void setDock(const DockStyle& dock);
+            // virtual void setAnchor(const AnchorStyle& anchor);
+            // virtual void setDock(const DockStyle& dock);
             virtual void setFont(const vorb::graphics::SpriteFont* font) { m_font = font; }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             virtual void setPositionType(PositionType positionType) { m_positionType = positionType; updatePosition(); }
@@ -185,9 +185,9 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            WidgetAlign m_align = WidgetAlign::TOP_LEFT;
-            AnchorStyle m_anchor; ///< The anchor data.
-            DockStyle m_dock = DockStyle::NONE; ///< The dock type.
+            // WidgetAlign m_align = WidgetAlign::TOP_LEFT;
+            // AnchorStyle m_anchor; ///< The anchor data.
+            // DockStyle m_dock = DockStyle::NONE; ///< The dock type.
             const vorb::graphics::SpriteFont* m_font = nullptr; ///< Font for rendering.
             UIRenderer* m_renderer = nullptr;
             Length2 m_minSize = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Minimum size

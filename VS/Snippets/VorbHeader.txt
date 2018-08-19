@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on $DAY$ $MONTHNAME$ $YEAR$
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file $FILE_BASE$.$FILE_EXT$

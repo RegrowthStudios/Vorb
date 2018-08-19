@@ -5,7 +5,7 @@
 // Created by Cristian Zaloj on 13 Feb 2015
 // Ported to Vorb by Benjamin Arnold on 4 Jun 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file AssetLoader.h

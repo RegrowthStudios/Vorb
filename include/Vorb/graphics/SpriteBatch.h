@@ -5,7 +5,7 @@
 // Created by Cristian Zaloj on 17 Jan 2015
 // Refactored by Benjamin Arnold on 3 May 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file SpriteBatch.h

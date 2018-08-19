@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 15 Dec 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file SpriteFont.h

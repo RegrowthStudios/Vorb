@@ -46,6 +46,53 @@ namespace vorb {
             CENTER
         };
 
+        /*!
+         * \brief Enum of ways a widget may be positioned.
+         */
+        enum class PositionType {
+            STATIC,
+            ABSOLUTE,
+            FIXED_TO_WINDOW,
+            FIXED_TO_FORM,
+            RELATIVE
+        };
+
+        /*!
+         * \brief Enum of ways the dimensions of a widget may be measured.
+         */
+        enum class DimensionType {
+            PIXEL,
+            PERCENTAGE,
+            FORM_WIDTH_PERCENTAGE,
+            FORM_HEIGHT_PERCENTAGE,
+            FORM_MIN_PERCENTAGE,
+            FORM_MAX_PERCENTAGE,
+            WINDOW_WIDTH_PERCENTAGE,
+            WINDOW_HEIGHT_PERCENTAGE,
+            WINDOW_MIN_PERCENTAGE,
+            WINDOW_MAX_PERCENTAGE,
+        };
+
+        /*!
+         * \brief Type that stores a length and the dimensions of that length.
+         */
+        struct Length {
+            f32 x;
+            struct {
+                DimensionType x;
+            } dimension;
+        };
+
+        /*!
+         * \brief Type that stores two lengths and the dimensions of those lengths.
+         */
+        struct Length2 {
+            f32 x, y;
+            struct {
+                DimensionType x, y;
+            } dimension;
+        };
+
         // Forward Declarations
         class UIRenderer;
 

@@ -201,7 +201,7 @@ namespace vorb {
             /*!
              * \brief Updates all child widgets' canvas fields.
              */
-            virtual void updateChildCanvases(IWidget* canvas = nullptr);
+            virtual void updateChildCanvases();
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -228,7 +228,7 @@ namespace vorb {
             const Font* m_font;                                                              ///< Font for rendering.
             UIRenderer* m_renderer;                                                              ///< Renderer to use for drawing widget.    
             // ContainerStyle m_style;            ///< The current style.
-            IWidget*    m_canvas;           ///< Canvas widget - i.e. the oldest ancestor of this widget.
+            IWidget*    m_canvas;           ///< Canvas widget - i.e. the oldest ancestor of this widget. If this widget is the canvas of its children, m_canvas is set to the this pointer (which is the case by default). NOTE: We should never update this parameter via a setter, it should only change via private logic on parent changes.
             IWidget*    m_parent;           ///< Parent widget.
             IWidgets    m_widgets;          ///< Collection of child widgets.
             // std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?

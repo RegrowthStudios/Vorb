@@ -14,7 +14,7 @@ vui::IWidget::IWidget() :
     MouseMove(this),
     m_font(nullptr),
     m_renderer(nullptr),
-    m_canvas(nullptr),
+    m_canvas(this),
     m_parent(nullptr),
     m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
@@ -121,19 +121,21 @@ void vui::IWidget::setParent(IWidget* parent) {
         // Add widget to the new parent (which will set the m_parent field).
         parent->addWidget(this);
 
-        // Traverse up the parent's ancestors until we reach the top.
-        while (parent->getParent()) {
-            parent = parent->getParent();
-        }
-
         // Set the new canvas widget of this widget.
-        m_canvas = parent;
+        m_canvas = parent->getCanvas();
         // Propagate the new canvas widget to children.
         updateChildCanvases();
     } else {
+        // Set the canvas to this widget.
+        m_canvas = this;
         // Update children - this widget is the new canvas widget.
-        updateChildCanvases(this);
+        updateChildCanvases();
     }
+
+    // Parent (and maybe canvas changing) means we should reevaluate dimensions of this widget and its children.
+    updateDimensions();
+
+    updateChildDimensions();
 }
 
 // void vui::IWidget::setChildDock(Widget* widget, DockStyle dockStyle) {
@@ -247,10 +249,10 @@ void vui::IWidget::updateChildDimensions() {
     }
 }
 
-void vui::IWidget::updateChildCanvases(IWidget* canvas /*= nullptr*/) {
+void vui::IWidget::updateChildCanvases() {
     for (IWidget* widget : m_widgets) {
-        widget->m_canvas = canvas ? canvas : m_canvas;
-        widget->updateChildCanvases(canvas);
+        widget->m_canvas = m_canvas;
+        widget->updateChildCanvases();
     }
 }
 

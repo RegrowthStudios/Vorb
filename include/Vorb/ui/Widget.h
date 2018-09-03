@@ -126,9 +126,6 @@ namespace vorb {
             } dimension;
         };
 
-        // Forward Declarations
-        class UIRenderer;
-
         class Widget : public IWidget {
             friend class WidgetScriptFuncs;
             friend class IWidget;

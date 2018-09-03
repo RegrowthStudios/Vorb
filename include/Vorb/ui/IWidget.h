@@ -1,5 +1,5 @@
 //
-// IWidgetContainer.h
+// IWidget.h
 // Vorb Engine
 //
 // Created by Benjamin Arnold on 10 May 2015
@@ -7,7 +7,7 @@
 // All Rights Reserved
 //
 
-/*! \file IWidgetContainer.h
+/*! \file IWidget.h
 * @brief 
 * Abstract Container for widgets
 *
@@ -61,6 +61,9 @@ namespace vorb {
         enum class DockStyle {
             NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
         };
+
+        // Forward Declarations
+        class UIRenderer;
 
         class IWidget {
             using IWidgets = std::vector<IWidget*>;

@@ -22,11 +22,11 @@ void vui::UIRenderer::init(vg::SpriteFont* defaultFont /*= nullptr*/,
     }
 }
 
-void vui::UIRenderer::add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc) {
+void vui::UIRenderer::add(const IWidget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc) {
     m_drawableFuncs.push_back({ widget, drawFunc, refreshFunc });
 }
 
-bool vui::UIRenderer::remove(const Widget* widget) {
+bool vui::UIRenderer::remove(const IWidget* widget) {
     bool rv = false;
     // Loop through and remove all // TODO(Ben): OPTIMIZE THIS CRAP
     for (i32 i = (i32)m_drawableFuncs.size() - 1; i >= 0; i--) {

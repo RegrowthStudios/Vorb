@@ -38,7 +38,7 @@ namespace vorb {
     namespace ui {
 
         // Forward Declarations
-        class Widget;
+        class IWidget;
         class GameWindow;
 
         class UIRenderer {
@@ -67,13 +67,13 @@ namespace vorb {
              *
              * @param drawable The drawable to render
              */
-            virtual void add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc);
+            virtual void add(const IWidget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc);
             /*! @brief Removes all drawables for a widget
              * 
              * @param widget: The Widget who's drawables should be removed
              * @return true if successfully removed
              */
-            virtual bool remove(const Widget* widget);
+            virtual bool remove(const IWidget* widget);
             /*! @brief Frees resources used by renderer */
             virtual void dispose();
             /*! @brief Draws all IDrawables held by this renderer */
@@ -90,7 +90,7 @@ namespace vorb {
             virtual const vg::SpriteFont* getDefaultFont() const { return m_defaultFont; }
         protected:
             struct DrawableFuncs {
-                const Widget* owner;
+                const IWidget* owner;
                 DrawFunc drawFunc;
                 RefreshFunc refreshFunc; // TODO(Ben): Do something with this or kill it
             };

@@ -25,10 +25,71 @@ void vui::Widget::dispose() {
     IWidget::dispose();
 }
 
+// TODO(Matthew): See if we can minimise calculations done on update.
 void vui::Widget::updateDimensions() {
-    updatePosition();
+    static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
+            f32v2 processedPosition = processLength(m_rawDimensions.position);
+            m_position = processedPosition + modifier;
+    };
 
-    updateDimensions();
+    static auto applyRawSize = [&]() {
+            f32v2 processedSize = processLength(m_rawDimensions.size);
+            m_size = processedSize;
+    };
+
+    static auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
+        f32 left   = processLength(m_rawRelativePositions.left);
+        f32 top    = processLength(m_rawRelativePositions.top);
+        f32 right  = processLength(m_rawRelativePositions.right);
+        f32 bottom = processLength(m_rawRelativePositions.bottom);
+        
+        m_position.x = position.x + left;
+        m_position.y = position.y + top;
+        m_size.x     = size.x - left + right;
+        m_size.y     = size.y - top + bottom;
+    };
+
+    switch(m_positionType) {
+        case PositionType::STATIC_TO_WINDOW:
+            applyRawPosition();
+
+            applyRawSize();
+
+            break;
+        case PositionType::STATIC_TO_CANVAS:
+            applyRawPosition(m_canvas->getPosition());
+
+            applyRawSize();
+
+            break;
+        case PositionType::STATIC_TO_PARENT:
+            applyRawPosition(m_parent->getPosition());
+
+            applyRawSize();
+
+            break;
+        case PositionType::RELATIVE_TO_WINDOW:
+            // TODO(Matthew): Get window dimensions...
+            break;
+        case PositionType::RELATIVE_TO_CANVAS:
+            applyRelativeDirectives(m_canvas->getPosition(), m_canvas->getSize());
+            
+            break;
+        case PositionType::RELATIVE_TO_PARENT:
+            applyRelativeDirectives(m_parent->getPosition(), m_parent->getSize());
+            
+            break;
+        default:
+            // Shouldn't get here.
+            assert(false);
+    }
+
+    applyMinMaxSizes();
+
+    // TODO(Matthew): Implement this once we've implemented overflow.
+    // if (m_parent) computeClipRect(m_parent->getClipRect());
+
+    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 
     updateChildDimensions();
 }
@@ -86,7 +147,9 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::RELATIVE_TO_WINDOW:
                     // TODO(Matthew): Get window dimensions...
                     assert (false);
+                    break;
             }
+            break;
         case DimensionType::HEIGHT_PERCENTAGE:
             switch(m_positionType) {
                 case PositionType::STATIC_TO_PARENT:
@@ -99,7 +162,9 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::RELATIVE_TO_WINDOW:
                     // TODO(Matthew): Get window dimensions...
                     assert (false);
+                    break;
             }
+            break;
         case DimensionType::MIN_PERCENTAGE:
             switch(m_positionType) {
                 case PositionType::STATIC_TO_PARENT:
@@ -112,7 +177,9 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::RELATIVE_TO_WINDOW:
                     // TODO(Matthew): Get window dimensions...
                     assert (false);
+                    break;
             }
+            break;
         case DimensionType::MAX_PERCENTAGE:
             switch(m_positionType) {
                 case PositionType::STATIC_TO_PARENT:
@@ -125,7 +192,9 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::RELATIVE_TO_WINDOW:
                     // TODO(Matthew): Get window dimensions...
                     assert (false);
+                    break;
             }
+            break;
         case DimensionType::PARENT_WIDTH_PERCENTAGE:
             return length.x * m_parent->getWidth();
         case DimensionType::PARENT_HEIGHT_PERCENTAGE: 
@@ -158,8 +227,8 @@ f32 vui::Widget::processLength(Length length) {
 
 f32v2 vui::Widget::processLength(Length2 length) {
     return f32v2(
-        processLength({ length.x, length.dimension.x }),
-        processLength({ length.y, length.dimension.y })
+        processLength({ length.x, { length.dimension.x } }),
+        processLength({ length.y, { length.dimension.y } })
     );
 }
 
@@ -167,69 +236,14 @@ void vui::Widget::applyMinMaxSizes() {
     f32v2 processedMinSize = processLength(m_minRawSize);
     f32v2 processedMaxSize = processLength(m_maxRawSize);
 
-    if (m_position.x < processedMinSize.x) {
-        m_position.x = processedMinSize.x;
-    } else if (m_position.x > processedMaxSize.x) {
-        m_position.x = processedMaxSize.x;
+    if (m_size.x < processedMinSize.x) {
+        m_size.x = processedMinSize.x;
+    } else if (m_size.x > processedMaxSize.x) {
+        m_size.x = processedMaxSize.x;
     }
-    if (m_position.y < processedMinSize.y) {
-        m_position.y = processedMinSize.y;
-    } else if (m_position.y > processedMaxSize.y) {
-        m_position.y = processedMaxSize.y;
+    if (m_size.y < processedMinSize.y) {
+        m_size.y = processedMinSize.y;
+    } else if (m_size.y > processedMaxSize.y) {
+        m_size.y = processedMaxSize.y;
     }
-}
-
-// TODO(Matthew): Clean up these update functions once all features are implemented.
-void vui::Widget::updatePosition() {
-    // TODO(Matthew): Implement margins...
-    switch(m_positionType) {
-        case PositionType::STATIC_TO_WINDOW:
-            f32v2 processedPosition = processLength(m_rawPosition);
-            m_position = processedPosition;
-            break;
-        case PositionType::STATIC_TO_CANVAS:
-            f32v2 processedPosition = processLength(m_rawPosition);
-            m_position = processedPosition + m_canvas->getPosition();
-            break;
-        case PositionType::STATIC_TO_PARENT:
-            f32v2 processedPosition = processLength(m_rawPosition);
-            m_position = processedPosition + m_parent->getPosition();
-            break;
-        case PositionType::RELATIVE_TO_WINDOW:
-            // TODO(Matthew): Implement {left, top, right, bottom} directives...
-        case PositionType::RELATIVE_TO_CANVAS:
-            // TODO(Matthew): Implement {left, top, right, bottom} directives...
-        case PositionType::RELATIVE_TO_PARENT:
-            // TODO(Matthew): Implement {left, top, right, bottom} directives...
-        default:
-            // Shouldn't get here.
-            assert(false);
-    }
-
-    // TODO(Matthew): Implement this once we've implemented overflow.
-    // if (m_parent) computeClipRect(m_parent->getClipRect());
-}
-
-void vui::Widget::updateSize() {
-    // TODO(Matthew): Implement margins...
-    switch(m_positionType) {
-        case PositionType::STATIC_TO_WINDOW:
-        case PositionType::STATIC_TO_CANVAS:
-        case PositionType::STATIC_TO_PARENT:
-            f32v2 processedSize    = processLength(m_rawSize);
-            m_position = processedSize;
-
-            applyMinMaxSizes();
-
-            break;
-        case PositionType::RELATIVE_TO_WINDOW:
-        case PositionType::RELATIVE_TO_CANVAS:
-        case PositionType::RELATIVE_TO_PARENT:
-            // TODO(Matthew): Implement {left, top, right, bottom} directives...
-        default:
-            // Shouldn't get here.
-            assert(false);
-    }
-
-    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 }

@@ -243,7 +243,7 @@ set(vorb_ui
     include/Vorb/ui/IGameScreen.h
     include/Vorb/ui/InputDispatcher.h
     include/Vorb/ui/InputDispatcherEventCatcher.h
-    include/Vorb/ui/IWidgetContainer.h
+    include/Vorb/ui/IWidget.h
     include/Vorb/ui/KeyboardEventDispatcher.h
     include/Vorb/ui/KeyMappings.inl
     include/Vorb/ui/Keys.inl
@@ -270,7 +270,7 @@ set(vorb_ui
     src/ui/Form.cpp
     src/ui/GameWindow.cpp
     src/ui/InputDispatcher.cpp
-    src/ui/IWidgetContainer.cpp
+    src/ui/IWidget.cpp
     src/ui/KeyboardEventDispatcher.cpp
     src/ui/Label.cpp
     src/ui/LuaDevConsole.cpp

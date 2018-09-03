@@ -49,30 +49,31 @@ void vui::ScriptedUI::onOptionsChanged() {
     }
 }
 
-void vui::ScriptedUI::setDimensions(const f32v2& dimensions) {
-    for (auto& it : m_forms) {
-        it.first->setDimensions(dimensions);
+void vui::ScriptedUI::setDimensions(VORB_UNUSED const f32v2& dimensions) {
+    for (VORB_UNUSED auto& it : m_forms) {
+        // it.first->setDimensions(dimensions);
     }
 }
 
 // TODO(Ben): use name
-vui::Form* vui::ScriptedUI::makeForm(nString name, nString filePath) {
-    // Make the form
-    Form* newForm = new Form;
-    newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);
-    FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
-    newFormEnv->init(newForm, m_window);
-    m_forms.push_back(std::make_pair(newForm, newFormEnv));
+vui::Form* vui::ScriptedUI::makeForm(VORB_UNUSED nString name, VORB_UNUSED nString filePath) {
+    // // Make the form
+    // Form* newForm = new Form;
+    // newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);
+    // FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
+    // newFormEnv->init(newForm, m_window);
+    // m_forms.push_back(std::make_pair(newForm, newFormEnv));
 
-    // Register callbacks
-    // Register other functions with the env
-    registerScriptValues(newFormEnv);
+    // // Register callbacks
+    // // Register other functions with the env
+    // registerScriptValues(newFormEnv);
 
-    // Load the script
-    newForm->disable();
-    newFormEnv->loadForm(filePath.c_str());
+    // // Load the script
+    // newForm->disable();
+    // newFormEnv->loadForm(filePath.c_str());
 
-    return newForm;
+    // return newForm;
+    return nullptr;
 }
 
 void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {

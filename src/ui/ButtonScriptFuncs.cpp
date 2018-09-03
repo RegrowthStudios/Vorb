@@ -110,6 +110,6 @@ void vui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) const {
     b->setTextScale(textScale);
 }
 
-void vui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) const {
-    b->setTexture(texture);
-}
+// void vui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) const {
+//     b->setTexture(texture);
+// }

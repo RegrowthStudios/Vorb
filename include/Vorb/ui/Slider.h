@@ -52,7 +52,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Slider(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Slider();
 
@@ -63,7 +63,7 @@ namespace vorb {
             virtual void addDrawables(UIRenderer* renderer) override;
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -84,12 +84,12 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setSlideDimensions(const f32v2& dimensions);
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
+            // virtual void setHeight(f32 height) override;
+            // virtual void setPosition(const f32v2& position) override;
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
             virtual void setBarColor(const color4& color);
-            virtual void setWidth(f32 width) override;
+            // virtual void setWidth(f32 width) override;
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
             virtual void setValue(int value);
@@ -110,7 +110,7 @@ namespace vorb {
             virtual void updateSlidePosition();
             virtual void updateColor();
             virtual void refreshDrawables();
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
+            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Event Handlers                                                       */

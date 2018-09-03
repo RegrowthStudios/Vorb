@@ -52,7 +52,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            CheckBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~CheckBox();
 
@@ -63,12 +63,12 @@ namespace vorb {
             virtual void addDrawables(UIRenderer* renderer) override;
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
 
             virtual void check();
             virtual void unCheck();
             virtual void toggleChecked();
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
+            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -89,15 +89,15 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions) override;
+            // virtual void setDimensions(const f32v2& dimensions) override;
             virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
+            // virtual void setHeight(f32 height) override;
+            // virtual void setPosition(const f32v2& position) override;
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
-            virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
+            // virtual void setWidth(f32 width) override;
+            // virtual void setX(f32 x) override;
+            // virtual void setY(f32 y) override;
             virtual void setBoxColor(const color4& color);
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);

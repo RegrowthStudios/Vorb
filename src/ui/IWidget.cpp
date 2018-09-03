@@ -28,7 +28,7 @@ vui::IWidget::IWidget() :
     enable();
 }
 
-vui::IWidget::IWidget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget() {
+vui::IWidget::IWidget(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : IWidget() {
     m_name = name;
     // setDestRect(destRect);
 }

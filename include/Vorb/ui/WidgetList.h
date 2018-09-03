@@ -51,14 +51,14 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            WidgetList(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            WidgetList(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~WidgetList();
 
             virtual void dispose() override;
 
             /*!@brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
 
             /*! @brief Adds a Widget to the combo box
             *
@@ -105,10 +105,10 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setHeight(f32 height) override;
+            // virtual void setDimensions(const f32v2& dimensions) override;
+            // virtual void setHeight(f32 height) override;
             virtual void setTexture(VGTexture texture);
-            virtual void setWidth(f32 width) override;
+            // virtual void setWidth(f32 width) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);

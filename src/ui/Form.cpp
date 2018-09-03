@@ -3,7 +3,7 @@
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/GameWindow.h"
 
-vui::Form::Form() : IWidgetContainer() {
+vui::Form::Form() : IWidget() {
     // Empty
 }
 
@@ -16,53 +16,53 @@ void vui::Form::init(const nString& name, IGameScreen* ownerScreen, const f32v4&
     m_ownerIGameScreen = ownerScreen;
     m_position.x = destRect.x;
     m_position.y = destRect.y;
-    m_dimensions.x = destRect.z;
-    m_dimensions.y = destRect.w;
+    m_size.x = destRect.z;
+    m_size.y = destRect.w;
     m_renderer.init(defaultFont, spriteBatch);
 }
 
-bool vui::Form::addWidget(Widget* widget) {
-    if (IWidgetContainer::addWidget(widget)) {
+bool vui::Form::addWidget(IWidget* widget) {
+    if (IWidget::addWidget(widget)) {
         if (!widget->getRenderer()) widget->addDrawables(&m_renderer);
         return true;
     }
     return false;
 }
 
-bool vui::Form::removeWidget(Widget* widget) {
-    if (IWidgetContainer::removeWidget(widget)) {
+bool vui::Form::removeWidget(IWidget* widget) {
+    if (IWidget::removeWidget(widget)) {
         return true;
     }
     return false;
 }
 
-void vui::Form::updatePosition() {
-    m_position = m_relativePosition;
+// void vui::Form::updatePosition() {
+//     m_position = m_relativePosition;
 
-    computeClipRect();
+//     computeClipRect();
     
-    updateChildPositions();
-}
+//     updateChildPositions();
+// }
 
-void vui::Form::update(f32 dt /*= 1.0f*/) {
+void vui::Form::update(VORB_UNUSED f32 dt /*= 1.0f*/) {
     if (!m_isEnabled) return;
-    for (auto& w : m_widgets) {
+    for (VORB_UNUSED auto& w : m_widgets) {
         // Check if we need to reload the drawables
-        if (w->needsDrawableReload()) {
-            w->removeDrawables();
-            w->setNeedsDrawableReload(false);
-            w->addDrawables(&m_renderer);
-        }
-        w->update(dt);
+        // if (w->needsDrawableReload()) {
+        //     w->removeDrawables();
+        //     w->setNeedsDrawableReload(false);
+        //     w->addDrawables(&m_renderer);
+        // }
+        // w->update(dt);
     }
 }
 
 void vui::Form::draw() {
     if (!m_isEnabled) return;
-    m_renderer.draw(m_dimensions);
+    m_renderer.draw(m_size);
 }
 
 void vui::Form::dispose() {
-    IWidgetContainer::dispose();
+    IWidget::dispose();
     m_renderer.dispose();
 }

@@ -7,13 +7,13 @@ vui::Label::Label() : Widget() {
     refreshDrawables();
 }
 
-vui::Label::Label(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label() {
+vui::Label::Label(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Label() {
     m_name = name;
-    setDestRect(destRect);
+    // setDestRect(destRect);
     updateTextPosition();
 }
 
-vui::Label::Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
+vui::Label::Label(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
     parent->addWidget(this);
 }
 
@@ -36,50 +36,50 @@ void vui::Label::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Label::refreshDrawables));
 }
 
-void vui::Label::updatePosition() {
-    Widget::updatePosition();
-    updateTextPosition();
-}
+// void vui::Label::updatePosition() {
+//     Widget::updatePosition();
+//     updateTextPosition();
+// }
 
-void vui::Label::setDestRect(const f32v4& destRect) {
-    vui::Widget::setDestRect(destRect);
-    refreshDrawables();
-}
+// void vui::Label::setDestRect(const f32v4& destRect) {
+//     vui::Widget::setDestRect(destRect);
+//     refreshDrawables();
+// }
 
-void vui::Label::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    updatePosition();
-}
+// void vui::Label::setDimensions(const f32v2& dimensions) {
+//     Widget::setDimensions(dimensions);
+//     updatePosition();
+// }
 
 void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
     m_font = font;
     updateTextPosition();
 }
 
-void vui::Label::setHeight(f32 height) {
-    Widget::setHeight(height);
-    updatePosition();
-}
+// void vui::Label::setHeight(f32 height) {
+//     Widget::setHeight(height);
+//     updatePosition();
+// }
 
-void vui::Label::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    updatePosition();
-}
+// void vui::Label::setPosition(const f32v2& position) {
+//     Widget::setPosition(position);
+//     updatePosition();
+// }
 
-void vui::Label::setWidth(f32 width) {
-    Widget::setWidth(width);
-    updatePosition();
-}
+// void vui::Label::setWidth(f32 width) {
+//     Widget::setWidth(width);
+//     updatePosition();
+// }
 
-void vui::Label::setX(f32 x) {
-    Widget::setX(x);
-    updatePosition();
-}
+// void vui::Label::setX(f32 x) {
+//     Widget::setX(x);
+//     updatePosition();
+// }
 
-void vui::Label::setY(f32 y) {
-    Widget::setY(y);
-    updatePosition();
-}
+// void vui::Label::setY(f32 y) {
+//     Widget::setY(y);
+//     updatePosition();
+// }
 
 void vui::Label::setText(const nString& text) {
     m_drawableText.setText(text);
@@ -102,7 +102,7 @@ void vui::Label::setTextScale(const f32v2& textScale) {
 }
 
 void vui::Label::updateTextPosition() {
-    const f32v2& dims = getDimensions();
+    const f32v2& dims = getSize();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
 

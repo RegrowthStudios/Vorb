@@ -52,7 +52,7 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            Panel(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Panel();
 
@@ -68,10 +68,10 @@ namespace vorb {
             virtual void removeDrawables() override;
 
 
-            bool addWidget(Widget* child) override;
+            bool addWidget(IWidget* child) override;
 
             /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -86,13 +86,13 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
-            virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
-            virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
+            // virtual void setDestRect(const f32v4& destRect) override;
+            // virtual void setDimensions(const f32v2& dimensions) override;
+            // virtual void setHeight(f32 height) override;
+            // virtual void setPosition(const f32v2& position) override;
+            // virtual void setWidth(f32 width) override;
+            // virtual void setX(f32 x) override;
+            // virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);

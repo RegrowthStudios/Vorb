@@ -61,14 +61,14 @@ namespace vorb {
             * @param name: Name of the control.
             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
-            ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            ComboBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~ComboBox();
 
             virtual void dispose() override;
 
             /*!@brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
 
             /*! @brief Adds an item to the combo box
              * 
@@ -136,13 +136,13 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height) override;
+            // virtual void setDimensions(const f32v2& dimensions) override;
+            // virtual void setFont(const vorb::graphics::SpriteFont* font) override;
+            // virtual void setHeight(f32 height) override;
             virtual void setTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture);
-            virtual void setWidth(f32 width) override;
+            // virtual void setWidth(f32 width) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setTextColor(const color4& color);
@@ -158,7 +158,7 @@ namespace vorb {
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
         protected:
             virtual void updateDropButton(vorb::ui::Button* b);
-            virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
+            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Event Handlers                                                       */

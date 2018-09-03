@@ -7,15 +7,15 @@ vui::Button::Button() : Widget() {
     updateColor();
 }
 
-vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button() {
+vui::Button::Button(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Button() {
     m_name = name;
-    setDestRect(destRect);
+    // setDestRect(destRect);
     m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
+    m_drawableRect.setDimensions(getSize());
     updateTextPosition();
 }
 
-vui::Button::Button(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
+vui::Button::Button(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
     parent->addWidget(this);
     m_parent = parent;
 }
@@ -44,66 +44,66 @@ void vui::Button::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
 
-void vui::Button::updatePosition() {
-    Widget::updatePosition();
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    updateTextPosition();
-}
+// void vui::Button::updatePosition() {
+//     Widget::updatePosition();
+//     m_drawableRect.setPosition(getPosition());
+//     m_drawableRect.setDimensions(getSize());
+//     m_drawableRect.setClipRect(m_clipRect);
+//     updateTextPosition();
+// }
 
-void vui::Button::setDestRect(const f32v4& destRect) {
-    vui::Widget::setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    refreshDrawables();
-}
+// void vui::Button::setDestRect(const f32v4& destRect) {
+//     vui::Widget::setDestRect(destRect);
+//     m_drawableRect.setPosition(getPosition());
+//     m_drawableRect.setDimensions(getSize());
+//     refreshDrawables();
+// }
 
-void vui::Button::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    m_drawableRect.setDimensions(dimensions);
-    updatePosition();
-}
+// void vui::Button::setDimensions(const f32v2& dimensions) {
+//     Widget::setDimensions(dimensions);
+//     m_drawableRect.setDimensions(dimensions);
+//     updatePosition();
+// }
 
-void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
-    m_font = font;
-    updatePosition();
-}
+// void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
+//     m_font = font;
+//     updatePosition();
+// }
 
-void vui::Button::setHeight(f32 height) {
-    Widget::setHeight(height);
-    m_drawableRect.setHeight(height);
-    updatePosition();
-}
+// void vui::Button::setHeight(f32 height) {
+//     Widget::setHeight(height);
+//     m_drawableRect.setHeight(height);
+//     updatePosition();
+// }
 
-void vui::Button::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    m_drawableRect.setPosition(m_position);
-    updatePosition();
-}
+// void vui::Button::setPosition(const f32v2& position) {
+//     Widget::setPosition(position);
+//     m_drawableRect.setPosition(m_position);
+//     updatePosition();
+// }
 
-void vui::Button::setTexture(VGTexture texture) {
-    m_drawableRect.setTexture(texture);
-    refreshDrawables();
-}
+// void vui::Button::setTexture(VGTexture texture) {
+//     m_drawableRect.setTexture(texture);
+//     refreshDrawables();
+// }
 
-void vui::Button::setWidth(f32 width) {
-    Widget::setWidth(width);
-    m_drawableRect.setWidth(width);
-    updatePosition();
-}
+// void vui::Button::setWidth(f32 width) {
+//     Widget::setWidth(width);
+//     m_drawableRect.setWidth(width);
+//     updatePosition();
+// }
 
-void vui::Button::setX(f32 x) {
-    Widget::setX(x);
-    m_drawableRect.setX(m_position.x);
-    updatePosition();
-}
+// void vui::Button::setX(f32 x) {
+//     Widget::setX(x);
+//     m_drawableRect.setX(m_position.x);
+//     updatePosition();
+// }
 
-void vui::Button::setY(f32 y) {
-    Widget::setY(y);
-    m_drawableRect.setX(m_position.y);
-    updatePosition();
-}
+// void vui::Button::setY(f32 y) {
+//     Widget::setY(y);
+//     m_drawableRect.setX(m_position.y);
+//     updatePosition();
+// }
 
 void vui::Button::setBackColor(const color4& color) {
     m_backColor1 = m_backColor2 = color;
@@ -170,7 +170,7 @@ void vui::Button::updateColor() {
 }
 
 void vui::Button::updateTextPosition() {
-    const f32v2& dims = getDimensions();
+    const f32v2& dims = getSize();
     const f32v2& pos = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
 

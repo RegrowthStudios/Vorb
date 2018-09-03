@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include <map>
-#include "Vorb/ui/IWidgetContainer.h"
+#include "Vorb/ui/IWidget.h"
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/Widget.h"
 
@@ -88,12 +88,12 @@ namespace vorb {
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
-            virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual IWidget* getParent(Widget* w) const;
             virtual f32v2 getMinSize(Widget* w) const;
             virtual f32v2 getMaxSize(Widget* w) const;
             virtual f32v2 getPositionPercentage(Widget* w) const;
             virtual f32v2 getDimensionsPercentage(Widget* w) const;
-            virtual WidgetAlign getWidgetAlign(Widget* w) const;
+            // virtual WidgetAlign getWidgetAlign(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -112,7 +112,7 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
-            virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            virtual void setParent(Widget* w, IWidget* parent) const;
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
             virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
@@ -121,7 +121,7 @@ namespace vorb {
             virtual void setYPercentage(Widget* w, f32 yPercentage) const;
             virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
             virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
-            virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
+            // virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
             virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 
             /************************************************************************/

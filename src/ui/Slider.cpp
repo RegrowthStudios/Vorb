@@ -10,15 +10,15 @@ vui::Slider::Slider() : Widget() {
     m_drawableSlide.setDimensions(f32v2(30.0f, 30.0f));
 }
 
-vui::Slider::Slider(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider() {
+vui::Slider::Slider(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Slider() {
     m_name = name;
-    setDestRect(destRect); 
-    updatePosition();
-    m_drawableBar.setDimensions(getDimensions());
+    // setDestRect(destRect); 
+    // updatePosition();
+    m_drawableBar.setDimensions(getSize());
     m_drawableBar.setPosition(getPosition());
 }
 
-vui::Slider::Slider(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
     parent->addWidget(this);
 }
 
@@ -43,31 +43,31 @@ void vui::Slider::addDrawables(UIRenderer* renderer) {
                   makeDelegate(*this, &Slider::refreshDrawables));
 }
 
-void vui::Slider::updatePosition() {
-    Widget::updatePosition();
+// void vui::Slider::updatePosition() {
+//     Widget::updatePosition();
 
-    m_drawableBar.setPosition(m_position);
-    m_drawableBar.setDimensions(m_dimensions);
-    m_drawableBar.setClipRect(m_clipRect);
-    m_drawableSlide.setClipRect(m_clipRect);
+//     m_drawableBar.setPosition(m_position);
+//     m_drawableBar.setDimensions(m_dimensions);
+//     m_drawableBar.setClipRect(m_clipRect);
+//     m_drawableSlide.setClipRect(m_clipRect);
 
-    updateSlidePosition();
-}
+//     updateSlidePosition();
+// }
 
 void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
     m_drawableSlide.setDimensions(dimensions);
-    updatePosition();
+    // updatePosition();
 }
 
-void vui::Slider::setHeight(f32 height) {
-    Widget::setHeight(height);
-    updatePosition();
-}
+// void vui::Slider::setHeight(f32 height) {
+//     Widget::setHeight(height);
+//     updatePosition();
+// }
 
-void vui::Slider::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    updatePosition();
-}
+// void vui::Slider::setPosition(const f32v2& position) {
+//     Widget::setPosition(position);
+//     updatePosition();
+// }
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
     m_drawableSlide.setTexture(texture);
@@ -84,10 +84,10 @@ void vui::Slider::setBarColor(const color4& color) {
     updateColor();
 }
 
-void vui::Slider::setWidth(f32 width) {
-    Widget::setWidth(width);
-    updatePosition();
-}
+// void vui::Slider::setWidth(f32 width) {
+//     Widget::setWidth(width);
+//     updatePosition();
+// }
 
 void vui::Slider::setSlideColor(const color4& color) {
     m_slideColor = color;
@@ -103,7 +103,7 @@ void vui::Slider::setValue(int value) {
     int old = m_value;
     m_value = glm::clamp(value, m_min, m_max);
     if (old != m_value) ValueChange(m_value);
-    updatePosition();
+    // updatePosition();
 }
 
 void vui::Slider::setRange(int min, int max) {
@@ -125,7 +125,7 @@ void vui::Slider::setMax(int max) {
 void vui::Slider::setIsVertical(bool isVertical) {
     if (isVertical != m_isVertical) {
         m_isVertical = isVertical;
-        updatePosition();
+        // updatePosition();
     }
 }
 
@@ -140,7 +140,7 @@ void vui::Slider::updateSlidePosition() {
  
     f32 scale = getValueScaled();
     const f32v2& barPos = getPosition();
-    const f32v2& barDims = getDimensions();
+    const f32v2& barDims = getSize();
     const f32v2& dims = m_drawableSlide.getDimensions();
    
     f32v2 newPos;
@@ -170,23 +170,23 @@ void vui::Slider::refreshDrawables() {
     m_drawnSlide = m_drawableSlide;
 }
 
-void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
-        f32v2 slideDims = m_drawableSlide.getDimensions();
-        pos -= slideDims * 0.5f;
-        dims += slideDims * 2.0f;
+// void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
+//     if (m_isClippingEnabled) {
+//         f32v2 pos = m_position;
+//         f32v2 dims = m_dimensions;
+//         f32v2 slideDims = m_drawableSlide.getSize();
+//         pos -= slideDims * 0.5f;
+//         dims += slideDims * 2.0f;
 
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
-    }
-    computeChildClipRects();
-}
+//         computeClipping(parentClipRect, pos, dims);
+//         if (dims.x < 0) dims.x = 0;
+//         if (dims.y < 0) dims.y = 0;
+//         m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+//     } else {
+//         m_clipRect = parentClipRect;
+//     }
+//     computeChildClipRects();
+// }
 
 void vui::Slider::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (m_isMouseIn) {

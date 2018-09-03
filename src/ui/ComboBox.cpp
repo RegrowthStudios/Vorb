@@ -19,14 +19,14 @@ vui::ComboBox::ComboBox() : Widget() {
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
+vui::ComboBox::ComboBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
     m_name = name;
-    setDestRect(destRect);
-    m_mainButton.setDimensions(m_dimensions);
-    updatePosition();
+    // setDestRect(destRect);
+    // m_mainButton.setDimensions(m_dimensions);
+    // updatePosition();
 }
 
-vui::ComboBox::ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
+vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
     parent->addWidget(this);
 }
 
@@ -42,43 +42,43 @@ void vui::ComboBox::dispose() {
     std::vector<Button*>().swap(m_buttons);
 }
 
-void vui::ComboBox::updatePosition() {
+// void vui::ComboBox::updatePosition() {
 
-    bool hasSlider = false;
-    if (m_items.size() * getHeight() > m_maxDropHeight) {
-        hasSlider = true;
-    }
+//     bool hasSlider = false;
+//     if (m_items.size() * getHeight() > m_maxDropHeight) {
+//         hasSlider = true;
+//     }
 
-    // Buttons
-    f32 i = 0;
-    for (auto& b : m_buttons) {
-        if (m_isDropped) {
-            b->enable();
-            b->setPosition(f32v2(0.0f, i * getHeight()));
-            if (hasSlider) {
-                b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
-            } else {
-                b->setDimensions(getDimensions());
-            }
-        } else {
-            b->disable();
-            b->setDimensions(f32v2(0.0f));
-        }
-        i += 1.0f;
-    }
+//     // Buttons
+//     f32 i = 0;
+//     for (auto& b : m_buttons) {
+//         if (m_isDropped) {
+//             b->enable();
+//             b->setPosition(f32v2(0.0f, i * getHeight()));
+//             if (hasSlider) {
+//                 b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
+//             } else {
+//                 b->setDimensions(getSize());
+//             }
+//         } else {
+//             b->disable();
+//             b->setDimensions(f32v2(0.0f));
+//         }
+//         i += 1.0f;
+//     }
 
-    // Drop list
-    if (m_isDropped) {
-        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        f32v2 dims = getDimensions() * f32v2(1.0f, (f32)m_items.size());
-        dims.y = glm::min(dims.y, m_maxDropHeight);
-        m_dropPanel.setDimensions(dims);
-    } else {
-        m_dropPanel.setDimensions(f32v2(0.0f));
-    }
+//     // Drop list
+//     if (m_isDropped) {
+//         m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
+//         f32v2 dims = getSize() * f32v2(1.0f, (f32)m_items.size());
+//         dims.y = glm::min(dims.y, m_maxDropHeight);
+//         m_dropPanel.setDimensions(dims);
+//     } else {
+//         m_dropPanel.setDimensions(f32v2(0.0f));
+//     }
     
-    vui::Widget::updatePosition();
-}
+//     vui::Widget::updatePosition();
+// }
 
 void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
@@ -92,8 +92,8 @@ void vui::ComboBox::addItem(const nString& item) {
     }
     b->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
     updateDropButton(b);
-    b->setDimensions(m_dimensions);
-    updatePosition();
+    // b->setDimensions(m_dimensions);
+    // updatePosition();
 }
 
 bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
@@ -151,40 +151,40 @@ const nString& vui::ComboBox::getItem(int index) const {
     return m_items.at(index);
 }
 
-void vui::ComboBox::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    m_mainButton.setDimensions(dimensions);
-    updatePosition();
-}
+// void vui::ComboBox::setDimensions(const f32v2& dimensions) {
+//     Widget::setDimensions(dimensions);
+//     m_mainButton.setDimensions(dimensions);
+//     updatePosition();
+// }
 
-void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
-    m_mainButton.setFont(font);
-    for (auto& b : m_buttons) b->setFont(font);
-}
+// void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
+//     m_mainButton.setFont(font);
+//     for (auto& b : m_buttons) b->setFont(font);
+// }
 
-void vui::ComboBox::setHeight(f32 height) {
-    Widget::setHeight(height);
-    m_mainButton.setHeight(height);
-    updatePosition();
-}
+// void vui::ComboBox::setHeight(f32 height) {
+//     Widget::setHeight(height);
+//     m_mainButton.setHeight(height);
+//     updatePosition();
+// }
 
-void vui::ComboBox::setTexture(VGTexture texture) {
-    m_mainButton.setTexture(texture);
+void vui::ComboBox::setTexture(VORB_UNUSED VGTexture texture) {
+    // m_mainButton.setTexture(texture);
 }
 
 void vui::ComboBox::setDropBoxTexture(VGTexture texture) {
     m_dropPanel.setTexture(texture);
 }
 
-void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
-    for (auto& b : m_buttons) b->setTexture(texture);
+void vui::ComboBox::setDropButtonTexture(VORB_UNUSED VGTexture texture) {
+    // for (auto& b : m_buttons) b->setTexture(texture);
 }
 
-void vui::ComboBox::setWidth(f32 width) {
-    Widget::setWidth(width);
-    m_mainButton.setWidth(width);
-    updatePosition();
-}
+// void vui::ComboBox::setWidth(f32 width) {
+//     Widget::setWidth(width);
+//     m_mainButton.setWidth(width);
+//     updatePosition();
+// }
 
 void vui::ComboBox::setBackColor(const color4& color) {
     m_mainButton.setBackColor(color);
@@ -226,7 +226,7 @@ void vui::ComboBox::setText(const nString& text) {
 
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_maxDropHeight = maxDropHeight;
-    updatePosition();
+    // updatePosition();
 }
 
 void vui::ComboBox::updateDropButton(vui::Button* b) {
@@ -239,22 +239,22 @@ void vui::ComboBox::updateDropButton(vui::Button* b) {
     b->setTextScale(m_mainButton.getTextScale());
 }
 
-void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
+// void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
+//     if (m_isClippingEnabled) {
+//         f32v2 pos = m_position;
+//         f32v2 dims = m_dimensions;
 
-        dims.y += m_dropPanel.getHeight();
+//         dims.y += m_dropPanel.getHeight();
 
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
-    }
-    computeChildClipRects();
-}
+//         computeClipping(parentClipRect, pos, dims);
+//         if (dims.x < 0) dims.x = 0;
+//         if (dims.y < 0) dims.y = 0;
+//         m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
+//     } else {
+//         m_clipRect = parentClipRect;
+//     }
+//     computeChildClipRects();
+// }
 
 void vui::ComboBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
     if (!m_isEnabled) return;
@@ -276,11 +276,11 @@ void vui::ComboBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
         MouseUp(e);
         if (!m_isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
-            updatePosition();
+            // updatePosition();
         }
     } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
-        updatePosition();
+        // updatePosition();
     }
     m_isClicking = false;
 }
@@ -297,5 +297,5 @@ void vui::ComboBox::onSubButtonClick(Sender s VORB_UNUSED, const MouseButtonEven
 void vui::ComboBox::onMainButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     MouseClick(e);
     m_isDropped = !m_isDropped;
-    updatePosition();
+    // updatePosition();
 }

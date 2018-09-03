@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/ui/IWidgetContainer.h"
+#include "Vorb/ui/IWidget.h"
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/IGameScreen.h"
 
@@ -38,7 +38,7 @@ namespace vorb {
         class Widget;
 
         // Template is the screen type
-        class Form : public IWidgetContainer {
+        class Form : public IWidget {
         public:
             Form();
             virtual ~Form();
@@ -56,15 +56,15 @@ namespace vorb {
              * @param widget: The Widget to add.
              * @return true on success.
              */
-            virtual bool addWidget(Widget* widget) override;
+            virtual bool addWidget(IWidget* widget) override;
             /*! @brief Removes a widget from the Form.
             *
             * @param widget: The Widget to remove.
             * @return true on success.
             */
-            virtual bool removeWidget(Widget* widget) override;
+            virtual bool removeWidget(IWidget* widget) override;
             /* Updates the position of the Form. */
-            virtual void updatePosition() override;
+            // virtual void updatePosition() override;
             /*! @brief Updates all the widgets in the Form.
              * 
              * @param dt: deltatime

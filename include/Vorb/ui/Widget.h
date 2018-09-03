@@ -226,8 +226,6 @@ namespace vorb {
              */
             void applyMinMaxSizes();
 
-            virtual void updatePosition();
-            virtual void updateSize();
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

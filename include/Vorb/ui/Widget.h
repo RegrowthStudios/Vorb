@@ -171,8 +171,12 @@ namespace vorb {
             // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             // virtual const DockStyle& getDock() const { return m_dock; }
             virtual         PositionType getPositionType()     const { return m_positionType; }
-            virtual       const Length2& getRawPosition()      const { return m_rawPosition; }
-            virtual       const Length2& getRawSize()          const { return m_rawSize; }
+            virtual       const Length2& getRawPosition()      const { return m_rawDimensions.position; }
+            virtual       const Length2& getRawSize()          const { return m_rawDimensions.size; }
+            virtual        const Length& getRawLeft()          const { return m_rawRelativePositions.left; }
+            virtual        const Length& getRawTop()           const { return m_rawRelativePositions.top; }
+            virtual        const Length& getRawRight()         const { return m_rawRelativePositions.right; }
+            virtual        const Length& getRawBottom()        const { return m_rawRelativePositions.bottom; }
             virtual       const Length2& getMinRawSize()       const { return m_minRawSize; }
             virtual       const Length2& getMaxRawSize()       const { return m_maxRawSize; }
             virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
@@ -184,12 +188,17 @@ namespace vorb {
             // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
-            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType; updatePosition(); }
-            // TODO(Matthew): Depending on position type may need to update position and size in each of these.
-            virtual void setRawPosition(const Length2& rawPosition)       { m_rawPosition = rawPosition; updatePosition(); }
-            virtual void setRawSize(const Length2& rawSize)               { m_rawSize = rawSize; updateSize(); }
-            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize; updateSize(); }
-            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize; updateSize(); }
+
+            // TODO(Matthew): updateDimensions shouldn't be called here, we should wait for an update() call instead to minimise calculations.
+            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType; updateDimensions(); }
+            virtual void setRawPosition(const Length2& rawPosition)       { m_rawDimensions.position = rawPosition; updateDimensions(); }
+            virtual void setRawSize(const Length2& rawSize)               { m_rawDimensions.size = rawSize; updateDimensions(); }
+            virtual void setRawLeft(const Length& rawLeft)                { m_rawRelativePositions.left = rawLeft; updateDimensions(); }
+            virtual void setRawTop(const Length& rawTop)                  { m_rawRelativePositions.top = rawTop; updateDimensions(); }
+            virtual void setRawRight(const Length& rawRight)              { m_rawRelativePositions.right = rawRight; updateDimensions(); }
+            virtual void setRawBottom(const Length& rawBottom)            { m_rawRelativePositions.bottom = rawBottom; updateDimensions(); }
+            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize; updateDimensions(); }
+            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize; updateDimensions(); }
             virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
             
         protected:
@@ -226,10 +235,22 @@ namespace vorb {
             // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
             // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
             PositionType  m_positionType        = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
-            Length2       m_rawPosition         = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Position of element in specified dimensions.
-            Length2       m_rawSize             = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Dimensions of element in specified dimensions.
             Length2       m_minRawSize          = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Minimum size of widget.
             Length2       m_maxRawSize          = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
+
+            union {
+                struct {
+                    Length2 position; ///< Position of widget in specified dimensions.
+                    Length2 size;     ///< Dimensions of widget in specified dimensions.
+                } m_rawDimensions = { { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } }, { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } } };
+                struct {
+                    Length left;   ///< Position of widget relative to left of target widget.
+                    Length top;    ///< Position of widget relative to top of target widget.
+                    Length right;  ///< Position of widget relative to right of target widget.
+                    Length bottom; ///< Position of widget relative to bottom of target widget.
+                } m_rawRelativePositions;
+            };
+
             volatile bool m_needsDrawableReload = false;                                                                ///< TODO(Matthew): Write valid description.
         };
     }

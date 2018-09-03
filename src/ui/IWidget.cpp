@@ -48,11 +48,10 @@ void vui::IWidget::dispose() {
     
 }
 
-// TODO(Matthew): This needs updating later - updatePosition will need replacing.
 bool vui::IWidget::addWidget(IWidget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
-    child->updatePosition();
+    child->updateDimensions();
     return true; // TODO(Ben): Is this needed?
 }
 

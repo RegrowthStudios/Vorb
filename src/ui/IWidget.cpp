@@ -14,6 +14,7 @@ vui::IWidget::IWidget() :
     MouseMove(this),
     m_font(nullptr),
     m_renderer(nullptr),
+    m_window(nullptr),
     m_canvas(this),
     m_parent(nullptr),
     m_widgets(IWidgets()),

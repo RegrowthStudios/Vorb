@@ -153,7 +153,8 @@ namespace vorb {
 
             /************************************************************************/
             /* Setters                                                              */
-            /************************************************************************/         
+            /************************************************************************/
+            virtual void setGameWindow(GameWindow* window) { m_window = window; }
             // virtual void setDestRect(const f32v4& destRect);
             // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }
             // virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
@@ -226,8 +227,9 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            const Font* m_font;                                                              ///< Font for rendering.
-            UIRenderer* m_renderer;                                                              ///< Renderer to use for drawing widget.    
+            const Font* m_font;             ///< Font for rendering.
+            UIRenderer* m_renderer;         ///< Renderer to use for drawing widget.
+            GameWindow* m_window;           ///< Game window pointer.
             // ContainerStyle m_style;            ///< The current style.
             IWidget*    m_canvas;           ///< Canvas widget - i.e. the oldest ancestor of this widget. If this widget is the canvas of its children, m_canvas is set to the this pointer (which is the case by default). NOTE: We should never update this parameter via a setter, it should only change via private logic on parent changes.
             IWidget*    m_parent;           ///< Parent widget.

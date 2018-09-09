@@ -1,5 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/Widget.h"
+
+#include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
 
@@ -69,7 +71,8 @@ void vui::Widget::updateDimensions() {
 
             break;
         case PositionType::RELATIVE_TO_WINDOW:
-            // TODO(Matthew): Get window dimensions...
+            applyRelativeDirectives(f32v2(0.0f, 0.0f), f32v2((f32)getGameWindow()->getWidth(), (f32)getGameWindow()->getHeight()));
+
             break;
         case PositionType::RELATIVE_TO_CANVAS:
             applyRelativeDirectives(m_canvas->getPosition(), m_canvas->getSize());
@@ -145,9 +148,9 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * m_canvas->getWidth();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // TODO(Matthew): Get window dimensions...
-                    assert (false);
-                    break;
+                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
+                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
+                    return length.x * getGameWindow()->getWidth();
             }
             break;
         case DimensionType::HEIGHT_PERCENTAGE:
@@ -160,9 +163,9 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * m_canvas->getHeight();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // TODO(Matthew): Get window dimensions...
-                    assert (false);
-                    break;
+                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
+                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
+                    return length.x * getGameWindow()->getHeight();
             }
             break;
         case DimensionType::MIN_PERCENTAGE:
@@ -175,9 +178,9 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * glm::min(m_canvas->getWidth(), m_canvas->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // TODO(Matthew): Get window dimensions...
-                    assert (false);
-                    break;
+                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
+                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
+                    return length.x * glm::min(getGameWindow()->getWidth(), getGameWindow()->getHeight());
             }
             break;
         case DimensionType::MAX_PERCENTAGE:
@@ -190,9 +193,9 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // TODO(Matthew): Get window dimensions...
-                    assert (false);
-                    break;
+                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
+                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
+                    return length.x * glm::max(getGameWindow()->getWidth(), getGameWindow()->getHeight());
             }
             break;
         case DimensionType::PARENT_WIDTH_PERCENTAGE:
@@ -212,13 +215,13 @@ f32 vui::Widget::processLength(Length length) {
         case DimensionType::CANVAS_MAX_PERCENTAGE:
             return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
         case DimensionType::WINDOW_WIDTH_PERCENTAGE:
-            // TODO(Matthew): Get window dimensions...
+            return length.x * getGameWindow()->getWidth();
         case DimensionType::WINDOW_HEIGHT_PERCENTAGE:
-            // TODO(Matthew): Get window dimensions...
+            return length.x * getGameWindow()->getHeight();
         case DimensionType::WINDOW_MIN_PERCENTAGE:
-            // TODO(Matthew): Get window dimensions...
+            return length.x * glm::min(getGameWindow()->getWidth(), getGameWindow()->getHeight());
         case DimensionType::WINDOW_MAX_PERCENTAGE:
-            // TODO(Matthew): Get window dimensions...
+            return length.x * glm::max(getGameWindow()->getWidth(), getGameWindow()->getHeight());
         default:
             // Shouldn't get here.
             assert(false);

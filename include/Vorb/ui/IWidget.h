@@ -42,7 +42,9 @@ namespace vorb {
         struct MouseButtonEvent;
         struct MouseMotionEvent;
         struct MouseEvent;
+        struct WindowResizeEvent;
         class Widget;
+        class GameWindow;
 
         // //! Bitfield of container styling flags
         // struct ContainerStyle {

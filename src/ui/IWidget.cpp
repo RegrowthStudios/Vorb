@@ -16,6 +16,7 @@ vui::IWidget::IWidget() :
     m_renderer(nullptr),
     m_canvas(this),
     m_parent(nullptr),
+    m_widgets(IWidgets()),
     m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
     m_position(f32v2(0.0f)),
@@ -25,6 +26,8 @@ vui::IWidget::IWidget() :
     m_isEnabled(false),
     m_isMouseIn(false) {
     // m_style = {};
+    // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
+    vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
     enable();
 }
 
@@ -121,6 +124,11 @@ void vui::IWidget::setParent(IWidget* parent) {
         // Add widget to the new parent (which will set the m_parent field).
         parent->addWidget(this);
 
+        if (m_canvas == this) {
+            // As the previous canvas widget, we should unsubscribe it.
+            vui::InputDispatcher::window.onResize -= makeDelegate(*this, &IWidget::onResize);
+        }
+
         // Set the new canvas widget of this widget.
         m_canvas = parent->getCanvas();
         // Propagate the new canvas widget to children.
@@ -128,6 +136,8 @@ void vui::IWidget::setParent(IWidget* parent) {
     } else {
         // Set the canvas to this widget.
         m_canvas = this;
+        // As canvas, this widget is now responsible for handling resizing of itself and children.
+        vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
         // Update children - this widget is the new canvas widget.
         updateChildCanvases();
     }
@@ -296,4 +306,8 @@ void vui::IWidget::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
         ev.y = e.y;
         MouseLeave(ev);
     }
+}
+
+void vui::IWidget::onResize(Sender s VORB_MAYBE_UNUSED, const WindowResizeEvent& e VORB_MAYBE_UNUSED) {
+    updateDimensions();
 }

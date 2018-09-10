@@ -105,10 +105,11 @@ namespace vorb {
              */
             virtual void updateDimensions() = 0;
 
-            /*! @brief Enables events* */
+            /*! @brief Enables events that all widgets share in common. */
             virtual void enable();
-            /*! @brief Disables events* */
+            /*! @brief Disables events that all widgets share in common. */
             virtual void disable();
+
             /*! @brief Checks if a point is inside the container
              *
              * @param point: The point to check
@@ -122,7 +123,6 @@ namespace vorb {
             * @param renderer: UIRenderer to add to.
             */
             virtual void addDrawables(UIRenderer* renderer);
-
             /*! @brief Removes all drawables from the UIRenderer */
             virtual void removeDrawables();
 
@@ -206,6 +206,7 @@ namespace vorb {
              * \brief Updates all child widgets' canvas fields.
              */
             virtual void updateChildCanvases();
+            
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

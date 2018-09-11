@@ -76,7 +76,7 @@ namespace vorb {
              * @param renderer: The renderer to use for drawing widget.
              * @param window: The window in which to set the UI.
              */
-            IWidget(UIRenderer* renderer = nullptr, const GameWindow* window = nullptr);
+            IWidget(UIRenderer* renderer, const GameWindow* window = nullptr);
             // /*! @brief Constructor that sets name, position, and dimensions.
             //  *
             //  * @param name: Name of the widget.
@@ -173,7 +173,7 @@ namespace vorb {
              * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
              */
             virtual void setFont(const Font* font)    { m_font = font; }
-            virtual void setParent(IWidget* parent, bool keepOwnRenderer = false);
+            virtual void setParent(IWidget* parent);
             virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/

@@ -137,7 +137,7 @@ namespace vorb {
             // virtual const ContainerStyle& getStyle() const { return m_style; }
             virtual       const Font* getFont()             const { return m_font; }
             virtual const UIRenderer* getRenderer()         const { return m_renderer; }
-            virtual       GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
+            virtual const GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
             virtual          IWidget* getCanvas()           const { return m_canvas; }
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }

@@ -5,7 +5,7 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
-vui::IWidget::IWidget() :
+vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* window /*= nullptr*/) :
     MouseClick(this),
     MouseDown(this),
     MouseUp(this),
@@ -13,8 +13,7 @@ vui::IWidget::IWidget() :
     MouseLeave(this),
     MouseMove(this),
     m_font(nullptr),
-    m_renderer(nullptr),
-    m_window(nullptr),
+    m_window(window),
     m_canvas(this),
     m_parent(nullptr),
     m_widgets(IWidgets()),
@@ -30,11 +29,11 @@ vui::IWidget::IWidget() :
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
     enable();
-}
-
-vui::IWidget::IWidget(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : IWidget() {
-    m_name = name;
-    // setDestRect(destRect);
+    if (renderer) {
+        setRenderer(renderer);
+    } else {
+        m_renderer = renderer;
+    }
 }
 
 vui::IWidget::~IWidget() {
@@ -100,24 +99,7 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
             y >= m_position.y && y < m_position.y + m_size.y);
 }
 
-void vui::IWidget::addDrawables(UIRenderer* renderer) {
-    m_renderer = renderer;
-    for (auto& w : m_widgets) {
-        w->addDrawables(m_renderer);
-    }
-}
-
-void vui::IWidget::removeDrawables() {
-    if (m_renderer) {
-        m_renderer->remove(this);
-        m_renderer = nullptr;
-    }
-    for (auto& w : m_widgets) {
-        w->removeDrawables();
-    }
-}
-
-void vui::IWidget::setParent(IWidget* parent) {
+void vui::IWidget::setParent(IWidget* parent, bool keepOwnRenderer /*= false*/) {
     // Remove this widget from any previous parent it may have had.
     if (m_parent) m_parent->removeWidget(this);
     // Are we are setting a new parent?
@@ -132,6 +114,9 @@ void vui::IWidget::setParent(IWidget* parent) {
 
         // Set the new canvas widget of this widget.
         m_canvas = parent->getCanvas();
+        // Set the renderer for this widget to that of the new parent if we are not keeping the old renderer.
+        if (!keepOwnRenderer &&
+            getRenderer() != parent->getRenderer()) setRenderer(parent->getRenderer());
         // Propagate the new canvas widget to children.
         updateChildCanvases();
     } else {
@@ -264,6 +249,20 @@ void vui::IWidget::updateChildCanvases() {
     for (IWidget* widget : m_widgets) {
         widget->m_canvas = m_canvas;
         widget->updateChildCanvases();
+    }
+}
+
+void vui::IWidget::addDrawables() {
+    for (auto& child : m_widgets) {
+        child->addDrawables();
+    }
+}
+
+void vui::IWidget::removeDrawables() {
+    if (m_renderer) m_renderer->remove(this);
+
+    for (auto& child : m_widgets) {
+        child->removeDrawables();
     }
 }
 

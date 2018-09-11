@@ -71,14 +71,18 @@ namespace vorb {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;
         public:
-            /*! @brief Default constructor. */
-            IWidget();
-            /*! @brief Constructor that sets name, position, and dimensions.
-             *
-             * @param name: Name of the widget.
-             * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            /*! @brief Constructor default and parametised to set renderer and window.
+             * 
+             * @param renderer: The renderer to use for drawing widget.
+             * @param window: The window in which to set the UI.
              */
-            IWidget(const nString& name, const f32v4& destRect = f32v4(0));     
+            IWidget(UIRenderer* renderer = nullptr, const GameWindow* window = nullptr);
+            // /*! @brief Constructor that sets name, position, and dimensions.
+            //  *
+            //  * @param name: Name of the widget.
+            //  * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            //  */
+            // IWidget(const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~IWidget();
             /*! @brief Releases all resources used by the Widget.
@@ -118,14 +122,6 @@ namespace vorb {
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to.
-            */
-            virtual void addDrawables(UIRenderer* renderer);
-            /*! @brief Removes all drawables from the UIRenderer */
-            virtual void removeDrawables();
-
             // virtual void setChildDock(Widget* widget, DockStyle dockStyle);
 
             /************************************************************************/
@@ -135,7 +131,7 @@ namespace vorb {
             // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             // virtual bool getSelectable() const { return m_style.selectable; }
             // virtual const ContainerStyle& getStyle() const { return m_style; }
-            virtual       UIRenderer* getRenderer()         const { return m_renderer ? m_renderer : m_canvas->m_renderer; }
+            virtual       UIRenderer* getRenderer()         const { return m_renderer; }
             virtual const GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
             virtual          IWidget* getCanvas()           const { return m_canvas; }
             virtual          IWidget* getParent()           const { return m_parent; }
@@ -157,6 +153,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            virtual void setRenderer(UIRenderer* renderer) { removeDrawables(); m_renderer = renderer; addDrawables(); }
             virtual void setGameWindow(GameWindow* window) { m_window = window; }
             // virtual void setDestRect(const f32v4& destRect);
             // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }
@@ -176,7 +173,7 @@ namespace vorb {
              * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
              */
             virtual void setFont(const Font* font)    { m_font = font; }
-            virtual void setParent(IWidget* parent);
+            virtual void setParent(IWidget* parent, bool keepOwnRenderer = false);
             virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/
@@ -207,6 +204,13 @@ namespace vorb {
              */
             virtual void updateChildCanvases();
             
+            /*! @brief Adds all drawables to the UIRenderer. */
+            virtual void addDrawables();
+            /*! @brief Removes all drawables from the UIRenderer. */
+            virtual void removeDrawables();
+            /*! @brief Refreshes all drawables. */
+            virtual void refreshDrawables() = 0;
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

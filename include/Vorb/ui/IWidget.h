@@ -135,12 +135,12 @@ namespace vorb {
             // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             // virtual bool getSelectable() const { return m_style.selectable; }
             // virtual const ContainerStyle& getStyle() const { return m_style; }
-            virtual       const Font* getFont()             const { return m_font; }
-            virtual const UIRenderer* getRenderer()         const { return m_renderer; }
+            virtual       UIRenderer* getRenderer()         const { return m_renderer ? m_renderer : m_canvas->m_renderer; }
             virtual const GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
             virtual          IWidget* getCanvas()           const { return m_canvas; }
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }
+            virtual       const Font* getFont()             const { return m_font; }
             virtual             f32v4 getClipRect()         const { return m_clipRect; }
             virtual             f32v4 getDestRect()         const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
             virtual        const f32& getX()                const { return m_position.x; }
@@ -231,19 +231,23 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            const Font* m_font;             ///< Font for rendering.
-            UIRenderer* m_renderer;         ///< Renderer to use for drawing widget.
-            GameWindow* m_window;           ///< Game window pointer.
+            UIRenderer*       m_renderer;         ///< Renderer to use for drawing widget.
+            const GameWindow* m_window;           ///< Game window pointer.
+            IWidget*          m_canvas;           /*< Canvas widget - i.e. the oldest ancestor of this widget. If this widget
+                                                   *  is the canvas of its children, m_canvas is set to the this pointer (which
+                                                   *  is the case by default). NOTE: We should never update this parameter via a
+                                                   *  setter, it should only change via private logic on parent changes.
+                                                   */
+            IWidget*          m_parent;           ///< Parent widget.
+            IWidgets          m_widgets;          ///< Collection of child widgets.
+            const Font*       m_font;             ///< Font for rendering.
+            f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
+            f32v2             m_position;         ///< Position of widget relative to window in pixels.
+            f32v2             m_size;             ///< Size of the widget in pixels.
+            nString           m_name;             ///< Display name of the container.
             // ContainerStyle m_style;            ///< The current style.
-            IWidget*    m_canvas;           ///< Canvas widget - i.e. the oldest ancestor of this widget. If this widget is the canvas of its children, m_canvas is set to the this pointer (which is the case by default). NOTE: We should never update this parameter via a setter, it should only change via private logic on parent changes.
-            IWidget*    m_parent;           ///< Parent widget.
-            IWidgets    m_widgets;          ///< Collection of child widgets.
             // std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            f32v4       m_clipRect;         ///< Clipping rectangle for rendering.
             // f32v4    m_dockSizes;        ///< Total size of each dock other than fill.
-            f32v2       m_position;         ///< Position of widget relative to window in pixels.
-            f32v2       m_size;             ///< Size of the widget in pixels.
-            nString     m_name;             ///< Display name of the container.
 
             // bool m_isClippingEnabled = true;
 

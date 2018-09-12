@@ -168,6 +168,108 @@ void vui::IWidget::setParent(IWidget* parent) {
     m_needsClipRectRecalculation = true;
 }
 
+void vui::IWidget::setPosition(f32v2 position) {
+    m_position = position;
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setX(f32 x) {
+    m_position.x = x;
+    
+    updateChildDimensions();
+    
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setY(f32 y) {
+    m_position.y = y;
+    
+    updateChildDimensions();
+    
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
+    m_position = relativePosition + m_parent->getPosition();
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setRelativeX(f32 relativeX) {
+    m_position.x = relativeX + m_parent->getPosition().x;
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setRelativeY(f32 relativeY) {
+    m_position.y = relativeY + m_parent->getPosition().y;
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setSize(f32v2 size) {
+    m_size = size;
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setWidth(f32 width) {
+    m_size.x = width;
+
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setHeight(f32 height) {
+    m_size.y = height;
+    
+    updateChildDimensions();
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setClipping(Clipping clipping) {
+    m_clipping = clipping;
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setClippingLeft(ClippingState state) {
+    m_clipping.left = state;
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setClippingTop(ClippingState state) {
+    m_clipping.top = state;
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setClippingRight(ClippingState state) {
+    m_clipping.right = state;
+
+    m_needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setClippingBottom(ClippingState state) {
+    m_clipping.bottom = state;
+
+    m_needsClipRectRecalculation = true;
+}
+
 // void vui::IWidget::setChildDock(Widget* widget, DockStyle dockStyle) {
 //     removeChildFromDock(widget);
 //     // Add to new dock

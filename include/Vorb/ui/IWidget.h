@@ -183,20 +183,23 @@ namespace vorb {
              * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
              */
             virtual void setParent(IWidget* parent);
-            virtual void setFont(const Font* font)              { m_font = font; }
-            virtual void setClipping(Clipping clipping)         { m_clipping = clipping;     m_needsClipRectRecalculation = true; }
-            virtual void setClippingLeft(ClippingState state)   { m_clipping.left   = state; m_needsClipRectRecalculation = true; }
-            virtual void setClippingTop(ClippingState state)    { m_clipping.top    = state; m_needsClipRectRecalculation = true; }
-            virtual void setClippingRight(ClippingState state)  { m_clipping.right  = state; m_needsClipRectRecalculation = true; }
-            virtual void setClippingBottom(ClippingState state) { m_clipping.bottom = state; m_needsClipRectRecalculation = true; }
-            virtual void setName(const nString& name)           { m_name = name; }
+            virtual void setFont(const Font* font) { m_font = font; }
+            virtual void setPosition(f32v2 position);
+            virtual void setX(f32 x);
+            virtual void setY(f32 y);
+            virtual void setRelativePosition(f32v2 relativePosition);
+            virtual void setRelativeX(f32 relX);
+            virtual void setRelativeY(f32 relY);
+            virtual void setSize(f32v2 size);
+            virtual void setWidth(f32 width);
+            virtual void setHeight(f32 height);
+            virtual void setClipping(Clipping clipping);
+            virtual void setClippingLeft(ClippingState state);  
+            virtual void setClippingTop(ClippingState state);
+            virtual void setClippingRight(ClippingState state);
+            virtual void setClippingBottom(ClippingState state);
+            virtual void setName(const nString& name) { m_name = name; }
             // virtual void setDestRect(const f32v4& destRect);
-            // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }
-            // virtual void setWidth(f32 width) { m_size.x = width;  updateChildPositions(); }
-            // virtual void setHeight(f32 height) { m_size.y = height;  updateChildPositions(); }
-            // virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
-            // virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
-            // virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */

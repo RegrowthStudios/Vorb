@@ -177,15 +177,15 @@ namespace vorb {
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
 
-            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType;             m_needsDimensionUpdate = true; }
-            virtual void setRawPosition(const Length2& rawPosition)       { m_rawDimensions.position = rawPosition;    m_needsDimensionUpdate = true; }
-            virtual void setRawSize(const Length2& rawSize)               { m_rawDimensions.size = rawSize;            m_needsDimensionUpdate = true; }
-            virtual void setRawLeft(const Length& rawLeft)                { m_rawRelativePositions.left = rawLeft;     m_needsDimensionUpdate = true; }
-            virtual void setRawTop(const Length& rawTop)                  { m_rawRelativePositions.top = rawTop;       m_needsDimensionUpdate = true; }
-            virtual void setRawRight(const Length& rawRight)              { m_rawRelativePositions.right = rawRight;   m_needsDimensionUpdate = true; }
-            virtual void setRawBottom(const Length& rawBottom)            { m_rawRelativePositions.bottom = rawBottom; m_needsDimensionUpdate = true; }
-            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize;                 m_needsDimensionUpdate = true; }
-            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize;                 m_needsDimensionUpdate = true; }
+            virtual void setPositionType(PositionType positionType) { m_positionType = positionType;             m_needsDimensionUpdate = true; }
+            virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_needsDimensionUpdate = true; }
+            virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_needsDimensionUpdate = true; }
+            virtual void setRawLeft(const Length& rawLeft)          { m_rawRelativePositions.left = rawLeft;     m_needsDimensionUpdate = true; }
+            virtual void setRawTop(const Length& rawTop)            { m_rawRelativePositions.top = rawTop;       m_needsDimensionUpdate = true; }
+            virtual void setRawRight(const Length& rawRight)        { m_rawRelativePositions.right = rawRight;   m_needsDimensionUpdate = true; }
+            virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_needsDimensionUpdate = true; }
+            virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_needsDimensionUpdate = true; }
+            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_needsDimensionUpdate = true; }
             
         protected:
             // virtual f32v2 getWidgetAlignOffset();

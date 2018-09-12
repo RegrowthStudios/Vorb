@@ -176,6 +176,7 @@ namespace vorb {
             // virtual const ContainerStyle& getStyle() const { return m_style; }
             // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
+            virtual const volatile bool& needsDimensionUpdate()       const { return m_needsDimensionUpdate; }
             virtual const volatile bool& needsClipRectRecalculation() const { return m_needsClipRectRecalculation; }
             virtual const volatile bool& needsDrawableReload()        const { return m_needsDrawableRefresh; }
 

@@ -46,13 +46,6 @@ namespace vorb {
         class Widget;
         class GameWindow;
 
-        //! Bitfield of anchor flags
-        struct AnchorStyle {
-            bool left : 1; ///< If true, anchored to the left of parent
-            bool right : 1; ///< If true, anchored to the right of parent
-            bool bottom : 1; ///< If true, anchored to the bottom of parent
-            bool top : 1; ///< If true, anchored to the top of parent
-        };
         //! Enum of clipping states.
         enum class ClippingState {
             VISIBLE = 0,

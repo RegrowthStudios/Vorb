@@ -190,11 +190,11 @@ namespace vorb {
              */
             virtual void setParent(IWidget* parent);
             virtual void setFont(const Font* font)              { m_font = font; }
-            virtual void setClipping(Clipping clipping)         { m_clipping = clipping; }
-            virtual void setClippingLeft(ClippingState state)   { m_clipping.left   = state; }
-            virtual void setClippingTop(ClippingState state)    { m_clipping.top    = state; }
-            virtual void setClippingRight(ClippingState state)  { m_clipping.right  = state; }
-            virtual void setClippingBottom(ClippingState state) { m_clipping.bottom = state; }
+            virtual void setClipping(Clipping clipping)         { m_clipping = clipping;     m_needsClipRectRecalculation = true; }
+            virtual void setClippingLeft(ClippingState state)   { m_clipping.left   = state; m_needsClipRectRecalculation = true; }
+            virtual void setClippingTop(ClippingState state)    { m_clipping.top    = state; m_needsClipRectRecalculation = true; }
+            virtual void setClippingRight(ClippingState state)  { m_clipping.right  = state; m_needsClipRectRecalculation = true; }
+            virtual void setClippingBottom(ClippingState state) { m_clipping.bottom = state; m_needsClipRectRecalculation = true; }
             virtual void setName(const nString& name)           { m_name = name; }
             // virtual void setDestRect(const f32v4& destRect);
             // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }

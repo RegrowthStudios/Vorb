@@ -84,7 +84,7 @@ void vui::Widget::updateDimensions() {
 
     applyMinMaxSizes();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 

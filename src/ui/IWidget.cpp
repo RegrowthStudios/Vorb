@@ -22,12 +22,7 @@ vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
     m_name(""),
-    m_isClicking(false),
-    m_isEnabled(false),
-    m_isMouseIn(false),
-    m_needsClipRectRecalculation(false),
-    m_needsDrawableRefresh(false),
-    m_needsDimensionUpdate(false) {
+    m_flags({ false, false, false, false, false, false, false }) {
     // m_style = {};
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     resetClipRect();
@@ -54,25 +49,30 @@ void vui::IWidget::dispose() {
 }
 
 void vui::IWidget::update(f32 dt) {
-    if (m_needsDimensionUpdate) {
-        m_needsDimensionUpdate = false;
+    if (m_flags.needsDimensionUpdate) {
+        m_flags.needsDimensionUpdate = false;
         updateDimensions();
     }
 
-    if (m_needsClipRectRecalculation) {
-        m_needsClipRectRecalculation = false;
+    if (m_flags.needsDockRecalculation) {
+        m_flags.needsDockRecalculation = false;
+        calculateDockedWidgets();
+    }
+
+    if (m_flags.needsClipRectRecalculation) {
+        m_flags.needsClipRectRecalculation = false;
         calculateClipRect();
     }
 
-    if (m_needsDrawableRefresh) {
-        m_needsDrawableRefresh = false;
+    if (m_flags.needsDrawableRefresh) {
+        m_flags.needsDrawableRefresh = false;
         refreshDrawables();
     }
 }
 
 void vui::IWidget::enable() {
-    if (!m_isEnabled) {
-        m_isEnabled = true;
+    if (!m_flags.isEnabled) {
+        m_flags.isEnabled = true;
         vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidget::onMouseDown);
         vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &IWidget::onMouseUp);
         vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &IWidget::onMouseMove);
@@ -83,14 +83,14 @@ void vui::IWidget::enable() {
 }
 
 void vui::IWidget::disable() {
-    if (m_isEnabled) {
-        m_isEnabled = false;
+    if (m_flags.isEnabled) {
+        m_flags.isEnabled = false;
         vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidget::onMouseDown);
         vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidget::onMouseUp);
         vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidget::onMouseMove);
         vui::InputDispatcher::mouse.onFocusLost -= makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
     // Disable all children
     for (auto& w : m_widgets) w->disable();
 }
@@ -98,7 +98,7 @@ void vui::IWidget::disable() {
 bool vui::IWidget::addWidget(IWidget* child) {
     m_widgets.push_back(child);
     child->m_parent = this;
-    child->m_needsDimensionUpdate = true;
+    child->m_flags.needsDimensionUpdate = true;
     return true; // TODO(Ben): Is this needed?
 }
 
@@ -164,8 +164,8 @@ void vui::IWidget::setParent(IWidget* parent) {
     }
 
     // Parent (and maybe canvas changing) means we should reevaluate dimensions of this widget and its children.
-    m_needsDimensionUpdate       = true;
-    m_needsClipRectRecalculation = true;
+    m_flags.needsDimensionUpdate       = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setPosition(f32v2 position) {
@@ -173,7 +173,7 @@ void vui::IWidget::setPosition(f32v2 position) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setX(f32 x) {
@@ -181,7 +181,7 @@ void vui::IWidget::setX(f32 x) {
     
     updateChildDimensions();
     
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setY(f32 y) {
@@ -189,7 +189,7 @@ void vui::IWidget::setY(f32 y) {
     
     updateChildDimensions();
     
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
@@ -197,7 +197,7 @@ void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativeX(f32 relativeX) {
@@ -205,7 +205,7 @@ void vui::IWidget::setRelativeX(f32 relativeX) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativeY(f32 relativeY) {
@@ -213,7 +213,7 @@ void vui::IWidget::setRelativeY(f32 relativeY) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setSize(f32v2 size) {
@@ -221,7 +221,7 @@ void vui::IWidget::setSize(f32v2 size) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setWidth(f32 width) {
@@ -229,7 +229,7 @@ void vui::IWidget::setWidth(f32 width) {
 
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setHeight(f32 height) {
@@ -237,37 +237,37 @@ void vui::IWidget::setHeight(f32 height) {
     
     updateChildDimensions();
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClipping(Clipping clipping) {
     m_clipping = clipping;
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingLeft(ClippingState state) {
     m_clipping.left = state;
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingTop(ClippingState state) {
     m_clipping.top = state;
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingRight(ClippingState state) {
     m_clipping.right = state;
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingBottom(ClippingState state) {
     m_clipping.bottom = state;
 
-    m_needsClipRectRecalculation = true;
+    m_flags.needsClipRectRecalculation = true;
 }
 
 // void vui::IWidget::setChildDock(Widget* widget, DockStyle dockStyle) {
@@ -416,14 +416,14 @@ void vui::IWidget::calculateClipRect() {
 
 void vui::IWidget::calculateChildClipRects() {
     for (auto& child : m_widgets) {
-        child->m_needsClipRectRecalculation = false;
+        child->m_flags.needsClipRectRecalculation = false;
         child->calculateClipRect();
     }
 }
 
 void vui::IWidget::updateChildDimensions() {
     for (auto& child : m_widgets) {
-        child->m_needsDimensionUpdate = false;
+        child->m_flags.needsDimensionUpdate = false;
         child->updateDimensions();
     }
 }
@@ -450,40 +450,40 @@ void vui::IWidget::removeDrawables() {
 }
 
 void vui::IWidget::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
         MouseDown(e);
-        m_isClicking = true;
+        m_flags.isClicking = true;
     }
 }
 
 void vui::IWidget::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (m_isClicking) MouseClick(e);
+        if (m_flags.isClicking) MouseClick(e);
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
 }
 
 void vui::IWidget::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
         }
         MouseMove(e);
-    } else if (m_isMouseIn) {
-        m_isMouseIn = false;
+    } else if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseLeave(e);
     }
 }
 
 void vui::IWidget::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
-        m_isMouseIn = false;
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseMotionEvent ev;
         ev.x = e.x;
         ev.y = e.y;
@@ -492,5 +492,5 @@ void vui::IWidget::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
 }
 
 void vui::IWidget::onResize(Sender s VORB_MAYBE_UNUSED, const WindowResizeEvent& e VORB_MAYBE_UNUSED) {
-    m_needsDimensionUpdate = true;
+    m_flags.needsDimensionUpdate = true;
 }

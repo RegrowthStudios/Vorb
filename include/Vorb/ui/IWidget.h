@@ -70,6 +70,18 @@ namespace vorb {
             NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
         };
 
+        //! Bitfield of widget flags
+        struct WidgetFlags {
+            bool isClicking : 1; ///< Used for click event tracking.
+            bool isEnabled  : 1; ///< True when events are enabled.
+            bool isMouseIn  : 1; ///< Used for motion event tracking.
+
+            volatile bool needsDimensionUpdate       : 1; ///< Whether we need to recalculate widget dimensions.
+            volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
+            volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
+            volatile bool needsDrawableRefresh       : 1; ///< Whether we need to refresh our drawables.
+        };
+
         // Forward Declarations
         class UIRenderer;
 
@@ -154,12 +166,12 @@ namespace vorb {
             virtual     ClippingState getClippingBottom()   const;
             virtual             f32v4 getClipRect()         const { return m_clipRect; }
             virtual    const nString& getName()             const { return m_name; }
-            virtual       const bool& isEnabled()           const { return m_isEnabled; }
-            virtual              bool isMouseIn()           const { return m_isMouseIn; }
+            virtual       const bool& isEnabled()           const { return m_flags.isEnabled; }
+            virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
 
-            virtual const volatile bool& needsDimensionUpdate()       const { return m_needsDimensionUpdate; }
-            virtual const volatile bool& needsClipRectRecalculation() const { return m_needsClipRectRecalculation; }
-            virtual const volatile bool& needsDrawableReload()        const { return m_needsDrawableRefresh; }
+            virtual volatile bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate; }
+            virtual volatile bool needsClipRectRecalculation() const { return m_flags.needsClipRectRecalculation; }
+            virtual volatile bool needsDrawableReload()        const { return m_flags.needsDrawableRefresh; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -274,17 +286,8 @@ namespace vorb {
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
             nString           m_name;             ///< Display name of the container.
-            // std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
-            // f32v4    m_dockSizes;        ///< Total size of each dock other than fill.
 
-            // TODO(Ben): Bitfield for memory reduction?.
-            bool m_isClicking; ///< Used for click event tracking.
-            bool m_isEnabled; ///< True when events are enabled.
-            bool m_isMouseIn; ///< Used for motion event tracking.
-
-            volatile bool m_needsDimensionUpdate;
-            volatile bool m_needsClipRectRecalculation; ///< Whether we need to recalculate the clip rectangle.
-            volatile bool m_needsDrawableRefresh;        ///< Whether we need to refresh our drawables.
+            WidgetFlags m_flags;
         };
     }
 }

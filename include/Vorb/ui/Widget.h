@@ -173,15 +173,15 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setPositionType(PositionType positionType) { m_positionType = positionType;             m_needsDimensionUpdate = true; }
-            virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_needsDimensionUpdate = true; }
-            virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_needsDimensionUpdate = true; }
-            virtual void setRawLeft(const Length& rawLeft)          { m_rawRelativePositions.left = rawLeft;     m_needsDimensionUpdate = true; }
-            virtual void setRawTop(const Length& rawTop)            { m_rawRelativePositions.top = rawTop;       m_needsDimensionUpdate = true; }
-            virtual void setRawRight(const Length& rawRight)        { m_rawRelativePositions.right = rawRight;   m_needsDimensionUpdate = true; }
-            virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_needsDimensionUpdate = true; }
-            virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_needsDimensionUpdate = true; }
-            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_needsDimensionUpdate = true; }
+            virtual void setPositionType(PositionType positionType) { m_positionType = positionType;             m_flags.needsDimensionUpdate = true; }
+            virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_flags.needsDimensionUpdate = true; }
+            virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_flags.needsDimensionUpdate = true; }
+            virtual void setRawLeft(const Length& rawLeft)          { m_rawRelativePositions.left = rawLeft;     m_flags.needsDimensionUpdate = true; }
+            virtual void setRawTop(const Length& rawTop)            { m_rawRelativePositions.top = rawTop;       m_flags.needsDimensionUpdate = true; }
+            virtual void setRawRight(const Length& rawRight)        { m_rawRelativePositions.right = rawRight;   m_flags.needsDimensionUpdate = true; }
+            virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_flags.needsDimensionUpdate = true; }
+            virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_flags.needsDimensionUpdate = true; }
+            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }
 
             // TODO(Matthew): Think how this actually works with position type system.
             // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }

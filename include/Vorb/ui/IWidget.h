@@ -161,10 +161,10 @@ namespace vorb {
             virtual        const f32& getHeight()           const { return m_size.y; }
             virtual      const f32v2& getSize()             const { return m_size; }
             virtual          Clipping getClipping()         const { return m_clipping; }
-            virtual     ClippingState getClippingLeft()     const { return m_clipping.left   == ClippingState::INHERIT ? m_parent->getClippingLeft()   : m_clipping.left;   }
-            virtual     ClippingState getClippingTop()      const { return m_clipping.top    == ClippingState::INHERIT ? m_parent->getClippingTop()    : m_clipping.top;    }
-            virtual     ClippingState getClippingRight()    const { return m_clipping.right  == ClippingState::INHERIT ? m_parent->getClippingRight()  : m_clipping.right;  }
-            virtual     ClippingState getClippingBottom()   const { return m_clipping.bottom == ClippingState::INHERIT ? m_parent->getClippingBottom() : m_clipping.bottom; }
+            virtual     ClippingState getClippingLeft()     const;
+            virtual     ClippingState getClippingTop()      const;
+            virtual     ClippingState getClippingRight()    const;
+            virtual     ClippingState getClippingBottom()   const;
             virtual             f32v4 getClipRect()         const { return m_clipRect; }
             virtual    const nString& getName()             const { return m_name; }
             virtual       const bool& isEnabled()           const { return m_isEnabled; }

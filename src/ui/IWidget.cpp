@@ -118,6 +118,22 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
             y >= m_position.y && y < m_position.y + m_size.y);
 }
 
+vui::ClippingState vui::IWidget::getClippingLeft() const {
+    return (m_clipping.left == ClippingState::INHERIT ? m_parent->getClippingLeft() : m_clipping.left);
+}
+
+vui::ClippingState vui::IWidget::getClippingTop() const {
+    return (m_clipping.top == ClippingState::INHERIT ? m_parent->getClippingTop() : m_clipping.top);
+}
+
+vui::ClippingState vui::IWidget::getClippingRight() const {
+    return (m_clipping.right == ClippingState::INHERIT ? m_parent->getClippingRight() : m_clipping.right);
+}
+
+vui::ClippingState vui::IWidget::getClippingBottom() const {
+    return (m_clipping.bottom == ClippingState::INHERIT ? m_parent->getClippingBottom() : m_clipping.bottom);
+}
+
 void vui::IWidget::setParent(IWidget* parent) {
     // Remove this widget from any previous parent it may have had.
     if (m_parent) m_parent->removeWidget(this);

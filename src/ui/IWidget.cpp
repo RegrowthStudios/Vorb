@@ -17,14 +17,18 @@ vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr
     m_canvas(this),
     m_parent(nullptr),
     m_widgets(IWidgets()),
-    m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     // m_dockSizes(f32v4(0.0f)),
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
+    m_clipping(DEFAULT_CLIPPING),
+    m_clipRect(f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)),
     m_name(""),
     m_isClicking(false),
     m_isEnabled(false),
-    m_isMouseIn(false) {
+    m_isMouseIn(false),
+    m_needsClipRectRecalculation(false),
+    m_needsDrawableRefresh(false),
+    m_needsDimensionUpdate(false) {
     // m_style = {};
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
@@ -41,10 +45,29 @@ void vui::IWidget::dispose() {
         w->dispose();
     }
     IWidgets().swap(m_widgets);
+
     // for (int i = 0; i < 5; i++) IWidgets().swap(m_dockedWidgets[i]);
 
+    removeDrawables();
+
     disable();
-    
+}
+
+void vui::IWidget::update(f32 dt) {
+    if (m_needsDimensionUpdate) {
+        m_needsDimensionUpdate = false;
+        updateDimensions();
+    }
+
+    if (m_needsClipRectRecalculation) {
+        m_needsClipRectRecalculation = false;
+        calculateClipRect();
+    }
+
+    if (m_needsDrawableRefresh) {
+        m_needsDrawableRefresh = false;
+        refreshDrawables();
+    }
 }
 
 bool vui::IWidget::addWidget(IWidget* child) {

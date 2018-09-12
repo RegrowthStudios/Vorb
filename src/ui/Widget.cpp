@@ -22,11 +22,6 @@ vui::Widget::~Widget() {
     // Empty
 }
 
-void vui::Widget::dispose() {
-    removeDrawables();
-    IWidget::dispose();
-}
-
 // TODO(Matthew): See if we can minimise calculations done on update.
 void vui::Widget::updateDimensions() {
     static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
@@ -89,8 +84,7 @@ void vui::Widget::updateDimensions() {
 
     applyMinMaxSizes();
 
-    // TODO(Matthew): Implement this once we've implemented overflow.
-    // if (m_parent) computeClipRect(m_parent->getClipRect());
+    m_needsClipRectRecalculation = true;
 
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 

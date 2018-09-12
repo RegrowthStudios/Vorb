@@ -59,6 +59,25 @@ namespace vorb {
             bool bottom : 1; ///< If true, anchored to the bottom of parent
             bool top : 1; ///< If true, anchored to the top of parent
         };
+        //! Enum of clipping states.
+        enum class ClippingState {
+            VISIBLE = 0,
+            HIDDEN,
+            INHERIT
+        };
+        //! Bitfield of clipping flags.
+        struct Clipping {
+            ClippingState left   : 2;
+            ClippingState top    : 2;
+            ClippingState right  : 2;
+            ClippingState bottom : 2;
+        };
+        const Clipping DEFAULT_CLIPPING = {
+            ClippingState::VISIBLE,
+            ClippingState::VISIBLE,
+            ClippingState::VISIBLE,
+            ClippingState::VISIBLE
+        };
         //! Bitfield of dock flags
         enum class DockStyle {
             NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
@@ -90,6 +109,13 @@ namespace vorb {
              * Gets called in the destructor.
              */
             virtual void dispose();
+
+            /*! @brief Updates the widget. Can be used for animation.
+            *
+            * @param dt: The TimeStep
+            */
+            virtual void update(f32 dt VORB_MAYBE_UNUSED);
+
             /*! @brief Childs another widget to this widget.
              *
              * @param child: The Widget to add
@@ -127,10 +153,6 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            // virtual bool getFixedHeight() const { return m_style.fixedHeight; }
-            // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
-            // virtual bool getSelectable() const { return m_style.selectable; }
-            // virtual const ContainerStyle& getStyle() const { return m_style; }
             virtual       UIRenderer* getRenderer()         const { return m_renderer; }
             virtual const GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
             virtual          IWidget* getCanvas()           const { return m_canvas; }
@@ -146,15 +168,35 @@ namespace vorb {
             virtual        const f32& getHeight()           const { return m_size.y; }
             virtual      const f32v2& getSize()             const { return m_size; }
             virtual    const nString& getName()             const { return m_name; }
-            // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
             virtual       const bool& isEnabled()           const { return m_isEnabled; }
             virtual              bool isMouseIn()           const { return m_isMouseIn; }
+            // virtual bool getFixedHeight() const { return m_style.fixedHeight; }
+            // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
+            // virtual bool getSelectable() const { return m_style.selectable; }
+            // virtual const ContainerStyle& getStyle() const { return m_style; }
+            // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
+
+            virtual const volatile bool& needsClipRectRecalculation() const { return m_needsClipRectRecalculation; }
+            virtual const volatile bool& needsDrawableReload()        const { return m_needsDrawableRefresh; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setRenderer(UIRenderer* renderer) { removeDrawables(); m_renderer = renderer; addDrawables(); }
             virtual void setGameWindow(GameWindow* window) { m_window = window; }
+            /*!
+             * \brief Sets the parent widget of this widget.
+             * 
+             * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
+             */
+            virtual void setParent(IWidget* parent);
+            virtual void setFont(const Font* font)              { m_font = font; }
+            virtual void setClipping(Clipping clipping)         { m_clipping = clipping; }
+            virtual void setClippingLeft(ClippingState state)   { m_clipping.left   = state; }
+            virtual void setClippingTop(ClippingState state)    { m_clipping.top    = state; }
+            virtual void setClippingRight(ClippingState state)  { m_clipping.right  = state; }
+            virtual void setClippingBottom(ClippingState state) { m_clipping.bottom = state; }
+            virtual void setName(const nString& name)           { m_name = name; }
             // virtual void setDestRect(const f32v4& destRect);
             // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }
             // virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
@@ -167,14 +209,6 @@ namespace vorb {
             // virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             // virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
             // virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
-            /*!
-             * \brief Sets the parent widget of this widget.
-             * 
-             * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
-             */
-            virtual void setFont(const Font* font)    { m_font = font; }
-            virtual void setParent(IWidget* parent);
-            virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/
             /* Events                                                               */
@@ -245,20 +279,23 @@ namespace vorb {
             IWidget*          m_parent;           ///< Parent widget.
             IWidgets          m_widgets;          ///< Collection of child widgets.
             const Font*       m_font;             ///< Font for rendering.
-            f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
             f32v2             m_position;         ///< Position of widget relative to window in pixels.
             f32v2             m_size;             ///< Size of the widget in pixels.
+            Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
+            f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
             nString           m_name;             ///< Display name of the container.
             // ContainerStyle m_style;            ///< The current style.
             // std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
             // f32v4    m_dockSizes;        ///< Total size of each dock other than fill.
 
-            // bool m_isClippingEnabled = true;
-
             // TODO(Ben): Bitfield for memory reduction?.
             bool m_isClicking; ///< Used for click event tracking.
             bool m_isEnabled; ///< True when events are enabled.
             bool m_isMouseIn; ///< Used for motion event tracking.
+
+            volatile bool m_needsDimensionUpdate;
+            volatile bool m_needsClipRectRecalculation; ///< Whether we need to recalculate the clip rectangle.
+            volatile bool m_needsDrawableRefresh;        ///< Whether we need to refresh our drawables.
         };
     }
 }

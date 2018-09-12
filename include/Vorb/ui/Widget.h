@@ -149,17 +149,6 @@ namespace vorb {
             Widget(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Destructor that unhooks events */
             virtual ~Widget();
-            /*! @brief Releases all resources used by the Widget.
-            *
-            * Gets called in the destructor.
-            */
-            virtual void dispose() override;
-
-            /*! @brief Updates the widget. Can be used for animation.
-            *
-            * @param dt: The TimeStep
-            */
-            virtual void update(f32 dt VORB_UNUSED = 1.0f) { }
 
             /*! @brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
             virtual void updateDimensions() override;
@@ -170,16 +159,15 @@ namespace vorb {
             // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
             // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
             // virtual const DockStyle& getDock() const { return m_dock; }
-            virtual         PositionType getPositionType()     const { return m_positionType; }
-            virtual       const Length2& getRawPosition()      const { return m_rawDimensions.position; }
-            virtual       const Length2& getRawSize()          const { return m_rawDimensions.size; }
-            virtual        const Length& getRawLeft()          const { return m_rawRelativePositions.left; }
-            virtual        const Length& getRawTop()           const { return m_rawRelativePositions.top; }
-            virtual        const Length& getRawRight()         const { return m_rawRelativePositions.right; }
-            virtual        const Length& getRawBottom()        const { return m_rawRelativePositions.bottom; }
-            virtual       const Length2& getMinRawSize()       const { return m_minRawSize; }
-            virtual       const Length2& getMaxRawSize()       const { return m_maxRawSize; }
-            virtual const volatile bool& needsDrawableReload() const { return m_needsDrawableReload; }
+            virtual   PositionType getPositionType() const { return m_positionType; }
+            virtual const Length2& getRawPosition()  const { return m_rawDimensions.position; }
+            virtual const Length2& getRawSize()      const { return m_rawDimensions.size; }
+            virtual  const Length& getRawLeft()      const { return m_rawRelativePositions.left; }
+            virtual  const Length& getRawTop()       const { return m_rawRelativePositions.top; }
+            virtual  const Length& getRawRight()     const { return m_rawRelativePositions.right; }
+            virtual  const Length& getRawBottom()    const { return m_rawRelativePositions.bottom; }
+            virtual const Length2& getMinRawSize()   const { return m_minRawSize; }
+            virtual const Length2& getMaxRawSize()   const { return m_maxRawSize; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -189,17 +177,15 @@ namespace vorb {
             // virtual void setAnchor(const AnchorStyle& anchor);
             // virtual void setDock(const DockStyle& dock);
 
-            // TODO(Matthew): updateDimensions shouldn't be called here, we should wait for an update() call instead to minimise calculations.
-            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType; updateDimensions(); }
-            virtual void setRawPosition(const Length2& rawPosition)       { m_rawDimensions.position = rawPosition; updateDimensions(); }
-            virtual void setRawSize(const Length2& rawSize)               { m_rawDimensions.size = rawSize; updateDimensions(); }
-            virtual void setRawLeft(const Length& rawLeft)                { m_rawRelativePositions.left = rawLeft; updateDimensions(); }
-            virtual void setRawTop(const Length& rawTop)                  { m_rawRelativePositions.top = rawTop; updateDimensions(); }
-            virtual void setRawRight(const Length& rawRight)              { m_rawRelativePositions.right = rawRight; updateDimensions(); }
-            virtual void setRawBottom(const Length& rawBottom)            { m_rawRelativePositions.bottom = rawBottom; updateDimensions(); }
-            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize; updateDimensions(); }
-            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize; updateDimensions(); }
-            virtual void setNeedsDrawableReload(bool needsDrawableReload) { m_needsDrawableReload = needsDrawableReload; }
+            virtual void setPositionType(PositionType positionType)       { m_positionType = positionType;             m_needsDimensionUpdate = true; }
+            virtual void setRawPosition(const Length2& rawPosition)       { m_rawDimensions.position = rawPosition;    m_needsDimensionUpdate = true; }
+            virtual void setRawSize(const Length2& rawSize)               { m_rawDimensions.size = rawSize;            m_needsDimensionUpdate = true; }
+            virtual void setRawLeft(const Length& rawLeft)                { m_rawRelativePositions.left = rawLeft;     m_needsDimensionUpdate = true; }
+            virtual void setRawTop(const Length& rawTop)                  { m_rawRelativePositions.top = rawTop;       m_needsDimensionUpdate = true; }
+            virtual void setRawRight(const Length& rawRight)              { m_rawRelativePositions.right = rawRight;   m_needsDimensionUpdate = true; }
+            virtual void setRawBottom(const Length& rawBottom)            { m_rawRelativePositions.bottom = rawBottom; m_needsDimensionUpdate = true; }
+            virtual void setMaxRawSize(const Length2& maxRawSize)         { m_maxRawSize = maxRawSize;                 m_needsDimensionUpdate = true; }
+            virtual void setMinRawSize(const Length2& minRawSize)         { m_minRawSize = minRawSize;                 m_needsDimensionUpdate = true; }
             
         protected:
             // virtual f32v2 getWidgetAlignOffset();
@@ -248,8 +234,6 @@ namespace vorb {
                     Length bottom; ///< Position of widget relative to bottom of target widget.
                 } m_rawRelativePositions;
             };
-
-            volatile bool m_needsDrawableReload = false;                                                                ///< TODO(Matthew): Write valid description.
         };
     }
 }

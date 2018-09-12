@@ -21,7 +21,6 @@ vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
-    resetClipRect(),
     m_name(""),
     m_isClicking(false),
     m_isEnabled(false),
@@ -31,6 +30,7 @@ vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr
     m_needsDimensionUpdate(false) {
     // m_style = {};
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
+    resetClipRect();
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
     enable();
     setRenderer(renderer);
@@ -241,48 +241,56 @@ void vui::IWidget::calculateClipRect() {
     // TODO(Matthew): Revisit inherit.
     clipRect = m_parent->getClipRect();
 
+    ClippingState left = getClippingLeft();
     if (m_position.x < clipRect.x) {
         m_clipRect.x = clipRect.x;
-    } else if (m_clipping.left == ClippingState::HIDDEN) {
+    } else if (left == ClippingState::HIDDEN) {
         m_clipRect.x = m_position.x;
-    } else if (m_clipping.left == ClippingState::VISIBLE) {
+    } else if (left == ClippingState::VISIBLE) {
         m_clipRect.x = m_parent ? m_parent->getClipRect().left
                                 : m_canvas->getClipRect().left;
     } else {
-        // TODO
+        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
+        assert(false);
     }
 
+    ClippingState top = getClippingTop();
     if (m_position.y < clipRect.y) {
         m_clipRect.y = clipRect.y;
-    } else if (m_clipping.top == ClippingState::HIDDEN) {
+    } else if (top == ClippingState::HIDDEN) {
         m_clipRect.y = m_position.y;
-    } else if (m_clipping.top == ClippingState::VISIBLE) {
+    } else if (top == ClippingState::VISIBLE) {
         m_clipRect.y = m_parent ? m_parent->getClipRect().top
                                 : m_canvas->getClipRect().top;
     } else {
-        // TODO
+        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
+        assert(false);
     }
 
+    ClippingState right = getClippingRight();
     if (m_position.x + m_size.x > clipRect.x + clipRect.z) {
         m_clipRect.z = clipRect.x + clipRect.z - m_clipRect.x;
-    } else if (m_clipping.right == ClippingState::HIDDEN) {
+    } else if (right == ClippingState::HIDDEN) {
         m_clipRect.z = m_position.x + m_size.x - m_clipRect.x;
-    } else if (m_clipping.right == ClippingState::VISIBLE) {
+    } else if (right == ClippingState::VISIBLE) {
         m_clipRect.z = m_parent ? m_parent->getClipRect().right
                                 : m_canvas->getClipRect().right;
     } else {
-        // TODO
+        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
+        assert(false);
     }
 
+    ClippingState bottom = getClippingBottom();
     if (m_position.y + m_size.y < clipRect.y + clipRect.w) {
         m_clipRect.w = clipRect.y + clipRect.w - m_clipRect.y;
-    } else if (m_clipping.bottom == ClippingState::HIDDEN) {
+    } else if (bottom == ClippingState::HIDDEN) {
         m_clipRect.w = m_position.y + m_size.y - m_clipRect.y;
-    } else if (m_clipping.bottom == ClippingState::VISIBLE) {
+    } else if (bottom == ClippingState::VISIBLE) {
         m_clipRect.w = m_parent ? m_parent->getClipRect().bottom
                                 : m_canvas->getClipRect().bottom;
     } else {
-        // TODO
+        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
+        assert(false);
     }
 
     computeChildClipRects();

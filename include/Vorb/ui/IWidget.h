@@ -153,7 +153,6 @@ namespace vorb {
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }
             virtual       const Font* getFont()             const { return m_font; }
-            virtual             f32v4 getClipRect()         const { return m_clipRect; }
             virtual             f32v4 getDestRect()         const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
@@ -161,6 +160,12 @@ namespace vorb {
             virtual        const f32& getWidth()            const { return m_size.x; }
             virtual        const f32& getHeight()           const { return m_size.y; }
             virtual      const f32v2& getSize()             const { return m_size; }
+            virtual          Clipping getClipping()         const { return m_clipping; }
+            virtual     ClippingState getClippingLeft()     const { return m_clipping.left   == ClippingState::INHERIT ? m_parent->getClippingLeft()   : m_clipping.left;   }
+            virtual     ClippingState getClippingTop()      const { return m_clipping.top    == ClippingState::INHERIT ? m_parent->getClippingTop()    : m_clipping.top;    }
+            virtual     ClippingState getClippingRight()    const { return m_clipping.right  == ClippingState::INHERIT ? m_parent->getClippingRight()  : m_clipping.right;  }
+            virtual     ClippingState getClippingBottom()   const { return m_clipping.bottom == ClippingState::INHERIT ? m_parent->getClippingBottom() : m_clipping.bottom; }
+            virtual             f32v4 getClipRect()         const { return m_clipRect; }
             virtual    const nString& getName()             const { return m_name; }
             virtual       const bool& isEnabled()           const { return m_isEnabled; }
             virtual              bool isMouseIn()           const { return m_isMouseIn; }
@@ -168,7 +173,6 @@ namespace vorb {
             // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
             // virtual bool getSelectable() const { return m_style.selectable; }
             // virtual const ContainerStyle& getStyle() const { return m_style; }
-            // virtual const bool& getClippingEnabled() const { return m_isClippingEnabled; }
 
             virtual const volatile bool& needsDimensionUpdate()       const { return m_needsDimensionUpdate; }
             virtual const volatile bool& needsClipRectRecalculation() const { return m_needsClipRectRecalculation; }

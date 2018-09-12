@@ -273,7 +273,7 @@ void vui::IWidget::setClippingBottom(ClippingState state) {
 
 void vui::IWidget::calculateClipRect() {
     // TODO(Matthew): Revisit inherit.
-    clipRect = m_parent->getClipRect();
+    f32v4 clipRect = m_parent->getClipRect();
 
     ClippingState left = getClippingLeft();
     if (m_position.x < clipRect.x) {
@@ -281,8 +281,8 @@ void vui::IWidget::calculateClipRect() {
     } else if (left == ClippingState::HIDDEN) {
         m_clipRect.x = m_position.x;
     } else if (left == ClippingState::VISIBLE) {
-        m_clipRect.x = m_parent ? m_parent->getClipRect().left
-                                : m_canvas->getClipRect().left;
+        m_clipRect.x = m_parent ? m_parent->getClipRect().x
+                                : m_canvas->getClipRect().x;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
@@ -294,8 +294,8 @@ void vui::IWidget::calculateClipRect() {
     } else if (top == ClippingState::HIDDEN) {
         m_clipRect.y = m_position.y;
     } else if (top == ClippingState::VISIBLE) {
-        m_clipRect.y = m_parent ? m_parent->getClipRect().top
-                                : m_canvas->getClipRect().top;
+        m_clipRect.y = m_parent ? m_parent->getClipRect().y
+                                : m_canvas->getClipRect().y;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
@@ -307,8 +307,8 @@ void vui::IWidget::calculateClipRect() {
     } else if (right == ClippingState::HIDDEN) {
         m_clipRect.z = m_position.x + m_size.x - m_clipRect.x;
     } else if (right == ClippingState::VISIBLE) {
-        m_clipRect.z = m_parent ? m_parent->getClipRect().right
-                                : m_canvas->getClipRect().right;
+        m_clipRect.z = m_parent ? m_parent->getClipRect().z
+                                : m_canvas->getClipRect().z;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
@@ -320,14 +320,14 @@ void vui::IWidget::calculateClipRect() {
     } else if (bottom == ClippingState::HIDDEN) {
         m_clipRect.w = m_position.y + m_size.y - m_clipRect.y;
     } else if (bottom == ClippingState::VISIBLE) {
-        m_clipRect.w = m_parent ? m_parent->getClipRect().bottom
-                                : m_canvas->getClipRect().bottom;
+        m_clipRect.w = m_parent ? m_parent->getClipRect().w
+                                : m_canvas->getClipRect().w;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
     }
 
-    computeChildClipRects();
+    calculateChildClipRects();
 }
 
 void vui::IWidget::calculateChildClipRects() {

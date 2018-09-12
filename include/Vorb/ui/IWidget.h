@@ -46,12 +46,6 @@ namespace vorb {
         class Widget;
         class GameWindow;
 
-        // //! Bitfield of container styling flags
-        // struct ContainerStyle {
-        //     bool fixedHeight : 1; ///< If true, the control has fixed height when auto-scaled.
-        //     bool fixedWidth : 1; ///< If true, the control has fixed width when auto-scaled.
-        //     bool selectable : 1; ///< If true, the control can receive focus.
-        // };
         //! Bitfield of anchor flags
         struct AnchorStyle {
             bool left : 1; ///< If true, anchored to the left of parent
@@ -198,13 +192,9 @@ namespace vorb {
             virtual void setName(const nString& name)           { m_name = name; }
             // virtual void setDestRect(const f32v4& destRect);
             // virtual void setSize(const f32v2& size) { m_size = size; updateChildPositions(); }
-            // virtual void setFixedHeight(bool fixedHeight) { m_style.fixedHeight = fixedHeight; }
-            // virtual void setFixedWidth(bool fixedWidth) { m_style.fixedWidth = fixedWidth; }
             // virtual void setWidth(f32 width) { m_size.x = width;  updateChildPositions(); }
             // virtual void setHeight(f32 height) { m_size.y = height;  updateChildPositions(); }
             // virtual void setPosition(const f32v2& position) { m_relativePosition = position; updatePosition(); }
-            // virtual void setSelectable(bool selectable) { m_style.selectable = selectable; }
-            // virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             // virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             // virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
 
@@ -293,7 +283,6 @@ namespace vorb {
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
             nString           m_name;             ///< Display name of the container.
-            // ContainerStyle m_style;            ///< The current style.
             // std::vector<Widget*> m_dockedWidgets[5]; ///< Widgets that are docked. TODO(Ben): Linked list instead?
             // f32v4    m_dockSizes;        ///< Total size of each dock other than fill.
 

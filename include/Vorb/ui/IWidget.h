@@ -163,10 +163,6 @@ namespace vorb {
             virtual    const nString& getName()             const { return m_name; }
             virtual       const bool& isEnabled()           const { return m_isEnabled; }
             virtual              bool isMouseIn()           const { return m_isMouseIn; }
-            // virtual bool getFixedHeight() const { return m_style.fixedHeight; }
-            // virtual bool getFixedWidth() const { return m_style.fixedWidth; }
-            // virtual bool getSelectable() const { return m_style.selectable; }
-            // virtual const ContainerStyle& getStyle() const { return m_style; }
 
             virtual const volatile bool& needsDimensionUpdate()       const { return m_needsDimensionUpdate; }
             virtual const volatile bool& needsClipRectRecalculation() const { return m_needsClipRectRecalculation; }
@@ -199,7 +195,6 @@ namespace vorb {
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
             virtual void setName(const nString& name) { m_name = name; }
-            // virtual void setDestRect(const f32v4& destRect);
 
             /************************************************************************/
             /* Events                                                               */

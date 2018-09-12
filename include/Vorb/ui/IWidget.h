@@ -116,6 +116,11 @@ namespace vorb {
             */
             virtual void update(f32 dt VORB_MAYBE_UNUSED);
 
+            /*! @brief Enables events that all widgets share in common. */
+            virtual void enable();
+            /*! @brief Disables events that all widgets share in common. */
+            virtual void disable();
+
             /*! @brief Childs another widget to this widget.
              *
              * @param child: The Widget to add
@@ -128,17 +133,6 @@ namespace vorb {
             * @return true on success.
             */
             virtual bool removeWidget(IWidget* child);
-
-            /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
-             *
-             *  The simplest form could be m_position = m_relativePosition;
-             */
-            virtual void updateDimensions() = 0;
-
-            /*! @brief Enables events that all widgets share in common. */
-            virtual void enable();
-            /*! @brief Disables events that all widgets share in common. */
-            virtual void disable();
 
             /*! @brief Checks if a point is inside the container
              *
@@ -209,7 +203,6 @@ namespace vorb {
             // virtual void setStyle(const ContainerStyle& style) { m_style = style; }
             // virtual void setX(f32 x) { m_relativePosition.x = x; updatePosition(); }
             // virtual void setY(f32 y) { m_relativePosition.y = y; updatePosition(); }
-            // virtual void setClippingEnabled(bool isClippingEnabled) { m_isClippingEnabled = isClippingEnabled; updatePosition(); }
 
             /************************************************************************/
             /* Events                                                               */
@@ -223,13 +216,24 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
+             *
+             *  The simplest form could be m_position = m_relativePosition;
+             */
+            virtual void updateDimensions() = 0;
+
             /*! Removes a widget from a dock and returns true on success. */
             // bool removeChildFromDock(Widget* widget);
             /*! Refreshes all docked widget positions and sizes. */
             // void recalculateDockedWidgets();
+            
             /*! Computes clipping for rendering and propagates through children. */
-            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX));
-            // virtual void computeChildClipRects();
+            virtual void calculateClipRect();
+            /*! Reset clip rect. */
+            virtual void resetClipRect() { m_clipRect = f32v4(-(FLT_MAX), -(FLT_MAX), FLT_MAX, FLT_MAX); };
+            /*! Computes the clipping of child widgets. */
+            virtual void calculateChildClipRects();
+            
             /*!
              * \brief Updates all child widgets' dimensions.
              */

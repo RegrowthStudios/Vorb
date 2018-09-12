@@ -21,6 +21,7 @@ vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
+    m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_flags({ false, false, false, false, false, false, false }) {
     // m_style = {};
@@ -270,6 +271,113 @@ void vui::IWidget::setClippingBottom(ClippingState state) {
     m_flags.needsClipRectRecalculation = true;
 }
 
+void vui::IWidget::setDock(Dock dock) {
+    m_dock = dock;
+
+    if (m_parent) {
+        m_parent->m_flags.needsDockRecalculation = true;
+    }
+}
+
+void vui::IWidget::setDockState(DockState state) {
+    m_dock.state = state;
+
+    if (m_parent) {
+        m_parent->m_flags.needsDockRecalculation = true;
+    }
+}
+
+void vui::IWidget::setDockSize(f32 size) {
+    m_dock.size = size;
+
+    if (m_parent) {
+        m_parent->m_flags.needsDockRecalculation = true;
+    }
+}
+
+void vui::IWidget::calculateDockedWidgets() {
+    f32 surplusWidth  = m_size.x;
+    f32 surplusHeight = m_size.y;
+    f32 leftFill      = 0.0f;
+    f32 topFill       = 0.0f;
+
+    for (auto& child : m_widgets) {
+        if (child->getDockState() == DockState::NONE) continue;
+
+        DockState state = child->getDockState();
+        f32       size  = child->getDockSize();
+        switch (state) {
+            case DockState::LEFT:
+                if (surplusWidth > size) {
+                    child->setWidth(size);
+                    surplusWidth -= size;
+                } else {
+                    child->setWidth(surplusWidth);
+                    surplusWidth = 0.0f;
+                }
+
+                child->setPosition(f32v2(leftFill, topFill));
+
+                child->setHeight(surplusHeight);
+                break;
+            case DockState::TOP:
+                if (surplusHeight > size) {
+                    child->setHeight(size);
+                    surplusHeight -= size;
+                } else {
+                    child->setHeight(surplusHeight);
+                    surplusHeight = 0.0f;
+                }
+
+                child->setPosition(f32v2(leftFill, topFill));
+
+                child->setWidth(surplusWidth);
+                break;
+            case DockState::RIGHT:
+                if (surplusWidth > size) {
+                    child->setWidth(size);
+                    surplusWidth -= size;
+
+                    child->setPosition(f32v2(leftFill + surplusWidth, topFill));
+                } else {
+                    child->setWidth(surplusWidth);
+                    surplusWidth = 0.0f;
+
+                    child->setPosition(f32v2(leftFill, topFill));
+                }
+
+                child->setHeight(surplusHeight);
+                break;
+            case DockState::BOTTOM:
+                if (surplusHeight > size) {
+                    child->setHeight(size);
+                    surplusHeight -= size;
+
+                    child->setPosition(f32v2(leftFill, topFill + surplusHeight));
+                } else {
+                    child->setHeight(surplusHeight);
+                    surplusHeight = 0.0f;
+
+                    child->setPosition(f32v2(leftFill, topFill));
+                }
+
+                child->setWidth(surplusWidth);
+                break;
+            case DockState::FILL:
+                child->setSize(f32v2(surplusWidth, surplusHeight));
+                child->setPosition(f32v2(leftFill, topFill));
+                surplusWidth  = 0.0f;
+                surplusHeight = 0.0f;
+                break;
+            default:
+                // Shouldn't get here.
+                assert(false);
+                break;
+        }
+
+        if (surplusWidth == 0.0f && surplusHeight == 0.0f) break;
+    }
+}
 
 void vui::IWidget::calculateClipRect() {
     // TODO(Matthew): Revisit inherit.

@@ -65,9 +65,20 @@ namespace vorb {
             ClippingState::VISIBLE,
             ClippingState::VISIBLE
         };
-        //! Bitfield of dock flags
-        enum class DockStyle {
-            NONE = 0, LEFT, RIGHT, BOTTOM, TOP, FILL
+
+        //! Bitfield of docking states.
+        enum class DockState {
+            NONE = 0,
+            LEFT,
+            RIGHT,
+            BOTTOM,
+            TOP,
+            FILL
+        };
+        //! Struct of docking state and size.
+        struct Dock {
+            DockState state;
+            f32       size;
         };
 
         //! Bitfield of widget flags
@@ -165,6 +176,9 @@ namespace vorb {
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
             virtual             f32v4 getClipRect()         const { return m_clipRect; }
+            virtual              Dock getDock()             const { return m_dock; }
+            virtual         DockState getDockState()        const { return m_dock.state; }
+            virtual               f32 getDockSize()         const { return m_dock.size; }
             virtual    const nString& getName()             const { return m_name; }
             virtual       const bool& isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
@@ -199,6 +213,9 @@ namespace vorb {
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
+            virtual void setDock(Dock dock);
+            virtual void setDockState(DockState state);
+            virtual void setDockSize(f32 size);
             virtual void setName(const nString& name) { m_name = name; }
 
             /************************************************************************/
@@ -221,8 +238,8 @@ namespace vorb {
 
             /*! Removes a widget from a dock and returns true on success. */
             // bool removeChildFromDock(Widget* widget);
-            /*! Refreshes all docked widget positions and sizes. */
-            // void recalculateDockedWidgets();
+            /*! Calculates positions and sizes of docked child widgets. */
+            void calculateDockedWidgets();
             
             /*! Computes clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
@@ -285,6 +302,7 @@ namespace vorb {
             f32v2             m_size;             ///< Size of the widget in pixels.
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
+            Dock              m_dock;             ///< Information for docking of widget.
             nString           m_name;             ///< Display name of the container.
 
             WidgetFlags m_flags;

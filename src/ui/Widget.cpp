@@ -24,6 +24,9 @@ vui::Widget::~Widget() {
 
 // TODO(Matthew): See if we can minimise calculations done on update.
 void vui::Widget::updateDimensions() {
+    // TODO(Matthew): Can we remove this check?
+    if (m_dock.state != DockState::NONE) return;
+
     static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
             f32v2 processedPosition = processLength(m_rawDimensions.position);
             m_position = processedPosition + modifier;

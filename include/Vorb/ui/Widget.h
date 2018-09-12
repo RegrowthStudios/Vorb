@@ -156,9 +156,6 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
-            // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
-            // virtual const DockStyle& getDock() const { return m_dock; }
             virtual   PositionType getPositionType() const { return m_positionType; }
             virtual const Length2& getRawPosition()  const { return m_rawDimensions.position; }
             virtual const Length2& getRawSize()      const { return m_rawDimensions.size; }
@@ -169,14 +166,13 @@ namespace vorb {
             virtual const Length2& getMinRawSize()   const { return m_minRawSize; }
             virtual const Length2& getMaxRawSize()   const { return m_maxRawSize; }
 
+            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
+            // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
+            // virtual const DockStyle& getDock() const { return m_dock; }
+
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // TODO(Matthew): Think how this actually works with position type system.
-            // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
-            // virtual void setAnchor(const AnchorStyle& anchor);
-            // virtual void setDock(const DockStyle& dock);
-
             virtual void setPositionType(PositionType positionType) { m_positionType = positionType;             m_needsDimensionUpdate = true; }
             virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_needsDimensionUpdate = true; }
             virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_needsDimensionUpdate = true; }
@@ -186,6 +182,11 @@ namespace vorb {
             virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_needsDimensionUpdate = true; }
             virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_needsDimensionUpdate = true; }
             virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_needsDimensionUpdate = true; }
+
+            // TODO(Matthew): Think how this actually works with position type system.
+            // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
+            // virtual void setAnchor(const AnchorStyle& anchor);
+            // virtual void setDock(const DockStyle& dock);
             
         protected:
             // virtual f32v2 getWidgetAlignOffset();
@@ -215,9 +216,6 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            // WidgetAlign   m_align               = WidgetAlign::TOP_LEFT;
-            // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
-            // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
             PositionType  m_positionType        = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
             Length2       m_minRawSize          = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Minimum size of widget.
             Length2       m_maxRawSize          = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
@@ -234,6 +232,10 @@ namespace vorb {
                     Length bottom; ///< Position of widget relative to bottom of target widget.
                 } m_rawRelativePositions;
             };
+
+            // WidgetAlign   m_align               = WidgetAlign::TOP_LEFT;
+            // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
+            // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
         };
     }
 }

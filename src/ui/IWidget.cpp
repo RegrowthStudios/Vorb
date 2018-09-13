@@ -20,9 +20,10 @@ vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* wind
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
+    m_zIndex(1),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
-    m_flags({ false, false, false, false, false, false, false }) {
+    m_flags({ false, false, false, false, false, false, false, false }) {
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     resetClipRect();
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
@@ -55,6 +56,11 @@ void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
         updateDimensions();
+    }
+
+    if (m_flags.needsZIndexReorder) {
+        m_flags.needsZIndexReorder = false;
+        reorderWidgets();
     }
 
     if (m_flags.needsDockRecalculation) {
@@ -483,6 +489,27 @@ void vui::IWidget::updateChildCanvases() {
     }
 }
 
+void vui::IWidget::reorderWidgets() {
+    std::sort(m_widgets.begin(), m_widgets.end(), [](const IWidget* lhs, const IWidget* rhs) {
+        return lhs->getZIndex() >= rhs->getZIndex();
+    });
+
+    reorderChildWidgets();
+
+    setRenderer(getRenderer());
+}
+
+void vui::IWidget::reorderChildWidgets() {
+    for (auto& child : m_widgets) {
+        std::vector<IWidget*> grandchildren = child->getWidgets();
+
+        std::sort(grandchildren.begin(), grandchildren.end(), [](const IWidget* lhs, const IWidget* rhs) {
+            return lhs->getZIndex() >= rhs->getZIndex();
+        });
+
+        child->reorderChildWidgets();
+    }
+}
 
 void vui::IWidget::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;

@@ -88,6 +88,7 @@ namespace vorb {
             bool isMouseIn  : 1; ///< Used for motion event tracking.
 
             volatile bool needsDimensionUpdate       : 1; ///< Whether we need to recalculate widget dimensions.
+            volatile bool needsZIndexReorder         : 1; ///< Whether we need to recalculate the order of widgets based on their z-index values.
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
             volatile bool needsDrawableRefresh       : 1; ///< Whether we need to refresh our drawables.
@@ -181,6 +182,7 @@ namespace vorb {
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
             virtual             f32v4 getClipRect()         const { return m_clipRect; }
+            virtual              ui16 getZIndex()           const { return m_zIndex; }
             virtual              Dock getDock()             const { return m_dock; }
             virtual         DockState getDockState()        const { return m_dock.state; }
             virtual               f32 getDockSize()         const { return m_dock.size; }
@@ -218,6 +220,7 @@ namespace vorb {
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
+            virtual void setZIndex(ui16 zIndex) { m_zIndex = zIndex; m_canvas->m_flags.needsZIndexReorder = true; }
             virtual void setDock(Dock dock);
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
@@ -267,6 +270,16 @@ namespace vorb {
              */
             virtual void updateChildCanvases();
 
+            /*!
+             * \brief Reorders widgets relative to their z-index value.
+             */
+            virtual void reorderWidgets();
+
+            /*!
+             * \brief Sorts, then removes and re-adds all child widgets to renderer.
+             */
+            virtual void reorderChildWidgets();
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
@@ -305,6 +318,7 @@ namespace vorb {
             f32v2             m_size;             ///< Size of the widget in pixels.
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
+            ui16              m_zIndex;           ///< Z-index of widget for depth.
             Dock              m_dock;             ///< Information for docking of widget.
             nString           m_name;             ///< Display name of the container.
 

@@ -5,16 +5,16 @@ vui::WidgetList::WidgetList() : Widget() {
     addWidget(&m_panel);
 }
 
-vui::WidgetList::WidgetList(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : WidgetList() {
-    m_name = name;
-    // setDestRect(destRect);
-    // m_panel.setDimensions(m_dimensions);
-    // updatePosition();
-}
+// vui::WidgetList::WidgetList(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : WidgetList() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     // m_panel.setDimensions(m_dimensions);
+//     // updatePosition();
+// }
 
-vui::WidgetList::WidgetList(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
-    parent->addWidget(this);
-}
+// vui::WidgetList::WidgetList(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
+//     parent->addWidget(this);
+// }
 
 vui::WidgetList::~WidgetList() {
     // Empty

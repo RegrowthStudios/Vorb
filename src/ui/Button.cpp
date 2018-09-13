@@ -7,39 +7,39 @@ vui::Button::Button() : Widget() {
     updateColor();
 }
 
-vui::Button::Button(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Button() {
-    m_name = name;
-    // setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getSize());
-    updateTextPosition();
-}
+// vui::Button::Button(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Button() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     m_drawableRect.setPosition(getPosition());
+//     m_drawableRect.setDimensions(getSize());
+//     updateTextPosition();
+// }
 
-vui::Button::Button(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
-    parent->addWidget(this);
-    m_parent = parent;
-}
+// vui::Button::Button(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
+//     parent->addWidget(this);
+//     m_parent = parent;
+// }
 
 vui::Button::~Button() {
     // Empty
 }
 
-void vui::Button::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
+void vui::Button::addDrawables() {
+    Widget::addDrawables();
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
     // Use renderer default font if we dont have a font
-    m_defaultFont = renderer->getDefaultFont();
+    m_defaultFont = m_renderer->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the rect
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Button::refreshDrawables));
     
     // Add the text 
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
@@ -155,7 +155,7 @@ void vui::Button::setTextScale(const f32v2& textScale) {
 }
 
 void vui::Button::updateColor() {
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         m_drawableRect.setColor1(m_backHoverColor1);
         m_drawableRect.setColor2(m_backHoverColor2);
         m_drawableRect.setGradientType(gradBack);
@@ -225,17 +225,17 @@ void vui::Button::refreshDrawables() {
 }
 
 void vui::Button::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
             updateColor();
         }
         MouseMove(e);
     } else {        
-        if (m_isMouseIn) {
-            m_isMouseIn = false;
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
             MouseLeave(e);
             updateColor();
         }
@@ -243,9 +243,9 @@ void vui::Button::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 }
 
 void vui::Button::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
-        m_isMouseIn = false;
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseMotionEvent ev;
         ev.x = e.x;
         ev.y = e.y;

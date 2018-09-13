@@ -15,30 +15,30 @@ vui::Panel::Panel() : Widget() {
     updateSliders();
 }
 
-vui::Panel::Panel(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Panel() {
-    m_name = name;
-    // setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getSize());
-}
+// vui::Panel::Panel(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Panel() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     m_drawableRect.setPosition(getPosition());
+//     m_drawableRect.setDimensions(getSize());
+// }
 
-vui::Panel::Panel(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
-    parent->addWidget(this);
-}
+// vui::Panel::Panel(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
+//     parent->addWidget(this);
+// }
 
 vui::Panel::~Panel() {
     // Empty
 }
 
-void vui::Panel::addDrawables(UIRenderer* renderer) {
+void vui::Panel::addDrawables() {
     // Make copy
     m_drawnRect = m_drawableRect;
     // Add the rect
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Panel::refreshDrawables));
 
-    Widget::addDrawables(renderer);
+    Widget::addDrawables();
 }
 
 void vui::Panel::removeDrawables() {
@@ -167,7 +167,7 @@ void vui::Panel::setAutoScroll(bool autoScroll) {
 }
 
 void vui::Panel::updateColor() {
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         m_drawableRect.setColor(m_backHoverColor);
     } else {
         m_drawableRect.setColor(m_backColor);
@@ -259,17 +259,17 @@ void vui::Panel::refreshDrawables() {
 }
 
 void vui::Panel::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
             updateColor();
         }
         MouseMove(e);
     } else {
-        if (m_isMouseIn) {
-            m_isMouseIn = false;
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
             MouseLeave(e);
             updateColor();
         }
@@ -277,9 +277,9 @@ void vui::Panel::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 }
 
 void vui::Panel::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
-        m_isMouseIn = false;
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseMotionEvent ev;
         ev.x = e.x;
         ev.y = e.y;

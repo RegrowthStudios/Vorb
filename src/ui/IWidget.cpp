@@ -5,31 +5,33 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
-vui::IWidget::IWidget(UIRenderer* renderer, const GameWindow* window /*= nullptr*/) :
+vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* window /*= nullptr*/) :
     MouseClick(this),
     MouseDown(this),
     MouseUp(this),
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this),
-    m_font(nullptr),
     m_window(window),
     m_canvas(this),
     m_parent(nullptr),
     m_widgets(IWidgets()),
-    // m_dockSizes(f32v4(0.0f)),
+    m_font(nullptr),
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_flags({ false, false, false, false, false, false, false }) {
-    // m_style = {};
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     resetClipRect();
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
     enable();
-    setRenderer(renderer);
+    if (renderer) {
+        setRenderer(renderer);
+    } else {
+        m_renderer = nullptr;
+    }
 }
 
 vui::IWidget::~IWidget() {
@@ -49,7 +51,7 @@ void vui::IWidget::dispose() {
     disable();
 }
 
-void vui::IWidget::update(f32 dt) {
+void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
         updateDimensions();

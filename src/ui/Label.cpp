@@ -7,31 +7,31 @@ vui::Label::Label() : Widget() {
     refreshDrawables();
 }
 
-vui::Label::Label(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Label() {
-    m_name = name;
-    // setDestRect(destRect);
-    updateTextPosition();
-}
+// vui::Label::Label(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Label() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     updateTextPosition();
+// }
 
-vui::Label::Label(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
-    parent->addWidget(this);
-}
+// vui::Label::Label(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
+//     parent->addWidget(this);
+// }
 
 vui::Label::~Label() {
     // Empty
 }
 
-void vui::Label::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
+void vui::Label::addDrawables() {
+    Widget::addDrawables();
     // Make copies
     m_drawnText = m_drawableText;
 
     // Use renderer default font if we dont have a font
-    m_defaultFont = renderer->getDefaultFont();
+    m_defaultFont = m_renderer->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the text 
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &Label::refreshDrawables));
 }

@@ -42,7 +42,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_DEL(env, setAnchor);
         // REGISTER_DEL(env, setDestRect);
         // REGISTER_DEL(env, setDimensions);
-        REGISTER_DEL(env, setDock);
+        // REGISTER_DEL(env, setDock);
         // REGISTER_DEL(env, setFixedHeight);
         // REGISTER_DEL(env, setFixedWidth);
         // REGISTER_DEL(env, setHeight);
@@ -194,7 +194,7 @@ i32 vui::WidgetScriptFuncs::getStyle(Widget* w VORB_UNUSED) const {
     return 0; //TODO(Ben): Implement
 }
 
-// vui::DockStyle vui::WidgetScriptFuncs::getDock(Widget* w) const {
+// vui::Dock vui::WidgetScriptFuncs::getDock(Widget* w) const {
 //     return w->getDock();
 // }
 
@@ -282,7 +282,7 @@ void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_UNUSED, int anchor VORB_UN
 //     w->setDimensions(dims);
 // }
 
-// void vui::WidgetScriptFuncs::setDock(Widget* w, DockStyle dock) const {
+// void vui::WidgetScriptFuncs::setDock(Widget* w, Dock dock) const {
 //     w->setDock(dock);
 // }
 

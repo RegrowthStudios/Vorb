@@ -7,16 +7,15 @@
 
 vui::Widget::Widget() : IWidget() {
     enable();
-    // m_anchor = {};
 }
 
-vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget(name, destRect) {
-    enable();
-}
+// vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget(name, destRect) {
+//     enable();
+// }
 
-vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-    setParent(parent);
-}
+// vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
+//     setParent(parent);
+// }
 
 vui::Widget::~Widget() {
     // Empty

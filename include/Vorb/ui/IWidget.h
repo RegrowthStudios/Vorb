@@ -105,7 +105,7 @@ namespace vorb {
              * @param renderer: The renderer to use for drawing widget.
              * @param window: The window in which to set the UI.
              */
-            IWidget(UIRenderer* renderer, const GameWindow* window = nullptr);
+            IWidget(UIRenderer* renderer = nullptr, const GameWindow* window = nullptr);
             // /*! @brief Constructor that sets name, position, and dimensions.
             //  *
             //  * @param name: Name of the widget.
@@ -151,8 +151,13 @@ namespace vorb {
              */
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
-
-            // virtual void setChildDock(Widget* widget, DockStyle dockStyle);
+            
+            /*! @brief Adds all drawables to the UIRenderer. */
+            virtual void addDrawables();
+            /*! @brief Removes all drawables from the UIRenderer. */
+            virtual void removeDrawables();
+            /*! @brief Refreshes all drawables. */
+            virtual void refreshDrawables() = 0;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -180,12 +185,12 @@ namespace vorb {
             virtual         DockState getDockState()        const { return m_dock.state; }
             virtual               f32 getDockSize()         const { return m_dock.size; }
             virtual    const nString& getName()             const { return m_name; }
-            virtual       const bool& isEnabled()           const { return m_flags.isEnabled; }
+            virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
 
-            virtual volatile bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate; }
-            virtual volatile bool needsClipRectRecalculation() const { return m_flags.needsClipRectRecalculation; }
-            virtual volatile bool needsDrawableReload()        const { return m_flags.needsDrawableRefresh; }
+            virtual bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate; }
+            virtual bool needsClipRectRecalculation() const { return m_flags.needsClipRectRecalculation; }
+            virtual bool needsDrawableReload()        const { return m_flags.needsDrawableRefresh; }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -256,13 +261,6 @@ namespace vorb {
              * \brief Updates all child widgets' canvas fields.
              */
             virtual void updateChildCanvases();
-            
-            /*! @brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables();
-            /*! @brief Removes all drawables from the UIRenderer. */
-            virtual void removeDrawables();
-            /*! @brief Refreshes all drawables. */
-            virtual void refreshDrawables() = 0;
 
             /************************************************************************/
             /* Event Handlers                                                       */

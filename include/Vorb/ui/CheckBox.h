@@ -38,29 +38,27 @@ namespace vorb {
         public:
             /*! @brief Default constructor. */
             CheckBox();
-            /*! @brief Constructor that sets name, position, and dimensions.
-            *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            CheckBox(const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            // /*! @brief Constructor that sets name, position, and dimensions.
+            // *
+            // * @param name: Name of the control.
+            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // */
+            // CheckBox(const nString& name, const f32v4& destRect = f32v4(0));
+            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            // *
+            // * The control will be made a child of parent.
+            // *
+            // * @param parent: Parent control object.
+            // * @param name: Name of the control.
+            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // */
+            // CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~CheckBox();
 
             /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
             */
-            virtual void addDrawables(UIRenderer* renderer) override;
+            virtual void addDrawables() override;
 
             /*! @brief Updates the position relative to parent */
             // virtual void updatePosition() override;

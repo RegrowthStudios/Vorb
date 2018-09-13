@@ -75,7 +75,7 @@ namespace vorb {
             virtual bool isMouseIn(Widget* w) const;
             virtual i32 getAnchor(Widget* w) const;
             virtual i32 getStyle(Widget* w) const;
-            virtual vui::DockStyle getDock(Widget* w) const;
+            // virtual vui::Dock getDock(Widget* w) const;
             virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
             virtual bool getClippingEnabled(Widget* w) const;
@@ -101,7 +101,7 @@ namespace vorb {
             virtual void setAnchor(Widget* w, int anchor) const;
             virtual void setDestRect(Widget* w, f32v4 destRect) const;
             virtual void setDimensions(Widget* w, f32v2 dims) const;
-            virtual void setDock(Widget* w, DockStyle dock) const;
+            // virtual void setDock(Widget* w, Dock dock) const;
             virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
             virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;

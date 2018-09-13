@@ -10,35 +10,35 @@ vui::Slider::Slider() : Widget() {
     m_drawableSlide.setDimensions(f32v2(30.0f, 30.0f));
 }
 
-vui::Slider::Slider(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Slider() {
-    m_name = name;
-    // setDestRect(destRect); 
-    // updatePosition();
-    m_drawableBar.setDimensions(getSize());
-    m_drawableBar.setPosition(getPosition());
-}
+// vui::Slider::Slider(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Slider() {
+//     m_name = name;
+//     // setDestRect(destRect); 
+//     // updatePosition();
+//     m_drawableBar.setDimensions(getSize());
+//     m_drawableBar.setPosition(getPosition());
+// }
 
-vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
-    parent->addWidget(this);
-}
+// vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+//     parent->addWidget(this);
+// }
 
 vui::Slider::~Slider() {
     // Empty
 }
 
-void vui::Slider::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
+void vui::Slider::addDrawables() {
+    Widget::addDrawables();
     // Make copies
     m_drawnBar = m_drawableBar;
     m_drawnSlide = m_drawableSlide;
   
     // Add the bar
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnBar, &DrawableRect::draw),
                   makeDelegate(*this, &Slider::refreshDrawables));
 
     // Add the slide 
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnSlide, &DrawableRect::draw),
                   makeDelegate(*this, &Slider::refreshDrawables));
 }
@@ -157,7 +157,7 @@ void vui::Slider::updateSlidePosition() {
 
 void vui::Slider::updateColor() {
     m_drawableBar.setColor(m_barColor);
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         m_drawableSlide.setColor(m_slideHoverColor);
     } else {
         m_drawableSlide.setColor(m_slideColor);
@@ -189,39 +189,39 @@ void vui::Slider::refreshDrawables() {
 // }
 
 void vui::Slider::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         MouseDown(e);
-        m_isClicking = true;
+        m_flags.isClicking = true;
     }
 }
 
 void vui::Slider::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (m_isClicking) MouseClick(e);
+        if (m_flags.isClicking) MouseClick(e);
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
 }
 
 void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
             updateColor();
         }
         MouseMove(e);
     } else {
-        if (m_isMouseIn) {
-            m_isMouseIn = false;
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
             MouseLeave(e);
             updateColor();
         }
     }
 
     // Check value change
-    if (m_isClicking) {
+    if (m_flags.isClicking) {
         const f32v2& pos = m_drawableBar.getPosition();
         const f32v2& dims = m_drawableBar.getDimensions();
         float v;

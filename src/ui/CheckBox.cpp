@@ -9,40 +9,40 @@ vui::CheckBox::CheckBox() : Widget() {
     setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::CheckBox::CheckBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : CheckBox() {
-    m_name = name;
-    // setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getSize());
-    updateTextPosition();
-}
+// vui::CheckBox::CheckBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : CheckBox() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     m_drawableRect.setPosition(getPosition());
+//     m_drawableRect.setDimensions(getSize());
+//     updateTextPosition();
+// }
 
-vui::CheckBox::CheckBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
-    parent->addWidget(this);
-    m_parent = parent;
-}
+// vui::CheckBox::CheckBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : CheckBox(name, destRect) {
+//     parent->addWidget(this);
+//     m_parent = parent;
+// }
 
 vui::CheckBox::~CheckBox() {
     // Empty
 }
 
-void vui::CheckBox::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
+void vui::CheckBox::addDrawables() {
+    Widget::addDrawables();
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
     // Use renderer default font if we dont have a font
-    m_defaultFont = renderer->getDefaultFont();
+    m_defaultFont = m_renderer->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the rect
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 
 
     // Add the text 
-    renderer->add(this,
+    m_renderer->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 }
@@ -180,13 +180,13 @@ void vui::CheckBox::setChecked(bool checked) {
 
 void vui::CheckBox::updateColor() {
     if (m_isChecked) {
-        if (m_isMouseIn) {
+        if (m_flags.isMouseIn) {
             m_drawableRect.setColor(m_boxCheckedHoverColor);
         } else {
             m_drawableRect.setColor(m_boxCheckedColor);
         }
     } else {
-        if (m_isMouseIn) {
+        if (m_flags.isMouseIn) {
             m_drawableRect.setColor(m_boxHoverColor);
         } else {
             m_drawableRect.setColor(m_boxColor);
@@ -255,30 +255,30 @@ void vui::CheckBox::refreshDrawables() {
 // }
 
 void vui::CheckBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (m_isClicking) {
+        if (m_flags.isClicking) {
             MouseClick(e);
             toggleChecked();
         }
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
     updateColor();
 }
 
 void vui::CheckBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
             updateColor();
         }
         MouseMove(e);
     } else {
-        if (m_isMouseIn) {
-            m_isMouseIn = false;
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
             MouseLeave(e);
             updateColor();
         }

@@ -37,29 +37,27 @@ namespace vorb {
         public:
             /*! @brief Default constructor. */
             Button();
-            /*! @brief Constructor that sets name, position, and dimensions.
-            *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Button(const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Button(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            // /*! @brief Constructor that sets name, position, and dimensions.
+            // *
+            // * @param name: Name of the control.
+            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // */
+            // Button(const nString& name, const f32v4& destRect = f32v4(0));
+            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            // *
+            // * The control will be made a child of parent.
+            // *
+            // * @param parent: Parent control object.
+            // * @param name: Name of the control.
+            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // */
+            // Button(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
             /*! @brief Default destructor. */
             virtual ~Button(); // TODO(Ben): Maybe make abstract?
 
             /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
             */
-            virtual void addDrawables(UIRenderer* renderer) override;
+            virtual void addDrawables() override;
 
             /*! @brief Updates the position relative to parent */
             // virtual void updatePosition() override;
@@ -99,7 +97,7 @@ namespace vorb {
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
 
-        protected:
+        protected:            
             virtual void updateColor();
             virtual void updateTextPosition();
             virtual void refreshDrawables();

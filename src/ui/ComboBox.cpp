@@ -19,16 +19,16 @@ vui::ComboBox::ComboBox() : Widget() {
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::ComboBox::ComboBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
-    m_name = name;
-    // setDestRect(destRect);
-    // m_mainButton.setDimensions(m_dimensions);
-    // updatePosition();
-}
+// vui::ComboBox::ComboBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
+//     m_name = name;
+//     // setDestRect(destRect);
+//     // m_mainButton.setDimensions(m_dimensions);
+//     // updatePosition();
+// }
 
-vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
-    parent->addWidget(this);
-}
+// vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
+//     parent->addWidget(this);
+// }
 
 vui::ComboBox::~ComboBox() {
     // Empty
@@ -84,7 +84,7 @@ void vui::ComboBox::addItem(const nString& item) {
     m_items.push_back(item);
     m_buttons.push_back(new Button);
     auto b = m_buttons.back();
-    b->addDrawables(m_renderer); // TODO(Ben): This only works consistently in LUA
+    b->addDrawables(); // TODO(Ben): This only works consistently in LUA
     m_dropPanel.addWidget(b);
     b->setText(item);
     if (!m_isDropped) {
@@ -257,24 +257,24 @@ void vui::ComboBox::updateDropButton(vui::Button* b) {
 // }
 
 void vui::ComboBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
         }
         MouseMove(e);
-    } else if (m_isMouseIn) {
-        m_isMouseIn = false;
+    } else if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseLeave(e);
     }
 }
 
 void vui::ComboBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (!m_isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
+        if (!m_flags.isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
             // updatePosition();
         }
@@ -282,7 +282,7 @@ void vui::ComboBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
         m_isDropped = false;
         // updatePosition();
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
 }
 
 void vui::ComboBox::onSubButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e VORB_UNUSED) {

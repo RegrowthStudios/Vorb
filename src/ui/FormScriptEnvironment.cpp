@@ -128,14 +128,14 @@ void vui::FormScriptEnvironment::registerConstants() {
         m_env->addValue("CENTER", vg::TextAlign::CENTER);
         m_env->setNamespaces();
     }
-    { // vui::DockStyle
-        m_env->setNamespaces("DockStyle");
-        m_env->addValue("NONE", DockStyle::NONE);
-        m_env->addValue("LEFT", DockStyle::LEFT);
-        m_env->addValue("RIGHT", DockStyle::RIGHT);
-        m_env->addValue("BOTTOM", DockStyle::BOTTOM);
-        m_env->addValue("TOP", DockStyle::TOP);
-        m_env->addValue("FILL", DockStyle::FILL);
+    { // vui::DockState
+        m_env->setNamespaces("DockState");
+        m_env->addValue("NONE", DockState::NONE);
+        m_env->addValue("LEFT", DockState::LEFT);
+        m_env->addValue("RIGHT", DockState::RIGHT);
+        m_env->addValue("BOTTOM", DockState::BOTTOM);
+        m_env->addValue("TOP", DockState::TOP);
+        m_env->addValue("FILL", DockState::FILL);
         m_env->setNamespaces();
     }
     // Misc constants
@@ -145,54 +145,54 @@ void vui::FormScriptEnvironment::registerConstants() {
     m_env->addValue("this", m_form);
 }
 
-vui::Button* vui::FormScriptEnvironment::makeButton(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Button* b = new vui::Button(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(b);
-    m_buttonFuncs.registerWidget(b);
-    return b;
-}
+// vui::Button* vui::FormScriptEnvironment::makeButton(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::Button* b = new vui::Button(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(b);
+//     m_buttonFuncs.registerWidget(b);
+//     return b;
+// }
 
-vui::Slider* vui::FormScriptEnvironment::makeSlider(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Slider* s = new vui::Slider(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(s);
-    m_sliderFuncs.registerWidget(s);
-    return s;
-}
+// vui::Slider* vui::FormScriptEnvironment::makeSlider(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::Slider* s = new vui::Slider(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(s);
+//     m_sliderFuncs.registerWidget(s);
+//     return s;
+// }
 
-vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::CheckBox* c = new vui::CheckBox(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(c);
-    m_checkBoxFuncs.registerWidget(c);
-    return c;
-}
+// vui::CheckBox* vui::FormScriptEnvironment::makeCheckBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::CheckBox* c = new vui::CheckBox(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(c);
+//     m_checkBoxFuncs.registerWidget(c);
+//     return c;
+// }
 
-vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::ComboBox* c = new vui::ComboBox(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(c);
-    m_comboBoxFuncs.registerWidget(c);
-    return c;
-}
+// vui::ComboBox* vui::FormScriptEnvironment::makeComboBox(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::ComboBox* c = new vui::ComboBox(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(c);
+//     m_comboBoxFuncs.registerWidget(c);
+//     return c;
+// }
 
-vui::Panel* vui::FormScriptEnvironment::makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Panel* p = new vui::Panel(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(p);
-    m_panelFuncs.registerWidget(p);
-    return p;
-}
+// vui::Panel* vui::FormScriptEnvironment::makePanel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::Panel* p = new vui::Panel(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(p);
+//     m_panelFuncs.registerWidget(p);
+//     return p;
+// }
 
-vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::Label* l = new vui::Label(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(l);
-    m_labelFuncs.registerWidget(l);
-    return l;
-}
+// vui::Label* vui::FormScriptEnvironment::makeLabel(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::Label* l = new vui::Label(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(l);
+//     m_labelFuncs.registerWidget(l);
+//     return l;
+// }
 
-vui::WidgetList* vui::FormScriptEnvironment::makeWidgetList(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
-    vui::WidgetList* w = new vui::WidgetList(f, name, f32v4(x, y, width, height));
-    m_widgetsToDelete.push_back(w);
-    m_widgetListFuncs.registerWidget(w);
-    return w;
-}
+// vui::WidgetList* vui::FormScriptEnvironment::makeWidgetList(Form* f, nString name, f32 x, f32 y, f32 width, f32 height) {
+//     vui::WidgetList* w = new vui::WidgetList(f, name, f32v4(x, y, width, height));
+//     m_widgetsToDelete.push_back(w);
+//     m_widgetListFuncs.registerWidget(w);
+//     return w;
+// }
 
 void vui::FormScriptEnvironment::enableForm(Form* f) {
     f->enable();

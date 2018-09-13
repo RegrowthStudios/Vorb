@@ -121,6 +121,28 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
             y >= m_position.y && y < m_position.y + m_size.y);
 }
 
+void vui::IWidget::addDrawables() {
+    addChildDrawables();
+}
+
+void vui::IWidget::addChildDrawables() {
+    for (auto& child : m_widgets) {
+        child->addDrawables();
+    }
+}
+
+void vui::IWidget::removeDrawables() {
+    if (m_renderer) m_renderer->remove(this);
+
+    removeChildDrawables();
+}
+
+void vui::IWidget::removeChildDrawables() {
+    for (auto& child : m_widgets) {
+        child->removeDrawables();
+    }
+}
+
 vui::ClippingState vui::IWidget::getClippingLeft() const {
     return (m_clipping.left == ClippingState::INHERIT ? m_parent->getClippingLeft() : m_clipping.left);
 }
@@ -461,19 +483,6 @@ void vui::IWidget::updateChildCanvases() {
     }
 }
 
-void vui::IWidget::addDrawables() {
-    for (auto& child : m_widgets) {
-        child->addDrawables();
-    }
-}
-
-void vui::IWidget::removeDrawables() {
-    if (m_renderer) m_renderer->remove(this);
-
-    for (auto& child : m_widgets) {
-        child->removeDrawables();
-    }
-}
 
 void vui::IWidget::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;

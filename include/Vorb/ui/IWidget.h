@@ -241,6 +241,11 @@ namespace vorb {
              */
             virtual void updateDimensions() = 0;
 
+            /*! @brief Adds all drawables of child widgets to the UIRenderer. */
+            virtual void addChildDrawables();
+            /*! @brief Removes all drawables of child widgets from the UIRenderer. */
+            virtual void removeChildDrawables();
+
             /*! Removes a widget from a dock and returns true on success. */
             // bool removeChildFromDock(Widget* widget);
             /*! Calculates positions and sizes of docked child widgets. */

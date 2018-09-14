@@ -44,7 +44,6 @@ namespace vorb {
         struct MouseEvent;
         struct WindowResizeEvent;
         class Widget;
-        class GameWindow;
 
         //! Enum of clipping states.
         enum class ClippingState {
@@ -125,7 +124,7 @@ namespace vorb {
             *
             * @param dt: The TimeStep
             */
-            virtual void update(f32 dt VORB_MAYBE_UNUSED);
+            virtual void update(f32 dt VORB_MAYBE_UNUSED = 1.0f);
 
             /*! @brief Enables events that all widgets share in common. */
             virtual void enable();
@@ -163,9 +162,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual       UIRenderer* getRenderer()         const { return m_renderer; }
-            virtual const GameWindow* getGameWindow()       const { return m_window ? m_window : m_canvas->m_window; }
-            virtual          IWidget* getCanvas()           const { return m_canvas; }
+            virtual          IWidget* getViewport()         const { return m_viewport; }
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }
             virtual       const Font* getFont()             const { return m_font; }
@@ -197,8 +194,6 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setRenderer(UIRenderer* renderer) { removeDrawables(); m_renderer = renderer; addDrawables(); }
-            virtual void setGameWindow(GameWindow* window) { m_window = window; }
             /*!
              * \brief Sets the parent widget of this widget.
              * 
@@ -220,7 +215,7 @@ namespace vorb {
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
-            virtual void setZIndex(ui16 zIndex) { m_zIndex = zIndex; m_canvas->m_flags.needsZIndexReorder = true; }
+            virtual void setZIndex(ui16 zIndex) { m_zIndex = zIndex; m_viewport->m_flags.needsZIndexReorder = true; }
             virtual void setDock(Dock dock);
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
@@ -238,6 +233,9 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /*! \brief Updates child widgets. */
+            virtual void updateChildren(f32 dt = 1.0f);
+
             /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
              *
              *  The simplest form could be m_position = m_relativePosition;
@@ -287,7 +285,6 @@ namespace vorb {
             virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e);
-            virtual void onResize(Sender s, const WindowResizeEvent& e);
 
             /************************************************************************/
             /* LUA Callbacks                                                        */
@@ -304,13 +301,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            UIRenderer*       m_renderer;         ///< Renderer to use for drawing widget.
-            const GameWindow* m_window;           ///< Game window pointer.
-            IWidget*          m_canvas;           /*< Canvas widget - i.e. the oldest ancestor of this widget. If this widget
-                                                   *  is the canvas of its children, m_canvas is set to the this pointer (which
-                                                   *  is the case by default). NOTE: We should never update this parameter via a
-                                                   *  setter, it should only change via private logic on parent changes.
-                                                   */
+            Viewport*         m_viewport;         ///< Viewport this widget resides in.
             IWidget*          m_parent;           ///< Parent widget.
             IWidgets          m_widgets;          ///< Collection of child widgets.
             const Font*       m_font;             ///< Font for rendering.

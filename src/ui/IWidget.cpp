@@ -12,8 +12,7 @@ vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* wind
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this),
-    m_window(window),
-    m_canvas(this),
+    m_viewport(this),
     m_parent(nullptr),
     m_widgets(IWidgets()),
     m_font(nullptr),
@@ -26,7 +25,6 @@ vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* wind
     m_flags({ false, false, false, false, false, false, false, false }) {
     // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
     resetClipRect();
-    vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
     enable();
     if (renderer) {
         setRenderer(renderer);
@@ -52,7 +50,7 @@ void vui::IWidget::dispose() {
     disable();
 }
 
-void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED) {
+void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
         updateDimensions();
@@ -77,6 +75,8 @@ void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED) {
         m_flags.needsDrawableRefresh = false;
         refreshDrawables();
     }
+
+    updateChildren(dt);
 }
 
 void vui::IWidget::enable() {
@@ -106,16 +106,22 @@ void vui::IWidget::disable() {
 
 bool vui::IWidget::addWidget(IWidget* child) {
     m_widgets.push_back(child);
+
     child->m_parent = this;
-    child->m_flags.needsDimensionUpdate = true;
-    return true; // TODO(Ben): Is this needed?
+    child->m_flags.needsDimensionUpdate       = true;
+    child->m_flags.needsClipRectRecalculation = true;
+
+    m_flags.needsZIndexReorder     = true;
+    m_flags.needsDockRecalculation = true;
+
+    return true;
 }
 
 bool vui::IWidget::removeWidget(IWidget* child) {
     for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
-            // if (removeChildFromDock(child)) recalculateDockedWidgets();
             m_widgets.erase(it);
+            m_flags.needsDockRecalculation = true;
             return true;
         }
     }
@@ -173,7 +179,7 @@ void vui::IWidget::setParent(IWidget* parent) {
         // Add widget to the new parent (which will set the m_parent field).
         parent->addWidget(this);
 
-        if (m_canvas == this) {
+        if (m_viewport == this) {
             // As the previous canvas widget, we should unsubscribe it.
             vui::InputDispatcher::window.onResize -= makeDelegate(*this, &IWidget::onResize);
         }
@@ -322,6 +328,12 @@ void vui::IWidget::setDockSize(f32 size) {
 
     if (m_parent) {
         m_parent->m_flags.needsDockRecalculation = true;
+    }
+}
+
+void vui::IWidget::updateChildren(f32 dt /*= 1.0f*/) {
+    for (auto& child : m_widgets) {
+        child->update(dt);
     }
 }
 
@@ -551,8 +563,4 @@ void vui::IWidget::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
         ev.y = e.y;
         MouseLeave(ev);
     }
-}
-
-void vui::IWidget::onResize(Sender s VORB_MAYBE_UNUSED, const WindowResizeEvent& e VORB_MAYBE_UNUSED) {
-    m_flags.needsDimensionUpdate = true;
 }

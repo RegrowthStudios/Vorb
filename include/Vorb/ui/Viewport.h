@@ -51,6 +51,8 @@ namespace vorb {
              * @param defaultFont: The optional SpriteBatch to use.
              */
             virtual void init(const nString& name, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            /*! @brief Frees all resources. */
+            virtual void dispose() override;
 
             /*! @brief Adds a widget to the viewport and initializes it for rendering.
              * 
@@ -73,8 +75,6 @@ namespace vorb {
 
             /*! @brief Draws the Form. */
             virtual void draw();
-            /*! @brief Frees all resources. */
-            virtual void dispose() override;
 
             /************************************************************************/
             /* Getters                                                              */

@@ -95,6 +95,7 @@ namespace vorb {
 
         // Forward Declarations
         class UIRenderer;
+        class Viewport;
 
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
@@ -194,12 +195,6 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            /*!
-             * \brief Sets the parent widget of this widget.
-             * 
-             * \warning This function could end up being costly if called too often - has to traverse all descendant widgets and sometimes all ancestor widgets.
-             */
-            virtual void setParent(IWidget* parent);
             virtual void setFont(const Font* font) { m_font = font; }
             virtual void setPosition(f32v2 position);
             virtual void setX(f32 x);
@@ -236,11 +231,21 @@ namespace vorb {
             /*! \brief Updates child widgets. */
             virtual void updateChildren(f32 dt = 1.0f);
 
+            /*!
+             * \brief Updates all child widgets' viewport fields.
+             */
+            virtual void updateChildViewports();
+
             /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
              *
              *  The simplest form could be m_position = m_relativePosition;
              */
             virtual void updateDimensions() = 0;
+            
+            /*!
+             * \brief Updates all child widgets' dimensions.
+             */
+            virtual void updateChildDimensions();
 
             /*! @brief Adds all drawables of child widgets to the UIRenderer. */
             virtual void addChildDrawables();
@@ -258,15 +263,6 @@ namespace vorb {
             virtual void resetClipRect() { m_clipRect = f32v4(-(FLT_MAX), -(FLT_MAX), FLT_MAX, FLT_MAX); };
             /*! Computes the clipping of child widgets. */
             virtual void calculateChildClipRects();
-            
-            /*!
-             * \brief Updates all child widgets' dimensions.
-             */
-            virtual void updateChildDimensions();
-            /*!
-             * \brief Updates all child widgets' canvas fields.
-             */
-            virtual void updateChildCanvases();
 
             /*!
              * \brief Reorders widgets relative to their z-index value.

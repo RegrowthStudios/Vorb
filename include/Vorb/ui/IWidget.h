@@ -64,6 +64,7 @@ namespace vorb {
             ClippingState::VISIBLE,
             ClippingState::VISIBLE
         };
+        const f32v4 DEFAULT_CLIP_RECT = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX);
 
         //! Bitfield of docking states.
         enum class DockState {
@@ -91,6 +92,7 @@ namespace vorb {
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
             volatile bool needsDrawableRefresh       : 1; ///< Whether we need to refresh our drawables.
+            volatile bool needsDrawableReregister;        ///< Whether we need to reregister our drawables.
         };
 
         // Forward Declarations
@@ -106,7 +108,7 @@ namespace vorb {
              * @param renderer: The renderer to use for drawing widget.
              * @param window: The window in which to set the UI.
              */
-            IWidget(UIRenderer* renderer = nullptr, const GameWindow* window = nullptr);
+            IWidget();
             // /*! @brief Constructor that sets name, position, and dimensions.
             //  *
             //  * @param name: Name of the widget.
@@ -154,7 +156,7 @@ namespace vorb {
             virtual bool isInBounds(f32 x, f32 y) const;
             
             /*! @brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables();
+            virtual void addDrawables() = 0;
             /*! @brief Removes all drawables from the UIRenderer. */
             virtual void removeDrawables();
             /*! @brief Refreshes all drawables. */
@@ -210,7 +212,7 @@ namespace vorb {
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
-            virtual void setZIndex(ui16 zIndex) { m_zIndex = zIndex; m_viewport->m_flags.needsZIndexReorder = true; }
+            virtual void setZIndex(ui16 zIndex);
             virtual void setDock(Dock dock);
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
@@ -228,29 +230,32 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
-            /*! \brief Updates child widgets. */
-            virtual void updateChildren(f32 dt = 1.0f);
+            /*! \brief Updates descendant widgets. */
+            virtual void updateDescendants(f32 dt);
 
             /*!
-             * \brief Updates all child widgets' viewport fields.
+             * \brief Updates all descendant widgets' viewport fields.
              */
-            virtual void updateChildViewports();
+            virtual void updateDescendantViewports();
+
+            // TODO(Matthew): Ensure we don't go out of the update loop to go through all descendants and update individual bits. Let's set flags on children only, let those children do their updates and set any necessary flags on their children, and so on.
+
+            /*!
+             * \brief Reregisters drawables of the widget.
+             */
+            virtual void reregisterDrawables();
+            /*!
+             * \brief Marks children to reregister their drawables.
+             */
+            virtual void markChildrenToReregisterDrawables();
 
             /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
-             *
-             *  The simplest form could be m_position = m_relativePosition;
              */
-            virtual void updateDimensions() = 0;
-            
+            virtual bool updateDimensions() = 0;
             /*!
-             * \brief Updates all child widgets' dimensions.
+             * \brief Marks all children to update their dimensions.
              */
-            virtual void updateChildDimensions();
-
-            /*! @brief Adds all drawables of child widgets to the UIRenderer. */
-            virtual void addChildDrawables();
-            /*! @brief Removes all drawables of child widgets from the UIRenderer. */
-            virtual void removeChildDrawables();
+            virtual void markChildrenToUpdateDimensions();
 
             /*! Removes a widget from a dock and returns true on success. */
             // bool removeChildFromDock(Widget* widget);
@@ -259,8 +264,6 @@ namespace vorb {
             
             /*! Computes clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
-            /*! Reset clip rect. */
-            virtual void resetClipRect() { m_clipRect = f32v4(-(FLT_MAX), -(FLT_MAX), FLT_MAX, FLT_MAX); };
             /*! Computes the clipping of child widgets. */
             virtual void calculateChildClipRects();
 

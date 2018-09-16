@@ -36,26 +36,25 @@ void vui::Viewport::dispose() {
 
 // TODO(Matthew): Clarify roles of {add|remove}Widget and setParent - rewrite such that either both pathways are public and viable endpoints or such that one is protected.
 // TODO(Matthew): Clarify role of flags and update functions so that updates are propagated to descendants ONCE - rewrite such that Viewport provides an easy entry point for updates.
-bool vui::Viewport::addWidget(IWidget* widget) {
-    if (IWidget::addWidget(widget)) {
-        widget->m_viewport = this;
-        if (!widget->getRenderer()) widget->setRenderer(&m_renderer);
-        return true;
-    }
-    return false;
-}
 
-bool vui::Viewport::removeWidget(IWidget* widget) {
-    if (IWidget::removeWidget(widget)) {
-        widget->setRenderer(nullptr);
-        return true;
-    }
-    return false;
+void vui::Viewport::update(f32 dt /*= 1.0f*/) {
+    IWidget::update(dt);
+    IWidget::updateDescendants(dt);
 }
 
 void vui::Viewport::draw() {
     if (!m_flags.isEnabled) return;
     m_renderer.draw(m_size);
+}
+
+void vui::Viewport::setGameWindow(const GameWindow* window) {
+    m_window = window;
+    
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Viewport::setNeedsDrawableReregister()  {
+    m_needsDrawableReregister = true;
 }
 
 void vui::Viewport::onResize(Sender s VORB_MAYBE_UNUSED, const WindowResizeEvent& e VORB_MAYBE_UNUSED) {

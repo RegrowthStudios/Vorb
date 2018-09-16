@@ -54,24 +54,11 @@ namespace vorb {
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
-            /*! @brief Adds a widget to the viewport and initializes it for rendering.
-             * 
-             * @param widget: The widget to add.
-             * @return true on success.
-             */
-            virtual bool addWidget(IWidget* widget) override;
-            /*! @brief Removes a widget from the viewport.
-            *
-            * @param widget: The widget to remove.
-            * @return true on success.
-            */
-            virtual bool removeWidget(IWidget* widget) override;
-
             /*! @brief Updates the viewport and all descendant widgets.
              * 
              * @param dt: Time since the last update.
              */
-            virtual void update(f32 dt = 1.0f);
+            virtual void update(f32 dt = 1.0f) override;
 
             /*! @brief Draws the Form. */
             virtual void draw();
@@ -85,7 +72,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual void setGameWindow(const GameWindow* window) { m_window = window; m_flags.needsDimensionUpdate = true; }
+            virtual void setGameWindow(const GameWindow* window);
         protected:
             /************************************************************************/
             /* Event Handlers                                                       */
@@ -95,8 +82,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            UIRenderer m_renderer;      ///< The UI Renderer.
-            const GameWindow* m_window; ///< The window to which this UI is drawn.
+            UIRenderer        m_renderer; ///< The UI Renderer.
+            const GameWindow* m_window;   ///< The window to which this UI is drawn.
         };
     }
 }

@@ -90,7 +90,7 @@ void vui::Widget::updateDimensions() {
 
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 
-    updateChildDimensions();
+    updateDescendantDimensions();
 }
 
 // void vui::Widget::setAnchor(const AnchorStyle& anchor) {

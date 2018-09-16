@@ -3,34 +3,29 @@
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-vui::IWidget::IWidget(UIRenderer* renderer /*= nullptr*/, const GameWindow* window /*= nullptr*/) :
+vui::IWidget::IWidget() :
     MouseClick(this),
     MouseDown(this),
     MouseUp(this),
     MouseEnter(this),
     MouseLeave(this),
     MouseMove(this),
-    m_viewport(this),
+    m_viewport(nullptr),
     m_parent(nullptr),
     m_widgets(IWidgets()),
     m_font(nullptr),
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
+    m_clipRect(DEFAULT_CLIP_RECT),
     m_zIndex(1),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
-    m_flags({ false, false, false, false, false, false, false, false }) {
-    // As the widget has just been made, it is its own canvas - thus should be subscribed for resize events.
-    resetClipRect();
+    m_flags({ false, false, false, false, false, false, false, false, false }) {
     enable();
-    if (renderer) {
-        setRenderer(renderer);
-    } else {
-        m_renderer = nullptr;
-    }
 }
 
 vui::IWidget::~IWidget() {
@@ -51,7 +46,10 @@ void vui::IWidget::dispose() {
 void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
-        updateDimensions();
+        if (updateDimensions()) {
+            // If updateDimensions changes the widget, then its children need updating too.
+            markChildrenToUpdateDimensions();
+        }
     }
 
     if (m_flags.needsZIndexReorder) {
@@ -74,16 +72,22 @@ void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
         refreshDrawables();
     }
 
-    updateChildren(dt);
+    if (m_flags.needsDrawableReregister) {
+        m_flags.needsDrawableReregister = false;
+        reregisterDrawables();
+
+        // If we have reregistered the drawables of this widget, so too must we all child widgets.
+        markChildrenToReregisterDrawables();
+    }
 }
 
 void vui::IWidget::enable() {
     if (!m_flags.isEnabled) {
         m_flags.isEnabled = true;
         vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp += makeDelegate(*this, &IWidget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion += makeDelegate(*this, &IWidget::onMouseMove);
-        vui::InputDispatcher::mouse.onFocusLost += makeDelegate(*this, &IWidget::onMouseFocusLost);
+        vui::InputDispatcher::mouse.onButtonUp   += makeDelegate(*this, &IWidget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
     // Enable all children
     for (auto& w : m_widgets) w->enable();
@@ -93,9 +97,9 @@ void vui::IWidget::disable() {
     if (m_flags.isEnabled) {
         m_flags.isEnabled = false;
         vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp -= makeDelegate(*this, &IWidget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion -= makeDelegate(*this, &IWidget::onMouseMove);
-        vui::InputDispatcher::mouse.onFocusLost -= makeDelegate(*this, &IWidget::onMouseFocusLost);
+        vui::InputDispatcher::mouse.onButtonUp   -= makeDelegate(*this, &IWidget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion     -= makeDelegate(*this, &IWidget::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost  -= makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
     m_flags.isClicking = false;
     // Disable all children
@@ -130,9 +134,9 @@ bool vui::IWidget::removeWidget(IWidget* child) {
             child->m_parent   = nullptr;
             child->m_viewport = nullptr;
 
-            child->updateChildViewports();
+            child->updateDescendantViewports();
 
-            child->resetClipRect();
+            m_clipRect = DEFAULT_CLIP_RECT;
 
             child->m_flags.needsDimensionUpdate       = true;
             child->m_flags.needsDockRecalculation     = true;
@@ -151,26 +155,9 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
             y >= m_position.y && y < m_position.y + m_size.y);
 }
 
-void vui::IWidget::addDrawables() {
-    addChildDrawables();
-}
-
-void vui::IWidget::addChildDrawables() {
-    for (auto& child : m_widgets) {
-        child->addDrawables();
-    }
-}
-
 void vui::IWidget::removeDrawables() {
-    if (m_renderer) m_renderer->remove(this);
-
-    removeChildDrawables();
-}
-
-void vui::IWidget::removeChildDrawables() {
-    for (auto& child : m_widgets) {
-        child->removeDrawables();
-    }
+    UIRenderer* renderer = m_viewport->getRenderer();
+    if (renderer) renderer->remove(this);
 }
 
 vui::ClippingState vui::IWidget::getClippingLeft() const {
@@ -189,147 +176,135 @@ vui::ClippingState vui::IWidget::getClippingBottom() const {
     return (m_clipping.bottom == ClippingState::INHERIT ? m_parent->getClippingBottom() : m_clipping.bottom);
 }
 
-// void vui::IWidget::setParent(IWidget* parent) {
-//     // Remove this widget from any previous parent it may have had.
-//     if (m_parent) m_parent->removeWidget(this);
-//     // Are we are setting a new parent?
-//     if (parent) {
-//         // Add widget to the new parent (which will set the m_parent field).
-//         parent->addWidget(this);
-
-//         if (m_viewport == this) {
-//             // As the previous canvas widget, we should unsubscribe it.
-//             vui::InputDispatcher::window.onResize -= makeDelegate(*this, &IWidget::onResize);
-//         }
-
-//         // Set the new canvas widget of this widget.
-//         m_canvas = parent->getCanvas();
-        
-//         // Propagate the new canvas widget to children.
-//         updateChildCanvases();
-//     } else {
-//         // Set the canvas to this widget.
-//         m_canvas = this;
-//         // Reset clip rect to recalculate correctly.
-//         resetClipRect();
-//         // As canvas, this widget is now responsible for handling resizing of itself and children.
-//         vui::InputDispatcher::window.onResize += makeDelegate(*this, &IWidget::onResize);
-//         // Update children - this widget is the new canvas widget.
-//         updateChildCanvases();
-//     }
-
-//     // Parent (and maybe canvas changing) means we should reevaluate dimensions of this widget and its children.
-//     m_flags.needsDimensionUpdate       = true;
-//     m_flags.needsClipRectRecalculation = true;
-// }
-
 void vui::IWidget::setPosition(f32v2 position) {
     m_position = position;
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setX(f32 x) {
     m_position.x = x;
     
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
     
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setY(f32 y) {
     m_position.y = y;
     
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
     
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
     m_position = relativePosition + m_parent->getPosition();
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativeX(f32 relativeX) {
     m_position.x = relativeX + m_parent->getPosition().x;
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setRelativeY(f32 relativeY) {
     m_position.y = relativeY + m_parent->getPosition().y;
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setSize(f32v2 size) {
     m_size = size;
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setWidth(f32 width) {
     m_size.x = width;
 
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setHeight(f32 height) {
     m_size.y = height;
     
-    updateChildDimensions();
+    markChildrenToUpdateDimensions();
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClipping(Clipping clipping) {
     m_clipping = clipping;
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingLeft(ClippingState state) {
     m_clipping.left = state;
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingTop(ClippingState state) {
     m_clipping.top = state;
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingRight(ClippingState state) {
     m_clipping.right = state;
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
 }
 
 void vui::IWidget::setClippingBottom(ClippingState state) {
     m_clipping.bottom = state;
 
+    m_flags.needsDockRecalculation     = true;
     m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::IWidget::setZIndex(ui16 zIndex) {
+    m_zIndex = zIndex;
+
+    m_flags.needsZIndexReorder = true;
 }
 
 void vui::IWidget::setDock(Dock dock) {
     m_dock = dock;
 
     if (m_parent) {
-        m_parent->m_flags.needsDockRecalculation = true;
+        m_parent->m_flags.needsDockRecalculation   = true;
+    } else if (m_viewport != this) {
+        m_viewport->m_flags.needsDockRecalculation = true;
     }
 }
 
@@ -337,7 +312,9 @@ void vui::IWidget::setDockState(DockState state) {
     m_dock.state = state;
 
     if (m_parent) {
-        m_parent->m_flags.needsDockRecalculation = true;
+        m_parent->m_flags.needsDockRecalculation   = true;
+    } else if (m_viewport != this) {
+        m_viewport->m_flags.needsDockRecalculation = true;
     }
 }
 
@@ -345,26 +322,40 @@ void vui::IWidget::setDockSize(f32 size) {
     m_dock.size = size;
 
     if (m_parent) {
-        m_parent->m_flags.needsDockRecalculation = true;
+        m_parent->m_flags.needsDockRecalculation   = true;
+    } else if (m_viewport != this) {
+        m_viewport->m_flags.needsDockRecalculation = true;
     }
 }
 
-void vui::IWidget::updateChildren(f32 dt /*= 1.0f*/) {
+void vui::IWidget::updateDescendants(f32 dt) {
     for (auto& child : m_widgets) {
         child->update(dt);
+        child->updateDescendants(dt);
     }
 }
 
-void vui::IWidget::updateChildViewports() {
+void vui::IWidget::updateDescendantViewports() {
     for (auto& child : m_widgets) {
         child->m_viewport = m_viewport;
-        child->updateChildViewports();
+        child->updateDescendantViewports();
     }
 }
 
-void vui::IWidget::updateChildDimensions() {
+void vui::IWidget::reregisterDrawables() {
+    removeDrawables();
+    addDrawables();
+}
+
+void vui::IWidget::markChildrenToReregisterDrawables() {
     for (auto& child : m_widgets) {
-        child->m_flags.needsDimensionUpdate = false;
+        child->m_flags.needsDrawableReregister = true;
+    }
+}
+
+void vui::IWidget::markChildrenToUpdateDimensions() {
+    for (auto& child : m_widgets) {
+        child->m_flags.needsDimensionUpdate = true;
         child->updateDimensions();
     }
 }
@@ -454,58 +445,53 @@ void vui::IWidget::calculateDockedWidgets() {
 }
 
 void vui::IWidget::calculateClipRect() {
-    // TODO(Matthew): Revisit inherit.
-    f32v4 clipRect = m_parent->getClipRect();
+    f32v4 parentClipRect = DEFAULT_CLIP_RECT;
+    if (m_parent) {
+        parentClipRect = m_parent->getClipRect();
+    } else if (m_viewport) {
+        parentClipRect = m_viewport->getClipRect();
+    }
 
     ClippingState left = getClippingLeft();
-    if (m_position.x < clipRect.x) {
-        m_clipRect.x = clipRect.x;
+    if (left == ClippingState::VISIBLE
+            || m_position.x < parentClipRect.x) {
+        // This widget's clip rect is the same as its parent's if overflow is enabled or if the widget overflows the parent's clip rect.
+        m_clipRect.x = parentClipRect.x;
     } else if (left == ClippingState::HIDDEN) {
+        // Otherwise, the clip rect is the same as the dimensions.
         m_clipRect.x = m_position.x;
-    } else if (left == ClippingState::VISIBLE) {
-        m_clipRect.x = m_parent ? m_parent->getClipRect().x
-                                : m_canvas->getClipRect().x;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
     }
 
     ClippingState top = getClippingTop();
-    if (m_position.y < clipRect.y) {
-        m_clipRect.y = clipRect.y;
-    } else if (top == ClippingState::HIDDEN) {
+    if (left == ClippingState::VISIBLE
+            || m_position.y < parentClipRect.y) {
+        m_clipRect.y = parentClipRect.y;
+    } else if (left == ClippingState::HIDDEN) {
         m_clipRect.y = m_position.y;
-    } else if (top == ClippingState::VISIBLE) {
-        m_clipRect.y = m_parent ? m_parent->getClipRect().y
-                                : m_canvas->getClipRect().y;
     } else {
-        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
     }
 
     ClippingState right = getClippingRight();
-    if (m_position.x + m_size.x > clipRect.x + clipRect.z) {
-        m_clipRect.z = clipRect.x + clipRect.z - m_clipRect.x;
-    } else if (right == ClippingState::HIDDEN) {
+    if (left == ClippingState::VISIBLE
+            || m_position.x + m_size.x < parentClipRect.x + parentClipRect.z) {
+        m_clipRect.z = parentClipRect.x + parentClipRect.z - m_clipRect.x;
+    } else if (left == ClippingState::HIDDEN) {
         m_clipRect.z = m_position.x + m_size.x - m_clipRect.x;
-    } else if (right == ClippingState::VISIBLE) {
-        m_clipRect.z = m_parent ? m_parent->getClipRect().z
-                                : m_canvas->getClipRect().z;
     } else {
-        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
     }
 
     ClippingState bottom = getClippingBottom();
-    if (m_position.y + m_size.y < clipRect.y + clipRect.w) {
-        m_clipRect.w = clipRect.y + clipRect.w - m_clipRect.y;
-    } else if (bottom == ClippingState::HIDDEN) {
+    if (left == ClippingState::VISIBLE
+            || m_position.y + m_size.y < parentClipRect.y + parentClipRect.w) {
+        m_clipRect.w = parentClipRect.y + parentClipRect.w - m_clipRect.y;
+    } else if (left == ClippingState::HIDDEN) {
         m_clipRect.w = m_position.y + m_size.y - m_clipRect.y;
-    } else if (bottom == ClippingState::VISIBLE) {
-        m_clipRect.w = m_parent ? m_parent->getClipRect().w
-                                : m_canvas->getClipRect().w;
     } else {
-        // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
     }
 
@@ -520,24 +506,21 @@ void vui::IWidget::calculateChildClipRects() {
 }
 
 void vui::IWidget::reorderWidgets() {
-    std::sort(m_widgets.begin(), m_widgets.end(), [](const IWidget* lhs, const IWidget* rhs) {
-        return lhs->getZIndex() >= rhs->getZIndex();
+    bool change = false;
+
+    std::sort(m_widgets.begin(), m_widgets.end(), [&change](const IWidget* lhs, const IWidget* rhs) {
+        bool res = lhs->getZIndex() >= rhs->getZIndex();
+
+        // Mark change eas true if we swap any entries.
+        change |= !res;
+
+        return res;
     });
 
-    reorderChildWidgets();
-
-    setRenderer(getRenderer());
-}
-
-void vui::IWidget::reorderChildWidgets() {
-    for (auto& child : m_widgets) {
-        std::vector<IWidget*> grandchildren = child->getWidgets();
-
-        std::sort(grandchildren.begin(), grandchildren.end(), [](const IWidget* lhs, const IWidget* rhs) {
-            return lhs->getZIndex() >= rhs->getZIndex();
-        });
-
-        child->reorderChildWidgets();
+    // If a change occurs, we need to recalculate dockings of children and also reregister drawables.
+    if (change) {
+        m_flags.needsDockRecalculation = true;
+        m_viewport->m_flags.needsDrawableReregister = true;
     }
 }
 

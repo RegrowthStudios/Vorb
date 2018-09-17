@@ -154,9 +154,6 @@ namespace vorb {
             /*! \brief Destructor that unhooks events */
             virtual ~Widget();
 
-            /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
-            virtual void updateDimensions() override;
-
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -183,6 +180,9 @@ namespace vorb {
             virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_flags.needsDimensionUpdate = true; }
             virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }            
         protected:
+            /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
+            virtual void updateDimensions(f32 dt) override;
+
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 
@@ -190,7 +190,7 @@ namespace vorb {
              * 
              * \returns The processed length.
              */
-            f32   processLength(Length  length);
+            f32 processLength(Length length);
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 

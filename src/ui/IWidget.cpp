@@ -24,7 +24,7 @@ vui::IWidget::IWidget() :
     m_zIndex(1),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
-    m_flags({ false, false, false, false, false, false, false, false, false }) {
+    m_flags({ false, false, false, false, false, false, false, false, false, false }) {
     enable();
 }
 
@@ -43,10 +43,10 @@ void vui::IWidget::dispose() {
     disable();
 }
 
-void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
+void vui::IWidget::update(f32 dt /*= 1.0f*/) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
-        updateDimensions();
+        updateDimensions(dt);
     }
 
     if (m_flags.needsZIndexReorder) {
@@ -62,6 +62,11 @@ void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
     if (m_flags.needsClipRectRecalculation) {
         m_flags.needsClipRectRecalculation = false;
         calculateClipRect();
+    }
+
+    if (m_flags.needsDrawableRecalculation) {
+        m_flags.needsDrawableRecalculation = false;
+        calculateDrawables();
     }
 
     if (m_flags.needsDrawableRefresh) {
@@ -183,6 +188,7 @@ void vui::IWidget::setPosition(f32v2 position) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -196,6 +202,7 @@ void vui::IWidget::setX(f32 x) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -209,6 +216,7 @@ void vui::IWidget::setY(f32 y) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -222,6 +230,7 @@ void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -235,6 +244,7 @@ void vui::IWidget::setRelativeX(f32 relativeX) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -248,6 +258,7 @@ void vui::IWidget::setRelativeY(f32 relativeY) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -261,6 +272,7 @@ void vui::IWidget::setSize(f32v2 size) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -274,6 +286,7 @@ void vui::IWidget::setWidth(f32 width) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -287,6 +300,7 @@ void vui::IWidget::setHeight(f32 height) {
 
         m_flags.needsDockRecalculation     = true;
         m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
@@ -578,7 +592,7 @@ void vui::IWidget::reorderWidgets() {
     }
 }
 
-void vui::IWidget::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
+void vui::IWidget::onMouseDown(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseDown(e);
@@ -586,7 +600,7 @@ void vui::IWidget::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) 
     }
 }
 
-void vui::IWidget::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
+void vui::IWidget::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseUp(e);
@@ -595,7 +609,7 @@ void vui::IWidget::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     m_flags.isClicking = false;
 }
 
-void vui::IWidget::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
+void vui::IWidget::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {

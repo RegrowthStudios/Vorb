@@ -43,8 +43,7 @@ vui::Widget::~Widget() {
     // Empty
 }
 
-void vui::Widget::updateDimensions() {
-    // TODO(Matthew): Can we remove this check?
+void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
     if (m_dock.state != DockState::NONE) return;
 
     static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {

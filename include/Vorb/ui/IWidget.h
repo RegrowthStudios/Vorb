@@ -101,8 +101,9 @@ namespace vorb {
             volatile bool needsZIndexReorder         : 1; ///< Whether we need to recalculate the order of widgets based on their z-index values.
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
-            volatile bool needsDrawableRefresh       : 1; ///< Whether we need to refresh our drawables.
-            volatile bool needsDrawableReregister;        ///< Whether we need to reregister our drawables.
+            volatile bool needsDrawableRecalculation : 1; ///< Whether we need to recalculate the drawables.
+            volatile bool needsDrawableRefresh       : 4; ///< Whether we need to refresh the drawables currently drawn to screen.
+            volatile bool needsDrawableReregister    : 4; ///< Whether we need to reregister our drawables with the renderer.
         };
 
         // Forward Declarations
@@ -132,7 +133,7 @@ namespace vorb {
             *
             * \param dt: The TimeStep
             */
-            virtual void update(f32 dt VORB_MAYBE_UNUSED = 1.0f);
+            virtual void update(f32 dt = 1.0f);
 
             /*! \brief Enables events that all widgets share in common. */
             virtual void enable();
@@ -173,7 +174,6 @@ namespace vorb {
             virtual         Viewport* getViewport()         const { return m_viewport; }
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }
-            virtual       const Font* getFont()             const { return m_font; }
             virtual             f32v4 getDestRect()         const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
@@ -202,7 +202,6 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const Font* font) { m_font = font; }
             virtual void setPosition(f32v2 position);
             virtual void setX(f32 x);
             virtual void setY(f32 y);
@@ -257,7 +256,7 @@ namespace vorb {
             /*!
              * \brief Updates the dimensions of the new IWidget according to specific widget rules.
              */
-            virtual void updateDimensions() = 0;
+            virtual void updateDimensions(f32 dt) = 0;
             /*!
              * \brief Marks all children to update their dimensions.
              */
@@ -266,10 +265,13 @@ namespace vorb {
             /*! Calculates positions and sizes of docked child widgets. */
             void calculateDockedWidgets();
             
-            /*! Computes clipping for rendering and propagates through children. */
+            /*! Calculates clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
-            /*! Computes the clipping of child widgets. */
+            /*! Calculates the clipping of child widgets. */
             virtual void calculateChildClipRects();
+
+            /*! Calculates the properties of the drawables. */
+            virtual void calculateDrawables() = 0;
 
             /*!
              * \brief Reorders widgets relative to their z-index value.
@@ -307,7 +309,6 @@ namespace vorb {
             Viewport*         m_viewport;         ///< Viewport this widget resides in.
             IWidget*          m_parent;           ///< Parent widget.
             IWidgets          m_widgets;          ///< Collection of child widgets.
-            const Font*       m_font;             ///< Font for rendering.
             f32v2             m_position;         ///< Position of widget relative to window in pixels.
             f32v2             m_size;             ///< Size of the widget in pixels.
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.

@@ -69,12 +69,13 @@ namespace vorb {
              * \param size: The size of the widget.
              */
             Button(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Button(); // TODO(Ben): Maybe make abstract?
 
-            /*! @brief Adds all drawables to the UIRenderer
-            */
+            /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;
+            /*! \brief Refresh drawables. */
+            virtual void refreshDrawables() override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -111,8 +112,6 @@ namespace vorb {
             virtual void updateColor();
             /*! Updates the text position in the drawable. */
             virtual void updateTextPosition();
-
-            virtual void refreshDrawables();
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;

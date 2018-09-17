@@ -165,6 +165,7 @@ void vui::Button::updateColor() {
     }
 }
 
+// TODO(Matthew): This is /very/ repeatable across any widget with text - we should move it out of any specific widget class.
 void vui::Button::updateTextPosition() {
     const f32v2& dims = getSize();
     const f32v2& pos  = getPosition();
@@ -203,6 +204,7 @@ void vui::Button::updateTextPosition() {
     }
 }
 
+// TODO(Matthew): This seems a bit repeatable too.
 void vui::Button::refreshDrawables() {
     // Use renderer default font if we don't have a font.
     if (!m_drawableText.getFont()) {
@@ -215,7 +217,6 @@ void vui::Button::refreshDrawables() {
         m_drawnText = m_drawableText;
     }
     
-    m_drawableRect.setClipRect(m_clipRect);
     m_drawnRect = m_drawableRect;
 }
 

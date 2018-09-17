@@ -4,6 +4,7 @@
 #include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 
 vui::Widget::Widget() : IWidget() {
     enable();
@@ -21,19 +22,18 @@ vui::Widget::~Widget() {
     // Empty
 }
 
-// TODO(Matthew): See if we can minimise calculations done on update.
 void vui::Widget::updateDimensions() {
     // TODO(Matthew): Can we remove this check?
     if (m_dock.state != DockState::NONE) return;
 
     static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
             f32v2 processedPosition = processLength(m_rawDimensions.position);
-            m_position = processedPosition + modifier;
+            setPosition(processedPosition + modifier);
     };
 
     static auto applyRawSize = [&]() {
             f32v2 processedSize = processLength(m_rawDimensions.size);
-            m_size = processedSize;
+            setSize(processedSize);
     };
 
     static auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
@@ -42,10 +42,8 @@ void vui::Widget::updateDimensions() {
         f32 right  = processLength(m_rawRelativePositions.right);
         f32 bottom = processLength(m_rawRelativePositions.bottom);
         
-        m_position.x = position.x + left;
-        m_position.y = position.y + top;
-        m_size.x     = size.x - left + right;
-        m_size.y     = size.y - top + bottom;
+        setPosition(f32v2(position.x + left, position.y + top));
+        setSize(f32v2(size.x - left + right, size.y - top + bottom));
     };
 
     switch(m_positionType) {
@@ -55,8 +53,8 @@ void vui::Widget::updateDimensions() {
             applyRawSize();
 
             break;
-        case PositionType::STATIC_TO_CANVAS:
-            applyRawPosition(m_canvas->getPosition());
+        case PositionType::STATIC_TO_VIEWPORT:
+            applyRawPosition(m_viewport->getPosition());
 
             applyRawSize();
 
@@ -68,11 +66,11 @@ void vui::Widget::updateDimensions() {
 
             break;
         case PositionType::RELATIVE_TO_WINDOW:
-            applyRelativeDirectives(f32v2(0.0f, 0.0f), f32v2((f32)getGameWindow()->getWidth(), (f32)getGameWindow()->getHeight()));
+            applyRelativeDirectives(f32v2(0.0f, 0.0f), f32v2((f32)m_viewport->getGameWindow()->getWidth(), (f32)m_viewport->getGameWindow()->getHeight()));
 
             break;
-        case PositionType::RELATIVE_TO_CANVAS:
-            applyRelativeDirectives(m_canvas->getPosition(), m_canvas->getSize());
+        case PositionType::RELATIVE_TO_VIEWPORT:
+            applyRelativeDirectives(m_viewport->getPosition(), m_viewport->getSize());
             
             break;
         case PositionType::RELATIVE_TO_PARENT:
@@ -86,49 +84,8 @@ void vui::Widget::updateDimensions() {
 
     applyMinMaxSizes();
 
-    m_flags.needsClipRectRecalculation = true;
-
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
-
-    updateDescendantDimensions();
 }
-
-// void vui::Widget::setAnchor(const AnchorStyle& anchor) {
-//     m_anchor = anchor;
-// }
-
-// void vui::Widget::setDock(const DockStyle& dock) {
-//     if (m_parent) {
-//         m_parent->setChildDock(this, dock);
-//     } else {
-//         m_dock = dock;
-//     }
-// }
-
-
-// f32v2 vui::Widget::getWidgetAlignOffset() {
-//     switch (m_align) {
-//         case WidgetAlign::LEFT:
-//             return f32v2(0, -m_dimensions.y * 0.5f);
-//         case WidgetAlign::TOP_LEFT:
-//             return f32v2(0.0f);
-//         case WidgetAlign::TOP:
-//             return f32v2(-m_dimensions.x * 0.5f, 0.0f);
-//         case WidgetAlign::TOP_RIGHT:
-//             return f32v2(-m_dimensions.x, 0.0f);
-//         case WidgetAlign::RIGHT:
-//             return f32v2(-m_dimensions.x, -m_dimensions.y * 0.5f);
-//         case WidgetAlign::BOTTOM_RIGHT:
-//             return f32v2(-m_dimensions.x, -m_dimensions.y);
-//         case WidgetAlign::BOTTOM:
-//             return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y);
-//         case WidgetAlign::BOTTOM_LEFT:
-//             return f32v2(0.0f, -m_dimensions.y);
-//         case WidgetAlign::CENTER:
-//             return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
-//     }
-//     return f32v2(0.0f); // Should never happen
-// }
 
 f32 vui::Widget::processLength(Length length) {
     switch (length.dimension.x) {
@@ -139,14 +96,14 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::STATIC_TO_PARENT:
                 case PositionType::RELATIVE_TO_PARENT:
                     return length.x * m_parent->getWidth();
-                case PositionType::STATIC_TO_CANVAS:
-                case PositionType::RELATIVE_TO_CANVAS:
-                    return length.x * m_canvas->getWidth();
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * m_viewport->getWidth();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
                     // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
                     // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
-                    return length.x * getGameWindow()->getWidth();
+                    return length.x * m_viewport->getGameWindow()->getWidth();
             }
             break;
         case DimensionType::HEIGHT_PERCENTAGE:
@@ -154,14 +111,14 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::STATIC_TO_PARENT:
                 case PositionType::RELATIVE_TO_PARENT:
                     return length.x * m_parent->getHeight();
-                case PositionType::STATIC_TO_CANVAS:
-                case PositionType::RELATIVE_TO_CANVAS:
-                    return length.x * m_canvas->getHeight();
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * m_viewport->getHeight();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
                     // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
                     // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
-                    return length.x * getGameWindow()->getHeight();
+                    return length.x * m_viewport->getGameWindow()->getHeight();
             }
             break;
         case DimensionType::MIN_PERCENTAGE:
@@ -169,14 +126,14 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::STATIC_TO_PARENT:
                 case PositionType::RELATIVE_TO_PARENT:
                     return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
-                case PositionType::STATIC_TO_CANVAS:
-                case PositionType::RELATIVE_TO_CANVAS:
-                    return length.x * glm::min(m_canvas->getWidth(), m_canvas->getHeight());
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
                     // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
                     // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
-                    return length.x * glm::min(getGameWindow()->getWidth(), getGameWindow()->getHeight());
+                    return length.x * glm::min(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
             }
             break;
         case DimensionType::MAX_PERCENTAGE:
@@ -184,14 +141,14 @@ f32 vui::Widget::processLength(Length length) {
                 case PositionType::STATIC_TO_PARENT:
                 case PositionType::RELATIVE_TO_PARENT:
                     return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
-                case PositionType::STATIC_TO_CANVAS:
-                case PositionType::RELATIVE_TO_CANVAS:
-                    return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
                     // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
                     // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
-                    return length.x * glm::max(getGameWindow()->getWidth(), getGameWindow()->getHeight());
+                    return length.x * glm::max(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
             }
             break;
         case DimensionType::PARENT_WIDTH_PERCENTAGE:
@@ -203,21 +160,21 @@ f32 vui::Widget::processLength(Length length) {
         case DimensionType::PARENT_MAX_PERCENTAGE:
             return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
         case DimensionType::CANVAS_WIDTH_PERCENTAGE:
-            return length.x * m_canvas->getWidth();
+            return length.x * m_viewport->getWidth();
         case DimensionType::CANVAS_HEIGHT_PERCENTAGE:
-            return length.x * m_canvas->getHeight();
+            return length.x * m_viewport->getHeight();
         case DimensionType::CANVAS_MIN_PERCENTAGE:
-            return length.x * glm::min(m_canvas->getWidth(), m_canvas->getHeight());
+            return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
         case DimensionType::CANVAS_MAX_PERCENTAGE:
-            return length.x * glm::max(m_canvas->getWidth(), m_canvas->getHeight());
+            return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
         case DimensionType::WINDOW_WIDTH_PERCENTAGE:
-            return length.x * getGameWindow()->getWidth();
+            return length.x * m_viewport->getGameWindow()->getWidth();
         case DimensionType::WINDOW_HEIGHT_PERCENTAGE:
-            return length.x * getGameWindow()->getHeight();
+            return length.x * m_viewport->getGameWindow()->getHeight();
         case DimensionType::WINDOW_MIN_PERCENTAGE:
-            return length.x * glm::min(getGameWindow()->getWidth(), getGameWindow()->getHeight());
+            return length.x * glm::min(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
         case DimensionType::WINDOW_MAX_PERCENTAGE:
-            return length.x * glm::max(getGameWindow()->getWidth(), getGameWindow()->getHeight());
+            return length.x * glm::max(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
         default:
             // Shouldn't get here.
             assert(false);
@@ -236,13 +193,13 @@ void vui::Widget::applyMinMaxSizes() {
     f32v2 processedMaxSize = processLength(m_maxRawSize);
 
     if (m_size.x < processedMinSize.x) {
-        m_size.x = processedMinSize.x;
+        setWidth(processedMinSize.x);
     } else if (m_size.x > processedMaxSize.x) {
-        m_size.x = processedMaxSize.x;
+        setWidth(processedMaxSize.x);
     }
     if (m_size.y < processedMinSize.y) {
-        m_size.y = processedMinSize.y;
+        setHeight(processedMinSize.y);
     } else if (m_size.y > processedMaxSize.y) {
-        m_size.y = processedMaxSize.y;
+        setHeight(processedMaxSize.y);
     }
 }

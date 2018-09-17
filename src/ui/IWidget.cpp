@@ -46,10 +46,7 @@ void vui::IWidget::dispose() {
 void vui::IWidget::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
-        if (updateDimensions()) {
-            // If updateDimensions changes the widget, then its children need updating too.
-            markChildrenToUpdateDimensions();
-        }
+        updateDimensions();
     }
 
     if (m_flags.needsZIndexReorder) {
@@ -177,125 +174,180 @@ vui::ClippingState vui::IWidget::getClippingBottom() const {
 }
 
 void vui::IWidget::setPosition(f32v2 position) {
+    f32v2 tmp = m_position;
+
     m_position = position;
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_position) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setX(f32 x) {
+    f32 tmp = m_position.x;
+
     m_position.x = x;
-    
-    markChildrenToUpdateDimensions();
-    
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+
+    if (tmp != m_position.x) {
+        markChildrenToUpdateDimensions();
+
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setY(f32 y) {
+    f32 tmp = m_position.y;
+
     m_position.y = y;
-    
-    markChildrenToUpdateDimensions();
-    
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+
+    if (tmp != m_position.y) {
+        markChildrenToUpdateDimensions();
+
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setRelativePosition(f32v2 relativePosition) {
+    f32v2 tmp = m_position;
+
     m_position = relativePosition + m_parent->getPosition();
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_position) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setRelativeX(f32 relativeX) {
+    f32 tmp = m_position.x;
+
     m_position.x = relativeX + m_parent->getPosition().x;
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_position.x) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setRelativeY(f32 relativeY) {
+    f32 tmp = m_position.y;
+
     m_position.y = relativeY + m_parent->getPosition().y;
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_position.y) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setSize(f32v2 size) {
+    f32v2 tmp = m_size;
+
     m_size = size;
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_position) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setWidth(f32 width) {
+    f32 tmp = m_size.x;
+
     m_size.x = width;
 
-    markChildrenToUpdateDimensions();
+    if (tmp != m_size.x) {
+        markChildrenToUpdateDimensions();
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setHeight(f32 height) {
-    m_size.y = height;
-    
-    markChildrenToUpdateDimensions();
+    f32 tmp = m_size.y;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    m_size.y = height;
+
+    if (tmp != m_size.y) {
+        markChildrenToUpdateDimensions();
+
+        m_flags.needsDockRecalculation     = true;
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setClipping(Clipping clipping) {
+    Clipping tmp = m_clipping;
+
     m_clipping = clipping;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    if (tmp != m_clipping) {
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setClippingLeft(ClippingState state) {
+    ClippingState tmp = m_clipping.left;
+
     m_clipping.left = state;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    if (tmp != m_clipping.left) {
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setClippingTop(ClippingState state) {
+    ClippingState tmp = m_clipping.top;
+
     m_clipping.top = state;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    if (tmp != m_clipping.top) {
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setClippingRight(ClippingState state) {
+    ClippingState tmp = m_clipping.right;
+
     m_clipping.right = state;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    if (tmp != m_clipping.right) {
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setClippingBottom(ClippingState state) {
+    ClippingState tmp = m_clipping.bottom;
+
     m_clipping.bottom = state;
 
-    m_flags.needsDockRecalculation     = true;
-    m_flags.needsClipRectRecalculation = true;
+    if (tmp != m_clipping.bottom) {
+        m_flags.needsClipRectRecalculation = true;
+    }
 }
 
 void vui::IWidget::setZIndex(ui16 zIndex) {
+    ui16 tmp = m_zIndex;
+
     m_zIndex = zIndex;
 
-    m_flags.needsZIndexReorder = true;
+    if (tmp != m_zIndex) {
+        m_flags.needsZIndexReorder = true;
+    }
 }
 
 void vui::IWidget::setDock(Dock dock) {
@@ -356,7 +408,6 @@ void vui::IWidget::markChildrenToReregisterDrawables() {
 void vui::IWidget::markChildrenToUpdateDimensions() {
     for (auto& child : m_widgets) {
         child->m_flags.needsDimensionUpdate = true;
-        child->updateDimensions();
     }
 }
 
@@ -367,7 +418,12 @@ void vui::IWidget::calculateDockedWidgets() {
     f32 topFill       = 0.0f;
 
     for (auto& child : m_widgets) {
-        if (child->getDockState() == DockState::NONE) continue;
+        if (child->getDockState() == DockState::NONE) {
+            continue;
+        } else if (surplusWidth == 0.0f && surplusHeight == 0.0f) {
+            child->setSize(f32v2(0.0f, 0.0f));
+            continue;
+        }
 
         DockState state = child->getDockState();
         f32       size  = child->getDockSize();
@@ -439,8 +495,6 @@ void vui::IWidget::calculateDockedWidgets() {
                 assert(false);
                 break;
         }
-
-        if (surplusWidth == 0.0f && surplusHeight == 0.0f) break;
     }
 }
 

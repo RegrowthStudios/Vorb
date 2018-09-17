@@ -55,11 +55,11 @@ namespace vorb {
          *     Parent   -> The parent widget of this widget.
          */
         enum class PositionType {
-              STATIC_TO_WINDOW,
-              STATIC_TO_CANVAS,
-              STATIC_TO_PARENT,
+            STATIC_TO_WINDOW,
+            STATIC_TO_VIEWPORT,
+            STATIC_TO_PARENT,
             RELATIVE_TO_WINDOW,
-            RELATIVE_TO_CANVAS,
+            RELATIVE_TO_VIEWPORT,
             RELATIVE_TO_PARENT
         };
 

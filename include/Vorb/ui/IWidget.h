@@ -57,6 +57,16 @@ namespace vorb {
             ClippingState top    : 2;
             ClippingState right  : 2;
             ClippingState bottom : 2;
+
+            bool operator==(Clipping rhs) {
+                return this->left   == rhs.left
+                    && this->top    == rhs.top
+                    && this->right  == rhs.right
+                    && this->bottom == rhs.bottom;
+            }
+            bool operator!=(Clipping rhs) {
+                return !(*this == rhs);
+            }
         };
         const Clipping DEFAULT_CLIPPING = {
             ClippingState::VISIBLE,
@@ -249,16 +259,15 @@ namespace vorb {
              */
             virtual void markChildrenToReregisterDrawables();
 
-            /*! \brief Updates the dimensions of the new IWidget according to specific widget rules.
+            /*!
+             * \brief Updates the dimensions of the new IWidget according to specific widget rules.
              */
-            virtual bool updateDimensions() = 0;
+            virtual void updateDimensions() = 0;
             /*!
              * \brief Marks all children to update their dimensions.
              */
             virtual void markChildrenToUpdateDimensions();
 
-            /*! Removes a widget from a dock and returns true on success. */
-            // bool removeChildFromDock(Widget* widget);
             /*! Calculates positions and sizes of docked child widgets. */
             void calculateDockedWidgets();
             

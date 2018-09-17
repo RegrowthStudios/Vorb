@@ -8,7 +8,7 @@
 //
 
 /*! \file IWidget.h
-* @brief 
+* \brief 
 * Abstract Container for widgets
 *
 */
@@ -113,63 +113,58 @@ namespace vorb {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;
         public:
-            /*! @brief Constructor default and parametised to set renderer and window.
+            /*! \brief Constructor default and parametised to set renderer and window.
              * 
-             * @param renderer: The renderer to use for drawing widget.
-             * @param window: The window in which to set the UI.
+             * \param renderer: The renderer to use for drawing widget.
+             * \param window: The window in which to set the UI.
              */
             IWidget();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            //  *
-            //  * @param name: Name of the widget.
-            //  * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            //  */
-            // IWidget(const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Destructor that unhooks events */
+            /*! \brief Destructor that unhooks events */
             virtual ~IWidget();
-            /*! @brief Releases all resources used by the Widget.
+
+            /*! \brief Releases all resources used by the Widget.
              *
              * Gets called in the destructor.
              */
             virtual void dispose();
 
-            /*! @brief Updates the widget. Can be used for animation.
+            /*! \brief Updates the widget. Can be used for animation.
             *
-            * @param dt: The TimeStep
+            * \param dt: The TimeStep
             */
             virtual void update(f32 dt VORB_MAYBE_UNUSED = 1.0f);
 
-            /*! @brief Enables events that all widgets share in common. */
+            /*! \brief Enables events that all widgets share in common. */
             virtual void enable();
-            /*! @brief Disables events that all widgets share in common. */
+            /*! \brief Disables events that all widgets share in common. */
             virtual void disable();
 
-            /*! @brief Childs another widget to this widget.
+            /*! \brief Childs another widget to this widget.
              *
-             * @param child: The Widget to add
-             * @return true on success.
+             * \param child: The Widget to add
+             * \return true on success.
              */
             virtual bool addWidget(IWidget* child);
-            /*! @brief Unchilds a child widget of this widget.
+            /*! \brief Unchilds a child widget of this widget.
             *
-            * @param child: The Widget to remove
-            * @return true on success.
+            * \param child: The Widget to remove
+            * \return true on success.
             */
             virtual bool removeWidget(IWidget* child);
 
-            /*! @brief Checks if a point is inside the container
+            /*! \brief Checks if a point is inside the container
              *
-             * @param point: The point to check
-             * @return true if point is in the bounds of the container
+             * \param point: The point to check
+             * \return true if point is in the bounds of the container
              */
             virtual bool isInBounds(const f32v2& point) const { return isInBounds(point.x, point.y); }
             virtual bool isInBounds(f32 x, f32 y) const;
             
-            /*! @brief Adds all drawables to the UIRenderer. */
+            /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables() = 0;
-            /*! @brief Removes all drawables from the UIRenderer. */
+            /*! \brief Removes all drawables from the UIRenderer. */
             virtual void removeDrawables();
-            /*! @brief Refreshes all drawables. */
+            /*! \brief Refreshes all drawables. */
             virtual void refreshDrawables() = 0;
 
             /************************************************************************/

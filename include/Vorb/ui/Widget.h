@@ -30,19 +30,6 @@
 
 namespace vorb {
     namespace ui {
-
-        // enum class WidgetAlign {
-        //     LEFT,
-        //     TOP_LEFT,
-        //     TOP,
-        //     TOP_RIGHT,
-        //     RIGHT,
-        //     BOTTOM_RIGHT,
-        //     BOTTOM,
-        //     BOTTOM_LEFT,
-        //     CENTER
-        // };
-
         /*!
          * \brief Enum of ways a widget may be positioned.
          * 
@@ -67,23 +54,23 @@ namespace vorb {
          * \brief Enum of ways the dimensions of a widget may be measured.
          * 
          * Dimension types are (where X is the length considered):
-         *     Pixel                    -> X is directly the number of pixels;
-         *     Width Percentage         -> X is the percentage of the width of the widget to which this widget is statically or relatively positioned.
-         *     Height Percentage        -> X is the percentage of the height of the widget to which this widget is statically or relatively positioned.
-         *     Min Percentage           -> X is the percentage of the minimum of width and height of the widget to which this widget is statically or relatively positioned.
-         *     Max Percentage           -> X is the percentage of the maximum of width and height of the widget to which this widget is statically or relatively positioned.
-         *     Parent Width Percentage  -> X is the percentage of the parent widget's width;
-         *     Parent Height Percentage -> X is the percentage of the parent widget's height;
-         *     Parent Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
-         *     Parent Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
-         *     Canvas Width Percentage  -> X is the percentage of the parent widget's width;
-         *     Canvas Height Percentage -> X is the percentage of the parent widget's height;
-         *     Canvas Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
-         *     Canvas Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
-         *     Window Width Percentage  -> X is the percentage of the parent widget's width;
-         *     Window Height Percentage -> X is the percentage of the parent widget's height;
-         *     Window Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
-         *     Window Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
+         *     Pixel                      -> X is directly the number of pixels;
+         *     Width Percentage           -> X is the percentage of the width of the widget to which this widget is statically or relatively positioned.
+         *     Height Percentage          -> X is the percentage of the height of the widget to which this widget is statically or relatively positioned.
+         *     Min Percentage             -> X is the percentage of the minimum of width and height of the widget to which this widget is statically or relatively positioned.
+         *     Max Percentage             -> X is the percentage of the maximum of width and height of the widget to which this widget is statically or relatively positioned.
+         *     Parent Width Percentage    -> X is the percentage of the parent widget's width;
+         *     Parent Height Percentage   -> X is the percentage of the parent widget's height;
+         *     Parent Min Perecentage     -> X is the percentage of the parent widget's minimum of width and height;
+         *     Parent Max Percentage      -> X is the percentage of the parent widget's maximum of width and height;
+         *     Viewport Width Percentage  -> X is the percentage of the parent widget's width;
+         *     Viewport Height Percentage -> X is the percentage of the parent widget's height;
+         *     Viewport Min Perecentage   -> X is the percentage of the parent widget's minimum of width and height;
+         *     Viewport Max Percentage    -> X is the percentage of the parent widget's maximum of width and height;
+         *     Window Width Percentage    -> X is the percentage of the parent widget's width;
+         *     Window Height Percentage   -> X is the percentage of the parent widget's height;
+         *     Window Min Perecentage     -> X is the percentage of the parent widget's minimum of width and height;
+         *     Window Max Percentage      -> X is the percentage of the parent widget's maximum of width and height;
          * Note that we are talking pre-normalised percentage - i.e. a value of 1.0 = 100%.
          */
         enum class DimensionType {
@@ -96,10 +83,10 @@ namespace vorb {
             PARENT_HEIGHT_PERCENTAGE,
             PARENT_MIN_PERCENTAGE,
             PARENT_MAX_PERCENTAGE,
-            CANVAS_WIDTH_PERCENTAGE,
-            CANVAS_HEIGHT_PERCENTAGE,
-            CANVAS_MIN_PERCENTAGE,
-            CANVAS_MAX_PERCENTAGE,
+            VIEWPORT_WIDTH_PERCENTAGE,
+            VIEWPORT_HEIGHT_PERCENTAGE,
+            VIEWPORT_MIN_PERCENTAGE,
+            VIEWPORT_MAX_PERCENTAGE,
             WINDOW_WIDTH_PERCENTAGE,
             WINDOW_HEIGHT_PERCENTAGE,
             WINDOW_MIN_PERCENTAGE,
@@ -130,27 +117,44 @@ namespace vorb {
             friend class WidgetScriptFuncs;
             friend class IWidget;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Widget();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            //  *
-            //  * @param name: Name of the control.
-            //  * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            //  */
-            // Widget(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            //  *
-            //  * The widget will be made a child of parent.
-            //  *
-            //  * @param parent: Parent container object.
-            //  * @param name: Name of the control.
-            //  * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            //  */
-            // Widget(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Destructor that unhooks events */
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+             */
+            Widget(const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Widget(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent container object.
+             * \param name: Name of the control.
+             * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+             */
+            Widget(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent container object.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Widget(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Destructor that unhooks events */
             virtual ~Widget();
 
-            /*! @brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
+            /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
             virtual void updateDimensions() override;
 
             /************************************************************************/

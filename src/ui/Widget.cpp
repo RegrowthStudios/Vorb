@@ -7,16 +7,37 @@
 #include "Vorb/ui/Viewport.h"
 
 vui::Widget::Widget() : IWidget() {
-    enable();
+    // Empty
 }
 
-// vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidget(name, destRect) {
-//     enable();
-// }
+vui::Widget::Widget(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : IWidget() {
+    m_name = name;
 
-// vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-//     setParent(parent);
-// }
+    m_position = f32v2(dimensions.x, dimensions.y);
+    m_size     = f32v2(dimensions.z, dimensions.w);
+
+    m_rawDimensions.position.x = dimensions.x;
+    m_rawDimensions.position.y = dimensions.y;
+    m_rawDimensions.size.x     = dimensions.z;
+    m_rawDimensions.size.y     = dimensions.w;
+}
+
+vui::Widget::Widget(const nString& name, const Length2& position, const Length2& size) : IWidget() {
+    m_name = name;
+
+    m_rawDimensions.position = position;
+    m_rawDimensions.size     = size;
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+    parent->addWidget(this);
+}
+
+vui::Widget::Widget(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
+    parent->addWidget(this);
+}
 
 vui::Widget::~Widget() {
     // Empty
@@ -159,13 +180,13 @@ f32 vui::Widget::processLength(Length length) {
             return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
         case DimensionType::PARENT_MAX_PERCENTAGE:
             return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
-        case DimensionType::CANVAS_WIDTH_PERCENTAGE:
+        case DimensionType::VIEWPORT_WIDTH_PERCENTAGE:
             return length.x * m_viewport->getWidth();
-        case DimensionType::CANVAS_HEIGHT_PERCENTAGE:
+        case DimensionType::VIEWPORT_HEIGHT_PERCENTAGE:
             return length.x * m_viewport->getHeight();
-        case DimensionType::CANVAS_MIN_PERCENTAGE:
+        case DimensionType::VIEWPORT_MIN_PERCENTAGE:
             return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
-        case DimensionType::CANVAS_MAX_PERCENTAGE:
+        case DimensionType::VIEWPORT_MAX_PERCENTAGE:
             return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
         case DimensionType::WINDOW_WIDTH_PERCENTAGE:
             return length.x * m_viewport->getGameWindow()->getWidth();

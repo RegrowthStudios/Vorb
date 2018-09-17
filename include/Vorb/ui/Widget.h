@@ -166,10 +166,6 @@ namespace vorb {
             virtual const Length2& getMinRawSize()   const { return m_minRawSize; }
             virtual const Length2& getMaxRawSize()   const { return m_maxRawSize; }
 
-            // virtual const WidgetAlign& getWidgetAlign() const { return m_align; }
-            // virtual const AnchorStyle& getAnchor() const { return m_anchor; }
-            // virtual const DockStyle& getDock() const { return m_dock; }
-
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
@@ -181,16 +177,8 @@ namespace vorb {
             virtual void setRawRight(const Length& rawRight)        { m_rawRelativePositions.right = rawRight;   m_flags.needsDimensionUpdate = true; }
             virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_flags.needsDimensionUpdate = true; }
             virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_flags.needsDimensionUpdate = true; }
-            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }
-
-            // TODO(Matthew): Think how this actually works with position type system.
-            // virtual void setWidgetAlign(WidgetAlign align) { m_align = align; updatePosition(); }
-            // virtual void setAnchor(const AnchorStyle& anchor);
-            // virtual void setDock(const DockStyle& dock);
-            
+            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }            
         protected:
-            // virtual f32v2 getWidgetAlignOffset();
-
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 
@@ -232,10 +220,6 @@ namespace vorb {
                     Length bottom; ///< Position of widget relative to bottom of target widget.
                 } m_rawRelativePositions;
             };
-
-            // WidgetAlign   m_align               = WidgetAlign::TOP_LEFT;
-            // AnchorStyle   m_anchor;                                                                                     ///< The anchor data.
-            // DockStyle     m_dock                = DockStyle::NONE;                                                      ///< The dock type.
         };
     }
 }

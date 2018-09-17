@@ -5,7 +5,6 @@
 #include "Vorb/ui/Button.h"
 #include "Vorb/ui/CheckBox.h"
 #include "Vorb/ui/ComboBox.h"
-#include "Vorb/ui/Form.h"
 #include "Vorb/ui/FormScriptEnvironment.h"
 #include "Vorb/ui/Label.h"
 #include "Vorb/ui/Panel.h"
@@ -31,9 +30,9 @@ bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) 
     { // Initialize callbacks
         // Form functions
         m_env->setNamespaces("Form");
-        m_env->addCDelegate("enable", makeDelegate(*this, &FormScriptEnvironment::enableForm));
-        m_env->addCDelegate("disable", makeDelegate(*this, &FormScriptEnvironment::disableForm));
-        m_env->addCRDelegate("getName", makeRDelegate(*this, &FormScriptEnvironment::getFormName));
+        // m_env->addCDelegate("enable", makeDelegate(*this, &FormScriptEnvironment::enableForm));
+        // m_env->addCDelegate("disable", makeDelegate(*this, &FormScriptEnvironment::disableForm));
+        // m_env->addCRDelegate("getName", makeRDelegate(*this, &FormScriptEnvironment::getFormName));
         m_env->addCRDelegate("makeButton", makeRDelegate(*this, &FormScriptEnvironment::makeButton));
         m_env->addCRDelegate("makeSlider", makeRDelegate(*this, &FormScriptEnvironment::makeSlider));
         m_env->addCRDelegate("makeCheckBox", makeRDelegate(*this, &FormScriptEnvironment::makeCheckBox));
@@ -41,7 +40,7 @@ bool vui::FormScriptEnvironment::init(Form* form, const GameWindow* gameWindow) 
         m_env->addCRDelegate("makePanel", makeRDelegate(*this, &FormScriptEnvironment::makePanel));
         m_env->addCRDelegate("makeLabel", makeRDelegate(*this, &FormScriptEnvironment::makeLabel));
         m_env->addCRDelegate("makeWidgetList", makeRDelegate(*this, &FormScriptEnvironment::makeWidgetList));
-        m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
+        // m_env->addCRDelegate("setCallback", makeRDelegate(*m_form, &Form::registerCallback));
         
         m_env->setNamespaces();
         // Widget functions
@@ -194,14 +193,14 @@ void vui::FormScriptEnvironment::registerConstants() {
 //     return w;
 // }
 
-void vui::FormScriptEnvironment::enableForm(Form* f) {
-    f->enable();
-}
+// void vui::FormScriptEnvironment::enableForm(Form* f) {
+//     f->enable();
+// }
 
-void vui::FormScriptEnvironment::disableForm(Form* f) {
-    f->disable();
-}
+// void vui::FormScriptEnvironment::disableForm(Form* f) {
+//     f->disable();
+// }
 
-nString vui::FormScriptEnvironment::getFormName(Form* f) {
-    return f->getName();
-}
+// nString vui::FormScriptEnvironment::getFormName(Form* f) {
+//     return f->getName();
+// }

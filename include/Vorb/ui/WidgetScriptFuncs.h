@@ -112,7 +112,7 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
-            virtual void setParent(Widget* w, IWidget* parent) const;
+            // virtual void setParent(Widget* w, IWidget* parent) const;
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
             virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;

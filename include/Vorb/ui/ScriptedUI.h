@@ -35,12 +35,12 @@ namespace vorb {
         // Forward declarations
         class FormScriptEnvironment;
         class IGameScreen;
-        class Form;
+        // class Form;
         class GameWindow;
 
         class ScriptedUI {
         public:
-            typedef std::pair<Form*, FormScriptEnvironment*> FormEnv;
+            // typedef std::pair<Form*, FormScriptEnvironment*> FormEnv;
 
             ScriptedUI();
             virtual ~ScriptedUI();
@@ -54,17 +54,17 @@ namespace vorb {
             virtual void setDimensions(const f32v2& dimensions);
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
-            virtual Form* makeForm(nString name, nString filePath);
+            // virtual Form* makeForm(nString name, nString filePath);
             virtual void registerScriptValues(FormScriptEnvironment* newFormEnv);
-            virtual Form* enableForm(nString name);
-            virtual Form* disableForm(nString name);
-            virtual Form* getForm(nString name);
+            // virtual Form* enableForm(nString name);
+            // virtual Form* disableForm(nString name);
+            // virtual Form* getForm(nString name);
 
             vg::SpriteFont* m_defaultFont = nullptr;
             f32v4 m_destRect;
             IGameScreen* m_ownerScreen = nullptr;
             const GameWindow* m_window = nullptr;     
-            std::vector<FormEnv> m_forms; ///< The forms and script envs in draw order
+            // std::vector<FormEnv> m_forms; ///< The forms and script envs in draw order
         };
     }
 }

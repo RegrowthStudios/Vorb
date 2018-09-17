@@ -2,6 +2,7 @@
 #include "Vorb/ui/Slider.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
 vui::Slider::Slider() : Widget() {
@@ -33,12 +34,12 @@ void vui::Slider::addDrawables() {
     m_drawnSlide = m_drawableSlide;
   
     // Add the bar
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnBar, &DrawableRect::draw),
                   makeDelegate(*this, &Slider::refreshDrawables));
 
     // Add the slide 
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnSlide, &DrawableRect::draw),
                   makeDelegate(*this, &Slider::refreshDrawables));
 }

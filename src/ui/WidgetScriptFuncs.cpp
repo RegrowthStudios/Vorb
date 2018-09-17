@@ -53,7 +53,7 @@ void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* en
         // REGISTER_DEL(env, setX);
         // REGISTER_DEL(env, setY);
         REGISTER_DEL(env, setName);
-        REGISTER_DEL(env, setParent);
+        // REGISTER_DEL(env, setParent);
         // REGISTER_DEL(env, setMinSize);
         // REGISTER_DEL(env, setMaxSize);
         // REGISTER_DEL(env, setPositionPercentage);
@@ -326,9 +326,9 @@ void vui::WidgetScriptFuncs::setName(Widget* w, nString name) const {
     w->setName(name);
 }
 
-void vui::WidgetScriptFuncs::setParent(Widget* w, IWidget* parent) const {
-    w->setParent(parent);
-}
+// void vui::WidgetScriptFuncs::setParent(Widget* w, IWidget* parent) const {
+//     w->setParent(parent);
+// }
 
 // void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2 minSize) const {
 //     w->setMinSize(minSize);

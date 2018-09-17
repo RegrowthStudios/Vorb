@@ -2,6 +2,7 @@
 #include "Vorb/ui/Panel.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
 // const int SLIDER_VAL_MAX = 10000;
@@ -34,7 +35,7 @@ void vui::Panel::addDrawables() {
     // Make copy
     m_drawnRect = m_drawableRect;
     // Add the rect
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &Panel::refreshDrawables));
 

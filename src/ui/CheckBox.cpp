@@ -2,6 +2,7 @@
 #include "Vorb/ui/CheckBox.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 
 vui::CheckBox::CheckBox() : Widget() {
     ValueChange.setSender(this);
@@ -32,17 +33,17 @@ void vui::CheckBox::addDrawables() {
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;
     // Use renderer default font if we dont have a font
-    m_defaultFont = m_renderer->getDefaultFont();
+    m_defaultFont = m_viewport->getRenderer()->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the rect
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnRect, &DrawableRect::draw),
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 
 
     // Add the text 
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &CheckBox::refreshDrawables));
 }

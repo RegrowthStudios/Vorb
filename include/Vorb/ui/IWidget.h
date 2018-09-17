@@ -175,7 +175,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual          IWidget* getViewport()         const { return m_viewport; }
+            virtual         Viewport* getViewport()         const { return m_viewport; }
             virtual          IWidget* getParent()           const { return m_parent; }
             virtual   const IWidgets& getWidgets()          const { return m_widgets; }
             virtual       const Font* getFont()             const { return m_font; }

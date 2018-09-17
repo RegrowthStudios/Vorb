@@ -1,6 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/Label.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
 vui::Label::Label() : Widget() {
@@ -27,11 +28,11 @@ void vui::Label::addDrawables() {
     m_drawnText = m_drawableText;
 
     // Use renderer default font if we dont have a font
-    m_defaultFont = m_renderer->getDefaultFont();
+    m_defaultFont = m_viewport->getRenderer()->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
     // Add the text 
-    m_renderer->add(this,
+    m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &Label::refreshDrawables));
 }

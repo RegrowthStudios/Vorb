@@ -8,7 +8,7 @@
 //
 
 /*! \file CheckBox.h
-* @brief 
+* \brief 
 * Defines the CheckBox widget.
 *
 */
@@ -36,72 +36,82 @@ namespace vorb {
         class CheckBox : public Widget {
             friend class CheckBoxScriptFuncs;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             CheckBox();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            // *
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // CheckBox(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * @param parent: Parent control object.
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Constructor that sets name, position, and dimensions.
+            *
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            CheckBox(const nString& name, const f32v4& destRect = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            CheckBox(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent container object.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            CheckBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Default destructor. */
             virtual ~CheckBox();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            */
+            /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;
-
-            /*! @brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
+            /*! \brief Refresh drawables. */
+            virtual void refreshDrawables() override;
 
             virtual void check();
-            virtual void unCheck();
+            virtual void uncheck();
             virtual void toggleChecked();
-            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getUncheckedTexture() const { return m_uncheckedTexture; }
-            virtual const VGTexture& getCheckedTexture() const { return m_checkedTexture; }
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const color4& getBoxColor() const { return m_boxColor; }
-            virtual const color4& getBoxHoverColor() const { return m_boxHoverColor; }
-            virtual const color4& getBoxCheckedColor() const { return m_boxCheckedColor; }
-            virtual const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor; }
-            virtual const color4& getTextColor() const { return m_drawableText.getColor(); }
-            virtual const nString& getText() const { return m_drawableText.getText(); }
-            virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
-            virtual const bool& isChecked() const { return m_isChecked; }
+            virtual                  const VGTexture& getUncheckedTexture()     const { return m_uncheckedTexture;            }
+            virtual                  const VGTexture& getCheckedTexture()       const { return m_checkedTexture;              }
+            virtual const vorb::graphics::SpriteFont* getFont()                 const { return m_drawableText.getFont();      }
+            virtual                     const color4& getBoxColor()             const { return m_boxColor;                    }
+            virtual                     const color4& getBoxHoverColor()        const { return m_boxHoverColor;               }
+            virtual                     const color4& getBoxCheckedColor()      const { return m_boxCheckedColor;             }
+            virtual                     const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor;        }
+            virtual                     const color4& getTextColor()            const { return m_textColor;                   }
+            virtual                     const color4& getTextHoverColor()       const { return m_textHoverColor;              }
+            virtual                    const nString& getText()                 const { return m_drawableText.getText();      }
+            virtual              const vg::TextAlign& getTextAlign()            const { return m_drawableText.getTextAlign(); }
+            virtual                      const f32v2& getTextScale()            const { return m_drawableText.getTextScale(); }
+            virtual                       const bool& isChecked()               const { return m_isChecked;                   }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            // virtual void setHeight(f32 height) override;
-            // virtual void setPosition(const f32v2& position) override;
+            virtual void setFont(const vorb::graphics::SpriteFont* font);
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
-            // virtual void setWidth(f32 width) override;
-            // virtual void setX(f32 x) override;
-            // virtual void setY(f32 y) override;
             virtual void setBoxColor(const color4& color);
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);
             virtual void setBoxCheckedHoverColor(const color4& color);
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
+            virtual void setTextHoverColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
             virtual void setChecked(bool checked);
@@ -112,9 +122,12 @@ namespace vorb {
             Event<bool> ValueChange; ///< Occurs when value of the box is changed
 
         protected:
+            virtual void calculateDrawables() override;
+
+            /*! Updates the colours set for the drawables. */
             virtual void updateColor();
+            /*! Updates the text position in the drawable. */
             virtual void updateTextPosition();
-            virtual void refreshDrawables();
 
             /************************************************************************/
             /* Event Handlers                                                       */
@@ -132,13 +145,14 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect m_drawableRect, m_drawnRect;
-            DrawableText m_drawableText, m_drawnText;
-            color4 m_boxColor = color::DarkGray, m_boxHoverColor = color::AliceBlue;
-            color4 m_boxCheckedColor = color::LightGray, m_boxCheckedHoverColor = color::AliceBlue;
+            DrawableRect          m_drawableRect, m_drawnRect;
+            DrawableText          m_drawableText, m_drawnText;
+            color4                m_boxColor = color::DarkGray, m_boxHoverColor = color::AliceBlue;
+            color4                m_boxCheckedColor = color::LightGray, m_boxCheckedHoverColor = color::AliceBlue;
+            color4                m_textColor,       m_textHoverColor;
             const vg::SpriteFont* m_defaultFont = nullptr;
-            VGTexture m_checkedTexture = 0, m_uncheckedTexture = 0;
-            bool m_isChecked = false;
+            VGTexture             m_checkedTexture = 0, m_uncheckedTexture = 0;
+            bool                  m_isChecked = false;
         };
     }
 }

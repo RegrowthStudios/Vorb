@@ -9,30 +9,58 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
-
 vui::ComboBox::ComboBox() : Widget() {
+    m_maxDropHeight = FLT_MAX;
+    m_dropPanel     = Panel();
+    m_mainButton    = Button();
+    m_buttons       = std::vector<Button*>();
+    m_items         = std::vector<nString>();
+    m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
+    m_isDropped     = false;
+
     ValueChange.setSender(this);
 
     addWidget(&m_mainButton);
     addWidget(&m_dropPanel);
 
     m_dropPanel.setAutoScroll(true);
+    m_dropPanel.setClipping({ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
 
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
-    
+
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-// vui::ComboBox::ComboBox(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
-//     m_name = name;
-//     // setDestRect(destRect);
-//     // m_mainButton.setDimensions(m_dimensions);
-//     // updatePosition();
-// }
+vui::ComboBox::ComboBox(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : ComboBox() {
+    m_name = name;
 
-// vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
-//     parent->addWidget(this);
-// }
+    m_position = f32v2(dimensions.x, dimensions.y);
+    m_size     = f32v2(dimensions.z, dimensions.w);
+
+    m_rawDimensions.position.x = dimensions.x;
+    m_rawDimensions.position.y = dimensions.y;
+    m_rawDimensions.size.x     = dimensions.z;
+    m_rawDimensions.size.y     = dimensions.w;
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+vui::ComboBox::ComboBox(const nString& name, const Length2& position, const Length2& size) : ComboBox() {
+    m_name = name;
+
+    m_rawDimensions.position = position;
+    m_rawDimensions.size     = size;
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : ComboBox(name, dimensions) {
+    parent->addWidget(this);
+}
+
+vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : ComboBox(name, position, size) {
+    parent->addWidget(this);
+}
 
 vui::ComboBox::~ComboBox() {
     // Empty
@@ -368,9 +396,15 @@ void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::ComboBox::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
+void vui::ComboBox::updateDimensions(f32 dt) {
+    Widget::updateDimensions(dt);
+
+    m_dropPanel.setWidth(getWidth());
+
+    f32 panelHeight = (f32)m_buttons.size() * getHeight();
     bool hasSlider = false;
-    if (m_buttons.size() * getHeight() > m_maxDropHeight) {
+    if (panelHeight > m_maxDropHeight) {
+        panelHeight = m_maxDropHeight;
         hasSlider = true;
     }
 
@@ -391,66 +425,18 @@ void vui::ComboBox::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
         }
         i += 1.0f;
     }
+
+    if (m_isDropped) {
+        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
+        m_dropPanel.setSize(f32v2(getWidth(), panelHeight));
+    } else {
+        m_dropPanel.setSize(f32v2(0.0f));
+    }
 }
 
 void vui::ComboBox::calculateDrawables() {
     // Empty
 }
-
-// void vui::ComboBox::updatePosition() {
-
-//     bool hasSlider = false;
-//     if (m_items.size() * getHeight() > m_maxDropHeight) {
-//         hasSlider = true;
-//     }
-
-//     // Buttons
-//     f32 i = 0;
-//     for (auto& button : m_buttons) {
-//         if (m_isDropped) {
-//             button->enable();
-//             button->setPosition(f32v2(0.0f, i * getHeight()));
-//             if (hasSlider) {
-//                 button->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
-//             } else {
-//                 button->setDimensions(getSize());
-//             }
-//         } else {
-//             button->disable();
-//             button->setDimensions(f32v2(0.0f));
-//         }
-//         i += 1.0f;
-//     }
-
-//     // Drop list
-//     if (m_isDropped) {
-//         m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-//         f32v2 dims = getSize() * f32v2(1.0f, (f32)m_items.size());
-//         dims.y = glm::min(dims.y, m_maxDropHeight);
-//         m_dropPanel.setDimensions(dims);
-//     } else {
-//         m_dropPanel.setDimensions(f32v2(0.0f));
-//     }
-    
-//     vui::Widget::updatePosition();
-// }
-// TODO(Matthew): Check this for any logic we need to keep.
-// void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-//     if (m_isClippingEnabled) {
-//         f32v2 pos = m_position;
-//         f32v2 dims = m_dimensions;
-
-//         dims.y += m_dropPanel.getHeight();
-
-//         computeClipping(parentClipRect, pos, dims);
-//         if (dims.x < 0) dims.x = 0;
-//         if (dims.y < 0) dims.y = 0;
-//         m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-//     } else {
-//         m_clipRect = parentClipRect;
-//     }
-//     computeChildClipRects();
-// }
 
 void vui::ComboBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;

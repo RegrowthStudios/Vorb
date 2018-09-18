@@ -47,21 +47,38 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             ComboBox();
-            // /*! \brief Constructor that sets name, position, and dimensions.
-            // *
-            // * \param name: Name of the control.
-            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // ComboBox(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * \param parent: Parent control object.
-            // * \param name: Name of the control.
-            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // ComboBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            /*! \brief Constructor that sets name, position, and dimensions.
+            *
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            ComboBox(const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            ComboBox(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * \param parent: Parent widget.
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            ComboBox(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent widget.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            ComboBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
             virtual ~ComboBox();
 
@@ -220,13 +237,13 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32                  m_maxDropHeight = FLT_MAX;
-            Panel                m_dropPanel; // Panel that holds the drop buttons
+            f32                  m_maxDropHeight;
+            Panel                m_dropPanel;  // Panel that holds the drop buttons
             Button               m_mainButton; // Main button for dropping
-            std::vector<Button*> m_buttons; // Sub buttons
+            std::vector<Button*> m_buttons;    // Sub buttons
             std::vector<nString> m_items;
-            DropDownStyle        m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
-            bool                 m_isDropped = false;
+            DropDownStyle        m_dropDownStyle;
+            bool                 m_isDropped;
         };
     }
 }

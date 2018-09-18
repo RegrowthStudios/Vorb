@@ -55,7 +55,7 @@ namespace vorb {
             *
             * The control will be made a child of parent.
             *
-            * \param parent: Parent control object.
+            * \param parent: Parent widget.
             * \param name: Name of the control.
             * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             */
@@ -64,7 +64,7 @@ namespace vorb {
              *
              * The widget will be made a child of parent.
              *
-             * \param parent: Parent container object.
+             * \param parent: Parent widget.
              * \param name: Name of the control.
              * \param position: The position of the widget.
              * \param size: The size of the widget.

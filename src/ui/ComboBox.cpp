@@ -200,7 +200,7 @@ bool vui::ComboBox::isInDropBounds(f32 x, f32 y) const {
     return m_dropPanel.isInBounds(x, y);
 }
 
-void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
+void vui::ComboBox::setFont(const vg::SpriteFont* font) {
     m_mainButton.setFont(font);
 
     for (auto& button : m_buttons) {

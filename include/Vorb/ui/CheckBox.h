@@ -85,24 +85,24 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual                  const VGTexture& getUncheckedTexture()     const { return m_uncheckedTexture;            }
-            virtual                  const VGTexture& getCheckedTexture()       const { return m_checkedTexture;              }
-            virtual const vorb::graphics::SpriteFont* getFont()                 const { return m_drawableText.getFont();      }
-            virtual                     const color4& getBoxColor()             const { return m_boxColor;                    }
-            virtual                     const color4& getBoxHoverColor()        const { return m_boxHoverColor;               }
-            virtual                     const color4& getBoxCheckedColor()      const { return m_boxCheckedColor;             }
-            virtual                     const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor;        }
-            virtual                     const color4& getTextColor()            const { return m_textColor;                   }
-            virtual                     const color4& getTextHoverColor()       const { return m_textHoverColor;              }
-            virtual                    const nString& getText()                 const { return m_drawableText.getText();      }
-            virtual              const vg::TextAlign& getTextAlign()            const { return m_drawableText.getTextAlign(); }
-            virtual                      const f32v2& getTextScale()            const { return m_drawableText.getTextScale(); }
-            virtual                       const bool& isChecked()               const { return m_isChecked;                   }
+            virtual      const VGTexture& getUncheckedTexture()     const { return m_uncheckedTexture;            }
+            virtual      const VGTexture& getCheckedTexture()       const { return m_checkedTexture;              }
+            virtual const vg::SpriteFont* getFont()                 const { return m_drawableText.getFont();      }
+            virtual         const color4& getBoxColor()             const { return m_boxColor;                    }
+            virtual         const color4& getBoxHoverColor()        const { return m_boxHoverColor;               }
+            virtual         const color4& getBoxCheckedColor()      const { return m_boxCheckedColor;             }
+            virtual         const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor;        }
+            virtual         const color4& getTextColor()            const { return m_textColor;                   }
+            virtual         const color4& getTextHoverColor()       const { return m_textHoverColor;              }
+            virtual        const nString& getText()                 const { return m_drawableText.getText();      }
+            virtual  const vg::TextAlign& getTextAlign()            const { return m_drawableText.getTextAlign(); }
+            virtual          const f32v2& getTextScale()            const { return m_drawableText.getTextScale(); }
+            virtual           const bool& isChecked()               const { return m_isChecked;                   }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const vorb::graphics::SpriteFont* font);
+            virtual void setFont(const vg::SpriteFont* font);
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
             virtual void setBoxColor(const color4& color);

@@ -80,20 +80,20 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual                  const VGTexture& getTexture()        const { return m_drawableRect.getTexture();   }
-            virtual const vorb::graphics::SpriteFont* getFont()           const { return m_drawableText.getFont();      }
-            virtual                     const color4& getBackColor()      const { return m_backColor1;                  }
-            virtual                     const color4& getBackHoverColor() const { return m_backHoverColor1;             }
-            virtual                     const color4& getTextColor()      const { return m_textColor;                   }
-            virtual                     const color4& getTextHoverColor() const { return m_textHoverColor;              }
-            virtual                    const nString& getText()           const { return m_drawableText.getText();      }
-            virtual              const vg::TextAlign& getTextAlign()      const { return m_drawableText.getTextAlign(); }
-            virtual                      const f32v2& getTextScale()      const { return m_drawableText.getTextScale(); }
+            virtual      const VGTexture& getTexture()        const { return m_drawableRect.getTexture();   }
+            virtual const vg::SpriteFont* getFont()           const { return m_drawableText.getFont();      }
+            virtual         const color4& getBackColor()      const { return m_backColor1;                  }
+            virtual         const color4& getBackHoverColor() const { return m_backHoverColor1;             }
+            virtual         const color4& getTextColor()      const { return m_textColor;                   }
+            virtual         const color4& getTextHoverColor() const { return m_textHoverColor;              }
+            virtual        const nString& getText()           const { return m_drawableText.getText();      }
+            virtual  const vg::TextAlign& getTextAlign()      const { return m_drawableText.getTextAlign(); }
+            virtual          const f32v2& getTextScale()      const { return m_drawableText.getTextScale(); }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const vorb::graphics::SpriteFont* font);
+            virtual void setFont(const vg::SpriteFont* font);
             virtual void setTexture(VGTexture texture);
             virtual void setBackColor(const color4& color);
             virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);

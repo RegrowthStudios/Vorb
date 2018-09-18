@@ -68,7 +68,7 @@ void vui::Button::addDrawables() {
                   makeDelegate(*this, &Button::refreshDrawables));  
 }
 
-void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
+void vui::Button::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
     
     m_flags.needsDrawableRefresh = true;

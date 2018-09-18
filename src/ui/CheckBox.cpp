@@ -51,7 +51,6 @@ vui::CheckBox::~CheckBox() {
 }
 
 void vui::CheckBox::addDrawables() {
-    Widget::addDrawables();
     // Make copies
     m_drawnText = m_drawableText;
     m_drawnRect = m_drawableRect;

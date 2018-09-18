@@ -29,7 +29,6 @@ vui::Label::~Label() {
 }
 
 void vui::Label::addDrawables() {
-    Widget::addDrawables();
     // Make copies.
     m_drawnText = m_drawableText;
 

@@ -208,9 +208,9 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            PositionType  m_positionType        = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
-            Length2       m_minRawSize          = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Minimum size of widget.
-            Length2       m_maxRawSize          = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
+            PositionType m_positionType = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
+            Length2      m_minRawSize   = { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } };         ///< Minimum size of widget.
+            Length2      m_maxRawSize   = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
 
             union {
                 struct {

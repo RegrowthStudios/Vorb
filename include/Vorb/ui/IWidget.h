@@ -172,32 +172,36 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual         Viewport* getViewport()         const { return m_viewport; }
-            virtual          IWidget* getParent()           const { return m_parent; }
-            virtual   const IWidgets& getWidgets()          const { return m_widgets; }
+            virtual          IWidget* getParent()           const { return m_parent;   }
+            virtual   const IWidgets& getWidgets()          const { return m_widgets;  }
             virtual             f32v4 getDestRect()         const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
-            virtual      const f32v2& getPosition()         const { return m_position; }
-            virtual        const f32& getWidth()            const { return m_size.x; }
-            virtual        const f32& getHeight()           const { return m_size.y; }
-            virtual      const f32v2& getSize()             const { return m_size; }
-            virtual          Clipping getClipping()         const { return m_clipping; }
+            virtual      const f32v2& getPosition()         const { return m_position;   }
+            virtual        const f32& getWidth()            const { return m_size.x;     }
+            virtual        const f32& getHeight()           const { return m_size.y;     }
+            virtual      const f32v2& getSize()             const { return m_size;       }
+            virtual          Clipping getClipping()         const { return m_clipping;   }
             virtual     ClippingState getClippingLeft()     const;
             virtual     ClippingState getClippingTop()      const;
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
-            virtual             f32v4 getClipRect()         const { return m_clipRect; }
-            virtual              ui16 getZIndex()           const { return m_zIndex; }
-            virtual              Dock getDock()             const { return m_dock; }
+            virtual             f32v4 getClipRect()         const { return m_clipRect;   }
+            virtual              ui16 getZIndex()           const { return m_zIndex;     }
+            virtual              Dock getDock()             const { return m_dock;       }
             virtual         DockState getDockState()        const { return m_dock.state; }
-            virtual               f32 getDockSize()         const { return m_dock.size; }
-            virtual    const nString& getName()             const { return m_name; }
+            virtual               f32 getDockSize()         const { return m_dock.size;  }
+            virtual    const nString& getName()             const { return m_name;       }
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
 
-            virtual bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate; }
+            virtual bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate;       }
+            virtual bool needsZIndexReorder()         const { return m_flags.needsZIndexReorder;         }
+            virtual bool needsDockRecalculation()     const { return m_flags.needsDockRecalculation;     }
             virtual bool needsClipRectRecalculation() const { return m_flags.needsClipRectRecalculation; }
-            virtual bool needsDrawableReload()        const { return m_flags.needsDrawableRefresh; }
+            virtual bool needsDrawableRecalculation() const { return m_flags.needsDrawableRecalculation; }
+            virtual bool needsDrawableRefresh()       const { return m_flags.needsDrawableRefresh;       }
+            virtual bool needsDrawableReregister()    const { return m_flags.needsDrawableReregister;    }
 
             /************************************************************************/
             /* Setters                                                              */

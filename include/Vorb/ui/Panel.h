@@ -8,7 +8,7 @@
 //
 
 /*! \file Panel.h
-* @brief 
+* \brief 
 * Panel widget implementation, used for
 * grouping controls inside a parent region.
 */
@@ -36,70 +36,58 @@ namespace vorb {
 
         class Panel : public Widget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Panel();
-            // /*! @brief Constructor that sets name, position, and dimensions.
+            // /*! \brief Constructor that sets name, position, and dimensions.
             // *
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // * \param name: Name of the control.
+            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             // */
             // Panel(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
+            // /*! \brief Constructor that sets parent control, name, position, and dimensions.
             // *
             // * The control will be made a child of parent.
             // *
-            // * @param parent: Parent control object.
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            // * \param parent: Parent control object.
+            // * \param name: Name of the control.
+            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
             // */
             // Panel(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Panel();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            */
+            /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables() override;
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables() override;
-
+            /*! \brief Refresh drawables. */
+            virtual void refreshDrawables() override;
 
             bool addWidget(IWidget* child) override;
 
-            /*! @brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
+            virtual void updateDimensions(f32 dt = 1.0f) override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
-            virtual const bool& getAutoScroll() const { return m_autoScroll; }
-            virtual const f32& getSliderWidth() const { return m_sliderWidth; }
-            virtual const color4& getColor() const { return m_backColor; }
-            virtual const color4& getHoverColor() const { return m_backHoverColor; }
+            virtual const VGTexture& getTexture()     const { return m_drawableRect.getTexture(); }
+            virtual             bool getAutoScroll()  const { return m_autoScroll;                }
+            virtual              f32 getSliderWidth() const { return m_sliderWidth;               }
+            virtual    const color4& getColor()       const { return m_backColor;                 }
+            virtual    const color4& getHoverColor()  const { return m_backHoverColor;            }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
-            // virtual void setDestRect(const f32v4& destRect) override;
-            // virtual void setDimensions(const f32v2& dimensions) override;
-            // virtual void setHeight(f32 height) override;
-            // virtual void setPosition(const f32v2& position) override;
-            // virtual void setWidth(f32 width) override;
-            // virtual void setX(f32 x) override;
-            // virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
 
         protected:
+            virtual void calculateDrawables() override;
+
             virtual void updateColor();
             virtual void updateSliders();
-            virtual void refreshDrawables();
-           
+
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
             virtual void onSliderValueChange(Sender s, int v);

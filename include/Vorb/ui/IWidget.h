@@ -115,7 +115,7 @@ namespace vorb {
             using Font = vorb::graphics::SpriteFont;
         public:
             /*! \brief Constructor default and parametised to set renderer and window.
-             * 
+             *
              * \param renderer: The renderer to use for drawing widget.
              * \param window: The window in which to set the UI.
              */
@@ -131,7 +131,7 @@ namespace vorb {
 
             /*! \brief Updates the widget. Can be used for animation.
             *
-            * \param dt: The TimeStep
+            * \param dt: Change in time since last update.
             */
             virtual void update(f32 dt = 1.0f);
 
@@ -234,7 +234,11 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
-            /*! \brief Updates descendant widgets. */
+            /*!
+             * \brief Updates descendant widgets.
+             *
+             * \param dt: Change in time since last update.
+             */
             virtual void updateDescendants(f32 dt);
 
             /*!
@@ -255,6 +259,8 @@ namespace vorb {
 
             /*!
              * \brief Updates the dimensions of the new IWidget according to specific widget rules.
+             * 
+             * \param dt: Change in time since last update.
              */
             virtual void updateDimensions(f32 dt) = 0;
             /*!
@@ -262,15 +268,15 @@ namespace vorb {
              */
             virtual void markChildrenToUpdateDimensions();
 
-            /*! Calculates positions and sizes of docked child widgets. */
+            /*! \brief Calculates positions and sizes of docked child widgets. */
             void calculateDockedWidgets();
             
-            /*! Calculates clipping for rendering and propagates through children. */
+            /*! \brief Calculates clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
-            /*! Calculates the clipping of child widgets. */
+            /*! \brief Calculates the clipping of child widgets. */
             virtual void calculateChildClipRects();
 
-            /*! Calculates the properties of the drawables. */
+            /*! \brief Calculates the properties of the drawables. */
             virtual void calculateDrawables() = 0;
 
             /*!

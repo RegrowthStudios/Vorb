@@ -181,6 +181,11 @@ namespace vorb {
             virtual        const f32& getWidth()            const { return m_size.x;     }
             virtual        const f32& getHeight()           const { return m_size.y;     }
             virtual      const f32v2& getSize()             const { return m_size;       }
+            virtual      const f32v4& getPadding()          const { return m_padding;    }
+            virtual               f32 getPaddingLeft()      const { return m_padding.x;  }
+            virtual               f32 getPaddingTop()       const { return m_padding.y;  }
+            virtual               f32 getPaddingRight()     const { return m_padding.z;  }
+            virtual               f32 getPaddingBottom()    const { return m_padding.w;  }
             virtual          Clipping getClipping()         const { return m_clipping;   }
             virtual     ClippingState getClippingLeft()     const;
             virtual     ClippingState getClippingTop()      const;
@@ -215,6 +220,11 @@ namespace vorb {
             virtual void setSize(f32v2 size);
             virtual void setWidth(f32 width);
             virtual void setHeight(f32 height);
+            virtual void setPadding(const f32v4& padding);
+            virtual void setPaddingLeft(f32 left);
+            virtual void setPaddingTop(f32 top);
+            virtual void setPaddingRight(f32 right);
+            virtual void setPaddingBottom(f32 bottom);
             virtual void setClipping(Clipping clipping);
             virtual void setClippingLeft(ClippingState state);  
             virtual void setClippingTop(ClippingState state);
@@ -225,6 +235,14 @@ namespace vorb {
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
             virtual void setName(const nString& name) { m_name = name; }
+
+            virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate = flag;       }
+            virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder = flag;         }
+            virtual void setNeedsDockRecalculation(bool flag)     { m_flags.needsDockRecalculation = flag;     }
+            virtual void setNeedsClipRectRecalculation(bool flag) { m_flags.needsClipRectRecalculation = flag; }
+            virtual void setNeedsDrawableRecalculation(bool flag) { m_flags.needsDrawableRecalculation = flag; }
+            virtual void setNeedsDrawableRefresh(bool flag)       { m_flags.needsDrawableRefresh = flag;       }
+            virtual void setNeedsDrawableReregister(bool flag)    { m_flags.needsDrawableReregister = flag;    }
 
             /************************************************************************/
             /* Events                                                               */
@@ -278,7 +296,7 @@ namespace vorb {
             /*! \brief Calculates clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
             /*! \brief Calculates the clipping of child widgets. */
-            virtual void calculateChildClipRects();
+            virtual void markChildrenToCalculateClipRect();
 
             /*! \brief Calculates the properties of the drawables. */
             virtual void calculateDrawables() = 0;
@@ -321,6 +339,7 @@ namespace vorb {
             IWidgets          m_widgets;          ///< Collection of child widgets.
             f32v2             m_position;         ///< Position of widget relative to window in pixels.
             f32v2             m_size;             ///< Size of the widget in pixels.
+            f32v4             m_padding;          ///< Padding of the widget in pixels.
             Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
             ui16              m_zIndex;           ///< Z-index of widget for depth.

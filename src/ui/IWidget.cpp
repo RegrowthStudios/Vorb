@@ -304,6 +304,56 @@ void vui::IWidget::setHeight(f32 height) {
     }
 }
 
+void vui::IWidget::setPadding(const f32v4& padding) {
+    f32v4 tmp = m_padding;
+
+    m_padding = padding;
+
+    if (tmp != m_padding) {
+        m_flags.needsClipRectRecalculation = true;
+    }
+}
+
+void vui::IWidget::setPaddingLeft(f32 left) {
+    f32 tmp = m_padding.x;
+
+    m_padding.x = left;
+
+    if (tmp != m_padding.x) {
+        m_flags.needsClipRectRecalculation = true;
+    }
+}
+
+void vui::IWidget::setPaddingTop(f32 top) {
+    f32 tmp = m_padding.y;
+
+    m_padding.y = top;
+
+    if (tmp != m_padding.y) {
+        m_flags.needsClipRectRecalculation = true;
+    }
+}
+
+void vui::IWidget::setPaddingRight(f32 right) {
+    f32 tmp = m_padding.z;
+
+    m_padding.z = right;
+
+    if (tmp != m_padding.z) {
+        m_flags.needsClipRectRecalculation = true;
+    }
+}
+
+void vui::IWidget::setPaddingBottom(f32 bottom) {
+    f32 tmp = m_padding.w;
+
+    m_padding.w = bottom;
+
+    if (tmp != m_padding.w) {
+        m_flags.needsClipRectRecalculation = true;
+    }
+}
+
 void vui::IWidget::setClipping(Clipping clipping) {
     Clipping tmp = m_clipping;
 
@@ -527,7 +577,7 @@ void vui::IWidget::calculateClipRect() {
         m_clipRect.x = parentClipRect.x;
     } else if (left == ClippingState::HIDDEN) {
         // Otherwise, the clip rect is the same as the dimensions.
-        m_clipRect.x = m_position.x;
+        m_clipRect.x = m_position.x + m_padding.x;
     } else {
         // Shouldn't get here as getClipping{Left|Top|Right|Bottom} should only return HIDDEN or VISIBLE.
         assert(false);
@@ -538,7 +588,7 @@ void vui::IWidget::calculateClipRect() {
             || m_position.y < parentClipRect.y) {
         m_clipRect.y = parentClipRect.y;
     } else if (left == ClippingState::HIDDEN) {
-        m_clipRect.y = m_position.y;
+        m_clipRect.y = m_position.y + m_padding.y;
     } else {
         assert(false);
     }
@@ -548,7 +598,7 @@ void vui::IWidget::calculateClipRect() {
             || m_position.x + m_size.x < parentClipRect.x + parentClipRect.z) {
         m_clipRect.z = parentClipRect.x + parentClipRect.z - m_clipRect.x;
     } else if (left == ClippingState::HIDDEN) {
-        m_clipRect.z = m_position.x + m_size.x - m_clipRect.x;
+        m_clipRect.z = m_position.x + m_size.x - m_clipRect.x + m_padding.z;
     } else {
         assert(false);
     }
@@ -558,18 +608,17 @@ void vui::IWidget::calculateClipRect() {
             || m_position.y + m_size.y < parentClipRect.y + parentClipRect.w) {
         m_clipRect.w = parentClipRect.y + parentClipRect.w - m_clipRect.y;
     } else if (left == ClippingState::HIDDEN) {
-        m_clipRect.w = m_position.y + m_size.y - m_clipRect.y;
+        m_clipRect.w = m_position.y + m_size.y - m_clipRect.y + m_padding.w;
     } else {
         assert(false);
     }
 
-    calculateChildClipRects();
+    markChildrenToCalculateClipRect();
 }
 
-void vui::IWidget::calculateChildClipRects() {
+void vui::IWidget::markChildrenToCalculateClipRect() {
     for (auto& child : m_widgets) {
-        child->m_flags.needsClipRectRecalculation = false;
-        child->calculateClipRect();
+        child->m_flags.needsClipRectRecalculation = true;
     }
 }
 

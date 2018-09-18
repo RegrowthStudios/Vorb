@@ -43,6 +43,34 @@ vui::Widget::~Widget() {
     // Empty
 }
 
+void vui::Widget::setRawPaddingLeft(const Length& rawLeft) {
+    m_rawPadding.x = rawLeft.x;
+    m_rawPadding.dimension.x = rawLeft.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingTop(const Length& rawTop) {
+    m_rawPadding.y = rawTop.x;
+    m_rawPadding.dimension.y = rawTop.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingRight(const Length& rawRight) {
+    m_rawPadding.z = rawRight.x;
+    m_rawPadding.dimension.z = rawRight.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingRight(const Length& rawRight) {
+    m_rawPadding.w = rawRight.x;
+    m_rawPadding.dimension.w = rawRight.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
 void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
     if (m_dock.state != DockState::NONE) return;
 
@@ -105,6 +133,17 @@ void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
     applyMinMaxSizes();
 
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
+}
+
+void vui::Widget::calculateClipRect() {
+    m_padding = {
+        processLength({ m_rawPadding.x, { m_rawPadding.dimension.x } }),
+        processLength({ m_rawPadding.y, { m_rawPadding.dimension.y } }),
+        processLength({ m_rawPadding.z, { m_rawPadding.dimension.z } }),
+        processLength({ m_rawPadding.w, { m_rawPadding.dimension.w } })
+    };
+
+    IWidget::calculateClipRect();
 }
 
 f32 vui::Widget::processLength(Length length) {

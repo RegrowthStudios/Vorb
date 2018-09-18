@@ -8,7 +8,7 @@
 //
 
 /*! \file Label.h
-* @brief 
+* \brief 
 * A simple text label widget.
 *
 */
@@ -35,66 +35,75 @@ namespace vorb {
 
         class Label : public Widget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Label();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            // *
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Label(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * @param parent: Parent control object.
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Label(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Constructor that sets name, position, and dimensions.
+            *
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Label(const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Label(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Label(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent widget.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Label(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Default destructor. */
             virtual ~Label();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            */
+            /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables() override;
-
-            /*! @brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
+            /*! \brief Refresh drawables. */
+            virtual void refreshDrawables() override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const color4& getTextColor() const { return m_drawableText.getColor(); }
-            virtual const nString& getText() const { return m_drawableText.getText(); }
-            virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual const vg::SpriteFont* getFont()      const { return m_drawableText.getFont();      }
+            virtual         const color4& getTextColor() const { return m_drawableText.getColor();     }
+            virtual        const nString& getText()      const { return m_drawableText.getText();      }
+            virtual  const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
+            virtual          const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // virtual void setDestRect(const f32v4& destRect) override;
-            // virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            // virtual void setHeight(f32 height) override;
-            // virtual void setPosition(const f32v2& position) override;
-            // virtual void setWidth(f32 width) override;
-            // virtual void setX(f32 x) override;
-            // virtual void setY(f32 y) override;
+            virtual void setFont(const vg::SpriteFont* font);
             virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
 
         protected:
+            virtual void calculateDrawables() override;
+
             virtual void updateTextPosition();
-            virtual void refreshDrawables();
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableText m_drawableText, m_drawnText;
+            DrawableText          m_drawableText, m_drawnText;
             const vg::SpriteFont* m_defaultFont = nullptr;
         };
     }

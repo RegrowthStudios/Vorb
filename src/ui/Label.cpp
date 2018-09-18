@@ -4,19 +4,25 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-vui::Label::Label() : Widget() {
-    refreshDrawables();
+vui::Label::Label() : Label("") {
+    // Empty
 }
 
-// vui::Label::Label(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Label() {
-//     m_name = name;
-//     // setDestRect(destRect);
-//     updateTextPosition();
-// }
+vui::Label::Label(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+    m_flags.needsDrawableRecalculation = true;
+}
 
-// vui::Label::Label(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
-//     parent->addWidget(this);
-// }
+vui::Label::Label(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
+    m_flags.needsDrawableRecalculation = true;
+}
+
+vui::Label::Label(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Label(name, dimensions) {
+    parent->addWidget(this);
+}
+
+vui::Label::Label(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Label(name, position, size) {
+    parent->addWidget(this);
+}
 
 vui::Label::~Label() {
     // Empty
@@ -24,90 +30,61 @@ vui::Label::~Label() {
 
 void vui::Label::addDrawables() {
     Widget::addDrawables();
-    // Make copies
+    // Make copies.
     m_drawnText = m_drawableText;
 
-    // Use renderer default font if we dont have a font
+    // Use renderer default font if we dont have a font.
     m_defaultFont = m_viewport->getRenderer()->getDefaultFont();
     if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
 
-    // Add the text 
+    // Add the text.
     m_viewport->getRenderer()->add(this,
                   makeDelegate(m_drawnText, &DrawableText::draw),
                   makeDelegate(*this, &Label::refreshDrawables));
 }
 
-// void vui::Label::updatePosition() {
-//     Widget::updatePosition();
-//     updateTextPosition();
-// }
-
-// void vui::Label::setDestRect(const f32v4& destRect) {
-//     vui::Widget::setDestRect(destRect);
-//     refreshDrawables();
-// }
-
-// void vui::Label::setDimensions(const f32v2& dimensions) {
-//     Widget::setDimensions(dimensions);
-//     updatePosition();
-// }
-
-void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
-    m_font = font;
-    updateTextPosition();
+void vui::Label::setFont(const vg::SpriteFont* font) {
+    m_drawableText.setFont(font);
+    
+    m_flags.needsDrawableRefresh = true;
 }
-
-// void vui::Label::setHeight(f32 height) {
-//     Widget::setHeight(height);
-//     updatePosition();
-// }
-
-// void vui::Label::setPosition(const f32v2& position) {
-//     Widget::setPosition(position);
-//     updatePosition();
-// }
-
-// void vui::Label::setWidth(f32 width) {
-//     Widget::setWidth(width);
-//     updatePosition();
-// }
-
-// void vui::Label::setX(f32 x) {
-//     Widget::setX(x);
-//     updatePosition();
-// }
-
-// void vui::Label::setY(f32 y) {
-//     Widget::setY(y);
-//     updatePosition();
-// }
 
 void vui::Label::setText(const nString& text) {
     m_drawableText.setText(text);
-    updateTextPosition();
+    
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Label::setTextColor(const color4& color) {
     m_drawableText.setColor(color);
-    refreshDrawables();
+    
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Label::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
-    updateTextPosition();
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Label::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
+    
+    m_flags.needsDrawableRefresh = true;
+}
+
+void vui::Label::calculateDrawables() {
+    m_drawableText.setClipRect(m_clipRect);
+
     updateTextPosition();
+
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Label::updateTextPosition() {
     const f32v2& dims = getSize();
-    const f32v2& pos = getPosition();
+    const f32v2& pos  = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
-
-    m_drawableText.setClipRect(m_clipRect);
 
     // TODO(Ben): Padding
     switch (textAlign) {
@@ -139,14 +116,15 @@ void vui::Label::updateTextPosition() {
             m_drawableText.setPosition(pos + dims / 2.0f);
             break;
     }
-    refreshDrawables();
 }
 
 void vui::Label::refreshDrawables() {
-    // Use renderer default font if we don't have a font
+    // Use renderer default font if we don't have a font.
     if (!m_drawableText.getFont()) {
         m_drawableText.setFont(m_defaultFont);
+
         m_drawnText = m_drawableText;
+
         m_drawableText.setFont(nullptr);
     } else {
         m_drawnText = m_drawableText;

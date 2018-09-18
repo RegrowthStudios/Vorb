@@ -84,6 +84,9 @@ namespace vorb {
 
             virtual void dispose() override;
 
+            virtual void addDrawables()     override { /* Empty */ }
+            virtual void refreshDrawables() override { /* Empty */ }
+
             /*!\brief Updates the position relative to parent */
             // virtual void updatePosition() override;
 

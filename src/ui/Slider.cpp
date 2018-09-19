@@ -223,13 +223,13 @@ void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 
     // Check value change
     if (m_flags.isClicking) {
-        const f32v2& pos = m_drawableBar.getPosition();
-        const f32v2& dims = m_drawableBar.getDimensions();
+        const f32v2& pos  = m_drawableBar.getPosition();
+        const f32v2& size = m_drawableBar.getSize();
         float v;
         if (m_isVertical) {
-            v = glm::clamp((e.y - pos.y) / dims.y, 0.0f, 1.0f);
+            v = glm::clamp((e.y - pos.y) / size.y, 0.0f, 1.0f);
         } else {
-            v = glm::clamp((e.x - pos.x) / dims.x, 0.0f, 1.0f);
+            v = glm::clamp((e.x - pos.x) / size.x, 0.0f, 1.0f);
         }
         // TODO(Ben): Faster round
         int newValue = (int)round(v * (m_max - m_min)) + m_min;

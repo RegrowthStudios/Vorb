@@ -159,6 +159,10 @@ void vui::Panel::updateSliders() {
         m_maxY = m_size.y;
     }
 
+    // TODO(Matthew): Use padding and place sliders relative to panel.
+    // TODO(Matthew): Allow choice of putting sliders left/right and top/bottom.
+    // TODO(Matthew): Use padding for drawable rectangle size (this applies to prior widgets too).
+
     // Set up horizontal slider.
     Slider& slider = m_sliders.horizontal;
     if (needsHorizontal) {

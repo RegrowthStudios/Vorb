@@ -178,6 +178,9 @@ namespace vorb {
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
             virtual      const f32v2& getPosition()         const { return m_position;   }
+            virtual        const f32& getRelativeX()        const { return m_parent ? m_position.x : m_position.x - m_parent->getPosition().x; }
+            virtual        const f32& getRelativeY()        const { return m_parent ? m_position.y : m_position.y - m_parent->getPosition().y; }
+            virtual      const f32v2& getRelativePosition() const { return m_parent ? m_position : m_position - m_parent->getPosition(); }
             virtual        const f32& getWidth()            const { return m_size.x;     }
             virtual        const f32& getHeight()           const { return m_size.y;     }
             virtual      const f32v2& getSize()             const { return m_size;       }

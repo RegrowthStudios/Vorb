@@ -172,8 +172,13 @@ void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
         f32 right  = processLength(m_rawRelativePositions.right);
         f32 bottom = processLength(m_rawRelativePositions.bottom);
         
+        f32 sizeX = size.x - left - right;
+        if (sizeX < 0.0f) sizeX = 0.0f;
+        f32 sizeY = size.y - top - bottom;
+        if (sizeY < 0.0f) sizeY = 0.0f;
+
         setPosition(f32v2(position.x + left, position.y + top));
-        setSize(f32v2(size.x - left + right, size.y - top + bottom));
+        setSize(f32v2(sizeX, sizeY));
     };
 
     switch(m_positionType) {

@@ -43,9 +43,70 @@ vui::Widget::~Widget() {
     // Empty
 }
 
+void vui::Widget::setMaxRawSize(const f32v2& maxRawSize) {
+    m_maxRawSize = { maxRawSize.x, maxRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setMinRawSize(const f32v2& minRawSize) {
+    m_minRawSize = { minRawSize.x, minRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawPosition(const f32v2& rawPosition) {
+    m_rawDimensions.position = { rawPosition.x, rawPosition.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawSize(const f32v2& rawSize) {
+    m_rawDimensions.size = { rawSize.x, rawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawLeft(f32 rawLeft) {
+    m_rawRelativePositions.left = { rawLeft, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawTop(f32 rawTop) {
+    m_rawRelativePositions.top = { rawTop, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawRight(f32 rawRight) {
+    m_rawRelativePositions.right = { rawRight, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawBottom(f32 rawBottom) {
+    m_rawRelativePositions.bottom = { rawBottom, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawPadding(const f32v4& rawPadding) {
+    m_rawPadding = { rawPadding.x, rawPadding.y, rawPadding.z, rawPadding.w, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
 void vui::Widget::setRawPaddingLeft(const Length& rawLeft) {
     m_rawPadding.x = rawLeft.x;
     m_rawPadding.dimension.x = rawLeft.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingLeft(f32 rawLeft) {
+    m_rawPadding.x = rawLeft;
+    m_rawPadding.dimension.x = DimensionType::PIXEL;
 
     m_flags.needsClipRectRecalculation = true;
 }
@@ -57,6 +118,13 @@ void vui::Widget::setRawPaddingTop(const Length& rawTop) {
     m_flags.needsClipRectRecalculation = true;
 }
 
+void vui::Widget::setRawPaddingTop(f32 rawTop) {
+    m_rawPadding.y = rawTop;
+    m_rawPadding.dimension.y = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
 void vui::Widget::setRawPaddingRight(const Length& rawRight) {
     m_rawPadding.z = rawRight.x;
     m_rawPadding.dimension.z = rawRight.dimension.x;
@@ -64,9 +132,23 @@ void vui::Widget::setRawPaddingRight(const Length& rawRight) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::setRawPaddingRight(const Length& rawRight) {
-    m_rawPadding.w = rawRight.x;
-    m_rawPadding.dimension.w = rawRight.dimension.x;
+void vui::Widget::setRawPaddingRight(f32 rawRight) {
+    m_rawPadding.z = rawRight;
+    m_rawPadding.dimension.z = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingBottom(const Length& rawBottom) {
+    m_rawPadding.w = rawBottom.x;
+    m_rawPadding.dimension.w = rawBottom.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingBottom(f32 rawBottom) {
+    m_rawPadding.w = rawBottom;
+    m_rawPadding.dimension.w = DimensionType::PIXEL;
 
     m_flags.needsClipRectRecalculation = true;
 }

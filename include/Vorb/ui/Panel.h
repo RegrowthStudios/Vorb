@@ -38,21 +38,38 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Panel();
-            // /*! \brief Constructor that sets name, position, and dimensions.
-            // *
-            // * \param name: Name of the control.
-            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Panel(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * \param parent: Parent control object.
-            // * \param name: Name of the control.
-            // * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Panel(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            /*! \brief Constructor that sets name, position, and dimensions.
+            *
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Panel(const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Panel(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Panel(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent widget.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Panel(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
             virtual ~Panel();
 
@@ -62,8 +79,6 @@ namespace vorb {
             virtual void refreshDrawables() override;
 
             bool addWidget(IWidget* child) override;
-
-            virtual void updateDimensions(f32 dt = 1.0f) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -95,8 +110,11 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32 minX = FLT_MAX, maxX = -FLT_MAX, minY = FLT_MAX, maxY = -FLT_MAX; ///< Used for auto scroll
-            Slider m_sliders[2];
+            f32 m_minX = FLT_MAX, m_maxX = -FLT_MAX, m_minY = FLT_MAX, m_maxY = -FLT_MAX; ///< Used for auto scroll
+            struct {
+                Slider horizontal;
+                Slider vertical;
+            } m_sliders;
             f32 m_sliderWidth = 15.0f;
             bool m_autoScroll = false;
             f32v2 m_childOffset = f32v2(0.0f);

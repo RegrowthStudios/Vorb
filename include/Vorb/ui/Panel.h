@@ -110,17 +110,24 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32 m_minX = FLT_MAX, m_maxX = -FLT_MAX, m_minY = FLT_MAX, m_maxY = -FLT_MAX; ///< Used for auto scroll
+            f32 m_minX =  FLT_MAX, m_minY =  FLT_MAX;
+            f32 m_maxX = -FLT_MAX, m_maxY = -FLT_MAX; ///< The minimum and maximum coordinates of child widgets relative to panel.
+
+            bool m_autoScroll     = false; ///< Whether to automatically add sliders if content overflows the panel.
             struct {
                 Slider horizontal;
                 Slider vertical;
-            } m_sliders;
-            f32 m_sliderWidth = 15.0f;
-            bool m_autoScroll = false;
+            } m_sliders; ///< The sliders that will be added on content overflow.
+
+            bool m_flipHorizontal = false; ///< Whether we should place the horizontal slider on the left or right (true = left, false = right).
+            bool m_flipVertical   = false; ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
+            f32  m_sliderWidth    = 15.0f; ///< The width, in pixels, of the sliders.
+
             f32v2 m_childOffset = f32v2(0.0f);
+
             DrawableRect m_drawableRect, m_drawnRect;
-            // Has no color by default
-            color4 m_backColor = color::Transparent, m_backHoverColor = color::Transparent;
+            color4 m_backColor      = color::Transparent; ///< Colour of the panel.
+            color4 m_backHoverColor = color::Transparent; ///< Colour of the panel on hover.
         };
     }
 }

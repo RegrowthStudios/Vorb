@@ -78,8 +78,8 @@ hunter_add_package(enet)
 find_package(enet CONFIG REQUIRED)
 hunter_add_package(yaml-cpp)
 find_package(yaml-cpp CONFIG REQUIRED)
-hunter_add_package(OpenSSL)
-find_package(OpenSSL REQUIRED)
+#hunter_add_package(OpenSSL)
+#find_package(OpenSSL REQUIRED)
 hunter_add_package(PNG)
 find_package(PNG CONFIG REQUIRED)
 
@@ -422,8 +422,8 @@ target_link_libraries(vorb
     glm
     enet::enet
     yaml-cpp::yaml-cpp
-    OpenSSL::SSL
-    OpenSSL::Crypto
+#    OpenSSL::SSL
+#    OpenSSL::Crypto
     Lua::lua_lib
     PNG::png
 )

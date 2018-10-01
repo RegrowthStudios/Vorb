@@ -8,7 +8,6 @@
 #include <GL/glew.h>
 #endif // !VORB_USING_PCH
 
-#include "Vorb/os.h"
 #if defined(VORB_IMPL_UI_SDL)
 //#if defined(VORB_OS_WINDOWS)
 //#include <SDL/SDL.h>

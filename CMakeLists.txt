@@ -347,7 +347,6 @@ set(vorb_headers
     include/Vorb/Matrix.hpp
     include/Vorb/Matrix.inl
     include/Vorb/MeshGenerators.h
-    include/Vorb/os.h
     include/Vorb/PtrRecycler.hpp
     include/Vorb/Quaternion.hpp
     include/Vorb/Quaternion.inl

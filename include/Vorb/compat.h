@@ -208,16 +208,16 @@
 #   error Portlan Group PGCC/PGCPP compiler is not supported by Vorb
 
 /* Oracle Solaris Studio. ----------------------------------- */
-#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#elif defined(__SUNPRO_C) && defined(__SUNPRO_CC)
 #   error Solaris compiler is not supported by Vorb
 
 #endif
 
 // Include UNIX threading and scheduling headers if not compiling on Windows. 
 // Currently all OS's supported (and plenty not) that are not Windows are UNIX-based.
-#if !defined(_WIN32) || !defined(_WIN64)
-    #include <pthread.h>
-    #include <sched.h>
+#if !defined(_WIN32) && !defined(_WIN64)
+#   include <pthread.h>
+#   include <sched.h>
 #endif
 
 #endif // !Vorb_compat_h__

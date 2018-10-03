@@ -1,8 +1,6 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/script/REPL.h"
 
-#include "Vorb/os.h"
-
 extern "C" {
 #include <lua.h>
 #include <lualib.h>

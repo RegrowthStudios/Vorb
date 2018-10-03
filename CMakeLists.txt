@@ -354,7 +354,7 @@ set(vorb_headers
     include/Vorb/Random.h
     include/Vorb/RingBuffer.hpp
     include/Vorb/RingBuffer.inl
-    include/Vorb/RPC.h
+    include/Vorb/vorb_rpc.h
     include/Vorb/ScopedTiming.hpp
     include/Vorb/stdafx.h
     include/Vorb/TextureRecycler.hpp
@@ -381,7 +381,7 @@ set(vorb_source
     src/colors.cpp
     src/MeshGenIcosphere.cpp
     src/Random.cpp
-    src/RPC.cpp
+    src/vorb_rpc.cpp
     src/stdafx.cpp
     src/Timing.cpp
     src/Vorb.cpp

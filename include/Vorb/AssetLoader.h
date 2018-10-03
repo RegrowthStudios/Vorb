@@ -23,7 +23,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/RPC.h"
+#include "Vorb/vorb_rpc.h"
 #include "Vorb/graphics/GLStates.h"
 #include "Vorb/graphics/ImageIO.h"
 #include "Vorb/io/Path.h"

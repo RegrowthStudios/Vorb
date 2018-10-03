@@ -1,3 +1,7 @@
+[![discord](https://img.shields.io/discord/459062989094649866.svg?logo=discord "Discord")](https://discord.gg/b2bf775)
+![travis](https://img.shields.io/travis/RegrowthStudios/Vorb.svg?style=flat-square&label=Linux "Travis CI")
+![appveyor](https://img.shields.io/appveyor/ci/SamThePsychoticLeprechaun/vorb.svg?style=flat-square&label=Windows "AppVeyor CI")
+
 # Vorb
 This repository contains the source code for Regrowth Studios Vorb Game Engine.
 

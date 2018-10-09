@@ -75,7 +75,7 @@ namespace vorb {
 #else
         // TODO: Investigate options
 
-#endif // OS_WINDOWS
+#endif // VORB_OS_WINDOWS
         if (!path.isValid()) path = "."; // No other option
         vio::IOManager::setExecutableDirectory(path.asCanonical());
 

@@ -32,7 +32,7 @@
 //#elif defined(VORB_IMPL_GRAPHICS_D3D)
 //#ifndef VORB_OS_WINDOWS
 //#error DirectX is Windows-only
-//#endif // !OS_WINDOWS
+//#endif // !VORB_OS_WINDOWS
 //#pragma message("VORB LIB: Linking GRAPHICS=D3D")
 //#if defined(VORB_DX_9)
 //#pragma message("Linking against <d3d9.lib>")

@@ -61,20 +61,35 @@
  * LINUX
  */
 
+// TODO(Matthew): Right now we are setting the build target info to that of the host machine for the build process. (An exception is the check for _M_IX86 for MSVC.) We ideally want to separate target from host, either by more well-defined existing macros or defining our own via CMake.
+
 // Detect 32- or 64-bit architectures
-#if defined(_WIN32)
-#   define VORB_ARCH_32
-#elif defined(_WIN64)
+//   Check _WIN64 first as _WIN32 is set for both 32-bit and 64-bit hosts.
+#if defined(_WIN64)
 #   define VORB_ARCH_64
+#elif defined(_WIN32)
+#   define VORB_ARCH_32
 #endif
 
 // Detect if OS is Windows, and create definitions and includes for that.
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #   define VORB_OS_WINDOWS
 #   define _WINSOCKAPI_
+#
 #   define NOMINMAX
-#       include <windows.h>
+#   include <windows.h>
 #   undef NOMINMAX
+#endif
+
+// Detect if OS is MacOS.
+// TODO(Matthew): Technically this could also mean iOS, but we assume not for now.
+#if defined(__APPLE__)
+#    define VORB_OS_MAC
+#endif
+
+// Detect if OS is Linux.
+#if defined(__linux__)
+#    define VORB_OS_LINUX
 #endif
 
 // Detect architecture
@@ -83,8 +98,8 @@
 /* Clang/LLVM. ---------------------------------------------- */
 #if defined(__clang__)
 #   define VORB_COMPILER_CLANG
-#   ifdef __i386__
-#       ifdef __x86_64__
+#   if defined(__i386__)
+#       if defined(__x86_64__)
 #           define VORB_ARCH_64
 #           define VORB_ARCH_X86_64
 #       else
@@ -92,11 +107,11 @@
 #           define VORB_ARCH_X86_32
 #       endif
 #   elif defined(__arm__)
-#       error ARM 32-bit and 64-bit architectures must be defined
+#       error ARM 32-bit and 64-bit architectures must be defined.
 #   endif
 #
 #   // Define maybe_unused attribute macro
-#   ifdef __cplusplus
+#   if defined(__cplusplus)
 #       if __cplusplus >= 201703L && ( (__clang_major__ == 3 && __clang_minor__ >= 9) || __clang_major__ > 3 )
 #           define VORB_UNUSED [[maybe_unused]]
 #           define VORB_MAYBE_UNUSED [[maybe_unused]]
@@ -119,14 +134,14 @@
 
 /* Intel ICC/ICPC. ------------------------------------------ */
 #elif defined(__ICC) || defined(__INTEL_COMPILER)
-#   error Intel ICC/ICPC compiler is not supported by Vorb
+#   error Intel ICC/ICPC compiler is not supported by Vorb.
 
 /* GNU GCC/G++. --------------------------------------------- */
 #elif defined(__GNUC__) || defined(__GNUG__)
 #   define VORB_COMPILER_GCC
 #
-#   ifdef __i386__
-#       ifdef __x86_64__
+#   if defined(__i386__)
+#       if defined(__x86_64__)
 #           define VORB_ARCH_64
 #           define VORB_ARCH_X86_64
 #       else
@@ -134,11 +149,11 @@
 #           define VORB_ARCH_X86_32
 #       endif
 #   elif defined(__arm__)
-#       error ARM 32-bit and 64-bit architectures must be defined
+#       error ARM 32-bit and 64-bit architectures must be defined.
 #   endif
 #
 #   // Define maybe_unused attribute macro
-#   ifdef __cplusplus
+#   if defined(__cplusplus)
 #       if __cplusplus >= 201703L && __GNUC__ >= 7
 #           define VORB_UNUSED [[maybe_unused]]
 #           define VORB_MAYBE_UNUSED [[maybe_unused]]
@@ -164,27 +179,27 @@
 
 /* Hewlett-Packard C/aC++. ---------------------------------- */
 #elif defined(__HP_cc) || defined(__HP_aCC)
-#   error HP C/aC++ compiler is not supported by Vorb
+#   error HP C/aC++ compiler is not supported by Vorb.
 
 /* IBM XL C/C++. -------------------------------------------- */
 #elif defined(__IBMC__) || defined(__IBMCPP__)
-#   error IBM XL C/C++ compiler is not supported by Vorb
+#   error IBM XL C/C++ compiler is not supported by Vorb.
 
 /* Microsoft Visual Studio. --------------------------------- */
 #elif defined(_MSC_VER)
 #   define VORB_COMPILER_MSVC
-#   ifdef _M_IX86
-#       ifdef VORB_ARCH_32
+#   if defined(_M_IX86)
+#       if defined(VORB_ARCH_32)
 #           define VORB_ARCH_X86_32
 #       else
 #           define VORB_ARCH_X86_64
 #       endif
 #   elif defined(_M_ARM)
-#       error ARM 32-bit and 64-bit architectures must be defined
+#       error ARM 32-bit and 64-bit architectures must be defined.
 #   endif
 #
 #   // Define maybe_unused attribute macro
-#   ifdef __cplusplus
+#   if defined(__cplusplus)
 #       if __cplusplus >= 201703L && _MSC_VER >= 1911
 #           define VORB_UNUSED [[maybe_unused]]
 #           define VORB_MAYBE_UNUSED [[maybe_unused]]
@@ -205,17 +220,17 @@
 
 /* Portland Group PGCC/PGCPP. ------------------------------- */
 #elif defined(__PGI)
-#   error Portlan Group PGCC/PGCPP compiler is not supported by Vorb
+#   error Portlan Group PGCC/PGCPP compiler is not supported by Vorb.
 
 /* Oracle Solaris Studio. ----------------------------------- */
 #elif defined(__SUNPRO_C) && defined(__SUNPRO_CC)
-#   error Solaris compiler is not supported by Vorb
+#   error Solaris compiler is not supported by Vorb.
 
 #endif
 
 // Include UNIX threading and scheduling headers if not compiling on Windows. 
 // Currently all OS's supported (and plenty not) that are not Windows are UNIX-based.
-#if !defined(_WIN32) && !defined(_WIN64)
+#if !defined(VORB_OS_WINDOWS)
 #   include <pthread.h>
 #   include <sched.h>
 #endif

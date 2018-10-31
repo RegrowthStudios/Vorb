@@ -44,14 +44,14 @@ void vui::IWidget::dispose() {
 }
 
 void vui::IWidget::update(f32 dt /*= 1.0f*/) {
-    if (m_flags.needsDimensionUpdate) {
-        m_flags.needsDimensionUpdate = false;
-        updateDimensions(dt);
-    }
-
     if (m_flags.needsZIndexReorder) {
         m_flags.needsZIndexReorder = false;
         reorderWidgets();
+    }
+
+    if (m_flags.needsDimensionUpdate) {
+        m_flags.needsDimensionUpdate = false;
+        updateDimensions(dt);
     }
 
     if (m_flags.needsDockRecalculation) {

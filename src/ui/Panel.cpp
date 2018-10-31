@@ -123,10 +123,12 @@ void vui::Panel::updateSliders() {
     bool needsHorizontal = false;
     bool needsVertical   = false;
     
-    // These are the most extreme points of the shild widgets.
+    // Reset min and max coord points.
     m_maxX = m_maxY = -FLT_MAX;
     m_minX = m_minY =  FLT_MAX;
 
+    // TODO(Matthew): Revisit this after figuring slider embedding - if children get altered drastically this calculation will be outdated.
+    // If we're automatically adding scrollbars, then we want to know the extreme points of the child widgets.
     if (m_autoScroll) {
         // Skip sliders for determining the min and max values.
         for (size_t i = 2; i < m_widgets.size(); ++i) {
@@ -154,18 +156,15 @@ void vui::Panel::updateSliders() {
             needsVertical = true;
         }
     }
-    if (m_minX > 0.0f) m_minX = 0.0f;
-    if (m_maxX < m_size.x) {
-        m_maxX = m_size.x;
-    }
-    if (m_minY > 0.0f) m_minY = 0.0f;
-    if (m_maxY < m_size.y) {
-        m_maxY = m_size.y;
-    }
+    // If all elements sit neatly inside the panel, our min and max points should be the boundaries of the panel itself.
+    if (m_minX > 0.0f)     m_minX = 0.0f;
+    if (m_minY > 0.0f)     m_minY = 0.0f;
+    if (m_maxX < m_size.x) m_maxX = m_size.x;
+    if (m_maxY < m_size.y) m_maxY = m_size.y;
 
-    // TODO(Matthew): Figure out what may end up being a recursively expanded padding.
-    // TODO(Matthew): Use padding for drawable rectangle size (this applies to prior widgets too).
     // TODO(Matthew): Either update children then apply childOffset or make childOffset a part of IWidget that on change flags children to updateDimensions (which uses this to shift its position).
+
+    // Note that while this looks like it might iteratively push the sliders further and further out, the processed values of position and padding are recalculated any time we also come here to update sliders - so as long as this never touches the raw values of position and padding we're good!
 
     // Set up horizontal slider.
     Slider& slider = m_sliders.horizontal;

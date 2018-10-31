@@ -219,16 +219,16 @@ void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
 
     applyMinMaxSizes();
 
-    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
-}
-
-void vui::Widget::calculateClipRect() {
     m_padding = {
         processLength({ m_rawPadding.x, { m_rawPadding.dimension.x } }),
         processLength({ m_rawPadding.y, { m_rawPadding.dimension.y } }),
         processLength({ m_rawPadding.z, { m_rawPadding.dimension.z } }),
         processLength({ m_rawPadding.w, { m_rawPadding.dimension.w } })
     };
+    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
+}
+
+void vui::Widget::calculateClipRect() {
 
     IWidget::calculateClipRect();
 }

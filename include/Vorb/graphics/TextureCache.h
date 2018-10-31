@@ -4,7 +4,7 @@
 //
 // Created by Ben Arnold on 20 Oct 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file TextureCache.h

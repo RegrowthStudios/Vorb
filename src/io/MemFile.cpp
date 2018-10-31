@@ -3,9 +3,7 @@
 
 #ifdef VORB_OS_WINDOWS
 #include <io.h>
-#endif//VORB_OS_WINDOWS
-
-#include "Vorb/os.h"
+#endif // VORB_OS_WINDOWS
 
 MemFile::MemFile() {
     m_file = tmpfile();

@@ -3,8 +3,6 @@
 #ifndef Tests_h__
 #define Tests_h__
 
-#include "../include/os.h"
-
 typedef std::map<nString, void*> TestLibrary; ///< Container type for tests
 __declspec(dllexport) TestLibrary& getLibrary(); ///< Member variable that stores tests
 

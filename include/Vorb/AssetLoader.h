@@ -5,7 +5,7 @@
 // Created by Cristian Zaloj on 13 Feb 2015
 // Ported to Vorb by Benjamin Arnold on 4 Jun 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file AssetLoader.h
@@ -23,7 +23,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/RPC.h"
+#include "Vorb/vorb_rpc.h"
 #include "Vorb/graphics/GLStates.h"
 #include "Vorb/graphics/ImageIO.h"
 #include "Vorb/io/Path.h"

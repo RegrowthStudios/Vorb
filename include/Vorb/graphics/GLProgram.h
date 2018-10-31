@@ -4,7 +4,7 @@
 //
 // Created by Ben Arnold on 16 Oct 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file GLProgram.h

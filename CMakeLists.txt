@@ -1,22 +1,47 @@
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
-
 cmake_policy(SET CMP0054 NEW)
 
-#include(${CMAKE_CURRENT_LIST_DIR}/cmake_files/hunter/HunterGate.cmake)
-#
-#HunterGate(
-#    URL "https://github.com/ruslo/hunter/archive/v0.19.208.tar.gz"
-#    SHA1 "4128ac8c79c21b250bf825e8119ce0bff05e5132"
-#)
+set(HUNTER_STATUS_DEBUG ON)
+#setup cache server and suppot upload
+set(
+    HUNTER_CACHE_SERVERS
+    "https://github.com/huntercache/SoA"
+    CACHE
+    STRING
+    "Default cache server"
+)
+
+string(COMPARE EQUAL "$ENV{TRAVIS}" "true" is_travis)
+string(COMPARE EQUAL "$ENV{APPVEYOR}" "True" is_appveyor)
+string(COMPARE EQUAL "$ENV{GITHUB_USER_PASSWORD}" "" password_is_empty)
+
+if((is_travis OR is_appveyor) AND NOT password_is_empty)
+  option(HUNTER_RUN_UPLOAD "Upload cache binaries" ON)
+endif()
+message(STATUS "Hunter upload: ${HUNTER_RUN_UPLOAD}")
+
+set(
+    HUNTER_PASSWORDS_PATH
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/hunter/passwords.cmake"
+    CACHE
+    FILEPATH
+    "Hunter passwords"
+)
+
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/hunter/HunterGate.cmake)
+
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.16.tar.gz"
+    SHA1 "dbe5b1c966414c4a055983c11d5251a2d8f2f16d"
+)
 
 set(name vorb)
-
 enable_testing()
 
 # ----------------------------------------------------------------------
 # VORB
 # ----------------------------------------------------------------------
-#project(${name})
+project(${name})
 # include available make files
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_files")
 #include(${name})
@@ -78,8 +103,8 @@ hunter_add_package(enet)
 find_package(enet CONFIG REQUIRED)
 hunter_add_package(yaml-cpp)
 find_package(yaml-cpp CONFIG REQUIRED)
-hunter_add_package(OpenSSL)
-find_package(OpenSSL REQUIRED)
+#hunter_add_package(OpenSSL)
+#find_package(OpenSSL REQUIRED)
 hunter_add_package(PNG)
 find_package(PNG CONFIG REQUIRED)
 
@@ -347,7 +372,6 @@ set(vorb_headers
     include/Vorb/Matrix.hpp
     include/Vorb/Matrix.inl
     include/Vorb/MeshGenerators.h
-    include/Vorb/os.h
     include/Vorb/PtrRecycler.hpp
     include/Vorb/Quaternion.hpp
     include/Vorb/Quaternion.inl
@@ -355,7 +379,7 @@ set(vorb_headers
     include/Vorb/Random.h
     include/Vorb/RingBuffer.hpp
     include/Vorb/RingBuffer.inl
-    include/Vorb/RPC.h
+    include/Vorb/vorb_rpc.h
     include/Vorb/ScopedTiming.hpp
     include/Vorb/stdafx.h
     include/Vorb/TextureRecycler.hpp
@@ -382,7 +406,7 @@ set(vorb_source
     src/colors.cpp
     src/MeshGenIcosphere.cpp
     src/Random.cpp
-    src/RPC.cpp
+    src/vorb_rpc.cpp
     src/stdafx.cpp
     src/Timing.cpp
     src/Vorb.cpp
@@ -422,8 +446,8 @@ target_link_libraries(vorb
     glm
     enet::enet
     yaml-cpp::yaml-cpp
-    OpenSSL::SSL
-    OpenSSL::Crypto
+#    OpenSSL::SSL
+#    OpenSSL::Crypto
     Lua::lua_lib
     PNG::png
 )

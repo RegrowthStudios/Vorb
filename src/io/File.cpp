@@ -3,7 +3,7 @@
 
 #include <boost/filesystem/operations.hpp>
 //#include <sha256/sha256sum.h>
-#include <openssl/sha.h>
+//#include <openssl/sha.h>
 
 #include "Vorb/io/FileOps.h"
 #include "Vorb/io/FileStream.h"
@@ -35,28 +35,28 @@ bool vorb::io::File::resize(const ui64& l) const {
     return ec.value() == 0;
 }
 
-void vorb::io::File::computeSum(vio::SHA256Sum* sum) const {
-    vio::FileSeekOffset l = 0;
-    ui8* data = nullptr;
-
-    { // Read file data
-        vio::FileStream s = openReadOnly(true);
-        l = s.length();
-        data = new ui8[l];
-        l = (vio::FileSeekOffset)s.read(l, 1, data);
-        s.close();
-    }
-
-    { // Compute sum
-        SHA256_CTX context;
-        SHA256_Init(&context);
-        SHA256_Update(&context, data, (ui32)l);
-        SHA256_Final((unsigned char *)sum, &context);
-//        memcpy(sum, context.hash, 32);
-    }
-
-    delete[] data;
-}
+//void vorb::io::File::computeSum(vio::SHA256Sum* sum) const {
+//    vio::FileSeekOffset l = 0;
+//    ui8* data = nullptr;
+//
+//    { // Read file data
+//        vio::FileStream s = openReadOnly(true);
+//        l = s.length();
+//        data = new ui8[l];
+//        l = (vio::FileSeekOffset)s.read(l, 1, data);
+//        s.close();
+//    }
+//
+//    { // Compute sum
+//        SHA256_CTX context;
+//        SHA256_Init(&context);
+//        SHA256_Update(&context, data, (ui32)l);
+//        SHA256_Final((unsigned char *)sum, &context);
+////        memcpy(sum, context.hash, 32);
+//    }
+//
+//    delete[] data;
+//}
 
 vio::FileStream vio::File::open(FileOpenFlags flags) const {
     FileStream stream(*this);

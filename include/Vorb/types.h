@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 16 Feb 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file types.h
@@ -27,6 +27,8 @@
 //#include "Vector.hpp"
 //#include "Matrix.hpp"
 //#include "Quaternion.hpp"
+
+#define GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

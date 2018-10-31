@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 3 Mar 2015
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file AnimationData.h

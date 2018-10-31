@@ -4,7 +4,7 @@
 //
 // Created by Cristian Zaloj on 31 Dec 2014
 // Copyright 2014 Regrowth Studios
-// All Rights Reserved
+// MIT License
 //
 
 /*! \file File.h
@@ -46,17 +46,17 @@ namespace vorb {
         };
         ENUM_CLASS_OPS_INL(FileOpenFlags, ui8)
 
-        // TODO: Maybe move sum elsewhere?
-        struct SHA256Sum {
-            const ui32& operator[](const size_t& i) const {
-                return m_data[i];
-            }
-            ui32& operator[](const size_t& i) {
-                return m_data[i];
-            }
-        private:
-            ui32 m_data[8];
-        };
+//        // TODO: Maybe move sum elsewhere?
+//        struct SHA256Sum {
+//            const ui32& operator[](const size_t& i) const {
+//                return m_data[i];
+//            }
+//            ui32& operator[](const size_t& i) {
+//                return m_data[i];
+//            }
+//        private:
+//            ui32 m_data[8];
+//        };
 
         /// Represents a file
         class File {
@@ -75,8 +75,8 @@ namespace vorb {
             bool isValid() const {
                 return m_path.isValid();
             }
-            /// @return A file checksum
-            void computeSum(OUT SHA256Sum* sum) const;
+//            /// @return A file checksum
+//            void computeSum(OUT SHA256Sum* sum) const;
 
             /// @return The size of the file in bytes
             ui64 length() const;

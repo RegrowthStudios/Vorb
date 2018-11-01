@@ -204,6 +204,7 @@ namespace vorb {
             virtual void setDropButtonTextAlign(vg::TextAlign align);
             virtual void setDropButtonTextAlign(vg::TextAlign align, const nString& item);
             virtual void setDropButtonTextAlign(vg::TextAlign align, size_t index);
+            virtual void setText(const nString& text);
             virtual void setMaxDropHeight(f32 maxDropHeight);
 
             /************************************************************************/

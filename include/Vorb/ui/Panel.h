@@ -98,7 +98,7 @@ namespace vorb {
             virtual void setAutoScroll(bool autoScroll);
 
         protected:
-            virtual void updateDimensions(f32 dt);
+            virtual void updateDimensions(f32 dt) override;
 
             virtual void calculateDrawables() override;
 

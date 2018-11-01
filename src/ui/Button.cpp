@@ -225,14 +225,20 @@ void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent
         if (!m_flags.isMouseIn) {
             m_flags.isMouseIn = true;
             MouseEnter(e);
+
             updateColor();
+
+            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {        
         if (m_flags.isMouseIn) {
             m_flags.isMouseIn = false;
             MouseLeave(e);
+
             updateColor();
+
+            m_flags.needsDrawableRefresh = true;
         }
     }
 }

@@ -608,10 +608,10 @@ void vui::IWidget::calculateClipRect() {
 
     f32 bottomMax = m_position.y + m_size.y + m_padding.w;
     ClippingState bottom = getClippingBottom();
-    if (left == ClippingState::VISIBLE
+    if (bottom == ClippingState::VISIBLE
             || bottomMax < parentClipRect.y + parentClipRect.w) {
         m_clipRect.w = parentClipRect.y + parentClipRect.w - m_clipRect.y;
-    } else if (left == ClippingState::HIDDEN) {
+    } else if (bottom == ClippingState::HIDDEN) {
         m_clipRect.w = bottomMax - m_clipRect.y;
     } else {
         assert(false);

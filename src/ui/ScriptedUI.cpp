@@ -75,14 +75,14 @@ void vui::ScriptedUI::setDimensions(VORB_UNUSED const f32v2& dimensions) {
 //     return nullptr;
 // }
 
-// void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {
+void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {
 //     vscript::Environment* env = newFormEnv->getEnv();
 //     env->setNamespaces();
 //     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
 //     env->addCRDelegate("enableForm", makeRDelegate(*this, &ScriptedUI::enableForm));
 //     env->addCRDelegate("disableForm", makeRDelegate(*this, &ScriptedUI::disableForm));
 //     env->addCRDelegate("getForm", makeRDelegate(*this, &ScriptedUI::getForm));
-// }
+}
 
 // vui::Form* vui::ScriptedUI::enableForm(nString name) {
 //     // This is O(n) but its fine.

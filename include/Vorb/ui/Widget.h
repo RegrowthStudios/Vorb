@@ -177,10 +177,10 @@ namespace vorb {
             virtual const Length2& getMinRawSize()       const { return m_minRawSize; }
             virtual const Length2& getMaxRawSize()       const { return m_maxRawSize; }
             virtual const Length4& getRawPadding()       const { return m_rawPadding; }
-            virtual  const Length& getRawPaddingLeft()   const { return { m_rawPadding.x, { m_rawPadding.dimension.x } }; }
-            virtual  const Length& getRawPaddingTop()    const { return { m_rawPadding.y, { m_rawPadding.dimension.y } }; }
-            virtual  const Length& getRawPaddingRight()  const { return { m_rawPadding.z, { m_rawPadding.dimension.z } }; }
-            virtual  const Length& getRawPaddingBottom() const { return { m_rawPadding.w, { m_rawPadding.dimension.w } }; }
+            virtual         Length getRawPaddingLeft()   const { return { m_rawPadding.x, { m_rawPadding.dimension.x } }; }
+            virtual         Length getRawPaddingTop()    const { return { m_rawPadding.y, { m_rawPadding.dimension.y } }; }
+            virtual         Length getRawPaddingRight()  const { return { m_rawPadding.z, { m_rawPadding.dimension.z } }; }
+            virtual         Length getRawPaddingBottom() const { return { m_rawPadding.w, { m_rawPadding.dimension.w } }; }
 
             /************************************************************************/
             /* Setters                                                              */

@@ -217,7 +217,7 @@ namespace vorb {
              * 
              * \param dt: Change in time since last update.
              */
-            virtual void updateDimensions(f32 dt);
+            virtual void updateDimensions(f32 dt) override;
 
             /*! \brief Calculates the properties of the drawables. */
             virtual void calculateDrawables() override;

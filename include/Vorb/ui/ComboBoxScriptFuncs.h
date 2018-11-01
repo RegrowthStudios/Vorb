@@ -63,7 +63,7 @@ namespace vorb {
             virtual color4 getTextHoverColor(ComboBox* c) const;
             virtual f32v2 getTextScale(ComboBox* c) const;
             virtual nString getItem(ComboBox* c, int index) const;
-            virtual size_t getNumItems(ComboBox* c) const;
+            virtual size_t getItemCount(ComboBox* c) const;
             virtual vg::TextAlign getTextAlign(ComboBox* c) const;
             virtual nString getText(ComboBox* c) const;
             virtual f32 getMaxDropHeight(ComboBox* c) const;
@@ -71,7 +71,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setTexture(ComboBox* c, VGTexture texture) const;
+            virtual void setMainButtonTexture(ComboBox* c, VGTexture texture) const;
             virtual void setDropBoxTexture(ComboBox* c, VGTexture texture) const;
             virtual void setDropButtonTexture(ComboBox* c, VGTexture texture) const;
             virtual void setBackColor(ComboBox* c, color4 color) const;

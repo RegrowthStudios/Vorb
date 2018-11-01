@@ -46,7 +46,7 @@ namespace vorb {
             virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
 
             virtual void check(CheckBox* c) const;
-            virtual void unCheck(CheckBox* c) const;
+            virtual void uncheck(CheckBox* c) const;
             virtual void toggleChecked(CheckBox* c) const;
 
             /************************************************************************/

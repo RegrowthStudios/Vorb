@@ -40,7 +40,7 @@ void vui::CheckBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_DEL(env, setChecked);
 
         REGISTER_DEL(env, check);
-        REGISTER_DEL(env, unCheck);
+        REGISTER_DEL(env, uncheck);
         REGISTER_DEL(env, toggleChecked);
     }
     env->setNamespaces();
@@ -92,8 +92,8 @@ void vui::CheckBoxScriptFuncs::check(CheckBox* c) const {
     c->check();
 }
 
-void vui::CheckBoxScriptFuncs::unCheck(CheckBox* c) const {
-    c->unCheck();
+void vui::CheckBoxScriptFuncs::uncheck(CheckBox* c) const {
+    c->uncheck();
 }
 
 void vui::CheckBoxScriptFuncs::toggleChecked(CheckBox* c) const {

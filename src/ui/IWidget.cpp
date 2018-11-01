@@ -645,6 +645,12 @@ void vui::IWidget::reorderWidgets() {
     }
 }
 
+void vui::IWidget::reorderChildWidgets() {
+    for (auto& child : m_widgets) {
+        child->m_flags.needsZIndexReorder = true;
+    }
+}
+
 void vui::IWidget::onMouseDown(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {

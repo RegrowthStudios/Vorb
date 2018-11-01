@@ -90,7 +90,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setSize(const f32v2& dimensions) { m_size = dimensions; }
+            virtual void setSize(const f32v2& size)       { m_size = size; }
             virtual void setHeight(f32 height)            { m_size.y = height;   }
             virtual void setWidth(f32 width)              { m_size.x = width;    }
             virtual void setTexture(VGTexture texture)    { m_texture = texture; }

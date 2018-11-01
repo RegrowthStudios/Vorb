@@ -228,11 +228,6 @@ void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 }
 
-void vui::Widget::calculateClipRect() {
-
-    IWidget::calculateClipRect();
-}
-
 f32 vui::Widget::processLength(Length length) {
     switch (length.dimension.x) {
         case DimensionType::PIXEL:
@@ -325,6 +320,8 @@ f32 vui::Widget::processLength(Length length) {
             // Shouldn't get here.
             assert(false);
     }
+
+    return 0;
 }
 
 f32v2 vui::Widget::processLength(Length2 length) {

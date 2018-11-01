@@ -216,9 +216,6 @@ namespace vorb {
             /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
             virtual void updateDimensions(f32 dt) override;
 
-            /*! \brief Calculates clipping for rendering and propagates through children. */
-            virtual void calculateClipRect() override;
-
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 

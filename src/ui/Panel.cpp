@@ -188,13 +188,13 @@ void vui::Panel::updateSliders() {
         slider.setRawTop(0.0f);
         slider.setRawBottom(0.0f);
 
-        slider.setSlideDimensions(f32v2(m_sliderWidth));
+        slider.setSlideSize(f32v2(m_sliderWidth));
         slider.setRange(0, SLIDER_VAL_MAX);
         slider.setIsVertical(false);
     } else {
         slider.setPositionType(PositionType::STATIC_TO_PARENT);
         slider.setRawSize(f32v2(0.0f));
-        slider.setSlideDimensions(f32v2(0.0f));
+        slider.setSlideSize(f32v2(0.0f));
         slider.disable();
     }
 
@@ -220,13 +220,13 @@ void vui::Panel::updateSliders() {
         slider.setRawLeft(0.0f);
         slider.setRawRight(0.0f);
 
-        slider.setSlideDimensions(f32v2(m_sliderWidth));
+        slider.setSlideSize(f32v2(m_sliderWidth));
         slider.setRange(0, SLIDER_VAL_MAX);
         slider.setIsVertical(false);
     } else {
         slider.setPositionType(PositionType::STATIC_TO_PARENT);
         slider.setRawSize(f32v2(0.0f));
-        slider.setSlideDimensions(f32v2(0.0f));
+        slider.setSlideSize(f32v2(0.0f));
         slider.disable();
     }
 }

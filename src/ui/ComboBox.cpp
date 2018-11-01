@@ -24,7 +24,7 @@ vui::ComboBox::ComboBox() : Widget() {
     addWidget(&m_dropPanel);
 
     m_dropPanel.setAutoScroll(true);
-    m_dropPanel.setClipping({ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
+    m_dropPanel.setClipping((Clipping){ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
 
     m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
 
@@ -388,6 +388,10 @@ void vui::ComboBox::setTextAlign(vg::TextAlign align) {
     for (auto& button : m_buttons) {
         button->setTextAlign(align);
     }
+}
+
+void vui::ComboBox::setText(const nString& text) {
+    m_mainButton.setText(text);
 }
 
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {

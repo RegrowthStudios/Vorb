@@ -63,6 +63,11 @@ namespace vorb {
             /*! @brief Draws the Form. */
             virtual void draw();
 
+            /*! \brief Adds all drawables to the UIRenderer */
+            virtual void addDrawables() override { /* Empty */ }
+            /*! \brief Refresh drawables. */
+            virtual void refreshDrawables() override { /* Empty */ }
+
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
@@ -74,6 +79,10 @@ namespace vorb {
             /************************************************************************/
             virtual void setGameWindow(const GameWindow* window);
         protected:
+            virtual void updateDimensions(f32) override { /* Empty */ }
+
+            virtual void calculateDrawables() override { /* Empty */ }
+
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/

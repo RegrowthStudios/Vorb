@@ -13,6 +13,7 @@ vui::Viewport::~Viewport() {
     // Empty
 }
 
+// TODO(Matthew): Support raw lengths - derive from Widget rather than IWidget.
 void vui::Viewport::init(const nString& name, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
     
@@ -33,9 +34,6 @@ void vui::Viewport::dispose() {
     m_renderer.dispose();
     m_window = nullptr;
 }
-
-// TODO(Matthew): Clarify roles of {add|remove}Widget and setParent - rewrite such that either both pathways are public and viable endpoints or such that one is protected.
-// TODO(Matthew): Clarify role of flags and update functions so that updates are propagated to descendants ONCE - rewrite such that Viewport provides an easy entry point for updates.
 
 void vui::Viewport::update(f32 dt /*= 1.0f*/) {
     IWidget::update(dt);

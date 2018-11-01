@@ -38,56 +38,72 @@ namespace vorb {
         public:
             /*! @brief Default constructor. */
             Slider();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            // *
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Slider(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * @param parent: Parent control object.
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // Slider(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
+            /*! \brief Constructor that sets name, position, and dimensions.
+            *
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Slider(const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets name, position, and dimensions.
+             *
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Slider(const nString& name, const Length2& position, const Length2& size);
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+            *
+            * The control will be made a child of parent.
+            *
+            * \param parent: Parent control object.
+            * \param name: Name of the control.
+            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
+            */
+            Slider(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
+            /*! \brief Constructor that sets parent control, name, position, and dimensions.
+             *
+             * The widget will be made a child of parent.
+             *
+             * \param parent: Parent widget.
+             * \param name: Name of the control.
+             * \param position: The position of the widget.
+             * \param size: The size of the widget.
+             */
+            Slider(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! @brief Default destructor. */
             virtual ~Slider();
 
             /*! @brief Adds all drawables to the UIRenderer
             */
             virtual void addDrawables() override;
-
-            /*! @brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
+            /*! @brief Refresh drawables passed to the UIRenderer
+            */
+            virtual void refreshDrawables() override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getSlideTexture() const { return m_drawableSlide.getTexture(); }
-            virtual const VGTexture& getBarTexture() const { return m_drawableBar.getTexture(); }
-            virtual const color4& getSlideColor() const { return m_slideColor; }
-            virtual const color4& getSlideHoverColor() const { return m_slideHoverColor; }
-            virtual const color4& getBarColor() const { return m_barColor; }
-            virtual const int& getValue() const { return m_value; }
-            virtual const int& getMin() const { return m_min; }
-            virtual const int& getMax() const { return m_max; }
+            virtual const VGTexture& getSlideTexture()    const { return m_drawableSlide.getTexture(); }
+            virtual const VGTexture& getBarTexture()      const { return m_drawableBar.getTexture(); }
+            virtual    const color4& getSlideColor()      const { return m_slideColor; }
+            virtual    const color4& getSlideHoverColor() const { return m_slideHoverColor; }
+            virtual    const color4& getBarColor()        const { return m_barColor; }
+            virtual              int getValue()           const { return m_value; }
+            virtual              int getMin()             const { return m_min; }
+            virtual              int getMax()             const { return m_max; }
             /// Gets slider value scaled between 0.0f and 1.0f
-            virtual f32 getValueScaled() const { return (f32)(m_value - m_min) / (m_max - m_min); }
-            virtual const bool& isVertical() const { return m_isVertical; }
+            virtual              f32 getValueScaled()     const { return (f32)(m_value - m_min) / (m_max - m_min); }
+            virtual             bool isHorizontal()       const { return !m_isVertical; }
+            virtual             bool isVertical()         const { return m_isVertical; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setSlideDimensions(const f32v2& dimensions);
-            // virtual void setHeight(f32 height) override;
-            // virtual void setPosition(const f32v2& position) override;
+            virtual void setSlideSize(const Length2& size);
+            virtual void setSlideSize(const f32v2& size);
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
             virtual void setBarColor(const color4& color);
-            // virtual void setWidth(f32 width) override;
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
             virtual void setValue(int value);
@@ -105,10 +121,10 @@ namespace vorb {
             Event<int> ValueChange; ///< Occurs when the value changes
 
         protected:
+            virtual void calculateDrawables() override;
+
             virtual void updateSlidePosition();
             virtual void updateColor();
-            virtual void refreshDrawables();
-            // virtual void computeClipRect(const f32v4& parentClipRect = f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)) override;
 
             /************************************************************************/
             /* Event Handlers                                                       */
@@ -123,14 +139,16 @@ namespace vorb {
 #ifdef VORB_USING_SCRIPT
             std::vector<script::Function> m_valueChangeFuncs;
 #endif
-            DrawableRect m_drawableBar, m_drawnBar;
+            DrawableRect m_drawableBar,   m_drawnBar;
             DrawableRect m_drawableSlide, m_drawnSlide;
-            color4 m_barColor = color::LightGray;
-            color4 m_slideColor = color::DarkGray, m_slideHoverColor = color::LightSlateGray;
-            int m_value = 0;
-            int m_min = 0;
-            int m_max = 10;
-            bool m_isVertical = false;
+            color4       m_barColor;
+            color4       m_slideColor, m_slideHoverColor;
+            Length2      m_rawSlideSize;
+            f32v2        m_slideSize;
+            int          m_value;
+            int          m_min;
+            int          m_max;
+            bool         m_isVertical;
         };
     }
 }

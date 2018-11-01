@@ -5,32 +5,61 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-vui::Slider::Slider() : Widget() {
-    ValueChange.setSender(this);
-    updateColor();
-    m_drawableSlide.setDimensions(f32v2(30.0f, 30.0f));
+vui::Slider::Slider() : Slider("") {
+    // Empty
 }
 
-// vui::Slider::Slider(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : Slider() {
-//     m_name = name;
-//     // setDestRect(destRect); 
-//     // updatePosition();
-//     m_drawableBar.setDimensions(getSize());
-//     m_drawableBar.setPosition(getPosition());
-// }
+vui::Slider::Slider(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+    m_barColor        = color::LightGray;
+    m_slideColor      = color::DarkGray;
+    m_slideHoverColor = color::LightSlateGray;
+    m_value           = 0;
+    m_min             = 0;
+    m_max             = 10;
+    m_isVertical      = false;
 
-// vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
-//     parent->addWidget(this);
-// }
+    ValueChange.setSender(this);
+
+    updateColor();
+
+    m_drawableSlide.setSize(f32v2(30.0f, 30.0f));
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+vui::Slider::Slider(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
+    m_barColor        = color::LightGray;
+    m_slideColor      = color::DarkGray;
+    m_slideHoverColor = color::LightSlateGray;
+    m_value           = 0;
+    m_min             = 0;
+    m_max             = 10;
+    m_isVertical      = false;
+
+    ValueChange.setSender(this);
+
+    updateColor();
+
+    m_drawableSlide.setSize(f32v2(30.0f, 30.0f));
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
+    parent->addWidget(this);
+}
+
+vui::Slider::Slider(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Slider(name, position, size) {
+    parent->addWidget(this);
+}
 
 vui::Slider::~Slider() {
     // Empty
 }
 
 void vui::Slider::addDrawables() {
-    Widget::addDrawables();
     // Make copies
-    m_drawnBar = m_drawableBar;
+    m_drawnBar  = m_drawableBar;
     m_drawnSlide = m_drawableSlide;
   
     // Add the bar
@@ -44,116 +73,137 @@ void vui::Slider::addDrawables() {
                   makeDelegate(*this, &Slider::refreshDrawables));
 }
 
-// void vui::Slider::updatePosition() {
-//     Widget::updatePosition();
-
-//     m_drawableBar.setPosition(m_position);
-//     m_drawableBar.setDimensions(m_dimensions);
-//     m_drawableBar.setClipRect(m_clipRect);
-//     m_drawableSlide.setClipRect(m_clipRect);
-
-//     updateSlidePosition();
-// }
-
-void vui::Slider::setSlideDimensions(const f32v2& dimensions) {
-    m_drawableSlide.setDimensions(dimensions);
-    // updatePosition();
+void vui::Slider::refreshDrawables() {
+    m_drawnBar   = m_drawableBar;
+    m_drawnSlide = m_drawableSlide;
 }
 
-// void vui::Slider::setHeight(f32 height) {
-//     Widget::setHeight(height);
-//     updatePosition();
-// }
+void vui::Slider::calculateDrawables() {
+    m_drawableBar.setPosition(m_position);
+    m_drawableBar.setSize(m_size);
+    m_drawableBar.setClipRect(m_clipRect);
 
-// void vui::Slider::setPosition(const f32v2& position) {
-//     Widget::setPosition(position);
-//     updatePosition();
-// }
+    m_slideSize = processLength(m_rawSlideSize);
+    m_drawableSlide.setSize(m_slideSize);
+    m_drawableSlide.setClipRect(m_clipRect);
+    updateSlidePosition();
+
+    m_flags.needsDrawableRefresh = true;
+}
+
+void vui::Slider::setSlideSize(const Length2& size) {
+    m_rawSlideSize = size;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Slider::setSlideSize(const f32v2& size) {
+    m_slideSize = size;
+    m_rawSlideSize = { size.x, size.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDrawableRecalculation = true;
+}
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
     m_drawableSlide.setTexture(texture);
-    refreshDrawables();
+
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setBarTexture(VGTexture texture) {
     m_drawableBar.setTexture(texture);
-    refreshDrawables();
+
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setBarColor(const color4& color) {
     m_barColor = color;
-    updateColor();
-}
 
-// void vui::Slider::setWidth(f32 width) {
-//     Widget::setWidth(width);
-//     updatePosition();
-// }
+    updateColor();
+
+    m_flags.needsDrawableRefresh = true;
+}
 
 void vui::Slider::setSlideColor(const color4& color) {
     m_slideColor = color;
+
     updateColor();
+
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setSlideHoverColor(const color4& color) {
     m_slideHoverColor = color;
+
     updateColor();
+
+    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setValue(int value) {
     int old = m_value;
+
     m_value = glm::clamp(value, m_min, m_max);
-    if (old != m_value) ValueChange(m_value);
-    // updatePosition();
+
+    if (old != m_value) {
+        ValueChange(m_value);
+
+        m_flags.needsDrawableRecalculation = true;
+    }
 }
 
 void vui::Slider::setRange(int min, int max) {
     m_min = min;
     m_max = max;
+
     setValue(m_value);
 }
 
 void vui::Slider::setMin(int min) {
     m_min = min;
+
     setValue(m_value);
 }
 
 void vui::Slider::setMax(int max) {
     m_max = max;
+
     setValue(m_value);
 }
 
 void vui::Slider::setIsVertical(bool isVertical) {
     if (isVertical != m_isVertical) {
         m_isVertical = isVertical;
-        // updatePosition();
+
+        m_flags.needsDrawableRecalculation = true;
     }
 }
 
 bool vui::Slider::isInSlideBounds(f32 x, f32 y) const {
-    const f32v2& pos = m_drawableSlide.getPosition();
-    const f32v2& dims = m_drawableSlide.getDimensions();
-    return (x >= pos.x && x <= pos.x + dims.x &&
-            y >= pos.y && y <= pos.y + dims.y);
+    const f32v2& pos  = m_drawableSlide.getPosition();
+    const f32v2& size = m_drawableSlide.getSize();
+
+    return (x >= pos.x && x <= pos.x + size.x &&
+            y >= pos.y && y <= pos.y + size.y);
 }
 
 void vui::Slider::updateSlidePosition() {
- 
     f32 scale = getValueScaled();
-    const f32v2& barPos = getPosition();
-    const f32v2& barDims = getSize();
-    const f32v2& dims = m_drawableSlide.getDimensions();
+
+    const f32v2& barPos  = getPosition();
+    const f32v2& barSize = getSize();
+
+    const f32v2& slideSize = m_drawableSlide.getSize();
    
     f32v2 newPos;
     if (m_isVertical) {
-        newPos.x = barPos.x + barDims.x * 0.5f - dims.x * 0.5f;
-        newPos.y = barPos.y + scale * barDims.y - dims.y * 0.5f;
+        newPos.x = barPos.x + barSize.x * 0.5f - slideSize.x * 0.5f;
+        newPos.y = barPos.y + scale * barSize.y - slideSize.y * 0.5f;
     } else {
-        newPos.x = barPos.x + scale * barDims.x - dims.x * 0.5f;
-        newPos.y = barPos.y + barDims.y * 0.5f - dims.y * 0.5f;
+        newPos.x = barPos.x + scale * barSize.x - slideSize.x * 0.5f;
+        newPos.y = barPos.y + barSize.y * 0.5f - slideSize.y * 0.5f;
     }
     m_drawableSlide.setPosition(newPos);
-    refreshDrawables();
 }
 
 void vui::Slider::updateColor() {
@@ -163,31 +213,7 @@ void vui::Slider::updateColor() {
     } else {
         m_drawableSlide.setColor(m_slideColor);
     }
-    refreshDrawables();
 }
-
-void vui::Slider::refreshDrawables() {
-    m_drawnBar = m_drawableBar;
-    m_drawnSlide = m_drawableSlide;
-}
-
-// void vui::Slider::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-//     if (m_isClippingEnabled) {
-//         f32v2 pos = m_position;
-//         f32v2 dims = m_dimensions;
-//         f32v2 slideDims = m_drawableSlide.getSize();
-//         pos -= slideDims * 0.5f;
-//         dims += slideDims * 2.0f;
-
-//         computeClipping(parentClipRect, pos, dims);
-//         if (dims.x < 0) dims.x = 0;
-//         if (dims.y < 0) dims.y = 0;
-//         m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-//     } else {
-//         m_clipRect = parentClipRect;
-//     }
-//     computeChildClipRects();
-// }
 
 void vui::Slider::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
     if (m_flags.isMouseIn) {
@@ -205,19 +231,24 @@ void vui::Slider::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
 }
 
 void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
             m_flags.isMouseIn = true;
             MouseEnter(e);
+
             updateColor();
+
+            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {
         if (m_flags.isMouseIn) {
             m_flags.isMouseIn = false;
             MouseLeave(e);
+
             updateColor();
+
+            m_flags.needsDrawableRefresh = true;
         }
     }
 

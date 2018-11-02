@@ -5,7 +5,6 @@
 #include "Vorb/ui/GameWindow.h"
 
 vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) : IWidget() {
-    m_viewport = this;
     m_window   = window;
 }
 
@@ -18,6 +17,9 @@ void vui::Viewport::init(const nString& name, const f32v4& destRect, vg::SpriteF
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
     
     m_name = name;
+    m_viewport = this;
+
+    updateDescendantViewports();
 
     m_position.x = destRect.x;
     m_position.y = destRect.y;

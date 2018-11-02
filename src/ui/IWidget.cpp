@@ -426,7 +426,7 @@ void vui::IWidget::setDock(Dock dock) {
 
     if (m_parent) {
         m_parent->m_flags.needsDockRecalculation   = true;
-    } else if (m_viewport != this) {
+    } else if (m_viewport && m_viewport != this) {
         m_viewport->m_flags.needsDockRecalculation = true;
     }
 }
@@ -436,7 +436,7 @@ void vui::IWidget::setDockState(DockState state) {
 
     if (m_parent) {
         m_parent->m_flags.needsDockRecalculation   = true;
-    } else if (m_viewport != this) {
+    } else if (m_viewport && m_viewport != this) {
         m_viewport->m_flags.needsDockRecalculation = true;
     }
 }
@@ -446,7 +446,7 @@ void vui::IWidget::setDockSize(f32 size) {
 
     if (m_parent) {
         m_parent->m_flags.needsDockRecalculation   = true;
-    } else if (m_viewport != this) {
+    } else if (m_viewport && m_viewport != this) {
         m_viewport->m_flags.needsDockRecalculation = true;
     }
 }

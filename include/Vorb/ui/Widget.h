@@ -241,6 +241,8 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
+            // TODO(Matthew): Dock support.
+
             PositionType m_positionType = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
             Length2      m_minRawSize   = { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } };       ///< Minimum size of widget.
             Length2      m_maxRawSize   = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.

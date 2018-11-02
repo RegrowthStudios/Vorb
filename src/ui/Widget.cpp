@@ -153,7 +153,7 @@ void vui::Widget::setRawPaddingBottom(f32 rawBottom) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::updateDimensions(f32 dt VORB_MAYBE_UNUSED) {
+void vui::Widget::updateDimensions(f32) {
     if (m_dock.state != DockState::NONE) return;
 
     static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {

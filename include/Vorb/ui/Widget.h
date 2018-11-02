@@ -214,7 +214,7 @@ namespace vorb {
             virtual void setRawPaddingBottom(f32 rawBottom);
         protected:
             /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
-            virtual void updateDimensions(f32 dt) override;
+            virtual void updateDimensions(f32) override;
 
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.

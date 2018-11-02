@@ -26,7 +26,7 @@
 
 #include "Vorb/Events.hpp"
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/ui/IWidget.h"
+#include "Vorb/ui/Widget.h"
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/IGameScreen.h"
 
@@ -38,19 +38,28 @@ namespace vorb {
         // Forward Declarations
         class GameWindow;
 
-        class Viewport : public IWidget {
+        class Viewport : public Widget {
         public:
             Viewport(const GameWindow* window = nullptr);
             virtual ~Viewport();
 
             /*! @brief Initializes the viewport and its renderer.
-             * 
+             *
              * @param name: The name of the viewport.
              * @param destRect: Position and size of the viewport.
              * @param defaultFont: The optional default font to use.
              * @param defaultFont: The optional SpriteBatch to use.
              */
             virtual void init(const nString& name, const f32v4& destRect, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            /*! @brief Initializes the viewport and its renderer.
+             *
+             * @param name: The name of the viewport.
+             * @param position: Position of the viewport.
+             * @param size: Size of the viewport.
+             * @param defaultFont: The optional default font to use.
+             * @param defaultFont: The optional SpriteBatch to use.
+             */
+            virtual void init(const nString& name, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 
@@ -79,8 +88,6 @@ namespace vorb {
             /************************************************************************/
             virtual void setGameWindow(const GameWindow* window);
         protected:
-            virtual void updateDimensions(f32) override { /* Empty */ }
-
             virtual void calculateDrawables() override { /* Empty */ }
 
             /************************************************************************/

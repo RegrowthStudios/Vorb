@@ -4,7 +4,7 @@
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/GameWindow.h"
 
-vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) : IWidget() {
+vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) : Widget() {
     m_window   = window;
 }
 
@@ -15,16 +15,42 @@ vui::Viewport::~Viewport() {
 // TODO(Matthew): Support raw lengths - derive from Widget rather than IWidget.
 void vui::Viewport::init(const nString& name, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
-    
+
     m_name = name;
     m_viewport = this;
 
     updateDescendantViewports();
 
-    m_position.x = destRect.x;
-    m_position.y = destRect.y;
-    m_size.x = destRect.z;
-    m_size.y = destRect.w;
+    m_positionType = PositionType::STATIC_TO_WINDOW;
+
+    m_rawDimensions.position.x = destRect.x;
+    m_rawDimensions.position.y = destRect.y;
+    m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
+    m_rawDimensions.size.x = destRect.z;
+    m_rawDimensions.size.y = destRect.w;
+    m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
+
+    m_flags.needsDimensionUpdate = true;
+
+    m_renderer.init(defaultFont, spriteBatch);
+}
+
+void vui::Viewport::init(const nString& name, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
+
+    m_name = name;
+    m_viewport = this;
+
+    updateDescendantViewports();
+
+    m_positionType = PositionType::STATIC_TO_WINDOW;
+
+    m_rawDimensions.position = position;
+    m_rawDimensions.size     = size;
+
+    m_flags.needsDimensionUpdate = true;
 
     m_renderer.init(defaultFont, spriteBatch);
 }

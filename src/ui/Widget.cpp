@@ -156,17 +156,17 @@ void vui::Widget::setRawPaddingBottom(f32 rawBottom) {
 void vui::Widget::updateDimensions(f32) {
     if (m_dock.state != DockState::NONE) return;
 
-    static auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
+    auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
             f32v2 processedPosition = processLength(m_rawDimensions.position);
             setPosition(processedPosition + modifier);
     };
 
-    static auto applyRawSize = [&]() {
+    auto applyRawSize = [&]() {
             f32v2 processedSize = processLength(m_rawDimensions.size);
             setSize(processedSize);
     };
 
-    static auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
+    auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
         f32 left   = processLength(m_rawRelativePositions.left);
         f32 top    = processLength(m_rawRelativePositions.top);
         f32 right  = processLength(m_rawRelativePositions.right);

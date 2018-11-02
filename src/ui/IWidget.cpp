@@ -109,6 +109,7 @@ void vui::IWidget::disable() {
 }
 
 bool vui::IWidget::addWidget(IWidget* child) {
+    // TODO(Matthew): Should probably return false here instead.
     if (child->m_parent) {
         child->m_parent->removeWidget(child);
     }

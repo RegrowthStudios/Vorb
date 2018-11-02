@@ -12,22 +12,10 @@ vui::Panel::Panel() : Panel("") {
 }
 
 vui::Panel::Panel(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
-    addWidget(&m_sliders.horizontal);
-    addWidget(&m_sliders.vertical);
-
-    m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
-    m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
-
     m_flags.needsDrawableRecalculation = true;
 }
 
 vui::Panel::Panel(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    addWidget(&m_sliders.horizontal);
-    addWidget(&m_sliders.vertical);
-
-    m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
-    m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
-
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -41,6 +29,26 @@ vui::Panel::Panel(IWidget* parent, const nString& name, const Length2& position,
 
 vui::Panel::~Panel() {
     // Empty
+}
+
+void vui::Panel::enable() {
+    IWidget::enable();
+
+    addWidget(&m_sliders.horizontal);
+    addWidget(&m_sliders.vertical);
+
+    m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
+    m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
+}
+
+void vui::Panel::disable() {
+    IWidget::disable();
+
+    removeWidget(&m_sliders.horizontal);
+    removeWidget(&m_sliders.vertical);
+
+    m_sliders.horizontal.ValueChange -= makeDelegate(*this, &Panel::onSliderValueChange);
+    m_sliders.vertical.ValueChange   -= makeDelegate(*this, &Panel::onSliderValueChange);
 }
 
 void vui::Panel::addDrawables() {
@@ -131,10 +139,12 @@ void vui::Panel::updateSliders() {
     // If we're automatically adding scrollbars, then we want to know the extreme points of the child widgets.
     if (m_autoScroll) {
         // Skip sliders for determining the min and max values.
-        for (size_t i = 2; i < m_widgets.size(); ++i) {
-            auto& widget = m_widgets[i];
-            const f32v2& position = widget->getRelativePosition();
-            const f32v2& size     = widget->getSize();
+        for (auto& child : m_widgets) {
+            if (child == &m_sliders.horizontal ||
+                child == &m_sliders.vertical) continue;
+
+            const f32v2& position = child->getRelativePosition();
+            const f32v2& size     = child->getSize();
 
             if (position.x < m_minX) {
                 m_minX = position.x;

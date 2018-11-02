@@ -73,6 +73,11 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~Panel();
 
+            /*! \brief Enables events panel widgets are interested in. */
+            virtual void enable() override;
+            /*! \brief Disables events panel widgets are interested in. */
+            virtual void disable() override;
+
             /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables() override;
             /*! \brief Refresh drawables. */
@@ -96,7 +101,6 @@ namespace vorb {
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
-
         protected:
             virtual void updateDimensions(f32 dt) override;
 

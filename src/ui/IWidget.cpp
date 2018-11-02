@@ -495,6 +495,8 @@ void vui::IWidget::calculateDockedWidgets() {
     f32 leftFill      = 0.0f;
     f32 topFill       = 0.0f;
 
+    f32 oldLeftFill, oldTopFill;
+
     for (auto& child : m_widgets) {
         if (child->getDockState() == DockState::NONE) {
             continue;
@@ -507,28 +509,34 @@ void vui::IWidget::calculateDockedWidgets() {
         f32       size  = child->getDockSize();
         switch (state) {
             case DockState::LEFT:
+                oldLeftFill = leftFill;
                 if (surplusWidth > size) {
                     child->setWidth(size);
+                    leftFill     += size;
                     surplusWidth -= size;
                 } else {
                     child->setWidth(surplusWidth);
+                    leftFill    += surplusWidth;
                     surplusWidth = 0.0f;
                 }
 
-                child->setPosition(f32v2(leftFill, topFill));
+                child->setPosition(f32v2(oldLeftFill, topFill));
 
                 child->setHeight(surplusHeight);
                 break;
             case DockState::TOP:
+                oldTopFill = topFill;
                 if (surplusHeight > size) {
                     child->setHeight(size);
+                    topFill       += size;
                     surplusHeight -= size;
                 } else {
                     child->setHeight(surplusHeight);
+                    topFill      += surplusHeight;
                     surplusHeight = 0.0f;
                 }
 
-                child->setPosition(f32v2(leftFill, topFill));
+                child->setPosition(f32v2(leftFill, oldTopFill));
 
                 child->setWidth(surplusWidth);
                 break;

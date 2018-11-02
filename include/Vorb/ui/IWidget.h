@@ -110,6 +110,7 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
+        // TODO(Matthew): We need to complete revisit copy constructor, at the very least ensuring things like parenting is properly preserved - as is we will just copy the parent pointer but never register the copy with the parent. We need to either disallow copy construction or choose between automatically adding it, or nullifying parent pointer. This is perhaps not the only issue pertaining to the copy construction problem.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;
@@ -275,8 +276,6 @@ namespace vorb {
              * \brief Updates all descendant widgets' viewport fields.
              */
             virtual void updateDescendantViewports();
-
-            // TODO(Matthew): Ensure we don't go out of the update loop to go through all descendants and update individual bits. Let's set flags on children only, let those children do their updates and set any necessary flags on their children, and so on.
 
             /*!
              * \brief Reregisters drawables of the widget.

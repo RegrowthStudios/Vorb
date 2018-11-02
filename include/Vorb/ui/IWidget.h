@@ -267,6 +267,11 @@ namespace vorb {
             virtual void updateDescendants(f32 dt);
 
             /*!
+             * \brief Removes drawables from all descendant widgets.
+             */
+            virtual void removeDescendantDrawables();
+
+            /*!
              * \brief Updates all descendant widgets' viewport fields.
              */
             virtual void updateDescendantViewports();

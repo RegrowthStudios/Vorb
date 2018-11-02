@@ -118,9 +118,12 @@ bool vui::IWidget::addWidget(IWidget* child) {
     child->m_parent   = this;
     child->m_viewport = m_viewport;
 
+    child->updateDescendantViewports();
+
     child->m_flags.needsDimensionUpdate       = true;
     child->m_flags.needsDockRecalculation     = true;
     child->m_flags.needsClipRectRecalculation = true;
+    child->m_flags.needsDrawableReregister    = true;
 
     m_flags.needsZIndexReorder     = true;
     m_flags.needsDockRecalculation = true;
@@ -131,6 +134,9 @@ bool vui::IWidget::addWidget(IWidget* child) {
 bool vui::IWidget::removeWidget(IWidget* child) {
     for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
+            child->removeDrawables();
+            child->removeDescendantDrawables();
+
             m_widgets.erase(it);
 
             child->m_parent   = nullptr;
@@ -448,6 +454,13 @@ void vui::IWidget::updateDescendants(f32 dt) {
     for (auto& child : m_widgets) {
         child->update(dt);
         child->updateDescendants(dt);
+    }
+}
+
+void vui::IWidget::removeDescendantDrawables() {
+    for (auto& child : m_widgets) {
+        child->removeDrawables();
+        child->removeDescendantDrawables();
     }
 }
 

@@ -25,7 +25,7 @@ vui::IWidget::IWidget() :
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_flags({ false, false, false, false, false, false, false, false, false, false }) {
-    enable();
+    // Empty
 }
 
 vui::IWidget::~IWidget() {

@@ -55,6 +55,26 @@ void vui::Widget::setMinRawSize(const f32v2& minRawSize) {
     m_flags.needsDimensionUpdate = true;
 }
 
+void vui::Widget::setRawDockSize(const Length& rawDockSize) {
+    m_rawDockSize = rawDockSize;
+
+    if (m_parent) {
+        m_parent->setNeedsDockRecalculation(true);
+    } else if (m_viewport && m_viewport != this) {
+        m_viewport->setNeedsDockRecalculation(true);
+    }
+}
+
+void vui::Widget::setRawDockSize(f32 rawDockSize) {
+    m_rawDockSize = { rawDockSize, { DimensionType::PIXEL } };
+
+    if (m_parent) {
+        m_parent->setNeedsDockRecalculation(true);
+    } else if (m_viewport && m_viewport != this) {
+        m_viewport->setNeedsDockRecalculation(true);
+    }
+}
+
 void vui::Widget::setRawPosition(const f32v2& rawPosition) {
     m_rawDimensions.position = { rawPosition.x, rawPosition.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
@@ -228,7 +248,7 @@ void vui::Widget::updateDimensions(f32) {
     // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 }
 
-f32 vui::Widget::processLength(Length length) {
+f32 vui::Widget::processLength(Length length) const {
     switch (length.dimension.x) {
         case DimensionType::PIXEL:
             return length.x;
@@ -242,8 +262,6 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * m_viewport->getWidth();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
-                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
                     return length.x * m_viewport->getGameWindow()->getWidth();
             }
             break;
@@ -257,8 +275,6 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * m_viewport->getHeight();
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
-                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
                     return length.x * m_viewport->getGameWindow()->getHeight();
             }
             break;
@@ -272,8 +288,6 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
-                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
                     return length.x * glm::min(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
             }
             break;
@@ -287,8 +301,6 @@ f32 vui::Widget::processLength(Length length) {
                     return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
                 case PositionType::STATIC_TO_WINDOW:
                 case PositionType::RELATIVE_TO_WINDOW:
-                    // This may look dangerous as getGameWindow can return nullptr, but we want to cause the game to crash if we've got a bad UI.
-                    // TODO(Matthew): Maybe it could be more elegant though (log and crash?).
                     return length.x * glm::max(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
             }
             break;
@@ -324,7 +336,7 @@ f32 vui::Widget::processLength(Length length) {
     return 0;
 }
 
-f32v2 vui::Widget::processLength(Length2 length) {
+f32v2 vui::Widget::processLength(Length2 length) const {
     return f32v2(
         processLength({ length.x, { length.dimension.x } }),
         processLength({ length.y, { length.dimension.y } })

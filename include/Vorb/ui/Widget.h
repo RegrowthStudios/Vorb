@@ -167,16 +167,18 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual   PositionType getPositionType()     const { return m_positionType; }
-            virtual const Length2& getRawPosition()      const { return m_rawDimensions.position; }
-            virtual const Length2& getRawSize()          const { return m_rawDimensions.size; }
-            virtual  const Length& getRawLeft()          const { return m_rawRelativePositions.left; }
-            virtual  const Length& getRawTop()           const { return m_rawRelativePositions.top; }
-            virtual  const Length& getRawRight()         const { return m_rawRelativePositions.right; }
+            virtual   PositionType getPositionType()     const { return m_positionType;                }
+            virtual const Length2& getRawPosition()      const { return m_rawDimensions.position;      }
+            virtual const Length2& getRawSize()          const { return m_rawDimensions.size;          }
+            virtual  const Length& getRawLeft()          const { return m_rawRelativePositions.left;   }
+            virtual  const Length& getRawTop()           const { return m_rawRelativePositions.top;    }
+            virtual  const Length& getRawRight()         const { return m_rawRelativePositions.right;  }
             virtual  const Length& getRawBottom()        const { return m_rawRelativePositions.bottom; }
-            virtual const Length2& getMinRawSize()       const { return m_minRawSize; }
-            virtual const Length2& getMaxRawSize()       const { return m_maxRawSize; }
-            virtual const Length4& getRawPadding()       const { return m_rawPadding; }
+            virtual const Length2& getMinRawSize()       const { return m_minRawSize;                  }
+            virtual const Length2& getMaxRawSize()       const { return m_maxRawSize;                  }
+            virtual  const Length& getRawDockSize()      const { return m_rawDockSize;                 }
+            virtual            f32 getDockSize()         const override { return processLength(m_rawDockSize); }
+            virtual const Length4& getRawPadding()       const { return m_rawPadding;                  }
             virtual         Length getRawPaddingLeft()   const { return { m_rawPadding.x, { m_rawPadding.dimension.x } }; }
             virtual         Length getRawPaddingTop()    const { return { m_rawPadding.y, { m_rawPadding.dimension.y } }; }
             virtual         Length getRawPaddingRight()  const { return { m_rawPadding.z, { m_rawPadding.dimension.z } }; }
@@ -190,6 +192,8 @@ namespace vorb {
             virtual void setMaxRawSize(const f32v2& maxRawSize);
             virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }
             virtual void setMinRawSize(const f32v2& minRawSize);
+            virtual void setRawDockSize(const Length& rawDockSize);
+            virtual void setRawDockSize(f32 rawDockSize);
             virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_flags.needsDimensionUpdate = true; }
             virtual void setRawPosition(const f32v2& rawPosition);
             virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_flags.needsDimensionUpdate = true; }
@@ -223,7 +227,7 @@ namespace vorb {
              * 
              * \returns The processed length.
              */
-            f32 processLength(Length length);
+            f32 processLength(Length length) const;
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 
@@ -231,7 +235,7 @@ namespace vorb {
              * 
              * \returns The processed length.
              */
-            f32v2 processLength(Length2 length);
+            f32v2 processLength(Length2 length) const;
 
             /*!
              * \brief Applies the minimum and maximum sizes specified for the widget.
@@ -241,11 +245,10 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            // TODO(Matthew): Dock support.
-
             PositionType m_positionType = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
             Length2      m_minRawSize   = { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } };       ///< Minimum size of widget.
             Length2      m_maxRawSize   = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
+            Length       m_rawDockSize  = { 0.0f, { DimensionType::PIXEL } };       ///< The raw dock size of widget.
 
             union {
                 struct {

@@ -125,8 +125,6 @@ namespace vorb {
              */
             virtual ~IWidget();
 
-            /*! \brief Initialiser for general set-up. */
-            virtual void initBase() { /* Empty */ }
             /*! \brief Initialiser that sets name, position, size, and Z-index.
             *
             * \param name: Name of the widget.
@@ -285,6 +283,9 @@ namespace vorb {
             // TODO(Ben): Lots more events!
 
         protected:
+            /*! \brief Initialiser for general set-up. */
+            virtual void initBase() { /* Empty */ }
+
             /*!
              * \brief Updates descendant widgets.
              *

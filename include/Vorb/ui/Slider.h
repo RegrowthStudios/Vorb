@@ -41,9 +41,6 @@ namespace vorb {
             /*! @brief Default destructor. */
             virtual ~Slider();
 
-            /*! \brief Initialiser for setting up events. */
-            virtual void initBase() override;
-
             /*! @brief Adds all drawables to the UIRenderer
             */
             virtual void addDrawables() override;
@@ -92,6 +89,9 @@ namespace vorb {
             Event<int> ValueChange; ///< Occurs when the value changes
 
         protected:
+            /*! \brief Initialiser for setting up events. */
+            virtual void initBase() override;
+
             virtual void calculateDrawables() override;
 
             virtual void updateSlidePosition();

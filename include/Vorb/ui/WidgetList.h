@@ -41,9 +41,6 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~WidgetList();
 
-            /*! \brief Initialiser for adding panel. */
-            virtual void initBase() override;
-
             virtual void dispose() override;
 
             /*! \brief Adds a widget to the list.
@@ -98,6 +95,9 @@ namespace vorb {
             virtual void setAutoScroll(bool autoScroll);
 
         protected:
+            /*! \brief Initialiser for adding panel. */
+            virtual void initBase() override;
+
             /*!
              * \brief Updates the positions of the listed widgets.
              */

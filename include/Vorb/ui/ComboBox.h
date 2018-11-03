@@ -49,9 +49,6 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~ComboBox();
 
-            /*! \brief Initialiser for adding buttons, panel and setting up events. */
-            virtual void initBase() override;
-
             virtual void dispose() override;
 
             /*! \brief Set up events. */
@@ -188,6 +185,9 @@ namespace vorb {
             Event<const nString&> ValueChange; ///< Occurs when selected item is changed
 
         protected:
+            /*! \brief Initialiser for adding buttons, panel and setting up events. */
+            virtual void initBase() override;
+
             /*!
              * \brief Updates the dimensions of the new IWidget according to specific widget rules.
              * 

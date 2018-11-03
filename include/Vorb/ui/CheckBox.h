@@ -41,9 +41,6 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~CheckBox();
 
-            /*! \brief Initialiser for general set-up. */
-            virtual void initBase() override;
-
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;
             /*! \brief Refresh drawables. */
@@ -89,6 +86,9 @@ namespace vorb {
             Event<bool> ValueChange; ///< Occurs when value of the box is changed
 
         protected:
+            /*! \brief Initialiser for general set-up. */
+            virtual void initBase() override;
+
             virtual void calculateDrawables() override;
 
             /*! Updates the colours set for the drawables. */

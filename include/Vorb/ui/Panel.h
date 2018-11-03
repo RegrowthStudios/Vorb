@@ -41,9 +41,6 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~Panel();
 
-            /*! \brief Initialiser for adding sliders. */
-            virtual void initBase() override;
-
             /*! \brief Enables events panel widgets are interested in. */
             virtual void enable() override;
             /*! \brief Disables events panel widgets are interested in. */
@@ -71,6 +68,9 @@ namespace vorb {
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
         protected:
+            /*! \brief Initialiser for adding sliders. */
+            virtual void initBase() override;
+
             virtual void updateDimensions(f32 dt) override;
 
             virtual void calculateDrawables() override;

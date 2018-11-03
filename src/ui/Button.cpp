@@ -104,12 +104,12 @@ void vui::Button::updateColor() {
     if (m_flags.isMouseIn) {
         m_drawableRect.setColor1(m_backHoverColor1);
         m_drawableRect.setColor2(m_backHoverColor2);
-        m_drawableRect.setGradientType(m_gradBack);
+        m_drawableRect.setGradientType(m_gradHover);
         m_drawableText.setColor(m_textHoverColor);
     } else {
         m_drawableRect.setColor1(m_backColor1);
         m_drawableRect.setColor2(m_backColor2);
-        m_drawableRect.setGradientType(m_gradHover);
+        m_drawableRect.setGradientType(m_gradBack);
         m_drawableText.setColor(m_textColor);
     }
 }

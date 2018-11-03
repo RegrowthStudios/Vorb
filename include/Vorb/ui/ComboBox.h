@@ -41,6 +41,7 @@ namespace vorb {
             DROP_DOWN_LIST
         };
 
+        // TODO(Matthew): Different properties on selected button.
         class ComboBox : public Widget {
             friend class ComboBoxScriptFuncs;
         public:
@@ -140,6 +141,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
+            // TODO(Matthew): We need to store data about these calls in this class, so that future added items also get given the right settings.
             virtual void setFont(const vorb::graphics::SpriteFont* font);
             virtual void setMainButtonTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);

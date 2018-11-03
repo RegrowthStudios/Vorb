@@ -198,12 +198,14 @@ namespace vorb {
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
             virtual      const f32v2& getPosition()         const { return m_position;   }
+            virtual             f32v2 getPaddedPosition()   const { return m_position - f32v2(m_padding.x, m_padding.y); }
             virtual               f32 getRelativeX()        const { return m_parent ? m_position.x : m_position.x - m_parent->getPosition().x; }
             virtual               f32 getRelativeY()        const { return m_parent ? m_position.y : m_position.y - m_parent->getPosition().y; }
             virtual             f32v2 getRelativePosition() const { return m_parent ? m_position : m_position - m_parent->getPosition(); }
             virtual        const f32& getWidth()            const { return m_size.x;     }
             virtual        const f32& getHeight()           const { return m_size.y;     }
             virtual      const f32v2& getSize()             const { return m_size;       }
+            virtual             f32v2 getPaddedSize()       const { return m_size + f32v2(m_padding.x + m_padding.z, m_padding.y + m_padding.w); }
             virtual      const f32v4& getPadding()          const { return m_padding;    }
             virtual               f32 getPaddingLeft()      const { return m_padding.x;  }
             virtual               f32 getPaddingTop()       const { return m_padding.y;  }

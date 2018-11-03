@@ -190,8 +190,11 @@ bool vui::IWidget::removeWidget(IWidget* child) {
 }
 
 bool vui::IWidget::isInBounds(f32 x, f32 y) const {
-    return (x >= m_position.x && x < m_position.x + m_size.x &&
-            y >= m_position.y && y < m_position.y + m_size.y);
+    f32v2 pos  = getPaddedPosition();
+    f32v2 size = getPaddedSize();
+
+    return (x >= pos.x && x < pos.x + size.x &&
+            y >= pos.y && y < pos.y + size.y);
 }
 
 void vui::IWidget::removeDrawables() {

@@ -17,7 +17,6 @@ vui::Panel::Panel() :
     m_flipHorizontal(false),
     m_flipVertical(false),
     m_sliderWidth(15.0f),
-    m_childOffset(f32v2(0.0f)),
     m_backColor(color::Transparent),
     m_backHoverColor(color::Transparent) {
     m_flags.needsDrawableRecalculation = true;
@@ -163,8 +162,6 @@ void vui::Panel::updateSliders() {
     if (m_maxX < m_size.x) m_maxX = m_size.x;
     if (m_maxY < m_size.y) m_maxY = m_size.y;
 
-    // TODO(Matthew): Either update children then apply childOffset or make childOffset a part of IWidget that on change flags children to updateDimensions (which uses this to shift its position).
-
     // Note that while this looks like it might iteratively push the sliders further and further out, the processed values of position and padding are recalculated any time we also come here to update sliders - so as long as this never touches the raw values of position and padding we're good!
 
     // Set up horizontal slider.
@@ -279,12 +276,12 @@ void vui::Panel::onSliderValueChange(Sender s, int v) {
             // Horizontal
             f32 range = m_maxX - m_minX - m_size.x + m_sliderWidth;
             if (m_sliders.vertical.isEnabled()) range += m_sliderWidth;
-            m_childOffset.x = m_minX + range * r;
+            setChildOffsetX(m_minX + range * r);
         } else {
             // Vertical
             f32 range = m_maxY - m_minY - m_size.y + m_sliderWidth;
             if (m_sliders.horizontal.isEnabled()) range += m_sliderWidth;
-            m_childOffset.y = m_minY + range * r;
+            setChildOffsetY(m_minY + range * r);
         }
     }
     m_flags.needsDimensionUpdate = true;

@@ -91,7 +91,7 @@ void vui::Button::calculateDrawables() {
     m_drawableRect.setPosition(m_position);
     m_drawableRect.setSize(m_size);
     m_drawableRect.setClipRect(m_clipRect);
-    m_drawableRect.setTexture(m_flags.isMouseIn ? m_hoverTexture, m_texture);
+    m_drawableRect.setTexture(m_flags.isMouseIn ? m_hoverTexture : m_texture);
 
     updateColor();
 

@@ -5,14 +5,13 @@
 #include "Vorb/ui/Viewport.h"
 
 vui::CheckBox::CheckBox() :
-    Widget(),
+    TextWidget(),
     m_boxColor(color::DarkGray),
     m_boxHoverColor(color::AliceBlue),
     m_boxCheckedColor(color::LightGray),
     m_boxCheckedHoverColor(color::AliceBlue),
     m_textColor(color::Black),
     m_textHoverColor(color::Black),
-    m_defaultFont(nullptr),
     m_checkedTexture(0),
     m_uncheckedTexture(0),
     m_isChecked(false) {

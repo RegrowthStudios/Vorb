@@ -174,8 +174,8 @@ namespace vorb {
             virtual  const Length& getRawTop()           const { return m_rawRelativePositions.top;    }
             virtual  const Length& getRawRight()         const { return m_rawRelativePositions.right;  }
             virtual  const Length& getRawBottom()        const { return m_rawRelativePositions.bottom; }
-            virtual const Length2& getMinRawSize()       const { return m_minRawSize;                  }
-            virtual const Length2& getMaxRawSize()       const { return m_maxRawSize;                  }
+            virtual const Length2& getMinRawSize()       const { return m_minRawSize;                     }
+            virtual const Length2& getMaxRawSize()       const { return m_maxRawSize;                     }
             virtual  const Length& getRawDockSize()      const { return m_rawDockSize;                 }
             virtual            f32 getDockSize()         const override { return processLength(m_rawDockSize); }
             virtual const Length4& getRawPadding()       const { return m_rawPadding;                  }
@@ -187,35 +187,39 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setPositionType(PositionType positionType) { m_positionType = positionType;             m_flags.needsDimensionUpdate = true; }
-            virtual void setMaxRawSize(const Length2& maxRawSize)   { m_maxRawSize = maxRawSize;                 m_flags.needsDimensionUpdate = true; }
-            virtual void setMaxRawSize(const f32v2& maxRawSize);
-            virtual void setMinRawSize(const Length2& minRawSize)   { m_minRawSize = minRawSize;                 m_flags.needsDimensionUpdate = true; }
-            virtual void setMinRawSize(const f32v2& minRawSize);
-            virtual void setRawDockSize(const Length& rawDockSize);
-            virtual void setRawDockSize(f32 rawDockSize);
-            virtual void setRawPosition(const Length2& rawPosition) { m_rawDimensions.position = rawPosition;    m_flags.needsDimensionUpdate = true; }
-            virtual void setRawPosition(const f32v2& rawPosition);
-            virtual void setRawSize(const Length2& rawSize)         { m_rawDimensions.size = rawSize;            m_flags.needsDimensionUpdate = true; }
-            virtual void setRawSize(const f32v2& rawSize);
-            virtual void setRawLeft(const Length& rawLeft)          { m_rawRelativePositions.left = rawLeft;     m_flags.needsDimensionUpdate = true; }
-            virtual void setRawLeft(f32 rawLeft);
-            virtual void setRawTop(const Length& rawTop)            { m_rawRelativePositions.top = rawTop;       m_flags.needsDimensionUpdate = true; }
-            virtual void setRawTop(f32 rawTop);
-            virtual void setRawRight(const Length& rawRight)        { m_rawRelativePositions.right = rawRight;   m_flags.needsDimensionUpdate = true; }
-            virtual void setRawRight(f32 rawRight);
-            virtual void setRawBottom(const Length& rawBottom)      { m_rawRelativePositions.bottom = rawBottom; m_flags.needsDimensionUpdate = true; }
-            virtual void setRawBottom(f32 rawBottom);
-            virtual void setRawPadding(const Length4& rawPadding)   { m_rawPadding = rawPadding;                 m_flags.needsClipRectRecalculation = true; }
-            virtual void setRawPadding(const f32v4& rawPadding);
-            virtual void setRawPaddingLeft(const Length& rawLeft);
-            virtual void setRawPaddingLeft(f32 rawLeft);
-            virtual void setRawPaddingTop(const Length& rawTop);
-            virtual void setRawPaddingTop(f32 rawTop);
-            virtual void setRawPaddingRight(const Length& rawRight);
-            virtual void setRawPaddingRight(f32 rawRight);
-            virtual void setRawPaddingBottom(const Length& rawBottom);
-            virtual void setRawPaddingBottom(f32 rawBottom);
+            virtual void setPositionType(PositionType posType)   { m_positionType = posType; m_flags.needsDimensionUpdate = true; }
+            virtual void setRawMaxSize(const Length2& maxSize)   { m_maxRawSize = maxSize;   m_flags.needsDimensionUpdate = true; }
+            virtual void setMaxSize(const f32v2& maxSize);
+            virtual void setRawMinSize(const Length2& minSize)   { m_minRawSize = minSize;   m_flags.needsDimensionUpdate = true; }
+            virtual void setMinSize(const f32v2& minSize);
+            virtual void setRawDockSize(const Length& dockSize);
+            virtual void setDockSize(f32 dockSize) override;
+            virtual void setRawPosition(const Length2& position) { m_rawDimensions.position = position;    m_flags.needsDimensionUpdate = true; }
+            virtual void setPosition(f32v2 position) override;
+            virtual void setX(f32 x) override;
+            virtual void setY(f32 y) override;
+            virtual void setRawSize(const Length2& size)         { m_rawDimensions.size = size;            m_flags.needsDimensionUpdate = true; }
+            virtual void setSize(f32v2 size) override;
+            virtual void setWidth(f32 width) override;
+            virtual void setHeight(f32 height) override;
+            virtual void setRawLeft(const Length& left)          { m_rawRelativePositions.left = left;     m_flags.needsDimensionUpdate = true; }
+            virtual void setLeft(f32 left);
+            virtual void setRawTop(const Length& top)            { m_rawRelativePositions.top = top;       m_flags.needsDimensionUpdate = true; }
+            virtual void setTop(f32 top);
+            virtual void setRawRight(const Length& right)        { m_rawRelativePositions.right = right;   m_flags.needsDimensionUpdate = true; }
+            virtual void setRight(f32 right);
+            virtual void setRawBottom(const Length& bottom)      { m_rawRelativePositions.bottom = bottom; m_flags.needsDimensionUpdate = true; }
+            virtual void setBottom(f32 bottom);
+            virtual void setRawPadding(const Length4& padding)   { m_rawPadding = padding;                 m_flags.needsDimensionUpdate = true; }
+            virtual void setPadding(const f32v4& padding) override;
+            virtual void setRawPaddingLeft(const Length& left);
+            virtual void setPaddingLeft(f32 left) override;
+            virtual void setRawPaddingTop(const Length& top);
+            virtual void setPaddingTop(f32 top) override;
+            virtual void setRawPaddingRight(const Length& right);
+            virtual void setPaddingRight(f32 right) override;
+            virtual void setRawPaddingBottom(const Length& bottom);
+            virtual void setPaddingBottom(f32 bottom) override;
         protected:
             /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
             virtual void updateDimensions(f32) override;

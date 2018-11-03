@@ -550,7 +550,7 @@ void vui::IWidget::calculateDockedWidgets() {
         if (child->getDockState() == DockState::NONE) {
             continue;
         } else if (surplusWidth == 0.0f && surplusHeight == 0.0f) {
-            child->setSize(f32v2(0.0f, 0.0f));
+            child->IWidget::setSize(f32v2(0.0f, 0.0f));
             continue;
         }
 
@@ -560,68 +560,68 @@ void vui::IWidget::calculateDockedWidgets() {
             case DockState::LEFT:
                 oldLeftFill = leftFill;
                 if (surplusWidth > size) {
-                    child->setWidth(size);
+                    child->IWidget::setWidth(size);
                     leftFill     += size;
                     surplusWidth -= size;
                 } else {
-                    child->setWidth(surplusWidth);
+                    child->IWidget::setWidth(surplusWidth);
                     leftFill    += surplusWidth;
                     surplusWidth = 0.0f;
                 }
 
-                child->setPosition(f32v2(oldLeftFill, topFill));
+                child->IWidget::setPosition(f32v2(oldLeftFill, topFill));
 
-                child->setHeight(surplusHeight);
+                child->IWidget::setHeight(surplusHeight);
                 break;
             case DockState::TOP:
                 oldTopFill = topFill;
                 if (surplusHeight > size) {
-                    child->setHeight(size);
+                    child->IWidget::setHeight(size);
                     topFill       += size;
                     surplusHeight -= size;
                 } else {
-                    child->setHeight(surplusHeight);
+                    child->IWidget::setHeight(surplusHeight);
                     topFill      += surplusHeight;
                     surplusHeight = 0.0f;
                 }
 
-                child->setPosition(f32v2(leftFill, oldTopFill));
+                child->IWidget::setPosition(f32v2(leftFill, oldTopFill));
 
-                child->setWidth(surplusWidth);
+                child->IWidget::setWidth(surplusWidth);
                 break;
             case DockState::RIGHT:
                 if (surplusWidth > size) {
-                    child->setWidth(size);
+                    child->IWidget::setWidth(size);
                     surplusWidth -= size;
 
-                    child->setPosition(f32v2(leftFill + surplusWidth, topFill));
+                    child->IWidget::setPosition(f32v2(leftFill + surplusWidth, topFill));
                 } else {
-                    child->setWidth(surplusWidth);
+                    child->IWidget::setWidth(surplusWidth);
                     surplusWidth = 0.0f;
 
-                    child->setPosition(f32v2(leftFill, topFill));
+                    child->IWidget::setPosition(f32v2(leftFill, topFill));
                 }
 
-                child->setHeight(surplusHeight);
+                child->IWidget::setHeight(surplusHeight);
                 break;
             case DockState::BOTTOM:
                 if (surplusHeight > size) {
-                    child->setHeight(size);
+                    child->IWidget::setHeight(size);
                     surplusHeight -= size;
 
-                    child->setPosition(f32v2(leftFill, topFill + surplusHeight));
+                    child->IWidget::setPosition(f32v2(leftFill, topFill + surplusHeight));
                 } else {
-                    child->setHeight(surplusHeight);
+                    child->IWidget::setHeight(surplusHeight);
                     surplusHeight = 0.0f;
 
-                    child->setPosition(f32v2(leftFill, topFill));
+                    child->IWidget::setPosition(f32v2(leftFill, topFill));
                 }
 
-                child->setWidth(surplusWidth);
+                child->IWidget::setWidth(surplusWidth);
                 break;
             case DockState::FILL:
-                child->setSize(f32v2(surplusWidth, surplusHeight));
-                child->setPosition(f32v2(leftFill, topFill));
+                child->IWidget::setSize(f32v2(surplusWidth, surplusHeight));
+                child->IWidget::setPosition(f32v2(leftFill, topFill));
                 surplusWidth  = 0.0f;
                 surplusHeight = 0.0f;
                 break;

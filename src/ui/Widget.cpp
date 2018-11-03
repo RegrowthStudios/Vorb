@@ -60,13 +60,13 @@ void vui::Widget::init(IWidget* parent, const nString& name, const Length2& posi
     parent->addWidget(this);
 }
 
-void vui::Widget::setMaxRawSize(const f32v2& maxRawSize) {
+void vui::Widget::setMaxSize(const f32v2& maxRawSize) {
     m_maxRawSize = { maxRawSize.x, maxRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setMinRawSize(const f32v2& minRawSize) {
+void vui::Widget::setMinSize(const f32v2& minRawSize) {
     m_minRawSize = { minRawSize.x, minRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
@@ -82,7 +82,7 @@ void vui::Widget::setRawDockSize(const Length& rawDockSize) {
     }
 }
 
-void vui::Widget::setRawDockSize(f32 rawDockSize) {
+void vui::Widget::setDockSize(f32 rawDockSize) {
     m_rawDockSize = { rawDockSize, { DimensionType::PIXEL } };
 
     if (m_parent) {
@@ -92,43 +92,67 @@ void vui::Widget::setRawDockSize(f32 rawDockSize) {
     }
 }
 
-void vui::Widget::setRawPosition(const f32v2& rawPosition) {
+void vui::Widget::setPosition(f32v2 rawPosition) {
     m_rawDimensions.position = { rawPosition.x, rawPosition.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawSize(const f32v2& rawSize) {
+void vui::Widget::setX(f32 x) {
+    m_rawDimensions.position = { x, m_rawDimensions.position.y, { DimensionType::PIXEL, m_rawDimensions.position.dimension.y } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setY(f32 y) {
+    m_rawDimensions.position = { m_rawDimensions.position.x, y, { m_rawDimensions.position.dimension.x, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setSize(f32v2 rawSize) {
     m_rawDimensions.size = { rawSize.x, rawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawLeft(f32 rawLeft) {
+void vui::Widget::setWidth(f32 width) {
+    m_rawDimensions.size = { width, m_rawDimensions.size.y, { DimensionType::PIXEL, m_rawDimensions.size.dimension.y } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setHeight(f32 height) {
+    m_rawDimensions.size = { m_rawDimensions.size.x, height, { m_rawDimensions.size.dimension.x, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setLeft(f32 rawLeft) {
     m_rawRelativePositions.left = { rawLeft, { DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawTop(f32 rawTop) {
+void vui::Widget::setTop(f32 rawTop) {
     m_rawRelativePositions.top = { rawTop, { DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawRight(f32 rawRight) {
+void vui::Widget::setRight(f32 rawRight) {
     m_rawRelativePositions.right = { rawRight, { DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawBottom(f32 rawBottom) {
+void vui::Widget::setBottom(f32 rawBottom) {
     m_rawRelativePositions.bottom = { rawBottom, { DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::setRawPadding(const f32v4& rawPadding) {
+void vui::Widget::setPadding(const f32v4& rawPadding) {
     m_rawPadding = { rawPadding.x, rawPadding.y, rawPadding.z, rawPadding.w, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsClipRectRecalculation = true;
@@ -141,7 +165,7 @@ void vui::Widget::setRawPaddingLeft(const Length& rawLeft) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::setRawPaddingLeft(f32 rawLeft) {
+void vui::Widget::setPaddingLeft(f32 rawLeft) {
     m_rawPadding.x = rawLeft;
     m_rawPadding.dimension.x = DimensionType::PIXEL;
 
@@ -155,7 +179,7 @@ void vui::Widget::setRawPaddingTop(const Length& rawTop) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::setRawPaddingTop(f32 rawTop) {
+void vui::Widget::setPaddingTop(f32 rawTop) {
     m_rawPadding.y = rawTop;
     m_rawPadding.dimension.y = DimensionType::PIXEL;
 
@@ -169,7 +193,7 @@ void vui::Widget::setRawPaddingRight(const Length& rawRight) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::setRawPaddingRight(f32 rawRight) {
+void vui::Widget::setPaddingRight(f32 rawRight) {
     m_rawPadding.z = rawRight;
     m_rawPadding.dimension.z = DimensionType::PIXEL;
 
@@ -183,7 +207,7 @@ void vui::Widget::setRawPaddingBottom(const Length& rawBottom) {
     m_flags.needsClipRectRecalculation = true;
 }
 
-void vui::Widget::setRawPaddingBottom(f32 rawBottom) {
+void vui::Widget::setPaddingBottom(f32 rawBottom) {
     m_rawPadding.w = rawBottom;
     m_rawPadding.dimension.w = DimensionType::PIXEL;
 
@@ -200,12 +224,12 @@ void vui::Widget::updateDimensions(f32) {
 
     auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
             f32v2 processedPosition = processLength(m_rawDimensions.position);
-            setPosition(processedPosition + modifier + offset);
+            IWidget::setPosition(processedPosition + modifier + offset);
     };
 
     auto applyRawSize = [&]() {
             f32v2 processedSize = processLength(m_rawDimensions.size);
-            setSize(processedSize);
+            IWidget::setSize(processedSize);
     };
 
     auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
@@ -219,8 +243,8 @@ void vui::Widget::updateDimensions(f32) {
         f32 sizeY = size.y - top - bottom;
         if (sizeY < 0.0f) sizeY = 0.0f;
 
-        setPosition(f32v2(position.x + left + offset.x, position.y + top + offset.y));
-        setSize(f32v2(sizeX, sizeY));
+        IWidget::setPosition(f32v2(position.x + left + offset.x, position.y + top + offset.y));
+        IWidget::setSize(f32v2(sizeX, sizeY));
     };
 
     switch(m_positionType) {
@@ -369,13 +393,13 @@ void vui::Widget::applyMinMaxSizes() {
     f32v2 processedMaxSize = processLength(m_maxRawSize);
 
     if (m_size.x < processedMinSize.x) {
-        setWidth(processedMinSize.x);
+        IWidget::setWidth(processedMinSize.x);
     } else if (m_size.x > processedMaxSize.x) {
-        setWidth(processedMaxSize.x);
+        IWidget::setWidth(processedMaxSize.x);
     }
     if (m_size.y < processedMinSize.y) {
-        setHeight(processedMinSize.y);
+        IWidget::setHeight(processedMinSize.y);
     } else if (m_size.y > processedMaxSize.y) {
-        setHeight(processedMaxSize.y);
+        IWidget::setHeight(processedMaxSize.y);
     }
 }

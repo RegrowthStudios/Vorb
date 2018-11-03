@@ -174,24 +174,24 @@ void vui::Panel::updateSliders() {
             m_position.x += m_sliderWidth;
             m_padding.x  += m_sliderWidth;
 
-            slider.setRawLeft(-1.0f * m_sliderWidth);
+            slider.setLeft(-1.0f * m_sliderWidth);
             slider.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
         } else {
             m_size.x    -= m_sliderWidth;
             m_padding.z += m_sliderWidth;
 
             slider.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
-            slider.setRawRight(-1.0f * m_sliderWidth);
+            slider.setRight(-1.0f * m_sliderWidth);
         }
-        slider.setRawTop(0.0f);
-        slider.setRawBottom(0.0f);
+        slider.setTop(0.0f);
+        slider.setBottom(0.0f);
 
         slider.setSlideSize(f32v2(m_sliderWidth));
         slider.setRange(0, SLIDER_VAL_MAX);
         slider.setIsVertical(false);
     } else {
         slider.setPositionType(PositionType::STATIC_TO_PARENT);
-        slider.setRawSize(f32v2(0.0f));
+        slider.setSize(f32v2(0.0f));
         slider.setSlideSize(f32v2(0.0f));
         slider.disable();
     }
@@ -206,24 +206,24 @@ void vui::Panel::updateSliders() {
             m_position.y += m_sliderWidth;
             m_padding.y  += m_sliderWidth;
 
-            slider.setRawTop(-1.0f * m_sliderWidth);
+            slider.setTop(-1.0f * m_sliderWidth);
             slider.setRawBottom({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
         } else {
             m_size.y    -= m_sliderWidth;
             m_padding.w += m_sliderWidth;
 
             slider.setRawTop({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
-            slider.setRawBottom(-1.0f * m_sliderWidth);
+            slider.setBottom(-1.0f * m_sliderWidth);
         }
-        slider.setRawLeft(0.0f);
-        slider.setRawRight(0.0f);
+        slider.setLeft(0.0f);
+        slider.setRight(0.0f);
 
         slider.setSlideSize(f32v2(m_sliderWidth));
         slider.setRange(0, SLIDER_VAL_MAX);
         slider.setIsVertical(false);
     } else {
         slider.setPositionType(PositionType::STATIC_TO_PARENT);
-        slider.setRawSize(f32v2(0.0f));
+        slider.setSize(f32v2(0.0f));
         slider.setSlideSize(f32v2(0.0f));
         slider.disable();
     }

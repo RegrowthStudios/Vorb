@@ -170,7 +170,6 @@ void vui::CheckBox::updateTextPosition() {
     const f32v2& pos  = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
 
-    // TODO(Ben): Padding
     switch (textAlign) {
         case vg::TextAlign::LEFT:
             m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));

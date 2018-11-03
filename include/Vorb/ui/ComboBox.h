@@ -41,7 +41,6 @@ namespace vorb {
             DROP_DOWN_LIST
         };
 
-        // TODO(Ben): Proper combo box
         class ComboBox : public Widget {
             friend class ComboBoxScriptFuncs;
         public:

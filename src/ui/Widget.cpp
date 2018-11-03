@@ -6,7 +6,6 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/Viewport.h"
 
-// TODO(Matthew): Some zero-initialisation in constructor?
 vui::Widget::Widget() :
     IWidget(),
     m_positionType(PositionType::STATIC_TO_PARENT),
@@ -263,7 +262,6 @@ void vui::Widget::updateDimensions(f32) {
         processLength({ m_rawPadding.z, { m_rawPadding.dimension.z } }),
         processLength({ m_rawPadding.w, { m_rawPadding.dimension.w } })
     };
-    // TODO(Matthew): Check what setDimensions did, it may have had some important side-effects.
 }
 
 f32 vui::Widget::processLength(Length length) const {

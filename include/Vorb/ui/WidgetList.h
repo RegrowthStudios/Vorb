@@ -31,7 +31,6 @@
 namespace vorb {
     namespace ui {
 
-        // TODO(Ben): Proper combo box
         class WidgetList : public Widget {
             friend class WidgetListScriptFuncs;
 

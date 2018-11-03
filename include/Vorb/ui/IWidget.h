@@ -110,7 +110,6 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
-        // TODO(Matthew): In every class, have an init function as well as (if needed for event (un)subscription) enable/disable.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;

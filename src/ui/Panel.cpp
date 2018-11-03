@@ -27,8 +27,8 @@ vui::Panel::~Panel() {
 }
 
 void vui::Panel::initBase() {
-    addWidget(&m_sliders.horizontal);
-    addWidget(&m_sliders.vertical);
+    m_sliders.horizontal.init(this, getName() + "_horizontal_slider");
+    m_sliders.vertical.init(this, getName() + "_vertical_slider");
 }
 
 void vui::Panel::enable() {

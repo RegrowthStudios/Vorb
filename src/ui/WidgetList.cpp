@@ -12,7 +12,7 @@ vui::WidgetList::~WidgetList() {
 }
 
 void vui::WidgetList::initBase() {
-    addWidget(&m_panel);
+    m_panel.init(this, getName() + "_panel");
 }
 
 void vui::WidgetList::dispose() {

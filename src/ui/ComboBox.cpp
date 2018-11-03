@@ -370,6 +370,29 @@ void vui::ComboBox::setTextAlign(vg::TextAlign align) {
         button->setTextAlign(align);
     }
 }
+void vui::ComboBox::setMainButtonTextAlign(vg::TextAlign align) {
+    m_mainButton.setTextAlign(align);
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align) {
+    for (auto& button : m_buttons) {
+        button->setTextAlign(align);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTextAlign(align);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTextAlign(align);
+}
 
 void vui::ComboBox::setText(const nString& text) {
     m_mainButton.setText(text);

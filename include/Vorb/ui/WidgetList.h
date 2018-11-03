@@ -43,7 +43,7 @@ namespace vorb {
             virtual ~WidgetList();
 
             /*! \brief Initialiser for adding panel. */
-            virtual void init() override;
+            virtual void initBase() override;
 
             virtual void dispose() override;
 
@@ -58,7 +58,7 @@ namespace vorb {
              * \param w: The widget to add.
              * \return true if successfully added.
              */
-            virtual bool addItemAtIndex(size_t index, Widget* item);
+            virtual bool addItemAtIndex(size_t index, IWidget* item);
             /*! \brief Adds a series of items to the list.
              *
              * \param widgetsToAdd: The widgets to add.
@@ -83,7 +83,7 @@ namespace vorb {
             /* Getters                                                              */
             /************************************************************************/
             virtual const VGTexture& getTexture()        const { return m_panel.getTexture();    }
-            virtual      const bool& getAutoScroll()     const { return m_panel.getAutoScroll(); }
+            virtual             bool getAutoScroll()     const { return m_panel.getAutoScroll(); }
             virtual    const color4& getBackColor()      const { return m_panel.getColor();      }
             virtual    const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
             virtual           size_t getItemCount()      const { return m_items.size();  }

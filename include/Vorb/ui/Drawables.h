@@ -28,7 +28,6 @@
 #include "Vorb/graphics/SpriteBatch.h"
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/colors.h"
-#include "Vorb/ui/WidgetStyle.h"
 
 #define CLIP_RECT_DEFAULT f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)
 

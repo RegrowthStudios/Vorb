@@ -245,16 +245,17 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            PositionType m_positionType = PositionType::STATIC_TO_PARENT;                                       ///< The type of positioning this widget uses.
-            Length2      m_minRawSize   = { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } };       ///< Minimum size of widget.
-            Length2      m_maxRawSize   = { FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Maximum size of widget.
-            Length       m_rawDockSize  = { 0.0f, { DimensionType::PIXEL } };       ///< The raw dock size of widget.
+            PositionType m_positionType; ///< The type of positioning this widget uses.
+            Length2      m_minRawSize;   ///< Minimum size of widget.
+            Length2      m_maxRawSize;   ///< Maximum size of widget.
+            Length       m_rawDockSize;  ///< The raw dock size of widget.
+            Length4      m_rawPadding;   ///< Padding of widget.
 
             union {
                 struct {
                     Length2 position; ///< Position of widget in specified dimensions.
                     Length2 size;     ///< Dimensions of widget in specified dimensions.
-                } m_rawDimensions = { { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }, { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } } };
+                } m_rawDimensions;
                 struct {
                     Length left;   ///< Position of widget relative to left of target widget.
                     Length top;    ///< Position of widget relative to top of target widget.
@@ -262,8 +263,6 @@ namespace vorb {
                     Length bottom; ///< Position of widget relative to bottom of target widget.
                 } m_rawRelativePositions;
             };
-
-            Length4 m_rawPadding   = { 0.0f, 0.0f, 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } }; ///< Padding of widget.
         };
     }
 }

@@ -42,7 +42,7 @@ namespace vorb {
             virtual ~Slider();
 
             /*! \brief Initialiser for setting up events. */
-            virtual void init() override;
+            virtual void initBase() override;
 
             /*! @brief Adds all drawables to the UIRenderer
             */

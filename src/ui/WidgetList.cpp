@@ -1,7 +1,9 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/WidgetList.h"
 
-vui::WidgetList::WidgetList() : Widget() {
+vui::WidgetList::WidgetList() :
+    Widget(),
+    m_spacing(10.0f) {
     // Empty
 }
 
@@ -9,7 +11,7 @@ vui::WidgetList::~WidgetList() {
     // Empty
 }
 
-void vui::WidgetList::init() {
+void vui::WidgetList::initBase() {
     addWidget(&m_panel);
 }
 
@@ -38,7 +40,7 @@ void vui::WidgetList::addItem(IWidget* item) {
     m_flags.needsDrawableRecalculation = true;
 }
 
-bool vui::WidgetList::addItemAtIndex(size_t index, Widget* item) {
+bool vui::WidgetList::addItemAtIndex(size_t index, IWidget* item) {
     if (index > m_items.size()) return false;
 
     m_items.insert(m_items.begin() + index, item);

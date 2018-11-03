@@ -5,6 +5,7 @@
 #include "Vorb/utils.h"
 
 vui::Label::Label() :
+    Widget(),
     m_defaultFont(nullptr) {
     m_flags.needsDrawableRecalculation = true;
 }

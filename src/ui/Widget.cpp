@@ -7,7 +7,14 @@
 #include "Vorb/ui/Viewport.h"
 
 // TODO(Matthew): Some zero-initialisation in constructor?
-vui::Widget::Widget() : IWidget() {
+vui::Widget::Widget() :
+    IWidget(),
+    m_positionType(PositionType::STATIC_TO_PARENT),
+    m_minRawSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_maxRawSize({ FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawDockSize({ 0.0f, { DimensionType::PIXEL } }),
+    m_rawPadding({ 0.0f, 0.0f, 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawDimensions({ { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }, { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } } }) {
     // Empty
 }
 
@@ -39,17 +46,17 @@ void vui::Widget::init(const nString& name, const Length2& position, const Lengt
 
     m_flags.needsDimensionUpdate = true;
 
-    init();
+    initBase();
 }
 
 void vui::Widget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
-    init(name, dimensions, zIndex);
+    Widget::init(name, dimensions, zIndex);
 
     parent->addWidget(this);
 }
 
 void vui::Widget::init(IWidget* parent, const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
-    init(name, position, size, zIndex);
+    Widget::init(name, position, size, zIndex);
 
     parent->addWidget(this);
 }

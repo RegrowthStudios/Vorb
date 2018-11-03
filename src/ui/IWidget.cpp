@@ -48,11 +48,18 @@ void vui::IWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0
     m_size     = f32v2(dimensions.z, dimensions.w);
     m_zIndex   = zIndex;
 
-    init();
+    MouseClick.setSender(this);
+    MouseDown.setSender(this);
+    MouseUp.setSender(this);
+    MouseEnter.setSender(this);
+    MouseLeave.setSender(this);
+    MouseMove.setSender(this);
+
+    initBase();
 }
 
 void vui::IWidget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
-    init(name, dimensions, zIndex);
+    IWidget::init(name, dimensions, zIndex);
 
     parent->addWidget(this);
 }
@@ -115,13 +122,6 @@ void vui::IWidget::enable() {
         vui::InputDispatcher::mouse.onButtonUp   += makeDelegate(*this, &IWidget::onMouseUp);
         vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
         vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
-
-        MouseClick.setSender(this);
-        MouseDown.setSender(this);
-        MouseUp.setSender(this);
-        MouseEnter.setSender(this);
-        MouseLeave.setSender(this);
-        MouseMove.setSender(this);
     }
     // Enable all children
     for (auto& w : m_widgets) w->enable();

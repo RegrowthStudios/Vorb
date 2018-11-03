@@ -42,7 +42,7 @@ namespace vorb {
             virtual ~Panel();
 
             /*! \brief Initialiser for adding sliders. */
-            virtual void init() override;
+            virtual void initBase() override;
 
             /*! \brief Enables events panel widgets are interested in. */
             virtual void enable() override;
@@ -85,24 +85,24 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32 m_minX =  FLT_MAX, m_minY =  FLT_MAX;
-            f32 m_maxX = -FLT_MAX, m_maxY = -FLT_MAX; ///< The minimum and maximum coordinates of child widgets relative to panel.
+            f32 m_minX, m_minY; ///< The minimum coordinates of child widgets relative to panel.
+            f32 m_maxX, m_maxY; ///< The maximum coordinates of child widgets relative to panel.
 
-            bool m_autoScroll     = false; ///< Whether to automatically add sliders if content overflows the panel.
+            bool m_autoScroll; ///< Whether to automatically add sliders if content overflows the panel.
             struct {
                 Slider horizontal;
                 Slider vertical;
             } m_sliders; ///< The sliders that will be added on content overflow.
 
-            bool m_flipHorizontal = false; ///< Whether we should place the horizontal slider on the left or right (true = left, false = right).
-            bool m_flipVertical   = false; ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
-            f32  m_sliderWidth    = 15.0f; ///< The width, in pixels, of the sliders.
+            bool m_flipHorizontal; ///< Whether we should place the horizontal slider on the left or right (true = left, false = right).
+            bool m_flipVertical;   ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
+            f32  m_sliderWidth;    ///< The width, in pixels, of the sliders.
 
-            f32v2 m_childOffset = f32v2(0.0f);
+            f32v2 m_childOffset;
 
             DrawableRect m_drawableRect, m_drawnRect;
-            color4 m_backColor      = color::Transparent; ///< Colour of the panel.
-            color4 m_backHoverColor = color::Transparent; ///< Colour of the panel on hover.
+            color4 m_backColor;      ///< Colour of the panel.
+            color4 m_backHoverColor; ///< Colour of the panel on hover.
         };
     }
 }

@@ -284,7 +284,6 @@ set(vorb_ui
     include/Vorb/ui/Viewport.h
     include/Vorb/ui/Widget.h
     include/Vorb/ui/WidgetList.h
-    include/Vorb/ui/WidgetStyle.h
     include/Vorb/ui/WindowEventDispatcher.h
 #source
     src/ui/Button.cpp

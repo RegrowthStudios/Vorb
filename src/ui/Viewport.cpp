@@ -4,8 +4,10 @@
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/GameWindow.h"
 
-vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) : Widget() {
-    m_window   = window;
+vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) :
+    Widget(),
+    m_window(window) {
+    // Empty
 }
 
 vui::Viewport::~Viewport() {
@@ -35,10 +37,10 @@ void vui::Viewport::init(const nString& name, const Length2& position, const Len
 }
 
 void vui::Viewport::dispose() {
-    vui::InputDispatcher::window.onResize -= makeDelegate(*this, &Viewport::onResize);
-
     IWidget::dispose();
+
     m_renderer.dispose();
+
     m_window = nullptr;
 }
 

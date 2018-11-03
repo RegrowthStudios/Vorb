@@ -5,6 +5,7 @@
 #include "Vorb/ui/Viewport.h"
 
 vui::Button::Button() :
+    Widget(),
     m_gradBack(vg::GradientType::NONE),
     m_gradHover(vg::GradientType::NONE),
     m_backColor1(color::LightGray),

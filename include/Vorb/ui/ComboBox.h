@@ -51,7 +51,7 @@ namespace vorb {
             virtual ~ComboBox();
 
             /*! \brief Initialiser for adding buttons, panel and setting up events. */
-            virtual void init() override;
+            virtual void initBase() override;
 
             virtual void dispose() override;
 

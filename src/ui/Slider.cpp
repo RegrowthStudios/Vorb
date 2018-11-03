@@ -6,6 +6,7 @@
 #include "Vorb/utils.h"
 
 vui::Slider::Slider() :
+    Widget(),
     m_barColor(color::LightGray),
     m_slideColor(color::DarkGray),
     m_slideHoverColor(color::LightSlateGray),
@@ -23,7 +24,7 @@ vui::Slider::~Slider() {
     // Empty
 }
 
-void vui::Slider::init() {
+void vui::Slider::initBase() {
     ValueChange.setSender(this);
 }
 

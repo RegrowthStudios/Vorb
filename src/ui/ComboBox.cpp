@@ -10,6 +10,7 @@
 #include "Vorb/utils.h"
 
 vui::ComboBox::ComboBox() :
+    Widget(),
     m_maxDropHeight(FLT_MAX),
     m_dropDownStyle(DropDownStyle::DROP_DOWN_LIST),
     m_isDropped(false) {
@@ -23,7 +24,7 @@ vui::ComboBox::~ComboBox() {
     // Empty
 }
 
-void vui::ComboBox::init() {
+void vui::ComboBox::initBase() {
     ValueChange.setSender(this);
 
     addWidget(&m_mainButton);

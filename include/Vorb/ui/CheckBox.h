@@ -42,7 +42,7 @@ namespace vorb {
             virtual ~CheckBox();
 
             /*! \brief Initialiser for general set-up. */
-            virtual void init() override;
+            virtual void initBase() override;
 
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;

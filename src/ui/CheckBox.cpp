@@ -5,6 +5,7 @@
 #include "Vorb/ui/Viewport.h"
 
 vui::CheckBox::CheckBox() :
+    Widget(),
     m_boxColor(color::DarkGray),
     m_boxHoverColor(color::AliceBlue),
     m_boxCheckedColor(color::LightGray),
@@ -22,7 +23,7 @@ vui::CheckBox::~CheckBox() {
     // Empty
 }
 
-void vui::CheckBox::init() {
+void vui::CheckBox::initBase() {
     ValueChange.setSender(this);
 }
 

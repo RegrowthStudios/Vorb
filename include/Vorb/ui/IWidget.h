@@ -127,7 +127,7 @@ namespace vorb {
             virtual ~IWidget();
 
             /*! \brief Initialiser for general set-up. */
-            virtual void init() { /* Empty */ }
+            virtual void initBase() { /* Empty */ }
             /*! \brief Initialiser that sets name, position, size, and Z-index.
             *
             * \param name: Name of the widget.

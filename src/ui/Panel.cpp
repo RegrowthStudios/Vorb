@@ -7,7 +7,19 @@
 
 const int SLIDER_VAL_MAX = 10000;
 
-vui::Panel::Panel() {
+vui::Panel::Panel() :
+    Widget(),
+    m_minX(FLT_MAX),
+    m_minY(FLT_MAX),
+    m_maxX(-FLT_MAX),
+    m_maxY(-FLT_MAX),
+    m_autoScroll(false),
+    m_flipHorizontal(false),
+    m_flipVertical(false),
+    m_sliderWidth(15.0f),
+    m_childOffset(f32v2(0.0f)),
+    m_backColor(color::Transparent),
+    m_backHoverColor(color::Transparent) {
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -15,7 +27,7 @@ vui::Panel::~Panel() {
     // Empty
 }
 
-void vui::Panel::init() {
+void vui::Panel::initBase() {
     addWidget(&m_sliders.horizontal);
     addWidget(&m_sliders.vertical);
 }

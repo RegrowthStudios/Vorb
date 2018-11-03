@@ -5,56 +5,26 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-vui::Slider::Slider() : Slider("") {
-    // Empty
-}
-
-vui::Slider::Slider(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
-    m_barColor        = color::LightGray;
-    m_slideColor      = color::DarkGray;
-    m_slideHoverColor = color::LightSlateGray;
-    m_value           = 0;
-    m_min             = 0;
-    m_max             = 10;
-    m_isVertical      = false;
-
-    ValueChange.setSender(this);
-
-    updateColor();
-
+vui::Slider::Slider() :
+    m_barColor(color::LightGray),
+    m_slideColor(color::DarkGray),
+    m_slideHoverColor(color::LightSlateGray),
+    m_value(0),
+    m_min(0),
+    m_max(10),
+    m_isVertical(false) {
     m_drawableSlide.setSize(f32v2(30.0f, 30.0f));
 
-    m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Slider::Slider(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    m_barColor        = color::LightGray;
-    m_slideColor      = color::DarkGray;
-    m_slideHoverColor = color::LightSlateGray;
-    m_value           = 0;
-    m_min             = 0;
-    m_max             = 10;
-    m_isVertical      = false;
-
-    ValueChange.setSender(this);
-
-    updateColor();
-
-    m_drawableSlide.setSize(f32v2(30.0f, 30.0f));
 
     m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Slider::Slider(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Slider(name, destRect) {
-    parent->addWidget(this);
-}
-
-vui::Slider::Slider(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Slider(name, position, size) {
-    parent->addWidget(this);
 }
 
 vui::Slider::~Slider() {
     // Empty
+}
+
+void vui::Slider::init() {
+    ValueChange.setSender(this);
 }
 
 void vui::Slider::addDrawables() {
@@ -88,6 +58,8 @@ void vui::Slider::calculateDrawables() {
     m_drawableSlide.setClipRect(m_clipRect);
     updateSlidePosition();
 
+    updateColor();
+
     m_flags.needsDrawableRefresh = true;
 }
 
@@ -119,25 +91,19 @@ void vui::Slider::setBarTexture(VGTexture texture) {
 void vui::Slider::setBarColor(const color4& color) {
     m_barColor = color;
 
-    updateColor();
-
-    m_flags.needsDrawableRefresh = true;
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setSlideColor(const color4& color) {
     m_slideColor = color;
 
-    updateColor();
-
-    m_flags.needsDrawableRefresh = true;
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setSlideHoverColor(const color4& color) {
     m_slideHoverColor = color;
 
-    updateColor();
-
-    m_flags.needsDrawableRefresh = true;
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setValue(int value) {

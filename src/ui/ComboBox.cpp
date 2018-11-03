@@ -9,61 +9,25 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
-vui::ComboBox::ComboBox() : Widget() {
-    m_maxDropHeight = FLT_MAX;
-    m_dropPanel     = Panel();
-    m_mainButton    = Button();
-    m_buttons       = std::vector<Button*>();
-    m_items         = std::vector<nString>();
-    m_dropDownStyle = DropDownStyle::DROP_DOWN_LIST;
-    m_isDropped     = false;
-
-    ValueChange.setSender(this);
-
-    addWidget(&m_mainButton);
-    addWidget(&m_dropPanel);
-
+vui::ComboBox::ComboBox() :
+    m_maxDropHeight(FLT_MAX),
+    m_dropDownStyle(DropDownStyle::DROP_DOWN_LIST),
+    m_isDropped(false) {
     m_dropPanel.setAutoScroll(true);
-    m_dropPanel.setClipping((Clipping){ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
-
-    m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
+    m_dropPanel.setClipping(Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
 
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::ComboBox::ComboBox(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : ComboBox() {
-    m_name = name;
-
-    m_position = f32v2(dimensions.x, dimensions.y);
-    m_size     = f32v2(dimensions.z, dimensions.w);
-
-    m_rawDimensions.position.x = dimensions.x;
-    m_rawDimensions.position.y = dimensions.y;
-    m_rawDimensions.size.x     = dimensions.z;
-    m_rawDimensions.size.y     = dimensions.w;
-
-    m_flags.needsDimensionUpdate = true;
-}
-
-vui::ComboBox::ComboBox(const nString& name, const Length2& position, const Length2& size) : ComboBox() {
-    m_name = name;
-
-    m_rawDimensions.position = position;
-    m_rawDimensions.size     = size;
-
-    m_flags.needsDimensionUpdate = true;
-}
-
-vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : ComboBox(name, dimensions) {
-    parent->addWidget(this);
-}
-
-vui::ComboBox::ComboBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : ComboBox(name, position, size) {
-    parent->addWidget(this);
-}
-
 vui::ComboBox::~ComboBox() {
     // Empty
+}
+
+void vui::ComboBox::init() {
+    ValueChange.setSender(this);
+
+    addWidget(&m_mainButton);
+    addWidget(&m_dropPanel);
 }
 
 void vui::ComboBox::dispose() {
@@ -74,6 +38,22 @@ void vui::ComboBox::dispose() {
     }
 
     std::vector<Button*>().swap(m_buttons);
+}
+
+void vui::ComboBox::enable() {
+    if (!m_flags.isEnabled) {
+        m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
+    }
+
+    Widget::enable();
+}
+
+void vui::ComboBox::disable() {
+    if (m_flags.isEnabled) {
+        m_mainButton.MouseClick -= makeDelegate(*this, &ComboBox::onMainButtonClick);
+    }
+
+    Widget::disable();
 }
 
 vui::Button* vui::ComboBox::addItem(const nString& item) {

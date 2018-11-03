@@ -7,48 +7,35 @@
 
 const int SLIDER_VAL_MAX = 10000;
 
-vui::Panel::Panel() : Panel("") {
-    // Empty
-}
-
-vui::Panel::Panel(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+vui::Panel::Panel() {
     m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Panel::Panel(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Panel::Panel(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Panel(name, destRect) {
-    parent->addWidget(this);
-}
-
-vui::Panel::Panel(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Panel(name, position, size) {
-    parent->addWidget(this);
 }
 
 vui::Panel::~Panel() {
     // Empty
 }
 
-void vui::Panel::enable() {
-    IWidget::enable();
-
+void vui::Panel::init() {
     addWidget(&m_sliders.horizontal);
     addWidget(&m_sliders.vertical);
+}
 
-    m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
-    m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
+void vui::Panel::enable() {
+    if (!m_flags.isEnabled) {
+        m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
+        m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
+    }
+
+    IWidget::enable();
 }
 
 void vui::Panel::disable() {
+    if (m_flags.isEnabled) {
+        m_sliders.horizontal.ValueChange -= makeDelegate(*this, &Panel::onSliderValueChange);
+        m_sliders.vertical.ValueChange   -= makeDelegate(*this, &Panel::onSliderValueChange);
+    }
+
     IWidget::disable();
-
-    removeWidget(&m_sliders.horizontal);
-    removeWidget(&m_sliders.vertical);
-
-    m_sliders.horizontal.ValueChange -= makeDelegate(*this, &Panel::onSliderValueChange);
-    m_sliders.vertical.ValueChange   -= makeDelegate(*this, &Panel::onSliderValueChange);
 }
 
 void vui::Panel::addDrawables() {
@@ -62,14 +49,6 @@ void vui::Panel::addDrawables() {
 
 void vui::Panel::refreshDrawables() {
     m_drawnRect = m_drawableRect;
-}
-
-bool vui::Panel::addWidget(IWidget* child) {
-    bool rv = IWidget::addWidget(child);
-
-    m_flags.needsDrawableRecalculation = true;
-
-    return rv;
 }
 
 void vui::Panel::setTexture(VGTexture texture) {

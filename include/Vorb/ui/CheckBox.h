@@ -38,40 +38,11 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             CheckBox();
-            /*! \brief Constructor that sets name, position, and dimensions.
-            *
-            * \param name: Name of the control.
-            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            CheckBox(const nString& name, const f32v4& destRect = f32v4(0.0f));
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            CheckBox(const nString& name, const Length2& position, const Length2& size);
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * \param parent: Parent widget.
-            * \param name: Name of the control.
-            * \param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            CheckBox(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0.0f));
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent widget.
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            CheckBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
             virtual ~CheckBox();
+
+            /*! \brief Initialiser for general set-up. */
+            virtual void init() override;
 
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;
@@ -147,12 +118,12 @@ namespace vorb {
             /************************************************************************/
             DrawableRect          m_drawableRect, m_drawnRect;
             DrawableText          m_drawableText, m_drawnText;
-            color4                m_boxColor = color::DarkGray, m_boxHoverColor = color::AliceBlue;
-            color4                m_boxCheckedColor = color::LightGray, m_boxCheckedHoverColor = color::AliceBlue;
+            color4                m_boxColor,        m_boxHoverColor;
+            color4                m_boxCheckedColor, m_boxCheckedHoverColor;
             color4                m_textColor,       m_textHoverColor;
-            const vg::SpriteFont* m_defaultFont = nullptr;
-            VGTexture             m_checkedTexture = 0, m_uncheckedTexture = 0;
-            bool                  m_isChecked = false;
+            const vg::SpriteFont* m_defaultFont;
+            VGTexture             m_checkedTexture, m_uncheckedTexture;
+            bool                  m_isChecked;
         };
     }
 }

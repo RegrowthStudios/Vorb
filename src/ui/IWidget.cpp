@@ -6,14 +6,7 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-// TODO(Matthew): Move event sender setting to enable...
 vui::IWidget::IWidget() :
-    MouseClick(this),
-    MouseDown(this),
-    MouseUp(this),
-    MouseEnter(this),
-    MouseLeave(this),
-    MouseMove(this),
     m_viewport(nullptr),
     m_parent(nullptr),
     m_widgets(IWidgets()),
@@ -47,6 +40,21 @@ vui::IWidget::IWidget(const IWidget& widget) {
 
 vui::IWidget::~IWidget() {
     // Empty
+}
+
+void vui::IWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    m_name     = name;
+    m_position = f32v2(dimensions.x, dimensions.y);
+    m_size     = f32v2(dimensions.z, dimensions.w);
+    m_zIndex   = zIndex;
+
+    init();
+}
+
+void vui::IWidget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    init(name, dimensions, zIndex);
+
+    parent->addWidget(this);
 }
 
 void vui::IWidget::dispose() {
@@ -107,6 +115,13 @@ void vui::IWidget::enable() {
         vui::InputDispatcher::mouse.onButtonUp   += makeDelegate(*this, &IWidget::onMouseUp);
         vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
         vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
+
+        MouseClick.setSender(this);
+        MouseDown.setSender(this);
+        MouseUp.setSender(this);
+        MouseEnter.setSender(this);
+        MouseLeave.setSender(this);
+        MouseMove.setSender(this);
     }
     // Enable all children
     for (auto& w : m_widgets) w->enable();

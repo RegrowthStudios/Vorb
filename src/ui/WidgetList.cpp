@@ -2,104 +2,92 @@
 #include "Vorb/ui/WidgetList.h"
 
 vui::WidgetList::WidgetList() : Widget() {
-    addWidget(&m_panel);
+    // Empty
 }
-
-// vui::WidgetList::WidgetList(const nString& name, VORB_UNUSED const f32v4& destRect /*= f32v4(0)*/) : WidgetList() {
-//     m_name = name;
-//     // setDestRect(destRect);
-//     // m_panel.setDimensions(m_dimensions);
-//     // updatePosition();
-// }
-
-// vui::WidgetList::WidgetList(IWidget* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : WidgetList(name, destRect) {
-//     parent->addWidget(this);
-// }
 
 vui::WidgetList::~WidgetList() {
     // Empty
 }
 
+void vui::WidgetList::init() {
+    addWidget(&m_panel);
+}
+
 void vui::WidgetList::dispose() {
     Widget::dispose();
-    std::vector<Widget*>().swap(m_listedWidgets);
+
+    IWidgets().swap(m_items);
 }
 
-// void vui::WidgetList::updatePosition() {
-//     f32 totalHeight = 0.0f;
-//     for (size_t i = 0; i < m_listedWidgets.size(); i++) {
-//         m_listedWidgets[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
-//         totalHeight += m_listedWidgets[i]->getHeight();
-//     }
-//     vui::Widget::updatePosition();
-// }
+void vui::WidgetList::calculateDrawables() {
+    f32 totalHeight = 0.0f;
 
-void vui::WidgetList::addItem(Widget* w) {
-    m_panel.addWidget(w);
-    m_listedWidgets.push_back(w);
-    // updatePosition();
+    // TODO(Matthew): As-is, dimension update to list items that derive from Widget, or any other dimension rule overriding class, will obliterate these changes.
+    for (size_t i = 0; i < m_items.size(); ++i) {
+        m_items[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
+
+        totalHeight += m_items[i]->getHeight();
+    }
 }
 
-bool vui::WidgetList::addItemAtIndex(int index, Widget* w) {
-    if (index > (int)m_listedWidgets.size()) return false;
-    m_listedWidgets.insert(m_listedWidgets.begin() + index, w);
-    m_panel.removeWidget(w);
-    // updatePosition();
+void vui::WidgetList::addItem(IWidget* item) {
+    m_panel.addWidget(item);
+    
+    m_items.push_back(item);
+    
+    m_flags.needsDrawableRecalculation = true;
+}
+
+bool vui::WidgetList::addItemAtIndex(size_t index, Widget* item) {
+    if (index > m_items.size()) return false;
+
+    m_items.insert(m_items.begin() + index, item);
+
+    m_panel.addWidget(item);
+
+    m_flags.needsDrawableRecalculation = true;
+
     return true;
 }
 
-bool vui::WidgetList::removeItem(Widget* w) {
-    for (auto it = m_listedWidgets.begin(); it != m_listedWidgets.end(); it++) {
-        if (*it == w) {
-            w->removeDrawables();
-            m_listedWidgets.erase(it);
-            m_panel.removeWidget(w);
-            // updatePosition();
+void vui::WidgetList::addItems(const IWidgets& items) {
+    for (auto& item : items) {
+        addItem(item);
+    }
+}
+
+bool vui::WidgetList::removeItem(IWidget* item) {
+    for (auto it = m_items.begin(); it != m_items.end(); ++it) {
+        if (*it == item) {
+            m_items.erase(it);
+
+            m_panel.removeWidget(item);
+
+            m_flags.needsDrawableRecalculation = true;
+
             return true;
         }
     }
     return false;
 }
 
-bool vui::WidgetList::removeItem(int index) {
-    if (index > (int)m_listedWidgets.size()) return false;
-    auto it = (m_listedWidgets.begin() + index);
-    (*it)->removeDrawables();
+bool vui::WidgetList::removeItem(size_t index) {
+    if (index > m_items.size()) return false;
+
+    auto it = (m_items.begin() + index);
+
     m_panel.removeWidget(*it);
-    m_listedWidgets.erase(it);
-    // updatePosition();
+
+    m_items.erase(it);
+
+    m_flags.needsDrawableRecalculation = true;
+
     return true;
 }
 
-void vui::WidgetList::addItems(const std::vector <Widget*>& widgetsToAdd) {
-    for (auto& it : widgetsToAdd) {
-        m_panel.addWidget(it);
-        m_listedWidgets.push_back(it);
-    }
-    // updatePosition();
+void vui::WidgetList::setTexture(VGTexture texture) {
+    m_panel.setTexture(texture);
 }
-
-// void vui::WidgetList::setDimensions(const f32v2& dimensions) {
-//     Widget::setDimensions(dimensions);
-//     m_panel.setDimensions(dimensions);
-//     updatePosition();
-// }
-
-// void vui::WidgetList::setHeight(f32 height) {
-//     Widget::setHeight(height);
-//     m_panel.setHeight(height);
-//     updatePosition();
-// }
-
-// void vui::WidgetList::setTexture(VGTexture texture) {
-//     m_panel.setTexture(texture);
-// }
-
-// void vui::WidgetList::setWidth(f32 width) {
-//     Widget::setWidth(width);
-//     m_panel.setWidth(width);
-//     updatePosition();
-// }
 
 void vui::WidgetList::setBackColor(const color4& color) {
     m_panel.setColor(color);
@@ -111,7 +99,8 @@ void vui::WidgetList::setBackHoverColor(const color4& color) {
 
 void vui::WidgetList::setSpacing(f32 spacing) {
     m_spacing = spacing;
-    // updatePosition();
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::WidgetList::setAutoScroll(bool autoScroll) {

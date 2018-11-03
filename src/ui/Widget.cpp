@@ -6,41 +6,52 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/Viewport.h"
 
+// TODO(Matthew): Some zero-initialisation in constructor?
 vui::Widget::Widget() : IWidget() {
     // Empty
 }
 
-vui::Widget::Widget(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : IWidget() {
-    m_name = name;
+vui::Widget::~Widget() {
+    // Empty
+}
 
-    m_position = f32v2(dimensions.x, dimensions.y);
-    m_size     = f32v2(dimensions.z, dimensions.w);
+void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    IWidget::init(name, dimensions, zIndex);
 
     m_rawDimensions.position.x = dimensions.x;
     m_rawDimensions.position.y = dimensions.y;
+    m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
+
     m_rawDimensions.size.x     = dimensions.z;
     m_rawDimensions.size.y     = dimensions.w;
+    m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
 }
 
-vui::Widget::Widget(const nString& name, const Length2& position, const Length2& size) : IWidget() {
+void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
     m_name = name;
 
     m_rawDimensions.position = position;
     m_rawDimensions.size     = size;
 
+    m_zIndex = zIndex;
+
     m_flags.needsDimensionUpdate = true;
+
+    init();
 }
 
-vui::Widget::Widget(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+void vui::Widget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    init(name, dimensions, zIndex);
+
     parent->addWidget(this);
 }
 
-vui::Widget::Widget(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    parent->addWidget(this);
-}
+void vui::Widget::init(IWidget* parent, const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
+    init(name, position, size, zIndex);
 
-vui::Widget::~Widget() {
-    // Empty
+    parent->addWidget(this);
 }
 
 void vui::Widget::setMaxRawSize(const f32v2& maxRawSize) {

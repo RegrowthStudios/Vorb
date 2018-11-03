@@ -125,44 +125,44 @@ namespace vorb {
 
         class Widget : public IWidget {
             friend class WidgetScriptFuncs;
-            friend class IWidget;
         public:
             /*! \brief Default constructor. */
             Widget();
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-             */
-            Widget(const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Widget(const nString& name, const Length2& position, const Length2& size);
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent container object.
-             * \param name: Name of the control.
-             * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-             */
-            Widget(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent container object.
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Widget(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Destructor that unhooks events */
             virtual ~Widget();
+
+            /*! \brief Initialiser that sets name, position, size, and Z-index.
+            *
+            * \param name: Name of the widget.
+            * \param dimensions: Position and size of widget.
+            * \param zIndex: Z-index of widget.
+            */
+            virtual void init(const nString& name, const f32v4& dimensions = f32v4(0.0f), ui16 zIndex = 0) override;
+            /*! \brief Initialiser that sets name, position, size, and Z-index.
+             *
+            * \param name: Name of the widget.
+            * \param position: Position of widget.
+            * \param size: Size of widget.
+            * \param zIndex: Z-index of widget.
+             */
+            virtual void init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex = 0);
+            /*! \brief Initialiser that sets parent, name, position, size, and Z-index.
+            *
+            * \param parent: Parent of the widget.
+            * \param name: Name of the widget.
+            * \param dimensions: Position and size of widget.
+            * \param zIndex: Z-index of widget.
+            */
+            virtual void init(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f), ui16 zIndex = 0) override;
+            /*! \brief Initialiser that sets parent, name, position, size, and Z-index.
+             *
+             * \param parent: Parent of the widget.
+             * \param name: Name of the widget.
+             * \param position: Position of widget.
+             * \param size: Size of widget.
+             * \param zIndex: Z-index of widget.
+             */
+            virtual void init(IWidget* parent, const nString& name, const Length2& position, const Length2& size, ui16 zIndex = 0);
 
             /************************************************************************/
             /* Getters                                                              */

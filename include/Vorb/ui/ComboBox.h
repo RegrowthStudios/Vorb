@@ -47,42 +47,18 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             ComboBox();
-            /*! \brief Constructor that sets name, position, and dimensions.
-            *
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            ComboBox(const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            ComboBox(const nString& name, const Length2& position, const Length2& size);
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * \param parent: Parent widget.
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            ComboBox(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent widget.
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            ComboBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
             virtual ~ComboBox();
 
+            /*! \brief Initialiser for adding buttons, panel and setting up events. */
+            virtual void init() override;
+
             virtual void dispose() override;
+
+            /*! \brief Set up events. */
+            virtual void enable() override;
+            /*! \brief Unsubscribe from events. */
+            virtual void disable() override;
 
             virtual void addDrawables()     override { /* Empty */ }
             virtual void refreshDrawables() override { /* Empty */ }
@@ -112,7 +88,7 @@ namespace vorb {
              * 
              * \return vector of pointers to buttons created.
              */
-            virtual std::vector<Button*> addItems(const std::vector <nString>& itemsToAdd);
+            virtual std::vector<Button*> addItems(const std::vector<nString>& itemsToAdd);
             /*! \brief Removes an item from the combo box.
             * If there are multiple instances of the item, only the
             * first will be removed.

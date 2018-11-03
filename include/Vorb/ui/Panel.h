@@ -38,40 +38,11 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Panel();
-            /*! \brief Constructor that sets name, position, and dimensions.
-            *
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Panel(const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Panel(const nString& name, const Length2& position, const Length2& size);
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * \param parent: Parent control object.
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Panel(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent widget.
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Panel(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
             virtual ~Panel();
+
+            /*! \brief Initialiser for adding sliders. */
+            virtual void init() override;
 
             /*! \brief Enables events panel widgets are interested in. */
             virtual void enable() override;
@@ -82,8 +53,6 @@ namespace vorb {
             virtual void addDrawables() override;
             /*! \brief Refresh drawables. */
             virtual void refreshDrawables() override;
-
-            bool addWidget(IWidget* child) override;
 
             /************************************************************************/
             /* Getters                                                              */

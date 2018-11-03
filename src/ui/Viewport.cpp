@@ -12,45 +12,24 @@ vui::Viewport::~Viewport() {
     // Empty
 }
 
-// TODO(Matthew): Support raw lengths - derive from Widget rather than IWidget.
-void vui::Viewport::init(const nString& name, const f32v4& destRect, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
-    vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
+void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    Widget::init(name, dimensions);
 
-    m_name = name;
     m_viewport = this;
-
     updateDescendantViewports();
 
     m_positionType = PositionType::STATIC_TO_WINDOW;
-
-    m_rawDimensions.position.x = destRect.x;
-    m_rawDimensions.position.y = destRect.y;
-    m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
-    m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
-    m_rawDimensions.size.x = destRect.z;
-    m_rawDimensions.size.y = destRect.w;
-    m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
-    m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
-
-    m_flags.needsDimensionUpdate = true;
 
     m_renderer.init(defaultFont, spriteBatch);
 }
 
 void vui::Viewport::init(const nString& name, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
-    vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
+    Widget::init(name, position, size);
 
-    m_name = name;
     m_viewport = this;
-
     updateDescendantViewports();
 
     m_positionType = PositionType::STATIC_TO_WINDOW;
-
-    m_rawDimensions.position = position;
-    m_rawDimensions.size     = size;
-
-    m_flags.needsDimensionUpdate = true;
 
     m_renderer.init(defaultFont, spriteBatch);
 }
@@ -61,6 +40,22 @@ void vui::Viewport::dispose() {
     IWidget::dispose();
     m_renderer.dispose();
     m_window = nullptr;
+}
+
+void vui::Viewport::enable() {
+    if (!m_flags.isEnabled) {
+        vui::InputDispatcher::window.onResize += makeDelegate(*this, &Viewport::onResize);
+    }
+
+    Widget::enable();
+}
+
+void vui::Viewport::disable() {
+    if (m_flags.isEnabled) {
+        vui::InputDispatcher::window.onResize -= makeDelegate(*this, &Viewport::onResize);
+    }
+
+    Widget::disable();
 }
 
 void vui::Viewport::update(f32 dt /*= 1.0f*/) {

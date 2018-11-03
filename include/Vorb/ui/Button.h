@@ -37,40 +37,8 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Button();
-            /*! \brief Constructor that sets name, position, and dimensions.
-            *
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Button(const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets name, position, and dimensions.
-             *
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Button(const nString& name, const Length2& position, const Length2& size);
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * \param parent: Parent widget.
-            * \param name: Name of the control.
-            * \param dimensions: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Button(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f));
-            /*! \brief Constructor that sets parent control, name, position, and dimensions.
-             *
-             * The widget will be made a child of parent.
-             *
-             * \param parent: Parent widget.
-             * \param name: Name of the control.
-             * \param position: The position of the widget.
-             * \param size: The size of the widget.
-             */
-            Button(IWidget* parent, const nString& name, const Length2& position, const Length2& size);
             /*! \brief Default destructor. */
-            virtual ~Button(); // TODO(Ben): Maybe make abstract?
+            virtual ~Button();
 
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables() override;

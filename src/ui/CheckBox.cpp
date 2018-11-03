@@ -4,50 +4,26 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/Viewport.h"
 
-vui::CheckBox::CheckBox() : CheckBox("") {
-    ValueChange.setSender(this);
-}
-
-vui::CheckBox::CheckBox(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
-    m_boxColor             = color::DarkGray;
-    m_boxHoverColor        = color::AliceBlue;
-    m_boxCheckedColor      = color::LightGray;
-    m_boxCheckedHoverColor = color::AliceBlue;
-    m_textColor            = color::Black;
-    m_textHoverColor       = color::Black;
-    m_defaultFont          = nullptr;
-    m_checkedTexture       = 0;
-    m_uncheckedTexture     = 0;
-    m_isChecked            = false;
-
+vui::CheckBox::CheckBox() :
+    m_boxColor(color::DarkGray),
+    m_boxHoverColor(color::AliceBlue),
+    m_boxCheckedColor(color::LightGray),
+    m_boxCheckedHoverColor(color::AliceBlue),
+    m_textColor(color::Black),
+    m_textHoverColor(color::Black),
+    m_defaultFont(nullptr),
+    m_checkedTexture(0),
+    m_uncheckedTexture(0),
+    m_isChecked(false) {
     m_flags.needsDrawableRecalculation = true;
-}
-
-vui::CheckBox::CheckBox(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    m_boxColor             = color::DarkGray;
-    m_boxHoverColor        = color::AliceBlue;
-    m_boxCheckedColor      = color::LightGray;
-    m_boxCheckedHoverColor = color::AliceBlue;
-    m_textColor            = color::Black;
-    m_textHoverColor       = color::Black;
-    m_defaultFont          = nullptr;
-    m_checkedTexture       = 0;
-    m_uncheckedTexture     = 0;
-    m_isChecked            = false;
-
-    m_flags.needsDrawableRecalculation = true;
-}
-
-vui::CheckBox::CheckBox(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : CheckBox(name, dimensions) {
-    parent->addWidget(this);
-}
-
-vui::CheckBox::CheckBox(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : CheckBox(name, position, size) {
-    parent->addWidget(this);
 }
 
 vui::CheckBox::~CheckBox() {
     // Empty
+}
+
+void vui::CheckBox::init() {
+    ValueChange.setSender(this);
 }
 
 void vui::CheckBox::addDrawables() {

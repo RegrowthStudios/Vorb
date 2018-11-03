@@ -4,24 +4,9 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
-vui::Label::Label() : Label("") {
-    // Empty
-}
-
-vui::Label::Label(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
+vui::Label::Label() :
+    m_defaultFont(nullptr) {
     m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Label::Label(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Label::Label(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Label(name, dimensions) {
-    parent->addWidget(this);
-}
-
-vui::Label::Label(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Label(name, position, size) {
-    parent->addWidget(this);
 }
 
 vui::Label::~Label() {

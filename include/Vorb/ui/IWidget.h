@@ -110,6 +110,7 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
+        // TODO(Matthew): In every class, have an init function as well as (if needed for event (un)subscription) enable/disable.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;
@@ -124,6 +125,24 @@ namespace vorb {
              * we set the viewport and parent to nullptr and create an empty vector of child widgets.
              */
             virtual ~IWidget();
+
+            /*! \brief Initialiser for general set-up. */
+            virtual void init() { /* Empty */ }
+            /*! \brief Initialiser that sets name, position, size, and Z-index.
+            *
+            * \param name: Name of the widget.
+            * \param dimensions: Position and size of widget.
+            * \param zIndex: Z-index of widget.
+            */
+            virtual void init(const nString& name, const f32v4& dimensions = f32v4(0.0f), ui16 zIndex = 0);
+            /*! \brief Initialiser that sets parent, name, position, size, and Z-index.
+            *
+            * \param parent: Parent of the widget.
+            * \param name: Name of the widget.
+            * \param dimensions: Position and size of widget.
+            * \param zIndex: Z-index of widget.
+            */
+            virtual void init(IWidget* parent, const nString& name, const f32v4& dimensions = f32v4(0.0f), ui16 zIndex = 0);
 
             /*! \brief Releases all resources used by the Widget.
              *

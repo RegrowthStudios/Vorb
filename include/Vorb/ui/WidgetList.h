@@ -8,7 +8,7 @@
 //
 
 /*! \file WidgetList.h
-* @brief 
+* \brief 
 * A widget that is a vertical list of other widgets.
 *
 */
@@ -33,94 +33,83 @@ namespace vorb {
 
         // TODO(Ben): Proper combo box
         class WidgetList : public Widget {
-            friend class ComboBoxScriptFuncs;
+            friend class WidgetListScriptFuncs;
+
+            using IWidgets = std::vector<IWidget*>;
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             WidgetList();
-            // /*! @brief Constructor that sets name, position, and dimensions.
-            // *
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // WidgetList(const nString& name, const f32v4& destRect = f32v4(0));
-            // /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            // *
-            // * The control will be made a child of parent.
-            // *
-            // * @param parent: Parent control object.
-            // * @param name: Name of the control.
-            // * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            // */
-            // WidgetList(IWidget* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~WidgetList();
+
+            /*! \brief Initialiser for adding panel. */
+            virtual void init() override;
 
             virtual void dispose() override;
 
-            /*!@brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
-
-            /*! @brief Adds a Widget to the combo box
-            *
-            * @param w: The Widget to add
-            */
-            virtual void addItem(Widget* w);
-            /*! @brief Adds a Widget to the combo box at a specific index
-            * and shifts other items accordingly.
-            *
-            * @param index: The index to add at
-            * @param w: The Widget to add
-            * @return true if successfully added
-            */
-            virtual bool addItemAtIndex(int index, Widget* w);
-            /*! @brief Removes a Widget from the combo box
-            * If there are multiple instances of the Widget, only the
-            * first will be removed
-            * @param w: The Widget to remove
-            * @return true if successfully removed
-            */
-            virtual bool removeItem(Widget* w);
-            /*! @brief Removes a Widget from the combo box
-            *
-            * @param index: The index of the Widget to remove
-            * @return true if successfully removed
-            */
-            virtual bool removeItem(int index);
-            /*! @brief Adds a series of items to the combo box
-            *
-            * @param widgetsToAdd: The Widgets to add
-            */
-            virtual void addItems(const std::vector <Widget*>& widgetsToAdd);
+            /*! \brief Adds a widget to the list.
+             *
+             * \param w: The widget to add.
+             */
+            virtual void addItem(IWidget* item);
+            /*! \brief Adds a Widget to the list at a specific index and shifts other items accordingly.
+             *
+             * \param index: The index to add at.
+             * \param w: The widget to add.
+             * \return true if successfully added.
+             */
+            virtual bool addItemAtIndex(size_t index, Widget* item);
+            /*! \brief Adds a series of items to the list.
+             *
+             * \param widgetsToAdd: The widgets to add.
+             */
+            virtual void addItems(const IWidgets& items);
+            /*! \brief Removes a widget from the list.
+             *
+             * If there are multiple instances of the widget, only the first will be removed.
+             *
+             * \param w: The widget to remove.
+             * \return true if successfully removed.
+             */
+            virtual bool removeItem(IWidget* item);
+            /*! \brief Removes a widget from the list.
+             *
+             * \param index: The index of the widget to remove.
+             * \return true if successfully removed.
+             */
+            virtual bool removeItem(size_t index);
    
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_panel.getTexture(); }
-            virtual const bool& getAutoScroll() const { return m_panel.getAutoScroll(); }
-            virtual const color4& getBackColor() const { return m_panel.getColor(); }
-            virtual const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
-            virtual size_t getNumItems() const { return m_listedWidgets.size(); }
-            virtual const f32& getSpacing() const { return m_spacing; }
+            virtual const VGTexture& getTexture()        const { return m_panel.getTexture();    }
+            virtual      const bool& getAutoScroll()     const { return m_panel.getAutoScroll(); }
+            virtual    const color4& getBackColor()      const { return m_panel.getColor();      }
+            virtual    const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
+            virtual           size_t getItemCount()      const { return m_items.size();  }
+            virtual       const f32& getSpacing()        const { return m_spacing;               }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // virtual void setDimensions(const f32v2& dimensions) override;
-            // virtual void setHeight(f32 height) override;
             virtual void setTexture(VGTexture texture);
-            // virtual void setWidth(f32 width) override;
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);
             virtual void setAutoScroll(bool autoScroll);
 
-        protected:  
+        protected:
+            /*!
+             * \brief Updates the positions of the listed widgets.
+             */
+            virtual void calculateDrawables() override;
+
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32 m_spacing;
-            Panel m_panel; // Panel that holds the drop buttons
-            std::vector<Widget*> m_listedWidgets; ///< The widgets in the list
+            f32      m_spacing; ///< Spacing between items.
+            Panel    m_panel;   ///< Panel that holds the items.
+            IWidgets m_items;   ///< The widgets in the list.
         };
     }
 }

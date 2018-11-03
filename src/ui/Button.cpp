@@ -4,44 +4,17 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/Viewport.h"
 
-vui::Button::Button() : Button("") {
-    // Empty
-}
-
-vui::Button::Button(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Widget(name, dimensions) {
-    m_gradBack        = vg::GradientType::NONE;
-    m_gradHover       = vg::GradientType::NONE;
-    m_backColor1      = color::LightGray;
-    m_backColor2      = color::LightGray;
-    m_backHoverColor1 = color::AliceBlue;
-    m_backHoverColor2 = color::AliceBlue;
-    m_textColor       = color::Black;
-    m_textHoverColor  = color::Black;
-    m_defaultFont     = nullptr;
-
+vui::Button::Button() :
+    m_gradBack(vg::GradientType::NONE),
+    m_gradHover(vg::GradientType::NONE),
+    m_backColor1(color::LightGray),
+    m_backColor2(color::LightGray),
+    m_backHoverColor1(color::AliceBlue),
+    m_backHoverColor2(color::AliceBlue),
+    m_textColor(color::Black),
+    m_textHoverColor(color::Black),
+    m_defaultFont(nullptr) {
     m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Button::Button(const nString& name, const Length2& position, const Length2& size) : Widget(name, position, size) {
-    m_gradBack        = vg::GradientType::NONE;
-    m_gradHover       = vg::GradientType::NONE;
-    m_backColor1      = color::LightGray;
-    m_backColor2      = color::LightGray;
-    m_backHoverColor1 = color::AliceBlue;
-    m_backHoverColor2 = color::AliceBlue;
-    m_textColor       = color::Black;
-    m_textHoverColor  = color::Black;
-    m_defaultFont     = nullptr;
-
-    m_flags.needsDrawableRecalculation = true;
-}
-
-vui::Button::Button(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/) : Button(name, dimensions) {
-    parent->addWidget(this);
-}
-
-vui::Button::Button(IWidget* parent, const nString& name, const Length2& position, const Length2& size) : Button(name, position, size) {
-    parent->addWidget(this);
 }
 
 vui::Button::~Button() {
@@ -171,7 +144,6 @@ void vui::Button::updateTextPosition() {
 
     const vg::TextAlign& textAlign = getTextAlign();
 
-    // TODO(Ben): Padding
     switch (textAlign) {
         case vg::TextAlign::LEFT:
             m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));

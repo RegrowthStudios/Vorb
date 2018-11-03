@@ -88,8 +88,8 @@ void vui::Button::setTextHoverColor(const color4& color) {
 }
 
 void vui::Button::calculateDrawables() {
-    m_drawableRect.setPosition(m_position);
-    m_drawableRect.setSize(m_size);
+    m_drawableRect.setPosition(getPaddedPosition());
+    m_drawableRect.setSize(getPaddedSize());
     m_drawableRect.setClipRect(m_clipRect);
     m_drawableRect.setTexture(m_flags.isMouseIn ? m_hoverTexture : m_texture);
 

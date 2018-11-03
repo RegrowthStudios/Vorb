@@ -50,8 +50,8 @@ void vui::Slider::refreshDrawables() {
 }
 
 void vui::Slider::calculateDrawables() {
-    m_drawableBar.setPosition(m_position);
-    m_drawableBar.setSize(m_size);
+    m_drawableBar.setPosition(getPaddedPosition());
+    m_drawableBar.setSize(getPaddedSize());
     m_drawableBar.setClipRect(m_clipRect);
 
     m_slideSize = processLength(m_rawSlideSize);

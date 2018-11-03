@@ -99,8 +99,8 @@ void vui::Panel::updateDimensions(f32 dt) {
 }
 
 void vui::Panel::calculateDrawables() {
-    m_drawableRect.setPosition(getPosition() - f32v2(getPadding().x, getPadding().y));
-    m_drawableRect.setSize(getSize() + f32v2(getPadding().z, getPadding().w));
+    m_drawableRect.setPosition(getPaddedPosition());
+    m_drawableRect.setSize(getPaddedSize());
     m_drawableRect.setClipRect(m_clipRect);
 
     updateColor();

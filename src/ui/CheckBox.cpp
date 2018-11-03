@@ -121,8 +121,8 @@ void vui::CheckBox::setChecked(bool checked) {
 }
 
 void vui::CheckBox::calculateDrawables() {
-    m_drawableRect.setPosition(m_position);
-    m_drawableRect.setSize(m_size);
+    m_drawableRect.setPosition(getPaddedPosition());
+    m_drawableRect.setSize(getPaddedSize());
     m_drawableRect.setClipRect(m_clipRect);
 
     if (m_flags.isMouseIn) {

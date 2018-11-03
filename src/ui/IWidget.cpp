@@ -502,6 +502,7 @@ void vui::IWidget::setChildOffsetY(f32 offset) {
 
 void vui::IWidget::updateDescendants(f32 dt) {
     for (auto& child : m_widgets) {
+        if (!child->isEnabled()) continue;
         child->update(dt);
         child->updateDescendants(dt);
     }

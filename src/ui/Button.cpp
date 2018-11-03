@@ -203,7 +203,6 @@ void vui::Button::updateTextPosition() {
     }
 }
 
-// TODO(Matthew): This seems a bit repeatable too.
 void vui::Button::refreshDrawables() {
     // Use renderer default font if we don't have a font.
     if (!m_drawableText.getFont()) {

@@ -93,8 +93,6 @@ namespace vorb {
 
             /*! Updates the colours set for the drawables. */
             virtual void updateColor();
-            /*! Updates the text position in the drawable. */
-            virtual void updateTextPosition();
 
             /************************************************************************/
             /* Event Handlers                                                       */

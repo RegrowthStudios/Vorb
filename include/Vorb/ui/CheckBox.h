@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/ui/Drawables.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/TextWidget.h"
 
 namespace vorb {
     namespace ui {
@@ -33,7 +33,7 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class CheckBox : public Widget {
+        class CheckBox : public TextWidget {
             friend class CheckBoxScriptFuncs;
         public:
             /*! \brief Default constructor. */
@@ -56,35 +56,31 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual      const VGTexture& getUncheckedTexture()     const { return m_uncheckedTexture;            }
-            virtual      const VGTexture& getCheckedTexture()       const { return m_checkedTexture;              }
-            virtual const vg::SpriteFont* getFont()                 const { return m_drawableText.getFont();      }
-            virtual         const color4& getBoxColor()             const { return m_boxColor;                    }
-            virtual         const color4& getBoxHoverColor()        const { return m_boxHoverColor;               }
-            virtual         const color4& getBoxCheckedColor()      const { return m_boxCheckedColor;             }
-            virtual         const color4& getBoxCheckedHoverColor() const { return m_boxCheckedHoverColor;        }
-            virtual         const color4& getTextColor()            const { return m_textColor;                   }
-            virtual         const color4& getTextHoverColor()       const { return m_textHoverColor;              }
-            virtual        const nString& getText()                 const { return m_drawableText.getText();      }
-            virtual  const vg::TextAlign& getTextAlign()            const { return m_drawableText.getTextAlign(); }
-            virtual          const f32v2& getTextScale()            const { return m_drawableText.getTextScale(); }
-            virtual           const bool& isChecked()               const { return m_isChecked;                   }
+            virtual      const VGTexture& getUncheckedTexture()      const { return m_uncheckedTexture;      }
+            virtual      const VGTexture& getCheckedTexture()        const { return m_checkedTexture;        }
+            virtual      const VGTexture& getUncheckedHoverTexture() const { return m_uncheckedHoverTexture; }
+            virtual      const VGTexture& getCheckedHoverTexture()   const { return m_checkedHoverTexture;   }
+            virtual         const color4& getBoxColor()              const { return m_boxColor;              }
+            virtual         const color4& getBoxHoverColor()         const { return m_boxHoverColor;         }
+            virtual         const color4& getBoxCheckedColor()       const { return m_boxCheckedColor;       }
+            virtual         const color4& getBoxCheckedHoverColor()  const { return m_boxCheckedHoverColor;  }
+            virtual         const color4& getTextColor()             const { return m_textColor;             }
+            virtual         const color4& getTextHoverColor()        const { return m_textHoverColor;        }
+            virtual           const bool& isChecked()                const { return m_isChecked;             }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const vg::SpriteFont* font);
             virtual void setCheckedTexture(VGTexture texture);
             virtual void setUncheckedTexture(VGTexture texture);
+            virtual void setCheckedHoverTexture(VGTexture texture);
+            virtual void setUncheckedHoverTexture(VGTexture texture);
             virtual void setBoxColor(const color4& color);
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);
             virtual void setBoxCheckedHoverColor(const color4& color);
-            virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
-            virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale);
             virtual void setChecked(bool checked);
 
             /************************************************************************/
@@ -116,13 +112,12 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect          m_drawableRect, m_drawnRect;
-            DrawableText          m_drawableText, m_drawnText;
-            color4                m_boxColor,        m_boxHoverColor;
-            color4                m_boxCheckedColor, m_boxCheckedHoverColor;
-            color4                m_textColor,       m_textHoverColor;
-            const vg::SpriteFont* m_defaultFont;
-            VGTexture             m_checkedTexture, m_uncheckedTexture;
+            DrawableRect          m_drawableRect,        m_drawnRect;
+            color4                m_boxColor,            m_boxHoverColor;
+            color4                m_boxCheckedColor,     m_boxCheckedHoverColor;
+            color4                m_textColor,           m_textHoverColor;
+            VGTexture             m_checkedTexture,      m_uncheckedTexture;
+            VGTexture             m_checkedHoverTexture, m_uncheckedHoverTexture;
             bool                  m_isChecked;
         };
     }

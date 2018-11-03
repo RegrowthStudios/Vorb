@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/ui/Drawables.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/TextWidget.h"
 
 namespace vorb {
     namespace ui {
@@ -33,7 +33,7 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class Button : public Widget {
+        class Button : public TextWidget {
         public:
             /*! \brief Default constructor. */
             Button();
@@ -48,38 +48,30 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual      const VGTexture& getTexture()        const { return m_drawableRect.getTexture();   }
-            virtual const vg::SpriteFont* getFont()           const { return m_drawableText.getFont();      }
-            virtual         const color4& getBackColor()      const { return m_backColor1;                  }
-            virtual         const color4& getBackHoverColor() const { return m_backHoverColor1;             }
-            virtual         const color4& getTextColor()      const { return m_textColor;                   }
-            virtual         const color4& getTextHoverColor() const { return m_textHoverColor;              }
-            virtual        const nString& getText()           const { return m_drawableText.getText();      }
-            virtual  const vg::TextAlign& getTextAlign()      const { return m_drawableText.getTextAlign(); }
-            virtual          const f32v2& getTextScale()      const { return m_drawableText.getTextScale(); }
+            virtual      const VGTexture& getTexture()        const { return m_texture;         }
+            virtual      const VGTexture& getHoverTexture()   const { return m_hoverTexture;    }
+            virtual         const color4& getBackColor()      const { return m_backColor1;      }
+            virtual         const color4& getBackHoverColor() const { return m_backHoverColor1; }
+            virtual         const color4& getTextColor()      const { return m_textColor;       }
+            virtual         const color4& getTextHoverColor() const { return m_textHoverColor;  }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const vg::SpriteFont* font);
             virtual void setTexture(VGTexture texture);
+            virtual void setHoverTexture(VGTexture texture);
             virtual void setBackColor(const color4& color);
             virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setBackHoverColor(const color4& color);
             virtual void setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
-            virtual void setText(const nString& text);
             virtual void setTextColor(const color4& color);
             virtual void setTextHoverColor(const color4& color);
-            virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale);
 
         protected:
             virtual void calculateDrawables() override;
 
             /*! Updates the colours set for the drawables. */
             virtual void updateColor();
-            /*! Updates the text position in the drawable. */
-            virtual void updateTextPosition();
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
@@ -88,12 +80,11 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             DrawableRect          m_drawableRect,    m_drawnRect;
-            DrawableText          m_drawableText,    m_drawnText;
             vg::GradientType      m_gradBack,        m_gradHover;
             color4                m_backColor1,      m_backColor2;
             color4                m_backHoverColor1, m_backHoverColor2;
+            VGTexture             m_texture,         m_hoverTexture;
             color4                m_textColor,       m_textHoverColor;
-            const vg::SpriteFont* m_defaultFont;
         };
     }
 }

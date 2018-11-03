@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/ui/Drawables.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/TextWidget.h"
 
 namespace vorb {
     namespace ui {
@@ -33,7 +33,7 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class Label : public Widget {
+        class Label : public TextWidget {
         public:
             /*! \brief Default constructor. */
             Label();
@@ -48,31 +48,35 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const vg::SpriteFont* getFont()      const { return m_drawableText.getFont();      }
-            virtual         const color4& getTextColor() const { return m_drawableText.getColor();     }
-            virtual        const nString& getText()      const { return m_drawableText.getText();      }
-            virtual  const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual          const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual const color4& setLabelColor()        const { return m_labelColor;         }
+            virtual const color4& setLabelHoverColor()   const { return m_labelHoverColor;    }
+            virtual     VGTexture setLabelTexture()      const { return m_labelTexture;       }
+            virtual     VGTexture setLabelHoverTexture() const { return m_labelHoverTexture;  }
+            virtual const color4& getTextColor()         const override { return m_textColor; }
+            virtual const color4& setTextHoverColor()    const { return m_textHoverColor;     }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setFont(const vg::SpriteFont* font);
-            virtual void setText(const nString& text);
-            virtual void setTextColor(const color4& color);
-            virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale);
+            virtual void setLabelColor(const color4& color);
+            virtual void setLabelHoverColor(const color4& color);
+            virtual void setLabelTexture(VGTexture texture);
+            virtual void setLabelHoverTexture(VGTexture texture);
+            virtual void setTextColor(const color4& color) override;
+            virtual void setTextHoverColor(const color4& color);
 
         protected:
             virtual void calculateDrawables() override;
 
-            virtual void updateTextPosition();
+            virtual void updateColor();
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableText          m_drawableText, m_drawnText;
-            const vg::SpriteFont* m_defaultFont;
+            DrawableRect          m_drawableRect, m_drawnRect;
+            color4                m_labelColor,   m_labelHoverColor;
+            VGTexture             m_labelTexture, m_labelHoverTexture;
+            color4                m_textColor,    m_textHoverColor;
         };
     }
 }

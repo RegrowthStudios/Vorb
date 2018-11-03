@@ -280,6 +280,7 @@ set(vorb_ui
     include/Vorb/ui/ScreenList.h
     include/Vorb/ui/Slider.h
     include/Vorb/ui/TextInputListener.hpp
+    include/Vorb/ui/TextWidget.h
     include/Vorb/ui/UIRenderer.h
     include/Vorb/ui/Viewport.h
     include/Vorb/ui/Widget.h
@@ -302,6 +303,7 @@ set(vorb_ui
     src/ui/Panel.cpp
     src/ui/ScreenList.cpp
     src/ui/Slider.cpp
+    src/ui/TextWidget.cpp
     src/ui/UIRenderer.cpp
     src/ui/Viewport.cpp
     src/ui/Widget.cpp

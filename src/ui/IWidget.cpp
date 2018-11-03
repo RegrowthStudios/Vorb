@@ -124,6 +124,11 @@ void vui::IWidget::enable() {
         vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
         vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
+
+    // TODO(Matthew): This is wrong, probably need to re-add drawables of all items with current renderer...
+    //                Change the UIRenderer to use an ordered list on z-index.
+    addDrawables();
+
     // Enable all children
     for (auto& w : m_widgets) w->enable();
 }
@@ -137,6 +142,9 @@ void vui::IWidget::disable() {
         vui::InputDispatcher::mouse.onFocusLost  -= makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
     m_flags.isClicking = false;
+
+    removeDrawables();
+
     // Disable all children
     for (auto& w : m_widgets) w->disable();
 }

@@ -60,18 +60,20 @@ void vui::ComboBox::disable() {
 vui::Button* vui::ComboBox::addItem(const nString& item) {
     // Add item and correspodning button.
     m_items.push_back(item);
-    m_buttons.push_back(new Button);
+    m_buttons.push_back(new Button());
 
     // Get reference to button we just added.
     auto& button = m_buttons.back();
 
-    // Add button as child of drop panel and add the text given.
-    m_dropPanel.addWidget(button);
+    // Initialise button and set parent.
+    button->init(&m_dropPanel, item, f32v4(0.0f, 0.0f, 100.0f, 30.0f));
+
+    // Set the text given.
     button->setText(item);
 
-    // If the combobox isn't currently dropped, disable the button.
-    if (!m_isDropped) {
-        button->disable();
+    // If the combobox is currently dropped, enable the button.
+    if (m_isDropped) {
+        button->enable();
     }
 
     // Add listener for mouse clicks on the button to handle combobox logic.
@@ -90,18 +92,20 @@ vui::Button* vui::ComboBox::addItemAtIndex(size_t index, const nString& item) {
 
     // Add item and correspodning button.
     m_items.insert(m_items.begin() + index, item);
-    m_buttons.insert(m_buttons.begin() + index, new Button);
+    m_buttons.insert(m_buttons.begin() + index, new Button());
 
     // Get reference to button we just added.
     auto& button = *(m_buttons.begin() + index);
 
-    // Add button as child of drop panel and add the text given.
-    m_dropPanel.addWidget(button);
+    // Initialise button and set parent.
+    button->init(&m_dropPanel, item, f32v4(0.0f, 0.0f, 100.0f, 30.0f));
+
+    // Set the text given.
     button->setText(item);
 
-    // If the combobox isn't currently dropped, disable the button.
-    if (!m_isDropped) {
-        button->disable();
+    // If the combobox is currently dropped, enable the button.
+    if (m_isDropped) {
+        button->enable();
     }
 
     // Add listener for mouse clicks on the button to handle combobox logic.
@@ -407,7 +411,7 @@ void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
 void vui::ComboBox::updateDimensions(f32 dt) {
     Widget::updateDimensions(dt);
 
-    m_dropPanel.setWidth(getWidth());
+    m_mainButton.setSize(getSize());
 
     f32 panelHeight = (f32)m_buttons.size() * getHeight();
     bool hasSlider = false;
@@ -466,11 +470,11 @@ void vui::ComboBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent
         MouseUp(e);
         if (!m_flags.isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
-            m_flags.needsDrawableRecalculation = true;
+            m_flags.needsDimensionUpdate = true;
         }
     } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
-        m_flags.needsDrawableRecalculation = true;
+        m_flags.needsDimensionUpdate = true;
     }
     m_flags.isClicking = false;
 }
@@ -490,5 +494,5 @@ void vui::ComboBox::onMainButtonClick(Sender s VORB_MAYBE_UNUSED, const MouseBut
 
     m_isDropped = !m_isDropped;
 
-    m_flags.needsDrawableRecalculation = true;
+    m_flags.needsDimensionUpdate = true;
 }

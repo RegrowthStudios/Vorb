@@ -175,38 +175,6 @@ void vui::Panel::updateSliders() {
 
         slider.setPositionType(PositionType::RELATIVE_TO_PARENT);
         if (m_flipHorizontal) {
-            m_position.x += m_sliderWidth;
-            m_padding.x  += m_sliderWidth;
-
-            slider.setLeft(-1.0f * m_sliderWidth);
-            slider.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
-        } else {
-            m_size.x    -= m_sliderWidth;
-            m_padding.z += m_sliderWidth;
-
-            slider.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
-            slider.setRight(-1.0f * m_sliderWidth);
-        }
-        slider.setTop(0.0f);
-        slider.setBottom(0.0f);
-
-        slider.setSlideSize(f32v2(m_sliderWidth));
-        slider.setRange(0, SLIDER_VAL_MAX);
-        slider.setIsVertical(false);
-    } else {
-        slider.setPositionType(PositionType::STATIC_TO_PARENT);
-        slider.setSize(f32v2(0.0f));
-        slider.setSlideSize(f32v2(0.0f));
-        slider.disable();
-    }
-
-    // Set up vertical slider.
-    slider = m_sliders.vertical;
-    if (needsVertical) {
-        slider.enable();
-
-        slider.setPositionType(PositionType::RELATIVE_TO_PARENT);
-        if (m_flipVertical) {
             m_position.y += m_sliderWidth;
             m_padding.y  += m_sliderWidth;
 
@@ -225,6 +193,38 @@ void vui::Panel::updateSliders() {
         slider.setSlideSize(f32v2(m_sliderWidth));
         slider.setRange(0, SLIDER_VAL_MAX);
         slider.setIsVertical(false);
+    } else {
+        slider.setPositionType(PositionType::STATIC_TO_PARENT);
+        slider.setSize(f32v2(0.0f));
+        slider.setSlideSize(f32v2(0.0f));
+        slider.disable();
+    }
+
+    // Set up vertical slider.
+    slider = m_sliders.vertical;
+    if (needsVertical) {
+        slider.enable();
+
+        slider.setPositionType(PositionType::RELATIVE_TO_PARENT);
+        if (m_flipVertical) {
+            m_position.x += m_sliderWidth;
+            m_padding.x  += m_sliderWidth;
+
+            slider.setLeft(-1.0f * m_sliderWidth);
+            slider.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
+        } else {
+            m_size.x    -= m_sliderWidth;
+            m_padding.z += m_sliderWidth;
+
+            slider.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
+            slider.setRight(-1.0f * m_sliderWidth);
+        }
+        slider.setTop(0.0f);
+        slider.setBottom(0.0f);
+
+        slider.setSlideSize(f32v2(m_sliderWidth));
+        slider.setRange(0, SLIDER_VAL_MAX);
+        slider.setIsVertical(true);
     } else {
         slider.setPositionType(PositionType::STATIC_TO_PARENT);
         slider.setSize(f32v2(0.0f));

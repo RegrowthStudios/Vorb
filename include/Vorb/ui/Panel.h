@@ -98,8 +98,6 @@ namespace vorb {
             bool m_flipVertical;   ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
             f32  m_sliderWidth;    ///< The width, in pixels, of the sliders.
 
-            f32v2 m_childOffset;
-
             DrawableRect m_drawableRect, m_drawnRect;
             color4 m_backColor;      ///< Colour of the panel.
             color4 m_backHoverColor; ///< Colour of the panel on hover.

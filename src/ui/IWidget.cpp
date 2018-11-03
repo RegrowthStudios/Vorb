@@ -18,6 +18,7 @@ vui::IWidget::IWidget() :
     m_zIndex(1),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
+    m_childOffset(f32v2(0.0f)),
     m_flags({ false, false, false, false, false, false, false, false, false, false }) {
     // Empty
 }
@@ -478,6 +479,22 @@ void vui::IWidget::setDockSize(f32 size) {
     } else if (m_viewport && m_viewport != this) {
         m_viewport->m_flags.needsDockRecalculation = true;
     }
+}
+
+void vui::IWidget::setChildOffset(const f32v2& offset) {
+    m_childOffset = offset;
+
+    for (auto& child : m_widgets) {
+        child->m_flags.needsDimensionUpdate = true;
+    }
+}
+
+void vui::IWidget::setChildOffsetX(f32 offset) {
+    setChildOffset(f32v2(offset, getChildOffset().y));
+}
+
+void vui::IWidget::setChildOffsetY(f32 offset) {
+    setChildOffset(f32v2(getChildOffset().x, offset));
 }
 
 void vui::IWidget::updateDescendants(f32 dt) {

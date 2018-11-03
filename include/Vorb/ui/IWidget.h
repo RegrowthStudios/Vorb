@@ -214,12 +214,13 @@ namespace vorb {
             virtual     ClippingState getClippingTop()      const;
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
-            virtual             f32v4 getClipRect()         const { return m_clipRect;   }
-            virtual              ui16 getZIndex()           const { return m_zIndex;     }
-            virtual              Dock getDock()             const { return m_dock;       }
-            virtual         DockState getDockState()        const { return m_dock.state; }
-            virtual               f32 getDockSize()         const { return m_dock.size;  }
-            virtual    const nString& getName()             const { return m_name;       }
+            virtual             f32v4 getClipRect()         const { return m_clipRect;    }
+            virtual              ui16 getZIndex()           const { return m_zIndex;      }
+            virtual              Dock getDock()             const { return m_dock;        }
+            virtual         DockState getDockState()        const { return m_dock.state;  }
+            virtual               f32 getDockSize()         const { return m_dock.size;   }
+            virtual    const nString& getName()             const { return m_name;        }
+            virtual      const f32v2& getChildOffset()      const { return m_childOffset; }
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
 
@@ -258,6 +259,9 @@ namespace vorb {
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
             virtual void setName(const nString& name) { m_name = name; }
+            virtual void setChildOffset(const f32v2& offset);
+            virtual void setChildOffsetX(f32 offset);
+            virtual void setChildOffsetY(f32 offset);
 
             virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate = flag;       }
             virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder = flag;         }
@@ -360,17 +364,18 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            Viewport*         m_viewport;         ///< Viewport this widget resides in.
-            IWidget*          m_parent;           ///< Parent widget.
-            IWidgets          m_widgets;          ///< Collection of child widgets.
-            f32v2             m_position;         ///< Position of widget relative to window in pixels.
-            f32v2             m_size;             ///< Size of the widget in pixels.
-            f32v4             m_padding;          ///< Padding of the widget in pixels.
-            Clipping          m_clipping;         ///< Clipping rules to use for generating the clip rectangle.
-            f32v4             m_clipRect;         ///< Clipping rectangle for rendering.
-            ui16              m_zIndex;           ///< Z-index of widget for depth.
-            Dock              m_dock;             ///< Information for docking of widget.
-            nString           m_name;             ///< Display name of the container.
+            Viewport*         m_viewport;    ///< Viewport this widget resides in.
+            IWidget*          m_parent;      ///< Parent widget.
+            IWidgets          m_widgets;     ///< Collection of child widgets.
+            f32v2             m_position;    ///< Position of widget relative to window in pixels.
+            f32v2             m_size;        ///< Size of the widget in pixels.
+            f32v4             m_padding;     ///< Padding of the widget in pixels.
+            Clipping          m_clipping;    ///< Clipping rules to use for generating the clip rectangle.
+            f32v4             m_clipRect;    ///< Clipping rectangle for rendering.
+            ui16              m_zIndex;      ///< Z-index of widget for depth.
+            Dock              m_dock;        ///< Information for docking of widget.
+            nString           m_name;        ///< Display name of the container.
+            f32v2             m_childOffset; ///< Apply this offset to all child widgets' positions.
 
             WidgetFlags m_flags;
         };

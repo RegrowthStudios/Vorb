@@ -48,12 +48,12 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const color4& setLabelColor()        const { return m_labelColor;         }
-            virtual const color4& setLabelHoverColor()   const { return m_labelHoverColor;    }
-            virtual     VGTexture setLabelTexture()      const { return m_labelTexture;       }
-            virtual     VGTexture setLabelHoverTexture() const { return m_labelHoverTexture;  }
+            virtual const color4& getLabelColor()        const { return m_labelColor;         }
+            virtual const color4& getLabelHoverColor()   const { return m_labelHoverColor;    }
+            virtual     VGTexture getLabelTexture()      const { return m_labelTexture;       }
+            virtual     VGTexture getLabelHoverTexture() const { return m_labelHoverTexture;  }
             virtual const color4& getTextColor()         const override { return m_textColor; }
-            virtual const color4& setTextHoverColor()    const { return m_textHoverColor;     }
+            virtual const color4& getTextHoverColor()    const { return m_textHoverColor;     }
 
             /************************************************************************/
             /* Setters                                                              */

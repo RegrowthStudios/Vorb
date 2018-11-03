@@ -30,6 +30,42 @@ void vui::Label::addDrawables() {
     TextWidget::addDrawables();
 }
 
+void vui::Label::setLabelColor(const color4& color) {
+    m_labelColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::setLabelHoverColor(const color4& color) {
+    m_labelHoverColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::setLabelTexture(VGTexture texture) {
+    m_labelTexture = texture;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::setLabelHoverTexture(VGTexture texture) {
+    m_labelHoverTexture = texture;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::setTextColor(const color4& color) {
+    m_textColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::setTextHoverColor(const color4& color) {
+    m_textHoverColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
 void vui::Label::calculateDrawables() {
     m_drawableRect.setPosition(getPaddedPosition());
     m_drawableRect.setSize(getPaddedSize());

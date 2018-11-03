@@ -110,18 +110,19 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
-        // TODO(Matthew): We need to complete revisit copy constructor, at the very least ensuring things like parenting is properly preserved - as is we will just copy the parent pointer but never register the copy with the parent. We need to either disallow copy construction or choose between automatically adding it, or nullifying parent pointer. This is perhaps not the only issue pertaining to the copy construction problem.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font = vorb::graphics::SpriteFont;
         public:
-            /*! \brief Constructor default and parametised to set renderer and window.
-             *
-             * \param renderer: The renderer to use for drawing widget.
-             * \param window: The window in which to set the UI.
-             */
+            /*! \brief Default constructor.  */
             IWidget();
-            /*! \brief Destructor that unhooks events */
+            /*! \brief Copy constructor. */
+            IWidget(const IWidget&);
+            /*! \brief Destructor that unhooks events 
+             *
+             * Note that we remove all ties to any UI structure the copied-from widget may be a part of. That is,
+             * we set the viewport and parent to nullptr and create an empty vector of child widgets.
+             */
             virtual ~IWidget();
 
             /*! \brief Releases all resources used by the Widget.

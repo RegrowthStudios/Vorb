@@ -128,10 +128,14 @@ void vui::Panel::updateSliders() {
     // TODO(Matthew): Revisit this after figuring slider embedding - if children get altered drastically this calculation will be outdated.
     // If we're automatically adding scrollbars, then we want to know the extreme points of the child widgets.
     if (m_autoScroll) {
-        // Skip sliders for determining the min and max values.
+        // Determine min and max coords of child widgets.
         for (auto& child : m_widgets) {
+            // Skip sliders.
             if (child == &m_sliders.horizontal ||
                 child == &m_sliders.vertical) continue;
+
+            // Skip disabled widgets.
+            if (!child->isEnabled()) continue;
 
             const f32v2& position = child->getRelativePosition();
             const f32v2& size     = child->getSize();

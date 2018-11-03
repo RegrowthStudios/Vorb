@@ -14,6 +14,8 @@ vui::CheckBox::CheckBox() :
     m_textHoverColor(color::Black),
     m_checkedTexture(0),
     m_uncheckedTexture(0),
+    m_checkedHoverTexture(0),
+    m_uncheckedHoverTexture(0),
     m_isChecked(false) {
     m_flags.needsDrawableRecalculation = true;
 }

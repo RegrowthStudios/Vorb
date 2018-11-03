@@ -52,7 +52,7 @@ namespace vorb {
             virtual      const VGTexture& getHoverTexture()   const { return m_hoverTexture;    }
             virtual         const color4& getBackColor()      const { return m_backColor1;      }
             virtual         const color4& getBackHoverColor() const { return m_backHoverColor1; }
-            virtual         const color4& getTextColor()      const { return m_textColor;       }
+            virtual         const color4& getTextColor()      const override { return m_textColor; }
             virtual         const color4& getTextHoverColor() const { return m_textHoverColor;  }
 
             /************************************************************************/
@@ -64,7 +64,7 @@ namespace vorb {
             virtual void setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
             virtual void setBackHoverColor(const color4& color);
             virtual void setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
-            virtual void setTextColor(const color4& color);
+            virtual void setTextColor(const color4& color) override;
             virtual void setTextHoverColor(const color4& color);
 
         protected:

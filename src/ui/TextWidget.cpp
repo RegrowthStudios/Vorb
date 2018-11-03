@@ -66,37 +66,37 @@ void vui::TextWidget::calculateDrawables() {
 }
 
 void vui::TextWidget::updateTextPosition() {
-    const f32v2& dims = getSize();
+    const f32v2& size = getSize();
     const f32v2& pos  = getPosition();
     const vg::TextAlign& textAlign = getTextAlign();
 
     switch (textAlign) {
         case vg::TextAlign::LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
+            m_drawableText.setPosition(pos + f32v2(0.0f, size.y / 2.0f));
             break;
         case vg::TextAlign::TOP_LEFT:
             m_drawableText.setPosition(pos);
             break;
         case vg::TextAlign::TOP:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
+            m_drawableText.setPosition(pos + f32v2(size.x / 2.0f, 0.0f));
             break;
         case vg::TextAlign::TOP_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
+            m_drawableText.setPosition(pos + f32v2(size.x, 0.0f));
             break;
         case vg::TextAlign::RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
+            m_drawableText.setPosition(pos + f32v2(size.x, size.y / 2.0f));
             break;
         case vg::TextAlign::BOTTOM_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
+            m_drawableText.setPosition(pos + f32v2(size.x, size.y));
             break;
         case vg::TextAlign::BOTTOM:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
+            m_drawableText.setPosition(pos + f32v2(size.x / 2.0f, size.y));
             break;
         case vg::TextAlign::BOTTOM_LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
+            m_drawableText.setPosition(pos + f32v2(0.0f, size.y));
             break;
         case vg::TextAlign::CENTER:
-            m_drawableText.setPosition(pos + dims / 2.0f);
+            m_drawableText.setPosition(pos + size / 2.0f);
             break;
     }
 }

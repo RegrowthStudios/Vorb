@@ -6,6 +6,7 @@
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/utils.h"
 
+// TODO(Matthew): Move event sender setting to enable...
 vui::IWidget::IWidget() :
     MouseClick(this),
     MouseDown(this),

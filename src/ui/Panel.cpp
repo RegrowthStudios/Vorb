@@ -31,6 +31,9 @@ vui::Panel::~Panel() {
 void vui::Panel::initBase() {
     m_sliders.horizontal.init(this, getName() + "_horizontal_slider");
     m_sliders.vertical.init(this, getName() + "_vertical_slider");
+
+    m_sliders.horizontal.setIgnoreOffset(true);
+    m_sliders.vertical.setIgnoreOffset(true);
 }
 
 void vui::Panel::enable() {

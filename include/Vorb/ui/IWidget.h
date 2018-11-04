@@ -97,12 +97,14 @@ namespace vorb {
             bool isEnabled  : 1; ///< True when events are enabled.
             bool isMouseIn  : 1; ///< Used for motion event tracking.
 
+            bool ignoreOffset : 1; ///< Ignore parent's childOffset factor.
+
             volatile bool needsDimensionUpdate       : 1; ///< Whether we need to recalculate widget dimensions.
             volatile bool needsZIndexReorder         : 1; ///< Whether we need to recalculate the order of widgets based on their z-index values.
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
-            volatile bool needsDrawableRecalculation : 1; ///< Whether we need to recalculate the drawables.
-            volatile bool needsDrawableRefresh       : 4; ///< Whether we need to refresh the drawables currently drawn to screen.
+            volatile bool needsDrawableRecalculation : 2; ///< Whether we need to recalculate the drawables.
+            volatile bool needsDrawableRefresh       : 2; ///< Whether we need to refresh the drawables currently drawn to screen.
             volatile bool needsDrawableReregister    : 4; ///< Whether we need to reregister our drawables with the renderer.
         };
 
@@ -223,6 +225,7 @@ namespace vorb {
             virtual      const f32v2& getChildOffset()      const { return m_childOffset; }
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
+            virtual              bool ignoreOffset()        const { return m_flags.ignoreOffset; }
 
             virtual bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate;       }
             virtual bool needsZIndexReorder()         const { return m_flags.needsZIndexReorder;         }
@@ -262,6 +265,7 @@ namespace vorb {
             virtual void setChildOffset(const f32v2& offset);
             virtual void setChildOffsetX(f32 offset);
             virtual void setChildOffsetY(f32 offset);
+            virtual void setIgnoreOffset(bool ignoreOffset);
 
             virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate = flag;       }
             virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder = flag;         }
@@ -343,6 +347,9 @@ namespace vorb {
              * \brief Sorts, then removes and re-adds all child widgets to renderer.
              */
             virtual void reorderChildWidgets();
+
+            /*! \brief Applies parent's child offset to this widget. */
+            virtual void applyOffset();
 
             /************************************************************************/
             /* Event Handlers                                                       */

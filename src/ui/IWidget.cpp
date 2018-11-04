@@ -19,7 +19,7 @@ vui::IWidget::IWidget() :
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_childOffset(f32v2(0.0f)),
-    m_flags({ false, false, false, false, false, false, false, false, false, false }) {
+    m_flags({ false, false, false, false, false, false, false, false, false, false, false }) {
     // Empty
 }
 
@@ -36,7 +36,7 @@ vui::IWidget::IWidget(const IWidget& widget) {
     m_dock     = widget.m_dock;
     m_name     = widget.m_name;
 
-    m_flags = { false, false, false, false, false, false, false, false, false, false };
+    m_flags = { false, false, false, false, false, false, false, false, false, false, false };
 }
 
 vui::IWidget::~IWidget() {
@@ -85,6 +85,9 @@ void vui::IWidget::update(f32 dt /*= 1.0f*/) {
     if (m_flags.needsDimensionUpdate) {
         m_flags.needsDimensionUpdate = false;
         updateDimensions(dt);
+        if (!m_flags.ignoreOffset) {
+            applyOffset();
+        }
     }
 
     if (m_flags.needsDockRecalculation) {
@@ -514,6 +517,12 @@ void vui::IWidget::setChildOffsetY(f32 offset) {
     setChildOffset(f32v2(getChildOffset().x, offset));
 }
 
+void vui::IWidget::setIgnoreOffset(bool ignoreOffset) {
+    m_flags.ignoreOffset = ignoreOffset;
+
+    m_flags.needsDimensionUpdate = true;
+}
+
 void vui::IWidget::updateDescendants(f32 dt) {
     for (auto& child : m_widgets) {
         if (!child->isEnabled()) continue;
@@ -734,6 +743,12 @@ void vui::IWidget::reorderWidgets() {
 void vui::IWidget::reorderChildWidgets() {
     for (auto& child : m_widgets) {
         child->m_flags.needsZIndexReorder = true;
+    }
+}
+
+void vui::IWidget::applyOffset() {
+    if (m_parent) {
+        IWidget::setPosition(getPosition() + m_parent->getChildOffset());
     }
 }
 

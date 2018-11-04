@@ -184,22 +184,7 @@ void vui::Slider::updateColor() {
     }
 }
 
-void vui::Slider::onMouseDown(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (m_flags.isMouseIn) {
-        MouseDown(e);
-        m_flags.isClicking = true;
-    }
-}
-
-void vui::Slider::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (m_flags.isMouseIn) {
-        MouseUp(e);
-        if (m_flags.isClicking) MouseClick(e);
-    }
-    m_flags.isClicking = false;
-}
-
-void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
+void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
             m_flags.isMouseIn = true;
@@ -223,16 +208,25 @@ void vui::Slider::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
 
     // Check value change
     if (m_flags.isClicking) {
-        const f32v2& pos  = m_drawableBar.getPosition();
-        const f32v2& size = m_drawableBar.getSize();
-        float v;
+        const f32v2& barPos  = m_drawableBar.getPosition();
+        const f32v2& barSize = m_drawableBar.getSize();
+
+        const f32v2& slidePos  = m_drawableSlide.getPosition();
+        const f32v2& slideSize = m_drawableSlide.getSize();
+
+        f32 v = 0.0f; // Normalised position of slide in bar after mouse move.
         if (m_isVertical) {
-            v = glm::clamp((e.y - pos.y) / size.y, 0.0f, 1.0f);
+            f32 newSlidePos = glm::clamp(slidePos.y + e.dy, barPos.y, barPos.y + barSize.y - slideSize.y);
+
+            v = (newSlidePos - barPos.y) / (barSize.y - slideSize.y);
         } else {
-            v = glm::clamp((e.x - pos.x) / size.x, 0.0f, 1.0f);
+            f32 newSlidePos = glm::clamp(slidePos.x + e.dx, barPos.x, barPos.x + barSize.x - slideSize.x);
+
+            v = (newSlidePos - barPos.x) / (barSize.x - slideSize.x);
         }
+
         // TODO(Ben): Faster round
-        int newValue = (int)round(v * (m_max - m_min)) + m_min;
+        int newValue = (int)round(v * (f32)(m_max - m_min)) + m_min;
         if (newValue != m_value) {
             setValue(newValue);
         }

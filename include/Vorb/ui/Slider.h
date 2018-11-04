@@ -100,9 +100,7 @@ namespace vorb {
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
-            virtual void onMouseDown(Sender s, const MouseButtonEvent& e) override;
-            virtual void onMouseUp(Sender s, const MouseButtonEvent& e) override;
-            virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+            virtual void onMouseMove(Sender, const MouseMotionEvent& e) override;
 
             /************************************************************************/
             /* LUA Callbacks                                                        */

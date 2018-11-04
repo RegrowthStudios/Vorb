@@ -163,13 +163,13 @@ void vui::Slider::updateSlidePosition() {
     const f32v2& barSize = getSize();
 
     const f32v2& slideSize = m_drawableSlide.getSize();
-   
+
     f32v2 newPos;
     if (m_isVertical) {
         newPos.x = barPos.x + barSize.x * 0.5f - slideSize.x * 0.5f;
-        newPos.y = barPos.y + scale * barSize.y - slideSize.y * 0.5f;
+        newPos.y = barPos.y + scale * (barSize.y - slideSize.y);
     } else {
-        newPos.x = barPos.x + scale * barSize.x - slideSize.x * 0.5f;
+        newPos.x = barPos.x + scale * (barSize.x - slideSize.x);
         newPos.y = barPos.y + barSize.y * 0.5f - slideSize.y * 0.5f;
     }
     m_drawableSlide.setPosition(newPos);

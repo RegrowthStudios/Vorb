@@ -313,19 +313,25 @@ void vui::Panel::onMouseFocusLost(Sender, const MouseEvent& e) {
     }
 }
 
-void vui::Panel::onSliderValueChange(Sender s, int v) {
+void vui::Panel::onSliderValueChange(Sender s, int) {
     if (m_autoScroll) {
-        f32 r = (f32)v / SLIDER_VAL_MAX;
+        f32 r = ((Slider*)s)->getValueScaled();
         if ((Slider*)s == &m_sliders.horizontal) {
-            // Horizontal
-            f32 range = m_maxX - m_minX - m_size.x + m_sliderWidth;
-            if (m_sliders.vertical.isEnabled()) range += m_sliderWidth;
-            setChildOffsetX(m_minX + range * r);
+            // r == 0: offset_l = +(m_position.x - m_minX)
+            // r == 1: offset_r = -(m_maxX - m_position.x - m_size.x)
+            // We want a formula that combines these offsets:
+            //    offset = offset_l + r(offset_r - offset_l)
+
+            f32 offset = m_position.x - m_minX + r * ( m_minX - m_maxX + m_size.x );
+            setChildOffsetX(offset);
         } else {
-            // Vertical
-            f32 range = m_maxY - m_minY - m_size.y + m_sliderWidth;
-            if (m_sliders.horizontal.isEnabled()) range += m_sliderWidth;
-            setChildOffsetY(m_minY + range * r);
+            // r == 0: offset_l = +(m_position.y - m_minY)
+            // r == 1: offset_r = -(m_maxY - m_position.y - m_size.y)
+            // We want a formula that combines these offsets:
+            //    offset = offset_l + r(offset_r - offset_l)
+
+            f32 offset = m_position.y - m_minY + r * ( m_minY - m_maxY + m_size.y );
+            setChildOffsetY(offset);
         }
     }
     m_flags.needsDimensionUpdate = true;

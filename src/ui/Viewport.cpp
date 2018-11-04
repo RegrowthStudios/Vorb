@@ -76,6 +76,7 @@ void vui::Viewport::setGameWindow(const GameWindow* window) {
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Viewport::onResize(Sender s VORB_MAYBE_UNUSED, const WindowResizeEvent& e VORB_MAYBE_UNUSED) {
+void vui::Viewport::onResize(Sender, const WindowResizeEvent&) {
     m_flags.needsDimensionUpdate = true;
+    markDescendantsToUpdateDimensions();
 }

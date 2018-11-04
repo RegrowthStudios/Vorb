@@ -563,6 +563,13 @@ void vui::IWidget::markChildrenToUpdateDimensions() {
     }
 }
 
+void vui::IWidget::markDescendantsToUpdateDimensions() {
+    for (auto& child : m_widgets) {
+        child->m_flags.needsDimensionUpdate = true;
+        child->markDescendantsToUpdateDimensions();
+    }
+}
+
 void vui::IWidget::calculateDockedWidgets() {
     f32 surplusWidth  = m_size.x;
     f32 surplusHeight = m_size.y;

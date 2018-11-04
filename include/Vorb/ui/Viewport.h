@@ -98,7 +98,7 @@ namespace vorb {
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
-            virtual void onResize(Sender s, const WindowResizeEvent& e);
+            virtual void onResize(Sender, const WindowResizeEvent&);
 
             /************************************************************************/
             /* Members                                                              */

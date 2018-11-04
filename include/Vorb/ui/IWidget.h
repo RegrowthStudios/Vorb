@@ -326,6 +326,10 @@ namespace vorb {
              * \brief Marks all children to update their dimensions.
              */
             virtual void markChildrenToUpdateDimensions();
+            /*!
+             * \brief Marks all descendants to update their dimensions.
+             */
+            virtual void markDescendantsToUpdateDimensions();
 
             /*! \brief Calculates positions and sizes of docked child widgets. */
             void calculateDockedWidgets();

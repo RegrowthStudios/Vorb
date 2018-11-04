@@ -130,6 +130,7 @@ void vui::IWidget::enable() {
 
     // TODO(Matthew): This is wrong, probably need to re-add drawables of all items with current renderer...
     //                Change the UIRenderer to use an ordered list on z-index.
+    //                (Revisit all places that use reregistering of drawables after this.)
     addDrawables();
 
     // Enable all children

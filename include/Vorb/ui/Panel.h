@@ -88,6 +88,9 @@ namespace vorb {
             f32 m_minX, m_minY; ///< The minimum coordinates of child widgets relative to panel.
             f32 m_maxX, m_maxY; ///< The maximum coordinates of child widgets relative to panel.
 
+            f32v4 m_dimensionDelta; ///< How much we changed the dimensions on last call to updateSliders.
+            f32v4 m_paddingDelta; ///< How much we changed the padding on last call to updateSliders.
+
             bool m_autoScroll; ///< Whether to automatically add sliders if content overflows the panel.
             struct {
                 Slider horizontal;

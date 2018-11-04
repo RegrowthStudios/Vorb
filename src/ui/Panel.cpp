@@ -13,6 +13,8 @@ vui::Panel::Panel() :
     m_minY(FLT_MAX),
     m_maxX(-FLT_MAX),
     m_maxY(-FLT_MAX),
+    m_dimensionDelta(f32v4(0.0f)),
+    m_paddingDelta(f32v4(0.0f)),
     m_autoScroll(false),
     m_flipHorizontal(false),
     m_flipVertical(false),
@@ -125,7 +127,6 @@ void vui::Panel::updateSliders() {
     m_maxX = m_maxY = -FLT_MAX;
     m_minX = m_minY =  FLT_MAX;
 
-    // TODO(Matthew): Revisit this after figuring slider embedding - if children get altered drastically this calculation will be outdated.
     // If we're automatically adding scrollbars, then we want to know the extreme points of the child widgets.
     if (m_autoScroll) {
         // Determine min and max coords of child widgets.
@@ -168,6 +169,16 @@ void vui::Panel::updateSliders() {
 
     // Note that while this looks like it might iteratively push the sliders further and further out, the processed values of position and padding are recalculated any time we also come here to update sliders - so as long as this never touches the raw values of position and padding we're good!
 
+    // If updateDimensions didn't already reset the position/size/padding, let's do that now.
+    if (m_dock.state != DockState::NONE) {
+        m_position -= f32v2(m_dimensionDelta.x, m_dimensionDelta.y);
+        m_size     -= f32v2(m_dimensionDelta.z, m_dimensionDelta.w);
+        m_padding  -= m_paddingDelta;
+
+        m_dimensionDelta = f32v4(0.0f, 0.0f, 0.0f, 0.0f);
+        m_paddingDelta   = f32v4(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
     // Set up horizontal slider.
     Slider& slider = m_sliders.horizontal;
     if (needsHorizontal) {
@@ -178,11 +189,17 @@ void vui::Panel::updateSliders() {
             m_position.y += m_sliderWidth;
             m_padding.y  += m_sliderWidth;
 
+            m_dimensionDelta += f32v4(0.0f, m_sliderWidth, 0.0f, 0.0f);
+            m_paddingDelta   += f32v4(0.0f, m_sliderWidth, 0.0f, 0.0f);
+
             slider.setTop(-1.0f * m_sliderWidth);
             slider.setRawBottom({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
         } else {
             m_size.y    -= m_sliderWidth;
             m_padding.w += m_sliderWidth;
+
+            m_dimensionDelta += f32v4(0.0f, 0.0f, 0.0f, -m_sliderWidth);
+            m_paddingDelta   += f32v4(0.0f, 0.0f, 0.0f,  m_sliderWidth);
 
             slider.setRawTop({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
             slider.setBottom(-1.0f * m_sliderWidth);
@@ -210,11 +227,17 @@ void vui::Panel::updateSliders() {
             m_position.x += m_sliderWidth;
             m_padding.x  += m_sliderWidth;
 
+            m_dimensionDelta += f32v4(m_sliderWidth, 0.0f, 0.0f, 0.0f);
+            m_paddingDelta   += f32v4(m_sliderWidth, 0.0f, 0.0f, 0.0f);
+
             slider.setLeft(-1.0f * m_sliderWidth);
             slider.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
         } else {
             m_size.x    -= m_sliderWidth;
             m_padding.z += m_sliderWidth;
+
+            m_dimensionDelta += f32v4(0.0f, 0.0f, -m_sliderWidth, 0.0f);
+            m_paddingDelta   += f32v4(0.0f, 0.0f,  m_sliderWidth, 0.0f);
 
             slider.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
             slider.setRight(-1.0f * m_sliderWidth);

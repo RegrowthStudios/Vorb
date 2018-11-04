@@ -146,17 +146,19 @@ void vui::Panel::updateSliders() {
             const f32v2& position = child->getRelativePosition();
             const f32v2& size     = child->getSize();
 
-            if (position.x < m_minX) {
-                m_minX = position.x;
+            f32v2 correctedPos = position - m_childOffset;
+
+            if (correctedPos.x < m_minX) {
+                m_minX = correctedPos.x;
             }
-            if (position.y < m_minY) {
-                m_minY = position.y;
+            if (correctedPos.y < m_minY) {
+                m_minY = correctedPos.y;
             }
-            if (position.x + size.x > m_maxX) {
-                m_maxX = position.x + size.x;
+            if (correctedPos.x + size.x > m_maxX) {
+                m_maxX = correctedPos.x + size.x;
             }
-            if (position.y + size.y > m_maxY) {
-                m_maxY = position.y + size.y;
+            if (correctedPos.y + size.y > m_maxY) {
+                m_maxY = correctedPos.y + size.y;
             }
         }
         if ((m_maxX > m_size.x) || (m_minX < 0.0f)) {

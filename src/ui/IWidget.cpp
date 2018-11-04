@@ -760,7 +760,7 @@ void vui::IWidget::applyOffset() {
     }
 }
 
-void vui::IWidget::onMouseDown(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
+void vui::IWidget::onMouseDown(Sender, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseDown(e);
@@ -768,7 +768,7 @@ void vui::IWidget::onMouseDown(Sender s VORB_MAYBE_UNUSED, const MouseButtonEven
     }
 }
 
-void vui::IWidget::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
+void vui::IWidget::onMouseUp(Sender, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseUp(e);
@@ -777,7 +777,7 @@ void vui::IWidget::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent&
     m_flags.isClicking = false;
 }
 
-void vui::IWidget::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
+void vui::IWidget::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
@@ -791,7 +791,7 @@ void vui::IWidget::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEven
     }
 }
 
-void vui::IWidget::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
+void vui::IWidget::onMouseFocusLost(Sender, const MouseEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         m_flags.isMouseIn = false;

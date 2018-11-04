@@ -29,6 +29,8 @@ void vui::CheckBox::initBase() {
 }
 
 void vui::CheckBox::addDrawables() {
+    if (!m_viewport) return;
+
     // Make copies
     m_drawnRect = m_drawableRect;
 

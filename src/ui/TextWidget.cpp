@@ -14,6 +14,8 @@ vui::TextWidget::~TextWidget() {
 }
 
 void vui::TextWidget::addDrawables() {
+    if (!m_viewport) return;
+
     // Make copies.
     m_drawnText = m_drawableText;
 

@@ -19,6 +19,8 @@ vui::Label::~Label() {
 }
 
 void vui::Label::addDrawables() {
+    if (!m_viewport) return;
+
     // Make copies.
     m_drawnRect = m_drawableRect;
 

@@ -164,6 +164,8 @@ bool vui::IWidget::addWidget(IWidget* child) {
     child->m_flags.needsClipRectRecalculation = true;
     child->m_flags.needsDrawableReregister    = true;
 
+    child->update();
+
     m_flags.needsZIndexReorder     = true;
     m_flags.needsDockRecalculation = true;
 
@@ -189,6 +191,8 @@ bool vui::IWidget::removeWidget(IWidget* child) {
             child->m_flags.needsDockRecalculation     = true;
             child->m_flags.needsClipRectRecalculation = true;
 
+            child->update();
+
             m_flags.needsDockRecalculation = true;
 
             return true;
@@ -206,8 +210,10 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
 }
 
 void vui::IWidget::removeDrawables() {
-    UIRenderer* renderer = m_viewport->getRenderer();
-    if (renderer) renderer->remove(this);
+    if (m_viewport) {
+        UIRenderer* renderer = m_viewport->getRenderer();
+        if (renderer) renderer->remove(this);
+    }
 }
 
 vui::ClippingState vui::IWidget::getClippingLeft() const {

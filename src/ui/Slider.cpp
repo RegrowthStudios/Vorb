@@ -29,6 +29,8 @@ void vui::Slider::initBase() {
 }
 
 void vui::Slider::addDrawables() {
+    if (!m_viewport) return;
+
     // Make copies
     m_drawnBar  = m_drawableBar;
     m_drawnSlide = m_drawableSlide;

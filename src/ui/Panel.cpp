@@ -52,6 +52,8 @@ void vui::Panel::disable() {
 }
 
 void vui::Panel::addDrawables() {
+    if (!m_viewport) return;
+
     // Make copy.
     m_drawnRect = m_drawableRect;
     // Register the drawable.

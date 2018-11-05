@@ -187,27 +187,26 @@ void vui::Panel::updateSliders() {
     }
 
     // Set up horizontal slider.
-    Slider& slider_hor = m_sliders.horizontal;
     if (needsHorizontal) {
-        if (!slider_hor.isEnabled()) {
-            slider_hor.enable();
+        if (!m_sliders.horizontal.isEnabled()) {
+            m_sliders.horizontal.enable();
 
-            slider_hor.setPositionType(PositionType::RELATIVE_TO_PARENT);
+            m_sliders.horizontal.setPositionType(PositionType::RELATIVE_TO_PARENT);
             if (m_flipHorizontal) {
-                slider_hor.setTop(-1.0f * m_sliderWidth);
-                slider_hor.setRawBottom({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
+                m_sliders.horizontal.setTop(-1.0f * m_sliderWidth);
+                m_sliders.horizontal.setRawBottom({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
             } else {
-                slider_hor.setRawTop({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
-                slider_hor.setBottom(-1.0f * m_sliderWidth);
+                m_sliders.horizontal.setRawTop({ 1.0f, { DimensionType::PARENT_HEIGHT_PERCENTAGE } });
+                m_sliders.horizontal.setBottom(-1.0f * m_sliderWidth);
             }
-            slider_hor.setLeft(0.0f);
-            slider_hor.setRight(0.0f);
+            m_sliders.horizontal.setLeft(0.0f);
+            m_sliders.horizontal.setRight(0.0f);
 
-            slider_hor.setRange(0, SLIDER_VAL_MAX);
-            slider_hor.setIsVertical(false);
+            m_sliders.horizontal.setRange(0, SLIDER_VAL_MAX);
+            m_sliders.horizontal.setIsVertical(false);
         }
 
-        slider_hor.setSlideSize(f32v2(m_size.x * m_size.x / (m_maxX - m_minX), m_sliderWidth));
+        m_sliders.horizontal.setSlideSize(f32v2(m_size.x * m_size.x / (m_maxX - m_minX), m_sliderWidth));
 
         if (m_flipHorizontal) {
             m_position.y += m_sliderWidth;
@@ -222,35 +221,36 @@ void vui::Panel::updateSliders() {
             m_dimensionDelta += f32v4(0.0f, 0.0f, 0.0f, -m_sliderWidth);
             m_paddingDelta   += f32v4(0.0f, 0.0f, 0.0f,  m_sliderWidth);
         }
+
+        m_sliders.horizontal.setNeedsDimensionUpdate(true);
     } else {
-        slider_hor.setPositionType(PositionType::STATIC_TO_PARENT);
-        slider_hor.setSize(f32v2(0.0f));
-        slider_hor.setSlideSize(f32v2(0.0f));
-        slider_hor.disable();
+        m_sliders.horizontal.setPositionType(PositionType::STATIC_TO_PARENT);
+        m_sliders.horizontal.setSize(f32v2(0.0f));
+        m_sliders.horizontal.setSlideSize(f32v2(0.0f));
+        m_sliders.horizontal.disable();
     }
 
     // Set up vertical slider.
-    Slider& slider_ver = m_sliders.vertical;
     if (needsVertical) {
-        if (!slider_ver.isEnabled()) {
-            slider_ver.enable();
+        if (!m_sliders.vertical.isEnabled()) {
+            m_sliders.vertical.enable();
 
-            slider_ver.setPositionType(PositionType::RELATIVE_TO_PARENT);
+            m_sliders.vertical.setPositionType(PositionType::RELATIVE_TO_PARENT);
             if (m_flipVertical) {
-                slider_ver.setLeft(-1.0f * m_sliderWidth);
-                slider_ver.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
+                m_sliders.vertical.setLeft(-1.0f * m_sliderWidth);
+                m_sliders.vertical.setRawRight({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
             } else {
-                slider_ver.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
-                slider_ver.setRight(-1.0f * m_sliderWidth);
+                m_sliders.vertical.setRawLeft({ 1.0f, { DimensionType::PARENT_WIDTH_PERCENTAGE } });
+                m_sliders.vertical.setRight(-1.0f * m_sliderWidth);
             }
-            slider_ver.setTop(0.0f);
-            slider_ver.setBottom(0.0f);
+            m_sliders.vertical.setTop(0.0f);
+            m_sliders.vertical.setBottom(0.0f);
 
-            slider_ver.setRange(0, SLIDER_VAL_MAX);
-            slider_ver.setIsVertical(true);
+            m_sliders.vertical.setRange(0, SLIDER_VAL_MAX);
+            m_sliders.vertical.setIsVertical(true);
         }
 
-        slider_ver.setSlideSize(f32v2(m_sliderWidth, m_size.y * m_size.y / (m_maxY - m_minY)));
+        m_sliders.vertical.setSlideSize(f32v2(m_sliderWidth, m_size.y * m_size.y / (m_maxY - m_minY)));
 
         if (m_flipVertical) {
             m_position.x += m_sliderWidth;
@@ -265,11 +265,13 @@ void vui::Panel::updateSliders() {
             m_dimensionDelta += f32v4(0.0f, 0.0f, -m_sliderWidth, 0.0f);
             m_paddingDelta   += f32v4(0.0f, 0.0f,  m_sliderWidth, 0.0f);
         }
+
+        m_sliders.vertical.setNeedsDimensionUpdate(true);
     } else {
-        slider_ver.setPositionType(PositionType::STATIC_TO_PARENT);
-        slider_ver.setSize(f32v2(0.0f));
-        slider_ver.setSlideSize(f32v2(0.0f));
-        slider_ver.disable();
+        m_sliders.vertical.setPositionType(PositionType::STATIC_TO_PARENT);
+        m_sliders.vertical.setSize(f32v2(0.0f));
+        m_sliders.vertical.setSlideSize(f32v2(0.0f));
+        m_sliders.vertical.disable();
     }
 }
 

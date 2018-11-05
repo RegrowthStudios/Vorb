@@ -56,9 +56,9 @@ namespace vorb {
             virtual    const color4& getSlideColor()      const { return m_slideColor; }
             virtual    const color4& getSlideHoverColor() const { return m_slideHoverColor; }
             virtual    const color4& getBarColor()        const { return m_barColor; }
-            virtual              int getValue()           const { return m_value; }
-            virtual              int getMin()             const { return m_min; }
-            virtual              int getMax()             const { return m_max; }
+            virtual              i32 getValue()           const { return m_value; }
+            virtual              i32 getMin()             const { return m_min; }
+            virtual              i32 getMax()             const { return m_max; }
             /// Gets slider value scaled between 0.0f and 1.0f
             virtual              f32 getValueScaled()     const { return (f32)(m_value - m_min) / (m_max - m_min); }
             virtual             bool isHorizontal()       const { return !m_isVertical; }
@@ -74,10 +74,10 @@ namespace vorb {
             virtual void setBarColor(const color4& color);
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
-            virtual void setValue(int value);
-            virtual void setRange(int min, int max);
-            virtual void setMin(int min);
-            virtual void setMax(int max);
+            virtual void setValue(i32 value);
+            virtual void setRange(i32 min, i32 max);
+            virtual void setMin(i32 min);
+            virtual void setMax(i32 max);
             virtual void setIsVertical(bool isVertical);
 
             virtual bool isInSlideBounds(const f32v2& point) const { return isInSlideBounds(point.x, point.y); }
@@ -86,7 +86,7 @@ namespace vorb {
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
-            Event<int> ValueChange; ///< Occurs when the value changes
+            Event<i32> ValueChange; ///< Occurs when the value changes
 
         protected:
             /*! \brief Initialiser for setting up events. */
@@ -117,9 +117,9 @@ namespace vorb {
             color4       m_slideColor, m_slideHoverColor;
             Length2      m_rawSlideSize;
             f32v2        m_slideSize;
-            int          m_value;
-            int          m_min;
-            int          m_max;
+            i32          m_value;
+            i32          m_min;
+            i32          m_max;
             bool         m_isVertical;
             f32v2        m_clickPoint;
         };

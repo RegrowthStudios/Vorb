@@ -114,8 +114,8 @@ void vui::Slider::setSlideHoverColor(const color4& color) {
     m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Slider::setValue(int value) {
-    int old = m_value;
+void vui::Slider::setValue(i32 value) {
+    i32 old = m_value;
 
     m_value = glm::clamp(value, m_min, m_max);
 
@@ -126,20 +126,20 @@ void vui::Slider::setValue(int value) {
     }
 }
 
-void vui::Slider::setRange(int min, int max) {
+void vui::Slider::setRange(i32 min, i32 max) {
     m_min = min;
     m_max = max;
 
     setValue(m_value);
 }
 
-void vui::Slider::setMin(int min) {
+void vui::Slider::setMin(i32 min) {
     m_min = min;
 
     setValue(m_value);
 }
 
-void vui::Slider::setMax(int max) {
+void vui::Slider::setMax(i32 max) {
     m_max = max;
 
     setValue(m_value);
@@ -240,7 +240,7 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
         }
 
         // TODO(Ben): Faster round
-        int newValue = (int)round(v * (f32)(m_max - m_min)) + m_min;
+        i32 newValue = (i32)round(v * (f32)(m_max - m_min)) + m_min;
         if (newValue != m_value) {
             setValue(newValue);
         }

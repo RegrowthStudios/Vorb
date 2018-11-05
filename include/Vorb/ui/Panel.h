@@ -80,7 +80,7 @@ namespace vorb {
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
-            virtual void onSliderValueChange(Sender s, int v);
+            virtual void onSliderValueChange(Sender s, i32 v);
 
             /************************************************************************/
             /* Members                                                              */

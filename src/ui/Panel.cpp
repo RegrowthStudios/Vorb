@@ -287,7 +287,7 @@ void vui::Panel::onMouseFocusLost(Sender, const MouseEvent& e) {
     }
 }
 
-void vui::Panel::onSliderValueChange(Sender s, int) {
+void vui::Panel::onSliderValueChange(Sender s, i32) {
     if (m_autoScroll) {
         f32 r = ((Slider*)s)->getValueScaled();
         if ((Slider*)s == &m_sliders.horizontal) {

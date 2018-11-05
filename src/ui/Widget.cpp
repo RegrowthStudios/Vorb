@@ -29,8 +29,8 @@ void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.
     m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
     m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
 
-    m_rawDimensions.size.x     = dimensions.z;
-    m_rawDimensions.size.y     = dimensions.w;
+    m_rawDimensions.size.x = dimensions.z;
+    m_rawDimensions.size.y = dimensions.w;
     m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
     m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
 }

@@ -67,17 +67,6 @@ namespace vorb {
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
-            virtual void setPosition(f32v2 position) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
-            virtual void setSize(f32v2 size) override;
-            virtual void setWidth(f32 width) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPadding(const f32v4& padding) override;
-            virtual void setPaddingLeft(f32 left) override;
-            virtual void setPaddingTop(f32 top) override;
-            virtual void setPaddingRight(f32 right) override;
-            virtual void setPaddingBottom(f32 bottom) override;
         protected:
             /*! \brief Initialiser for adding sliders. */
             virtual void initBase() override;
@@ -98,9 +87,6 @@ namespace vorb {
             /************************************************************************/
             f32 m_minX, m_minY; ///< The minimum coordinates of child widgets relative to panel.
             f32 m_maxX, m_maxY; ///< The maximum coordinates of child widgets relative to panel.
-
-            f32v4 m_dimensionDelta; ///< How much we changed the dimensions on last call to updateSliders.
-            f32v4 m_paddingDelta; ///< How much we changed the padding on last call to updateSliders.
 
             bool m_autoScroll; ///< Whether to automatically add sliders if content overflows the panel.
             struct {

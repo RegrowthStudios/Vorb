@@ -13,8 +13,6 @@ vui::Panel::Panel() :
     m_minY(FLT_MAX),
     m_maxX(-FLT_MAX),
     m_maxY(-FLT_MAX),
-    m_dimensionDelta(f32v4(0.0f)),
-    m_paddingDelta(f32v4(0.0f)),
     m_autoScroll(false),
     m_flipHorizontal(false),
     m_flipVertical(false),
@@ -102,74 +100,6 @@ void vui::Panel::setAutoScroll(bool autoScroll) {
     }
 }
 
-void vui::Panel::setPosition(f32v2 position) {
-    Widget::setPosition(position);
-
-    m_dimensionDelta.x = 0.0f;
-    m_dimensionDelta.y = 0.0f;
-}
-
-void vui::Panel::setX(f32 x) {
-    Widget::setX(x);
-
-    m_dimensionDelta.x = 0.0f;
-}
-
-void vui::Panel::setY(f32 y) {
-    Widget::setY(y);
-
-    m_dimensionDelta.y = 0.0f;
-}
-
-void vui::Panel::setSize(f32v2 size) {
-    Widget::setSize(size);
-
-    m_dimensionDelta.z = 0.0f;
-    m_dimensionDelta.w = 0.0f;
-}
-
-void vui::Panel::setWidth(f32 width) {
-    Widget::setWidth(width);
-
-    m_dimensionDelta.z = 0.0f;
-}
-
-void vui::Panel::setHeight(f32 height) {
-    Widget::setHeight(height);
-
-    m_dimensionDelta.w = 0.0f;
-}
-
-void vui::Panel::setPadding(const f32v4& padding) {
-    Widget::setPadding(padding);
-
-    m_paddingDelta = f32v4(0.0f);
-}
-
-void vui::Panel::setPaddingLeft(f32 left) {
-    Widget::setPaddingLeft(left);
-
-    m_paddingDelta.x = 0.0f;
-}
-
-void vui::Panel::setPaddingTop(f32 top) {
-    Widget::setPaddingTop(top);
-
-    m_paddingDelta.y = 0.0f;
-}
-
-void vui::Panel::setPaddingRight(f32 right) {
-    Widget::setPaddingRight(right);
-
-    m_paddingDelta.z = 0.0f;
-}
-
-void vui::Panel::setPaddingBottom(f32 bottom) {
-    Widget::setPaddingBottom(bottom);
-
-    m_paddingDelta.w = 0.0f;
-}
-
 void vui::Panel::updateDimensions(f32 dt) {
     Widget::updateDimensions(dt);
 
@@ -249,29 +179,13 @@ void vui::Panel::updateSliders() {
 
     // Note that while this looks like it might iteratively push the sliders further and further out, the processed values of position and padding are recalculated any time we also come here to update sliders - so as long as this never touches the raw values of position and padding we're good!
 
-    // If updateDimensions/recalculateDocking didn't already reset the position/size/padding, let's do that now.
-    if (m_dock.state != DockState::NONE) {
-        m_position -= f32v2(m_dimensionDelta.x, m_dimensionDelta.y);
-        m_size     -= f32v2(m_dimensionDelta.z, m_dimensionDelta.w);
-        m_padding  -= m_paddingDelta;
-
-        m_dimensionDelta = f32v4(0.0f, 0.0f, 0.0f, 0.0f);
-        m_paddingDelta   = f32v4(0.0f, 0.0f, 0.0f, 0.0f);
-    }
-
     // Set up horizontal slider.
     if (needsHorizontal) {
         if (!m_sliders.horizontal.isEnabled()) {
             m_sliders.horizontal.enable();
 
             m_sliders.horizontal.setPositionType(PositionType::RELATIVE_TO_PARENT);
-            if (m_flipHorizontal) {
-                m_sliders.horizontal.setTop(-1.0f * m_sliderWidth);
-                m_sliders.horizontal.setRawBottom({ m_size.y - m_sliderWidth, { DimensionType::PIXEL } });
-            } else {
-                m_sliders.horizontal.setRawTop({ m_size.y - m_sliderWidth, { DimensionType::PIXEL } });
-                m_sliders.horizontal.setBottom(-1.0f * m_sliderWidth);
-            }
+
             m_sliders.horizontal.setLeft(0.0f);
             m_sliders.horizontal.setRight(0.0f);
 
@@ -279,22 +193,15 @@ void vui::Panel::updateSliders() {
             m_sliders.horizontal.setIsVertical(false);
         }
 
-        m_sliders.horizontal.setSlideSize(f32v2(m_size.x * m_size.x / (m_maxX - m_minX), m_sliderWidth));
-
         if (m_flipHorizontal) {
-            m_position.y += m_sliderWidth;
-            m_size.y     -= m_sliderWidth;
-            m_padding.y  += m_sliderWidth;
-
-            m_dimensionDelta += f32v4(0.0f, m_sliderWidth, 0.0f, -m_sliderWidth);
-            m_paddingDelta   += f32v4(0.0f, m_sliderWidth, 0.0f, 0.0f);
+            m_sliders.horizontal.setTop(0.0f);
+            m_sliders.horizontal.setRawBottom({ m_size.y - m_sliderWidth, { DimensionType::PIXEL } });
         } else {
-            m_size.y    -= m_sliderWidth;
-            m_padding.w += m_sliderWidth;
-
-            m_dimensionDelta += f32v4(0.0f, 0.0f, 0.0f, -m_sliderWidth);
-            m_paddingDelta   += f32v4(0.0f, 0.0f, 0.0f,  m_sliderWidth);
+            m_sliders.horizontal.setRawTop({ m_size.y - m_sliderWidth, { DimensionType::PIXEL } });
+            m_sliders.horizontal.setBottom(0.0f);
         }
+
+        m_sliders.horizontal.setSlideSize(f32v2(m_size.x * m_size.x / (m_maxX - m_minX), m_sliderWidth));
 
         m_sliders.horizontal.setNeedsDimensionUpdate(true);
     } else {
@@ -310,13 +217,7 @@ void vui::Panel::updateSliders() {
             m_sliders.vertical.enable();
 
             m_sliders.vertical.setPositionType(PositionType::RELATIVE_TO_PARENT);
-            if (m_flipVertical) {
-                m_sliders.vertical.setLeft(-1.0f * m_sliderWidth);
-                m_sliders.vertical.setRawRight({ m_size.x - m_sliderWidth, { DimensionType::PIXEL } });
-            } else {
-                m_sliders.vertical.setRawLeft({ m_size.x - m_sliderWidth, { DimensionType::PIXEL } });
-                m_sliders.vertical.setRight(-1.0f * m_sliderWidth);
-            }
+
             m_sliders.vertical.setTop(0.0f);
             m_sliders.vertical.setBottom(0.0f);
 
@@ -324,22 +225,15 @@ void vui::Panel::updateSliders() {
             m_sliders.vertical.setIsVertical(true);
         }
 
-        m_sliders.vertical.setSlideSize(f32v2(m_sliderWidth, m_size.y * m_size.y / (m_maxY - m_minY)));
-
         if (m_flipVertical) {
-            m_position.x += m_sliderWidth;
-            m_size.x     -= m_sliderWidth;
-            m_padding.x  += m_sliderWidth;
-
-            m_dimensionDelta += f32v4(m_sliderWidth, 0.0f, -m_sliderWidth, 0.0f);
-            m_paddingDelta   += f32v4(m_sliderWidth, 0.0f, 0.0f, 0.0f);
+            m_sliders.vertical.setLeft(0.0f);
+            m_sliders.vertical.setRawRight({ m_size.x - m_sliderWidth, { DimensionType::PIXEL } });
         } else {
-            m_size.x    -= m_sliderWidth;
-            m_padding.z += m_sliderWidth;
-
-            m_dimensionDelta += f32v4(0.0f, 0.0f, -m_sliderWidth, 0.0f);
-            m_paddingDelta   += f32v4(0.0f, 0.0f,  m_sliderWidth, 0.0f);
+            m_sliders.vertical.setRawLeft({ m_size.x - m_sliderWidth, { DimensionType::PIXEL } });
+            m_sliders.vertical.setRight(0.0f);
         }
+
+        m_sliders.vertical.setSlideSize(f32v2(m_sliderWidth, m_size.y * m_size.y / (m_maxY - m_minY)));
 
         m_sliders.vertical.setNeedsDimensionUpdate(true);
     } else {

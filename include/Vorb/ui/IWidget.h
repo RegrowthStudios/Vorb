@@ -253,7 +253,7 @@ namespace vorb {
             virtual void setPaddingRight(f32 right);
             virtual void setPaddingBottom(f32 bottom);
             virtual void setClipping(Clipping clipping);
-            virtual void setClippingLeft(ClippingState state);  
+            virtual void setClippingLeft(ClippingState state);
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
@@ -267,23 +267,23 @@ namespace vorb {
             virtual void setChildOffsetY(f32 offset);
             virtual void setIgnoreOffset(bool ignoreOffset);
 
-            virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate = flag;       }
-            virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder = flag;         }
-            virtual void setNeedsDockRecalculation(bool flag)     { m_flags.needsDockRecalculation = flag;     }
+            virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate       = flag; }
+            virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder         = flag; }
+            virtual void setNeedsDockRecalculation(bool flag)     { m_flags.needsDockRecalculation     = flag; }
             virtual void setNeedsClipRectRecalculation(bool flag) { m_flags.needsClipRectRecalculation = flag; }
             virtual void setNeedsDrawableRecalculation(bool flag) { m_flags.needsDrawableRecalculation = flag; }
-            virtual void setNeedsDrawableRefresh(bool flag)       { m_flags.needsDrawableRefresh = flag;       }
-            virtual void setNeedsDrawableReregister(bool flag)    { m_flags.needsDrawableReregister = flag;    }
+            virtual void setNeedsDrawableRefresh(bool flag)       { m_flags.needsDrawableRefresh       = flag; }
+            virtual void setNeedsDrawableReregister(bool flag)    { m_flags.needsDrawableReregister    = flag; }
 
             /************************************************************************/
             /* Events                                                               */
             /************************************************************************/
             Event<const MouseButtonEvent&> MouseClick; ///< Occurs when container is clicked by mouse.
-            Event<const MouseButtonEvent&> MouseDown; ///< Occurs when mouse button is pressed over container.
-            Event<const MouseButtonEvent&> MouseUp; ///< Occurs when mouse button is released over container.
+            Event<const MouseButtonEvent&> MouseDown;  ///< Occurs when mouse button is pressed over container.
+            Event<const MouseButtonEvent&> MouseUp;    ///< Occurs when mouse button is released over container.
             Event<const MouseMotionEvent&> MouseEnter; ///< Occurs when mouse pointer enters the container.
             Event<const MouseMotionEvent&> MouseLeave; ///< Occurs when mouse pointer leaves the container.
-            Event<const MouseMotionEvent&> MouseMove; ///< Occurs when mouse pointer is moved over container.
+            Event<const MouseMotionEvent&> MouseMove;  ///< Occurs when mouse pointer is moved over container.
             // TODO(Ben): Lots more events!
 
         protected:

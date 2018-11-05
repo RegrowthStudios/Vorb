@@ -67,6 +67,17 @@ namespace vorb {
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
+            virtual void setPosition(f32v2 position) override;
+            virtual void setX(f32 x) override;
+            virtual void setY(f32 y) override;
+            virtual void setSize(f32v2 size) override;
+            virtual void setWidth(f32 width) override;
+            virtual void setHeight(f32 height) override;
+            virtual void setPadding(const f32v4& padding) override;
+            virtual void setPaddingLeft(f32 left) override;
+            virtual void setPaddingTop(f32 top) override;
+            virtual void setPaddingRight(f32 right) override;
+            virtual void setPaddingBottom(f32 bottom) override;
         protected:
             /*! \brief Initialiser for adding sliders. */
             virtual void initBase() override;

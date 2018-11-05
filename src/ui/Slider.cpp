@@ -51,6 +51,11 @@ void vui::Slider::refreshDrawables() {
     m_drawnSlide = m_drawableSlide;
 }
 
+void vui::Slider::updateDimensions(f32 dt) {
+    Widget::updateDimensions(dt);
+    m_dock.state = DockState::NONE;
+}
+
 void vui::Slider::calculateDrawables() {
     m_drawableBar.setPosition(getPaddedPosition());
     m_drawableBar.setSize(getPaddedSize());
@@ -186,7 +191,7 @@ void vui::Slider::updateColor() {
 
 void vui::Slider::onMouseDown(Sender, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
-    if (m_flags.isMouseIn) {
+    if (m_flags.isMouseIn || isInSlideBounds((f32)e.x, (f32)e.y)) {
         MouseDown(e);
         m_flags.isClicking = true;
         m_clickPoint = f32v2(e.x, e.y);

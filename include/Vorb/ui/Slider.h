@@ -92,6 +92,8 @@ namespace vorb {
             /*! \brief Initialiser for setting up events. */
             virtual void initBase() override;
 
+            virtual void updateDimensions(f32 dt) override;
+
             virtual void calculateDrawables() override;
 
             virtual void updateSlidePosition();

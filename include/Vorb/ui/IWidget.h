@@ -28,6 +28,7 @@
 #include "Vorb/script/Function.h"
 #endif
 
+#include <limits>
 #include <vector>
 
 #include "Vorb/Events.hpp"
@@ -392,6 +393,9 @@ namespace vorb {
             f32v2             m_childOffset; ///< Apply this offset to all child widgets' positions.
 
             WidgetFlags m_flags;
+        public:
+            const static decltype(m_zIndex) Z_INDEX_MAX = std::numeric_limits<decltype(m_zIndex)>::max();
+            const static decltype(m_zIndex) Z_INDEX_MIN = std::numeric_limits<decltype(m_zIndex)>::lowest();
         };
     }
 }

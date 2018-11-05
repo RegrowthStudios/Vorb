@@ -32,6 +32,9 @@ void vui::Panel::initBase() {
 
     m_sliders.horizontal.setIgnoreOffset(true);
     m_sliders.vertical.setIgnoreOffset(true);
+
+    m_sliders.horizontal.setZIndex(IWidget::Z_INDEX_MAX);
+    m_sliders.vertical.setZIndex(IWidget::Z_INDEX_MAX);
 }
 
 void vui::Panel::enable() {

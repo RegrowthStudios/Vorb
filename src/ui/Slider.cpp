@@ -195,6 +195,7 @@ void vui::Slider::onMouseDown(Sender, const MouseButtonEvent& e) {
         MouseDown(e);
         m_flags.isClicking = true;
         m_clickPoint = f32v2(e.x, e.y);
+        m_clickValue = getValueScaled();
     }
 }
 
@@ -230,13 +231,13 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
 
         f32 v = 0.0f; // Normalised position of slide in bar after mouse move.
         if (m_isVertical) {
-            f32 newSlidePos = glm::clamp(/*slidePos.y + e.dy*/(f32)e.y - m_clickPoint.y, barPos.y, barPos.y + barSize.y - slideSize.y);
+            f32 newSlidePos = glm::clamp((f32)e.y - m_clickPoint.y, -m_clickValue * (barSize.y - slideSize.y), barSize.y - slideSize.y - m_clickValue * (barSize.y - slideSize.y));
 
-            v = (newSlidePos - barPos.y) / (barSize.y - slideSize.y);
+            v = (newSlidePos + m_clickValue * (barSize.y - slideSize.y)) / (barSize.y - slideSize.y);
         } else {
-            f32 newSlidePos = glm::clamp(/*slidePos.x + e.dx*/(f32)e.x - m_clickPoint.x, barPos.x, barPos.x + barSize.x - slideSize.x);
+            f32 newSlidePos = glm::clamp((f32)e.x - m_clickPoint.x, -m_clickValue * (barSize.x - slideSize.x), barSize.x - slideSize.x - m_clickValue * (barSize.x - slideSize.x));
 
-            v = (newSlidePos - barPos.x) / (barSize.x - slideSize.x);
+            v = (newSlidePos + m_clickValue * (barSize.x - slideSize.x)) / (barSize.x - slideSize.x);
         }
 
         // TODO(Ben): Faster round

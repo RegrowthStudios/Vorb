@@ -122,6 +122,7 @@ namespace vorb {
             i32          m_max;
             bool         m_isVertical;
             f32v2        m_clickPoint;
+            f32          m_clickValue;
         };
     }
 }

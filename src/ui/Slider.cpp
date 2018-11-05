@@ -184,6 +184,15 @@ void vui::Slider::updateColor() {
     }
 }
 
+void vui::Slider::onMouseDown(Sender, const MouseButtonEvent& e) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
+        MouseDown(e);
+        m_flags.isClicking = true;
+        m_clickPoint = f32v2(e.x, e.y);
+    }
+}
+
 void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (isInSlideBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
@@ -216,11 +225,11 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
 
         f32 v = 0.0f; // Normalised position of slide in bar after mouse move.
         if (m_isVertical) {
-            f32 newSlidePos = glm::clamp(slidePos.y + e.dy, barPos.y, barPos.y + barSize.y - slideSize.y);
+            f32 newSlidePos = glm::clamp(/*slidePos.y + e.dy*/(f32)e.y - m_clickPoint.y, barPos.y, barPos.y + barSize.y - slideSize.y);
 
             v = (newSlidePos - barPos.y) / (barSize.y - slideSize.y);
         } else {
-            f32 newSlidePos = glm::clamp(slidePos.x + e.dx, barPos.x, barPos.x + barSize.x - slideSize.x);
+            f32 newSlidePos = glm::clamp(/*slidePos.x + e.dx*/(f32)e.x - m_clickPoint.x, barPos.x, barPos.x + barSize.x - slideSize.x);
 
             v = (newSlidePos - barPos.x) / (barSize.x - slideSize.x);
         }

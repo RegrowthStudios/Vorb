@@ -100,6 +100,7 @@ namespace vorb {
             /************************************************************************/
             /* Event Handlers                                                       */
             /************************************************************************/
+            virtual void onMouseDown(Sender, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender, const MouseMotionEvent& e) override;
 
             /************************************************************************/
@@ -118,6 +119,7 @@ namespace vorb {
             int          m_min;
             int          m_max;
             bool         m_isVertical;
+            f32v2        m_clickPoint;
         };
     }
 }

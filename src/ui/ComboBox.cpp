@@ -47,6 +47,13 @@ void vui::ComboBox::enable() {
     }
 
     Widget::enable();
+
+    if (!m_isDropped) {
+        m_dropPanel.disable();
+        for (auto& button : m_buttons) {
+            button->disable();
+        }
+    }
 }
 
 void vui::ComboBox::disable() {

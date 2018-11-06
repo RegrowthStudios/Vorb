@@ -168,7 +168,7 @@ bool vui::IWidget::addWidget(IWidget* child) {
     child->m_flags.needsClipRectRecalculation = true;
     child->m_flags.needsDrawableReregister    = true;
 
-    child->update();
+    child->update(0.0f);
 
     m_flags.needsZIndexReorder     = true;
     m_flags.needsDockRecalculation = true;
@@ -195,7 +195,7 @@ bool vui::IWidget::removeWidget(IWidget* child) {
             child->m_flags.needsDockRecalculation     = true;
             child->m_flags.needsClipRectRecalculation = true;
 
-            child->update();
+            child->update(0.0f);
 
             m_flags.needsDockRecalculation = true;
 

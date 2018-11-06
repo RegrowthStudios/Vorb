@@ -28,27 +28,12 @@ void vui::Slider::initBase() {
     ValueChange.setSender(this);
 }
 
-void vui::Slider::addDrawables() {
-    if (!m_viewport) return;
+void vui::Slider::addDrawables(UIRenderer& renderer) {
+    // Add the bar rect.
+    renderer.add(makeDelegate(m_drawableBar, &DrawableRect::draw));
 
-    // Make copies
-    m_drawnBar  = m_drawableBar;
-    m_drawnSlide = m_drawableSlide;
-  
-    // Add the bar
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnBar, &DrawableRect::draw),
-                  makeDelegate(*this, &Slider::refreshDrawables));
-
-    // Add the slide 
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnSlide, &DrawableRect::draw),
-                  makeDelegate(*this, &Slider::refreshDrawables));
-}
-
-void vui::Slider::refreshDrawables() {
-    m_drawnBar   = m_drawableBar;
-    m_drawnSlide = m_drawableSlide;
+    // Add the slide rect <- after the bar rect to draw on top!
+    renderer.add(makeDelegate(m_drawableSlide, &DrawableRect::draw));
 }
 
 void vui::Slider::updateDimensions(f32 dt) {
@@ -67,14 +52,10 @@ void vui::Slider::calculateDrawables() {
     updateSlidePosition();
 
     updateColor();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setSlideSize(const Length2& size) {
     m_rawSlideSize = size;
-
-    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setSlideSize(const f32v2& size) {
@@ -86,14 +67,10 @@ void vui::Slider::setSlideSize(const f32v2& size) {
 
 void vui::Slider::setSlideTexture(VGTexture texture) {
     m_drawableSlide.setTexture(texture);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setBarTexture(VGTexture texture) {
     m_drawableBar.setTexture(texture);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Slider::setBarColor(const color4& color) {
@@ -206,8 +183,6 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
             MouseEnter(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {
@@ -216,17 +191,13 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
             MouseLeave(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
     }
 
     // Check value change
     if (m_flags.isClicking) {
-        const f32v2& barPos  = m_drawableBar.getPosition();
         const f32v2& barSize = m_drawableBar.getSize();
 
-        const f32v2& slidePos  = m_drawableSlide.getPosition();
         const f32v2& slideSize = m_drawableSlide.getSize();
 
         f32 v = 0.0f; // Normalised position of slide in bar after mouse move.

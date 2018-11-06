@@ -58,41 +58,25 @@ void vui::Panel::disable() {
     IWidget::disable();
 }
 
-void vui::Panel::addDrawables() {
-    if (!m_viewport) return;
-
-    // Make copy.
-    m_drawnRect = m_drawableRect;
-    // Register the drawable.
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &Panel::refreshDrawables));
-}
-
-void vui::Panel::refreshDrawables() {
-    m_drawnRect = m_drawableRect;
+void vui::Panel::addDrawables(UIRenderer& renderer) {
+    // Add the panel rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
 }
 
 void vui::Panel::setTexture(VGTexture texture) {
     m_drawableRect.setTexture(texture);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Panel::setColor(const color4& color) {
     m_backColor = color;
 
     updateColor();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Panel::setHoverColor(const color4& color) {
     m_backHoverColor = color;
 
     updateColor();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Panel::setAutoScroll(bool autoScroll) {
@@ -145,8 +129,6 @@ void vui::Panel::calculateDrawables() {
     m_drawableRect.setClipRect(m_clipRect);
 
     updateColor();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Panel::updateColor() {
@@ -234,9 +216,6 @@ void vui::Panel::updateSliders() {
 
         m_sliders.horizontal.setNeedsDimensionUpdate(true);
     } else {
-        m_sliders.horizontal.setPositionType(PositionType::STATIC_TO_PARENT);
-        m_sliders.horizontal.setSize(f32v2(0.0f));
-        m_sliders.horizontal.setSlideSize(f32v2(0.0f));
         m_sliders.horizontal.disable();
     }
 
@@ -266,9 +245,6 @@ void vui::Panel::updateSliders() {
 
         m_sliders.vertical.setNeedsDimensionUpdate(true);
     } else {
-        m_sliders.vertical.setPositionType(PositionType::STATIC_TO_PARENT);
-        m_sliders.vertical.setSize(f32v2(0.0f));
-        m_sliders.vertical.setSlideSize(f32v2(0.0f));
         m_sliders.vertical.disable();
     }
 }
@@ -281,8 +257,6 @@ void vui::Panel::onMouseMove(Sender, const MouseMotionEvent& e) {
             MouseEnter(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {
@@ -291,8 +265,6 @@ void vui::Panel::onMouseMove(Sender, const MouseMotionEvent& e) {
             MouseLeave(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
     }
 }
@@ -308,11 +280,9 @@ void vui::Panel::onMouseFocusLost(Sender, const MouseEvent& e) {
         MouseLeave(ev);
 
         updateColor();
-
-        m_flags.needsDrawableRefresh = true;
     }
 }
 
-void vui::Panel::onSliderValueChange(Sender s, i32) {
+void vui::Panel::onSliderValueChange(Sender, i32) {
     m_flags.needsDimensionUpdate = true;
 }

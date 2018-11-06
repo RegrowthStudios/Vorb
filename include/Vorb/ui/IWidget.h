@@ -101,13 +101,13 @@ namespace vorb {
             bool ignoreOffset : 1; ///< Ignore parent's childOffset factor.
 
             volatile bool needsDimensionUpdate       : 1; ///< Whether we need to recalculate widget dimensions.
-            volatile bool needsZIndexReorder         : 1; ///< Whether we need to recalculate the order of widgets based on their z-index values.
+            volatile bool needsZIndexReorder         : 1; ///< Whether we need to reorder this widget and its siblings.
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
-            volatile bool needsDrawableRecalculation : 2; ///< Whether we need to recalculate the drawables.
-            volatile bool needsDrawableRefresh       : 2; ///< Whether we need to refresh the drawables currently drawn to screen.
-            volatile bool needsDrawableReregister    : 4; ///< Whether we need to reregister our drawables with the renderer.
+            volatile bool needsDrawableRecalculation;     ///< Whether we need to recalculate the drawables.
         };
+
+        using ZIndex = ui16;
 
         // Forward Declarations
         class UIRenderer;
@@ -115,7 +115,7 @@ namespace vorb {
 
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
-            using Font = vorb::graphics::SpriteFont;
+            using Font     = vorb::graphics::SpriteFont;
         public:
             /*! \brief Default constructor.  */
             IWidget();
@@ -183,11 +183,8 @@ namespace vorb {
             virtual bool isInBounds(f32 x, f32 y) const;
             
             /*! \brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables() = 0;
-            /*! \brief Removes all drawables from the UIRenderer. */
-            virtual void removeDrawables();
-            /*! \brief Refreshes all drawables. */
-            virtual void refreshDrawables() = 0;
+            virtual void addDrawables(UIRenderer& renderer) = 0;
+            // We used to have a refresh drawables with double buffering of drawables, but given UI is single-threaded this is overkill - for now we are back to single buffered drawables for simplicity.
 
             /************************************************************************/
             /* Getters                                                              */
@@ -218,7 +215,7 @@ namespace vorb {
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
             virtual             f32v4 getClipRect()         const { return m_clipRect;    }
-            virtual              ui16 getZIndex()           const { return m_zIndex;      }
+            virtual            ZIndex getZIndex()           const { return m_zIndex;      }
             virtual              Dock getDock()             const { return m_dock;        }
             virtual         DockState getDockState()        const { return m_dock.state;  }
             virtual               f32 getDockSize()         const { return m_dock.size;   }
@@ -234,8 +231,6 @@ namespace vorb {
             virtual bool needsDockRecalculation()     const { return m_flags.needsDockRecalculation;     }
             virtual bool needsClipRectRecalculation() const { return m_flags.needsClipRectRecalculation; }
             virtual bool needsDrawableRecalculation() const { return m_flags.needsDrawableRecalculation; }
-            virtual bool needsDrawableRefresh()       const { return m_flags.needsDrawableRefresh;       }
-            virtual bool needsDrawableReregister()    const { return m_flags.needsDrawableReregister;    }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -259,7 +254,7 @@ namespace vorb {
             virtual void setClippingTop(ClippingState state);
             virtual void setClippingRight(ClippingState state);
             virtual void setClippingBottom(ClippingState state);
-            virtual void setZIndex(ui16 zIndex);
+            virtual void setZIndex(ZIndex zIndex);
             virtual void setDock(Dock dock);
             virtual void setDockState(DockState state);
             virtual void setDockSize(f32 size);
@@ -275,8 +270,6 @@ namespace vorb {
             virtual void setNeedsDockRecalculation(bool flag)     { m_flags.needsDockRecalculation     = flag; }
             virtual void setNeedsClipRectRecalculation(bool flag) { m_flags.needsClipRectRecalculation = flag; }
             virtual void setNeedsDrawableRecalculation(bool flag) { m_flags.needsDrawableRecalculation = flag; }
-            virtual void setNeedsDrawableRefresh(bool flag)       { m_flags.needsDrawableRefresh       = flag; }
-            virtual void setNeedsDrawableReregister(bool flag)    { m_flags.needsDrawableReregister    = flag; }
 
             /************************************************************************/
             /* Events                                                               */
@@ -301,23 +294,14 @@ namespace vorb {
             virtual void updateDescendants(f32 dt);
 
             /*!
-             * \brief Removes drawables from all descendant widgets.
+             * \brief Adds drawables of all descendant widgets.
              */
-            virtual void removeDescendantDrawables();
+            virtual void addDescendantDrawables(UIRenderer& renderer);
 
             /*!
              * \brief Updates all descendant widgets' viewport fields.
              */
             virtual void updateDescendantViewports();
-
-            /*!
-             * \brief Reregisters drawables of the widget.
-             */
-            virtual void reregisterDrawables();
-            /*!
-             * \brief Marks children to reregister their drawables.
-             */
-            virtual void markChildrenToReregisterDrawables();
 
             /*!
              * \brief Updates the dimensions of the new IWidget according to specific widget rules.
@@ -336,7 +320,7 @@ namespace vorb {
 
             /*! \brief Calculates positions and sizes of docked child widgets. */
             void calculateDockedWidgets();
-            
+
             /*! \brief Calculates clipping for rendering and propagates through children. */
             virtual void calculateClipRect();
             /*! \brief Calculates the clipping of child widgets. */
@@ -349,11 +333,6 @@ namespace vorb {
              * \brief Reorders widgets relative to their z-index value.
              */
             virtual void reorderWidgets();
-
-            /*!
-             * \brief Sorts, then removes and re-adds all child widgets to renderer.
-             */
-            virtual void reorderChildWidgets();
 
             /*! \brief Applies parent's child offset to this widget. */
             virtual void applyOffset();
@@ -389,15 +368,15 @@ namespace vorb {
             f32v4             m_padding;     ///< Padding of the widget in pixels.
             Clipping          m_clipping;    ///< Clipping rules to use for generating the clip rectangle.
             f32v4             m_clipRect;    ///< Clipping rectangle for rendering.
-            ui16              m_zIndex;      ///< Z-index of widget for depth.
+            ZIndex            m_zIndex;      ///< Z-index of widget.
             Dock              m_dock;        ///< Information for docking of widget.
             nString           m_name;        ///< Display name of the container.
             f32v2             m_childOffset; ///< Apply this offset to all child widgets' positions.
 
             WidgetFlags m_flags;
         public:
-            const static decltype(m_zIndex) Z_INDEX_MAX = std::numeric_limits<decltype(m_zIndex)>::max();
-            const static decltype(m_zIndex) Z_INDEX_MIN = std::numeric_limits<decltype(m_zIndex)>::lowest();
+            const static ZIndex Z_INDEX_MAX = std::numeric_limits<ZIndex>::max();
+            const static ZIndex Z_INDEX_MIN = std::numeric_limits<ZIndex>::lowest();
         };
     }
 }

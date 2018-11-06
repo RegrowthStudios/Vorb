@@ -13,38 +13,30 @@ vui::TextWidget::~TextWidget() {
     // Empty
 }
 
-void vui::TextWidget::addDrawables() {
-    if (!m_viewport) return;
-
-    // Make copies.
-    m_drawnText = m_drawableText;
-
+void vui::TextWidget::addDrawables(UIRenderer& renderer) {
     // Use renderer default font if we dont have a font.
-    m_defaultFont = m_viewport->getRenderer()->getDefaultFont();
-    if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
-
-    // Add the text.
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnText, &DrawableText::draw),
-                  makeDelegate(*this, &TextWidget::refreshDrawables));
+    m_defaultFont = renderer.getDefaultFont();
+    if (!m_drawableText.getFont()) {
+        m_drawableText.setFont(m_defaultFont);
+        // Add the text.
+        renderer.add(makeDelegate(m_drawableText, &DrawableText::draw));
+        m_drawableText.setFont(nullptr);
+    } else {
+        // Add the text.
+        renderer.add(makeDelegate(m_drawableText, &DrawableText::draw));
+    }
 }
 
 void vui::TextWidget::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::TextWidget::setText(const nString& text) {
     m_drawableText.setText(text);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::TextWidget::setTextColor(const color4& color) {
     m_drawableText.setColor(color);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::TextWidget::setTextAlign(vg::TextAlign textAlign) {
@@ -55,16 +47,12 @@ void vui::TextWidget::setTextAlign(vg::TextAlign textAlign) {
 
 void vui::TextWidget::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::TextWidget::calculateDrawables() {
     m_drawableText.setClipRect(m_clipRect);
 
     updateTextPosition();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::TextWidget::updateTextPosition() {
@@ -100,18 +88,5 @@ void vui::TextWidget::updateTextPosition() {
         case vg::TextAlign::CENTER:
             m_drawableText.setPosition(pos + size / 2.0f);
             break;
-    }
-}
-
-void vui::TextWidget::refreshDrawables() {
-    // Use renderer default font if we don't have a font.
-    if (!m_drawableText.getFont()) {
-        m_drawableText.setFont(m_defaultFont);
-
-        m_drawnText = m_drawableText;
-
-        m_drawableText.setFont(nullptr);
-    } else {
-        m_drawnText = m_drawableText;
     }
 }

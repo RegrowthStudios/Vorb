@@ -41,9 +41,7 @@ namespace vorb {
             virtual ~Button();
 
             /*! \brief Adds all drawables to the UIRenderer */
-            virtual void addDrawables() override;
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -79,7 +77,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect          m_drawableRect,    m_drawnRect;
+            DrawableRect          m_drawableRect;
             vg::GradientType      m_gradBack,        m_gradHover;
             color4                m_backColor1,      m_backColor2;
             color4                m_backHoverColor1, m_backHoverColor2;

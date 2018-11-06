@@ -42,9 +42,7 @@ namespace vorb {
             virtual ~CheckBox();
 
             /*! \brief Adds all drawables to the UIRenderer */
-            virtual void addDrawables() override;
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             virtual void check();
             virtual void uncheck();
@@ -61,7 +59,7 @@ namespace vorb {
             virtual         const color4& getBoxHoverColor()         const { return m_boxHoverColor;         }
             virtual         const color4& getBoxCheckedColor()       const { return m_boxCheckedColor;       }
             virtual         const color4& getBoxCheckedHoverColor()  const { return m_boxCheckedHoverColor;  }
-            virtual         const color4& getTextColor()             const { return m_textColor;             }
+            virtual         const color4& getTextColor()             const override { return m_textColor;             }
             virtual         const color4& getTextHoverColor()        const { return m_textHoverColor;        }
             virtual           const bool& isChecked()                const { return m_isChecked;             }
 
@@ -76,7 +74,7 @@ namespace vorb {
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);
             virtual void setBoxCheckedHoverColor(const color4& color);
-            virtual void setTextColor(const color4& color);
+            virtual void setTextColor(const color4& color) override;
             virtual void setTextHoverColor(const color4& color);
             virtual void setChecked(bool checked);
 
@@ -110,7 +108,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect          m_drawableRect,        m_drawnRect;
+            DrawableRect          m_drawableRect;
             color4                m_boxColor,            m_boxHoverColor;
             color4                m_boxCheckedColor,     m_boxCheckedHoverColor;
             color4                m_textColor,           m_textHoverColor;

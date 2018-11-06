@@ -47,9 +47,7 @@ namespace vorb {
             virtual void disable() override;
 
             /*! \brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables() override;
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -80,7 +78,7 @@ namespace vorb {
 
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
-            virtual void onSliderValueChange(Sender s, i32 v);
+            virtual void onSliderValueChange(Sender, i32 v);
 
             /************************************************************************/
             /* Members                                                              */
@@ -98,7 +96,7 @@ namespace vorb {
             bool m_flipVertical;   ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
             f32  m_sliderWidth;    ///< The width, in pixels, of the sliders.
 
-            DrawableRect m_drawableRect, m_drawnRect;
+            DrawableRect m_drawableRect;
             color4 m_backColor;      ///< Colour of the panel.
             color4 m_backHoverColor; ///< Colour of the panel on hover.
         };

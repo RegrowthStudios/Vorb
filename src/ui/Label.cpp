@@ -18,18 +18,12 @@ vui::Label::~Label() {
     // Empty
 }
 
-void vui::Label::addDrawables() {
-    if (!m_viewport) return;
+void vui::Label::addDrawables(UIRenderer& renderer) {
+    // Add the label rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
 
-    // Make copies.
-    m_drawnRect = m_drawableRect;
-
-    // Add the text.
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &Label::refreshDrawables));
-
-    TextWidget::addDrawables();
+    // Add the text <- after checkbox to be rendererd on top!
+    TextWidget::addDrawables(renderer);
 }
 
 void vui::Label::setLabelColor(const color4& color) {
@@ -77,8 +71,6 @@ void vui::Label::calculateDrawables() {
     updateColor();
 
     TextWidget::calculateDrawables();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Label::updateColor() {
@@ -89,10 +81,4 @@ void vui::Label::updateColor() {
         m_drawableText.setColor(m_textColor);
         m_drawableRect.setColor(m_labelColor);
     }
-}
-
-void vui::Label::refreshDrawables() {
-    m_drawnRect = m_drawableRect;
-
-    TextWidget::refreshDrawables();
 }

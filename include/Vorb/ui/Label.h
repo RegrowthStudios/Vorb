@@ -41,9 +41,7 @@ namespace vorb {
             virtual ~Label();
 
             /*! \brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables() override;
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -73,7 +71,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableRect          m_drawableRect, m_drawnRect;
+            DrawableRect          m_drawableRect;
             color4                m_labelColor,   m_labelHoverColor;
             VGTexture             m_labelTexture, m_labelHoverTexture;
             color4                m_textColor,    m_textHoverColor;

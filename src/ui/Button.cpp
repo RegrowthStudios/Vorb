@@ -23,18 +23,12 @@ vui::Button::~Button() {
     // Empty
 }
 
-void vui::Button::addDrawables() {
-    if (!m_viewport) return;
-
-    // Make copies
-    m_drawnRect = m_drawableRect;
-
-    // Add the rect
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &Button::refreshDrawables));
+void vui::Button::addDrawables(UIRenderer& renderer) {
+    // Add the button rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
     
-    TextWidget::addDrawables();
+    // Add the text <- after checkbox to be rendererd on top!
+    TextWidget::addDrawables(renderer);
 }
 
 void vui::Button::setTexture(VGTexture texture) {
@@ -98,8 +92,6 @@ void vui::Button::calculateDrawables() {
     updateColor();
 
     TextWidget::calculateDrawables();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::Button::updateColor() {
@@ -116,12 +108,6 @@ void vui::Button::updateColor() {
     }
 }
 
-void vui::Button::refreshDrawables() {    
-    m_drawnRect = m_drawableRect;
-
-    TextWidget::refreshDrawables();
-}
-
 void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
@@ -130,8 +116,6 @@ void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent
             MouseEnter(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {        
@@ -140,8 +124,6 @@ void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent
             MouseLeave(e);
 
             updateColor();
-
-            m_flags.needsDrawableRefresh = true;
         }
     }
 }
@@ -156,7 +138,5 @@ void vui::Button::onMouseFocusLost(Sender s VORB_MAYBE_UNUSED, const MouseEvent&
         MouseLeave(ev);
 
         updateColor();
-
-        m_flags.needsDrawableRefresh = true;
     }
 }

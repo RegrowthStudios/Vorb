@@ -417,6 +417,7 @@ void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
 
 void vui::ComboBox::updateDimensions(f32 dt) {
     f32v2 oldSize = getSize();
+    f32v2 oldPos  = getPosition();
 
     Widget::updateDimensions(dt);
 
@@ -433,7 +434,7 @@ void vui::ComboBox::updateDimensions(f32 dt) {
     }
 
     if (m_isDropped) {
-        if (!m_dropPanel.isEnabled() || oldSize != newSize) {
+        if (!m_dropPanel.isEnabled() || oldSize != newSize || oldPos != getPosition()) {
             // We need to set the drop panel size explicitly fully here as buttons depend on it.
             m_dropPanel.enable();
             m_dropPanel.setPositionType(PositionType::STATIC_TO_PARENT);

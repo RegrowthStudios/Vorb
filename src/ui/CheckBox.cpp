@@ -28,18 +28,12 @@ void vui::CheckBox::initBase() {
     ValueChange.setSender(this);
 }
 
-void vui::CheckBox::addDrawables() {
-    if (!m_viewport) return;
+void vui::CheckBox::addDrawables(UIRenderer& renderer) {
+    // Add the checkbox rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
 
-    // Make copies
-    m_drawnRect = m_drawableRect;
-
-    // Add the rect
-    m_viewport->getRenderer()->add(this,
-                  makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &CheckBox::refreshDrawables));
-
-    TextWidget::addDrawables();
+    // Add the text <- after checkbox to be rendererd on top!
+    TextWidget::addDrawables(renderer);
 }
 
 void vui::CheckBox::check() {
@@ -138,8 +132,6 @@ void vui::CheckBox::calculateDrawables() {
     updateColor();
 
     TextWidget::calculateDrawables();
-
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::CheckBox::updateColor() {
@@ -160,12 +152,6 @@ void vui::CheckBox::updateColor() {
     }
 }
 
-void vui::CheckBox::refreshDrawables() {
-    m_drawnRect = m_drawableRect;
-
-    TextWidget::refreshDrawables();
-}
-
 void vui::CheckBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
@@ -177,7 +163,6 @@ void vui::CheckBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent
     }
     m_flags.isClicking = false;
     updateColor();
-    m_flags.needsDrawableRefresh = true;
 }
 
 void vui::CheckBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
@@ -187,7 +172,6 @@ void vui::CheckBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEve
             m_flags.isMouseIn = true;
             MouseEnter(e);
             updateColor();
-            m_flags.needsDrawableRefresh = true;
         }
         MouseMove(e);
     } else {
@@ -195,7 +179,6 @@ void vui::CheckBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEve
             m_flags.isMouseIn = false;
             MouseLeave(e);
             updateColor();
-            m_flags.needsDrawableRefresh = true;
         }
     }
 }

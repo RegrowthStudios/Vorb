@@ -78,9 +78,7 @@ namespace vorb {
             virtual void draw();
 
             /*! \brief Adds all drawables to the UIRenderer */
-            virtual void addDrawables() override { /* Empty */ }
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override { /* Empty */ }
+            virtual void addDrawables(UIRenderer&) override { /* Empty */ }
 
             /************************************************************************/
             /* Getters                                                              */

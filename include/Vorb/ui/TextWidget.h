@@ -41,9 +41,7 @@ namespace vorb {
             virtual ~TextWidget();
 
             /*! \brief Adds all drawables to the UIRenderer. */
-            virtual void addDrawables() override;
-            /*! \brief Refresh drawables. */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -71,7 +69,7 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableText          m_drawableText, m_drawnText;
+            DrawableText          m_drawableText;
             const vg::SpriteFont* m_defaultFont;
         };
     }

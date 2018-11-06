@@ -43,10 +43,7 @@ namespace vorb {
 
             /*! @brief Adds all drawables to the UIRenderer
             */
-            virtual void addDrawables() override;
-            /*! @brief Refresh drawables passed to the UIRenderer
-            */
-            virtual void refreshDrawables() override;
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
@@ -111,8 +108,8 @@ namespace vorb {
 #ifdef VORB_USING_SCRIPT
             std::vector<script::Function> m_valueChangeFuncs;
 #endif
-            DrawableRect m_drawableBar,   m_drawnBar;
-            DrawableRect m_drawableSlide, m_drawnSlide;
+            DrawableRect m_drawableBar;
+            DrawableRect m_drawableSlide;
             color4       m_barColor;
             color4       m_slideColor, m_slideHoverColor;
             Length2      m_rawSlideSize;

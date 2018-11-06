@@ -15,11 +15,11 @@ vui::IWidget::IWidget() :
     m_padding(f32v4(0.0f)),
     m_clipping(DEFAULT_CLIPPING),
     m_clipRect(DEFAULT_CLIP_RECT),
-    m_zIndex(1),
+    m_zIndex(0),
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_childOffset(f32v2(0.0f)),
-    m_flags({ false, false, false, false, false, false, false, false, false, false, false }) {
+    m_flags({ false, false, false, false, false, false, false, false, false }) {
     // Empty
 }
 
@@ -36,7 +36,7 @@ vui::IWidget::IWidget(const IWidget& widget) {
     m_dock     = widget.m_dock;
     m_name     = widget.m_name;
 
-    m_flags = { false, false, false, false, false, false, false, false, false, false, false };
+    m_flags = { false, false, false, false, false, false, false, false, false };
 }
 
 vui::IWidget::~IWidget() {
@@ -71,8 +71,6 @@ void vui::IWidget::dispose() {
     }
     IWidgets().swap(m_widgets);
 
-    removeDrawables();
-
     disable();
 }
 
@@ -104,19 +102,6 @@ void vui::IWidget::update(f32 dt /*= 1.0f*/) {
         m_flags.needsDrawableRecalculation = false;
         calculateDrawables();
     }
-
-    if (m_flags.needsDrawableRefresh) {
-        m_flags.needsDrawableRefresh = false;
-        refreshDrawables();
-    }
-
-    if (m_flags.needsDrawableReregister) {
-        m_flags.needsDrawableReregister = false;
-        reregisterDrawables();
-
-        // If we have reregistered the drawables of this widget, so too must we all child widgets.
-        markChildrenToReregisterDrawables();
-    }
 }
 
 void vui::IWidget::enable() {
@@ -127,11 +112,6 @@ void vui::IWidget::enable() {
         vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
         vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
-
-    // TODO(Matthew): This is wrong, probably need to re-add drawables of all items with current renderer...
-    //                Change the UIRenderer to use an ordered list on z-index.
-    //                (Revisit all places that use reregistering of drawables after this.)
-    addDrawables();
 
     // Enable all children
     for (auto& w : m_widgets) w->enable();
@@ -146,8 +126,6 @@ void vui::IWidget::disable() {
         vui::InputDispatcher::mouse.onFocusLost  -= makeDelegate(*this, &IWidget::onMouseFocusLost);
     }
     m_flags.isClicking = false;
-
-    removeDrawables();
 
     // Disable all children
     for (auto& w : m_widgets) w->disable();
@@ -166,7 +144,6 @@ bool vui::IWidget::addWidget(IWidget* child) {
     child->m_flags.needsDimensionUpdate       = true;
     child->m_flags.needsDockRecalculation     = true;
     child->m_flags.needsClipRectRecalculation = true;
-    child->m_flags.needsDrawableReregister    = true;
 
     child->update(0.0f);
 
@@ -179,9 +156,6 @@ bool vui::IWidget::addWidget(IWidget* child) {
 bool vui::IWidget::removeWidget(IWidget* child) {
     for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
-            child->removeDrawables();
-            child->removeDescendantDrawables();
-
             m_widgets.erase(it);
 
             child->m_parent   = nullptr;
@@ -211,13 +185,6 @@ bool vui::IWidget::isInBounds(f32 x, f32 y) const {
 
     return (x >= pos.x && x < pos.x + size.x &&
             y >= pos.y && y < pos.y + size.y);
-}
-
-void vui::IWidget::removeDrawables() {
-    if (m_viewport) {
-        UIRenderer* renderer = m_viewport->getRenderer();
-        if (renderer) renderer->remove(this);
-    }
 }
 
 vui::ClippingState vui::IWidget::getClippingLeft() const {
@@ -462,13 +429,13 @@ void vui::IWidget::setClippingBottom(ClippingState state) {
     }
 }
 
-void vui::IWidget::setZIndex(ui16 zIndex) {
-    ui16 tmp = m_zIndex;
+void vui::IWidget::setZIndex(ZIndex zIndex) {
+    ZIndex tmp = m_zIndex;
 
     m_zIndex = zIndex;
 
     if (tmp != m_zIndex) {
-        m_flags.needsZIndexReorder = true;
+        if (m_parent) m_parent->setNeedsZIndexReorder(true);
     }
 }
 
@@ -532,10 +499,11 @@ void vui::IWidget::updateDescendants(f32 dt) {
     }
 }
 
-void vui::IWidget::removeDescendantDrawables() {
+void vui::IWidget::addDescendantDrawables(UIRenderer& renderer) {
     for (auto& child : m_widgets) {
-        child->removeDrawables();
-        child->removeDescendantDrawables();
+        if (!child->isEnabled()) continue;
+        child->addDrawables(renderer);
+        child->addDescendantDrawables(renderer);
     }
 }
 
@@ -543,17 +511,6 @@ void vui::IWidget::updateDescendantViewports() {
     for (auto& child : m_widgets) {
         child->m_viewport = m_viewport;
         child->updateDescendantViewports();
-    }
-}
-
-void vui::IWidget::reregisterDrawables() {
-    removeDrawables();
-    addDrawables();
-}
-
-void vui::IWidget::markChildrenToReregisterDrawables() {
-    for (auto& child : m_widgets) {
-        child->m_flags.needsDrawableReregister = true;
     }
 }
 
@@ -741,16 +698,9 @@ void vui::IWidget::reorderWidgets() {
         return res;
     });
 
-    // If a change occurs, we need to recalculate dockings of children and also reregister drawables.
+    // If a change occurs, we need to recalculate dockings of children.
     if (change) {
         m_flags.needsDockRecalculation = true;
-        m_viewport->m_flags.needsDrawableReregister = true;
-    }
-}
-
-void vui::IWidget::reorderChildWidgets() {
-    for (auto& child : m_widgets) {
-        child->m_flags.needsZIndexReorder = true;
     }
 }
 

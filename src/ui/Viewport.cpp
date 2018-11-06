@@ -67,7 +67,11 @@ void vui::Viewport::update(f32 dt /*= 1.0f*/) {
 
 void vui::Viewport::draw() {
     if (!m_flags.isEnabled) return;
-    m_renderer.draw(m_size);
+    m_renderer.prepare();
+
+    addDescendantDrawables(m_renderer);
+
+    m_renderer.render(m_size);
 }
 
 void vui::Viewport::setGameWindow(const GameWindow* window) {

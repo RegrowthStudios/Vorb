@@ -57,8 +57,7 @@ namespace vorb {
             /*! \brief Unsubscribe from events. */
             virtual void disable() override;
 
-            virtual void addDrawables()     override { /* Empty */ }
-            virtual void refreshDrawables() override { /* Empty */ }
+            virtual void addDrawables(UIRenderer&) override { /* Empty */ }
 
             /*!\brief Updates the position relative to parent */
             // virtual void updatePosition() override;

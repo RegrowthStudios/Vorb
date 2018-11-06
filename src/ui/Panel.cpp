@@ -132,7 +132,9 @@ void vui::Panel::updateDimensions(f32 dt) {
         }
     }
 
-    // updateSliders();
+    // We might want updateSliders here. This won't work immediately for docked panels as the update model we use means docked & undocked widgets aren't treated equally.
+    // For docked widgets at initialisation its likely only the parents needsDockRecalculation flag will be set but not this panel's needsDimensionUpdate.
+    // There is a further bug that makes rendering the slide of the slider bar strange - it appears to change length when moved about.
 }
 
 void vui::Panel::calculateDrawables() {
@@ -205,8 +207,6 @@ void vui::Panel::updateSliders() {
     if (m_minY > 0.0f)     m_minY = 0.0f;
     if (m_maxX < m_size.x) m_maxX = m_size.x;
     if (m_maxY < m_size.y) m_maxY = m_size.y;
-
-    // Note that while this looks like it might iteratively push the sliders further and further out, the processed values of position and padding are recalculated any time we also come here to update sliders - so as long as this never touches the raw values of position and padding we're good!
 
     // Set up horizontal slider.
     if (needsHorizontal) {

@@ -10,7 +10,7 @@ vui::ScriptedUI::~ScriptedUI() {
     dispose();
 }
 
-void vui::ScriptedUI::init(const nString& startFormPath, IGameScreen* ownerScreen,
+void vui::ScriptedUI::init(const nString& startFormPath VORB_MAYBE_UNUSED, IGameScreen* ownerScreen,
                            const GameWindow* window, const f32v4& destRect,
                            vg::SpriteFont* defaultFont /*= nullptr*/) {
     // Set up the first form
@@ -27,7 +27,7 @@ void vui::ScriptedUI::draw() {
     // }
 }
 
-void vui::ScriptedUI::update(f32 dt /*= 1.0f*/) {
+void vui::ScriptedUI::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
     // for (auto& it : m_forms) {
     //     it.first->update(dt);
     // }
@@ -75,7 +75,7 @@ void vui::ScriptedUI::setDimensions(VORB_UNUSED const f32v2& dimensions) {
 //     return nullptr;
 // }
 
-void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv) {
+void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv VORB_MAYBE_UNUSED) {
 //     vscript::Environment* env = newFormEnv->getEnv();
 //     env->setNamespaces();
 //     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));

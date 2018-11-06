@@ -24,7 +24,6 @@ void vui::WidgetList::dispose() {
 void vui::WidgetList::calculateDrawables() {
     f32 totalHeight = 0.0f;
 
-    // TODO(Matthew): As-is, dimension update to list items that derive from Widget, or any other dimension rule overriding class, will obliterate these changes.
     for (size_t i = 0; i < m_items.size(); ++i) {
         m_items[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
 

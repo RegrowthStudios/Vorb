@@ -416,9 +416,14 @@ void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
 }
 
 void vui::ComboBox::updateDimensions(f32 dt) {
+    f32v2 oldSize = getSize();
+
     Widget::updateDimensions(dt);
 
-    m_mainButton.setSize(getSize());
+    f32v2 newSize = getSize();
+    if (oldSize != newSize) {
+        m_mainButton.setSize(newSize);
+    }
 
     f32 panelHeight = (f32)m_buttons.size() * getHeight();
     bool hasSlider = false;

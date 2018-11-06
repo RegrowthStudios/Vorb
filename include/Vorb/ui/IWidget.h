@@ -227,6 +227,7 @@ namespace vorb {
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
             virtual              bool ignoreOffset()        const { return m_flags.ignoreOffset; }
+            virtual       WidgetFlags getFlags()            const { return m_flags; }
 
             virtual bool needsDimensionUpdate()       const { return m_flags.needsDimensionUpdate;       }
             virtual bool needsZIndexReorder()         const { return m_flags.needsZIndexReorder;         }
@@ -267,6 +268,7 @@ namespace vorb {
             virtual void setChildOffsetX(f32 offset);
             virtual void setChildOffsetY(f32 offset);
             virtual void setIgnoreOffset(bool ignoreOffset);
+            virtual void setFlags(WidgetFlags flags) { m_flags = flags; }
 
             virtual void setNeedsDimensionUpdate(bool flag)       { m_flags.needsDimensionUpdate       = flag; }
             virtual void setNeedsZIndexReorder(bool flag)         { m_flags.needsZIndexReorder         = flag; }

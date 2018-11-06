@@ -432,29 +432,36 @@ void vui::ComboBox::updateDimensions(f32 dt) {
         hasSlider = true;
     }
 
-    f32 i = 0.0f;
-    for (auto& button : m_buttons) {
-        if (m_isDropped) {
-            button->enable();
-            button->setPositionType(PositionType::STATIC_TO_PARENT);
-            button->setRawPosition({ 0.0f, i * getHeight(), { DimensionType::PIXEL, DimensionType::PIXEL } });
-            if (hasSlider) {
-                button->setRawSize({ getWidth() - m_dropPanel.getSliderWidth(), getHeight(), { DimensionType::PIXEL, DimensionType::PIXEL } });
-            } else {
-                button->setRawSize({ getWidth(), getHeight(), { DimensionType::PIXEL, DimensionType::PIXEL } });
-            }
-        } else {
-            button->disable();
-            button->setRawSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } });
-        }
-        i += 1.0f;
-    }
-
     if (m_isDropped) {
-        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        m_dropPanel.setSize(f32v2(getWidth(), panelHeight));
+        if (!m_dropPanel.isEnabled() || oldSize != newSize) {
+            // We need to set the drop panel size explicitly fully here as buttons depend on it.
+            m_dropPanel.enable();
+            m_dropPanel.setPositionType(PositionType::STATIC_TO_PARENT);
+            m_dropPanel.setPosition(f32v2(0.0f, newSize.y));
+            m_dropPanel.IWidget::setPosition(getPosition() + f32v2(0.0f, newSize.y));
+            m_dropPanel.setSize(f32v2(newSize.x, panelHeight));
+            m_dropPanel.IWidget::setSize(f32v2(newSize.x, panelHeight));
+
+            f32 i = 0.0f;
+            for (auto& button : m_buttons) {
+                button->setPositionType(PositionType::STATIC_TO_PARENT);
+                button->setPosition(f32v2(0.0f, i * getHeight()));
+                if (hasSlider) {
+                    button->setSize(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
+                } else {
+                    button->setSize(f32v2(getWidth(), getHeight()));
+                }
+                // Update buttons before letting panel update as it needs to know their final properties to determine 
+                // slider properties.
+                button->update(dt);
+                i += 1.0f;
+            }
+        }
     } else {
-        m_dropPanel.setSize(f32v2(0.0f));
+        m_dropPanel.disable();
+        for (auto& button : m_buttons) {
+            button->disable();
+        }
     }
 }
 

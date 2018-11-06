@@ -317,20 +317,20 @@ void vui::Panel::onSliderValueChange(Sender s, i32) {
     if (m_autoScroll) {
         f32 r = ((Slider*)s)->getValueScaled();
         if ((Slider*)s == &m_sliders.horizontal) {
-            // r == 0: offset_l = +(m_position.x - m_minX)
-            // r == 1: offset_r = -(m_maxX - m_position.x - m_size.x)
+            // r == 0: offset_l = -(m_minX)
+            // r == 1: offset_r = -(m_maxX - m_size.x)
             // We want a formula that combines these offsets:
             //    offset = offset_l + r(offset_r - offset_l)
 
-            f32 offset = m_position.x - m_minX + r * ( m_minX - m_maxX + m_size.x );
+            f32 offset = -m_minX + r * ( m_minX - m_maxX + m_size.x );
             setChildOffsetX(offset);
         } else {
-            // r == 0: offset_l = +(m_position.y - m_minY)
-            // r == 1: offset_r = -(m_maxY - m_position.y - m_size.y)
+            // r == 0: offset_l = -(m_minY)
+            // r == 1: offset_r = -(m_maxY - m_size.y)
             // We want a formula that combines these offsets:
             //    offset = offset_l + r(offset_r - offset_l)
 
-            f32 offset = m_position.y - m_minY + r * ( m_minY - m_maxY + m_size.y );
+            f32 offset = -m_minY + r * ( m_minY - m_maxY + m_size.y );
             setChildOffsetY(offset);
         }
     }

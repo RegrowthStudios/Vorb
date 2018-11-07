@@ -43,6 +43,8 @@ namespace vorb {
 
             virtual void dispose() override;
 
+            virtual void addDrawables(UIRenderer&) override { /* Empty */ }
+
             /*! \brief Adds a widget to the list.
              *
              * \param w: The widget to add.

@@ -186,11 +186,11 @@ bool vui::WidgetScriptFuncs::isMouseIn(Widget* w) const {
     return w->isMouseIn();
 }
 
-i32 vui::WidgetScriptFuncs::getAnchor(Widget* w VORB_UNUSED) const {
+i32 vui::WidgetScriptFuncs::getAnchor(Widget* w VORB_MAYBE_UNUSED) const {
     return 0; //TODO(Ben): Implement
 }
 
-i32 vui::WidgetScriptFuncs::getStyle(Widget* w VORB_UNUSED) const {
+i32 vui::WidgetScriptFuncs::getStyle(Widget* w VORB_MAYBE_UNUSED) const {
     return 0; //TODO(Ben): Implement
 }
 
@@ -270,7 +270,7 @@ vui::IWidget* vui::WidgetScriptFuncs::getParent(Widget* w) const {
 //     return w->getWidgetAlign();
 // }
 
-void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_UNUSED, int anchor VORB_UNUSED) const {
+void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_MAYBE_UNUSED, int anchor VORB_MAYBE_UNUSED) const {
     //TODO(Ben): Implement
 }
 
@@ -306,7 +306,7 @@ void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_UNUSED, int anchor VORB_UN
 //     w->setSelectable(selectable);
 // }
 
-void vui::WidgetScriptFuncs::setStyle(Widget* w VORB_UNUSED, int style VORB_UNUSED) const {
+void vui::WidgetScriptFuncs::setStyle(Widget* w VORB_MAYBE_UNUSED, int style VORB_MAYBE_UNUSED) const {
     //TODO(Ben): Implement
 }
 

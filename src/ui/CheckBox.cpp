@@ -152,7 +152,7 @@ void vui::CheckBox::updateColor() {
     }
 }
 
-void vui::CheckBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
+void vui::CheckBox::onMouseUp(Sender, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseUp(e);
@@ -165,7 +165,7 @@ void vui::CheckBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent
     updateColor();
 }
 
-void vui::CheckBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
+void vui::CheckBox::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {

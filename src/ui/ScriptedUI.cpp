@@ -48,14 +48,14 @@ void vui::ScriptedUI::onOptionsChanged() {
     // }
 }
 
-void vui::ScriptedUI::setDimensions(VORB_UNUSED const f32v2& dimensions) {
-    // for (VORB_UNUSED auto& it : m_forms) {
+void vui::ScriptedUI::setDimensions(VORB_MAYBE_UNUSED const f32v2& dimensions) {
+    // for (VORB_MAYBE_UNUSED auto& it : m_forms) {
     //     // it.first->setDimensions(dimensions);
     // }
 }
 
 // TODO(Ben): use name
-// vui::Form* vui::ScriptedUI::makeForm(VORB_UNUSED nString name, VORB_UNUSED nString filePath) {
+// vui::Form* vui::ScriptedUI::makeForm(VORB_MAYBE_UNUSED nString name, VORB_MAYBE_UNUSED nString filePath) {
 //     // // Make the form
 //     // Form* newForm = new Form;
 //     // newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);

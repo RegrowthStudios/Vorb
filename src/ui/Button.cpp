@@ -108,7 +108,7 @@ void vui::Button::updateColor() {
     }
 }
 
-void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
+void vui::Button::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
@@ -128,7 +128,7 @@ void vui::Button::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent
     }
 }
 
-void vui::Button::onMouseFocusLost(Sender s VORB_MAYBE_UNUSED, const MouseEvent& e) {
+void vui::Button::onMouseFocusLost(Sender, const MouseEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         m_flags.isMouseIn = false;

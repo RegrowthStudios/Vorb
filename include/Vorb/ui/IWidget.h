@@ -223,6 +223,7 @@ namespace vorb {
             virtual      const f32v2& getChildOffset()      const { return m_childOffset; }
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
+            virtual              bool isClicking()          const { return m_flags.isClicking; }
             virtual              bool ignoreOffset()        const { return m_flags.ignoreOffset; }
             virtual       WidgetFlags getFlags()            const { return m_flags; }
 

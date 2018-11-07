@@ -24,14 +24,51 @@ void vui::WidgetList::dispose() {
     IWidgets().swap(m_items);
 }
 
-void vui::WidgetList::calculateDrawables() {
+void vui::WidgetList::updateDimensions(f32 dt) {
+    Widget::updateDimensions(dt);
+
     f32 totalHeight = 0.0f;
 
     for (size_t i = 0; i < m_items.size(); ++i) {
-        m_items[i]->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
+        IWidget* child = m_items[i];
 
-        totalHeight += m_items[i]->getHeight();
+        // We need to update the child's dimensions now, as we might otherwise get screwy scroll bars as the child isn't up-to-date with parent changes.
+        {
+            WidgetFlags oldFlags = child->getFlags();
+            child->setFlags({
+                oldFlags.isClicking,
+                oldFlags.isEnabled,
+                oldFlags.isMouseIn,
+                oldFlags.ignoreOffset,
+                true,  // needsDimensionUpdate
+                false, // needsZIndexReorder
+                false, // needsDockRecalculation
+                false, // needsClipRectRecalculation
+                false  // needsDrawableRecalculation
+            });
+
+            child->update(0.0f);
+
+            WidgetFlags newFlags = child->getFlags();
+            child->setFlags({
+                newFlags.isClicking,
+                newFlags.isEnabled,
+                newFlags.isMouseIn,
+                newFlags.ignoreOffset,
+                false, // needsDimensionUpdate
+                oldFlags.needsZIndexReorder         || newFlags.needsZIndexReorder,
+                oldFlags.needsDockRecalculation     || newFlags.needsDockRecalculation,
+                oldFlags.needsClipRectRecalculation || newFlags.needsClipRectRecalculation,
+                oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation
+            });
+        }
+
+        child->setPosition(f32v2(0.0f, totalHeight + i * m_spacing));
+
+        totalHeight += child->getHeight();
     }
+
+    m_panel.setSize(f32v2(getWidth(), totalHeight > m_maxHeight ? m_maxHeight : totalHeight));
 }
 
 void vui::WidgetList::addItem(IWidget* item) {

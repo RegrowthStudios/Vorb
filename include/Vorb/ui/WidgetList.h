@@ -105,7 +105,10 @@ namespace vorb {
             /*!
              * \brief Updates the positions of the listed widgets.
              */
-            virtual void calculateDrawables() override;
+            virtual void updateDimensions(f32 dt) override;
+
+            /*! \brief Calculates the properties of the drawables. */
+            virtual void calculateDrawables() override { /* Empty */ }
 
             /************************************************************************/
             /* Members                                                              */

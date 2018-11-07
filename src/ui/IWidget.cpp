@@ -141,12 +141,35 @@ bool vui::IWidget::addWidget(IWidget* child) {
 
     child->updateDescendantViewports();
 
-    child->m_flags.needsDimensionUpdate       = true;
-    child->m_flags.needsDockRecalculation     = true;
-    child->m_flags.needsClipRectRecalculation = true;
-
+    // Update child appropriately - no more, no less, than we must.
     if (child->isEnabled()) {
+        WidgetFlags oldFlags = child->getFlags();
+        child->setFlags({
+            oldFlags.isClicking,
+            oldFlags.isEnabled,
+            oldFlags.isMouseIn,
+            oldFlags.ignoreOffset,
+            true,  // needsDimensionUpdate
+            false, // needsZIndexReorder
+            true,  // needsDockRecalculation
+            true,  // needsClipRectRecalculation
+            false  // needsDrawableRecalculation
+        });
+
         child->update(0.0f);
+
+        WidgetFlags newFlags = child->getFlags();
+        child->setFlags({
+            newFlags.isClicking,
+            newFlags.isEnabled,
+            newFlags.isMouseIn,
+            newFlags.ignoreOffset,
+            oldFlags.needsDimensionUpdate       || newFlags.needsDimensionUpdate,
+            oldFlags.needsZIndexReorder         || newFlags.needsZIndexReorder,
+            oldFlags.needsDockRecalculation     || newFlags.needsDockRecalculation,
+            oldFlags.needsClipRectRecalculation || newFlags.needsClipRectRecalculation,
+            oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation
+        });
     }
 
     m_flags.needsZIndexReorder     = true;

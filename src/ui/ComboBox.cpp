@@ -470,7 +470,7 @@ void vui::ComboBox::calculateDrawables() {
     // Empty
 }
 
-void vui::ComboBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEvent& e) {
+void vui::ComboBox::onMouseMove(Sender, const MouseMotionEvent& e) {
     if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
         if (!m_flags.isMouseIn) {
@@ -484,22 +484,24 @@ void vui::ComboBox::onMouseMove(Sender s VORB_MAYBE_UNUSED, const MouseMotionEve
     }
 }
 
-void vui::ComboBox::onMouseUp(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
+void vui::ComboBox::onMouseUp(Sender, const MouseButtonEvent& e) {
     if (!m_flags.isEnabled) return;
     if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (!m_flags.isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
+        if (m_flags.isClicking) {
+            MouseClick(e);
+        } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
             m_flags.needsDimensionUpdate = true;
         }
-    } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
+    } else if (!m_dropPanel.isClicking() && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
         m_flags.needsDimensionUpdate = true;
     }
     m_flags.isClicking = false;
 }
 
-void vui::ComboBox::onSubButtonClick(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e VORB_MAYBE_UNUSED) {
+void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent&) {
     vui::Button* button = (vui::Button*)s;
     const nString& text = button->getText();
     if (m_mainButton.getText() != text) {
@@ -509,7 +511,7 @@ void vui::ComboBox::onSubButtonClick(Sender s VORB_MAYBE_UNUSED, const MouseButt
     }
 }
 
-void vui::ComboBox::onMainButtonClick(Sender s VORB_MAYBE_UNUSED, const MouseButtonEvent& e) {
+void vui::ComboBox::onMainButtonClick(Sender, const MouseButtonEvent& e) {
     MouseClick(e);
 
     m_isDropped = !m_isDropped;

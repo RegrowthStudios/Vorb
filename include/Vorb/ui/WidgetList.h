@@ -84,8 +84,9 @@ namespace vorb {
             virtual             bool getAutoScroll()     const { return m_panel.getAutoScroll(); }
             virtual    const color4& getBackColor()      const { return m_panel.getColor();      }
             virtual    const color4& getBackHoverColor() const { return m_panel.getHoverColor(); }
-            virtual           size_t getItemCount()      const { return m_items.size();  }
-            virtual       const f32& getSpacing()        const { return m_spacing;               }
+            virtual           size_t getItemCount()      const { return m_items.size(); }
+            virtual       const f32& getSpacing()        const { return m_spacing;      }
+            virtual       const f32& getMaxHeight()      const { return m_maxHeight;    }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -95,6 +96,7 @@ namespace vorb {
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);
             virtual void setAutoScroll(bool autoScroll);
+            virtual void setMaxHeight(f32 maxHeight);
 
         protected:
             /*! \brief Initialiser for adding panel. */
@@ -108,9 +110,10 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32      m_spacing; ///< Spacing between items.
-            Panel    m_panel;   ///< Panel that holds the items.
-            IWidgets m_items;   ///< The widgets in the list.
+            f32      m_spacing;   ///< Spacing between items.
+            f32      m_maxHeight; ///< Max height of the list panel.
+            Panel    m_panel;     ///< Panel that holds the items.
+            IWidgets m_items;     ///< The widgets in the list.
         };
     }
 }

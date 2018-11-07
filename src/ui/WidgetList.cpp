@@ -3,7 +3,8 @@
 
 vui::WidgetList::WidgetList() :
     Widget(),
-    m_spacing(10.0f) {
+    m_spacing(10.0f),
+    m_maxHeight(FLT_MAX) {
     // Empty
 }
 
@@ -108,4 +109,10 @@ void vui::WidgetList::setSpacing(f32 spacing) {
 
 void vui::WidgetList::setAutoScroll(bool autoScroll) {
     m_panel.setAutoScroll(autoScroll);
+}
+
+void vui::WidgetList::setMaxHeight(f32 maxHeight) {
+    m_maxHeight = maxHeight;
+
+    m_flags.needsDimensionUpdate = true;
 }

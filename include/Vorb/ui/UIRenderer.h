@@ -41,6 +41,7 @@ namespace vorb {
         class IWidget;
         class GameWindow;
 
+        // TODO(Matthew): The spritebatch does FUNKY shit when text extends beyond clip rect, trying to do some wrapping but it's borked.
         class UIRenderer {
         public:
             using DrawFunc = Delegate<vg::SpriteBatch*>;

@@ -56,6 +56,8 @@ void vui::Slider::calculateDrawables() {
 
 void vui::Slider::setSlideSize(const Length2& size) {
     m_rawSlideSize = size;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setSlideSize(const f32v2& size) {

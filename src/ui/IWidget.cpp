@@ -713,9 +713,9 @@ void vui::IWidget::reorderWidgets() {
     bool change = false;
 
     std::sort(m_widgets.begin(), m_widgets.end(), [&change](const IWidget* lhs, const IWidget* rhs) {
-        bool res = lhs->getZIndex() >= rhs->getZIndex();
+        bool res = lhs->getZIndex() < rhs->getZIndex();
 
-        // Mark change eas true if we swap any entries.
+        // Mark change as true if we swap any entries.
         change |= !res;
 
         return res;

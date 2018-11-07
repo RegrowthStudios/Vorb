@@ -159,6 +159,37 @@ void vui::Panel::updateSliders() {
             // Skip disabled widgets.
             if (!child->isEnabled()) continue;
 
+            // We need to update the child's dimensions now, as we might otherwise get screwy scroll bars as the child isn't up-to-date with parent changes.
+            {
+                WidgetFlags oldFlags = child->getFlags();
+                child->setFlags({
+                    oldFlags.isClicking,
+                    oldFlags.isEnabled,
+                    oldFlags.isMouseIn,
+                    oldFlags.ignoreOffset,
+                    true,  // needsDimensionUpdate
+                    false, // needsZIndexReorder
+                    false, // needsDockRecalculation
+                    false, // needsClipRectRecalculation
+                    false  // needsDrawableRecalculation
+                });
+
+                child->update(0.0f);
+
+                WidgetFlags newFlags = child->getFlags();
+                child->setFlags({
+                    newFlags.isClicking,
+                    newFlags.isEnabled,
+                    newFlags.isMouseIn,
+                    newFlags.ignoreOffset,
+                    false, // needsDimensionUpdate
+                    oldFlags.needsZIndexReorder         || newFlags.needsZIndexReorder,
+                    oldFlags.needsDockRecalculation     || newFlags.needsDockRecalculation,
+                    oldFlags.needsClipRectRecalculation || newFlags.needsClipRectRecalculation,
+                    oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation
+                });
+            }
+
             const f32v2& position = child->getRelativePosition();
             const f32v2& size     = child->getSize();
 

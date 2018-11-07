@@ -113,6 +113,7 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
+        // TODO(Matthew): Fullscreen -> Windowed is screwy.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font     = vorb::graphics::SpriteFont;

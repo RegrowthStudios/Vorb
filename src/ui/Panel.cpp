@@ -139,6 +139,7 @@ void vui::Panel::updateColor() {
     }
 }
 
+// TODO(Matthew): We ideally want to be putting sliders outside of panel area, so as to not have panel contents overlapping them.
 void vui::Panel::updateSliders() {
     // We need to figure which of the two sliders are needed.
     bool needsHorizontal = false;

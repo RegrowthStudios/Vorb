@@ -117,8 +117,11 @@ public:
     Delegate(GenericObject object, GenericMemberFunction function, Executor executor, Deletor deletor = nullptr) :
         m_object(object), m_memberFunction(function), m_executor(executor), m_deletor(deletor)
     { /* Empty */ }
+    /*!
+     * WARNING: The object pointer is directly copied, rather than a deep copy of the object itself. Neuter this new instance if you don't want it managing the object.
+     */
     Delegate(const Delegate& delegate) :
-        m_object(delegate.m_deletor ? new SpecificClass(*delegate.m_object) : delegate.m_object), m_function(delegate.m_function), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor)
+        m_object(delegate.m_object), m_function(delegate.m_function), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor)
     { /* EMPTY */ }
     Delegate(Delegate&& delegate) NOEXCEPT :
         m_object(delegate.m_object), m_function(delegate.m_function), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor) {
@@ -136,13 +139,16 @@ public:
         m_deletor  = nullptr;
     }
 
+    void neuter() {
+        m_deletor = nullptr;
+    }
+
     // Assignment operators.
+    /*!
+     * WARNING: The object pointer is directly copied, rather than a deep copy of the object itself. Neuter this new instance if you don't want it managing the object.
+     */
     Delegate& operator=(const Delegate& delegate) {
-        if (delegate.m_deletor) {
-            m_object = new SpecificClass
-        } else {
-            m_object = delegate.m_object;
-        }
+        m_object   = delegate.m_object;
         m_function = delegate.m_function;
         m_executor = delegate.m_executor;
         m_deletor  = delegate.m_deletor;
@@ -168,10 +174,9 @@ public:
     }
 
     // Equality and not-equality operators to compare delegates.
-    bool operator==(const Delegate& delegate) const {
-        return (m_object   == delegate.m_object)
-            && (m_function == delegate.m_function)
-            && (m_executor == delegate.m_executor);
+    bool operator==(const Delegate& other) const {
+        return (m_object   == other.m_object)
+            && (m_function == other.m_function);
     }
     bool operator!=(const Delegate& delegate) const {
         return !(*this == delegate);

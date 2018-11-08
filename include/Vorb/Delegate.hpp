@@ -1,5 +1,5 @@
 //
-// Events.hpp
+// Delegate.hpp
 // Vorb Engine
 //
 // Created by Matthew Marshall on 7 Nov 2018
@@ -13,6 +13,13 @@
  * same return and parameter signature. These can thus be stored in the same container with ease
  * and provide a common call method.
  */
+
+#pragma once
+
+#ifndef Vorb_Delegate_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Delegate_h__
+//! @endcond
 
 /****************************************************************************\
  *                             Brief Overview                               *
@@ -659,3 +666,5 @@ Delegate<ReturnType, Parameters...> makeNonConstFunctor(const SpecificClass& obj
 
     return Delegate<ReturnType, Parameters...>::template createCopy<SpecificClass>(&object, function);
 }
+
+#endif // !Vorb_Delegate_h__

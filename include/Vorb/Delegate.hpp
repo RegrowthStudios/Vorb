@@ -8,7 +8,7 @@
 // MIT License
 //
 
-/*!
+/*! \file Delegate.hpp
  * \brief Provides a definition of delegates, which wrap various callables in C++ that have the
  * same return and parameter signature. These can thus be stored in the same container with ease
  * and provide a common call method.
@@ -204,76 +204,111 @@ public:
      * pointer, and a version taking the object by const pointer.               *
     \****************************************************************************/
 
-    // Creation functions for wrapping various types of functions.
-    // Static functions.
+    /**************************\
+     *    Static Functions    *
+    \**************************/
+
     static Delegate create(StaticFunction function) {
         return Delegate(nullptr, (GenericFunction)function, &execute);
     }
-    /// Enable create functions only if SpecificClass is a class.
-    // Non-const member functions of non-const objects.
+
+    /*********************************************\
+     *    Member Functions & Functor Classes     *
+     *           (Object Reference)              *
+    \*********************************************/
+
+        /****
+          Non-const Function of Non-const Object
+                                             ****/
+
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(SpecificClass* object, MemberFunction<SpecificClass> function) {
         return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createNonConst(SpecificClass* object, MemberFunction<SpecificClass> function) {
         return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
     }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createNonConstCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    // Non-const member functions of const objects.
-    /// This sounds crazy, but mutable lambdas depend on this.
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate create(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
-    }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createNonConst(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
-    }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createNonConstCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    // Const member functions of non-const objects.
+
+        /****
+          Const Function of Non-const Object
+                                         ****/
+
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
         return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createConst(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
         return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
     }
-    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createConstCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
-    }
-    // Const member functions of const objects.
+
+        /****
+          Const Function of Const Object
+                                     ****/
+
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
         return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+    static Delegate createConst(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+    }
+
+    /*******************************************\
+     *    Member Functions, Functor Classes    *
+     *               & Lambdas                 *
+     *             (Object Copy)               *
+    \*******************************************/
+
+        /****
+          Non-const Function of Non-const Object
+                                             ****/
+
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createNonConstCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+
+        /****
+          Non-const Function of Const Object
+                                         ****/
+
+    // This sounds bad, but mutable lambdas depend on this.
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
         return Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate createConst(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+    static Delegate createNonConstCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+
+        /****
+          Const Function of Non-const Object
+                                         ****/
+
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createConstCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+
+        /****
+          Const Function of Const Object
+                                     ****/
+
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate createCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createConstCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {

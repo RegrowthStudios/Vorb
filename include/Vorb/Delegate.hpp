@@ -87,9 +87,13 @@
  *                     The Delegate Implementation                          *
 \****************************************************************************/
 
+// Empty base class of delegates to allow for non-templated polymorphic containers.
+class DelegateBase {
+    // Empty
+};
 // Interface for delegates.
 template<typename ReturnType, typename ...Parameters>
-class Delegate {
+class Delegate : public DelegateBase {
 protected:
     // Alias a whole bunch of types to make things more readable.
     using GenericObject         = const void*;

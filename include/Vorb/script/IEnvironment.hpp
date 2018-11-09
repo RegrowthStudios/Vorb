@@ -39,6 +39,7 @@ namespace vorb {
         using GenericScriptFunction = void(*)();
         using GenericCFunction      = void(*)();
 
+        // TODO(Matthew): A static_assert of implementations providing functions required?
         template <typename DerivedEnvironment>
         class IEnvironment {
             using CFunctionList = std::vector<std::unique_ptr<DelegateBase>>;

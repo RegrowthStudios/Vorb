@@ -39,7 +39,7 @@ namespace vorb {
         namespace lua {
             class LFunction;
 
-            class Environment : public IEnvironment {
+            class Environment : public IEnvironment<Environment> {
                 using LFunctionList = std::unordered_map<nString, LFunction*>;
             public:
                 Environment();

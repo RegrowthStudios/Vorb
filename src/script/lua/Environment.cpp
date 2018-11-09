@@ -4,6 +4,7 @@
 #include "script/lua/LFunction.h"
 
 vscript::lua::Environment::Environment() :
+    IEnvironment(),
     m_state(nullptr),
     m_namespaceDepth(0),
     m_maxScriptLength(INT32_MAX / 10) {

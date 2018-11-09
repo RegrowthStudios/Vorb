@@ -49,6 +49,10 @@ namespace vorb {
             };
             using EventList = std::unordered_map<nString, EventData>;
         public:
+            IEnvironment() {
+                static_assert(std::is_base_of<IEnvironment, DerivedEnvironment>::value, "Environment implementation provided not deriving from IEnvironment interface.");
+            }
+
             /*!
              * \brief Load in a script from the provided filepath.
              *

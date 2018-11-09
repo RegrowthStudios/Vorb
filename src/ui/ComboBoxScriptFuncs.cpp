@@ -29,14 +29,14 @@ void vui::ComboBoxScriptFuncs::init(const cString nSpace, vscript::Environment* 
         REGISTER_RDEL(env, getTextHoverColor);
         REGISTER_RDEL(env, getTextScale);
         REGISTER_RDEL(env, getItem);
-        REGISTER_RDEL(env, getNumItems);
+        REGISTER_RDEL(env, getItemCount);
         REGISTER_RDEL(env, getTextAlign);
         REGISTER_RDEL(env, getText);
         REGISTER_RDEL(env, getMaxDropHeight);
 
         REGISTER_RDEL(env, isInDropBounds);
         // Setters
-        REGISTER_DEL(env, setTexture);
+        REGISTER_DEL(env, setMainButtonTexture);
         REGISTER_DEL(env, setDropBoxTexture);
         REGISTER_DEL(env, setDropButtonTexture);
         REGISTER_DEL(env, setBackColor);
@@ -145,8 +145,8 @@ nString vui::ComboBoxScriptFuncs::getItem(ComboBox* c, int index) const {
     return c->getItem(index);
 }
 
-size_t vui::ComboBoxScriptFuncs::getNumItems(ComboBox* c) const {
-    return c->getNumItems();
+size_t vui::ComboBoxScriptFuncs::getItemCount(ComboBox* c) const {
+    return c->getItemCount();
 }
 
 vg::TextAlign vui::ComboBoxScriptFuncs::getTextAlign(ComboBox* c) const {
@@ -161,8 +161,8 @@ f32 vui::ComboBoxScriptFuncs::getMaxDropHeight(ComboBox* c) const {
     return c->getMaxDropHeight();
 }
 
-void vui::ComboBoxScriptFuncs::setTexture(ComboBox* c, VGTexture texture) const {
-    c->setTexture(texture);
+void vui::ComboBoxScriptFuncs::setMainButtonTexture(ComboBox* c, VGTexture texture) const {
+    c->setMainButtonTexture(texture);
 }
 
 void vui::ComboBoxScriptFuncs::setDropBoxTexture(ComboBox* c, VGTexture texture) const {

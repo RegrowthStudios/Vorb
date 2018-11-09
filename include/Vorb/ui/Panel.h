@@ -8,7 +8,7 @@
 //
 
 /*! \file Panel.h
-* @brief 
+* \brief 
 * Panel widget implementation, used for
 * grouping controls inside a parent region.
 */
@@ -36,87 +36,69 @@ namespace vorb {
 
         class Panel : public Widget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Panel();
-            /*! @brief Constructor that sets name, position, and dimensions.
-            *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Panel(const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Panel(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Panel();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
-            */
-            virtual void addDrawables(UIRenderer* renderer) override;
-            /*! @brief Removes all drawables from the UIRenderer
-            *
-            * @param renderer: UIRenderer to remove from
-            */
-            virtual void removeDrawables() override;
+            /*! \brief Enables events panel widgets are interested in. */
+            virtual void enable() override;
+            /*! \brief Disables events panel widgets are interested in. */
+            virtual void disable() override;
 
-
-            bool addWidget(Widget* child) override;
-
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            /*! \brief Adds all drawables to the UIRenderer. */
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture() const { return m_drawableRect.getTexture(); }
-            virtual const bool& getAutoScroll() const { return m_autoScroll; }
-            virtual const f32& getSliderWidth() const { return m_sliderWidth; }
-            virtual const color4& getColor() const { return m_backColor; }
-            virtual const color4& getHoverColor() const { return m_backHoverColor; }
+            virtual const VGTexture& getTexture()     const { return m_drawableRect.getTexture(); }
+            virtual             bool getAutoScroll()  const { return m_autoScroll;                }
+            virtual              f32 getSliderWidth() const { return m_sliderWidth;               }
+            virtual    const color4& getColor()       const { return m_backColor;                 }
+            virtual    const color4& getHoverColor()  const { return m_backHoverColor;            }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
-            virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
-            virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
             virtual void setAutoScroll(bool autoScroll);
-
         protected:
+            /*! \brief Initialiser for adding sliders. */
+            virtual void initBase() override;
+
+            virtual void updateDimensions(f32 dt) override;
+
+            virtual void calculateDrawables() override;
+
             virtual void updateColor();
             virtual void updateSliders();
-            virtual void refreshDrawables();
-           
+
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
             virtual void onMouseFocusLost(Sender s, const MouseEvent& e) override;
-            virtual void onSliderValueChange(Sender s, int v);
+            virtual void onSliderValueChange(Sender, i32 v);
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            f32 minX = FLT_MAX, maxX = -FLT_MAX, minY = FLT_MAX, maxY = -FLT_MAX; ///< Used for auto scroll
-            Slider m_sliders[2];
-            f32 m_sliderWidth = 15.0f;
-            bool m_autoScroll = false;
-            f32v2 m_childOffset = f32v2(0.0f);
-            DrawableRect m_drawableRect, m_drawnRect;
-            // Has no color by default
-            color4 m_backColor = color::Transparent, m_backHoverColor = color::Transparent;
+            f32 m_minX, m_minY; ///< The minimum coordinates of child widgets relative to panel.
+            f32 m_maxX, m_maxY; ///< The maximum coordinates of child widgets relative to panel.
+
+            bool m_autoScroll; ///< Whether to automatically add sliders if content overflows the panel.
+            struct {
+                Slider horizontal;
+                Slider vertical;
+            } m_sliders; ///< The sliders that will be added on content overflow.
+
+            bool m_flipHorizontal; ///< Whether we should place the horizontal slider on the left or right (true = left, false = right).
+            bool m_flipVertical;   ///< Whether we should place the vertical slider on the top or bottom (true = top, false = bottom).
+            f32  m_sliderWidth;    ///< The width, in pixels, of the sliders.
+
+            DrawableRect m_drawableRect;
+            color4 m_backColor;      ///< Colour of the panel.
+            color4 m_backHoverColor; ///< Colour of the panel on hover.
         };
     }
 }

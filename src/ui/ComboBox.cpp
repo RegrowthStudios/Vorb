@@ -9,128 +9,181 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/utils.h"
 
-
-vui::ComboBox::ComboBox() : Widget() {
-    ValueChange.setSender(this);
-    addWidget(&m_mainButton);
-    addWidget(&m_dropPanel);
+vui::ComboBox::ComboBox() :
+    Widget(),
+    m_maxDropHeight(FLT_MAX),
+    m_dropDownStyle(DropDownStyle::DROP_DOWN_LIST),
+    m_isDropped(false) {
     m_dropPanel.setAutoScroll(true);
-    m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
+    m_dropPanel.setClipping(Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
+
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
-}
-
-vui::ComboBox::ComboBox(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox() {
-    m_name = name;
-    setDestRect(destRect);
-    m_mainButton.setDimensions(m_dimensions);
-    updatePosition();
-}
-
-vui::ComboBox::ComboBox(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : ComboBox(name, destRect) {
-    parent->addWidget(this);
 }
 
 vui::ComboBox::~ComboBox() {
     // Empty
 }
 
+void vui::ComboBox::initBase() {
+    ValueChange.setSender(this);
+
+    m_dropPanel.init(this, getName() + "_drop_panel");
+    m_mainButton.init(this, getName() + "_main_button", f32v4(0.0f, 0.0f, m_size.x, m_size.y));
+}
+
 void vui::ComboBox::dispose() {
     Widget::dispose();
+
     for (size_t i = 0; i < m_buttons.size(); i++) {
         delete m_buttons[i];
     }
+
     std::vector<Button*>().swap(m_buttons);
 }
 
-void vui::ComboBox::updatePosition() {
-
-    bool hasSlider = false;
-    if (m_items.size() * getHeight() > m_maxDropHeight) {
-        hasSlider = true;
+void vui::ComboBox::enable() {
+    if (!m_flags.isEnabled) {
+        m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
     }
 
-    // Buttons
-    f32 i = 0;
-    for (auto& b : m_buttons) {
-        if (m_isDropped) {
-            b->enable();
-            b->setPosition(f32v2(0.0f, i * getHeight()));
-            if (hasSlider) {
-                b->setDimensions(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
-            } else {
-                b->setDimensions(getDimensions());
-            }
-        } else {
-            b->disable();
-            b->setDimensions(f32v2(0.0f));
-        }
-        i += 1.0f;
-    }
+    Widget::enable();
 
-    // Drop list
-    if (m_isDropped) {
-        m_dropPanel.setPosition(f32v2(0.0f, getHeight()));
-        f32v2 dims = getDimensions() * f32v2(1.0f, (f32)m_items.size());
-        dims.y = glm::min(dims.y, m_maxDropHeight);
-        m_dropPanel.setDimensions(dims);
-    } else {
-        m_dropPanel.setDimensions(f32v2(0.0f));
-    }
-    
-    vui::Widget::updatePosition();
-}
-
-void vui::ComboBox::addItem(const nString& item) {
-    m_items.push_back(item);
-    m_buttons.push_back(new Button);
-    auto b = m_buttons.back();
-    b->addDrawables(m_renderer); // TODO(Ben): This only works consistently in LUA
-    m_dropPanel.addWidget(b);
-    b->setText(item);
     if (!m_isDropped) {
-        b->disable();
+        m_dropPanel.disable();
+        for (auto& button : m_buttons) {
+            button->disable();
+        }
     }
-    b->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
-    updateDropButton(b);
-    b->setDimensions(m_dimensions);
-    updatePosition();
 }
 
-bool vui::ComboBox::addItemAtIndex(int index, const nString& item) {
-    if (index > (int)m_items.size()) return false;
+void vui::ComboBox::disable() {
+    if (m_flags.isEnabled) {
+        m_mainButton.MouseClick -= makeDelegate(*this, &ComboBox::onMainButtonClick);
+    }
+
+    Widget::disable();
+}
+
+vui::Button* vui::ComboBox::addItem(const nString& item) {
+    // Add item and correspodning button.
+    m_items.push_back(item);
+    m_buttons.push_back(new Button());
+
+    // Get reference to button we just added.
+    auto& button = m_buttons.back();
+
+    // Initialise button and set parent.
+    button->init(&m_dropPanel, item, f32v4(0.0f, 0.0f, 100.0f, 30.0f));
+
+    // Set the text given.
+    button->setText(item);
+
+    // If the combobox is currently dropped, enable the button.
+    if (m_isDropped) {
+        button->enable();
+    }
+
+    // Add listener for mouse clicks on the button to handle combobox logic.
+    button->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
+
+    button->setSize(m_size);
+    
+    m_flags.needsDrawableRecalculation = true;
+
+    return button;
+}
+
+vui::Button* vui::ComboBox::addItemAtIndex(size_t index, const nString& item) {
+    // Return false if index is out-of-range.
+    if (index >= m_buttons.size()) return nullptr;
+
+    // Add item and correspodning button.
     m_items.insert(m_items.begin() + index, item);
-    return true;
+    m_buttons.insert(m_buttons.begin() + index, new Button());
+
+    // Get reference to button we just added.
+    auto& button = *(m_buttons.begin() + index);
+
+    // Initialise button and set parent.
+    button->init(&m_dropPanel, item, f32v4(0.0f, 0.0f, 100.0f, 30.0f));
+
+    // Set the text given.
+    button->setText(item);
+
+    // If the combobox is currently dropped, enable the button.
+    if (m_isDropped) {
+        button->enable();
+    }
+
+    // Add listener for mouse clicks on the button to handle combobox logic.
+    button->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
+
+    button->setSize(m_size);
+    
+    m_flags.needsDrawableRecalculation = true;
+
+    return button;
+}
+
+std::vector<vui::Button*> vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
+    std::vector<Button*> addedButtons;
+    addedButtons.reserve(itemsToAdd.size());
+
+    for (auto& item : itemsToAdd) {
+        addedButtons.push_back(addItem(item));
+    }
+
+    return addedButtons;
 }
 
 bool vui::ComboBox::removeItem(const nString& item) {
-    // TODO(Ben): This is certainly wrong. It leaves button.
-    for (auto it = m_items.begin(); it != m_items.end(); it++) {
-        if (*it == item) {
-            m_items.erase(it);
+    for (size_t i = 0; i < m_buttons.size(); ++i) {
+        if (*(m_items.begin() + i) == item) {
+            m_items.erase(m_items.begin() + i);
+            m_buttons.erase(m_buttons.begin() + i);
             return true;
         }
     }
     return false;
 }
 
-bool vui::ComboBox::removeItem(int index) {
-    if (index > (int)m_items.size()) return false;
+bool vui::ComboBox::removeItem(size_t index) {
+    if (index >= m_buttons.size()) return false;
 
     m_items.erase(m_items.begin() + index);
+    m_buttons.erase(m_buttons.begin() + index);
+
     return true;
 }
 
-void vui::ComboBox::addItems(const std::vector <nString>& itemsToAdd) {
-    for (auto& it : itemsToAdd) {
-        addItem(it);
+bool vui::ComboBox::selectItem(const nString& item) {
+    // If this item isn't currently selected, then we search for it and set it if found.
+    if (item != m_mainButton.getText()) {
+        for (auto& button : m_buttons) {
+            if (button->getText() != item) continue;
+
+            m_mainButton.setText(item);
+
+            ValueChange(item);
+
+            return true;
+        }
     }
+    return false;
 }
 
-bool vui::ComboBox::selectItem(int index) {
-    if (index > (int)m_items.size()) return false;
-    if (m_items[index] != m_mainButton.getText()) {
-        m_mainButton.setText(m_items[index]);
-        ValueChange(m_items[index]);
+bool vui::ComboBox::selectItem(size_t index) {
+    // Fail if out-of-range.
+    if (index >= m_buttons.size()) return false;
+
+    // Get text of selected item.
+    const nString& selected = m_buttons[index]->getText();
+
+    // If this item isn't currently selected, set it as selected.
+    if (selected != m_mainButton.getText()) {
+        m_mainButton.setText(selected);
+
+        ValueChange(selected);
     }
     return true;
 }
@@ -139,36 +192,15 @@ bool vui::ComboBox::isInDropBounds(f32 x, f32 y) const {
     return m_dropPanel.isInBounds(x, y);
 }
 
-const vorb::graphics::SpriteFont* vui::ComboBox::getFont() const {
-    return m_mainButton.getFont();
-}
-
-f32v2 vui::ComboBox::getTextScale() const {
-    return m_mainButton.getTextScale();
-}
-
-const nString& vui::ComboBox::getItem(int index) const {
-    return m_items.at(index);
-}
-
-void vui::ComboBox::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    m_mainButton.setDimensions(dimensions);
-    updatePosition();
-}
-
-void vui::ComboBox::setFont(const vorb::graphics::SpriteFont* font) {
+void vui::ComboBox::setFont(const vg::SpriteFont* font) {
     m_mainButton.setFont(font);
-    for (auto& b : m_buttons) b->setFont(font);
+
+    for (auto& button : m_buttons) {
+        button->setFont(font);
+    }
 }
 
-void vui::ComboBox::setHeight(f32 height) {
-    Widget::setHeight(height);
-    m_mainButton.setHeight(height);
-    updatePosition();
-}
-
-void vui::ComboBox::setTexture(VGTexture texture) {
+void vui::ComboBox::setMainButtonTexture(VGTexture texture) {
     m_mainButton.setTexture(texture);
 }
 
@@ -177,47 +209,200 @@ void vui::ComboBox::setDropBoxTexture(VGTexture texture) {
 }
 
 void vui::ComboBox::setDropButtonTexture(VGTexture texture) {
-    for (auto& b : m_buttons) b->setTexture(texture);
+    for (auto& button : m_buttons) {
+        button->setTexture(texture);
+    }
 }
 
-void vui::ComboBox::setWidth(f32 width) {
-    Widget::setWidth(width);
-    m_mainButton.setWidth(width);
-    updatePosition();
+void vui::ComboBox::setDropButtonTexture(VGTexture texture, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTexture(texture);
+    }
+}
+
+void vui::ComboBox::setDropButtonTexture(VGTexture texture, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTexture(texture);
 }
 
 void vui::ComboBox::setBackColor(const color4& color) {
+    setMainButtonBackColor(color);
+    setDropButtonBackColor(color);
+}
+
+void vui::ComboBox::setMainButtonBackColor(const color4& color) {
     m_mainButton.setBackColor(color);
-    for (auto& b : m_buttons)  b->setBackColor(color);
+}
+
+void vui::ComboBox::setDropButtonBackColor(const color4& color) {
+    for (auto& button : m_buttons) {
+        button->setBackColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonBackColor(const color4& color, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setBackColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonBackColor(const color4& color, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setBackColor(color);
 }
 
 void vui::ComboBox::setBackHoverColor(const color4& color) {
+    setMainButtonBackHoverColor(color);
+    setDropButtonBackHoverColor(color);
+}
+
+void vui::ComboBox::setMainButtonBackHoverColor(const color4& color) {
     m_mainButton.setBackHoverColor(color);
-    for (auto& b : m_buttons)  b->setBackHoverColor(color);
+}
+
+void vui::ComboBox::setDropButtonBackHoverColor(const color4& color) {
+    for (auto& button : m_buttons) {
+        button->setBackHoverColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonBackHoverColor(const color4& color, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setBackHoverColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonBackHoverColor(const color4& color, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setBackHoverColor(color);
 }
 
 void vui::ComboBox::setTextColor(const color4& color) {
+    setMainButtonTextColor(color);
+    setDropButtonTextColor(color);
+}
+
+void vui::ComboBox::setMainButtonTextColor(const color4& color) {
     m_mainButton.setTextColor(color);
-    for (auto& b : m_buttons)  b->setTextColor(color);
+}
+
+void vui::ComboBox::setDropButtonTextColor(const color4& color) {
+    for (auto& button : m_buttons) {
+        button->setTextColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextColor(const color4& color, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTextColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextColor(const color4& color, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTextColor(color);
 }
 
 void vui::ComboBox::setTextHoverColor(const color4& color) {
-    m_mainButton.setTextHoverColor(color);
-    for (auto& b : m_buttons) b->setTextHoverColor(color);
+    setMainButtonTextHoverColor(color);
+    setDropButtonTextHoverColor(color);
 }
 
-void vui::ComboBox::setTextScale(const f32v2& textScale) {
-    m_mainButton.setTextScale(textScale);
-    for (auto& it : m_buttons) {
-        it->setTextScale(textScale);
+void vui::ComboBox::setMainButtonTextHoverColor(const color4& color) {
+    m_mainButton.setTextHoverColor(color);
+}
+
+void vui::ComboBox::setDropButtonTextHoverColor(const color4& color) {
+    for (auto& button : m_buttons) {
+        button->setTextHoverColor(color);
     }
+}
+
+void vui::ComboBox::setDropButtonTextHoverColor(const color4& color, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTextHoverColor(color);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextHoverColor(const color4& color, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTextHoverColor(color);
+}
+
+
+void vui::ComboBox::setTextScale(const f32v2& textScale) {
+    setMainButtonTextScale(textScale);
+    setDropButtonTextScale(textScale);
+}
+
+void vui::ComboBox::setMainButtonTextScale(const f32v2& textScale) {
+    m_mainButton.setTextScale(textScale);
+}
+
+void vui::ComboBox::setDropButtonTextScale(const f32v2& textScale) {
+    for (auto& button : m_buttons) {
+        button->setTextScale(textScale);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextScale(const f32v2& textScale, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTextScale(textScale);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextScale(const f32v2& textScale, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTextScale(textScale);
 }
 
 void vui::ComboBox::setTextAlign(vg::TextAlign align) {
     m_mainButton.setTextAlign(align);
-    for (auto& it : m_buttons) {
-        it->setTextAlign(align);
+
+    for (auto& button : m_buttons) {
+        button->setTextAlign(align);
     }
+}
+void vui::ComboBox::setMainButtonTextAlign(vg::TextAlign align) {
+    m_mainButton.setTextAlign(align);
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align) {
+    for (auto& button : m_buttons) {
+        button->setTextAlign(align);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, const nString& item) {
+    for (auto& button : m_buttons) {
+        if (button->getText() != item) continue;
+
+        button->setTextAlign(align);
+    }
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setTextAlign(align);
 }
 
 void vui::ComboBox::setText(const nString& text) {
@@ -226,76 +411,110 @@ void vui::ComboBox::setText(const nString& text) {
 
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_maxDropHeight = maxDropHeight;
-    updatePosition();
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::ComboBox::updateDropButton(vui::Button* b) {
-    b->setFont(m_mainButton.getFont());
-    b->setBackColor(m_mainButton.getBackColor());
-    b->setBackHoverColor(m_mainButton.getBackHoverColor());
-    b->setTextColor(m_mainButton.getTextColor());
-    b->setTextHoverColor(m_mainButton.getTextHoverColor());
-    b->setTextAlign(m_mainButton.getTextAlign());
-    b->setTextScale(m_mainButton.getTextScale());
-}
+void vui::ComboBox::updateDimensions(f32 dt) {
+    f32v2 oldSize = getSize();
+    f32v2 oldPos  = getPosition();
 
-void vui::ComboBox::computeClipRect(const f32v4& parentClipRect /*= f32v4(-(FLT_MAX / 2.0f), -(FLT_MAX / 2.0f), FLT_MAX, FLT_MAX)*/) {
-    if (m_isClippingEnabled) {
-        f32v2 pos = m_position;
-        f32v2 dims = m_dimensions;
+    Widget::updateDimensions(dt);
 
-        dims.y += m_dropPanel.getHeight();
-
-        computeClipping(parentClipRect, pos, dims);
-        if (dims.x < 0) dims.x = 0;
-        if (dims.y < 0) dims.y = 0;
-        m_clipRect = f32v4(pos.x, pos.y, dims.x, dims.y);
-    } else {
-        m_clipRect = parentClipRect;
+    f32v2 newSize = getSize();
+    if (oldSize != newSize) {
+        m_mainButton.setSize(newSize);
     }
-    computeChildClipRects();
+
+    f32 panelHeight = (f32)m_buttons.size() * getHeight();
+    bool hasSlider = false;
+    if (panelHeight > m_maxDropHeight) {
+        panelHeight = m_maxDropHeight;
+        hasSlider = true;
+    }
+
+    if (m_isDropped) {
+        if (!m_dropPanel.isEnabled() || oldSize != newSize || oldPos != getPosition()) {
+            // We need to set the drop panel size explicitly fully here as buttons depend on it.
+            m_dropPanel.enable();
+            m_dropPanel.setPositionType(PositionType::STATIC_TO_PARENT);
+            m_dropPanel.setPosition(f32v2(0.0f, newSize.y));
+            m_dropPanel.IWidget::setPosition(getPosition() + f32v2(0.0f, newSize.y));
+            m_dropPanel.setSize(f32v2(newSize.x, panelHeight));
+            m_dropPanel.IWidget::setSize(f32v2(newSize.x, panelHeight));
+
+            f32 i = 0.0f;
+            for (auto& button : m_buttons) {
+                button->setPositionType(PositionType::STATIC_TO_PARENT);
+                button->setPosition(f32v2(0.0f, i * getHeight()));
+                if (hasSlider) {
+                    button->setSize(f32v2(getWidth() - m_dropPanel.getSliderWidth(), getHeight()));
+                } else {
+                    button->setSize(f32v2(getWidth(), getHeight()));
+                }
+                // Update buttons before letting panel update as it needs to know their final properties to determine 
+                // slider properties.
+                button->update(dt);
+                i += 1.0f;
+            }
+        }
+    } else {
+        m_dropPanel.disable();
+        for (auto& button : m_buttons) {
+            button->disable();
+        }
+    }
 }
 
-void vui::ComboBox::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+void vui::ComboBox::calculateDrawables() {
+    // Empty
+}
+
+void vui::ComboBox::onMouseMove(Sender, const MouseMotionEvent& e) {
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
         }
         MouseMove(e);
-    } else if (m_isMouseIn) {
-        m_isMouseIn = false;
+    } else if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseLeave(e);
     }
 }
 
-void vui::ComboBox::onMouseUp(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
+void vui::ComboBox::onMouseUp(Sender, const MouseButtonEvent& e) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
         MouseUp(e);
-        if (!m_isClicking && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
+        if (m_flags.isClicking) {
+            MouseClick(e);
+        } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
             m_isDropped = false;
-            updatePosition();
+            m_flags.needsDimensionUpdate = true;
         }
-    } else if (!isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
+    } else if (!m_dropPanel.isClicking() && !isInDropBounds((f32)e.x, (f32)e.y) && m_isDropped) {
         m_isDropped = false;
-        updatePosition();
+        m_flags.needsDimensionUpdate = true;
     }
-    m_isClicking = false;
+    m_flags.isClicking = false;
 }
 
-void vui::ComboBox::onSubButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e VORB_UNUSED) {
-    vui::Button* b = (vui::Button*)s;
-    const nString& text = b->getText();
+void vui::ComboBox::onSubButtonClick(Sender s, const MouseButtonEvent&) {
+    vui::Button* button = (vui::Button*)s;
+    const nString& text = button->getText();
     if (m_mainButton.getText() != text) {
         m_mainButton.setText(text);
+
         ValueChange(text);
     }
 }
 
-void vui::ComboBox::onMainButtonClick(Sender s VORB_UNUSED, const MouseButtonEvent& e) {
+void vui::ComboBox::onMainButtonClick(Sender, const MouseButtonEvent& e) {
     MouseClick(e);
+
     m_isDropped = !m_isDropped;
-    updatePosition();
+
+    m_flags.needsDimensionUpdate = true;
 }

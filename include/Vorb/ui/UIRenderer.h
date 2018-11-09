@@ -8,7 +8,7 @@
 //
 
 /*! \file UIRenderer.h
-* @brief 
+* \brief 
 * Renderer for Vorb UI
 *
 */
@@ -38,66 +38,58 @@ namespace vorb {
     namespace ui {
 
         // Forward Declarations
-        class Widget;
+        class IWidget;
         class GameWindow;
 
+        // TODO(Matthew): The spritebatch does FUNKY shit when text extends beyond clip rect, trying to do some wrapping but it's borked.
         class UIRenderer {
         public:
-            typedef Delegate<vg::SpriteBatch*> DrawFunc;
-            typedef Delegate<> RefreshFunc;
+            using DrawFunc = Delegate<vg::SpriteBatch*>;
 
             /// Constructor
             UIRenderer();
             /// Destructor
             virtual ~UIRenderer();
 
-            /*! @brief Initializes the renderer
+            /*! \brief Initializes the renderer
             *
             * Call on the GL thread after GL initialization
             *
-            * @param defaultFont: Optional default font to use for rendering.
-            * @param spriteBatch: Optional SpriteBatch to use. Will not init if passed in. If nullptr, will init it's own.
+            * \param defaultFont: Optional default font to use for rendering.
+            * \param spriteBatch: Optional SpriteBatch to use. Will not init if passed in. If nullptr, will init it's own.
             */
             virtual void init(vg::SpriteFont* defaultFont = nullptr,
                               vg::SpriteBatch* spriteBatch = nullptr);
 
-            /*! @brief Adds an drawable to be drawn
-             * 
-             * The init function should have already been called.
-             *
-             * @param drawable The drawable to render
-             */
-            virtual void add(const Widget* widget, const DrawFunc& drawFunc, const RefreshFunc& refreshFunc);
-            /*! @brief Removes all drawables for a widget
-             * 
-             * @param widget: The Widget who's drawables should be removed
-             * @return true if successfully removed
-             */
-            virtual bool remove(const Widget* widget);
-            /*! @brief Frees resources used by renderer */
+            /*! \brief Frees resources used by renderer */
             virtual void dispose();
-            /*! @brief Draws all IDrawables held by this renderer */
-            virtual void draw(const f32m4& mWorld, const f32m4& mCamera, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            virtual void draw(const f32m4& mWorld, const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
-            virtual void draw(const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
 
-            /*! @brief Gets the default SpriteFont.
+            /*!
+             * \brief Prepares the UIRenderer for rendering a UI.
+             */
+            virtual void prepare() { m_sb->begin(); }
+
+            /*! \brief Adds a drawable to be rendererd. */
+            virtual void add(const DrawFunc& drawFunc);
+
+            /*!
+             * \brief Renders the UI that has been prepared.
+             */
+            virtual void render(const f32m4& mWorld, const f32m4& mCamera, const vg::SamplerState* ss /*= nullptr*/, const vg::DepthState* ds /*= nullptr*/, const vg::RasterizerState* rs /*= nullptr*/, vg::GLProgram* shader /*= nullptr*/);
+            virtual void render(const f32m4& mWorld, const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+            virtual void render(const f32v2& screenSize, const vg::SamplerState* ss = nullptr, const vg::DepthState* ds = nullptr, const vg::RasterizerState* rs = nullptr, vg::GLProgram* shader = nullptr);
+
+            /*! \brief Gets the default SpriteFont.
              *
-             * It is up to  the Widget classes to call this function and set the drawable fonts
+             * It is up to the Widget classes to call this function and set the drawable fonts
              * 
-             * @return the SpriteFont
+             * \return the SpriteFont
              */
             virtual const vg::SpriteFont* getDefaultFont() const { return m_defaultFont; }
         protected:
-            struct DrawableFuncs {
-                const Widget* owner;
-                DrawFunc drawFunc;
-                RefreshFunc refreshFunc; // TODO(Ben): Do something with this or kill it
-            };
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            std::vector<DrawableFuncs> m_drawableFuncs; ///< The Ith widget is the widget that owns the Ith DrawFunc
             VGTexture m_defaultTexture = 0; ///< Default texture if drawable doesn't have one
             vg::SpriteFont* m_defaultFont = nullptr; ///< Default font if drawable doesn't have one
             vg::SpriteBatch m_defaultSb; ///< Default SpriteBatch if none specified

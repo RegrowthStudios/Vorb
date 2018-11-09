@@ -2,254 +2,141 @@
 #include "Vorb/ui/Button.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 
-vui::Button::Button() : Widget() {
-    updateColor();
-}
-
-vui::Button::Button(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button() {
-    m_name = name;
-    setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    updateTextPosition();
-}
-
-vui::Button::Button(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Button(name, destRect) {
-    parent->addWidget(this);
-    m_parent = parent;
+vui::Button::Button() :
+    TextWidget(),
+    m_gradBack(vg::GradientType::NONE),
+    m_gradHover(vg::GradientType::NONE),
+    m_backColor1(color::LightGray),
+    m_backColor2(color::LightGray),
+    m_backHoverColor1(color::AliceBlue),
+    m_backHoverColor2(color::AliceBlue),
+    m_texture(0),
+    m_hoverTexture(0),
+    m_textColor(color::Black),
+    m_textHoverColor(color::Black) {
+    m_flags.needsDrawableRecalculation = true;
 }
 
 vui::Button::~Button() {
     // Empty
 }
 
-void vui::Button::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
-    // Make copies
-    m_drawnText = m_drawableText;
-    m_drawnRect = m_drawableRect;
-    // Use renderer default font if we dont have a font
-    m_defaultFont = renderer->getDefaultFont();
-    if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
-
-    // Add the rect
-    renderer->add(this,
-                  makeDelegate(m_drawnRect, &DrawableRect::draw),
-                  makeDelegate(*this, &Button::refreshDrawables));
+void vui::Button::addDrawables(UIRenderer& renderer) {
+    // Add the button rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
     
-    // Add the text 
-    renderer->add(this,
-                  makeDelegate(m_drawnText, &DrawableText::draw),
-                  makeDelegate(*this, &Button::refreshDrawables));  
-}
-
-void vui::Button::updatePosition() {
-    Widget::updatePosition();
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    m_drawableRect.setClipRect(m_clipRect);
-    updateTextPosition();
-}
-
-void vui::Button::setDestRect(const f32v4& destRect) {
-    vui::Widget::setDestRect(destRect);
-    m_drawableRect.setPosition(getPosition());
-    m_drawableRect.setDimensions(getDimensions());
-    refreshDrawables();
-}
-
-void vui::Button::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    m_drawableRect.setDimensions(dimensions);
-    updatePosition();
-}
-
-void vui::Button::setFont(const vorb::graphics::SpriteFont* font) {
-    m_font = font;
-    updatePosition();
-}
-
-void vui::Button::setHeight(f32 height) {
-    Widget::setHeight(height);
-    m_drawableRect.setHeight(height);
-    updatePosition();
-}
-
-void vui::Button::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    m_drawableRect.setPosition(m_position);
-    updatePosition();
+    // Add the text <- after checkbox to be rendererd on top!
+    TextWidget::addDrawables(renderer);
 }
 
 void vui::Button::setTexture(VGTexture texture) {
-    m_drawableRect.setTexture(texture);
-    refreshDrawables();
+    m_texture = texture;
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Button::setWidth(f32 width) {
-    Widget::setWidth(width);
-    m_drawableRect.setWidth(width);
-    updatePosition();
-}
-
-void vui::Button::setX(f32 x) {
-    Widget::setX(x);
-    m_drawableRect.setX(m_position.x);
-    updatePosition();
-}
-
-void vui::Button::setY(f32 y) {
-    Widget::setY(y);
-    m_drawableRect.setX(m_position.y);
-    updatePosition();
+void vui::Button::setHoverTexture(VGTexture texture) {
+    m_hoverTexture = texture;
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackColor(const color4& color) {
     m_backColor1 = m_backColor2 = color;
-    updateColor();
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackColorGrad(const color4& color1, const color4& color2, vg::GradientType grad) {
     m_backColor1 = color1;
     m_backColor2 = color2;
-    gradBack = grad;
-    updateColor();
+    m_gradBack = grad;
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackHoverColor(const color4& color) {
     m_backHoverColor1 = m_backHoverColor2 = color;
-    updateColor();
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad) {
     m_backHoverColor1 = color1;
     m_backHoverColor2 = color2;
-    gradHover = grad;
-    updateColor();
-}
-
-void vui::Button::setText(const nString& text) {
-    m_drawableText.setText(text);
-    updateTextPosition();
+    m_gradHover = grad;
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setTextColor(const color4& color) {
     m_textColor = color;
-    updateColor();
+    
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setTextHoverColor(const color4& color) {
     m_textHoverColor = color;
+    
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Button::calculateDrawables() {
+    m_drawableRect.setPosition(getPaddedPosition());
+    m_drawableRect.setSize(getPaddedSize());
+    m_drawableRect.setClipRect(m_clipRect);
+    m_drawableRect.setTexture(m_flags.isMouseIn ? m_hoverTexture : m_texture);
+
     updateColor();
-}
 
-void vui::Button::setTextAlign(vg::TextAlign textAlign) {
-    m_drawableText.setTextAlign(textAlign);
-    updateTextPosition();
-}
-
-void vui::Button::setTextScale(const f32v2& textScale) {
-    m_drawableText.setTextScale(textScale);
-    updateTextPosition();
+    TextWidget::calculateDrawables();
 }
 
 void vui::Button::updateColor() {
-    if (m_isMouseIn) {
+    if (m_flags.isMouseIn) {
         m_drawableRect.setColor1(m_backHoverColor1);
         m_drawableRect.setColor2(m_backHoverColor2);
-        m_drawableRect.setGradientType(gradBack);
+        m_drawableRect.setGradientType(m_gradHover);
         m_drawableText.setColor(m_textHoverColor);
     } else {
         m_drawableRect.setColor1(m_backColor1);
         m_drawableRect.setColor2(m_backColor2);
-        m_drawableRect.setGradientType(gradHover);
+        m_drawableRect.setGradientType(m_gradBack);
         m_drawableText.setColor(m_textColor);
     }
-    refreshDrawables();
 }
 
-void vui::Button::updateTextPosition() {
-    const f32v2& dims = getDimensions();
-    const f32v2& pos = getPosition();
-    const vg::TextAlign& textAlign = getTextAlign();
-
-    m_drawableText.setClipRect(m_clipRect);
-
-    // TODO(Ben): Padding
-    switch (textAlign) {
-        case vg::TextAlign::LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::TOP_LEFT:
-            m_drawableText.setPosition(pos);
-            break;
-        case vg::TextAlign::TOP:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
-            break;
-        case vg::TextAlign::TOP_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
-            break;
-        case vg::TextAlign::RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::BOTTOM_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM_LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
-            break;
-        case vg::TextAlign::CENTER:
-            m_drawableText.setPosition(pos + dims / 2.0f);
-            break;
-    }
-    refreshDrawables();
-}
-
-void vui::Button::refreshDrawables() {
-
-    // Use renderer default font if we don't have a font
-    if (!m_drawableText.getFont()) {
-        m_drawableText.setFont(m_defaultFont);
-        m_drawnText = m_drawableText;
-        m_drawableText.setFont(nullptr);
-    } else {
-        m_drawnText = m_drawableText;
-    }
-    
-    m_drawableRect.setClipRect(m_clipRect);
-    m_drawnRect = m_drawableRect;
-}
-
-void vui::Button::onMouseMove(Sender s VORB_UNUSED, const MouseMotionEvent& e) {
-    if (!m_isEnabled) return;
+void vui::Button::onMouseMove(Sender, const MouseMotionEvent& e) {
+    if (!m_flags.isEnabled) return;
     if (isInBounds((f32)e.x, (f32)e.y)) {
-        if (!m_isMouseIn) {
-            m_isMouseIn = true;
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
             MouseEnter(e);
+
             updateColor();
         }
         MouseMove(e);
     } else {        
-        if (m_isMouseIn) {
-            m_isMouseIn = false;
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
             MouseLeave(e);
+
             updateColor();
         }
     }
 }
 
-void vui::Button::onMouseFocusLost(Sender s VORB_UNUSED, const MouseEvent& e) {
-    if (!m_isEnabled) return;
-    if (m_isMouseIn) {
-        m_isMouseIn = false;
+void vui::Button::onMouseFocusLost(Sender, const MouseEvent& e) {
+    if (!m_flags.isEnabled) return;
+    if (m_flags.isMouseIn) {
+        m_flags.isMouseIn = false;
         MouseMotionEvent ev;
         ev.x = e.x;
         ev.y = e.y;
         MouseLeave(ev);
+
         updateColor();
     }
 }

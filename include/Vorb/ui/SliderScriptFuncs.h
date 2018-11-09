@@ -61,7 +61,7 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setSlideDimensions(Slider* s, f32v2 dimensions) const;
+            virtual void setSlideSize(Slider* s, f32v2 dimensions) const;
             virtual void setSlideTexture(Slider* s, VGTexture texture) const;
             virtual void setBarTexture(Slider* s, VGTexture texture) const;
             virtual void setBarColor(Slider* s, color4 color) const;

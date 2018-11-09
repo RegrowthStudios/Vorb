@@ -39,18 +39,6 @@ namespace vorb {
         namespace lua {
             class LFunction;
 
-            /*!
-             * \brief Adds the provided LFunction to the provided Event.
-             *
-             * \tparam Parameters The list of parameter types provided by the Event on trigger.
-             *
-             * \param pool The pool to use for resource managing.
-             * \param lFunction The Lua function to register to the event.
-             * \param eventBase The event to subscribe the Lua function to.
-             */
-            template <typename ...Parameters>
-            void addLFunctionToEvent(AutoDelegatePool& pool, GenericScriptFunction scriptFunction, EventBase* eventBase);
-
             class Environment : public IEnvironment {
                 using LFunctionList = std::unordered_map<nString, LFunction*>;
             public:
@@ -59,133 +47,125 @@ namespace vorb {
                 ~Environment();
 
                 /*!
-                * \brief Load in a script from the provided filepath.
-                *
-                * \param filepath The filepath from which to load the script.
-                */
+                 * \brief Load in a script from the provided filepath.
+                 *
+                 * \param filepath The filepath from which to load the script.
+                 */
                 virtual bool load(const vio::Path& filepath) override;
 
                 /*!
-                 * \brief Register an event with the script environment.
+                 * \brief Adds the provided LFunction to the provided Event.
                  *
-                 * The notion behind this is that we are able to add the subscriber 
-                 * to the appropriate event using a generic function pointer. This
-                 * way we need not use any templating here.
+                 * \tparam Parameters The list of parameter types provided by the Event on trigger.
                  *
-                 * \param name The name of the event for use by lua scripts when subscribing.
-                 * \param eventData The event to be registered with a pointer to the 
-                 *                  function which adds subscribers to the event.
+                 * \param scriptFunction The Lua function to register to the event.
+                 * \param eventBase The event to subscribe the Lua function to.
                  */
                 template <typename ...Parameters>
                 void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase);
 
+                // TODO(Matthew): Can addCFunction and addCClosure be generalised for the interface?
                 /*!
-                 * \brief Set the max length each script may be.
+                 * \brief Add a C++ function as a hook with name "name" for Lua scripts to call.
                  *
-                 * \param length The max length.
-                 */
-                void setMaxScriptLength(i32 length) { m_maxScriptLength = length; }
-
-                /*!
-                 * \brief Get the max length each script may be.
+                 * \param name The name of the function to add.
+                 * \param function The function to add.
                  *
-                 * \return The max length.
+                 * Warning: function must satisfy the signature int(*)(lua_State*).
                  */
-                i32 getMaxScriptLength() { return m_maxScriptLength; }
-
-                /*!
-                * \brief Add a C++ function as a hook with name "name" for Lua scripts to call.
-                *
-                * \param name The name of the function to add.
-                * \param function The function to add.
-                */
                 void addCFunction(const nString& name, CFunction::Type function);
                 /*!
-                * \brief Add a C++ function that captures upvalueCount many upvalues - variables accessible at every call of the function.
-                *
-                * \param name The name of the function to add as a closure.
-                * \param upvalueCount The number of values at the top of the Lua stack to capture in this closure.
-                * \param function The function to add.
-                */
+                 * \brief Add a C++ function that captures upvalueCount many upvalues - variables accessible at every call of the function.
+                 *
+                 * \param name The name of the function to add as a closure.
+                 * \param upvalueCount The number of values at the top of the Lua stack to capture in this closure.
+                 * \param function The function to add.
+                 *
+                 * Warning: function must satisfy the signature int(*)(lua_State*).
+                 */
                 void addCClosure(const nString& name, ui8 upvalueCount, CFunction::Type function);
                 /*!
-                * \brief Add a C++ delegate as a hook with name "name" for Lua scripts to call.
-                *
-                * \param name The name of the delegate to add.
-                * \param function The delegate to add.
-                */
+                 * \brief Add a C++ delegate as a hook with name "name" for Lua scripts to call.
+                 *
+                 * \param name The name of the delegate to add.
+                 * \param function The delegate to add.
+                 */
                 template<typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
                 void addCDelegate(const nString& name, DelegateType&& delegate);
 
                 /*!
-                * \brief Add a Lua function to the list of registered Lua functions.
-                *
-                * \param lFunction The Lua function to register.
-                *
-                * \return True on successful register, false otherwise.
-                */
+                 * \brief Add a Lua function to the list of registered Lua functions.
+                 *
+                 * NOTE: This should only be called by makeLFunction.
+                 *
+                 * \param lFunction The Lua function to register.
+                 *
+                 * \return True on successful register, false otherwise.
+                 */
                 bool addLFunction(LFunction* lFunction);
                 /*!
-                * \brief Subscribe a Lua callback to the named event.
-                *
-                * \param eventName The event to subscribe the Lua function to.
-                * \param lFunction The Lua function to register.
-                *
-                * \return True on successful subscription, false otherwise.
-                */
+                 * \brief Subscribe a Lua callback to the named event.
+                 *
+                 * NOTE: This should only be called by makeLCallback.
+                 *
+                 * \param eventName The event to subscribe the Lua function to.
+                 * \param lFunction The Lua function to register.
+                 *
+                 * \return True on successful subscription, false otherwise.
+                 */
                 bool subscribeLFunction(const nString& eventName, LFunction* lFunction);
 
                 /*!
-                * \brief Retrieves the named Lua function from the registered list.
-                *
-                * \param lFunction The Lua function to register.
-                *
-                * \return Pointer to the function obtained.
-                */
+                 * \brief Retrieves the named Lua function from the registered list.
+                 *
+                 * \param lFunction The Lua function to register.
+                 *
+                 * \return Pointer to the function obtained.
+                 */
                 LFunction* getLFunction(const nString& name);
 
                 /*!
-                * \brief Adds the given value to the top of the lua stack.
-                *
-                * \param name The key to give the value to be added to the Lua stack.
-                * \param value The value to add to the Lua stack.
-                */
+                 * \brief Adds the given value to the top of the lua stack.
+                 *
+                 * \param name The key to give the value to be added to the Lua stack.
+                 * \param value The value to add to the Lua stack.
+                 */
                 template<typename Type>
                 bool addValue(const nString& name, Type value);
 
                 /*!
-                * \brief Sets the global lua table to the top of the lua stack.
-                */
+                 * \brief Sets the global lua table to the top of the lua stack.
+                 */
                 void setGlobalNamespace();
                 /*!
-                * \brief Sets a series of embedded lua tables to the top of the lua stack.
-                *
-                * \param namespaces The namespaces to set.
-                */
+                 * \brief Sets a series of embedded lua tables to the top of the lua stack.
+                 *
+                 * \param namespaces The namespaces to set.
+                 */
                 template<typename ...Namespaces>
                 void setNamespaces(Namespaces... namespaces);
             protected:
                 VORB_NON_COPYABLE(Environment);
 
                 /*!
-                * \brief Recursively pushes tables onto the top of the lua stack.
-                *
-                * \param namespace The namespaces to push now.
-                * \param namespaces The namespaces to push next.
-                */
+                 * \brief Recursively pushes tables onto the top of the lua stack.
+                 *
+                 * \param namespace The namespaces to push now.
+                 * \param namespaces The namespaces to push next.
+                 */
                 template<typename Namespace, typename ...Namespaces>
                 void pushNamespaces(Namespace namespace_, Namespaces... namespaces);
                 /*!
-                * \brief Specialisation to complete this recursive loop.
-                */
+                 * \brief Specialisation to complete this recursive loop.
+                 */
                 inline void pushNamespaces() {
                     // Empty
                 }
                 /*!
-                * \brief Pushes the specific namespace given to the Lua stack.
-                *
-                * \param namespace The namespaces to push.
-                */
+                 * \brief Pushes the specific namespace given to the Lua stack.
+                 *
+                 * \param namespace The namespaces to push.
+                 */
                 void pushNamespace(const nString& namespace_);
 
                 Handle        m_state;           ///< The Lua state handle.
@@ -194,10 +174,10 @@ namespace vorb {
             };
 
             /*!
-            * \brief Dumps the lua stack to cout.
-            *
-            * //TODO(Matthew): Yield choice of output mode to caller?
-            */
+             * \brief Dumps the lua stack to cout.
+             *
+             * //TODO(Matthew): Yield choice of output mode to caller?
+             */
             void dumpStack();
 
             /*!

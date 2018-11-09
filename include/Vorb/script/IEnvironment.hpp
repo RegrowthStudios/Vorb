@@ -102,7 +102,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-                static_cast<DerivedEnvironment*>(this)->addScriptFunctionToEvent(scriptFunction, eventBase);
+                static_cast<DerivedEnvironment*>(this)->addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
             }
 
             /*!

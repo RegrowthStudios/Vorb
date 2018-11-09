@@ -20,6 +20,9 @@
 #define Vorb_Event_h__
 //! @endcond
 
+#include <algorithm>
+#include <vector>
+
 #include "Delegate.hpp"
 
 /************************************************************************\
@@ -168,7 +171,7 @@ public:
      * \param parameters The parameters to pass to subscribers.
      */
     void operator()(Parameters... parameters) {
-        trigger(std::forward<Parameters...>(parameters...));
+        trigger(std::forward<Parameters>(parameters)...);
     }
 protected:
     Subscribers m_subscribers;
@@ -183,7 +186,7 @@ protected:
  */
 class AutoDelegatePool {
 public:
-    using Deletor     = Delegate<void>;       ///< A deletion function prototype.
+    using Deletor     = Delegate<void>*;       ///< A deletion function prototype.
     using DeletorList = std::vector<Deletor>; ///< A container of deleters.
 
     /*!
@@ -202,7 +205,7 @@ public:
      * \param functor The functor to subscribe to the provided event.
      */
     template<typename Functor, typename... Parameters>
-    void addAutoHook(Event<Parameters...>& event, Functor functor) {
+    void addAutoHook(Event<Parameters...>& event, Functor& functor) {
         auto delegate = event.template addFunctor<Functor>(functor);
 
         Deletor deletor = makeFunctor([&delegate, &event] () {

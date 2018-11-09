@@ -228,19 +228,15 @@ set(vorb_io
 
 if(VORB_USE_SCRIPTING)
     set(vorb_script
-        include/Vorb/script/Environment.h
-        include/Vorb/script/Function.h
-        include/Vorb/script/GraphicsScriptInterface.h
-        include/Vorb/script/REPL.h
-        include/Vorb/script/Script.h
-        include/Vorb/script/ScriptImpl.h
-        include/Vorb/script/ScriptValueSenders.h
+        include/Vorb/script/IEnvironment.hpp
+        include/Vorb/script/lua/Environment.h
+        include/Vorb/script/lua/LFunction.h
+        include/Vorb/script/lua/CFunction.hpp
+        include/Vorb/script/lua/ValueMediator.h
     #source
-        src/script/Environment.cpp
-        src/script/GraphicsScriptInterface.cpp
-        src/script/REPL.cpp
-        src/script/ScriptImpl.cpp
-        src/script/ScriptValueSenders.cpp
+        src/script/lua/Environment.cpp
+        src/script/lua/LFunction.cpp
+        src/script/lua/ValueMediator.cpp
     )
 endif()
 
@@ -360,7 +356,8 @@ set(vorb_headers
     include/Vorb/concurrentqueue.h
     include/Vorb/Constants.h
     include/Vorb/decorators.h
-    include/Vorb/Events.hpp
+    include/Vorb/Delegate.hpp
+    include/Vorb/Event.hpp
     include/Vorb/FastConversion.inl
     include/Vorb/FixedSizeArrayRecycler.hpp
     include/Vorb/Graphics.h

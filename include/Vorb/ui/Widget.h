@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include <vector>
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/IWidgetContainer.h"
 

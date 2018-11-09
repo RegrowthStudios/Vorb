@@ -15,7 +15,7 @@
 #ifndef WindowEventDispatcher_h__
 #define WindowEventDispatcher_h__
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 
 namespace vorb {
     namespace ui {

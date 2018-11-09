@@ -7,7 +7,7 @@
 #include <random>
 #include <thread>
 
-#include <include/Events.hpp>
+#include <include/Event.hpp>
 #include <include/Random.h>
 #include <include/RingBuffer.hpp>
 #include <include/Timing.h>

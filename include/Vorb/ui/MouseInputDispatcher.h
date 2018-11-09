@@ -27,7 +27,7 @@
 
 #include <atomic>
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 
 namespace vorb {
     namespace ui {

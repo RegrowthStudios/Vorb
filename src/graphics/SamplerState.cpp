@@ -2,7 +2,7 @@
 #include "Vorb/graphics/SamplerState.h"
 
 #ifdef VORB_USING_SCRIPT
-#include "Vorb/script/Environment.h"
+#include "Vorb/script/lua/Environment.h"
 #endif
 
 vg::SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter,

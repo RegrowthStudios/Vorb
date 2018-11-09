@@ -17,7 +17,7 @@
 
 #ifdef VORB_LUA
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../io/MemFile.h"
 #include "../RingBuffer.hpp"
 

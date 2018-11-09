@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "../PtrRecycler.hpp"
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "YAMLNode.h"
 
 namespace keg {

@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "KegValue.h"
-#include "../Events.hpp"
+#include "../Event.hpp"
 
 #define offsetOf(Class, Member) ((char*)&((Class*)nullptr)->Member - (char*)nullptr)
 

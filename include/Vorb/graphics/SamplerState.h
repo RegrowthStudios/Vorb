@@ -27,7 +27,7 @@
 
 #ifdef VORB_USING_SCRIPT
 #include "../VorbPreDecl.inl"
-DECL_VSCRIPT(class Environment);
+DECL_VSCRIPT_LUA(class Environment);
 #endif
 
 namespace vorb {

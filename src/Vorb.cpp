@@ -20,7 +20,7 @@
 #include "Vorb/sound/SoundEngine.h"
 #include "Vorb/utils.h"
 #include "Vorb/VorbLibs.h"
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 
 void doNothing(void*) { 
     // Empty

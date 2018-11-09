@@ -26,7 +26,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../VorbPreDecl.inl"
 #include "../graphics/SpriteBatch.h"
 #include "../graphics/GLRenderTarget.h"

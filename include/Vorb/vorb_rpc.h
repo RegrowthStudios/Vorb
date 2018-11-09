@@ -24,7 +24,7 @@
 
 #include <queue>
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/ThreadSync.h"
 
 namespace vorb {

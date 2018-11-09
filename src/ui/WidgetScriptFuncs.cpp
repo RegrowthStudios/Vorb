@@ -1,6 +1,6 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/WidgetScriptFuncs.h"
-#include "Vorb/script/Environment.h"
+#include "Vorb/script/lua/Environment.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 
 // Helper macros for smaller code

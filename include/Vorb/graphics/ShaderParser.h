@@ -25,7 +25,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/Vorb.h"
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/GLEnums.h"

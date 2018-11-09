@@ -28,7 +28,7 @@
 #include "Vorb/script/Function.h"
 #endif
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include <vector>
 
 namespace vorb {

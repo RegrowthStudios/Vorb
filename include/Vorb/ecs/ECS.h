@@ -27,7 +27,7 @@
 
 #include "Entity.h"
 #include "BitTable.hpp"
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../IDGenerator.h"
 
 namespace vorb {

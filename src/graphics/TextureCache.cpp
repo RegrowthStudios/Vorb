@@ -5,7 +5,7 @@
 #include "Vorb/graphics/GpuMemory.h"
 
 #ifdef VORB_USING_SCRIPT
-#include "Vorb/script/Environment.h"
+#include "Vorb/script/lua/Environment.h"
 #endif
 
 vg::TextureCache::TextureCache() {

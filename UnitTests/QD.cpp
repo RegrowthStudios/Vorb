@@ -4,7 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH QD_
 
-#include <include/Events.hpp>
+#include <include/Event.hpp>
 
 class DEED {
 public:

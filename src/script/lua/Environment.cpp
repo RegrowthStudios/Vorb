@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "script/lua/Environment.h"
 
-#include "LFunction.h"
+#include "script/lua/LFunction.h"
 
 vscript::lua::Environment::Environment() :
     m_state(nullptr),
@@ -10,6 +10,8 @@ vscript::lua::Environment::Environment() :
     // Initialise the Lua environment.
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
+
+    // TODO(Matthew): Error handler.
 
     // Create a table for storing registered functions.
     lua_newtable(m_state);
@@ -27,19 +29,19 @@ vscript::lua::Environment::Environment() :
     addCClosure("SubscribeToEvent", 1, &makeLCallback);
 }
 
-vscript::lua::Environment::Environment(const std::string& filepath) :
+vscript::lua::Environment::Environment(const nString& filepath) :
     Environment() {
     load(filepath);
 }
 
-Script::Lua::Environment::~Environment() {
+vscript::lua::Environment::~Environment() {
     for (auto& lFunction : m_lFunctions) {
         lFunction.second.reset();
     }
     lua_close(m_state);
 }
 
-bool Script::Lua::Environment::load(const vio::Path& filepath) {
+bool vscript::lua::Environment::load(const vio::Path& filepath) {
     // Get a File reference.
     if (!file.isFile()) return false;
     vio::File file;
@@ -71,3 +73,208 @@ bool Script::Lua::Environment::load(const vio::Path& filepath) {
     return success;
 }
 
+void vscript::lua::Environment::addCFunction(const nString& name, CFunction::Type function) {
+    // Push function pointer onto Lua stack and set the field of key name to that pointer.
+    lua_pushcfunction(m_state, function);
+    lua_setfield(m_state, -2, name.c_str());
+}
+
+void vscript::lua::Environment::addCClosure(const nString& name, ui8 upvalueCount, CFunction::Type function) {
+    // Push function pointer onto Lua stack, capturing upvalueCount many values below it on the stack, then set the field of key name to that pointer.
+    lua_pushcclosure(m_state, function, upvalueCount);
+    lua_setfield(m_state, (-1 * (i32)upvalueCount) - 1, name.c_str());
+}
+
+bool vscript::lua::Environment::addLFunction(LFunction* lFunction) {
+    return m_lFunctions.insert({ lFunction->getName(), lFunction }).second;
+}
+
+bool vscript::lua::Environment::subscribeLFunction(const nString& eventName, LFunction* lFunction) {
+    // First see if the lFunction we just got already exists in the environment's register.
+    LFunction* registeredLFunction = getLFunction(lFunction->getName());
+    if (registeredLFunction == nullptr) {
+        // Add the unregistered LFunction to the register.
+        // If we fail to register it then we can't susbcribe it to an event.
+        if (!addLFunction(lFunction)) {
+            return false;
+        }
+        registeredLFunction = lFunction;
+    }
+
+    // Find the event we want to register to, if we don't find it then return false.
+    const auto& it = m_events.find(eventName);
+    if (it == m_events.end()) {
+        return false;
+    }
+
+    // Call the adder function, which manages all the actual work as it knows the template data.
+    it->second.adder(m_listenerPool, lFunction, it->first);
+
+    return true;
+}
+
+vscript::lua::LFunction* Script::Lua::Environment::getLFunction(const nString& name) {
+    const auto& it = m_lFunctions.find(name);
+    if (it == m_lFunctions.end()) {
+        return nullptr;
+    }
+    return it->second;
+}
+
+void vscript::lua::Environment::setGlobalNamespace() {
+    lua_pushglobaltable(m_state);
+}
+
+void vscript::lua::Environment::pushNamespace(const nString& namespace_) {
+    // See if a field already exists with the key of this namespace.
+    lua_getfield(m_state, -1, namespace_.c_str());
+    // If it doesn't, we can add it.
+    if (lua_isnil(m_state, -1)) {
+        // Pop the result of looking for the namespace.
+        lua_pop(m_state, 1);
+        // Add a clean table to the stack.
+        lua_newtable(m_state);
+        // Add this clean table to the previous table as a field with a key of namespace_.
+        lua_setfield(m_state, -2, namespace_.c_str());
+        // Get the new namespace back on top of the stack (lua_setfield pops the top value on the stack).
+        lua_getfield(m_state, -1, namespace_.c_str());
+    }
+}
+
+// Helper function for the next two functions; pops const cString values off the top of the stack in the correct order.
+using Index  = i32;
+using Values = std::vector<const cString>;
+static Values popValues(Handle state, i32 n) {
+    // Container to store the values popped, resized to minimise calls to new.
+    Values values;
+    values.resize(n);
+
+    // For loop over indices of values on the stack in the desired order.
+    for (i32 i = -1; i >= -1 * n; --i) {
+        const cString value;
+        // Try to pop a string type value, if we fail to do so then we have an invalid parameter; fail.
+        if (!vscript::lua::ValueMediator<const cString>::tryPop(state, value)) {
+            return Values();
+        }
+        values[i + n] = value;
+    }
+
+    return values;
+}
+
+int vscript::lua::makeLFunction(Handle state) {
+    // Get "depth" of the function to make a reference to.
+    // If this is 0 or 1, then there's no function to reference!
+    i32 depth = lua_gettop(state);
+    if (depth <= 1) {
+        return -1;
+    }
+
+    // Pop the values provided, ensuring they're all string types.
+    // If they aren't, then we don't assume anything and must fail.
+    Values values = popValues(state, depth);
+    if (values.empty()) {
+        return -1;
+    }
+
+    nString name(values.front());
+
+    Index currIndex;
+
+    // Get our script function table in the Lua registry.
+    lua_getfield(state, LUA_REGISTRYINDEX, SCRIPT_FUNCTION_TABLE);
+
+    // Get the first layer (table, or function itself) and create a reference to it in the table.
+    // Store the index of the reference as the current index value in the lua registry index.
+    lua_getglobal(state, values.at(1));
+    currIndex = luaL_ref(state, -2);
+
+    auto it = values.begin();
+    if (++(++it) != values.end()) {
+        for (; it != values.end(); ++it) {
+            // Get a raw access to the table referenced at the last index added to the list. 
+            lua_rawgeti(state, -1, currIndex);
+            // Get the value of the field with key equal to the value currently pointer to by the iterator.
+            lua_getfield(state, -1, *it);
+            // Create a reference to this value, be it another table or function, and set it as the new current index value.
+            currIndex = luaL_ref(state, -3);
+            // Pop the raw access to the previous table.
+            lua_pop(state, 1);
+        }
+    }
+
+    // Create an lFunction wrapper associated with the lua function referenced by the current index value in the lua registry index.
+    LFunction* lFunction = new LFunction(state, name, currIndex);
+
+    // Get the captured environment pointer.
+    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
+    // Add the generated lFunction to the environment's registry.
+    env->addLFunction(lFunction);
+
+    return 0;
+}
+
+int vscript::lua::makeLCallback(Handle state) {
+    // Get "depth" of the function to make a reference to.
+    // If this is 0, 1 or 2, then there's no function to reference!
+    i32 depth = lua_gettop(state);
+    if (depth <= 2) {
+        return -1;
+    }
+
+    const cString eventName;
+    // Try to pop string type value for the event name, if we fail to do so then we have an invalid parameter; fail.
+    if (!ValueMediator<const cString>::tryRetrieve(state, 1, eventName)) {
+        return -1;
+    }
+
+    // Try to pop string type value for the function name, if we fail to do so then we have an invalid parameter; fail.
+    const cString functionName = nullptr;
+    if (!ValueMediator<const cString>::tryRetrieve(state, 1, functionName)) {
+        return -1;
+    }
+
+    // Reevaluate the depth of the stack.
+    depth = lua_gettop(state);
+
+    // Pop the values left, ensuring they're all string types.
+    // If they aren't, then we don't assume anything and must fail.
+    Values values = popValues(state, depth);
+    if (values.empty()) {
+        return -1;
+    }
+
+    Index currIndex;
+
+    // Get our script function table in the Lua registry.
+    lua_getfield(state, LUA_REGISTRYINDEX, SCRIPT_FUNCTION_TABLE);
+
+    // Get the first layer (table, or function itself) and create a reference to it in the table.
+    // Store the index of the reference in the indices vector.
+    lua_getglobal(state, values.at(0));
+    currIndex = luaL_ref(state, -2);
+
+    auto it = values.begin();
+    if (++it != values.end()) {
+        for (; it != values.end(); ++it) {
+            // Get a raw access to the table referenced at the last index added to the list. 
+            lua_rawgeti(state, -1, currIndex);
+            // Get the value of the field with key equal to the value currently pointer to by the iterator.
+            lua_getfield(state, -1, *it);
+            // Create a reference to this value, be it another table or function, and set it as the new current index value.
+            currIndex = luaL_ref(state, -3);
+            // Pop the raw access to the previous table.
+            lua_pop(state, 1);
+        }
+    }
+
+    // Create an lFunction wrapper associated with the lua function referenced by the current index value in the lua registry index.
+    LFunction* lFunction = new LFunction(state, functionName, currIndex);
+
+    // Get the captured environment pointer.
+    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
+    // Subscribe the generated lFunction to the desired event.
+    env->subscribeLFunction(eventName, lFunction, priority);
+
+    return 0;
+}

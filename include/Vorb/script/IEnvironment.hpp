@@ -29,17 +29,22 @@
 
 #ifdef VORB_USING_SCRIPT
 
-#include "Event.hpp"
+#include <unordered_map>
+
+#include "../Event.hpp"
+#include "../io/Path.h"
 
 namespace vorb {
     namespace script {
+        using GenericScriptFunction = void*;
+
         class IEnvironment {
             using CFunctionList = std::vector<std::unique_ptr<DelegateBase>>;
-            using EventAdder    = void(*)();
+            using EventAdder    = void(*)(AutoDelegatePool&, GenericScriptFunction, EventBase*);
             struct EventData {
                 EventBase* event;
                 EventAdder adder;
-            }
+            };
             using EventList = std::unordered_map<nString, EventData>;
         public:
             /*!
@@ -60,12 +65,13 @@ namespace vorb {
              * \param eventData The event to be registered with a pointer to the 
              *                  function which adds subscribers to the event.
              */
-            bool registerEvent(std::string name, EventData eventData) {
-                return m_events.insert({ name, eventData } }).second;
+            bool registerEvent(const nString& name, EventData eventData) {
+                return m_events.insert({ name, eventData }).second;
             }
         protected:
-            CFunctionList m_cFunctions;
-            EventLsit     m_events;
+            CFunctionList    m_cFunctions;   ///< List of C++ functions registered with the script environment.
+            EventList        m_events;       ///< List of events registered with the script environment.
+            AutoDelegatePool m_listenerPool; ///< Manages Lua functions subscribed to events.
         };
     }
 }

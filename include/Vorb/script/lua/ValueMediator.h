@@ -39,9 +39,9 @@ namespace vorb {
                 static i32 getValueCount();                                     \
                 static i32 push(Handle state, const TYPE& value);               \
                 static TYPE pop(Handle state);                                  \
-                static bool tryPop(Handle state, TYPE& value);                  \
+                static bool tryPop(Handle state, OUT TYPE& value);                  \
                 static TYPE retrieve(Handle state, ui32 index);                 \
-                static bool tryRetrieve(Handle state, ui32 index, TYPE& value); \
+                static bool tryRetrieve(Handle state, ui32 index, OUT TYPE& value); \
             }
 #define VALUE_MEDIATOR_VAL(TYPE)                                                \
             template<>                                                          \
@@ -51,9 +51,9 @@ namespace vorb {
                 static i32 getValueCount();                                     \
                 static i32 push(Handle state, TYPE value);                      \
                 static TYPE pop(Handle state);                                  \
-                static bool tryPop(Handle state, TYPE& value);                  \
+                static bool tryPop(Handle state, OUT TYPE& value);                  \
                 static TYPE retrieve(Handle state, ui32 index);                 \
-                static bool tryRetrieve(Handle state, ui32 index, TYPE& value); \
+                static bool tryRetrieve(Handle state, ui32 index, OUT TYPE& value); \
             }
 #define VALUE_MEDIATOR_VEC(TYPE)      \
         VALUE_MEDIATOR_VAL(TYPE);     \
@@ -116,18 +116,18 @@ namespace vorb {
                  * \param tPtr A pointer to the tuple we wish to populate.
                  */
                 template<typename Type>
-                void rpopValues(Handle state, std::tuple<Type>* tPtr) {
+                void rpopValues(Handle state, OUT std::tuple<Type>* tPtr) {
                     // Pop one value of type Type from stack and put in tuple.
                     std::get<0>(*tPtr) = ValueMediator<Type>::pop(state);
                 }
                 template<typename Type>
-                void rpopValues(Handle state, std::tuple<Type&>* tPtr) {
+                void rpopValues(Handle state, OUT std::tuple<Type&>* tPtr) {
                     // Copy the pointer to the value into the tuple.
                     void* value = ValueMediator<void*>::pop(state);
                     std::memcpy(tPtr, &value, sizeof(void*));
                 }
                 template<typename Type1, typename Type2, typename ...Types>
-                void rpopValues(Handle state, std::tuple<Type1, Type2, Types...>* tPtr) {
+                void rpopValues(Handle state, OUT std::tuple<Type1, Type2, Types...>* tPtr) {
                     // Pop all but the first value - we want this recursive approach to pop in reverse order of
                     // types provided.
                     std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2, Types>::defaultValue()... };
@@ -156,12 +156,12 @@ namespace vorb {
                  * \return True if all values are successfully popped, false otherwise.
                  */
                 template<typename Type>
-                bool rtryPopValues(Handle state, std::tuple<Type>* tPtr) {
+                bool rtryPopValues(Handle state, OUT std::tuple<Type>* tPtr) {
                     // Pop one value of type Type from stack and put in tuple.
                     return ValueMediator<Type>::tryPop(state, std::get<0>(*tPtr));
                 }
                 template<typename Type>
-                bool rtryPopValues(Handle state, std::tuple<Type&>* tPtr) {
+                bool rtryPopValues(Handle state, OUT std::tuple<Type&>* tPtr) {
                     // Attempt to pop off the pointer to the value, if successful copy the pointer into the tuple.
                     void* value = nullptr;
                     if (!ValueMediator<void*>::tryPop(state, value)) {
@@ -171,7 +171,7 @@ namespace vorb {
                     return true;
                 }
                 template<typename Type1, typename Type2, typename ...Types>
-                bool rtryPopValues(Handle state, std::tuple<Type1, Type2, Types...>* tPtr) {
+                bool rtryPopValues(Handle state, OUT std::tuple<Type1, Type2, Types...>* tPtr) {
                     // Pop all but the first value - we want this recursive approach to pop in reverse order of
                     // types provided.
                     std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2, Types>::defaultValue()... };
@@ -225,7 +225,7 @@ namespace vorb {
                     return static_cast<Type>(ValueMediator<EnumType>::pop(state));
                 }
 
-                static bool tryPop(Handle state, Type& value) {
+                static bool tryPop(Handle state, OUT Type& value) {
                     EnumType result;
                     // Try to pop the underlying enum type.
                     bool success = ValueMediator<EnumType>::tryPop(state, result);
@@ -238,10 +238,10 @@ namespace vorb {
                 }
 
                 static Type retrieve(Handle state, ui32 index) {
-                    return static_cast<Type>(ValueMediator<EnumType>::retrieve(state));
+                    return static_cast<Type>(ValueMediator<EnumType>::retrieve(state, index));
                 }
 
-                static bool tryRetrieve(Handle state, ui32 index, Type& value) {
+                static bool tryRetrieve(Handle state, ui32 index, OUT Type& value) {
                     EnumType result;
                     // Try to pop the underlying enum type.
                     bool success = ValueMediator<EnumType>::tryRetrieve(state, index, result);
@@ -274,7 +274,7 @@ namespace vorb {
                     return (Type*)ValueMediator<void*>::pop(state);
                 }
 
-                static bool tryPop(Handle state, Type*& value) {
+                static bool tryPop(Handle state, OUT Type*& value) {
                     void* result;
                     // Try to pop the light user data.
                     bool success = ValueMediator<void*>::tryPop(state, result);
@@ -290,7 +290,7 @@ namespace vorb {
                     return (Type*)ValueMediator<void*>::retrieve(state, index);
                 }
 
-                static bool tryRetrieve(Handle state, ui32 index, Type*& value) {
+                static bool tryRetrieve(Handle state, ui32 index, OUT Type*& value) {
                     void* result;
                     // Try to pop the light user data.
                     bool success = ValueMediator<void*>::tryRetrieve(state, index, result);
@@ -324,7 +324,7 @@ namespace vorb {
                     return *((Type*)ValueMediator<void*>::pop(state));
                 }
 
-                static bool tryPop(Handle state, Type& value) {
+                static bool tryPop(Handle state, OUT Type& value) {
                     void* result;
                     // Try to pop the light user data.
                     bool success = ValueMediator<void*>::tryPop(state, result);
@@ -340,7 +340,7 @@ namespace vorb {
                     return *((Type*)ValueMediator<void*>::retrieve(state, index));
                 }
 
-                static bool tryRetrieve(Handle state, ui32 index, Type& value) {
+                static bool tryRetrieve(Handle state, ui32 index, OUT Type& value) {
                     void* result;
                     // Try to pop the light user data.
                     bool success = ValueMediator<void*>::tryRetrieve(state, index, result);

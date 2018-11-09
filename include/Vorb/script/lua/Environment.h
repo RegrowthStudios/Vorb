@@ -77,9 +77,7 @@ namespace vorb {
                  *                  function which adds subscribers to the event.
                  */
                 template <typename ...Parameters>
-                bool registerEvent(const nString& name, Event<Parameters...>* event) {
-                    return m_events.insert({ name, { static_cast<EventBase*>(event), &addLFunctionToEvent<Parameters...> } }).second;
-                }
+                void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase);
 
                 /*!
                  * \brief Set the max length each script may be.
@@ -192,7 +190,6 @@ namespace vorb {
 
                 Handle        m_state;           ///< The Lua state handle.
                 i32           m_namespaceDepth;  ///< The depth of namespace we are currently at.
-                i32           m_maxScriptLength; ///< The maximum length a single script may be.
                 LFunctionList m_lFunctions;      ///< The list of Lua functions registered with this environment.
             };
 
@@ -281,11 +278,11 @@ inline void vscript::lua::Environment::pushNamespaces(Namespace namespace_, Name
 }
 
 template <typename ...Parameters>
-void vscript::lua::addLFunctionToEvent(AutoDelegatePool& pool, GenericScriptFunction scriptFunction, EventBase* eventBase) {
+void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
     Event<Parameters...>* event     = static_cast<Event<Parameters...>*>(eventBase);
     LFunction*            lFunction = static_cast<LFunction*>(scriptFunction);
 
-    pool.addAutoHook(*event, *lFunction);
+    m_listenerPool.addAutoHook(*event, *lFunction);
 }
 
 #endif // VORB_USING_SCRIPT

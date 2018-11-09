@@ -27,7 +27,7 @@ void vui::SliderScriptFuncs::init(const cString nSpace, vscript::Environment* en
         REGISTER_RDEL(env, isInSlideBounds);
         REGISTER_RDEL(env, isVertical);
         // Setters
-        REGISTER_DEL(env, setSlideDimensions);
+        REGISTER_DEL(env, setSlideSize);
         REGISTER_DEL(env, setSlideTexture);
         REGISTER_DEL(env, setBarTexture);
         REGISTER_DEL(env, setBarColor);
@@ -124,8 +124,8 @@ bool vui::SliderScriptFuncs::isVertical(Slider* s) const {
     return s->isVertical();
 }
 
-void vui::SliderScriptFuncs::setSlideDimensions(Slider* s, f32v2 dimensions) const {
-    s->setSlideDimensions(dimensions);
+void vui::SliderScriptFuncs::setSlideSize(Slider* s, f32v2 size) const {
+    s->setSlideSize(size);
 }
 
 void vui::SliderScriptFuncs::setSlideTexture(Slider* s, VGTexture texture) const {

@@ -8,7 +8,7 @@
 //
 
 /*! \file Label.h
-* @brief 
+* \brief 
 * A simple text label widget.
 *
 */
@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/ui/Drawables.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/TextWidget.h"
 
 namespace vorb {
     namespace ui {
@@ -33,71 +33,48 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        class Label : public Widget {
+        class Label : public TextWidget {
         public:
-            /*! @brief Default constructor. */
+            /*! \brief Default constructor. */
             Label();
-            /*! @brief Constructor that sets name, position, and dimensions.
-            *
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Label(const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Constructor that sets parent control, name, position, and dimensions.
-            *
-            * The control will be made a child of parent.
-            *
-            * @param parent: Parent control object.
-            * @param name: Name of the control.
-            * @param destRect: Rectangle defining the position and dimensions as the tuple <x,y,w,h>.
-            */
-            Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect = f32v4(0));
-            /*! @brief Default destructor. */
+            /*! \brief Default destructor. */
             virtual ~Label();
 
-            /*! @brief Adds all drawables to the UIRenderer
-            *
-            * @param renderer: UIRenderer to add to
-            */
-            virtual void addDrawables(UIRenderer* renderer) override;
-
-            /*! @brief Updates the position relative to parent */
-            virtual void updatePosition() override;
+            /*! \brief Adds all drawables to the UIRenderer. */
+            virtual void addDrawables(UIRenderer& renderer) override;
 
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const vorb::graphics::SpriteFont* getFont() const override { return m_drawableText.getFont(); }
-            virtual const color4& getTextColor() const { return m_drawableText.getColor(); }
-            virtual const nString& getText() const { return m_drawableText.getText(); }
-            virtual const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual const color4& getLabelColor()        const { return m_labelColor;         }
+            virtual const color4& getLabelHoverColor()   const { return m_labelHoverColor;    }
+            virtual     VGTexture getLabelTexture()      const { return m_labelTexture;       }
+            virtual     VGTexture getLabelHoverTexture() const { return m_labelHoverTexture;  }
+            virtual const color4& getTextColor()         const override { return m_textColor; }
+            virtual const color4& getTextHoverColor()    const { return m_textHoverColor;     }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setDestRect(const f32v4& destRect) override;
-            virtual void setDimensions(const f32v2& dimensions) override;
-            virtual void setFont(const vorb::graphics::SpriteFont* font) override;
-            virtual void setHeight(f32 height) override;
-            virtual void setPosition(const f32v2& position) override;
-            virtual void setWidth(f32 width) override;
-            virtual void setX(f32 x) override;
-            virtual void setY(f32 y) override;
-            virtual void setText(const nString& text);
-            virtual void setTextColor(const color4& color);
-            virtual void setTextAlign(vg::TextAlign textAlign);
-            virtual void setTextScale(const f32v2& textScale);
+            virtual void setLabelColor(const color4& color);
+            virtual void setLabelHoverColor(const color4& color);
+            virtual void setLabelTexture(VGTexture texture);
+            virtual void setLabelHoverTexture(VGTexture texture);
+            virtual void setTextColor(const color4& color) override;
+            virtual void setTextHoverColor(const color4& color);
 
         protected:
-            virtual void updateTextPosition();
-            virtual void refreshDrawables();
+            virtual void calculateDrawables() override;
+
+            virtual void updateColor();
 
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            DrawableText m_drawableText, m_drawnText;
-            const vg::SpriteFont* m_defaultFont = nullptr;
+            DrawableRect          m_drawableRect;
+            color4                m_labelColor,   m_labelHoverColor;
+            VGTexture             m_labelTexture, m_labelHoverTexture;
+            color4                m_textColor,    m_textHoverColor;
         };
     }
 }

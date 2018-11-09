@@ -1,136 +1,400 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/Widget.h"
+
+#include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
+#include "Vorb/ui/Viewport.h"
 
-vui::Widget::Widget() : IWidgetContainer() {
-    enable();
-    m_anchor = {};
-}
-
-vui::Widget::Widget(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : IWidgetContainer(name, destRect) {
-    enable();
-}
-
-vui::Widget::Widget(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Widget(name, destRect) {
-    setParent(parent);
+vui::Widget::Widget() :
+    IWidget(),
+    m_positionType(PositionType::STATIC_TO_PARENT),
+    m_minRawSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_maxRawSize({ FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawDockSize({ 0.0f, { DimensionType::PIXEL } }),
+    m_rawPadding({ 0.0f, 0.0f, 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawDimensions({ { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }, { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } } }) {
+    // Empty
 }
 
 vui::Widget::~Widget() {
     // Empty
 }
 
-void vui::Widget::dispose() {
-    removeDrawables();
-    IWidgetContainer::dispose();
+void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    IWidget::init(name, dimensions, zIndex);
+
+    m_rawDimensions.position.x = dimensions.x;
+    m_rawDimensions.position.y = dimensions.y;
+    m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
+
+    m_rawDimensions.size.x = dimensions.z;
+    m_rawDimensions.size.y = dimensions.w;
+    m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
+    m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
 }
 
-void vui::Widget::addDrawables(UIRenderer* renderer) {
-    m_renderer = renderer;
-    for (auto& w : m_widgets) {
-        w->addDrawables(m_renderer);
-    }
+void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
+    m_name = name;
+
+    m_rawDimensions.position = position;
+    m_rawDimensions.size     = size;
+
+    m_zIndex = zIndex;
+
+    m_flags.needsDimensionUpdate = true;
+
+    initBase();
 }
 
-void vui::Widget::removeDrawables() {
-    if (m_renderer) {
-        m_renderer->remove(this);
-        m_renderer = nullptr;
-    }
-    for (auto& w : m_widgets) {
-        w->removeDrawables();
-    }
+void vui::Widget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
+    Widget::init(name, dimensions, zIndex);
+
+    parent->addWidget(this);
 }
 
-void vui::Widget::updatePosition() {
-    f32v2 newPos = m_relativePosition;
+void vui::Widget::init(IWidget* parent, const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
+    Widget::init(name, position, size, zIndex);
+
+    parent->addWidget(this);
+}
+
+void vui::Widget::setMaxSize(const f32v2& maxRawSize) {
+    m_maxRawSize = { maxRawSize.x, maxRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setMinSize(const f32v2& minRawSize) {
+    m_minRawSize = { minRawSize.x, minRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRawDockSize(const Length& rawDockSize) {
+    m_rawDockSize = rawDockSize;
+
     if (m_parent) {
-        // Handle percentages
-        if (m_positionPercentage.x >= 0.0f) {
-            newPos.x = m_parent->getWidth() * m_positionPercentage.x;
-        }
-        if (m_positionPercentage.y >= 0.0f) {
-            newPos.y = m_parent->getHeight() * m_positionPercentage.y;
-        }
-        m_relativePosition = newPos;
-        newPos += m_parent->getPosition();
+        m_parent->setNeedsDockRecalculation(true);
+    } else if (m_viewport && m_viewport != this) {
+        m_viewport->setNeedsDockRecalculation(true);
     }
-    newPos += getWidgetAlignOffset();
-    m_position = newPos;
-    
-    // Update relative dimensions
-    updateDimensions();
-
-    if (m_parent) computeClipRect(m_parent->getClipRect());
-    
-    updateChildPositions();
 }
 
-void vui::Widget::setAnchor(const AnchorStyle& anchor) {
-    m_anchor = anchor;
-}
+void vui::Widget::setDockSize(f32 rawDockSize) {
+    m_rawDockSize = { rawDockSize, { DimensionType::PIXEL } };
 
-void vui::Widget::setDock(const DockStyle& dock) {
     if (m_parent) {
-        m_parent->setChildDock(this, dock);
-    } else {
-        m_dock = dock;
+        m_parent->setNeedsDockRecalculation(true);
+    } else if (m_viewport && m_viewport != this) {
+        m_viewport->setNeedsDockRecalculation(true);
     }
 }
 
-void vui::Widget::setParent(IWidgetContainer* parent) {
-    if (m_parent) m_parent->removeWidget(this);
-    if (parent) parent->addWidget(this);
+void vui::Widget::setPosition(f32v2 rawPosition) {
+    m_rawDimensions.position = { rawPosition.x, rawPosition.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
 }
 
-f32v2 vui::Widget::getWidgetAlignOffset() {
-    switch (m_align) {
-        case WidgetAlign::LEFT:
-            return f32v2(0, -m_dimensions.y * 0.5f);
-        case WidgetAlign::TOP_LEFT:
-            return f32v2(0.0f);
-        case WidgetAlign::TOP:
-            return f32v2(-m_dimensions.x * 0.5f, 0.0f);
-        case WidgetAlign::TOP_RIGHT:
-            return f32v2(-m_dimensions.x, 0.0f);
-        case WidgetAlign::RIGHT:
-            return f32v2(-m_dimensions.x, -m_dimensions.y * 0.5f);
-        case WidgetAlign::BOTTOM_RIGHT:
-            return f32v2(-m_dimensions.x, -m_dimensions.y);
-        case WidgetAlign::BOTTOM:
-            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y);
-        case WidgetAlign::BOTTOM_LEFT:
-            return f32v2(0.0f, -m_dimensions.y);
-        case WidgetAlign::CENTER:
-            return f32v2(-m_dimensions.x * 0.5f, -m_dimensions.y * 0.5f);
-    }
-    return f32v2(0.0f); // Should never happen
+void vui::Widget::setX(f32 x) {
+    m_rawDimensions.position = { x, m_rawDimensions.position.y, { DimensionType::PIXEL, m_rawDimensions.position.dimension.y } };
+
+    m_flags.needsDimensionUpdate = true;
 }
 
-void vui::Widget::updateDimensions() {
-    f32v2 newDims = m_dimensions;
-    // Check parent relative dimensions
-    if (m_parent) {      
-        if (m_dimensionsPercentage.x > 0.0f) {
-            newDims.x = m_dimensionsPercentage.x * m_parent->getWidth();
-        }
-        if (m_dimensionsPercentage.y > 0.0f) {
-            newDims.y = m_dimensionsPercentage.y * m_parent->getHeight();
-        } 
+void vui::Widget::setY(f32 y) {
+    m_rawDimensions.position = { m_rawDimensions.position.x, y, { m_rawDimensions.position.dimension.x, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setSize(f32v2 rawSize) {
+    m_rawDimensions.size = { rawSize.x, rawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setWidth(f32 width) {
+    m_rawDimensions.size = { width, m_rawDimensions.size.y, { DimensionType::PIXEL, m_rawDimensions.size.dimension.y } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setHeight(f32 height) {
+    m_rawDimensions.size = { m_rawDimensions.size.x, height, { m_rawDimensions.size.dimension.x, DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setLeft(f32 rawLeft) {
+    m_rawRelativePositions.left = { rawLeft, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setTop(f32 rawTop) {
+    m_rawRelativePositions.top = { rawTop, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setRight(f32 rawRight) {
+    m_rawRelativePositions.right = { rawRight, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setBottom(f32 rawBottom) {
+    m_rawRelativePositions.bottom = { rawBottom, { DimensionType::PIXEL } };
+
+    m_flags.needsDimensionUpdate = true;
+}
+
+void vui::Widget::setPadding(const f32v4& rawPadding) {
+    m_rawPadding = { rawPadding.x, rawPadding.y, rawPadding.z, rawPadding.w, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } };
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingLeft(const Length& rawLeft) {
+    m_rawPadding.x = rawLeft.x;
+    m_rawPadding.dimension.x = rawLeft.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setPaddingLeft(f32 rawLeft) {
+    m_rawPadding.x = rawLeft;
+    m_rawPadding.dimension.x = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingTop(const Length& rawTop) {
+    m_rawPadding.y = rawTop.x;
+    m_rawPadding.dimension.y = rawTop.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setPaddingTop(f32 rawTop) {
+    m_rawPadding.y = rawTop;
+    m_rawPadding.dimension.y = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingRight(const Length& rawRight) {
+    m_rawPadding.z = rawRight.x;
+    m_rawPadding.dimension.z = rawRight.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setPaddingRight(f32 rawRight) {
+    m_rawPadding.z = rawRight;
+    m_rawPadding.dimension.z = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setRawPaddingBottom(const Length& rawBottom) {
+    m_rawPadding.w = rawBottom.x;
+    m_rawPadding.dimension.w = rawBottom.dimension.x;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::setPaddingBottom(f32 rawBottom) {
+    m_rawPadding.w = rawBottom;
+    m_rawPadding.dimension.w = DimensionType::PIXEL;
+
+    m_flags.needsClipRectRecalculation = true;
+}
+
+void vui::Widget::updateDimensions(f32) {
+    if (m_dock.state != DockState::NONE) return;
+
+    auto applyRawPosition = [&](f32v2 modifier = { 0.0f, 0.0f }) {
+            f32v2 processedPosition = processLength(m_rawDimensions.position);
+            IWidget::setPosition(processedPosition + modifier);
+    };
+
+    auto applyRawSize = [&]() {
+            f32v2 processedSize = processLength(m_rawDimensions.size);
+            IWidget::setSize(processedSize);
+    };
+
+    auto applyRelativeDirectives = [&](f32v2 position, f32v2 size) {
+        f32 left   = processLength(m_rawRelativePositions.left);
+        f32 top    = processLength(m_rawRelativePositions.top);
+        f32 right  = processLength(m_rawRelativePositions.right);
+        f32 bottom = processLength(m_rawRelativePositions.bottom);
+        
+        f32 sizeX = size.x - left - right;
+        if (sizeX < 0.0f) sizeX = 0.0f;
+        f32 sizeY = size.y - top - bottom;
+        if (sizeY < 0.0f) sizeY = 0.0f;
+
+        IWidget::setPosition(f32v2(position.x + left, position.y + top));
+        IWidget::setSize(f32v2(sizeX, sizeY));
+    };
+
+    switch(m_positionType) {
+        case PositionType::STATIC_TO_WINDOW:
+            applyRawPosition();
+
+            applyRawSize();
+
+            break;
+        case PositionType::STATIC_TO_VIEWPORT:
+            applyRawPosition(m_viewport->getPosition());
+
+            applyRawSize();
+
+            break;
+        case PositionType::STATIC_TO_PARENT:
+            applyRawPosition(m_parent->getPosition());
+
+            applyRawSize();
+
+            break;
+        case PositionType::RELATIVE_TO_WINDOW:
+            applyRelativeDirectives(f32v2(0.0f, 0.0f), f32v2((f32)m_viewport->getGameWindow()->getWidth(), (f32)m_viewport->getGameWindow()->getHeight()));
+
+            break;
+        case PositionType::RELATIVE_TO_VIEWPORT:
+            applyRelativeDirectives(m_viewport->getPosition(), m_viewport->getSize());
+            
+            break;
+        case PositionType::RELATIVE_TO_PARENT:
+            applyRelativeDirectives(m_parent->getPosition(), m_parent->getSize());
+            
+            break;
+        default:
+            // Shouldn't get here.
+            assert(false);
     }
-    // Check min/max size
-    if (newDims.x < m_minSize.x) {
-        newDims.x = m_minSize.x;
-    } else if (newDims.x > m_maxSize.x) {
-        newDims.x = m_maxSize.x;
+
+    applyMinMaxSizes();
+
+    m_padding = {
+        processLength({ m_rawPadding.x, { m_rawPadding.dimension.x } }),
+        processLength({ m_rawPadding.y, { m_rawPadding.dimension.y } }),
+        processLength({ m_rawPadding.z, { m_rawPadding.dimension.z } }),
+        processLength({ m_rawPadding.w, { m_rawPadding.dimension.w } })
+    };
+}
+
+f32 vui::Widget::processLength(Length length) const {
+    switch (length.dimension.x) {
+        case DimensionType::PIXEL:
+            return length.x;
+        case DimensionType::WIDTH_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * m_parent->getWidth();
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * m_viewport->getWidth();
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    return length.x * m_viewport->getGameWindow()->getWidth();
+            }
+            break;
+        case DimensionType::HEIGHT_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * m_parent->getHeight();
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * m_viewport->getHeight();
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    return length.x * m_viewport->getGameWindow()->getHeight();
+            }
+            break;
+        case DimensionType::MIN_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    return length.x * glm::min(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
+            }
+            break;
+        case DimensionType::MAX_PERCENTAGE:
+            switch(m_positionType) {
+                case PositionType::STATIC_TO_PARENT:
+                case PositionType::RELATIVE_TO_PARENT:
+                    return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
+                case PositionType::STATIC_TO_VIEWPORT:
+                case PositionType::RELATIVE_TO_VIEWPORT:
+                    return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
+                case PositionType::STATIC_TO_WINDOW:
+                case PositionType::RELATIVE_TO_WINDOW:
+                    return length.x * glm::max(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
+            }
+            break;
+        case DimensionType::PARENT_WIDTH_PERCENTAGE:
+            return length.x * m_parent->getWidth();
+        case DimensionType::PARENT_HEIGHT_PERCENTAGE: 
+            return length.x * m_parent->getHeight();
+        case DimensionType::PARENT_MIN_PERCENTAGE:
+            return length.x * glm::min(m_parent->getWidth(), m_parent->getHeight());
+        case DimensionType::PARENT_MAX_PERCENTAGE:
+            return length.x * glm::max(m_parent->getWidth(), m_parent->getHeight());
+        case DimensionType::VIEWPORT_WIDTH_PERCENTAGE:
+            return length.x * m_viewport->getWidth();
+        case DimensionType::VIEWPORT_HEIGHT_PERCENTAGE:
+            return length.x * m_viewport->getHeight();
+        case DimensionType::VIEWPORT_MIN_PERCENTAGE:
+            return length.x * glm::min(m_viewport->getWidth(), m_viewport->getHeight());
+        case DimensionType::VIEWPORT_MAX_PERCENTAGE:
+            return length.x * glm::max(m_viewport->getWidth(), m_viewport->getHeight());
+        case DimensionType::WINDOW_WIDTH_PERCENTAGE:
+            return length.x * m_viewport->getGameWindow()->getWidth();
+        case DimensionType::WINDOW_HEIGHT_PERCENTAGE:
+            return length.x * m_viewport->getGameWindow()->getHeight();
+        case DimensionType::WINDOW_MIN_PERCENTAGE:
+            return length.x * glm::min(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
+        case DimensionType::WINDOW_MAX_PERCENTAGE:
+            return length.x * glm::max(m_viewport->getGameWindow()->getWidth(), m_viewport->getGameWindow()->getHeight());
+        default:
+            // Shouldn't get here.
+            assert(false);
     }
-    if (newDims.y < m_minSize.y) {
-        newDims.y = m_minSize.y;
-    } else if (newDims.y > m_maxSize.y) {
-        newDims.y = m_maxSize.y;
+
+    return 0;
+}
+
+f32v2 vui::Widget::processLength(Length2 length) const {
+    return f32v2(
+        processLength({ length.x, { length.dimension.x } }),
+        processLength({ length.y, { length.dimension.y } })
+    );
+}
+
+void vui::Widget::applyMinMaxSizes() {
+    f32v2 processedMinSize = processLength(m_minRawSize);
+    f32v2 processedMaxSize = processLength(m_maxRawSize);
+
+    if (m_size.x < processedMinSize.x) {
+        IWidget::setWidth(processedMinSize.x);
+    } else if (m_size.x > processedMaxSize.x) {
+        IWidget::setWidth(processedMaxSize.x);
     }
-    // Only set if it changed
-    if (newDims != m_dimensions) {
-        setDimensions(newDims);
+    if (m_size.y < processedMinSize.y) {
+        IWidget::setHeight(processedMinSize.y);
+    } else if (m_size.y > processedMaxSize.y) {
+        IWidget::setHeight(processedMaxSize.y);
     }
 }

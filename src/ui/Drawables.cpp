@@ -5,13 +5,13 @@
 void vui::DrawableRect::draw(vg::SpriteBatch* spriteBatch) const {
     f32v4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
     // Check clipping
-    f32v2 pos = m_position;
-    f32v2 dims = m_dimensions;
-    computeClipping(m_clipRect, pos, dims, uvRect);
+    f32v2 pos  = m_position;
+    f32v2 size = m_size;
+    computeClipping(m_clipRect, pos, size, uvRect);
 
     // Draw it
-    if (dims.x > 0 && dims.y > 0) {
-        spriteBatch->draw(m_texture, &uvRect, pos, dims, m_color1, m_color2, m_grad, m_layerDepth);
+    if (size.x > 0 && size.y > 0) {
+        spriteBatch->draw(m_texture, &uvRect, pos, size, m_color1, m_color2, m_grad, m_layerDepth);
     }
 }
 

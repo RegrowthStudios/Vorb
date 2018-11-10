@@ -31,7 +31,7 @@
 #include <limits>
 #include <vector>
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
 
 DECL_VG(class SpriteFont)

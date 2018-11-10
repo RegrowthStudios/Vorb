@@ -49,6 +49,8 @@ namespace vorb {
             };
             using EventList = std::unordered_map<nString, EventData>;
         public:
+            // TODO(Matthew): Initialisation and disposal.
+
             /*!
              * \brief Load in a script from the provided filepath.
              *

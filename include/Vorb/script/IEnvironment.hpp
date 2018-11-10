@@ -39,10 +39,10 @@ namespace vorb {
         using GenericScriptFunction = void(*)();
         using GenericCFunction      = void(*)();
 
-        template <typename DerivedEnvironment>
+        template <typename EnvironmentImpl>
         class IEnvironment {
             using CFunctionList = std::vector<std::unique_ptr<DelegateBase>>;
-            using EventAdder    = void(DerivedEnvironment::*)(GenericScriptFunction, EventBase*);
+            using EventAdder    = void(EnvironmentImpl::*)(GenericScriptFunction, EventBase*);
             struct EventData {
                 EventBase* event;
                 EventAdder adder;
@@ -55,7 +55,7 @@ namespace vorb {
              * \param filepath The filepath from which to load the script.
              */
             bool load(const vio::Path& filepath) {
-                static_cast<DerivedEnvironment*>(this)->load(filepath);
+                static_cast<EnvironmentImpl*>(this)->load(filepath);
             }
 
             /*!
@@ -85,7 +85,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             bool registerEvent(const nString& name, Event<Parameters...>* event) {
-                return m_events.insert({ name, { static_cast<EventBase*>(event), &DerivedEnvironment::addScriptFunctionToEvent<Parameters...> } }).second;
+                return m_events.insert({ name, { static_cast<EventBase*>(event), &EnvironmentImpl::addScriptFunctionToEvent<Parameters...> } }).second;
             }
 
             /*!
@@ -98,7 +98,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-                static_cast<DerivedEnvironment*>(this)->addScriptFunctionToEvent(scriptFunction, eventBase);
+                static_cast<EnvironmentImpl*>(this)->addScriptFunctionToEvent(scriptFunction, eventBase);
             }
 
             /*!
@@ -111,7 +111,7 @@ namespace vorb {
              */
             template<typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
             void addCDelegate(const nString& name, DelegateType&& delegate) {
-                static_cast<DerivedEnvironment*>(this)->addCDelegate(name, std::move(delegate));
+                static_cast<EnvironmentImpl*>(this)->addCDelegate(name, std::move(delegate));
             }
 
             /*!
@@ -124,7 +124,7 @@ namespace vorb {
              */
             template<typename Type>
             bool addValue(const nString& name, Type value) {
-                return static_cast<DerivedEnvironment*>(this)->addValue(name, std::move(value));
+                return static_cast<EnvironmentImpl*>(this)->addValue(name, std::move(value));
             }
 
             /*!
@@ -150,7 +150,7 @@ namespace vorb {
              */
             template<typename ...Namespaces>
             void setNamespaces(Namespaces... namespaces) {
-                static_cast<DerivedEnvironment*>(this)->setNamespaces(std::forward<Namespaces>(namespaces)...);
+                static_cast<EnvironmentImpl*>(this)->setNamespaces(std::forward<Namespaces>(namespaces)...);
             }
         protected:
             i32              m_maxScriptLength; ///< The maximum length a single script may be.

@@ -111,7 +111,7 @@ namespace vorb {
              * \param name The name of the delegate to add.
              * \param function The delegate to add.
              */
-            template<typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
             void addCDelegate(const nString& name, DelegateType&& delegate) {
                 static_cast<EnvironmentImpl*>(this)->addCDelegate(name, std::move(delegate));
             }
@@ -124,7 +124,7 @@ namespace vorb {
              * \param name The key to give the value to be added to the Lua stack.
              * \param value The value to add to the Lua stack.
              */
-            template<typename Type>
+            template <typename Type>
             bool addValue(const nString& name, Type value) {
                 return static_cast<EnvironmentImpl*>(this)->addValue(name, std::move(value));
             }

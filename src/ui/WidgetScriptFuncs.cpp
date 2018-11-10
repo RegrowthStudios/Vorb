@@ -1,15 +1,16 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/WidgetScriptFuncs.h"
-#include "Vorb/script/lua/Environment.h"
+
 #include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/script/IEnvironment.hpp"
 
 // Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetScriptFuncs::name));
 #define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
 
-void vui::WidgetScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
+template <typename EnvironmentImpl>
+void vui::WidgetScriptFuncs<EnvironmentImpl>::init(const cString namespace_, vscript::IEnvironment<EnvironmentImpl>* env) {
     m_env = env;
-    env->setNamespaces(nSpace);
+    env->setNamespaces(namespace_);
 
     { // Register all functions
         // Getters

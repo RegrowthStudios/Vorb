@@ -24,12 +24,11 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include <map>
 #include "Vorb/ui/IWidget.h"
-#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/Widget.h"
+#include "Vorb/VorbPreDecl.inl"
 
-DECL_VSCRIPT(class Environment)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
@@ -45,11 +44,12 @@ namespace vorb {
             VALUE_CHANGE
         };
 
+        template <typename EnvironmentImpl>
         class WidgetScriptFuncs {
         public:
-            virtual void init(const cString nSpace, vscript::Environment* env);
-            virtual void registerWidget(Widget* w);
-            virtual void unregisterWidget(Widget* w);
+            virtual void init(const cString namespace_, vscript::IEnvironment<EnvironmentImpl>* env);
+            virtual void registerWidget(Widget* widget);
+            virtual void unregisterWidget(Widget* widget);
         protected:
 
             /*! @brief Releases all resources used by the Widget.
@@ -133,7 +133,7 @@ namespace vorb {
             virtual void onMouseEnter(Sender s, const MouseMotionEvent& e);
             virtual void onMouseLeave(Sender s, const MouseMotionEvent& e);
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
-            vscript::Environment* m_env = nullptr;
+            vscript::IEnvironment<EnvironmentImpl>* m_env = nullptr;
         };
     }
 }

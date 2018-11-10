@@ -117,6 +117,21 @@ namespace vorb {
             }
 
             /*!
+             * \brief Returns a pointer delegate wrapping the named script function.
+             *
+             * \tparam ReturnType The return type of the script function.
+             * \tparam Parameters The parameters accepted by the script funciton.
+             *
+             * \param name The name of the script function.
+             *
+             * \return A pointer to the delegate, or nullptr if the script function wasn't found.
+             */
+            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+            DelegateType* getScriptDelegate(const nString& name) {
+                return static_cast<EnvironmentImpl*>(this)->getScriptDelegate<ReturnType, Parameters...>(name);
+            }
+
+            /*!
              * \brief Adds the given value to the top of the lua stack.
              *
              * Note that this instance is here to act as a fake virtualisation of member template.

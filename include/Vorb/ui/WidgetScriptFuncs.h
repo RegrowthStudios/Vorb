@@ -24,12 +24,11 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include <map>
-#include "Vorb/ui/IWidgetContainer.h"
-#include "Vorb/VorbPreDecl.inl"
+#include "Vorb/ui/IWidget.h"
 #include "Vorb/ui/Widget.h"
+#include "Vorb/VorbPreDecl.inl"
 
-DECL_VSCRIPT(class Environment)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
@@ -45,11 +44,12 @@ namespace vorb {
             VALUE_CHANGE
         };
 
+        template <typename EnvironmentImpl>
         class WidgetScriptFuncs {
         public:
-            virtual void init(const cString nSpace, vscript::Environment* env);
-            virtual void registerWidget(Widget* w);
-            virtual void unregisterWidget(Widget* w);
+            virtual void init(const cString namespace_, vscript::IEnvironment<EnvironmentImpl>* env);
+            virtual void registerWidget(Widget* widget);
+            virtual void unregisterWidget(Widget* widget);
         protected:
 
             /*! @brief Releases all resources used by the Widget.
@@ -75,7 +75,7 @@ namespace vorb {
             virtual bool isMouseIn(Widget* w) const;
             virtual i32 getAnchor(Widget* w) const;
             virtual i32 getStyle(Widget* w) const;
-            virtual vui::DockStyle getDock(Widget* w) const;
+            // virtual vui::Dock getDock(Widget* w) const;
             virtual i32 getNumWidgets(Widget* w) const;
             virtual bool isEnabled(Widget* w) const;
             virtual bool getClippingEnabled(Widget* w) const;
@@ -88,12 +88,12 @@ namespace vorb {
             virtual f32v2 getRelativePosition(Widget* w) const;
             virtual nString getName(Widget* w) const;
             virtual f32v4 getDestRect(Widget* w) const;
-            virtual IWidgetContainer* getParent(Widget* w) const;
+            virtual IWidget* getParent(Widget* w) const;
             virtual f32v2 getMinSize(Widget* w) const;
             virtual f32v2 getMaxSize(Widget* w) const;
             virtual f32v2 getPositionPercentage(Widget* w) const;
             virtual f32v2 getDimensionsPercentage(Widget* w) const;
-            virtual WidgetAlign getWidgetAlign(Widget* w) const;
+            // virtual WidgetAlign getWidgetAlign(Widget* w) const;
 
             /************************************************************************/
             /* Setters                                                              */
@@ -101,7 +101,7 @@ namespace vorb {
             virtual void setAnchor(Widget* w, int anchor) const;
             virtual void setDestRect(Widget* w, f32v4 destRect) const;
             virtual void setDimensions(Widget* w, f32v2 dims) const;
-            virtual void setDock(Widget* w, DockStyle dock) const;
+            // virtual void setDock(Widget* w, Dock dock) const;
             virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
             virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
             virtual void setHeight(Widget* w, f32 height) const;
@@ -112,7 +112,7 @@ namespace vorb {
             virtual void setX(Widget* w, f32 x) const;
             virtual void setY(Widget* w, f32 y) const;
             virtual void setName(Widget* w, nString name) const;
-            virtual void setParent(Widget* w, IWidgetContainer* parent) const;
+            // virtual void setParent(Widget* w, IWidget* parent) const;
             virtual void setMinSize(Widget* w, f32v2 minSize) const;
             virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
             virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
@@ -121,7 +121,7 @@ namespace vorb {
             virtual void setYPercentage(Widget* w, f32 yPercentage) const;
             virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
             virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
-            virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
+            // virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
             virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
 
             /************************************************************************/
@@ -133,7 +133,7 @@ namespace vorb {
             virtual void onMouseEnter(Sender s, const MouseMotionEvent& e);
             virtual void onMouseLeave(Sender s, const MouseMotionEvent& e);
             virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
-            vscript::Environment* m_env = nullptr;
+            vscript::IEnvironment<EnvironmentImpl>* m_env = nullptr;
         };
     }
 }

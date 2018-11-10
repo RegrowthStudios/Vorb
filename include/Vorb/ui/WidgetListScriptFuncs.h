@@ -50,20 +50,20 @@ namespace vorb {
             * @param w: The Widget to add
             * @return true if successfully added
             */
-            virtual bool addItemAtIndex(WidgetList* wl, int index, Widget* w);
+            virtual bool addItemAtIndex(WidgetList* wl, size_t index, IWidget* w);
             /*! @brief Removes a Widget from the combo box
             * If there are multiple instances of the Widget, only the
             * first will be removed
             * @param w: The Widget to remove
             * @return true if successfully removed
             */
-            virtual bool removeItem(WidgetList* wl, Widget* w);
+            virtual bool removeItem(WidgetList* wl, IWidget* w);
             /*! @brief Removes a Widget from the combo box
             *
             * @param index: The index of the Widget to remove
             * @return true if successfully removed
             */
-            virtual bool removeItemAtIndex(WidgetList* wl, int index);
+            virtual bool removeItemAtIndex(WidgetList* wl, size_t index);
 
             /************************************************************************/
             /* Getters                                                              */
@@ -71,7 +71,7 @@ namespace vorb {
             virtual VGTexture getTexture(WidgetList* w) const;
             virtual color4 getBackColor(WidgetList* w) const;
             virtual color4 getBackHoverColor(WidgetList* w);
-            virtual size_t getNumItems(WidgetList* w) const;
+            virtual size_t getItemCount(WidgetList* w) const;
             virtual f32 getSpacing(WidgetList* w) const;
             virtual bool getAutoScroll(WidgetList* w) const;
 

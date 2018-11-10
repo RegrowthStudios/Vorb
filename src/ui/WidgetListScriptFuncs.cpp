@@ -22,7 +22,7 @@ void vui::WidgetListScriptFuncs::init(const cString nSpace, vscript::Environment
         REGISTER_RDEL(env, getTexture);
         REGISTER_RDEL(env, getBackColor);
         REGISTER_RDEL(env, getBackHoverColor);
-        REGISTER_RDEL(env, getNumItems);
+        REGISTER_RDEL(env, getItemCount);
         REGISTER_RDEL(env, getSpacing);
         REGISTER_RDEL(env, getAutoScroll);     
         // Setters
@@ -42,15 +42,15 @@ void vui::WidgetListScriptFuncs::addItem(WidgetList* wl, Widget* w) {
     wl->addItem(w);
 }
 
-bool vui::WidgetListScriptFuncs::addItemAtIndex(WidgetList* wl, int index, Widget* w) {
+bool vui::WidgetListScriptFuncs::addItemAtIndex(WidgetList* wl, size_t index, IWidget* w) {
     return wl->addItemAtIndex(index, w);
 }
 
-bool vui::WidgetListScriptFuncs::removeItem(WidgetList* wl, Widget* w) {
+bool vui::WidgetListScriptFuncs::removeItem(WidgetList* wl, IWidget* w) {
     return wl->removeItem(w);
 }
 
-bool vui::WidgetListScriptFuncs::removeItemAtIndex(WidgetList* wl, int index) {
+bool vui::WidgetListScriptFuncs::removeItemAtIndex(WidgetList* wl, size_t index) {
     return wl->removeItem(index);
 }
 
@@ -66,8 +66,8 @@ color4 vui::WidgetListScriptFuncs::getBackHoverColor(WidgetList* w) {
     return w->getBackHoverColor();
 }
 
-size_t vui::WidgetListScriptFuncs::getNumItems(WidgetList* w) const {
-    return w->getNumItems();
+size_t vui::WidgetListScriptFuncs::getItemCount(WidgetList* w) const {
+    return w->getItemCount();
 }
 
 f32 vui::WidgetListScriptFuncs::getSpacing(WidgetList* w) const {

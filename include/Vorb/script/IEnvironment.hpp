@@ -40,10 +40,10 @@ namespace vorb {
         using GenericCFunction      = void(*)();
 
         // TODO(Matthew): A static_assert of implementations providing functions required?
-        template <typename DerivedEnvironment>
+        template <typename EnvironmentImpl>
         class IEnvironment {
             using CFunctionList = std::vector<std::unique_ptr<DelegateBase>>;
-            using EventAdder    = void(DerivedEnvironment::*)(GenericScriptFunction, EventBase*);
+            using EventAdder    = void(EnvironmentImpl::*)(GenericScriptFunction, EventBase*);
             struct EventData {
                 EventBase* event;
                 EventAdder adder;
@@ -53,6 +53,7 @@ namespace vorb {
             IEnvironment() {
                 static_assert(std::is_base_of<IEnvironment, DerivedEnvironment>::value, "Environment implementation provided not deriving from IEnvironment interface.");
             }
+            // TODO(Matthew): Initialisation and disposal.
 
             /*!
              * \brief Load in a script from the provided filepath.
@@ -60,7 +61,7 @@ namespace vorb {
              * \param filepath The filepath from which to load the script.
              */
             bool load(const vio::Path& filepath) {
-                static_cast<DerivedEnvironment*>(this)->load(filepath);
+                static_cast<EnvironmentImpl*>(this)->load(filepath);
             }
 
             /*!
@@ -90,7 +91,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             bool registerEvent(const nString& name, Event<Parameters...>* event) {
-                return m_events.insert({ name, { static_cast<EventBase*>(event), &DerivedEnvironment::addScriptFunctionToEvent<Parameters...> } }).second;
+                return m_events.insert({ name, { static_cast<EventBase*>(event), &EnvironmentImpl::addScriptFunctionToEvent<Parameters...> } }).second;
             }
 
             /*!
@@ -103,7 +104,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-                static_cast<DerivedEnvironment*>(this)->addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
+                static_cast<EnvironmentImpl*>(this)->addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
             }
 
             /*!
@@ -114,9 +115,24 @@ namespace vorb {
              * \param name The name of the delegate to add.
              * \param function The delegate to add.
              */
-            template<typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
             void addCDelegate(const nString& name, DelegateType&& delegate) {
-                static_cast<DerivedEnvironment*>(this)->addCDelegate(name, std::move(delegate));
+                static_cast<EnvironmentImpl*>(this)->addCDelegate(name, std::move(delegate));
+            }
+
+            /*!
+             * \brief Returns a pointer delegate wrapping the named script function.
+             *
+             * \tparam ReturnType The return type of the script function.
+             * \tparam Parameters The parameters accepted by the script funciton.
+             *
+             * \param name The name of the script function.
+             *
+             * \return A pointer to the delegate, or nullptr if the script function wasn't found.
+             */
+            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+            DelegateType* getScriptDelegate(const nString& name) {
+                return static_cast<EnvironmentImpl*>(this)->getScriptDelegate<ReturnType, Parameters...>(name);
             }
 
             /*!
@@ -127,9 +143,9 @@ namespace vorb {
              * \param name The key to give the value to be added to the Lua stack.
              * \param value The value to add to the Lua stack.
              */
-            template<typename Type>
+            template <typename Type>
             bool addValue(const nString& name, Type value) {
-                return static_cast<DerivedEnvironment*>(this)->addValue(name, std::move(value));
+                return static_cast<EnvironmentImpl*>(this)->addValue(name, std::move(value));
             }
 
             /*!
@@ -155,7 +171,7 @@ namespace vorb {
              */
             template<typename ...Namespaces>
             void setNamespaces(Namespaces... namespaces) {
-                static_cast<DerivedEnvironment*>(this)->setNamespaces(std::forward<Namespaces>(namespaces)...);
+                static_cast<EnvironmentImpl*>(this)->setNamespaces(std::forward<Namespaces>(namespaces)...);
             }
         protected:
             i32              m_maxScriptLength; ///< The maximum length a single script may be.

@@ -120,9 +120,22 @@ namespace vorb {
                  *
                  * \param lFunction The Lua function to register.
                  *
-                 * \return Pointer to the function obtained.
+                 * \return Pointer to the function obtained, or nullptr if not found.
                  */
                 LFunction* getLFunction(const nString& name);
+
+                /*!
+                 * \brief Returns a pointer delegate wrapping the named script function.
+                 *
+                 * \tparam ReturnType The return type of the script function.
+                 * \tparam Parameters The parameters accepted by the script funciton.
+                 *
+                 * \param name The name of the script function.
+                 *
+                 * \return A pointer to the delegate, or nullptr if the script function wasn't found.
+                 */
+                template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+                DelegateType* getScriptDelegate(const nString& name);
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.
@@ -263,6 +276,17 @@ void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction s
     LFunction*            lFunction = static_cast<LFunction*>(scriptFunction);
 
     m_listenerPool.addAutoHook(*event, *lFunction);
+}
+
+template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
+DelegateType* getScriptDelegate(const nString& name) {
+    // Get the LFunction we want to wrap.
+    LFunction* lFunction = getLFunction(name);
+
+    // If we couldn't find it, fail.
+    if (lFunction == nullptr) return nullptr;
+
+    return new DelegateType(std::move(makeDelegate(*lFunction)));
 }
 
 #endif // VORB_USING_SCRIPT

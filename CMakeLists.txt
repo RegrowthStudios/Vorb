@@ -259,12 +259,11 @@ set(vorb_ui
     include/Vorb/ui/ComboBox.h
     include/Vorb/ui/Drawables.h
     include/Vorb/ui/FocusController.h
-    include/Vorb/ui/Form.h
     include/Vorb/ui/GameWindow.h
     include/Vorb/ui/IGameScreen.h
     include/Vorb/ui/InputDispatcher.h
     include/Vorb/ui/InputDispatcherEventCatcher.h
-    include/Vorb/ui/IWidgetContainer.h
+    include/Vorb/ui/IWidget.h
     include/Vorb/ui/KeyboardEventDispatcher.h
     include/Vorb/ui/KeyMappings.inl
     include/Vorb/ui/Keys.inl
@@ -277,10 +276,11 @@ set(vorb_ui
     include/Vorb/ui/ScreenList.h
     include/Vorb/ui/Slider.h
     include/Vorb/ui/TextInputListener.hpp
+    include/Vorb/ui/TextWidget.h
     include/Vorb/ui/UIRenderer.h
+    include/Vorb/ui/Viewport.h
     include/Vorb/ui/Widget.h
     include/Vorb/ui/WidgetList.h
-    include/Vorb/ui/WidgetStyle.h
     include/Vorb/ui/WindowEventDispatcher.h
 #source
     src/ui/Button.cpp
@@ -288,10 +288,9 @@ set(vorb_ui
     src/ui/ComboBox.cpp
     src/ui/Drawables.cpp
     src/ui/FocusController.cpp
-    src/ui/Form.cpp
     src/ui/GameWindow.cpp
     src/ui/InputDispatcher.cpp
-    src/ui/IWidgetContainer.cpp
+    src/ui/IWidget.cpp
     src/ui/KeyboardEventDispatcher.cpp
     src/ui/Label.cpp
     src/ui/LuaDevConsole.cpp
@@ -300,7 +299,9 @@ set(vorb_ui
     src/ui/Panel.cpp
     src/ui/ScreenList.cpp
     src/ui/Slider.cpp
+    src/ui/TextWidget.cpp
     src/ui/UIRenderer.cpp
+    src/ui/Viewport.cpp
     src/ui/Widget.cpp
     src/ui/WidgetList.cpp
 )

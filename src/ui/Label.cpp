@@ -1,153 +1,84 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/Label.h"
 #include "Vorb/ui/UIRenderer.h"
-#include "Vorb/utils.h"
+#include "Vorb/ui/Viewport.h"
 
-vui::Label::Label() : Widget() {
-    refreshDrawables();
-}
-
-vui::Label::Label(const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label() {
-    m_name = name;
-    setDestRect(destRect);
-    updateTextPosition();
-}
-
-vui::Label::Label(IWidgetContainer* parent, const nString& name, const f32v4& destRect /*= f32v4(0)*/) : Label(name, destRect) {
-    parent->addWidget(this);
+vui::Label::Label() :
+    TextWidget(),
+    m_labelColor(color::Transparent),
+    m_labelHoverColor(color::Transparent),
+    m_labelTexture(0),
+    m_labelHoverTexture(0),
+    m_textColor(color::DarkGray),
+    m_textHoverColor(color::AliceBlue) {
+    m_flags.needsDrawableRecalculation = true;
 }
 
 vui::Label::~Label() {
     // Empty
 }
 
-void vui::Label::addDrawables(UIRenderer* renderer) {
-    Widget::addDrawables(renderer);
-    // Make copies
-    m_drawnText = m_drawableText;
+void vui::Label::addDrawables(UIRenderer& renderer) {
+    // Add the label rect.
+    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
 
-    // Use renderer default font if we dont have a font
-    m_defaultFont = renderer->getDefaultFont();
-    if (!m_drawnText.getFont()) m_drawnText.setFont(m_defaultFont);
-
-    // Add the text 
-    renderer->add(this,
-                  makeDelegate(m_drawnText, &DrawableText::draw),
-                  makeDelegate(*this, &Label::refreshDrawables));
+    // Add the text <- after checkbox to be rendererd on top!
+    TextWidget::addDrawables(renderer);
 }
 
-void vui::Label::updatePosition() {
-    Widget::updatePosition();
-    updateTextPosition();
+void vui::Label::setLabelColor(const color4& color) {
+    m_labelColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setDestRect(const f32v4& destRect) {
-    vui::Widget::setDestRect(destRect);
-    refreshDrawables();
+void vui::Label::setLabelHoverColor(const color4& color) {
+    m_labelHoverColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setDimensions(const f32v2& dimensions) {
-    Widget::setDimensions(dimensions);
-    updatePosition();
+void vui::Label::setLabelTexture(VGTexture texture) {
+    m_labelTexture = texture;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setFont(const vorb::graphics::SpriteFont* font) {
-    m_font = font;
-    updateTextPosition();
-}
+void vui::Label::setLabelHoverTexture(VGTexture texture) {
+    m_labelHoverTexture = texture;
 
-void vui::Label::setHeight(f32 height) {
-    Widget::setHeight(height);
-    updatePosition();
-}
-
-void vui::Label::setPosition(const f32v2& position) {
-    Widget::setPosition(position);
-    updatePosition();
-}
-
-void vui::Label::setWidth(f32 width) {
-    Widget::setWidth(width);
-    updatePosition();
-}
-
-void vui::Label::setX(f32 x) {
-    Widget::setX(x);
-    updatePosition();
-}
-
-void vui::Label::setY(f32 y) {
-    Widget::setY(y);
-    updatePosition();
-}
-
-void vui::Label::setText(const nString& text) {
-    m_drawableText.setText(text);
-    updateTextPosition();
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Label::setTextColor(const color4& color) {
-    m_drawableText.setColor(color);
-    refreshDrawables();
+    m_textColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setTextAlign(vg::TextAlign textAlign) {
-    m_drawableText.setTextAlign(textAlign);
-    updateTextPosition();
+void vui::Label::setTextHoverColor(const color4& color) {
+    m_textHoverColor = color;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setTextScale(const f32v2& textScale) {
-    m_drawableText.setTextScale(textScale);
-    updateTextPosition();
+void vui::Label::calculateDrawables() {
+    m_drawableRect.setPosition(getPaddedPosition());
+    m_drawableRect.setSize(getPaddedSize());
+    m_drawableRect.setClipRect(m_clipRect);
+    m_drawableRect.setTexture(m_flags.isMouseIn ? m_labelHoverTexture : m_labelTexture);
+
+    updateColor();
+
+    TextWidget::calculateDrawables();
 }
 
-void vui::Label::updateTextPosition() {
-    const f32v2& dims = getDimensions();
-    const f32v2& pos = getPosition();
-    const vg::TextAlign& textAlign = getTextAlign();
-
-    m_drawableText.setClipRect(m_clipRect);
-
-    // TODO(Ben): Padding
-    switch (textAlign) {
-        case vg::TextAlign::LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::TOP_LEFT:
-            m_drawableText.setPosition(pos);
-            break;
-        case vg::TextAlign::TOP:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, 0.0f));
-            break;
-        case vg::TextAlign::TOP_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, 0.0f));
-            break;
-        case vg::TextAlign::RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y / 2.0f));
-            break;
-        case vg::TextAlign::BOTTOM_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(dims.x, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM:
-            m_drawableText.setPosition(pos + f32v2(dims.x / 2.0f, dims.y));
-            break;
-        case vg::TextAlign::BOTTOM_LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, dims.y));
-            break;
-        case vg::TextAlign::CENTER:
-            m_drawableText.setPosition(pos + dims / 2.0f);
-            break;
-    }
-    refreshDrawables();
-}
-
-void vui::Label::refreshDrawables() {
-    // Use renderer default font if we don't have a font
-    if (!m_drawableText.getFont()) {
-        m_drawableText.setFont(m_defaultFont);
-        m_drawnText = m_drawableText;
-        m_drawableText.setFont(nullptr);
+void vui::Label::updateColor() {
+    if (m_flags.isMouseIn) {
+        m_drawableText.setColor(m_textHoverColor);
+        m_drawableRect.setColor(m_labelHoverColor);
     } else {
-        m_drawnText = m_drawableText;
+        m_drawableText.setColor(m_textColor);
+        m_drawableRect.setColor(m_labelColor);
     }
 }

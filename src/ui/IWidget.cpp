@@ -75,7 +75,7 @@ void vui::IWidget::dispose() {
     disable();
 }
 
-void vui::IWidget::update(f32 dt /*= 1.0f*/) {
+void vui::IWidget::update(f32 dt /*= 0.0f*/) {
     if (m_flags.needsZIndexReorder) {
         m_flags.needsZIndexReorder = false;
         reorderWidgets();

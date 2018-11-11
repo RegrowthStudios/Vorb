@@ -24,7 +24,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/UIRenderer.h"
@@ -73,7 +73,7 @@ namespace vorb {
              * 
              * @param dt: Time since the last update.
              */
-            virtual void update(f32 dt = 1.0f) override;
+            virtual void update(f32 dt = 0.0f) override;
 
             /*! @brief Draws the Form. */
             virtual void draw();

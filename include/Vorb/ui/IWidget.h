@@ -155,7 +155,7 @@ namespace vorb {
             *
             * \param dt: Change in time since last update.
             */
-            virtual void update(f32 dt = 1.0f);
+            virtual void update(f32 dt = 0.0f);
 
             /*! \brief Enables events that all widgets share in common. */
             virtual void enable();

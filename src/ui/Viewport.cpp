@@ -60,7 +60,8 @@ void vui::Viewport::disable() {
     Widget::disable();
 }
 
-void vui::Viewport::update(f32 dt /*= 1.0f*/) {
+void vui::Viewport::update(f32 dt /*= 0.0f*/) {
+    if (!m_flags.isEnabled) return;
     IWidget::update(dt);
     IWidget::updateDescendants(dt);
 }

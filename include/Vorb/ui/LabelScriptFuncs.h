@@ -8,9 +8,7 @@
 //
 
 /*! \file LabelScriptFuncs.h
-* @brief 
-*
-*
+* \brief Registers functions and consts for buttons to a script environment.
 */
 
 #pragma once
@@ -24,36 +22,43 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
-#include "Vorb/graphics/SpriteFont.h"
+
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
-
-        // Forward declarations
+        // Forward Declarations
         class Label;
 
-        class LabelScriptFuncs : public WidgetScriptFuncs {
-        public:
-            virtual void init(const cString nSpace, vscript::Environment* env) override;
-        protected:
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual color4 getTextColor(Label* l) const;
-            virtual nString getText(Label* l) const;
-            virtual vg::TextAlign getTextAlign(Label* l) const;
-            virtual f32v2 getTextScale(Label* l) const;
+        namespace LabelScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setText(Label* l, nString text) const;
-            virtual void setTextColor(Label* l, color4 color) const;
-            virtual void setTextAlign(Label* l, vg::TextAlign textAlign) const;
-            virtual void setTextScale(Label* l, f32v2 textScale) const;
-        };
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+            
+            namespace impl {
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                   color4 getLabelColor        (Label* label);
+                   color4 getLabelHoverColor   (Label* label);
+                VGTexture getLabelTexture      (Label* label);
+                VGTexture getLabelHoverTexture (Label* label);
+                   color4 getTextHoverColor    (Label* label);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+                void setLabelColor        (Label* label, color4 color);
+                void setLabelHoverColor   (Label* label, color4 color);
+                void setLabelTexture      (Label* label, VGTexture texture);
+                void setLabelHoverTexture (Label* label, VGTexture texture);
+                void setTextHoverColor    (Label* label, color4 color);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

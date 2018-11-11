@@ -22,10 +22,16 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/VorbPreDecl.inl"
+
+DECL_VG(class SpriteFont; enum class TextAlign)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
+        // Forward Declarations
+        class TextWidget;
+
         namespace TextWidgetScriptFuncs {
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
@@ -34,7 +40,23 @@ namespace vorb {
             void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
             namespace impl {
-                // Here go functions to be registered.
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                const vg::SpriteFont* getFont      (TextWidget* textWidget);
+                              nString getText      (TextWidget* textWidget);
+                        vg::TextAlign getTextAlign (TextWidget* textWidget);
+                               color4 getTextColor (TextWidget* textWidget);
+                                f32v2 getTextScale (TextWidget* textWidget);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+                void setFont      (TextWidget* textWidget, vg::SpriteFont* font);
+                void setText      (TextWidget* textWidget, nString text);
+                void setTextAlign (TextWidget* textWidget, vg::TextAlign textAlign);
+                void setTextColor (TextWidget* textWidget, color4 color);
+                void setTextScale (TextWidget* textWidget, f32v2 scale);
             }
         }
     }

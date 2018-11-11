@@ -8,9 +8,7 @@
 //
 
 /*! \file ComboBoxScriptFuncs.h
-* @brief 
-* Script functions for ComboBox widget.
-*
+* \brief Registers functions and consts for buttons to a script environment.
 */
 
 #pragma once
@@ -25,66 +23,96 @@
 #endif // !VORB_USING_PCH
 
 
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
-#include "Vorb/graphics/SpriteFont.h"
+
+DECL_VG(class SpriteFont; enum class TextAlign)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
-
-        // Forward declarations
+        // Forward Declarations
         class ComboBox;
 
-        class ComboBoxScriptFuncs : public WidgetScriptFuncs {
-        public:
-            void init(const cString nSpace, vscript::Environment* env) override;
-            virtual void registerWidget(Widget* w) override;
-            virtual void unregisterWidget(Widget* w) override;
-        protected:
-            virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
-            /*! @brief Deregisters a LUA callback with a widget* */
-            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
+        namespace ComboBoxScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(nString namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            virtual void addItem(ComboBox* c, nString item) const;
-            virtual bool addItemAtIndex(ComboBox* c, int index, nString item) const;
-            virtual bool removeItem(ComboBox* c, nString item) const;
-            virtual bool removeItemAtIndex(ComboBox* c, int index) const;
-            virtual bool selectItemAtIndex(ComboBox* c, int index) const;
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            virtual bool isInDropBounds(ComboBox* c, f32v2 point) const;
+            namespace impl {
+                void addItem(ComboBox* comboBox, nString item);
+                bool addItemAtIndex(ComboBox* comboBox, size_t index, nString item);
+                bool removeItem(ComboBox* comboBox, nString item);
+                bool removeItemAtIndex(ComboBox* comboBox, size_t index);
+                bool selectItem(ComboBox* comboBox, nString item);
+                bool selectItemAtIndex(ComboBox* comboBox, size_t index);
 
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual VGTexture getTexture(ComboBox* c) const;
-            virtual color4 getBackColor(ComboBox* c) const;
-            virtual color4 getBackHoverColor(ComboBox* c) const;
-            virtual color4 getTextColor(ComboBox* c) const;
-            virtual color4 getTextHoverColor(ComboBox* c) const;
-            virtual f32v2 getTextScale(ComboBox* c) const;
-            virtual nString getItem(ComboBox* c, int index) const;
-            virtual size_t getItemCount(ComboBox* c) const;
-            virtual vg::TextAlign getTextAlign(ComboBox* c) const;
-            virtual nString getText(ComboBox* c) const;
-            virtual f32 getMaxDropHeight(ComboBox* c) const;
+                bool isInDropBounds(ComboBox* comboBox, f32 x, f32 y);
 
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setMainButtonTexture(ComboBox* c, VGTexture texture) const;
-            virtual void setDropBoxTexture(ComboBox* c, VGTexture texture) const;
-            virtual void setDropButtonTexture(ComboBox* c, VGTexture texture) const;
-            virtual void setBackColor(ComboBox* c, color4 color) const;
-            virtual void setBackHoverColor(ComboBox* c, color4 color) const;
-            virtual void setTextColor(ComboBox* c, color4 color) const;
-            virtual void setTextHoverColor(ComboBox* c, color4 color) const;
-            virtual void setTextScale(ComboBox* c, f32v2 textScale) const;
-            virtual void setTextAlign(ComboBox* c, vg::TextAlign align) const;
-            virtual void setText(ComboBox* c, nString text) const;
-            virtual void setMaxDropHeight(ComboBox* c, f32 maxDropHeight) const;
+                /************************************************************************/
+                /* Getters                                                              */
+                /************************************************************************/
+                VGTexture getTexture(ComboBox* comboBox);
+                const vorb::graphics::SpriteFont* getFont(ComboBox* comboBox);
+                color4 getBackColor(ComboBox* comboBox);
+                color4 getBackHoverColor(ComboBox* comboBox);
+                color4 getTextColor(ComboBox* comboBox);
+                color4 getTextHoverColor(ComboBox* comboBox);
+                f32v2 getTextScale(ComboBox* comboBox);
+                nString getItem(ComboBox* comboBox, size_t index);
+                size_t getItemIndex(ComboBox* comboBox, nString item);
+                size_t getItemCount(ComboBox* comboBox);
+                vg::TextAlign getTextAlign(ComboBox* comboBox);
+                nString getText(ComboBox* comboBox);
+                f32 getMaxDropHeight(ComboBox* comboBox);
 
-            void onValueChange(Sender s, const nString& v) const;
-        };
+                /************************************************************************/
+                /* Setters                                                              */
+                /************************************************************************/
+                void setFont(ComboBox* comboBox, vg::SpriteFont* font);
+                void setMainButtonTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropBoxTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropButtonTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropButtonTextureOfItem(ComboBox* comboBox, VGTexture texture, nString item);
+                void setDropButtonTextureAtIndex(ComboBox* comboBox, VGTexture texture, size_t index);
+                void setBackColor(ComboBox* comboBox, color4 color);
+                void setMainButtonBackColor(ComboBox* comboBox, color4 color);
+                void setDropButtonBackColor(ComboBox* comboBox, color4 color);
+                void setDropButtonBackColorOfItem(ComboBox* comboBox, color4 color, nString item);
+                void setDropButtonBackColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setBackHoverColor(ComboBox* comboBox, color4 color);
+                void setMainButtonBackHoverColor(ComboBox* comboBox, color4 color);
+                void setDropButtonBackHoverColor(ComboBox* comboBox, color4 color);
+                void setDropButtonBackHoverColorOfItem(ComboBox* comboBox, color4 color, nString item);
+                void setDropButtonBackHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setTextColor(ComboBox* comboBox, color4 color);
+                void setMainButtonTextColor(ComboBox* comboBox, color4 color);
+                void setDropButtonTextColor(ComboBox* comboBox, color4 color);
+                void setDropButtonTextColorOfItem(ComboBox* comboBox, color4 color, nString item);
+                void setDropButtonTextColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setTextHoverColor(ComboBox* comboBox, color4 color);
+                void setMainButtonTextHoverColor(ComboBox* comboBox, color4 color);
+                void setDropButtonTextHoverColor(ComboBox* comboBox, color4 color);
+                void setDropButtonTextHoverColorOfItem(ComboBox* comboBox, color4 color, nString item);
+                void setDropButtonTextHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setTextScale(ComboBox* comboBox, f32v2 textScale);
+                void setMainButtonTextScale(ComboBox* comboBox, f32v2 textScale);
+                void setDropButtonTextScale(ComboBox* comboBox, f32v2 textScale);
+                void setDropButtonTextScaleOfItem(ComboBox* comboBox, f32v2 textScale, nString item);
+                void setDropButtonTextScaleAtIndex(ComboBox* comboBox, f32v2 textScale, size_t index);
+                void setTextAlign(ComboBox* comboBox, vg::TextAlign align);
+                void setMainButtonTextAlign(ComboBox* comboBox, vg::TextAlign align);
+                void setDropButtonTextAlign(ComboBox* comboBox, vg::TextAlign align);
+                void setDropButtonTextAlignOfItem(ComboBox* comboBox, vg::TextAlign align, nString item);
+                void setDropButtonTextAlignAtIndex(ComboBox* comboBox, vg::TextAlign align, size_t index);
+                void setText(ComboBox* comboBox, nString text);
+                void setMaxDropHeight(ComboBox* comboBox, f32 maxDropHeight);
+
+                // void onValueChange(Sender s, nString& v);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

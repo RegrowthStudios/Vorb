@@ -1,32 +1,40 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/GameWindowScriptFuncs.h"
+
 #include "Vorb/ui/GameWindow.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/script/IEnvironment.hpp"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &GameWindowScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &GameWindowScriptFuncs::name));
 
-void vui::GameWindowScriptFuncs::init(const cString nSpace, const GameWindow* gameWindow, vscript::Environment* env) {
-    m_window = gameWindow; 
-    env->setNamespaces(nSpace);
-    REGISTER_RDEL(env, getNumSupportedResolutions);
-    REGISTER_RDEL(env, getSupportedResolution);
-    REGISTER_RDEL(env, getCurrentResolution);
+template <typename ScriptEnvironmentImpl>
+void vui::GameWindowScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getNumSupportedResolutions", makeDelegate([window] () {
+        return impl::getNumSupportedResolutions(window);
+    });
+    env->addCDelegate("getSupportedResolution",     makeDelegate([window] (size_t resIndex) {
+        return impl::getNumSupportedResolutions(window, resIndex);
+    });
+    env->addCDelegate("getCurrentResolution",       makeDelegate([window] () {
+        return impl::getNumSupportedResolutions(window);
+    });
     env->setNamespaces();
+
+    WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-i32 vui::GameWindowScriptFuncs::getNumSupportedResolutions() const {
-    return (i32)m_window->getSupportedResolutions().size();
+template <typename ScriptEnvironmentImpl>
+void vui::GameWindowScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
 }
 
-ui32v2 vui::GameWindowScriptFuncs::getSupportedResolution(int resIndex) const {
-    return m_window->getSupportedResolutions().at(resIndex);
+size_t vui::GameWindowScriptFuncs::impl::getNumSupportedResolutions(const GameWindow* window) {
+    return window->getSupportedResolutions().size();
 }
 
-ui32v2 vui::GameWindowScriptFuncs::getCurrentResolution() const {
-    return m_window->getViewportDims();
+ui32v2 vui::GameWindowScriptFuncs::impl::getSupportedResolution(const GameWindow* window, size_t resIndex) {
+    return window->getSupportedResolutions().at(resIndex);
+}
+
+ui32v2 vui::GameWindowScriptFuncs::impl::getCurrentResolution(const GameWindow* window) {
+    return window->getViewportDims();
 }

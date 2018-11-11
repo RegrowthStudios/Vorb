@@ -1,64 +1,68 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/PanelScriptFuncs.h"
+
 #include "Vorb/ui/Panel.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/script/IEnvironment.hpp"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &PanelScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &PanelScriptFuncs::name));
-
-void vui::PanelScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    
-    // Call base register
-    WidgetScriptFuncs::init(nSpace, env);
-
-    env->setNamespaces(nSpace);
-    { // Register all functions
-        // Getters
-        REGISTER_RDEL(env, getTexture);
-        REGISTER_RDEL(env, getColor);
-        REGISTER_RDEL(env, getHoverColor);
-        REGISTER_RDEL(env, getAutoScroll);
-        // Setters
-        REGISTER_DEL(env, setTexture);
-        REGISTER_DEL(env, setColor);
-        REGISTER_DEL(env, setHoverColor);
-        REGISTER_DEL(env, setAutoScroll);
-    }
+template <typename ScriptEnvironmentImpl>
+void vui::PanelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getTexture",     makeDelegate(&impl::getTexture));
+    env->addCDelegate("setTexture",     makeDelegate(&impl::setTexture));
+    env->addCDelegate("getAutoScroll",  makeDelegate(&impl::getAutoScroll));
+    env->addCDelegate("setAutoScroll",  makeDelegate(&impl::setAutoScroll));
+    env->addCDelegate("getSliderWidth", makeDelegate(&impl::getSliderWidth));
+    env->addCDelegate("setSliderWidth", makeDelegate(&impl::setSliderWidth));
+    env->addCDelegate("getColor",       makeDelegate(&impl::getColor));
+    env->addCDelegate("setColor",       makeDelegate(&impl::setColor));
+    env->addCDelegate("getHoverColor",  makeDelegate(&impl::getHoverColor));
+    env->addCDelegate("setHoverColor",  makeDelegate(&impl::setHoverColor));
     env->setNamespaces();
+
+    WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-VGTexture vui::PanelScriptFuncs::getTexture(Panel* p) const {
-    return p->getTexture();
+template <typename ScriptEnvironmentImpl>
+void vui::PanelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
 }
 
-color4 vui::PanelScriptFuncs::getColor(Panel* p) const {
-    return p->getColor();
+VGTexture vui::PanelScriptFuncs::impl::getTexture(Panel* panel) {
+    return panel->getTexture();
 }
 
-color4 vui::PanelScriptFuncs::getHoverColor(Panel* p) const {
-    return p->getHoverColor();
+bool vui::PanelScriptFuncs::impl::getAutoScroll(Panel* panel) {
+    return panel->getAutoScroll();
 }
 
-bool vui::PanelScriptFuncs::getAutoScroll(Panel* p) const {
-    return p->getAutoScroll();
+f32 vui::PanelScriptFuncs::impl::getSliderWidth(Panel* panel) {
+    return panel->getSliderWidth();
 }
 
-void vui::PanelScriptFuncs::setTexture(Panel* p, VGTexture texture) const {
-    p->setTexture(texture);
+color4 vui::PanelScriptFuncs::impl::getColor(Panel* panel) {
+    return panel->getColor();
 }
 
-void vui::PanelScriptFuncs::setColor(Panel* p, color4 color) const {
-    p->setColor(color);
+color4 vui::PanelScriptFuncs::impl::getHoverColor(Panel* panel) {
+    return panel->getHoverColor();
 }
 
-void vui::PanelScriptFuncs::setHoverColor(Panel* p, color4 color) const {
-    p->setHoverColor(color);
+void vui::PanelScriptFuncs::impl::setTexture(Panel* panel, VGTexture texture) {
+    panel->setTexture(texture);
 }
 
-void vui::PanelScriptFuncs::setAutoScroll(Panel* p, bool autoScroll) const {
-    p->setAutoScroll(autoScroll);
+void vui::PanelScriptFuncs::impl::setAutoScroll(Panel* panel, bool autoScroll) {
+    panel->setAutoScroll(autoScroll);
+}
+
+void vui::PanelScriptFuncs::impl::setSliderWidth(Panel* panel, f32 width) {
+    panel->setSliderWidth(width);
+}
+
+void vui::PanelScriptFuncs::impl::setColor(Panel* panel, color4 color) {
+    panel->setColor(color);
+}
+
+void vui::PanelScriptFuncs::impl::setHoverColor(Panel* panel, color4 color) {
+    panel->setHoverColor(color);
 }

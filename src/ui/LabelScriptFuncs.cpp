@@ -1,64 +1,69 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/LabelScriptFuncs.h"
+
+#include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Label.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/ui/TextWidgetScriptFuncs.h"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &LabelScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &LabelScriptFuncs::name));
-
-void vui::LabelScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    // Call base register
-    WidgetScriptFuncs::init(nSpace, env);
-
-    env->setNamespaces(nSpace);
-
-    { // Register all functions
-        // Getters
-        REGISTER_RDEL(env, getTextColor);
-        REGISTER_RDEL(env, getText);
-        REGISTER_RDEL(env, getTextAlign);
-        REGISTER_RDEL(env, getTextScale);
-        // Setters
-        REGISTER_DEL(env, setText);
-        REGISTER_DEL(env, setTextColor);
-        REGISTER_DEL(env, setTextAlign);
-        REGISTER_DEL(env, setTextScale);
-    }
+template <typename ScriptEnvironmentImpl>
+void vui::LabelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getLabelColor",      makeDelegate(&impl::getLabelColor));
+    env->addCDelegate("setLabelColor",      makeDelegate(&impl::setLabelColor));
+    env->addCDelegate("getLabelHoverColor",      makeDelegate(&impl::getLabelHoverColor));
+    env->addCDelegate("setLabelHoverColor",      makeDelegate(&impl::setLabelHoverColor));
+    env->addCDelegate("getLabelTexture", makeDelegate(&impl::getLabelTexture));
+    env->addCDelegate("setLabelTexture", makeDelegate(&impl::setLabelTexture));
+    env->addCDelegate("getLabelHoverTexture", makeDelegate(&impl::getLabelHoverTexture));
+    env->addCDelegate("setLabelHoverTexture", makeDelegate(&impl::setLabelHoverTexture));
+    env->addCDelegate("getTextHoverColor", makeDelegate(&impl::getTextHoverColor));
+    env->addCDelegate("setTextHoverColor", makeDelegate(&impl::setTextHoverColor));
     env->setNamespaces();
+
+    TextWidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-color4 vui::LabelScriptFuncs::getTextColor(Label* l) const {
-    return l->getTextColor();
+template <typename ScriptEnvironmentImpl>
+void vui::LabelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
 }
 
-nString vui::LabelScriptFuncs::getText(Label* l) const {
-    return l->getText();
+color4 vui::LabelScriptFuncs::impl::getLabelColor(Label* label) {
+    return label->getLabelColor();
 }
 
-vg::TextAlign vui::LabelScriptFuncs::getTextAlign(Label* l) const {
-    return l->getTextAlign();
+color4 vui::LabelScriptFuncs::impl::getLabelHoverColor(Label* label) {
+    return label->getLabelHoverColor();
 }
 
-f32v2 vui::LabelScriptFuncs::getTextScale(Label* l) const {
-    return l->getTextScale();
+VGTexture vui::LabelScriptFuncs::impl::getLabelTexture(Label* label) {
+    return label->getLabelTexture();
 }
 
-void vui::LabelScriptFuncs::setText(Label* l, nString text) const {
-    l->setText(text);
+VGTexture vui::LabelScriptFuncs::impl::getLabelHoverTexture(Label* label) {
+    return label->getLabelHoverTexture();
 }
 
-void vui::LabelScriptFuncs::setTextColor(Label* l, color4 color) const {
-    l->setTextColor(color);
+color4 vui::LabelScriptFuncs::impl::getTextHoverColor(Label* label) {
+    return label->getTextHoverColor();
 }
 
-void vui::LabelScriptFuncs::setTextAlign(Label* l, vg::TextAlign textAlign) const {
-    l->setTextAlign(textAlign);
+void vui::LabelScriptFuncs::impl::setLabelColor(Label* label, color4 color) {
+    label->setLabelColor(color);
 }
 
-void vui::LabelScriptFuncs::setTextScale(Label* l, f32v2 textScale) const {
-    l->setTextScale(textScale);
+void vui::LabelScriptFuncs::impl::setLabelHoverColor(Label* label, color4 color) {
+    label->setLabelHoverColor(color);
+}
+
+void vui::LabelScriptFuncs::impl::setLabelTexture(Label* label, VGTexture texture) {
+    label->setLabelTexture(texture);
+}
+
+void vui::LabelScriptFuncs::impl::setLabelHoverTexture(Label* label, VGTexture texture) {
+    label->setLabelHoverTexture(texture);
+}
+
+void vui::LabelScriptFuncs::impl::setTextHoverColor(Label* label, color4 color) {
+    label->setTextHoverColor(color);
 }

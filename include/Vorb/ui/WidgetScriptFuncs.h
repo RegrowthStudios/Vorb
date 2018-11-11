@@ -24,117 +24,191 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/ui/IWidget.h"
-#include "Vorb/ui/Widget.h"
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/ui/Widget.h"
 
 DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
+        // Forward Declarations
+        class Viewport;
 
-        enum class EventType {
-            NONE,
-            MOUSE_CLICK,
-            MOUSE_DOWN,
-            MOUSE_UP,
-            MOUSE_ENTER,
-            MOUSE_LEAVE,
-            MOUSE_MOVE,
-            VALUE_CHANGE
-        };
 
-        template <typename EnvironmentImpl>
-        class WidgetScriptFuncs {
-        public:
-            virtual void init(const cString namespace_, vscript::IEnvironment<EnvironmentImpl>* env);
-            virtual void registerWidget(Widget* widget);
-            virtual void unregisterWidget(Widget* widget);
-        protected:
+        namespace WidgetScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /*! @brief Releases all resources used by the Widget.
-            *
-            * Gets called in the destructor.
-            */
-            virtual void dispose(Widget* w);
-            /*! @brief Enables events* */
-            virtual void enable(Widget* w);
-            /*! @brief Disables events* */
-            virtual void disable(Widget* w);
-            /*! @brief Registers a LUA callback with a widget* */
-            virtual bool addCallback(Widget* w, EventType eventType, nString funcName);
-            /*! @brief Deregisters a LUA callback with a widget* */
-            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName);
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual bool getFixedHeight(Widget* w) const;
-            virtual bool getFixedWidth(Widget* w) const;
-            virtual bool getSelectable(Widget* w) const;
-            virtual bool isMouseIn(Widget* w) const;
-            virtual i32 getAnchor(Widget* w) const;
-            virtual i32 getStyle(Widget* w) const;
-            // virtual vui::Dock getDock(Widget* w) const;
-            virtual i32 getNumWidgets(Widget* w) const;
-            virtual bool isEnabled(Widget* w) const;
-            virtual bool getClippingEnabled(Widget* w) const;
-            virtual f32 getHeight(Widget* w) const;
-            virtual f32 getWidth(Widget* w) const;
-            virtual f32 getX(Widget* w) const;
-            virtual f32 getY(Widget* w) const;
-            virtual f32v2 getDimensions(Widget* w) const;
-            virtual f32v2 getPosition(Widget* w) const;
-            virtual f32v2 getRelativePosition(Widget* w) const;
-            virtual nString getName(Widget* w) const;
-            virtual f32v4 getDestRect(Widget* w) const;
-            virtual IWidget* getParent(Widget* w) const;
-            virtual f32v2 getMinSize(Widget* w) const;
-            virtual f32v2 getMaxSize(Widget* w) const;
-            virtual f32v2 getPositionPercentage(Widget* w) const;
-            virtual f32v2 getDimensionsPercentage(Widget* w) const;
-            // virtual WidgetAlign getWidgetAlign(Widget* w) const;
+            namespace impl {
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                
+                /***
+                  From IWidget
+                            ***/
 
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setAnchor(Widget* w, int anchor) const;
-            virtual void setDestRect(Widget* w, f32v4 destRect) const;
-            virtual void setDimensions(Widget* w, f32v2 dims) const;
-            // virtual void setDock(Widget* w, Dock dock) const;
-            virtual void setFixedHeight(Widget* w, bool fixedHeight) const;
-            virtual void setFixedWidth(Widget* w, bool fixedWidth) const;
-            virtual void setHeight(Widget* w, f32 height) const;
-            virtual void setPosition(Widget* w, f32v2 pos) const;
-            virtual void setSelectable(Widget* w, bool selectable) const;
-            virtual void setStyle(Widget* w, int style) const;
-            virtual void setWidth(Widget* w, f32 width) const;
-            virtual void setX(Widget* w, f32 x) const;
-            virtual void setY(Widget* w, f32 y) const;
-            virtual void setName(Widget* w, nString name) const;
-            // virtual void setParent(Widget* w, IWidget* parent) const;
-            virtual void setMinSize(Widget* w, f32v2 minSize) const;
-            virtual void setMaxSize(Widget* w, f32v2 maxSize) const;
-            virtual void setPositionPercentage(Widget* w, f32v2 positionPercentage) const;
-            virtual void setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const;
-            virtual void setXPercentage(Widget* w, f32 xPercentage) const;
-            virtual void setYPercentage(Widget* w, f32 yPercentage) const;
-            virtual void setWidthPercentage(Widget* w, f32 widthPercentage) const;
-            virtual void setHeightPercentage(Widget* w, f32 heightPercentage) const;
-            // virtual void setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const;
-            virtual void setClippingEnabled(Widget* w, bool clippingEnabled) const;
+                    Viewport* getViewport         (IWidget* widget);
+                     IWidget* getParent           (IWidget* widget);
+                // TODO(Matthew): Can we send pointers to all children?
+                        f32v4 getDimensions       (IWidget* widget);
+                          f32 getX                (IWidget* widget);
+                          f32 getY                (IWidget* widget);
+                        f32v2 getPosition         (IWidget* widget);
+                        f32v2 getPaddedPosition   (IWidget* widget);
+                          f32 getRelativeX        (IWidget* widget);
+                          f32 getRelativeY        (IWidget* widget);
+                        f32v2 getRelativePosition (IWidget* widget);
+                          f32 getWidth            (IWidget* widget);
+                          f32 getHeight           (IWidget* widget);
+                        f32v2 getSize             (IWidget* widget);
+                        f32v2 getPaddedSize       (IWidget* widget);
+                        f32v4 getPadding          (IWidget* widget);
+                          f32 getPaddingLeft      (IWidget* widget);
+                          f32 getPaddingTop       (IWidget* widget);
+                          f32 getPaddingRight     (IWidget* widget);
+                          f32 getPaddingBottom    (IWidget* widget);
+                // TODO(Matthew): Need to specialise ValueMediator for Clipping.
+                     Clipping getClipping         (IWidget* widget);
+                ClippingState getClippingLeft     (IWidget* widget);
+                ClippingState getClippingTop      (IWidget* widget);
+                ClippingState getClippingRight    (IWidget* widget);
+                ClippingState getClippingBottom   (IWidget* widget);
+                        f32v4 getClipRect         (IWidget* widget);
+                       ZIndex getZIndex           (IWidget* widget);
+                // TODO(Matthew): Need to specialise ValueMediator for Dock.
+                         Dock getDock             (IWidget* widget);
+                    DockState getDockState        (IWidget* widget);
+                          f32 getDockSize         (IWidget* widget);
+                      nString getName             (IWidget* widget);
+                        f32v2 getChildOffset      (IWidget* widget);
+                          f32 getChildOffsetX     (IWidget* widget);
+                          f32 getChildOffsetY     (IWidget* widget);
+                // TODO(Matthew): Need to specialise ValueMediator for WidgetFlags.
+                  WidgetFlags getFlags            (IWidget* widget);
 
-            /************************************************************************/
-            /* Widget Event Handlers                                                */
-            /************************************************************************/
-            virtual void onMouseClick(Sender s, const MouseButtonEvent& e);
-            virtual void onMouseDown(Sender s, const MouseButtonEvent& e);
-            virtual void onMouseUp(Sender s, const MouseButtonEvent& e);
-            virtual void onMouseEnter(Sender s, const MouseMotionEvent& e);
-            virtual void onMouseLeave(Sender s, const MouseMotionEvent& e);
-            virtual void onMouseMove(Sender s, const MouseMotionEvent& e);
-            vscript::IEnvironment<EnvironmentImpl>* m_env = nullptr;
-        };
+
+                bool isInBounds                 (IWidget* widget, f32 x, f32 y);
+                bool isEnabled                  (IWidget* widget);
+                bool isMouseIn                  (IWidget* widget);
+                bool isClicking                 (IWidget* widget);
+                bool ignoreOffset               (IWidget* widget);
+                bool needsDimensionUpdate       (IWidget* widget);
+                bool needsZIndexReorder         (IWidget* widget);
+                bool needsDockRecalculation     (IWidget* widget);
+                bool needsClipRectRecalculation (IWidget* widget);
+                bool needsDrawableRecalculation (IWidget* widget);
+
+                /***
+                  From Widget
+                           ***/
+
+                PositionType getPositionType     (Widget* widget);
+                     Length2 getRawPosition      (Widget* widget);
+                     Length2 getRawSize          (Widget* widget);
+                      Length getRawLeft          (Widget* widget);
+                      Length getRawTop           (Widget* widget);
+                      Length getRawRight         (Widget* widget);
+                      Length getRawBottom        (Widget* widget);
+                     Length2 getRawMinSize       (Widget* widget);
+                     Length2 getRawMaxSize       (Widget* widget);
+                      Length getRawDockSize      (Widget* widget);
+                     Length4 getRawPadding       (Widget* widget);
+                      Length getRawPaddingLeft   (Widget* widget);
+                      Length getRawPaddingTop    (Widget* widget);
+                      Length getRawPaddingRight  (Widget* widget);
+                      Length getRawPaddingBottom (Widget* widget);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+
+                /***
+                  From IWidget
+                            ***/
+
+                bool addWidget    (IWidget* widget, IWidget* child);
+                bool removeWidget (IWidget* widget, IWidget* child);
+
+                void setX                (IWidget* widget, f32 x);
+                void setY                (IWidget* widget, f32 y);
+                void setPosition         (IWidget* widget, f32v2 position);
+                void setRelativeX        (IWidget* widget, f32 relX);
+                void setRelativeY        (IWidget* widget, f32 relY);
+                void setRelativePosition (IWidget* widget, f32v2 position);
+                void setWidth            (IWidget* widget, f32 width);
+                void setHeight           (IWidget* widget, f32 height);
+                void setSize             (IWidget* widget, f32v2 size);
+                void setPadding          (IWidget* widget, f32v4 padding);
+                void setPaddingLeft      (IWidget* widget, f32 left);
+                void setPaddingTop       (IWidget* widget, f32 top);
+                void setPaddingRight     (IWidget* widget, f32 right);
+                void setPaddingBottom    (IWidget* widget, f32 bottom);
+                // TODO(Matthew): Need to specialise ValueMediator for Clipping.
+                void setClipping         (IWidget* widget, Clipping clipping);
+                void setClippingLeft     (IWidget* widget, ClippingState state);
+                void setClippingTop      (IWidget* widget, ClippingState state);
+                void setClippingRight    (IWidget* widget, ClippingState state);
+                void setClippingBottom   (IWidget* widget, ClippingState state);
+                void setZIndex           (IWidget* widget, ZIndex zIndex);
+                // TODO(Matthew): Need to specialise ValueMediator for Dock.
+                void setDock             (IWidget* widget, Dock dock);
+                void setDockState        (IWidget* widget, DockState state);
+                void setDockSize         (IWidget* widget, f32 size);
+                void setName             (IWidget* widget, nString name);
+                void setChildOffset      (IWidget* widget, f32v2 offset);
+                void setChildOffsetX     (IWidget* widget, f32 offset);
+                void setChildOffsetY     (IWidget* widget, f32 offset);
+                // TODO(Matthew): Need to specialise ValueMediator for WidgetFlags.
+                void setFlags            (IWidget* widget, WidgetFlags flags);
+
+                void setIgnoreOffset            (IWidget* widget, bool ignoreOffset);
+                void setNeedsDimensionUpdate       (IWidget* widget, bool flag);
+                void setNeedsZIndexReorder         (IWidget* widget, bool flag);
+                void setNeedsDockRecalculation     (IWidget* widget, bool flag);
+                void setNeedsClipRectRecalculation (IWidget* widget, bool flag);
+                void setNeedsDrawableRecalculation (IWidget* widget, bool flag);
+
+                /***
+                  From Widget
+                           ***/
+
+                void setPositionType     (Widget* widget, PositionType positionType);
+                void setRawPosition      (Widget* widget, Length2 position);
+                void setRawSize          (Widget* widget, Length2 size);
+                void setLeft             (Widget* widget, f32 left);
+                void setTop              (Widget* widget, f32 top);
+                void setRight            (Widget* widget, f32 right);
+                void setBottom           (Widget* widget, f32 bottom);
+                void setRawLeft          (Widget* widget, Length left);
+                void setRawTop           (Widget* widget, Length top);
+                void setRawRight         (Widget* widget, Length right);
+                void setRawBottom        (Widget* widget, Length bottom);
+                void setMinSize          (Widget* widget, f32v2 minSize);
+                void setMaxSize          (Widget* widget, f32v2 maxSize);
+                void setRawMinSize       (Widget* widget, Length2 minSize);
+                void setRawMaxSize       (Widget* widget, Length2 maxSize);
+                void setRawDockSize      (Widget* widget, Length dockSize);
+                void setRawPadding       (Widget* widget, Length4 padding);
+                void setRawPaddingLeft   (Widget* widget, Length left);
+                void setRawPaddingTop    (Widget* widget, Length top);
+                void setRawPaddingRight  (Widget* widget, Length right);
+                void setRawPaddingBottom (Widget* widget, Length bottom);
+
+                /******************************************************************/
+                /* Widget Event Handlers                                          */
+                /******************************************************************/
+                // void onMouseClick(Sender s, const MouseButtonEvent& e);
+                // void onMouseDown(Sender s, const MouseButtonEvent& e);
+                // void onMouseUp(Sender s, const MouseButtonEvent& e);
+                // void onMouseEnter(Sender s, const MouseMotionEvent& e);
+                // void onMouseLeave(Sender s, const MouseMotionEvent& e);
+                // void onMouseMove(Sender s, const MouseMotionEvent& e);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

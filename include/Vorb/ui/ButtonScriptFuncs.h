@@ -8,9 +8,7 @@
 //
 
 /*! \file ButtonScriptFuncs.h
-* @brief 
-* Scripting functions for buttons.
-*
+* \brief Registers functions and consts for buttons to a script environment.
 */
 
 #pragma once
@@ -24,47 +22,46 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
-#include "Vorb/graphics/SpriteFont.h"
-#include "Vorb/graphics/SpriteBatch.h"
+
+DECL_VG(enum class GradientType)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
-
         // Forward declarations
         class Button;
 
-        class ButtonScriptFuncs : public WidgetScriptFuncs {
-        public:
-            virtual void init(const cString nSpace, vscript::Environment* env) override;
-        protected:
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual VGTexture getTexture(Button* b) const;
-            virtual color4 getBackColor(Button* b) const;
-            virtual color4 getBackHoverColor(Button* b) const;
-            virtual color4 getTextColor(Button* b) const;
-            virtual color4 getTextHoverColor(Button* b) const;
-            virtual nString getText(Button* b) const;
-            virtual vg::TextAlign getTextAlign(Button* b) const;
-            virtual f32v2 getTextScale(Button* b) const;
+        namespace ButtonScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setBackColor(Button* b, color4 color) const;
-            virtual void setBackColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const;
-            virtual void setBackHoverColor(Button* b, color4 color) const;
-            virtual void setBackHoverColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const;
-            virtual void setText(Button* b, nString text) const;
-            virtual void setTextColor(Button* b, color4 color) const;
-            virtual void setTextHoverColor(Button* b, color4 color) const;
-            virtual void setTextAlign(Button* b, vg::TextAlign textAlign) const;
-            virtual void setTextScale(Button* b, f32v2 textScale) const;
-            virtual void setTexture(Button* b, VGTexture texture) const;
-        };
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*);
+
+            namespace impl {
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                VGTexture getTexture(Button* button);
+                VGTexture getHoverTexture(Button* button);
+                color4 getBackColor(Button* button);
+                color4 getBackHoverColor(Button* button);
+                color4 getTextHoverColor(Button* button);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+                void setTexture(Button* button, VGTexture texture);
+                void setHoverTexture(Button* button, VGTexture texture);
+                void setBackColor(Button* button, color4 color);
+                void setBackColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad);
+                void setBackHoverColor(Button* button, color4 color);
+                void setBackHoverColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad);
+                void setTextHoverColor(Button* button, color4 color);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

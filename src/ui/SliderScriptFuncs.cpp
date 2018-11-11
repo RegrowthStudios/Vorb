@@ -1,181 +1,152 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/SliderScriptFuncs.h"
+
 #include "Vorb/ui/Slider.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/script/IEnvironment.hpp"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &SliderScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &SliderScriptFuncs::name));
-
-void vui::SliderScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    // Call base register
-    WidgetScriptFuncs::init(nSpace, env);
-
-    env->setNamespaces(nSpace);
-
-    { // Register all functions
-        // Getters
-        REGISTER_RDEL(env, getSlideTexture);
-        REGISTER_RDEL(env, getBarTexture);
-        REGISTER_RDEL(env, getSlideColor);
-        REGISTER_RDEL(env, getSlideHoverColor);
-        REGISTER_RDEL(env, getBarColor);
-        REGISTER_RDEL(env, getValue);
-        REGISTER_RDEL(env, getMin);
-        REGISTER_RDEL(env, getMax);
-        REGISTER_RDEL(env, getValueScaled);
-        REGISTER_RDEL(env, isInSlideBounds);
-        REGISTER_RDEL(env, isVertical);
-        // Setters
-        REGISTER_DEL(env, setSlideSize);
-        REGISTER_DEL(env, setSlideTexture);
-        REGISTER_DEL(env, setBarTexture);
-        REGISTER_DEL(env, setBarColor);
-        REGISTER_DEL(env, setSlideColor);
-        REGISTER_DEL(env, setSlideHoverColor);
-        REGISTER_DEL(env, setValue);
-        REGISTER_DEL(env, setRange);
-        REGISTER_DEL(env, setMin);
-        REGISTER_DEL(env, setMax);
-        REGISTER_DEL(env, setIsVertical);
-    }
+template <typename ScriptEnvironmentImpl>
+void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getSlideTexture",    makeDelegate(&impl::getSlideTexture));
+    env->addCDelegate("setSlideTexture",    makeDelegate(&impl::setSlideTexture));
+    env->addCDelegate("getBarTexture",      makeDelegate(&impl::getBarTexture));
+    env->addCDelegate("setBarTexture",      makeDelegate(&impl::setBarTexture));
+    env->addCDelegate("getSlideColor",      makeDelegate(&impl::getSlideColor));
+    env->addCDelegate("setSlideColor",      makeDelegate(&impl::setSlideColor));
+    env->addCDelegate("getSlideHoverColor", makeDelegate(&impl::getSlideHoverColor));
+    env->addCDelegate("setSlideHoverColor", makeDelegate(&impl::setSlideHoverColor));
+    env->addCDelegate("getBarColor",        makeDelegate(&impl::getBarColor));
+    env->addCDelegate("setBarColor",        makeDelegate(&impl::setBarColor));
+    env->addCDelegate("getValue",           makeDelegate(&impl::getValue));
+    env->addCDelegate("setValue",           makeDelegate(&impl::setValue));
+    env->addCDelegate("getMin",             makeDelegate(&impl::getMin));
+    env->addCDelegate("setMin",             makeDelegate(&impl::setMin));
+    env->addCDelegate("getMax",             makeDelegate(&impl::getMax));
+    env->addCDelegate("setMax",             makeDelegate(&impl::setMax));
+    env->addCDelegate("getSlideSize",       makeDelegate(&impl::getSlideSize));
+    env->addCDelegate("setSlideSize",       makeDelegate(&impl::setSlideSize));
+    env->addCDelegate("getRawSlideSize",    makeDelegate(&impl::getRawSlideSize));
+    env->addCDelegate("setRawSlideSize",    makeDelegate(&impl::setRawSlideSize));
+    env->addCDelegate("isVertical",         makeDelegate(&impl::isVertical));
+    env->addCDelegate("setIsVertical",      makeDelegate(&impl::setIsVertical));
+    env->addCDelegate("isHorizontal",       makeDelegate(&impl::isHorizontal));
+    env->addCDelegate("getValueScaled",     makeDelegate(&impl::getValueScaled));
+    env->addCDelegate("setRange",           makeDelegate(&impl::setRange));
     env->setNamespaces();
+
+    WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-void vui::SliderScriptFuncs::registerWidget(Widget* w) {
-    WidgetScriptFuncs::registerWidget(w);
-    Slider* s = (Slider*)w;
-    s->ValueChange += makeDelegate(*this, &SliderScriptFuncs::onValueChange);
+template <typename ScriptEnvironmentImpl>
+void vui::SliderScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
 }
 
-void vui::SliderScriptFuncs::unregisterWidget(Widget* w) {
-    WidgetScriptFuncs::unregisterWidget(w);
-    Slider* s = (Slider*)w;
-    s->ValueChange -= makeDelegate(*this, &SliderScriptFuncs::onValueChange);
+VGTexture vui::SliderScriptFuncs::impl::getSlideTexture(Slider* slider) {
+    return slider->getSlideTexture();
 }
 
-bool vui::SliderScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
-    const vscript::Function& f = (*m_env)[funcName];
-    if (f.isNil()) return false;
-    Slider* s = (Slider*)w;
-    switch (eventType) {
-        case EventType::VALUE_CHANGE:
-            s->m_valueChangeFuncs.push_back(f); break;
-        default:
-            return false;
-    }
-    return true;
+VGTexture vui::SliderScriptFuncs::impl::getBarTexture(Slider* slider) {
+    return slider->getBarTexture();
 }
 
-bool vui::SliderScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
-    const vscript::Function& f = (*m_env)[funcName];
-    if (f.isNil()) return false;
-    Slider* s = (Slider*)w;
-    switch (eventType) {
-        case EventType::VALUE_CHANGE:
-            s->m_valueChangeFuncs.erase(std::find(s->m_valueChangeFuncs.begin(), s->m_valueChangeFuncs.end(), f));
-            break;
-        default:
-            return WidgetScriptFuncs::removeCallback(w, eventType, funcName);
-    }
-    return true;
+color4 vui::SliderScriptFuncs::impl::getSlideColor(Slider* slider) {
+    return slider->getSlideColor();
 }
 
-VGTexture vui::SliderScriptFuncs::getSlideTexture(Slider* s) const {
-    return s->getSlideTexture();
+color4 vui::SliderScriptFuncs::impl::getSlideHoverColor(Slider* slider) {
+    return slider->getSlideHoverColor();
 }
 
-VGTexture vui::SliderScriptFuncs::getBarTexture(Slider* s) const {
-    return s->getBarTexture();
+color4 vui::SliderScriptFuncs::impl::getBarColor(Slider* slider) {
+    return slider->getBarColor();
 }
 
-color4 vui::SliderScriptFuncs::getSlideColor(Slider* s) const {
-    return s->getSlideColor();
+i32 vui::SliderScriptFuncs::impl::getValue(Slider* slider) {
+    return slider->getValue();
 }
 
-color4 vui::SliderScriptFuncs::getSlideHoverColor(Slider* s) const {
-    return s->getSlideHoverColor();
+i32 vui::SliderScriptFuncs::impl::getMin(Slider* slider) {
+    return slider->getMin();
 }
 
-color4 vui::SliderScriptFuncs::getBarColor(Slider* s) const {
-    return s->getBarColor();
+i32 vui::SliderScriptFuncs::impl::getMax(Slider* slider) {
+    return slider->getMax();
 }
 
-int vui::SliderScriptFuncs::getValue(Slider* s) const {
-    return s->getValue();
+f32 vui::SliderScriptFuncs::impl::getValueScaled(Slider* slider) {
+    return slider->getValueScaled();
 }
 
-int vui::SliderScriptFuncs::getMin(Slider* s) const {
-    return s->getMin();
+f32v2 vui::SliderScriptFuncs::impl::getSlideSize(Slider* slider) {
+    return slider->getSlideSize();
 }
 
-int vui::SliderScriptFuncs::getMax(Slider* s) const {
-    return s->getMax();
+vui::Length2 vui::SliderScriptFuncs::impl::getRawSlideSize(Slider* slider) {
+    return slider->getRawSlideSize();
 }
 
-f32 vui::SliderScriptFuncs::getValueScaled(Slider* s) const {
-    return s->getValueScaled();
+bool vui::SliderScriptFuncs::impl::isHorizontal(Slider* slider) {
+    return slider->isHorizontal();
 }
 
-bool vui::SliderScriptFuncs::isVertical(Slider* s) const {
-    return s->isVertical();
+bool vui::SliderScriptFuncs::impl::isVertical(Slider* slider) {
+    return slider->isVertical();
 }
 
-void vui::SliderScriptFuncs::setSlideSize(Slider* s, f32v2 size) const {
-    s->setSlideSize(size);
+bool vui::SliderScriptFuncs::impl::isInSlideBounds(Slider* slider, f32 x, f32 y) {
+    return slider->isInSlideBounds(x, y);
 }
 
-void vui::SliderScriptFuncs::setSlideTexture(Slider* s, VGTexture texture) const {
-    s->setSlideTexture(texture);
+void vui::SliderScriptFuncs::impl::setSlideSize(Slider* slider, f32v2 size) {
+    slider->setSlideSize(size);
 }
 
-void vui::SliderScriptFuncs::setBarTexture(Slider* s, VGTexture texture) const {
-    s->setBarTexture(texture);
+void vui::SliderScriptFuncs::impl::setSlideTexture(Slider* slider, VGTexture texture) {
+    slider->setSlideTexture(texture);
 }
 
-void vui::SliderScriptFuncs::setBarColor(Slider* s, color4 color) const {
-    s->setBarColor(color);
+void vui::SliderScriptFuncs::impl::setBarTexture(Slider* slider, VGTexture texture) {
+    slider->setBarTexture(texture);
 }
 
-void vui::SliderScriptFuncs::setSlideColor(Slider* s, color4 color) const {
-    s->setSlideColor(color);
+void vui::SliderScriptFuncs::impl::setBarColor(Slider* slider, color4 color) {
+    slider->setBarColor(color);
 }
 
-void vui::SliderScriptFuncs::setSlideHoverColor(Slider* s, color4 color) const {
-    s->setSlideHoverColor(color);
+void vui::SliderScriptFuncs::impl::setSlideColor(Slider* slider, color4 color) {
+    slider->setSlideColor(color);
 }
 
-void vui::SliderScriptFuncs::setValue(Slider* s, int value) const {
-    s->setValue(value);
+void vui::SliderScriptFuncs::impl::setSlideHoverColor(Slider* slider, color4 color) {
+    slider->setSlideHoverColor(color);
 }
 
-void vui::SliderScriptFuncs::setRange(Slider* s, int min, int max) const {
-    s->setRange(min, max);
+void vui::SliderScriptFuncs::impl::setValue(Slider* slider, i32 value) {
+    slider->setValue(value);
 }
 
-void vui::SliderScriptFuncs::setMin(Slider* s, int min) const {
-    s->setMin(min);
+void vui::SliderScriptFuncs::impl::setRange(Slider* slider, i32 min, i32 max) {
+    slider->setRange(min, max);
 }
 
-void vui::SliderScriptFuncs::setMax(Slider* s, int max) const {
-    s->setMax(max);
+void vui::SliderScriptFuncs::impl::setMin(Slider* slider, i32 min) {
+    slider->setMin(min);
 }
 
-void vui::SliderScriptFuncs::setIsVertical(Slider* s, bool isVertical) const {
-    s->setIsVertical(isVertical);
+void vui::SliderScriptFuncs::impl::setMax(Slider* slider, i32 max) {
+    slider->setMax(max);
 }
 
-bool vui::SliderScriptFuncs::isInSlideBounds(Slider* s, f32v2 point) const {
-    return s->isInSlideBounds(point);
+void vui::SliderScriptFuncs::impl::setIsVertical(Slider* slider, bool isVertical) {
+    slider->setIsVertical(isVertical);
 }
 
-void vui::SliderScriptFuncs::onValueChange(Sender s, int v) const {
-    Slider* w = (Slider*)s;
-    size_t sz = w->m_valueChangeFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
-        w->m_valueChangeFuncs[i](v);
-    }
-}
+// void vui::SliderScriptFuncs::impl::onValueChange(Sender s, i32 v) {
+//     Slider* w = (Slider*)s;
+//     size_t sz = w->m_valueChangeFuncs.size();
+//     for (size_t i = 0; i < sz && i < w->m_valueChangeFuncs.size(); i++) {
+//         w->m_valueChangeFuncs[i](v);
+//     }
+// }

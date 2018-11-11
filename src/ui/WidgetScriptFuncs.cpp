@@ -1,420 +1,637 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/WidgetScriptFuncs.h"
 
-#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/graphics/SpriteFont.h"
 #include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/Widget.h"
 
-// Helper macros for smaller code
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &WidgetScriptFuncs::name));
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getViewport",         makeDelegate(&impl::getViewport));
+    env->addCDelegate("getParent",           makeDelegate(&impl::getParent));
+    env->addCDelegate("getDimensions",       makeDelegate(&impl::getDimensions));
+    env->addCDelegate("getX",                makeDelegate(&impl::getX));
+    env->addCDelegate("getY",                makeDelegate(&impl::getY));
+    env->addCDelegate("getPosition",         makeDelegate(&impl::getPosition));
+    env->addCDelegate("getPaddedPosition",   makeDelegate(&impl::getPaddedPosition));
+    env->addCDelegate("getRelativeX",        makeDelegate(&impl::getRelativeX));
+    env->addCDelegate("getRelativeY",        makeDelegate(&impl::getRelativeY));
+    env->addCDelegate("getRelativePosition", makeDelegate(&impl::getRelativePosition));
+    env->addCDelegate("getWidth",            makeDelegate(&impl::getWidth));
+    env->addCDelegate("getHeight",           makeDelegate(&impl::getHeight));
+    env->addCDelegate("getSize",             makeDelegate(&impl::getSize));
+    env->addCDelegate("getPaddedSize",       makeDelegate(&impl::getPaddedSize));
+    env->addCDelegate("getPadding",          makeDelegate(&impl::getPadding));
+    env->addCDelegate("getPaddingLeft",      makeDelegate(&impl::getPaddingLeft));
+    env->addCDelegate("getPaddingTop",       makeDelegate(&impl::getPaddingTop));
+    env->addCDelegate("getPaddingRight",     makeDelegate(&impl::getPaddingRight));
+    env->addCDelegate("getPaddingBottom",    makeDelegate(&impl::getPaddingBottom));
+    env->addCDelegate("getClipping",         makeDelegate(&impl::getClipping));
+    env->addCDelegate("getClippingLeft",     makeDelegate(&impl::getClippingLeft));
+    env->addCDelegate("getClippingTop",      makeDelegate(&impl::getClippingTop));
+    env->addCDelegate("getClippingRight",    makeDelegate(&impl::getClippingRight));
+    env->addCDelegate("getClippingBottom",   makeDelegate(&impl::getClippingBottom));
+    env->addCDelegate("getClipRect",         makeDelegate(&impl::getClipRect));
+    env->addCDelegate("getZIndex",           makeDelegate(&impl::getZIndex));
+    env->addCDelegate("getDock",             makeDelegate(&impl::getDock));
+    env->addCDelegate("getDockState",        makeDelegate(&impl::getDockState));
+    env->addCDelegate("getDockSize",         makeDelegate(&impl::getDockSize));
+    env->addCDelegate("getName",             makeDelegate(&impl::getName));
+    env->addCDelegate("getChildOffset",      makeDelegate(&impl::getChildOffset));
+    env->addCDelegate("getChildOffsetX",     makeDelegate(&impl::getChildOffsetX));
+    env->addCDelegate("getChildOffsetY",     makeDelegate(&impl::getChildOffsetY));
+    env->addCDelegate("getFlags",            makeDelegate(&impl::getFlags));
 
-template <typename EnvironmentImpl>
-void vui::WidgetScriptFuncs<EnvironmentImpl>::init(const cString namespace_, vscript::IEnvironment<EnvironmentImpl>* env) {
-    m_env = env;
-    env->setNamespaces(namespace_);
+    env->addCDelegate("isEnabled",                  makeDelegate(&impl::isEnabled));
+    env->addCDelegate("isMouseIn",                  makeDelegate(&impl::isMouseIn));
+    env->addCDelegate("isClicking",                 makeDelegate(&impl::isClicking));
+    env->addCDelegate("ignoreOffset",               makeDelegate(&impl::ignoreOffset));
+    env->addCDelegate("needsDimensionUpdate",       makeDelegate(&impl::needsDimensionUpdate));
+    env->addCDelegate("needsZIndexReorder",         makeDelegate(&impl::needsZIndexReorder));
+    env->addCDelegate("needsDockRecalculation",     makeDelegate(&impl::needsDockRecalculation));
+    env->addCDelegate("needsClipRectRecalculation", makeDelegate(&impl::needsClipRectRecalculation));
+    env->addCDelegate("needsDrawableRecalculation", makeDelegate(&impl::needsDrawableRecalculation));
 
-    { // Register all functions
-        // Getters
-        // REGISTER_RDEL(env, getFixedHeight);
-        // REGISTER_RDEL(env, getFixedWidth);
-        // REGISTER_RDEL(env, getSelectable);
-        REGISTER_RDEL(env, isMouseIn);
-        REGISTER_RDEL(env, getAnchor);
-        REGISTER_RDEL(env, getStyle);
-        // REGISTER_RDEL(env, getDock);
-        REGISTER_RDEL(env, getNumWidgets);
-        REGISTER_RDEL(env, isEnabled);
-        // REGISTER_RDEL(env, getClippingEnabled);
-        REGISTER_RDEL(env, getHeight);
-        REGISTER_RDEL(env, getWidth);
-        REGISTER_RDEL(env, getX);
-        REGISTER_RDEL(env, getY);
-        // REGISTER_RDEL(env, getDimensions);
-        REGISTER_RDEL(env, getPosition);
-        // REGISTER_RDEL(env, getRelativePosition);
-        REGISTER_RDEL(env, getName);
-        REGISTER_RDEL(env, getDestRect);
-        REGISTER_RDEL(env, getParent);
-        // REGISTER_RDEL(env, getMinSize);
-        // REGISTER_RDEL(env, getMaxSize);
-        // REGISTER_RDEL(env, getPositionPercentage);
-        // REGISTER_RDEL(env, getDimensionsPercentage);
-        // REGISTER_RDEL(env, getWidgetAlign);
-        // Setters
-        REGISTER_DEL(env, setAnchor);
-        // REGISTER_DEL(env, setDestRect);
-        // REGISTER_DEL(env, setDimensions);
-        // REGISTER_DEL(env, setDock);
-        // REGISTER_DEL(env, setFixedHeight);
-        // REGISTER_DEL(env, setFixedWidth);
-        // REGISTER_DEL(env, setHeight);
-        // REGISTER_DEL(env, setPosition);
-        // REGISTER_DEL(env, setSelectable);
-        REGISTER_DEL(env, setStyle);
-        // REGISTER_DEL(env, setWidth);
-        // REGISTER_DEL(env, setX);
-        // REGISTER_DEL(env, setY);
-        REGISTER_DEL(env, setName);
-        // REGISTER_DEL(env, setParent);
-        // REGISTER_DEL(env, setMinSize);
-        // REGISTER_DEL(env, setMaxSize);
-        // REGISTER_DEL(env, setPositionPercentage);
-        // REGISTER_DEL(env, setDimensionsPercentage);
-        // REGISTER_DEL(env, setXPercentage);
-        // REGISTER_DEL(env, setYPercentage);
-        // REGISTER_DEL(env, setWidthPercentage);
-        // REGISTER_DEL(env, setHeightPercentage);
-        // REGISTER_DEL(env, setWidgetAlign);
-        // REGISTER_DEL(env, setClippingEnabled);
-        // Misc
-        REGISTER_DEL(env, dispose);
-        REGISTER_DEL(env, enable);
-        REGISTER_DEL(env, disable);
-        REGISTER_RDEL(env, addCallback);
-        REGISTER_RDEL(env, removeCallback);
-    }
+    env->addCDelegate("getPositionType",     makeDelegate(&impl::getPositionType));
+    env->addCDelegate("getRawPosition",      makeDelegate(&impl::getRawPosition));
+    env->addCDelegate("getRawSize",          makeDelegate(&impl::getRawSize));
+    env->addCDelegate("getRawLeft",          makeDelegate(&impl::getRawLeft));
+    env->addCDelegate("getRawTop",           makeDelegate(&impl::getRawTop));
+    env->addCDelegate("getRawRight",         makeDelegate(&impl::getRawRight));
+    env->addCDelegate("getRawBottom",        makeDelegate(&impl::getRawBottom));
+    env->addCDelegate("getRawMinSize",       makeDelegate(&impl::getRawMinSize));
+    env->addCDelegate("getRawMaxSize",       makeDelegate(&impl::getRawMaxSize));
+    env->addCDelegate("getRawDockSize",      makeDelegate(&impl::getRawDockSize));
+    env->addCDelegate("getRawPadding",       makeDelegate(&impl::getRawPadding));
+    env->addCDelegate("getRawPaddingLeft",   makeDelegate(&impl::getRawPaddingLeft));
+    env->addCDelegate("getRawPaddingTop",    makeDelegate(&impl::getRawPaddingTop));
+    env->addCDelegate("getRawPaddingRight",  makeDelegate(&impl::getRawPaddingRight));
+    env->addCDelegate("getRawPaddingBottom", makeDelegate(&impl::getRawPaddingBottom));
 
-    { // Register EventType enum
-        env->setNamespaces("EventType");
-        env->addValue("NONE", vui::EventType::NONE);
-        env->addValue("MOUSE_CLICK", vui::EventType::MOUSE_CLICK);
-        env->addValue("MOUSE_DOWN", vui::EventType::MOUSE_DOWN);
-        env->addValue("MOUSE_UP", vui::EventType::MOUSE_UP);
-        env->addValue("MOUSE_ENTER", vui::EventType::MOUSE_ENTER);
-        env->addValue("MOUSE_LEAVE", vui::EventType::MOUSE_LEAVE);
-        env->addValue("MOUSE_MOVE", vui::EventType::MOUSE_MOVE);
-        env->addValue("VALUE_CHANGE", vui::EventType::VALUE_CHANGE);
-    }
+    env->addCDelegate("addWidget",    makeDelegate(&impl::addWidget));
+    env->addCDelegate("removeWidget", makeDelegate(&impl::removeWidget));
 
+    env->addCDelegate("isInBounds", makeDelegate(&impl::isInBounds));
+
+    env->addCDelegate("setDimensions",       makeDelegate(&impl::setDimensions));
+    env->addCDelegate("setX",                makeDelegate(&impl::setX));
+    env->addCDelegate("setY",                makeDelegate(&impl::setY));
+    env->addCDelegate("setPosition",         makeDelegate(&impl::setPosition));
+    env->addCDelegate("setRelativeX",        makeDelegate(&impl::setRelativeX));
+    env->addCDelegate("setRelativeY",        makeDelegate(&impl::setRelativeY));
+    env->addCDelegate("setRelativePosition", makeDelegate(&impl::setRelativePosition));
+    env->addCDelegate("setWidth",            makeDelegate(&impl::setWidth));
+    env->addCDelegate("setHeight",           makeDelegate(&impl::setHeight));
+    env->addCDelegate("setSize",             makeDelegate(&impl::setSize));
+    env->addCDelegate("setPadding",          makeDelegate(&impl::setPadding));
+    env->addCDelegate("setPaddingLeft",      makeDelegate(&impl::setPaddingLeft));
+    env->addCDelegate("setPaddingTop",       makeDelegate(&impl::setPaddingTop));
+    env->addCDelegate("setPaddingRight",     makeDelegate(&impl::setPaddingRight));
+    env->addCDelegate("setPaddingBottom",    makeDelegate(&impl::setPaddingBottom));
+    env->addCDelegate("setClipping",         makeDelegate(&impl::setClipping));
+    env->addCDelegate("setClippingLeft",     makeDelegate(&impl::setClippingLeft));
+    env->addCDelegate("setClippingTop",      makeDelegate(&impl::setClippingTop));
+    env->addCDelegate("setClippingRight",    makeDelegate(&impl::setClippingRight));
+    env->addCDelegate("setClippingBottom",   makeDelegate(&impl::setClippingBottom));
+    env->addCDelegate("setZIndex",           makeDelegate(&impl::setZIndex));
+    env->addCDelegate("setDock",             makeDelegate(&impl::setDock));
+    env->addCDelegate("setDockState",        makeDelegate(&impl::setDockState));
+    env->addCDelegate("setDockSize",         makeDelegate(&impl::setDockSize));
+    env->addCDelegate("setName",             makeDelegate(&impl::setName));
+    env->addCDelegate("setChildOffset",      makeDelegate(&impl::setChildOffset));
+    env->addCDelegate("setChildOffsetX",     makeDelegate(&impl::setChildOffsetX));
+    env->addCDelegate("setChildOffsetY",     makeDelegate(&impl::setChildOffsetY));
+    env->addCDelegate("setFlags",            makeDelegate(&impl::setFlags));
+
+    env->addCDelegate("setIgnoreOffset",               makeDelegate(&impl::ignoreOffset));
+    env->addCDelegate("setNeedsDimensionUpdate",       makeDelegate(&impl::setNeedsDimensionUpdate));
+    env->addCDelegate("setNeedsZIndexReorder",         makeDelegate(&impl::setNeedsZIndexReorder));
+    env->addCDelegate("setNeedsDockRecalculation",     makeDelegate(&impl::setNeedsDockRecalculation));
+    env->addCDelegate("setNeedsClipRectRecalculation", makeDelegate(&impl::setNeedsClipRectRecalculation));
+    env->addCDelegate("setNeedsDrawableRecalculation", makeDelegate(&impl::setNeedsDrawableRecalculation));
+
+    env->addCDelegate("setPositionType",     makeDelegate(&impl::setPositionType));
+    env->addCDelegate("setRawPosition",      makeDelegate(&impl::setRawPosition));
+    env->addCDelegate("setRawSize",          makeDelegate(&impl::setRawSize));
+    env->addCDelegate("setLeft",             makeDelegate(&impl::setLeft));
+    env->addCDelegate("setTop",              makeDelegate(&impl::setTop));
+    env->addCDelegate("setRight",            makeDelegate(&impl::setRight));
+    env->addCDelegate("setBottom",           makeDelegate(&impl::setBottom));
+    env->addCDelegate("setRawLeft",          makeDelegate(&impl::setRawLeft));
+    env->addCDelegate("setRawTop",           makeDelegate(&impl::setRawTop));
+    env->addCDelegate("setRawRight",         makeDelegate(&impl::setRawRight));
+    env->addCDelegate("setRawBottom",        makeDelegate(&impl::setRawBottom));
+    env->addCDelegate("setMinSize",          makeDelegate(&impl::setMinSize));
+    env->addCDelegate("setMaxSize",          makeDelegate(&impl::setMaxSize));
+    env->addCDelegate("setRawMinSize",       makeDelegate(&impl::setRawMinSize));
+    env->addCDelegate("setRawMaxSize",       makeDelegate(&impl::setRawMaxSize));
+    env->addCDelegate("setRawDockSize",      makeDelegate(&impl::setRawDockSize));
+    env->addCDelegate("setRawPadding",       makeDelegate(&impl::setRawPadding));
+    env->addCDelegate("setRawPaddingLeft",   makeDelegate(&impl::setRawPaddingLeft));
+    env->addCDelegate("setRawPaddingTop",    makeDelegate(&impl::setRawPaddingTop));
+    env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
+    env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
     env->setNamespaces();
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    m_env->setNamespaces("UI", "Widget", "ClippingState");
+    m_env->addValue("VISIBLE", vui::IWidget::ClippingState::VISIBLE);
+    m_env->addValue("HIDDEN",  vui::IWidget::ClippingState::HIDDEN);
+    m_env->addValue("INHERIT", vui::IWidget::ClippingState::INHERIT);
+    m_env->setNamespaces();
 
-void vui::WidgetScriptFuncs::registerWidget(Widget* w) {
-    w->MouseClick += makeDelegate(*this, &WidgetScriptFuncs::onMouseClick);
-    w->MouseDown += makeDelegate(*this, &WidgetScriptFuncs::onMouseDown);
-    w->MouseUp += makeDelegate(*this, &WidgetScriptFuncs::onMouseUp);
-    w->MouseMove += makeDelegate(*this, &WidgetScriptFuncs::onMouseMove);
-    w->MouseEnter += makeDelegate(*this, &WidgetScriptFuncs::onMouseEnter);
-    w->MouseLeave += makeDelegate(*this, &WidgetScriptFuncs::onMouseLeave);
+    m_env->setNamespaces("UI", "Widget", "DockState");
+    m_env->addValue("NONE",   vui::IWidget::DockState::NONE);
+    m_env->addValue("LEFT",   vui::IWidget::DockState::LEFT);
+    m_env->addValue("RIGHT",  vui::IWidget::DockState::RIGHT);
+    m_env->addValue("BOTTOM", vui::IWidget::DockState::BOTTOM);
+    m_env->addValue("TOP",    vui::IWidget::DockState::TOP);
+    m_env->addValue("FILL",   vui::IWidget::DockState::FILL);
+    m_env->setNamespaces();
+
+    m_env->setNamespaces("UI", "Widget", "PositionType");
+    m_env->addValue("STATIC_TO_WINDOW",     vui::Widget::PositionType::STATIC_TO_WINDOW);
+    m_env->addValue("STATIC_TO_VIEWPORT",   vui::Widget::PositionType::STATIC_TO_VIEWPORT);
+    m_env->addValue("STATIC_TO_PARENT",     vui::Widget::PositionType::STATIC_TO_PARENT);
+    m_env->addValue("RELATIVE_TO_WINDOW",   vui::Widget::PositionType::RELATIVE_TO_WINDOW);
+    m_env->addValue("RELATIVE_TO_VIEWPORT", vui::Widget::PositionType::RELATIVE_TO_VIEWPORT);
+    m_env->addValue("RELATIVE_TO_PARENT",   vui::Widget::PositionType::RELATIVE_TO_PARENT);
+    m_env->setNamespaces();
+
+    m_env->setNamespaces("UI", "Widget", "DimensionType");
+    m_env->addValue("PIXEL",                      vui::Widget::DimensionType::PIXEL);
+    m_env->addValue("WIDTH_PERCENTAGE",           vui::Widget::DimensionType::WIDTH_PERCENTAGE);
+    m_env->addValue("HEIGHT_PERCENTAGE",          vui::Widget::DimensionType::HEIGHT_PERCENTAGE);
+    m_env->addValue("MIN_PERCENTAGE",             vui::Widget::DimensionType::MIN_PERCENTAGE);
+    m_env->addValue("MAX_PERCENTAGE",             vui::Widget::DimensionType::MAX_PERCENTAGE);
+    m_env->addValue("PARENT_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::PARENT_WIDTH_PERCENTAGE);
+    m_env->addValue("PARENT_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::PARENT_HEIGHT_PERCENTAGE);
+    m_env->addValue("PARENT_MIN_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MIN_PERCENTAGE);
+    m_env->addValue("PARENT_MAX_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MAX_PERCENTAGE);
+    m_env->addValue("VIEWPORT_WIDTH_PERCENTAGE",  vui::Widget::DimensionType::VIEWPORT_WIDTH_PERCENTAGE);
+    m_env->addValue("VIEWPORT_HEIGHT_PERCENTAGE", vui::Widget::DimensionType::VIEWPORT_HEIGHT_PERCENTAGE);
+    m_env->addValue("VIEWPORT_MIN_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MIN_PERCENTAGE);
+    m_env->addValue("VIEWPORT_MAX_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MAX_PERCENTAGE);
+    m_env->addValue("WINDOW_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::WINDOW_WIDTH_PERCENTAGE);
+    m_env->addValue("WINDOW_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::WINDOW_HEIGHT_PERCENTAGE);
+    m_env->addValue("WINDOW_MIN_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MIN_PERCENTAGE);
+    m_env->addValue("WINDOW_MAX_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MAX_PERCENTAGE);
+    m_env->setNamespaces();
 }
 
-void vui::WidgetScriptFuncs::unregisterWidget(Widget* w) {
-    w->MouseClick -= makeDelegate(*this, &WidgetScriptFuncs::onMouseClick);
-    w->MouseDown -= makeDelegate(*this, &WidgetScriptFuncs::onMouseDown);
-    w->MouseUp -= makeDelegate(*this, &WidgetScriptFuncs::onMouseUp);
-    w->MouseMove -= makeDelegate(*this, &WidgetScriptFuncs::onMouseMove);
-    w->MouseEnter -= makeDelegate(*this, &WidgetScriptFuncs::onMouseEnter);
-    w->MouseLeave -= makeDelegate(*this, &WidgetScriptFuncs::onMouseLeave);
+vui::Viewport* vui::WidgetScriptFuncs::impl::getViewport(IWidget* widget) {
+    return widget->getViewport();
 }
 
-void vui::WidgetScriptFuncs::dispose(Widget* w) {
-    w->dispose();
+vui::IWidget* vui::WidgetScriptFuncs::impl::getParent(IWidget* widget) {
+    return widget->getParent();
 }
 
-void vui::WidgetScriptFuncs::enable(Widget* w) {
-    w->enable();
+f32v4 vui::WidgetScriptFuncs::impl::getDimensions(IWidget* widget) {
+    return widget->getDimensions();
 }
 
-void vui::WidgetScriptFuncs::disable(Widget* w) {
-    w->disable();
+f32 vui::WidgetScriptFuncs::impl::getX(IWidget* widget) {
+    return widget->getX();
 }
 
-bool vui::WidgetScriptFuncs::addCallback(Widget* w, EventType eventType, nString funcName) {
-    const vscript::Function& f = (*m_env)[funcName];
-    if (f.isNil()) return false;
-    switch (eventType) {
-        case EventType::MOUSE_CLICK:
-            w->m_mouseClickFuncs.push_back(f); break;
-        case EventType::MOUSE_DOWN:
-            w->m_mouseDownFuncs.push_back(f); break;
-        case EventType::MOUSE_ENTER:
-            w->m_mouseEnterFuncs.push_back(f); break;
-        case EventType::MOUSE_LEAVE:
-            w->m_mouseLeaveFuncs.push_back(f); break;
-        case EventType::MOUSE_MOVE:
-            w->m_mouseMoveFuncs.push_back(f); break;
-        case EventType::MOUSE_UP:
-            w->m_mouseUpFuncs.push_back(f); break;
-        default:
-            return false;
-    }
-    return true;
+f32 vui::WidgetScriptFuncs::impl::getY(IWidget* widget) {
+    return widget->getY();
 }
 
-bool vui::WidgetScriptFuncs::removeCallback(Widget* w, EventType eventType, nString funcName) {
-    const vscript::Function& f = (*m_env)[funcName];
-    if (f.isNil()) return false;
-    switch (eventType) {
-        case EventType::MOUSE_CLICK:
-            w->m_mouseClickFuncs.erase(std::find(w->m_mouseClickFuncs.begin(), w->m_mouseClickFuncs.end(), f));
-            break;
-        case EventType::MOUSE_DOWN:
-            w->m_mouseDownFuncs.erase(std::find(w->m_mouseDownFuncs.begin(), w->m_mouseDownFuncs.end(), f));
-            break;
-        case EventType::MOUSE_ENTER:
-            w->m_mouseEnterFuncs.erase(std::find(w->m_mouseEnterFuncs.begin(), w->m_mouseEnterFuncs.end(), f));
-            break;
-        case EventType::MOUSE_LEAVE:
-            w->m_mouseLeaveFuncs.erase(std::find(w->m_mouseLeaveFuncs.begin(), w->m_mouseLeaveFuncs.end(), f));
-            break;
-        case EventType::MOUSE_MOVE:
-            w->m_mouseMoveFuncs.erase(std::find(w->m_mouseMoveFuncs.begin(), w->m_mouseMoveFuncs.end(), f));
-            break;
-        case EventType::MOUSE_UP:
-            w->m_mouseUpFuncs.erase(std::find(w->m_mouseUpFuncs.begin(), w->m_mouseUpFuncs.end(), f));
-            break;
-        default:
-            return false;
-    }
-    return true;
+f32v2 vui::WidgetScriptFuncs::impl::getPaddedPosition(IWidget* widget) {
+    return widget->getPaddedPosition();
 }
 
-// bool vui::WidgetScriptFuncs::getFixedHeight(Widget* w) const {
-//     return w->getFixedHeight();
-// }
-
-// bool vui::WidgetScriptFuncs::getFixedWidth(Widget* w) const {
-//     return w->getFixedWidth();
-// }
-
-// bool vui::WidgetScriptFuncs::getSelectable(Widget* w) const {
-//     return w->getSelectable();
-// }
-
-bool vui::WidgetScriptFuncs::isMouseIn(Widget* w) const {
-    return w->isMouseIn();
+f32 vui::WidgetScriptFuncs::impl::getRelativeX(IWidget* widget) {
+    return widget->getRelativeX();
 }
 
-i32 vui::WidgetScriptFuncs::getAnchor(Widget* w VORB_MAYBE_UNUSED) const {
-    return 0; //TODO(Ben): Implement
+f32 vui::WidgetScriptFuncs::impl::getRelativeY(IWidget* widget) {
+    return widget->getRelativeY();
 }
 
-i32 vui::WidgetScriptFuncs::getStyle(Widget* w VORB_MAYBE_UNUSED) const {
-    return 0; //TODO(Ben): Implement
+f32v2 vui::WidgetScriptFuncs::impl::getRelativePosition(IWidget* widget) {
+    return widget->getRelativePosition();
 }
 
-// vui::Dock vui::WidgetScriptFuncs::getDock(Widget* w) const {
-//     return w->getDock();
-// }
-
-i32 vui::WidgetScriptFuncs::getNumWidgets(Widget* w) const {
-    return (i32)w->getWidgets().size();
+f32 vui::WidgetScriptFuncs::impl::getWidth(IWidget* widget) {
+    return widget->getWidth();
 }
 
-bool vui::WidgetScriptFuncs::isEnabled(Widget* w) const {
-    return w->isEnabled();
+f32 vui::WidgetScriptFuncs::impl::getHeight(IWidget* widget) {
+    return widget->getHeight();
 }
 
-// bool vui::WidgetScriptFuncs::getClippingEnabled(Widget* w) const {
-//     return w->getClippingEnabled();
-// }
-
-f32 vui::WidgetScriptFuncs::getHeight(Widget* w) const {
-    return w->getHeight();
+f32v2 vui::WidgetScriptFuncs::impl::getSize(IWidget* widget) {
+    return widget->getSize();
 }
 
-f32 vui::WidgetScriptFuncs::getWidth(Widget* w) const {
-    return w->getWidth();
+f32v2 vui::WidgetScriptFuncs::impl::getPaddedSize(IWidget* widget) {
+    return widget->getPaddedSize();
 }
 
-f32 vui::WidgetScriptFuncs::getX(Widget* w) const {
-    return w->getX();
+f32v4 vui::WidgetScriptFuncs::impl::getPadding(IWidget* widget) {
+    return widget->getPadding();
 }
 
-f32 vui::WidgetScriptFuncs::getY(Widget* w) const {
-    return w->getY();
+f32 vui::WidgetScriptFuncs::impl::getPaddingLeft(IWidget* widget) {
+    return widget->getPaddingLeft();
 }
 
-// f32v2 vui::WidgetScriptFuncs::getDimensions(Widget* w) const {
-//     return w->getDimensions();
-// }
-
-f32v2 vui::WidgetScriptFuncs::getPosition(Widget* w) const {
-    return w->getPosition();
+f32 vui::WidgetScriptFuncs::impl::getPaddingTop(IWidget* widget) {
+    return widget->getPaddingTop();
 }
 
-// f32v2 vui::WidgetScriptFuncs::getRelativePosition(Widget* w) const {
-//     return w->getRelativePosition();
-// }
-
-nString vui::WidgetScriptFuncs::getName(Widget* w) const {
-    return w->getName();
+f32 vui::WidgetScriptFuncs::impl::getPaddingRight(IWidget* widget) {
+    return widget->getPaddingRight();
 }
 
-// f32v4 vui::WidgetScriptFuncs::getDestRect(Widget* w) const {
-//     return w->getDestRect();
-// }
-
-vui::IWidget* vui::WidgetScriptFuncs::getParent(Widget* w) const {
-    return w->getParent();
+f32 vui::WidgetScriptFuncs::impl::getPaddingBottom(IWidget* widget) {
+    return widget->getPaddingBottom();
 }
 
-// f32v2 vui::WidgetScriptFuncs::getMinSize(Widget* w) const {
-//     return w->getMinSize();
-// }
-
-// f32v2 vui::WidgetScriptFuncs::getMaxSize(Widget* w) const {
-//     return w->getMaxSize();
-// }
-
-// f32v2 vui::WidgetScriptFuncs::getPositionPercentage(Widget* w) const {
-//     return w->getPositionPercentage();
-// }
-
-// f32v2 vui::WidgetScriptFuncs::getDimensionsPercentage(Widget* w) const {
-//     return w->getDimensionsPercentage();
-// }
-
-// vui::WidgetAlign vui::WidgetScriptFuncs::getWidgetAlign(Widget* w) const {
-//     return w->getWidgetAlign();
-// }
-
-void vui::WidgetScriptFuncs::setAnchor(Widget* w VORB_MAYBE_UNUSED, int anchor VORB_MAYBE_UNUSED) const {
-    //TODO(Ben): Implement
+vui::Clipping vui::WidgetScriptFuncs::impl::getClipping(IWidget* widget) {
+    return widget->getClipping();
 }
 
-// void vui::WidgetScriptFuncs::setDestRect(Widget* w, f32v4 destRect) const {
-//     w->setDestRect(destRect);
-// }
-
-// void vui::WidgetScriptFuncs::setDimensions(Widget* w, f32v2 dims) const {
-//     w->setDimensions(dims);
-// }
-
-// void vui::WidgetScriptFuncs::setDock(Widget* w, Dock dock) const {
-//     w->setDock(dock);
-// }
-
-// void vui::WidgetScriptFuncs::setFixedHeight(Widget* w, bool fixedHeight) const {
-//     w->setFixedHeight(fixedHeight);
-// }
-
-// void vui::WidgetScriptFuncs::setFixedWidth(Widget* w, bool fixedWidth) const {
-//     w->setFixedWidth(fixedWidth);
-// }
-
-// void vui::WidgetScriptFuncs::setHeight(Widget* w, f32 height) const {
-//     w->setHeight(height);
-// }
-
-// void vui::WidgetScriptFuncs::setPosition(Widget* w, f32v2 pos) const {
-//     w->setPosition(pos);
-// }
-
-// void vui::WidgetScriptFuncs::setSelectable(Widget* w, bool selectable) const {
-//     w->setSelectable(selectable);
-// }
-
-void vui::WidgetScriptFuncs::setStyle(Widget* w VORB_MAYBE_UNUSED, int style VORB_MAYBE_UNUSED) const {
-    //TODO(Ben): Implement
+vui::ClippingState vui::WidgetScriptFuncs::impl::getClippingLeft(IWidget* widget) {
+    return widget->getClippingLeft();
 }
 
-// void vui::WidgetScriptFuncs::setWidth(Widget* w, f32 width) const {
-//     w->setWidth(width);
-// }
-
-// void vui::WidgetScriptFuncs::setX(Widget* w, f32 x) const {
-//     w->setX(x);
-// }
-
-// void vui::WidgetScriptFuncs::setY(Widget* w, f32 y) const {
-//     w->setY(y);
-// }
-
-void vui::WidgetScriptFuncs::setName(Widget* w, nString name) const {
-    w->setName(name);
+vui::ClippingState vui::WidgetScriptFuncs::impl::getClippingTop(IWidget* widget) {
+    return widget->getClippingTop();
 }
 
-// void vui::WidgetScriptFuncs::setParent(Widget* w, IWidget* parent) const {
-//     w->setParent(parent);
-// }
-
-// void vui::WidgetScriptFuncs::setMinSize(Widget* w, f32v2 minSize) const {
-//     w->setMinSize(minSize);
-// }
-
-// void vui::WidgetScriptFuncs::setMaxSize(Widget* w, f32v2 maxSize) const {
-//     w->setMaxSize(maxSize);
-// }
-
-// void vui::WidgetScriptFuncs::setPositionPercentage(Widget* w, f32v2 positionPercentage) const {
-//     w->setPositionPercentage(positionPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setDimensionsPercentage(Widget* w, f32v2 dimensionsPercentage) const {
-//     w->setDimensionsPercentage(dimensionsPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setXPercentage(Widget* w, f32 xPercentage) const {
-//     w->setXPercentage(xPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setYPercentage(Widget* w, f32 yPercentage) const {
-//     w->setYPercentage(yPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setWidthPercentage(Widget* w, f32 widthPercentage) const {
-//     w->setWidthPercentage(widthPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setHeightPercentage(Widget* w, f32 heightPercentage) const {
-//     w->setHeightPercentage(heightPercentage);
-// }
-
-// void vui::WidgetScriptFuncs::setWidgetAlign(Widget* w, WidgetAlign widgetAlign) const {
-//     w->setWidgetAlign(widgetAlign);
-// }
-
-// void vui::WidgetScriptFuncs::setClippingEnabled(Widget* w, bool clippingEnabled) const {
-//     w->setClippingEnabled(clippingEnabled);
-// }
-
-void vui::WidgetScriptFuncs::onMouseClick(Sender s, const MouseButtonEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseClickFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseClickFuncs.size(); i++) {
-        w->m_mouseClickFuncs[i](e.button, e.x, e.y);
-    }
+vui::ClippingState vui::WidgetScriptFuncs::impl::getClippingRight(IWidget* widget) {
+    return widget->getClippingRight();
 }
 
-void vui::WidgetScriptFuncs::onMouseDown(Sender s, const MouseButtonEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseDownFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseDownFuncs.size(); i++) {
-        w->m_mouseDownFuncs[i](e.button, e.x, e.y);
-    }
+vui::ClippingState vui::WidgetScriptFuncs::impl::getClippingBottom(IWidget* widget) {
+    return widget->getClippingBottom();
 }
 
-void vui::WidgetScriptFuncs::onMouseUp(Sender s, const MouseButtonEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseUpFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseUpFuncs.size(); i++) {
-        w->m_mouseUpFuncs[i](e.button, e.x, e.y);
-    }
+f32v4 vui::WidgetScriptFuncs::impl::getClipRect(IWidget* widget) {
+    return widget->getClipRect();
 }
 
-void vui::WidgetScriptFuncs::onMouseEnter(Sender s, const MouseMotionEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseEnterFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseEnterFuncs.size(); i++) {
-        w->m_mouseEnterFuncs[i](e.x, e.y);
-    }
+vui::ZIndex vui::WidgetScriptFuncs::impl::getZIndex(IWidget* widget) {
+    return widget->getZIndex();
 }
 
-void vui::WidgetScriptFuncs::onMouseLeave(Sender s, const MouseMotionEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseLeaveFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseLeaveFuncs.size(); i++) {
-        w->m_mouseLeaveFuncs[i](e.x, e.y);
-    }
+vui::Dock vui::WidgetScriptFuncs::impl::getDock(IWidget* widget) {
+    return widget->getDock();
 }
 
-void vui::WidgetScriptFuncs::onMouseMove(Sender s, const MouseMotionEvent& e) {
-    Widget* w = (Widget*)s;
-    size_t sz = w->m_mouseMoveFuncs.size();
-    for (size_t i = 0; i < sz && i < w->m_mouseMoveFuncs.size(); i++) {
-        w->m_mouseMoveFuncs[i](e.x, e.y);
-    }
+vui::DockState vui::WidgetScriptFuncs::impl::getDockState(IWidget* widget) {
+    return widget->getDockState();
+}
+
+f32 vui::WidgetScriptFuncs::impl::getDockSize(IWidget* widget) {
+    return widget->getDockSize();
+}
+
+nString vui::WidgetScriptFuncs::impl::getName(IWidget* widget) {
+    return widget->getName();
+}
+
+f32v2 vui::WidgetScriptFuncs::impl::getChildOffset(IWidget* widget) {
+    return widget->getChildOffset();
+}
+
+f32 vui::WidgetScriptFuncs::impl::getChildOffsetX(IWidget* widget) {
+    return widget->getChildOffsetX();
+}
+
+f32 vui::WidgetScriptFuncs::impl::getChildOffsetY(IWidget* widget) {
+    return widget->getChildOffsetY();
+}
+
+vui::WidgetFlags vui::WidgetScriptFuncs::impl::getFlags(IWidget* widget) {
+    return widget->getFlags();
+}
+
+bool vui::WidgetScriptFuncs::impl::isInBounds(IWidget* widget, f32 x, f32 y) {
+    return widget->isInBounds(x, y);
+}
+
+bool vui::WidgetScriptFuncs::impl::isEnabled(IWidget* widget) {
+    return widget->isEnabled();
+}
+
+bool vui::WidgetScriptFuncs::impl::isMouseIn(IWidget* widget) {
+    return widget->isMouseIn();
+}
+
+bool vui::WidgetScriptFuncs::impl::isClicking(IWidget* widget) {
+    return widget->isClicking();
+}
+
+bool vui::WidgetScriptFuncs::impl::ignoreOffset(IWidget* widget) {
+    return widget->ignoreOffset();
+}
+
+bool vui::WidgetScriptFuncs::impl::needsDimensionUpdate(IWidget* widget) {
+    return widget->needsDimensionUpdate();
+}
+
+bool vui::WidgetScriptFuncs::impl::needsZIndexReorder(IWidget* widget) {
+    return widget->needsZIndexReorder();
+}
+
+bool vui::WidgetScriptFuncs::impl::needsDockRecalculation(IWidget* widget) {
+    return widget->needsDockRecalculation();
+}
+
+bool vui::WidgetScriptFuncs::impl::needsClipRectRecalculation(IWidget* widget) {
+    return widget->needsClipRectRecalculation();
+}
+
+bool vui::WidgetScriptFuncs::impl::needsDrawableRecalculation(IWidget* widget) {
+    return widget->needsDrawableRecalculation();
+}
+
+vui::PositionType vui::WidgetScriptFuncs::impl::getPositionType(Widget* widget) {
+    return widget->getPositionType();
+}
+
+vui::Length2 vui::WidgetScriptFuncs::impl::getRawPosition(Widget* widget) {
+    return widget->getRawPosition();
+}
+
+vui::Length2 vui::WidgetScriptFuncs::impl::getRawSize(Widget* widget) {
+    return widget->getRawSize();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawLeft(Widget* widget) {
+    return widget->getRawLeft();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawTop(Widget* widget) {
+    return widget->getRawTop();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawRight(Widget* widget) {
+    return widget->getRawRight();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawBottom(Widget* widget) {
+    return widget->getRawBottom();
+}
+vui::Length2 vui::WidgetScriptFuncs::impl::getRawMinSize(Widget* widget) {
+    return widget->getRawMinSize();
+}
+
+vui::Length2 vui::WidgetScriptFuncs::impl::getRawMaxSize(Widget* widget) {
+    return widget->getRawMaxSize();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawDockSize(Widget* widget) {
+    return widget->getRawDockSize();
+}
+
+vui::Length4 vui::WidgetScriptFuncs::impl::getRawPadding(Widget* widget) {
+    return widget->getRawPadding();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawPaddingLeft(Widget* widget) {
+    return widget->getRawPaddingLeft();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawPaddingTop(Widget* widget) {
+    return widget->getRawPaddingTop();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawPaddingRight(Widget* widget) {
+    return widget->getRawPaddingRight();
+}
+
+vui::Length vui::WidgetScriptFuncs::impl::getRawPaddingBottom(Widget* widget) {
+    return widget->getRawPaddingBottom();
+}
+
+bool vui::WidgetScriptFuncs::impl::addWidget(IWidget* widget, IWidget* child) {
+    return widget->addWidget(child);
+}
+
+bool vui::WidgetScriptFuncs::impl::removeWidget(IWidget* widget, IWidget* child) {
+    return widget->removeWidget(child);
+}
+
+void vui::WidgetScriptFuncs::impl::setX(IWidget* widget, f32 x) {
+    widget->setX(x);
+}
+
+void vui::WidgetScriptFuncs::impl::setY(IWidget* widget, f32 y) {
+    widget->setY(y);
+}
+
+void vui::WidgetScriptFuncs::impl::setRelativeX(IWidget* widget, f32 relX) {
+    widget->setRelativeX(relX);
+}
+
+void vui::WidgetScriptFuncs::impl::setRelativeY(IWidget* widget, f32 relY) {
+    widget->setRelativeY(relY);
+}
+
+void vui::WidgetScriptFuncs::impl::setRelativePosition(IWidget* widget, f32v2 position) {
+    widget->setRelativePosition(position);
+}
+
+void vui::WidgetScriptFuncs::impl::setWidth(IWidget* widget, f32 width) {
+    widget->setWidth(width);
+}
+
+void vui::WidgetScriptFuncs::impl::setHeight(IWidget* widget, f32 height) {
+    widget->setHeight(height);
+}
+
+void vui::WidgetScriptFuncs::impl::setSize(IWidget* widget, f32v2 size) {
+    widget->setSize(size);
+}
+
+void vui::WidgetScriptFuncs::impl::setPadding(IWidget* widget, f32v4 padding) {
+    widget->setPadding(padding);
+}
+
+void vui::WidgetScriptFuncs::impl::setPaddingLeft(IWidget* widget, f32 left) {
+    widget->setPaddingLeft(left);
+}
+
+void vui::WidgetScriptFuncs::impl::setPaddingTop(IWidget* widget, f32 top) {
+    widget->setPaddingTop(top);
+}
+
+
+void vui::WidgetScriptFuncs::impl::setPaddingRight(IWidget* widget, f32 right) {
+    widget->setPaddingRight(right);
+}
+
+
+void vui::WidgetScriptFuncs::impl::setClipping(IWidget* widget, Clipping clipping) {
+    widget->setClipping(clipping);
+}
+
+void vui::WidgetScriptFuncs::impl::setClippingLeft(IWidget* widget, ClippingState state) {
+    widget->setClippingLeft(state);
+}
+
+void vui::WidgetScriptFuncs::impl::setClippingTop(IWidget* widget, ClippingState state) {
+    widget->setClippingTop(state);
+}
+
+void vui::WidgetScriptFuncs::impl::setClippingRight(IWidget* widget, ClippingState state) {
+    widget->setClippingRight(state);
+}
+
+void vui::WidgetScriptFuncs::impl::setClippingBottom(IWidget* widget, ClippingState state) {
+    widget->setClippingBottom(state);
+}
+
+void vui::WidgetScriptFuncs::impl::setZIndex(IWidget* widget, ZIndex zIndex) {
+    widget->setZIndex(zIndex);
+}
+
+void vui::WidgetScriptFuncs::impl::setDock(IWidget* widget, Dock dock) {
+    widget->setDock(dock);
+}
+
+void vui::WidgetScriptFuncs::impl::setDockState(IWidget* widget, DockState state) {
+    widget->setDockState(state);
+}
+
+void vui::WidgetScriptFuncs::impl::setDockSize(IWidget* widget, f32 size) {
+    widget->setDockSize(size);
+}
+
+void vui::WidgetScriptFuncs::impl::setName(IWidget* widget, nString name) {
+    widget->setName(name);
+}
+
+void vui::WidgetScriptFuncs::impl::setChildOffset(IWidget* widget, f32v2 offset) {
+    widget->setChildOffset(offset);
+}
+
+void vui::WidgetScriptFuncs::impl::setChildOffsetX(IWidget* widget, f32 offset) {
+    widget->setChildOffsetX(offset);
+}
+
+void vui::WidgetScriptFuncs::impl::setChildOffsetY(IWidget* widget, f32 offset) {
+    widget->setChildOffsetY(offset);
+}
+
+void vui::WidgetScriptFuncs::impl::setFlags(IWidget* widget, WidgetFlags flags) {
+    widget->setFlags(flags);
+}
+
+void vui::WidgetScriptFuncs::impl::setIgnoreOffset(IWidget* widget, bool ignoreOffset) {
+    widget->setIgnoreOffset(ignoreOffset);
+}
+
+void vui::WidgetScriptFuncs::impl::setNeedsDimensionUpdate(IWidget* widget, bool flag) {
+    widget->setNeedsDimensionUpdate(flag);
+}
+
+void vui::WidgetScriptFuncs::impl::setNeedsZIndexReorder(IWidget* widget, bool flag) {
+    widget->setNeedsZIndexReorder(flag);
+}
+
+void vui::WidgetScriptFuncs::impl::setNeedsDockRecalculation(IWidget* widget, bool flag) {
+    widget->setNeedsDockRecalculation(flag);
+}
+
+void vui::WidgetScriptFuncs::impl::setNeedsClipRectRecalculation(IWidget* widget, bool flag) {
+    widget->setNeedsClipRectRecalculation(flag);
+}
+
+void vui::WidgetScriptFuncs::impl::setNeedsDrawableRecalculation(IWidget* widget, bool flag) {
+    widget->setNeedsDrawableRecalculation(flag);
+}
+
+void vui::WidgetScriptFuncs::impl::setPositionType(Widget* widget, PositionType positionType) {
+    widget->setPositionType(positionType);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPosition(Widget* widget, Length2 position) {
+    widget->setRawPosition(position);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawSize(Widget* widget, Length2 size) {
+    widget->setRawSize(size);
+}
+
+void vui::WidgetScriptFuncs::impl::setLeft(Widget* widget, f32 left) {
+    widget->setLeft(left);
+}
+
+void vui::WidgetScriptFuncs::impl::setTop(Widget* widget, f32 top) {
+    widget->setTop(top);
+}
+
+void vui::WidgetScriptFuncs::impl::setRight(Widget* widget, f32 right) {
+    widget->setRight(right);
+}
+
+void vui::WidgetScriptFuncs::impl::setBottom(Widget* widget, f32 bottom) {
+    widget->setBottom(bottom);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawLeft(Widget* widget, Length left) {
+    widget->setRawLeft(left);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawTop(Widget* widget, Length top) {
+    widget->setRawTop(top);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawRight(Widget* widget, Length right) {
+    widget->setRawRight(right);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawBottom(Widget* widget, Length bottom) {
+    widget->setRawBottom(bottom);
+}
+
+void vui::WidgetScriptFuncs::impl::setMinSize(Widget* widget, f32v2 minSize) {
+    widget->setMinSize(minSize);
+}
+
+void vui::WidgetScriptFuncs::impl::setMaxSize(Widget* widget, f32v2 maxSize) {
+    widget->setMaxSize(maxSize);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawMinSize(Widget* widget, Length2 minSize) {
+    widget->setRawMinSize(minSize);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawMaxSize(Widget* widget, Length2 maxSize) {
+    widget->setRawMaxSize(maxSize);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawDockSize(Widget* widget, Length dockSize) {
+    widget->setRawDockSize(dockSize);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPadding(Widget* widget, Length4 padding) {
+    widget->setRawPadding(padding);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPaddingLeft(Widget* widget, Length left) {
+    widget->setRawPaddingLeft(left);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPaddingTop(Widget* widget, Length top) {
+    widget->setRawPaddingTop(top);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPaddingRight(Widget* widget, Length right) {
+    widget->setRawPaddingRight(right);
+}
+
+void vui::WidgetScriptFuncs::impl::setRawPaddingBottom(Widget* widget, Length bottom) {
+    widget->setRawPaddingBottom(bottom);
 }

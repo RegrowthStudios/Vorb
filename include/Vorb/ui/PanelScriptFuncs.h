@@ -8,9 +8,7 @@
 //
 
 /*! \file PanelScriptFuncs.h
-* @brief 
-* Scripting functions for Panel Widget.
-*
+* \brief Registers functions and consts for buttons to a script environment.
 */
 
 #pragma once
@@ -30,30 +28,36 @@
 
 namespace vorb {
     namespace ui {
-
-        // Forward declarations
+        // Forward Declarations
         class Panel;
 
-        class PanelScriptFuncs : public WidgetScriptFuncs {
-        public:
-            virtual void init(const cString nSpace, vscript::Environment* env) override;
-        protected:
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual VGTexture getTexture(Panel* p) const;
-            virtual color4 getColor(Panel* p) const;
-            virtual color4 getHoverColor(Panel* p) const;
-            virtual bool getAutoScroll(Panel* p) const;
+        namespace PanelScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setTexture(Panel* p, VGTexture texture) const;
-            virtual void setColor(Panel* p, color4 color) const;
-            virtual void setHoverColor(Panel* p, color4 color) const;
-            virtual void setAutoScroll(Panel* p, bool autoScroll) const;
-        };
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+
+            namespace impl {
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                VGTexture getTexture     (Panel* panel);
+                     bool getAutoScroll  (Panel* panel);
+                      f32 getSliderWidth (Panel* panel);
+                   color4 getColor       (Panel* panel);
+                   color4 getHoverColor  (Panel* panel);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+                void setTexture     (Panel* panel, VGTexture texture);
+                void setAutoScroll  (Panel* panel, bool autoScroll);
+                void setSliderWidth (Panel* panel, f32 width);
+                void setColor       (Panel* panel, color4 color);
+                void setHoverColor  (Panel* panel, color4 color);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

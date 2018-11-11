@@ -1,115 +1,80 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/ButtonScriptFuncs.h"
+
+#include "Vorb/graphics/SpriteBatch.h"
+#include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Button.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/ui/TextWidgetScriptFuncs.h"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &ButtonScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &ButtonScriptFuncs::name));
-
-void vui::ButtonScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    // Call base register
-    WidgetScriptFuncs::init(nSpace, env);
-
-    env->setNamespaces(nSpace);
-
-    { // Register all functions
-        // Getters
-        REGISTER_RDEL(env, getTexture);
-        REGISTER_RDEL(env, getBackColor);
-        REGISTER_RDEL(env, getBackHoverColor);
-        REGISTER_RDEL(env, getTextColor);
-        REGISTER_RDEL(env, getTextHoverColor);
-        REGISTER_RDEL(env, getText);
-        REGISTER_RDEL(env, getTextAlign);
-        REGISTER_RDEL(env, getTextScale);
-        // Setters
-        REGISTER_DEL(env, setBackColor);
-        REGISTER_DEL(env, setBackColorGrad);
-        REGISTER_DEL(env, setBackHoverColor);
-        REGISTER_DEL(env, setBackHoverColorGrad);
-        REGISTER_DEL(env, setText);
-        REGISTER_DEL(env, setTextColor);
-        REGISTER_DEL(env, setTextHoverColor);
-        REGISTER_DEL(env, setTextAlign);
-        REGISTER_DEL(env, setTextScale);
-        REGISTER_DEL(env, setTexture);
-        
-    }
+template <typename ScriptEnvironmentImpl>
+void vui::ButtonScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getTexture",            makeDelegate(&impl::getTexture));
+    env->addCDelegate("setTexture",            makeDelegate(&impl::setTexture));
+    env->addCDelegate("getHoverTexture",       makeDelegate(&impl::getHoverTexture));
+    env->addCDelegate("setHoverTexture",       makeDelegate(&impl::setHoverTexture));
+    env->addCDelegate("getBackColor",          makeDelegate(&impl::getBackColor));
+    env->addCDelegate("setBackColor",          makeDelegate(&impl::setBackColor));
+    env->addCDelegate("getBackHoverColor",     makeDelegate(&impl::getBackHoverColor));
+    env->addCDelegate("setBackHoverColor",     makeDelegate(&impl::setBackHoverColor));
+    env->addCDelegate("getTextHoverColor",     makeDelegate(&impl::getTextHoverColor));
+    env->addCDelegate("setTextHoverColor",     makeDelegate(&impl::setTextHoverColor));
+    env->addCDelegate("setBackColorGrad",      makeDelegate(&impl::setBackColorGrad));
+    env->addCDelegate("setBackHoverColorGrad", makeDelegate(&impl::setBackHoverColorGrad));
     env->setNamespaces();
+
+    TextWidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-VGTexture vui::ButtonScriptFuncs::getTexture(Button* b) const {
-    return b->getTexture();
+template <typename ScriptEnvironmentImpl>
+void vui::TextWidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+    // Empty
 }
 
-color4 vui::ButtonScriptFuncs::getBackColor(Button* b) const {
-    return b->getBackColor();
+VGTexture  vui::ButtonScriptFuncs::impl::getTexture(Button* button) {
+    return button->getTexture();
 }
 
-color4 vui::ButtonScriptFuncs::getBackHoverColor(Button* b) const {
-    return b->getBackHoverColor();
+VGTexture  vui::ButtonScriptFuncs::impl::getHoverTexture(Button* button) {
+    return button->getHoverTexture();
 }
 
-color4 vui::ButtonScriptFuncs::getTextColor(Button* b) const {
-    return b->getTextColor();
+color4  vui::ButtonScriptFuncs::impl::getBackColor(Button* button) {
+    return button->getBackColor();
 }
 
-color4 vui::ButtonScriptFuncs::getTextHoverColor(Button* b) const {
-    return b->getTextHoverColor();
+color4  vui::ButtonScriptFuncs::impl::getBackHoverColor(Button* button) {
+    return button->getBackHoverColor();
 }
 
-nString vui::ButtonScriptFuncs::getText(Button* b) const {
-    return b->getText();
+color4  vui::ButtonScriptFuncs::impl::getTextHoverColor(Button* button) {
+    return button->getTextHoverColor();
 }
 
-vg::TextAlign vui::ButtonScriptFuncs::getTextAlign(Button* b) const {
-    return b->getTextAlign();
+void  vui::ButtonScriptFuncs::impl::setTexture(Button* button, VGTexture texture) {
+    button->setTexture(texture);
 }
 
-f32v2 vui::ButtonScriptFuncs::getTextScale(Button* b) const {
-    return b->getTextScale();
+void  vui::ButtonScriptFuncs::impl::setHoverTexture(Button* button, VGTexture texture) {
+    button->setTexture(texture);
 }
 
-void vui::ButtonScriptFuncs::setBackColor(Button* b, color4 color) const {
-    b->setBackColor(color);
+void  vui::ButtonScriptFuncs::impl::setBackColor(Button* button, color4 color) {
+    button->setBackColor(color);
 }
 
-void vui::ButtonScriptFuncs::setBackColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const {
-    b->setBackColorGrad(color1, color2, grad);
+void  vui::ButtonScriptFuncs::impl::setBackColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad) {
+    button->setBackColorGrad(color1, color2, grad);
 }
 
-void vui::ButtonScriptFuncs::setBackHoverColor(Button* b, color4 color) const {
-    b->setBackHoverColor(color);
+void  vui::ButtonScriptFuncs::impl::setBackHoverColor(Button* button, color4 color) {
+    button->setBackHoverColor(color);
 }
 
-void vui::ButtonScriptFuncs::setBackHoverColorGrad(Button* b, color4 color1, color4 color2, vg::GradientType grad) const {
-    b->setBackHoverColorGrad(color1, color2, grad);
+void  vui::ButtonScriptFuncs::impl::setBackHoverColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad) {
+    button->setBackHoverColorGrad(color1, color2, grad);
 }
 
-void vui::ButtonScriptFuncs::setText(Button* b, nString text) const {
-    b->setText(text);
+void  vui::ButtonScriptFuncs::impl::setTextHoverColor(Button* button, color4 color) {
+    button->setTextHoverColor(color);
 }
-
-void vui::ButtonScriptFuncs::setTextColor(Button* b, color4 color) const {
-    b->setTextColor(color);
-}
-
-void vui::ButtonScriptFuncs::setTextHoverColor(Button* b, color4 color) const {
-    b->setTextHoverColor(color);
-}
-
-void vui::ButtonScriptFuncs::setTextAlign(Button* b, vg::TextAlign textAlign) const {
-    b->setTextAlign(textAlign);
-}
-
-void vui::ButtonScriptFuncs::setTextScale(Button* b, f32v2 textScale) const {
-    b->setTextScale(textScale);
-}
-
-// void vui::ButtonScriptFuncs::setTexture(Button* b, VGTexture texture) const {
-//     b->setTexture(texture);
-// }

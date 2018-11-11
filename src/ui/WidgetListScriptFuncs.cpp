@@ -1,99 +1,101 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/WidgetListScriptFuncs.h"
+
+#include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/WidgetList.h"
-#include "Vorb/script/lua/Environment.h"
+#include "Vorb/ui/WidgetScriptFuncs.h"
 
-// Helper macros for smaller code
-#define REGISTER_RDEL(env, name) env->addCRDelegate(#name, makeRDelegate(*this, &WidgetListScriptFuncs::name));
-#define REGISTER_DEL(env, name) env->addCDelegate(#name, makeDelegate(*this, &WidgetListScriptFuncs::name));
 
-void vui::WidgetListScriptFuncs::init(const cString nSpace, vscript::Environment* env) {
-    // Call base register
-    WidgetScriptFuncs::init(nSpace, env);
-
-    env->setNamespaces(nSpace);
-
-    { // Register all functions
-        REGISTER_DEL(env, addItem);
-        REGISTER_RDEL(env, addItemAtIndex);
-        REGISTER_RDEL(env, removeItem);
-        REGISTER_RDEL(env, removeItemAtIndex);
-        // Getters
-        REGISTER_RDEL(env, getTexture);
-        REGISTER_RDEL(env, getBackColor);
-        REGISTER_RDEL(env, getBackHoverColor);
-        REGISTER_RDEL(env, getItemCount);
-        REGISTER_RDEL(env, getSpacing);
-        REGISTER_RDEL(env, getAutoScroll);     
-        // Setters
-        REGISTER_DEL(env, setTexture);
-        REGISTER_DEL(env, setBackColor);
-        REGISTER_DEL(env, setBackHoverColor);
-        REGISTER_DEL(env, setSpacing);
-        REGISTER_DEL(env, setAutoScroll);
-    }
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetListScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getTexture",      makeDelegate(&impl::getTexture));
+    env->addCDelegate("setTexture",      makeDelegate(&impl::setTexture));
+    env->addCDelegate("getAutoScroll",      makeDelegate(&impl::getAutoScroll));
+    env->addCDelegate("setAutoScroll",      makeDelegate(&impl::setAutoScroll));
+    env->addCDelegate("getBackColor", makeDelegate(&impl::getBackColor));
+    env->addCDelegate("setBackColor", makeDelegate(&impl::setBackColor));
+    env->addCDelegate("getBackHoverColor", makeDelegate(&impl::getBackHoverColor));
+    env->addCDelegate("setBackHoverColor", makeDelegate(&impl::setBackHoverColor));
+    env->addCDelegate("getItemCount", makeDelegate(&impl::getItemCount));
+    env->addCDelegate("getSpacing", makeDelegate(&impl::getSpacing));
+    env->addCDelegate("setSpacing", makeDelegate(&impl::setSpacing));
+    env->addCDelegate("getMaxHeight", makeDelegate(&impl::getMaxHeight));
+    env->addCDelegate("setMaxHeight", makeDelegate(&impl::setMaxHeight));
     env->setNamespaces();
+
+    WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
-#undef REGISTER_RDEL
-#undef REGISTER_DEL
-
-void vui::WidgetListScriptFuncs::addItem(WidgetList* wl, Widget* w) {
-    wl->addItem(w);
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetListScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
 }
 
-bool vui::WidgetListScriptFuncs::addItemAtIndex(WidgetList* wl, size_t index, IWidget* w) {
-    return wl->addItemAtIndex(index, w);
+void vui::WidgetListScriptFuncs::impl::addItem(WidgetList* widgetList, IWidget* item) {
+    widgetList->addItem(item);
 }
 
-bool vui::WidgetListScriptFuncs::removeItem(WidgetList* wl, IWidget* w) {
-    return wl->removeItem(w);
+bool vui::WidgetListScriptFuncs::impl::addItemAtIndex(WidgetList* widgetList, size_t index, IWidget* item) {
+    return widgetList->addItemAtIndex(index, item);
 }
 
-bool vui::WidgetListScriptFuncs::removeItemAtIndex(WidgetList* wl, size_t index) {
-    return wl->removeItem(index);
+bool vui::WidgetListScriptFuncs::impl::removeItem(WidgetList* widgetList, IWidget* item) {
+    return widgetList->removeItem(item);
 }
 
-VGTexture vui::WidgetListScriptFuncs::getTexture(WidgetList* w) const {
-    return w->getTexture();
+bool vui::WidgetListScriptFuncs::impl::removeItemAtIndex(WidgetList* widgetList, size_t index) {
+    return widgetList->removeItem(index);
 }
 
-color4 vui::WidgetListScriptFuncs::getBackColor(WidgetList* w) const {
-    return w->getBackColor();
+VGTexture vui::WidgetListScriptFuncs::impl::getTexture(WidgetList* widgetList) {
+    return widgetList->getTexture();
 }
 
-color4 vui::WidgetListScriptFuncs::getBackHoverColor(WidgetList* w) {
-    return w->getBackHoverColor();
+bool vui::WidgetListScriptFuncs::impl::getAutoScroll(WidgetList* widgetList) {
+    return widgetList->getAutoScroll();
 }
 
-size_t vui::WidgetListScriptFuncs::getItemCount(WidgetList* w) const {
-    return w->getItemCount();
+color4 vui::WidgetListScriptFuncs::impl::getBackColor(WidgetList* widgetList) {
+    return widgetList->getBackColor();
 }
 
-f32 vui::WidgetListScriptFuncs::getSpacing(WidgetList* w) const {
-    return w->getSpacing();
+color4 vui::WidgetListScriptFuncs::impl::getBackHoverColor(WidgetList* widgetList) {
+    return widgetList->getBackHoverColor();
 }
 
-bool vui::WidgetListScriptFuncs::getAutoScroll(WidgetList* w) const {
-    return w->getAutoScroll();
+size_t vui::WidgetListScriptFuncs::impl::getItemCount(WidgetList* widgetList) {
+    return widgetList->getItemCount();
 }
 
-void vui::WidgetListScriptFuncs::setTexture(WidgetList* w, VGTexture texture) const {
-    w->setTexture(texture);
+f32 vui::WidgetListScriptFuncs::impl::getSpacing(WidgetList* widgetList) {
+    return widgetList->getSpacing();
 }
 
-void vui::WidgetListScriptFuncs::setBackColor(WidgetList* w, color4 color) const {
-    w->setBackColor(color);
+f32 vui::WidgetListScriptFuncs::impl::getMaxHeight(WidgetList* widgetList) {
+    return widgetList->getMaxHeight();
 }
 
-void vui::WidgetListScriptFuncs::setBackHoverColor(WidgetList* w, color4 color) const {
-    w->setBackHoverColor(color);
+void vui::WidgetListScriptFuncs::impl::setTexture(WidgetList* widgetList, VGTexture texture) {
+    widgetList->setTexture(texture);
 }
 
-void vui::WidgetListScriptFuncs::setSpacing(WidgetList* w, f32 spacing) const {
-    w->setSpacing(spacing);
+void vui::WidgetListScriptFuncs::impl::setAutoScroll(WidgetList* widgetList, bool autoScroll) {
+    widgetList->setAutoScroll(autoScroll);
 }
 
-void vui::WidgetListScriptFuncs::setAutoScroll(WidgetList* w, bool autoScroll) const {
-    w->setAutoScroll(autoScroll);
+void vui::WidgetListScriptFuncs::impl::setBackColor(WidgetList* widgetList, color4 color) {
+    widgetList->setBackColor(color);
+}
+
+void vui::WidgetListScriptFuncs::impl::setBackHoverColor(WidgetList* widgetList, color4 color) {
+    widgetList->setBackHoverColor(color);
+}
+
+void vui::WidgetListScriptFuncs::impl::setSpacing(WidgetList* widgetList, f32 spacing) {
+    widgetList->setSpacing(spacing);
+}
+
+void vui::WidgetListScriptFuncs::impl::setMaxHeight(WidgetList* widgetList, f32 maxHeight) {
+    widgetList->setMaxHeight(maxHeight);
 }

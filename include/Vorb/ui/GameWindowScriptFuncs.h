@@ -8,9 +8,7 @@
 //
 
 /*! \file GameWindowScriptFuncs.h
-* @brief 
-* Scripting functions for a vui::GameWindow
-*
+* \brief Registers functions and consts for buttons to a script environment.
 */
 
 #pragma once
@@ -26,24 +24,26 @@
 
 #include "Vorb/VorbPreDecl.inl"
 
-DECL_VSCRIPT(class Environment)
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
-
+        // Forward Declarations
         class GameWindow;
 
-        class GameWindowScriptFuncs {
-        public:
-            virtual void init(const cString nSpace, const GameWindow* gameWindow, vscript::Environment* env);
+        namespace GameWindowScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window);
 
-        protected:
-            virtual i32 getNumSupportedResolutions() const;
-            virtual ui32v2 getSupportedResolution(int resIndex) const;
-            virtual ui32v2 getCurrentResolution() const;
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            const GameWindow* m_window = nullptr;
-        };
+            namespace impl {
+                size_t getNumSupportedResolutions(const GameWindow* window);
+                ui32v2 getSupportedResolution(const GameWindow* window, size_t resIndex);
+                ui32v2 getCurrentResolution(const GameWindow* window);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

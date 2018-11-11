@@ -8,9 +8,7 @@
 //
 
 /*! \file SliderScriptFuncs.h
-* @brief 
-* Scripting functions for the Slider widget.
-*
+* \brief Registers functions ands for buttons to a script environment.
 */
 
 #pragma once
@@ -24,59 +22,63 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
+#include "Vorb/ui/Widget.h"
+
+DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
-
-        // Forward declarations
+        // Forward Declarations
         class Slider;
 
-        class SliderScriptFuncs : public WidgetScriptFuncs {
-        public:
-            virtual void init(const cString nSpace, vscript::Environment* env) override;
-            virtual void registerWidget(Widget* w) override;
-            virtual void unregisterWidget(Widget* w) override;
-        protected:
-            virtual bool addCallback(Widget* w, EventType eventType, nString funcName) override;
-            /*! @brief Deregisters a LUA callback with a widget* */
-            virtual bool removeCallback(Widget* w, EventType eventType, nString funcName) override;
+        namespace SliderScriptFuncs {
+            template <typename ScriptEnvironmentImpl>
+            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            /************************************************************************/
-            /* Getters                                                              */
-            /************************************************************************/
-            virtual VGTexture getSlideTexture(Slider* s) const;
-            virtual VGTexture getBarTexture(Slider* s) const;
-            virtual color4 getSlideColor(Slider* s) const;
-            virtual color4 getSlideHoverColor(Slider* s) const;
-            virtual color4 getBarColor(Slider* s) const;
-            virtual int getValue(Slider* s) const;
-            virtual int getMin(Slider* s) const;
-            virtual int getMax(Slider* s) const;
-            /// Gets slider value scaled between 0.0f and 1.0f
-            virtual f32 getValueScaled(Slider* s) const;
-            virtual bool isVertical(Slider* s) const;
-           
-            /************************************************************************/
-            /* Setters                                                              */
-            /************************************************************************/
-            virtual void setSlideSize(Slider* s, f32v2 dimensions) const;
-            virtual void setSlideTexture(Slider* s, VGTexture texture) const;
-            virtual void setBarTexture(Slider* s, VGTexture texture) const;
-            virtual void setBarColor(Slider* s, color4 color) const;
-            virtual void setSlideColor(Slider* s, color4 color) const;
-            virtual void setSlideHoverColor(Slider* s, color4 color) const;
-            virtual void setValue(Slider* s, int value) const;
-            virtual void setRange(Slider* s, int min, int max) const;
-            virtual void setMin(Slider* s, int min) const;
-            virtual void setMax(Slider* s, int max) const;
-            virtual void setIsVertical(Slider* s, bool isVertical) const;
+            template <typename ScriptEnvironmentImpl>
+            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            virtual bool isInSlideBounds(Slider* s, f32v2 point) const;
+            namespace impl {
+                /******************************************************************/
+                /* Getters                                                        */
+                /******************************************************************/
+                VGTexture getSlideTexture    (Slider* slider);
+                VGTexture getBarTexture      (Slider* slider);
+                   color4 getSlideColor      (Slider* slider);
+                   color4 getSlideHoverColor (Slider* slider);
+                   color4 getBarColor        (Slider* slider);
+                      i32 getValue           (Slider* slider);
+                      i32 getMin             (Slider* slider);
+                      i32 getMax             (Slider* slider);
+                    f32v2 getSlideSize       (Slider* slider);
+                  Length2 getRawSlideSize    (Slider* slider);
+                     bool isVertical         (Slider* slider);
+                     bool isHorizontal       (Slider* slider);
+                      f32 getValueScaled     (Slider* slider);
 
-            void onValueChange(Sender s, int v) const;
-        };
+                bool isInSlideBounds(Slider* slider, f32 x, f32 y);
+
+                /******************************************************************/
+                /* Setters                                                        */
+                /******************************************************************/
+                void setSlideTexture    (Slider* slider, VGTexture texture);
+                void setBarTexture      (Slider* slider, VGTexture texture);
+                void setSlideColor      (Slider* slider, color4 color);
+                void setSlideHoverColor (Slider* slider, color4 color);
+                void setBarColor        (Slider* slider, color4 color);
+                void setValue           (Slider* slider, i32 value);
+                void setMin             (Slider* slider, i32 min);
+                void setMax             (Slider* slider, i32 max);
+                void setSlideSize       (Slider* slider, f32v2 dimensions);
+                void setRawSlideSize    (Slider* slider, Length2 dimensions);
+                void setIsVertical      (Slider* slider, bool isVertical);
+                void setRange           (Slider* slider, i32 min, i32 max);
+
+                // void onValueChange(Sender s, i32 v);
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

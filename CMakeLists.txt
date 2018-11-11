@@ -308,29 +308,33 @@ set(vorb_ui
 
 if(VORB_USE_SCRIPTING)
 set(vorb_ui ${vorb_ui}
-    include/Vorb/ui/ButtonScriptFuncs.h
-    include/Vorb/ui/CheckBoxScriptFuncs.h
-    include/Vorb/ui/ComboBoxScriptFuncs.h
-    include/Vorb/ui/FormScriptEnvironment.h
-    include/Vorb/ui/GameWindowScriptFuncs.h
-    include/Vorb/ui/LabelScriptFuncs.h
-    include/Vorb/ui/PanelScriptFuncs.h
     include/Vorb/ui/ScriptedUI.h
-    include/Vorb/ui/SliderScriptFuncs.h
-    include/Vorb/ui/WidgetListScriptFuncs.h
-    include/Vorb/ui/WidgetScriptFuncs.h
+    include/Vorb/ui/script/ButtonScriptFuncs.h
+    include/Vorb/ui/script/CheckBoxScriptFuncs.h
+    include/Vorb/ui/script/ComboBoxScriptFuncs.h
+    include/Vorb/ui/script/GameWindowScriptFuncs.h
+    include/Vorb/ui/script/LabelScriptFuncs.h
+    include/Vorb/ui/script/PanelScriptFuncs.h
+    include/Vorb/ui/script/SliderScriptFuncs.h
+    include/Vorb/ui/script/TextWidgetScriptFuncs.h
+    include/Vorb/ui/script/ViewportScriptFuncs.h
+    include/Vorb/ui/script/ViewScriptEnvironment.h
+    include/Vorb/ui/script/WidgetListScriptFuncs.h
+    include/Vorb/ui/script/WidgetScriptFuncs.h
 #source
-    src/ui/ButtonScriptFuncs.cpp
-    src/ui/CheckBoxScriptFuncs.cpp
-    src/ui/ComboBoxScriptFuncs.cpp
-    src/ui/FormScriptEnvironment.cpp
-    src/ui/GameWindowScriptFuncs.cpp
-    src/ui/LabelScriptFuncs.cpp
-    src/ui/PanelScriptFuncs.cpp
     src/ui/ScriptedUI.cpp
-    src/ui/SliderScriptFuncs.cpp
-    src/ui/WidgetListScriptFuncs.cpp
-    src/ui/WidgetScriptFuncs.cpp
+    src/ui/script/ButtonScriptFuncs.cpp
+    src/ui/script/CheckBoxScriptFuncs.cpp
+    src/ui/script/ComboBoxScriptFuncs.cpp
+    src/ui/script/GameWindowScriptFuncs.cpp
+    src/ui/script/LabelScriptFuncs.cpp
+    src/ui/script/PanelScriptFuncs.cpp
+    src/ui/script/SliderScriptFuncs.cpp
+    src/ui/script/TextWidgetScriptFuncs.cpp
+    src/ui/script/ViewportScriptFuncs.cpp
+    src/ui/script/ViewScriptEnvironment.cpp
+    src/ui/script/WidgetListScriptFuncs.cpp
+    src/ui/script/WidgetScriptFuncs.cpp
 )
 endif()
 

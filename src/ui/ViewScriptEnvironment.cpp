@@ -72,14 +72,14 @@ template <typename ScriptEnvironmentImpl>
 void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerFuncs() {
     // Set up creation functions for extending the view.
     m_env->setNamespaces("UI", "View");
-    m_env->addCDelegate("makeButton",     makeDelegate(this, &FormScriptEnvironment::makeButton));
-    m_env->addCDelegate("makeCheckBox",   makeDelegate(this, &FormScriptEnvironment::makeCheckBox));
-    m_env->addCDelegate("makeComboBox",   makeDelegate(this, &FormScriptEnvironment::makeComboBox));
-    m_env->addCDelegate("makeLabel",      makeDelegate(this, &FormScriptEnvironment::makeLabel));
-    m_env->addCDelegate("makePanel",      makeDelegate(this, &FormScriptEnvironment::makePanel));
-    m_env->addCDelegate("makeSlider",     makeDelegate(this, &FormScriptEnvironment::makeSlider));
-    m_env->addCDelegate("makeWidgetList", makeDelegate(this, &FormScriptEnvironment::makeWidgetList));
-    m_env->addCDelegate("destroyWidget",  makeDelegate(this, &FormScriptEnvironment::destroyWidget));
+    m_env->addCDelegate("makeButton",     makeDelegate(this, &ViewScriptEnvironment::makeButton));
+    m_env->addCDelegate("makeCheckBox",   makeDelegate(this, &ViewScriptEnvironment::makeCheckBox));
+    m_env->addCDelegate("makeComboBox",   makeDelegate(this, &ViewScriptEnvironment::makeComboBox));
+    m_env->addCDelegate("makeLabel",      makeDelegate(this, &ViewScriptEnvironment::makeLabel));
+    m_env->addCDelegate("makePanel",      makeDelegate(this, &ViewScriptEnvironment::makePanel));
+    m_env->addCDelegate("makeSlider",     makeDelegate(this, &ViewScriptEnvironment::makeSlider));
+    m_env->addCDelegate("makeWidgetList", makeDelegate(this, &ViewScriptEnvironment::makeWidgetList));
+    m_env->addCDelegate("destroyWidget",  makeDelegate(this, &ViewScriptEnvironment::destroyWidget));
     m_env->setNamespaces();
 
     ButtonScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Button", m_env);

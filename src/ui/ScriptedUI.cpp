@@ -66,7 +66,7 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport = new Viewport(m_window);
     view.viewport->init(name, dimensions, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
-    view.scriptEnv = new ScriptEnvironmentImpl();
+    view.scriptEnv = new ScriptEnv();
     view.scriptEnv->init(viewport, m_window);
 
     prepareScriptEnv(view.scriptEnv);
@@ -83,7 +83,7 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport = new Viewport(m_window);
     view.viewport->init(name, position, size, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
-    view.scriptEnv = new ScriptEnvironmentImpl();
+    view.scriptEnv = new ScriptEnv();
     view.scriptEnv->init(viewport, m_window);
 
     prepareScriptEnv(view.scriptEnv);
@@ -155,6 +155,47 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableView(const nString
 }
 
 template <typename ScriptEnvironmentImpl>
+bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(const nString& name) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            // Dispose the viewport and contained widgets and the script environment of the viewport.
+            view.second.viewport->dispose();
+            view.second.scriptEnv->dispose();
+
+            // Free our memory.
+            delete view.second.viewport;
+            delete view.second.scriptEnv;
+
+            // Erase view from the list of views.
+            m_views.erase(view);
+
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::setViewZIndex(const nString& name, ZIndex zIndex) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            Viewport* viewport = view.second.viewport;
+
+            ScriptedView<ScriptEnvironmentImpl> newView;
+            view.viewport  = viewport;
+            view.scriptEnv = view.second.scriptEnv;
+
+            m_views.erase(view);
+
+            m_views.insert(std::make_pair(zIndex, newView));
+
+            return viewport;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
 vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nString& name, const vio::File& filepath) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
@@ -171,9 +212,10 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ScriptEnv* scriptE
 
     env->setNamespaces("UI");
     env->addCDelegate("makeViewFromScript", makeDelegate(this, &ScriptedUI::makeViewFromScript);
-    env->addCDelegate("makeViewFromYAML", makeDelegate(this, &ScriptedUI::makeViewFromYAML));
-    env->addCDelegate("enableView", makeRDelegate(*this, &ScriptedUI::enableView));
-    env->addCDelegate("disableView", makeRDelegate(*this, &ScriptedUI::disableView));
-    env->addCDelegate("getView", makeRDelegate(*this, &ScriptedUI::getView));
+    env->addCDelegate("makeViewFromYAML",   makeDelegate(this, &ScriptedUI::makeViewFromYAML));
+    env->addCDelegate("enableView",         makeDelegate(this, &ScriptedUI::enableView));
+    env->addCDelegate("disableView",        makeDelegate(this, &ScriptedUI::disableView));
+    env->addCDelegate("getView",            makeDelegate(this, &ScriptedUI::getView));
+    env->addCDelegate("setViewZIndex",      makeDelegate(this, &ScriptedUI::setViewZIndex));
     env->setNamespaces();
 }

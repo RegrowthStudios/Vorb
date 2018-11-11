@@ -247,11 +247,15 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ScriptEnv* scriptE
     vscript::IEnvironment<ScriptEnvironmentImpl>* env = scriptEnv->getEnv();
 
     env->setNamespaces("UI");
-    env->addCDelegate("makeViewFromScript", makeDelegate(this, &ScriptedUI::makeViewFromScript);
-    env->addCDelegate("makeViewFromYAML",   makeDelegate(this, &ScriptedUI::makeViewFromYAML));
-    env->addCDelegate("enableView",         makeDelegate(this, &ScriptedUI::enableView));
-    env->addCDelegate("disableView",        makeDelegate(this, &ScriptedUI::disableView));
-    env->addCDelegate("getView",            makeDelegate(this, &ScriptedUI::getView));
-    env->addCDelegate("setViewZIndex",      makeDelegate(this, &ScriptedUI::setViewZIndex));
+    env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript);
+    env->addCDelegate("makeViewFromYAML",    makeDelegate(this, &ScriptedUI::makeViewFromYAML));
+    env->addCDelegate("enableView",          makeDelegate(this, &ScriptedUI::enableView));
+    env->addCDelegate("enableViewWithName",  makeDelegate(this, &ScriptedUI::enableViewWithName));
+    env->addCDelegate("disableView",         makeDelegate(this, &ScriptedUI::disableView));
+    env->addCDelegate("disableViewWithName", makeDelegate(this, &ScriptedUI::disableViewWithName));
+    env->addCDelegate("getView",             makeDelegate(this, &ScriptedUI::getView));
+    env->addCDelegate("setViewZIndex",       makeDelegate(this, &ScriptedUI::setViewZIndex));
+    env->addCDelegate("destroyView",         makeDelegate(this, &ScriptedUI::destroyView));
+    env->addCDelegate("destroyViewWithName", makeDelegate(this, &ScriptedUI::destroyViewWithName));
     env->setNamespaces();
 }

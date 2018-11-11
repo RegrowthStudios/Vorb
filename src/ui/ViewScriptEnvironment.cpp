@@ -34,8 +34,31 @@ vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::~ViewScriptEnvironment() {
 
 template <typename ScriptEnvironmentImpl>
 void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::init(Viewport* viewport, const GameWindow* window) {
+    m_window   = window;
     m_viewport = viewport;
     m_env      = new ScriptEnv();
+    m_env->init();
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::dispose() {
+    for (auto& widget : m_widgets) {
+        delete widget;
+    }
+    IWidgets().swap(m_widgets);
+
+    m_env->dispose();
+
+    delete m_env;
+
+    m_env      = nullptr;
+    m_window   = nullptr;
+    m_viewport = nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+bool vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::load(const vio::File& filepath) {
+    m_env->load(filepath);
 }
 
 template <typename ScriptEnvironmentImpl>

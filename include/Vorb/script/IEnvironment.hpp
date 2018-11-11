@@ -50,19 +50,40 @@ namespace vorb {
             };
             using EventList = std::unordered_map<nString, EventData>;
         public:
-            IEnvironment() {
+            IEnvironment() :
+                m_maxScriptLength(FLT_MAX) {
                 static_assert(std::is_base_of<IEnvironment, DerivedEnvironment>::value, "Environment implementation provided not deriving from IEnvironment interface.");
             }
-            // TODO(Matthew): Initialisation and disposal.
+
+            /*!
+             * \brief Initialises the environment.
+             */
+            virtual void init() = 0;
+            /*!
+             * \brief Initialises the environment.
+             *
+             * \param filepath The filepath from which to load the script.
+             */
+            virtual void init(const vio::Path& filepath) = 0;
+
+            /*!
+             * \brief Disposes of the environment.
+             */
+            virtual void dispose() {
+                for (auto& cFunction : m_cFunctions) {
+                    cFunction.second.reset();
+                }
+                CFunctionList().swap(m_cFunctions);
+                EventList().swap(m_events);
+                m_listenerPool.dispose();
+            }
 
             /*!
              * \brief Load in a script from the provided filepath.
              *
              * \param filepath The filepath from which to load the script.
              */
-            bool load(const vio::Path& filepath) {
-                static_cast<EnvironmentImpl*>(this)->load(filepath);
-            }
+            virtual bool load(const vio::Path& filepath) = 0;
 
             /*!
              * \brief Register an event with the script environment.

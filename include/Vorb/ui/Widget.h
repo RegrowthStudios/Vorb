@@ -175,8 +175,8 @@ namespace vorb {
             virtual  const Length& getRawTop()           const { return m_rawRelativePositions.top;    }
             virtual  const Length& getRawRight()         const { return m_rawRelativePositions.right;  }
             virtual  const Length& getRawBottom()        const { return m_rawRelativePositions.bottom; }
-            virtual const Length2& getMinRawSize()       const { return m_minRawSize;                     }
-            virtual const Length2& getMaxRawSize()       const { return m_maxRawSize;                     }
+            virtual const Length2& getRawMinSize()       const { return m_rawMinSize;                     }
+            virtual const Length2& getRawMaxSize()       const { return m_rawMaxSize;                     }
             virtual  const Length& getRawDockSize()      const { return m_rawDockSize;                 }
             virtual            f32 getDockSize()         const override { return processLength(m_rawDockSize); }
             virtual const Length4& getRawPadding()       const { return m_rawPadding;                  }
@@ -189,9 +189,9 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setPositionType(PositionType posType)   { m_positionType = posType; m_flags.needsDimensionUpdate = true; }
-            virtual void setRawMaxSize(const Length2& maxSize)   { m_maxRawSize = maxSize;   m_flags.needsDimensionUpdate = true; }
+            virtual void setRawMaxSize(const Length2& maxSize)   { m_rawMaxSize = maxSize;   m_flags.needsDimensionUpdate = true; }
             virtual void setMaxSize(const f32v2& maxSize);
-            virtual void setRawMinSize(const Length2& minSize)   { m_minRawSize = minSize;   m_flags.needsDimensionUpdate = true; }
+            virtual void setRawMinSize(const Length2& minSize)   { m_rawMinSize = minSize;   m_flags.needsDimensionUpdate = true; }
             virtual void setMinSize(const f32v2& minSize);
             virtual void setRawDockSize(const Length& dockSize);
             virtual void setDockSize(f32 dockSize) override;
@@ -251,8 +251,8 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             PositionType m_positionType; ///< The type of positioning this widget uses.
-            Length2      m_minRawSize;   ///< Minimum size of widget.
-            Length2      m_maxRawSize;   ///< Maximum size of widget.
+            Length2      m_rawMinSize;   ///< Minimum size of widget.
+            Length2      m_rawMaxSize;   ///< Maximum size of widget.
             Length       m_rawDockSize;  ///< The raw dock size of widget.
             Length4      m_rawPadding;   ///< Padding of widget.
 

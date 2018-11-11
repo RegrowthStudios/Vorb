@@ -24,47 +24,182 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "../VorbPreDecl.inl"
 #include <vector>
 
-DECL_VG(class SpriteFont)
+#include "Vorb/VorbPreDecl.inl"
+#include "Vorb/io/File.h"
+
+DECL_VG(class SpriteBatch; class SpriteFont)
 
 namespace vorb {
     namespace ui {
 
         // Forward declarations
-        class FormScriptEnvironment;
-        class IGameScreen;
-        // class Form;
         class GameWindow;
+        class Viewport;
+        class ViewScriptEnvironment;
 
+        // Pairing of Viewport and script environment, forming a view.
+        template <typename ScriptEnvironmentImpl>
+        struct ScriptedView {
+            Viewport* viewport;
+            ViewScriptEnvironment<ScriptEnvironmentImpl>* scriptEnv;
+        };
+
+        // TODO(Matthew): Make a non-scripted version.
+        // TODO(Matthew): ValueMediator specialisations for Length & Length2.
+        template <typename ScriptEnvironmentImpl>
         class ScriptedUI {
         public:
-            // typedef std::pair<Form*, FormScriptEnvironment*> FormEnv;
+            using ZIndex    = ui16;
+            using ScriptEnv = ViewScriptEnvironment<ScriptEnvironmentImpl>;
+            using UIViews   = std::map<ZIndex, ScriptedView<ScriptEnvironmentImpl>>;
 
+            /*!
+             * \brief Just ensures ScriptedUI instance is in valid state, use init to prepare instance for use.
+             */
             ScriptedUI();
-            virtual ~ScriptedUI();
-            virtual void init(const nString& startFormPath, IGameScreen* ownerScreen,
-                              const GameWindow* window, const f32v4& destRect,
-                              vg::SpriteFont* defaultFont = nullptr);
-            virtual void draw();
-            virtual void update(f32 dt = 1.0f);
-            virtual void dispose();
-            virtual void onOptionsChanged();
-            virtual void setDimensions(const f32v2& dimensions);
+            /*!
+             * \brief Does nothing, call dispose!
+             */
+            ~ScriptedUI();
+
+            /*!
+             * \brief Initialises the instance for use.
+             *
+             * \param window The game window this UI will be rendered to.
+             * \param defaultFont The default font for views to use.
+             * \param spriteBatch The spritebatch for view renderers to use.
+             */
+            void init(const GameWindow* window, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            /*!
+             * \brief Disposes the managed views and resets pointers.
+             */
+            void dispose();
+
+            /*!
+             * \brief Tells each view to update.
+             *
+             * Views called in order of z-index.
+             *
+             * \param dt The time delta between this update and the last.
+             */
+            void update(f32 dt = 0.0f);
+            /*!
+             * \brief Tells each view to draw.
+             *
+             * Views called in order of z-index.
+             */
+            void draw();
+
+            // TODO(Matthew): Hook this into some options state event? This would involve Vorb providing a game options supporting class - and optons might not be a well-generalisable thing. Worst case can put the onus on Vorb users to register it to an event/call it directly.
+            /*!
+             * \brief Handles options changing.
+             */
+            void onOptionsChanged();
+
+            /*!
+             * \brief Creates a new view in this UI.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param dimensions The dimensions of the viewport.
+             * \param defaultFont The default font of the view (overrides the default set for the ScriptedUI instance if not nullptr).
+             * \param spriteBatch The spritebatch to use for rendering.
+             *
+             * \return Pointers to the viewport and script env of the constructed view.
+             */
+            ScriptedView<ScriptEnvironmentImpl> makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions = f32v4(0.0f), vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            /*!
+             * \brief Creates a new view in this UI.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param position The position of the viewport.
+             * \param size The size of the viewport.
+             * \param defaultFont The default font of the view (overrides the default set for the ScriptedUI instance if not nullptr).
+             * \param spriteBatch The spritebatch to use for rendering.
+             *
+             * \return Pointers to the viewport and script env of the constructed view.
+             */
+            ScriptedView<ScriptEnvironmentImpl> makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+
+            /*!
+             * \brief Creates a new view in this UI.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param filepath The path to the script to begin building from.
+             *
+             * \return A pointer to the viewport of the constructed view.
+             */
+            Viewport* makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath);
+
+            /*!
+             * \brief Creates a new view in this UI.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param filepath The path to the script to begin building from.
+             *
+             * \return A pointer to the viewport of the constructed view.
+             */
+            Viewport* makeViewFromYAML(const nString& name, ZIndex zIndex, const vio::File& filepath);
+
+            /*!
+             * \brief Gets the named view.
+             *
+             * \param name The name of the view to get.
+             *
+             * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
+             */
+            Viewport* getView(const nString& name);
+
+            /*!
+             * \brief Gets the named view's script environment.
+             *
+             * \param name The name of the view to get.
+             *
+             * \return A pointer to the view script env of the view found, or nullptr if no view found as named.
+             */
+            ScriptEnv* getEnv(const nString& name);
+
+            /*!
+             * \brief Enables the named view.
+             *
+             * \param name The name of the view to enable.
+             *
+             * \return A pointer to the viewport of the view enabled, or nullptr if no view found as named.
+             */
+            Viewport* enableView(const nString& name);
+            /*!
+             * \brief Disables the named view.
+             *
+             * \param name The name of the view to disable.
+             *
+             * \return A pointer to the viewport of the view disabled, or nullptr if no view found as named.
+             */
+            Viewport* disableView(const nString& name);
+
+            /*!
+             * \brief Runs a script 
+             *
+             * \param name The name of the view to get.
+             *
+             * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
+             */
+            Viewport* runViewScript(const nString& name, const vio::File& filepath);
+
+            // TODO(Matthew): Other run funcs? runViewScriptFunc? runViewScript capturing multiple views?
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
-            // virtual Form* makeForm(nString name, nString filePath);
-            virtual void registerScriptValues(FormScriptEnvironment* newFormEnv);
-            // virtual Form* enableForm(nString name);
-            // virtual Form* disableForm(nString name);
-            // virtual Form* getForm(nString name);
 
-            vg::SpriteFont* m_defaultFont = nullptr;
-            f32v4 m_destRect;
-            IGameScreen* m_ownerScreen = nullptr;
-            const GameWindow* m_window = nullptr;     
-            // std::vector<FormEnv> m_forms; ///< The forms and script envs in draw order
+            void prepareScriptEnv(ScriptEnv* scriptEnv);
+
+            UIViews           m_views;       ///< List of UI views in draw order.
+            const GameWindow* m_window;      ///< Pointer to the window the UI views will be drawn to.
+            vg::SpriteFont*   m_defaultFont; ///< Default font of views.
+            vg::SpriteBatch*  m_spriteBatch; ///< SpriteBatch instance to use for rendering.
         };
     }
 }

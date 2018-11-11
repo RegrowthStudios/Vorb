@@ -1,120 +1,179 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/ScriptedUI.h"
-#include "Vorb/ui/FormScriptEnvironment.h"
 
-vui::ScriptedUI::ScriptedUI() {
+#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/ViewScriptEnvironment.h"
+
+template <typename ScriptEnvironmentImpl>
+vui::ScriptedUI<ScriptEnvironmentImpl>::ScriptedUI() :
+    m_window(nullptr),
+    m_defaultFont(nullptr),
+    m_spriteBatch(nullptr) {
     // Empty
 }
 
-vui::ScriptedUI::~ScriptedUI() {
-    dispose();
+template <typename ScriptEnvironmentImpl>
+vui::ScriptedUI<ScriptEnvironmentImpl>::~ScriptedUI() {
+    // Empty
 }
 
-void vui::ScriptedUI::init(const nString& startFormPath VORB_MAYBE_UNUSED, IGameScreen* ownerScreen,
-                           const GameWindow* window, const f32v4& destRect,
-                           vg::SpriteFont* defaultFont /*= nullptr*/) {
-    // Set up the first form
-    m_ownerScreen = ownerScreen;
-    m_window = window;
-    m_destRect = destRect;
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::init(const GameWindow* window, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    m_window      = window;
     m_defaultFont = defaultFont;
-    // makeForm("main", startFormPath);
+    m_spriteBatch = spriteBatch;
 }
 
-void vui::ScriptedUI::draw() {
-    // for (auto& it : m_forms) {
-    //     it.first->draw();
-    // }
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::dispose() {
+    for (auto& view : m_views) {
+        view.second.viewport->dispose();
+        view.second.scriptEnv->dispose();
+        delete view.second.viewport;
+        delete view.second.scriptEnv;
+    }
+    UIViews().swap(m_views);
+
+    m_window      = nullptr;
+    m_defaultFont = nullptr;
+    m_spriteBatch = nullptr;
 }
 
-void vui::ScriptedUI::update(f32 dt VORB_MAYBE_UNUSED /*= 1.0f*/) {
-    // for (auto& it : m_forms) {
-    //     it.first->update(dt);
-    // }
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::update(f32 dt /*= 1.0f*/) {
+    for (auto& view : m_views) {
+        view.second.scriptEnv->update(dt);
+        view.second.viewport->update(dt);
+    }
 }
 
-void vui::ScriptedUI::dispose() {
-    // for (auto& it : m_forms) {
-    //     it.first->dispose();
-    //     delete it.first;
-    //     delete it.second;
-    // }
-    // std::vector<std::pair<Form*, FormScriptEnvironment*> >().swap(m_forms);
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::draw() {
+    for (auto& view : m_views) {
+        view.second.viewport->draw();
+    }
 }
 
-void vui::ScriptedUI::onOptionsChanged() {
-    // for (auto& it : m_forms) {
-    //     if (it.first->isEnabled()) it.second->onOptionsChanged();
-    // }
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::onOptionsChanged() {
+    // TODO(Matthew): Implement.
 }
 
-void vui::ScriptedUI::setDimensions(VORB_MAYBE_UNUSED const f32v2& dimensions) {
-    // for (VORB_MAYBE_UNUSED auto& it : m_forms) {
-    //     // it.first->setDimensions(dimensions);
-    // }
+template <typename ScriptEnvironmentImpl>
+vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions /*= f32v4(0.0f)*/, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    ScriptedView<ScriptEnvironmentImpl> view;
+
+    view.viewport = new Viewport(m_window);
+    view.viewport->init(name, dimensions, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
+
+    view.scriptEnv = new ScriptEnvironmentImpl();
+    view.scriptEnv->init(viewport, m_window);
+
+    prepareScriptEnv(view.scriptEnv);
+
+    m_views.insert(std::make_pair(zIndex, view));
+
+    return view;
 }
 
-// TODO(Ben): use name
-// vui::Form* vui::ScriptedUI::makeForm(VORB_MAYBE_UNUSED nString name, VORB_MAYBE_UNUSED nString filePath) {
-//     // // Make the form
-//     // Form* newForm = new Form;
-//     // newForm->init(name, m_ownerScreen, m_destRect, m_defaultFont);
-//     // FormScriptEnvironment* newFormEnv = new FormScriptEnvironment;
-//     // newFormEnv->init(newForm, m_window);
-//     // m_forms.push_back(std::make_pair(newForm, newFormEnv));
+template <typename ScriptEnvironmentImpl>
+vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>::makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    ScriptedView<ScriptEnvironmentImpl> view;
 
-//     // // Register callbacks
-//     // // Register other functions with the env
-//     // registerScriptValues(newFormEnv);
+    view.viewport = new Viewport(m_window);
+    view.viewport->init(name, position, size, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
-//     // // Load the script
-//     // newForm->disable();
-//     // newFormEnv->loadForm(filePath.c_str());
+    view.scriptEnv = new ScriptEnvironmentImpl();
+    view.scriptEnv->init(viewport, m_window);
 
-//     // return newForm;
-//     return nullptr;
-// }
+    prepareScriptEnv(view.scriptEnv);
 
-void vui::ScriptedUI::registerScriptValues(FormScriptEnvironment* newFormEnv VORB_MAYBE_UNUSED) {
-//     vscript::Environment* env = newFormEnv->getEnv();
-//     env->setNamespaces();
-//     env->addCRDelegate("makeForm", makeRDelegate(*this, &ScriptedUI::makeForm));
-//     env->addCRDelegate("enableForm", makeRDelegate(*this, &ScriptedUI::enableForm));
-//     env->addCRDelegate("disableForm", makeRDelegate(*this, &ScriptedUI::disableForm));
-//     env->addCRDelegate("getForm", makeRDelegate(*this, &ScriptedUI::getForm));
+    m_views.insert(std::make_pair(zIndex, view));
+
+    return view;
 }
 
-// vui::Form* vui::ScriptedUI::enableForm(nString name) {
-//     // This is O(n) but its fine.
-//     for (auto& it : m_forms) {
-//         // What am I doing.
-//         if (it.first->getName() == name) {
-//             if (!it.first->isEnabled()) {
-//                 it.first->enable();
-//                 return it.first;
-//             }
-//         }
-//     }
-//     return nullptr;
-// }
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath) {
+    ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
-// vui::Form* vui::ScriptedUI::disableForm(nString name) {
-//     // This is O(n) but its fine.
-//     for (auto& it : m_forms) {
-//         if (it.first->getName() == name) {
-//             it.first->disable();
-//             return it.first;
-//         }
-//     }
-//     return nullptr;
-// }
+    view.scriptEnv.load(filepath);
 
-// vui::Form* vui::ScriptedUI::getForm(nString name) {
-//     // This is O(n) but its fine.
-//     for (auto& it : m_forms) {
-//         if (it.first->getName() == name) {
-//             return it.first;
-//         }
-//     }
-//     return nullptr;
-// }
+    return view.viewport;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath) {
+    ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
+
+    // TODO(Matthew): Implement building view from YAML.
+
+    return view.viewport;
+}
+
+// TODO(Matthew): Do we want to consider sorting by name, either not guaranteeing order of render of each viewport, or storing the information twice?
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::getView(const nString& name) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            return view.second.viewport;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::ViewScriptEnvironment<ScriptEnvironmentImpl>* vui::ScriptedUI<ScriptEnvironmentImpl>::getEnv(const nString& name) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            return view.second.scriptEnv;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::enableView(const nString& name) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            view.second.viewport->enable();
+            return view.second.viewport;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableView(const nString& name) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            view.second.viewport->disable();
+            return view.second.viewport;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nString& name, const vio::File& filepath) {
+    for (auto& view : m_views) {
+        if (view.second.viewport->getName() == name) {
+            view.second.scriptEnv->load(filepath);
+            return view.second.viewport;
+        }
+    }
+    return nullptr;
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ScriptEnv* scriptEnv) {
+    vscript::IEnvironment<ScriptEnvironmentImpl>* env = scriptEnv->getEnv();
+
+    env->setNamespaces("UI");
+    env->addCDelegate("makeViewFromScript", makeDelegate(this, &ScriptedUI::makeViewFromScript);
+    env->addCDelegate("makeViewFromYAML", makeDelegate(this, &ScriptedUI::makeViewFromYAML));
+    env->addCDelegate("enableView", makeRDelegate(*this, &ScriptedUI::enableView));
+    env->addCDelegate("disableView", makeRDelegate(*this, &ScriptedUI::disableView));
+    env->addCDelegate("getView", makeRDelegate(*this, &ScriptedUI::getView));
+    env->setNamespaces();
+}

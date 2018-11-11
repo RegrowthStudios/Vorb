@@ -48,6 +48,9 @@ namespace vorb {
             ViewScriptEnvironment<ScriptEnvironmentImpl>* scriptEnv;
         };
 
+        // TODO(Matthew): Subscription to widget events.
+        // TODO(Matthew): Unsubscription from events (also in vscript::IEnvironment!).
+        // TODO(Matthew): Provide method to load textures.
         // TODO(Matthew): Make a non-scripted version.
         // TODO(Matthew): ValueMediator specialisations for Length & Length2.
         template <typename ScriptEnvironmentImpl>

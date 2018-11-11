@@ -167,3 +167,93 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
     m_env->addValue("WINDOW_MAX_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MAX_PERCENTAGE);
     m_env->setNamespaces();
 }
+
+template <typename ScriptEnvironmentImpl>
+vui::Button* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeButton(IWidget* parent, nString name, f32v4 dimensions) {
+    Button* button = new Button();
+
+    button->init(parent, name, dimensions);
+
+    m_widgets.push_back(button);
+
+    return button;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::CheckBox* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeCheckBox(IWidget* parent, nString name, f32v4 dimensions) {
+    CheckBox* checkBox = new CheckBox();
+
+    checkBox->init(parent, name, dimensions);
+
+    m_widgets.push_back(checkBox);
+
+    return checkBox;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::ComboBox* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeComboBox(IWidget* parent, nString name, f32v4 dimensions) {
+    ComboBox* comboBox = new ComboBox();
+
+    comboBox->init(parent, name, dimensions);
+
+    m_widgets.push_back(comboBox);
+
+    return comboBox
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Label* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeLabel(IWidget* parent, nString name, f32v4 dimensions) {
+    Label* label = new Label();
+
+    label->init(parent, name, dimensions);
+
+    m_widgets.push_back(label);
+
+    return label
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Panel* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makePanel(IWidget* parent, nString name, f32v4 dimensions) {
+    Panel* panel = new Panel();
+
+    panel->init(parent, name, dimensions);
+
+    m_widgets.push_back(panel);
+
+    return panel
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Slider* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeSlider(IWidget* parent, nString name, f32v4 dimensions) {
+    Slider* slider = new Slider();
+
+    slider->init(parent, name, dimensions);
+
+    m_widgets.push_back(slider);
+
+    return slider
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::WidgetList* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeWidgetList(IWidget* parent, nString name, f32v4 dimensions) {
+    WidgetList* widgetList = new WidgetList();
+
+    widgetList->init(parent, name, dimensions);
+
+    m_widgets.push_back(widgetList);
+
+    return widgetList
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::destroyWidget(IWidget* widget) {
+    // By default this function acts to just dispose the widget, unless we also manage it.
+    widget->dispose();
+
+    // If we manage this widget, clear up memory.
+    auto& it = std::find(m_widgets.begin(), m_widgets.end(), widget);
+    if (it != m_widgets.end()) {
+        m_widgets.erase(it);
+        delete widget;
+    }
+}

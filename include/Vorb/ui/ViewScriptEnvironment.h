@@ -41,6 +41,7 @@ namespace vorb {
         class Viewport;
         class WidgetList;
 
+        // TODO(Matthew): Provide function for loading specified fonts via Lua.
         // TODO(Matthew): Implement update mechanism for script env.
         template <typename ScriptEnvironmentImpl>
         class ViewScriptEnvironment {

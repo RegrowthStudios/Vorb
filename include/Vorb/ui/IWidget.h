@@ -193,7 +193,7 @@ namespace vorb {
             virtual         Viewport* getViewport()         const { return m_viewport; }
             virtual          IWidget* getParent()           const { return m_parent;   }
             virtual   const IWidgets& getWidgets()          const { return m_widgets;  }
-            virtual             f32v4 getDestRect()         const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
+            virtual             f32v4 getDimensions()       const { return f32v4(m_position.x, m_position.y, m_size.x, m_size.y); }
             virtual        const f32& getX()                const { return m_position.x; }
             virtual        const f32& getY()                const { return m_position.y; }
             virtual      const f32v2& getPosition()         const { return m_position;   }
@@ -215,13 +215,15 @@ namespace vorb {
             virtual     ClippingState getClippingTop()      const;
             virtual     ClippingState getClippingRight()    const;
             virtual     ClippingState getClippingBottom()   const;
-            virtual             f32v4 getClipRect()         const { return m_clipRect;    }
-            virtual            ZIndex getZIndex()           const { return m_zIndex;      }
-            virtual              Dock getDock()             const { return m_dock;        }
-            virtual         DockState getDockState()        const { return m_dock.state;  }
-            virtual               f32 getDockSize()         const { return m_dock.size;   }
-            virtual    const nString& getName()             const { return m_name;        }
-            virtual      const f32v2& getChildOffset()      const { return m_childOffset; }
+            virtual             f32v4 getClipRect()         const { return m_clipRect;      }
+            virtual            ZIndex getZIndex()           const { return m_zIndex;        }
+            virtual              Dock getDock()             const { return m_dock;          }
+            virtual         DockState getDockState()        const { return m_dock.state;    }
+            virtual               f32 getDockSize()         const { return m_dock.size;     }
+            virtual    const nString& getName()             const { return m_name;          }
+            virtual             f32v2 getChildOffset()      const { return m_childOffset;   }
+            virtual               f32 getChildOffsetX()     const { return m_childOffset.x; }
+            virtual               f32 getChildOffsetY()     const { return m_childOffset.y; }
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
             virtual              bool isClicking()          const { return m_flags.isClicking; }

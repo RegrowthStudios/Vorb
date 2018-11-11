@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/GameWindowScriptFuncs.h"
+#include "Vorb/ui/script/GameWindowScriptFuncs.h"
 
 #include "Vorb/ui/GameWindow.h"
 #include "Vorb/script/IEnvironment.hpp"

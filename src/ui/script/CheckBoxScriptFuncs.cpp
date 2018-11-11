@@ -1,9 +1,9 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/CheckBoxScriptFuncs.h"
+#include "Vorb/ui/script/CheckBoxScriptFuncs.h"
 
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/CheckBox.h"
-#include "Vorb/ui/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 template <typename ScriptEnvironmentImpl>
 void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {

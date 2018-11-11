@@ -1,9 +1,9 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/LabelScriptFuncs.h"
+#include "Vorb/ui/script/LabelScriptFuncs.h"
 
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Label.h"
-#include "Vorb/ui/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 template <typename ScriptEnvironmentImpl>
 void vui::LabelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {

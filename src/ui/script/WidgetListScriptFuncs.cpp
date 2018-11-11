@@ -1,9 +1,9 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/WidgetListScriptFuncs.h"
+#include "Vorb/ui/script/WidgetListScriptFuncs.h"
 
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/WidgetList.h"
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 
 template <typename ScriptEnvironmentImpl>

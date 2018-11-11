@@ -1,10 +1,10 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/ButtonScriptFuncs.h"
+#include "Vorb/ui/script/ButtonScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteBatch.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Button.h"
-#include "Vorb/ui/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 template <typename ScriptEnvironmentImpl>
 void vui::ButtonScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {

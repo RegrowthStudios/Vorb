@@ -1,10 +1,10 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/TextWidget.h"
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 template <typename ScriptEnvironmentImpl>
 void vui::TextWidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {

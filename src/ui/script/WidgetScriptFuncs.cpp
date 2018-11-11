@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
 #include "Vorb/script/IEnvironment.hpp"

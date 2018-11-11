@@ -2,7 +2,7 @@
 #include "Vorb/ui/ScriptedUI.h"
 
 #include "Vorb/ui/Widget.h"
-#include "Vorb/ui/ViewScriptEnvironment.h"
+#include "Vorb/ui/script/ViewScriptEnvironment.h"
 
 template <typename ScriptEnvironmentImpl>
 vui::ScriptedUI<ScriptEnvironmentImpl>::ScriptedUI() :

@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/ComboBoxScriptFuncs.h"
+#include "Vorb/ui/script/ComboBoxScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
 #include "Vorb/ui/ComboBox.h"

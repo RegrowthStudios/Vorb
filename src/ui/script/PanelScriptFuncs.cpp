@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/PanelScriptFuncs.h"
+#include "Vorb/ui/script/PanelScriptFuncs.h"
 
 #include "Vorb/ui/Panel.h"
 #include "Vorb/script/IEnvironment.hpp"

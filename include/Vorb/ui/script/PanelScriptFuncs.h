@@ -22,7 +22,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/ui/WidgetScriptFuncs.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/graphics/SpriteFont.h"
 

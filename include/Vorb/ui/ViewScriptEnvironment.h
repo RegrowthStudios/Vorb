@@ -46,6 +46,7 @@ namespace vorb {
         template <typename ScriptEnvironmentImpl>
         class ViewScriptEnvironment {
             using ScriptEnv = vscript::IEnvironment<ScriptEnvironmentImpl>;
+            using IWidgets  = std::vector<IWidget*>;
         public:
             ViewScriptEnvironment();
             ~ViewScriptEnvironment();
@@ -72,8 +73,11 @@ namespace vorb {
 
             void destroyWidget(IWidget* widget);
 
-            Viewport*  m_viewport;
-            ScriptEnv* m_env;
+            const GameWindow* m_window;
+
+            Viewport*   m_viewport;
+            ScriptEnv*  m_env;
+            IWidgets    m_widgets;
         };
     }
 }

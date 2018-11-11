@@ -92,10 +92,10 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
+            virtual void setAutoScroll(bool autoScroll);
             virtual void setBackColor(const color4& color);
             virtual void setBackHoverColor(const color4& color);
             virtual void setSpacing(f32 spacing);
-            virtual void setAutoScroll(bool autoScroll);
             virtual void setMaxHeight(f32 maxHeight);
 
         protected:

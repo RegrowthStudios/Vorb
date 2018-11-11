@@ -67,6 +67,22 @@ void vui::Panel::setTexture(VGTexture texture) {
     m_drawableRect.setTexture(texture);
 }
 
+void vui::Panel::setAutoScroll(bool autoScroll) {
+    if (autoScroll != m_autoScroll) {
+        m_autoScroll = autoScroll;
+
+        m_flags.needsDrawableRecalculation = true;
+    }
+}
+
+void vui::Panel::setSliderWidth(f32 width) {
+    if (width != m_sliderWidth) {
+        m_sliderWidth = width;
+
+        m_flags.needsDrawableRecalculation = true;
+    }
+}
+
 void vui::Panel::setColor(const color4& color) {
     m_backColor = color;
 
@@ -77,14 +93,6 @@ void vui::Panel::setHoverColor(const color4& color) {
     m_backHoverColor = color;
 
     updateColor();
-}
-
-void vui::Panel::setAutoScroll(bool autoScroll) {
-    if (autoScroll != m_autoScroll) {
-        m_autoScroll = autoScroll;
-
-        m_flags.needsDrawableRecalculation = true;
-    }
 }
 
 void vui::Panel::updateDimensions(f32 dt) {

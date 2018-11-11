@@ -62,9 +62,10 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
+            virtual void setAutoScroll(bool autoScroll);
+            virtual void setSliderWidth(f32 width);
             virtual void setColor(const color4& color);
             virtual void setHoverColor(const color4& color);
-            virtual void setAutoScroll(bool autoScroll);
         protected:
             /*! \brief Initialiser for adding sliders. */
             virtual void initBase() override;

@@ -46,6 +46,7 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
+            // TODO(Matthew): Get gradients back (update script funcs).
             virtual      const VGTexture& getTexture()        const { return m_texture;         }
             virtual      const VGTexture& getHoverTexture()   const { return m_hoverTexture;    }
             virtual         const color4& getBackColor()      const { return m_backColor1;      }

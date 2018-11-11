@@ -58,6 +58,8 @@ namespace vorb {
             virtual              i32 getMax()             const { return m_max; }
             /// Gets slider value scaled between 0.0f and 1.0f
             virtual              f32 getValueScaled()     const { return (f32)(m_value - m_min) / (m_max - m_min); }
+            virtual     const f32v2& getSlideSize()       const { return m_slideSize; }
+            virtual   const Length2& getRawSlideSize()    const { return m_rawSlideSize; }
             virtual             bool isHorizontal()       const { return !m_isVertical; }
             virtual             bool isVertical()         const { return m_isVertical; }
 

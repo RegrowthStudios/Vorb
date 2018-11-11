@@ -72,6 +72,10 @@ void vui::IWidget::dispose() {
     }
     IWidgets().swap(m_widgets);
 
+    if (m_parent) {
+        m_parent->removeWidget(this);
+    }
+
     disable();
 }
 

@@ -122,50 +122,6 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
     WidgetScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     WidgetListScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
-
-    m_env->setNamespaces("UI", "ClippingState");
-    m_env->addValue("VISIBLE", vui::IWidget::ClippingState::VISIBLE);
-    m_env->addValue("HIDDEN",  vui::IWidget::ClippingState::HIDDEN);
-    m_env->addValue("INHERIT", vui::IWidget::ClippingState::INHERIT);
-    m_env->setNamespaces();
-
-    m_env->setNamespaces("UI", "DockState");
-    m_env->addValue("NONE",   vui::IWidget::DockState::NONE);
-    m_env->addValue("LEFT",   vui::IWidget::DockState::LEFT);
-    m_env->addValue("RIGHT",  vui::IWidget::DockState::RIGHT);
-    m_env->addValue("BOTTOM", vui::IWidget::DockState::BOTTOM);
-    m_env->addValue("TOP",    vui::IWidget::DockState::TOP);
-    m_env->addValue("FILL",   vui::IWidget::DockState::FILL);
-    m_env->setNamespaces();
-
-    m_env->setNamespaces("UI", "PositionType");
-    m_env->addValue("STATIC_TO_WINDOW",     vui::Widget::PositionType::STATIC_TO_WINDOW);
-    m_env->addValue("STATIC_TO_VIEWPORT",   vui::Widget::PositionType::STATIC_TO_VIEWPORT);
-    m_env->addValue("STATIC_TO_PARENT",     vui::Widget::PositionType::STATIC_TO_PARENT);
-    m_env->addValue("RELATIVE_TO_WINDOW",   vui::Widget::PositionType::RELATIVE_TO_WINDOW);
-    m_env->addValue("RELATIVE_TO_VIEWPORT", vui::Widget::PositionType::RELATIVE_TO_VIEWPORT);
-    m_env->addValue("RELATIVE_TO_PARENT",   vui::Widget::PositionType::RELATIVE_TO_PARENT);
-    m_env->setNamespaces();
-
-    m_env->setNamespaces("UI", "DimensionType");
-    m_env->addValue("PIXEL",                      vui::Widget::DimensionType::PIXEL);
-    m_env->addValue("WIDTH_PERCENTAGE",           vui::Widget::DimensionType::WIDTH_PERCENTAGE);
-    m_env->addValue("HEIGHT_PERCENTAGE",          vui::Widget::DimensionType::HEIGHT_PERCENTAGE);
-    m_env->addValue("MIN_PERCENTAGE",             vui::Widget::DimensionType::MIN_PERCENTAGE);
-    m_env->addValue("MAX_PERCENTAGE",             vui::Widget::DimensionType::MAX_PERCENTAGE);
-    m_env->addValue("PARENT_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::PARENT_WIDTH_PERCENTAGE);
-    m_env->addValue("PARENT_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::PARENT_HEIGHT_PERCENTAGE);
-    m_env->addValue("PARENT_MIN_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MIN_PERCENTAGE);
-    m_env->addValue("PARENT_MAX_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MAX_PERCENTAGE);
-    m_env->addValue("VIEWPORT_WIDTH_PERCENTAGE",  vui::Widget::DimensionType::VIEWPORT_WIDTH_PERCENTAGE);
-    m_env->addValue("VIEWPORT_HEIGHT_PERCENTAGE", vui::Widget::DimensionType::VIEWPORT_HEIGHT_PERCENTAGE);
-    m_env->addValue("VIEWPORT_MIN_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MIN_PERCENTAGE);
-    m_env->addValue("VIEWPORT_MAX_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MAX_PERCENTAGE);
-    m_env->addValue("WINDOW_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::WINDOW_WIDTH_PERCENTAGE);
-    m_env->addValue("WINDOW_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::WINDOW_HEIGHT_PERCENTAGE);
-    m_env->addValue("WINDOW_MIN_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MIN_PERCENTAGE);
-    m_env->addValue("WINDOW_MAX_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MAX_PERCENTAGE);
-    m_env->setNamespaces();
 }
 
 template <typename ScriptEnvironmentImpl>

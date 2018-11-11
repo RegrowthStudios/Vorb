@@ -16,6 +16,8 @@
 #include "Vorb/ui/Slider.h"
 #include "Vorb/ui/SliderScriptFuncs.h"
 #include "Vorb/ui/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/ViewportScriptFuncs.h"
 #include "Vorb/ui/WidgetScriptFuncs.h"
 #include "Vorb/ui/WidgetList.h"
 #include "Vorb/ui/WidgetListScriptFuncs.h"

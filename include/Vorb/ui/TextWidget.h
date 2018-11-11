@@ -8,9 +8,7 @@
 //
 
 /*! \file TextWidget.h
-* \brief 
-* 
-*
+* \brief Provides a simple extension of Widget to incorporate text.
 */
 
 #pragma once

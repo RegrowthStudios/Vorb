@@ -37,6 +37,7 @@ namespace vorb {
         // Forward declarations
         class GameWindow;
         class Viewport;
+        template <typename ScriptEnvironmentImpl>
         class ViewScriptEnvironment;
 
         // Pairing of Viewport and script environment, forming a view.
@@ -180,6 +181,24 @@ namespace vorb {
              * \return A pointer to the viewport of the view disabled, or nullptr if no view found as named.
              */
             Viewport* disableView(const nString& name);
+
+            /*!
+             * \brief Destroys the named view.
+             *
+             * \param name The name of the view to destroy.
+             *
+             * \return True if the view was destroyed, false otherwise.
+             */
+            bool destroyView(const nString& name);
+
+            /*!
+             * \brief Sets a new z-index value for the named view.
+             *
+             * \param name The name of the view to change the z-index of.
+             *
+             * \return A pointer to the viewport of the named view, or nullptr if no view found as named.
+             */
+            Viewport* setViewZIndex(const nString& name, ZIndex zIndex);
 
             /*!
              * \brief Runs a script 

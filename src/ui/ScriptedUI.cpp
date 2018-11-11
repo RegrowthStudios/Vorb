@@ -133,7 +133,14 @@ vui::ViewScriptEnvironment<ScriptEnvironmentImpl>* vui::ScriptedUI<ScriptEnviron
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::enableView(const nString& name) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::enableView(Viewport* viewport) {
+    viewport->enable();
+
+    return viewport;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::enableViewWithName(nString name) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
             view.second.viewport->enable();
@@ -144,7 +151,14 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::enableView(const nString&
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableView(const nString& name) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableView(Viewport* viewport) {
+    viewport->disable();
+
+    return viewport;
+}
+
+template <typename ScriptEnvironmentImpl>
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableViewWithName(nString name) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
             view.second.viewport->disable();
@@ -154,8 +168,30 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableView(const nString
     return nullptr;
 }
 
+
 template <typename ScriptEnvironmentImpl>
-bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(const nString& name) {
+bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(Viewport* viewport) {
+    for (auto& view : m_views) {
+        if (view.second.viewport == viewport) {
+            // Dispose the viewport and contained widgets and the script environment of the viewport.
+            view.second.viewport->dispose();
+            view.second.scriptEnv->dispose();
+
+            // Free our memory.
+            delete view.second.viewport;
+            delete view.second.scriptEnv;
+
+            // Erase view from the list of views.
+            m_views.erase(view);
+
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename ScriptEnvironmentImpl>
+bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyViewWithName(nString name) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
             // Dispose the viewport and contained widgets and the script environment of the viewport.

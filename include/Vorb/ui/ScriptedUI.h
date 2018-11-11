@@ -170,13 +170,29 @@ namespace vorb {
             ScriptEnv* getEnv(const nString& name);
 
             /*!
+             * \brief Enables the pointed-to view.
+             *
+             * \param viewport Pointer to the viewport to enable.
+             *
+             * \return The pointer provided.
+             */
+            Viewport* enableView(Viewport* viewport);
+            /*!
              * \brief Enables the named view.
              *
              * \param name The name of the view to enable.
              *
              * \return A pointer to the viewport of the view enabled, or nullptr if no view found as named.
              */
-            Viewport* enableView(const nString& name);
+            Viewport* enableViewWithName(nString name);
+            /*!
+             * \brief Disables the pointed-to view.
+             *
+             * \param viewport Pointer to the viewport to disable.
+             *
+             * \return The pointer provided.
+             */
+            Viewport* disableView(Viewport* viewport);
             /*!
              * \brief Disables the named view.
              *
@@ -184,8 +200,17 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the view disabled, or nullptr if no view found as named.
              */
-            Viewport* disableView(const nString& name);
+            Viewport* disableViewWithName(nString name);
 
+
+            /*!
+             * \brief Destroys the pointed-to view.
+             *
+             * \param viewport Pointer to the viewport to destroy.
+             *
+             * \return True if the view was destroyed, false otherwise.
+             */
+            bool destroyView(Viewport* viewport);
             /*!
              * \brief Destroys the named view.
              *
@@ -193,7 +218,7 @@ namespace vorb {
              *
              * \return True if the view was destroyed, false otherwise.
              */
-            bool destroyView(const nString& name);
+            bool destroyViewWithName(nString name);
 
             /*!
              * \brief Sets a new z-index value for the named view.

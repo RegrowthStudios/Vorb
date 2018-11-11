@@ -23,20 +23,21 @@ vui::IWidget::IWidget() :
     // Empty
 }
 
-vui::IWidget::IWidget(const IWidget& widget) {
-    m_viewport = nullptr;
-    m_parent   = nullptr;
-    m_widgets  = IWidgets();
-    m_position = widget.m_position;
-    m_size     = widget.m_size;
-    m_padding  = widget.m_padding;
-    m_clipping = widget.m_clipping;
-    m_clipRect = widget.m_clipRect;
-    m_zIndex   = widget.m_zIndex;
-    m_dock     = widget.m_dock;
-    m_name     = widget.m_name;
-
-    m_flags = { false, false, false, false, false, false, false, false, false };
+vui::IWidget::IWidget(const IWidget& widget) :
+    m_viewport(nullptr),
+    m_parent(nullptr),
+    m_widgets(IWidgets()),
+    m_position(widget.m_position),
+    m_size(widget.m_size),
+    m_padding(widget.m_padding),
+    m_clipping(widget.m_clipping),
+    m_clipRect(widget.m_clipRect),
+    m_zIndex(widget.m_zIndex),
+    m_dock(widget.m_dock),
+    m_name(widget.m_name),
+    m_childOffset(widget.m_childOffset),
+    m_flags({ false, false, false, false, false, false, false, false, false }) {
+    // Empty
 }
 
 vui::IWidget::~IWidget() {

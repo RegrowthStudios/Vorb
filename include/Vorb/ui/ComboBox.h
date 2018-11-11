@@ -35,11 +35,11 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        enum class DropDownStyle {
-            SIMPLE,
-            DROP_DOWN,
-            DROP_DOWN_LIST
-        };
+        // enum class DropDownStyle {
+        //     SIMPLE,
+        //     DROP_DOWN,
+        //     DROP_DOWN_LIST
+        // };
 
         // TODO(Matthew): Different properties on selected button.
         class ComboBox : public Widget {
@@ -133,6 +133,7 @@ namespace vorb {
             virtual      const std::vector <nString>& getItems()             const { return m_items;                          }
             virtual                            size_t getItemCount()         const { return m_buttons.size();                 }
             virtual                    const nString& getItem(size_t index)  const { return m_items.at(index);                }
+            virtual                            size_t getItemIndex(nString item)  const { return std::distance(m_items.begin(), std::find(m_items.begin(), m_items.end(), item));                }
             virtual              const vg::TextAlign& getTextAlign()         const { return m_mainButton.getTextAlign();      }
             virtual                    const nString& getText()              const { return m_mainButton.getText();           }
             virtual                        const f32& getMaxDropHeight()     const { return m_maxDropHeight;                  }
@@ -141,6 +142,8 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             // TODO(Matthew): We need to store data about these calls in this class, so that future added items also get given the right settings.
+            // TODO(Matthew): Provide a setDropButtonXXX with a functor that chooses which buttons to apply the change to.
+            //                  & make it accessible to scripts!
             virtual void setFont(const vorb::graphics::SpriteFont* font);
             virtual void setMainButtonTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);

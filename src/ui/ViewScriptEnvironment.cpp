@@ -96,6 +96,8 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerFuncs() {
 
     SliderScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Slider", m_env);
 
+    ViewportScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Viewport", m_env);
+
     WidgetListScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("WidgetList", m_env);
 }
 
@@ -114,6 +116,10 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
     PanelScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     SliderScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
+
+    ViewportScriptFuncs::registerFuncs<ScriptEnvironmentImpl>(m_env);
+
+    WidgetScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     WidgetListScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 

@@ -63,13 +63,13 @@ namespace vorb {
             void registerFuncs();
             void registerConsts();
 
-                vui::Button* makeButton     (IWidget* parent, const nString& name, f32v4 dimensions);
-              vui::CheckBox* makeCheckBox   (IWidget* parent, const nString& name, f32v4 dimensions);
-              vui::ComboBox* makeComboBox   (IWidget* parent, const nString& name, f32v4 dimensions);
-                 vui::Label* makeLabel      (IWidget* parent, const nString& name, f32v4 dimensions);
-                 vui::Panel* makePanel      (IWidget* parent, const nString& name, f32v4 dimensions);
-                vui::Slider* makeSlider     (IWidget* parent, const nString& name, f32v4 dimensions);
-            vui::WidgetList* makeWidgetList (IWidget* parent, const nString& name, f32v4 dimensions);
+                vui::Button* makeButton     (IWidget* parent, nString name, f32v4 dimensions);
+              vui::CheckBox* makeCheckBox   (IWidget* parent, nString name, f32v4 dimensions);
+              vui::ComboBox* makeComboBox   (IWidget* parent, nString name, f32v4 dimensions);
+                 vui::Label* makeLabel      (IWidget* parent, nString name, f32v4 dimensions);
+                 vui::Panel* makePanel      (IWidget* parent, nString name, f32v4 dimensions);
+                vui::Slider* makeSlider     (IWidget* parent, nString name, f32v4 dimensions);
+            vui::WidgetList* makeWidgetList (IWidget* parent, nString name, f32v4 dimensions);
 
             void destroyWidget(IWidget* widget);
 

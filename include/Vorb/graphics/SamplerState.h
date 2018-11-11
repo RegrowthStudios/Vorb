@@ -8,7 +8,7 @@
 //
 
 /*! \file SamplerState.h
- * @brief Changes GPU texture sampling state.
+ * \brief Changes GPU texture sampling state.
  */
 
 #pragma once
@@ -25,11 +25,6 @@
 #include "GLEnums.h"
 #include "gtypes.h"
 
-#ifdef VORB_USING_SCRIPT
-#include "../VorbPreDecl.inl"
-DECL_VSCRIPT_LUA(class Environment);
-#endif
-
 namespace vorb {
 	namespace graphics {
         // TODO: Why are these here?
@@ -42,12 +37,9 @@ namespace vorb {
 		
 		class SamplerState {
 		public:
-		    SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter,
-		        TextureWrapMode texWrapS, TextureWrapMode texWrapT, TextureWrapMode texWrapR);
-		    SamplerState(ui32 texMinFilter, ui32 texMagFilter,
-		        ui32 texWrapS, ui32 texWrapT, ui32 texWrapR) :
-		        SamplerState(static_cast<TextureMinFilter>(texMinFilter), static_cast<TextureMagFilter>(texMagFilter),
-		        static_cast<TextureWrapMode>(texWrapS), static_cast<TextureWrapMode>(texWrapT), static_cast<TextureWrapMode>(texWrapR)) {}
+		    SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter, TextureWrapMode texWrapS, 
+							TextureWrapMode texWrapT, TextureWrapMode texWrapR);
+		    SamplerState(ui32 texMinFilter, ui32 texMagFilter, ui32 texWrapS, ui32 texWrapT, ui32 texWrapR);
 		
 		    void initObject();
 		    // Initialize All The Sampler Objects When OpenGL Context Is Created
@@ -57,14 +49,6 @@ namespace vorb {
 		    void set(ui32 textureTarget) const;
 		    // Unit Is In The Range [0 - GraphicsDeviceProperties::maxTextureUnits)
 		    void setObject(ui32 textureUnit) const;
-
-#ifdef VORB_USING_SCRIPT
-            /*! @brief Registers states with a script environment.
-             * 
-             * @param env: The scripting environment. 
-             */
-            static void registerStates(vscript::Environment& env);
-#endif
 		
 		    static SamplerState POINT_WRAP;
 		    static SamplerState POINT_CLAMP;
@@ -75,13 +59,13 @@ namespace vorb {
 		    static SamplerState LINEAR_WRAP_MIPMAP;
 		    static SamplerState LINEAR_CLAMP_MIPMAP;
 		private:
-		    VGSampler _id;
+		    VGSampler m_id;
 		
-		    TextureMinFilter _minFilter;
-		    TextureMagFilter _magFilter;
-		    TextureWrapMode _wrapS;
-		    TextureWrapMode _wrapT;
-		    TextureWrapMode _wrapR;
+		    TextureMinFilter m_minFilter;
+		    TextureMagFilter m_magFilter;
+		    TextureWrapMode  m_wrapS;
+		    TextureWrapMode  m_wrapT;
+		    TextureWrapMode  m_wrapR;
 		};
 	}
 }

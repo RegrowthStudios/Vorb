@@ -88,7 +88,7 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerFuncs() {
 
     ComboBoxScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("ComboBox", m_env);
 
-    GameWindowScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Window", m_env);
+    GameWindowScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Window", m_env, m_window);
 
     LabelScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Label", m_env);
 

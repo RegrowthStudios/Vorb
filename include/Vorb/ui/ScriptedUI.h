@@ -39,6 +39,7 @@ namespace vorb {
         class Viewport;
         template <typename ScriptEnvironmentImpl>
         class ViewScriptEnvironment;
+        struct Length2;
 
         // Pairing of Viewport and script environment, forming a view.
         template <typename ScriptEnvironmentImpl>

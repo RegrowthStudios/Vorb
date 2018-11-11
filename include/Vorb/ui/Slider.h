@@ -66,17 +66,17 @@ namespace vorb {
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            virtual void setSlideSize(const Length2& size);
-            virtual void setSlideSize(const f32v2& size);
             virtual void setSlideTexture(VGTexture texture);
             virtual void setBarTexture(VGTexture texture);
-            virtual void setBarColor(const color4& color);
             virtual void setSlideColor(const color4& color);
             virtual void setSlideHoverColor(const color4& color);
+            virtual void setBarColor(const color4& color);
             virtual void setValue(i32 value);
             virtual void setRange(i32 min, i32 max);
             virtual void setMin(i32 min);
             virtual void setMax(i32 max);
+            virtual void setSlideSize(const Length2& size);
+            virtual void setSlideSize(const f32v2& size);
             virtual void setIsVertical(bool isVertical);
 
             virtual bool isInSlideBounds(const f32v2& point) const { return isInSlideBounds(point.x, point.y); }

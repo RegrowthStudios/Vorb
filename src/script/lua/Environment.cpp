@@ -8,6 +8,10 @@ vscript::lua::Environment::Environment() :
     m_state(nullptr),
     m_namespaceDepth(0),
     m_maxScriptLength(INT32_MAX / 10) {
+    // Empty
+}
+
+vscript::lua::Environment::init() {
     // Initialise the Lua environment.
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
@@ -30,16 +34,20 @@ vscript::lua::Environment::Environment() :
     addCClosure("SubscribeToEvent", 1, &makeLCallback);
 }
 
-vscript::lua::Environment::Environment(const nString& filepath) :
-    Environment() {
+vscript::lua::Environment::init(const nString& filepath) {
+    init();
     load(filepath);
 }
 
-vscript::lua::Environment::~Environment() {
+vscript::lua::Environment::dispose() {
     for (auto& lFunction : m_lFunctions) {
-        lFunction.second.reset();
+        delete lFunction.second;
     }
+    LFunctionList().swap(m_lFunctions);
+
     lua_close(m_state);
+
+    IEnvironment::dispose();
 }
 
 bool vscript::lua::Environment::load(const vio::Path& filepath) {

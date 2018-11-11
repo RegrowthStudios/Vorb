@@ -44,7 +44,22 @@ namespace vorb {
             public:
                 Environment();
                 Environment(const nString& filepath);
-                ~Environment();
+
+                /*!
+                 * \brief Initialises the environment.
+                 */
+                virtual void init() override;
+                /*!
+                 * \brief Initialises the environment.
+                 *
+                 * \param filepath The filepath from which to load the script.
+                 */
+                virtual void init(const vio::Path& filepath) override;
+
+                /*!
+                 * \brief Disposes of the environment.
+                 */
+                virtual dispose() override;
 
                 /*!
                  * \brief Load in a script from the provided filepath.
@@ -217,7 +232,7 @@ namespace vscript = vorb::script;
 template<typename ReturnType, typename ...Parameters, typename DelegateType>
 inline void vscript::lua::Environment::addCDelegate(const nString& name, DelegateType&& delegate) {
     // Create copy of delegate and store it.
-    m_cFunctions.emplace_back(new DelegateType(delegate));
+    m_cFunctions.emplace_back(new DelegateType(std::move(delegate)));
 
     // Get function to wrap delegate.
     CFunction::Type function = CFunction::fromDelegate<ReturnType, Parameters...>();
@@ -286,7 +301,7 @@ DelegateType* getScriptDelegate(const nString& name) {
     // If we couldn't find it, fail.
     if (lFunction == nullptr) return nullptr;
 
-    return new DelegateType(std::move(makeDelegate(*lFunction)));
+    return new DelegateType(std::move(makeDelegate<ReturnType, Parameters...>(*lFunction)));
 }
 
 #endif // VORB_USING_SCRIPT

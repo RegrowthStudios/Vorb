@@ -24,7 +24,7 @@ void vui::LabelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IE
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::LabelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::LabelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

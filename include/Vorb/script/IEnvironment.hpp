@@ -36,12 +36,13 @@
 
 namespace vorb {
     namespace script {
-        using GenericScriptFunction = void(*)();
+        using GenericScriptFunction = void*;
         using GenericCFunction      = void(*)();
 
         // TODO(Matthew): A static_assert of implementations providing functions required?
         template <typename EnvironmentImpl>
         class IEnvironment {
+        protected:
             using CFunctionList = std::vector<std::unique_ptr<DelegateBase>>;
             using EventAdder    = void(EnvironmentImpl::*)(GenericScriptFunction, EventBase*);
             struct EventData {
@@ -51,8 +52,8 @@ namespace vorb {
             using EventList = std::unordered_map<nString, EventData>;
         public:
             IEnvironment() :
-                m_maxScriptLength(FLT_MAX) {
-                static_assert(std::is_base_of<IEnvironment, DerivedEnvironment>::value, "Environment implementation provided not deriving from IEnvironment interface.");
+                m_maxScriptLength(INT_MAX) {
+                static_assert(std::is_base_of<IEnvironment, EnvironmentImpl>::value, "Environment implementation provided not deriving from IEnvironment interface.");
             }
 
             /*!
@@ -71,7 +72,7 @@ namespace vorb {
              */
             virtual void dispose() {
                 for (auto& cFunction : m_cFunctions) {
-                    cFunction.second.reset();
+                    cFunction.reset();
                 }
                 CFunctionList().swap(m_cFunctions);
                 EventList().swap(m_events);
@@ -112,7 +113,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             bool registerEvent(const nString& name, Event<Parameters...>* event) {
-                return m_events.insert({ name, { static_cast<EventBase*>(event), &EnvironmentImpl::addScriptFunctionToEvent<Parameters...> } }).second;
+                return m_events.insert({ name, { static_cast<EventBase*>(event), &EnvironmentImpl::template addScriptFunctionToEvent<Parameters...> } }).second;
             }
 
             /*!
@@ -125,7 +126,7 @@ namespace vorb {
              */
             template <typename ...Parameters>
             void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-                static_cast<EnvironmentImpl*>(this)->addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
+                static_cast<EnvironmentImpl*>(this)->template addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
             }
 
             /*!
@@ -153,7 +154,7 @@ namespace vorb {
              */
             template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
             DelegateType* getScriptDelegate(const nString& name) {
-                return static_cast<EnvironmentImpl*>(this)->getScriptDelegate<ReturnType, Parameters...>(name);
+                return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
             }
 
             /*!

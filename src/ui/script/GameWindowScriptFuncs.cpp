@@ -2,6 +2,7 @@
 #include "Vorb/ui/script/GameWindowScriptFuncs.h"
 
 #include "Vorb/ui/GameWindow.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 #include "Vorb/script/IEnvironment.hpp"
 
 
@@ -10,20 +11,20 @@ void vui::GameWindowScriptFuncs::registerFuncs(const nString& namespace_, vscrip
     env->setNamespaces("UI", namespace_);
     env->addCDelegate("getNumSupportedResolutions", makeDelegate([window] () {
         return impl::getNumSupportedResolutions(window);
-    });
+    }));
     env->addCDelegate("getSupportedResolution",     makeDelegate([window] (size_t resIndex) {
-        return impl::getNumSupportedResolutions(window, resIndex);
-    });
+        return impl::getSupportedResolution(window, resIndex);
+    }));
     env->addCDelegate("getCurrentResolution",       makeDelegate([window] () {
-        return impl::getNumSupportedResolutions(window);
-    });
+        return impl::getCurrentResolution(window);
+    }));
     env->setNamespaces();
 
     WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::GameWindowScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::GameWindowScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

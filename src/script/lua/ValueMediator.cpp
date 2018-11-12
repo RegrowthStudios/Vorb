@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "script/lua/ValueMediator.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/lua/ValueMediator.h"
 
 /************************************************************************/
 /* Integer Cast                                                         */
@@ -275,7 +275,7 @@ color4 vscript::lua::ValueMediator<color4, void>::defaultValue() {
     return color4();
 }
 
-i32 vscript::lua::ValueMediator<color4, void>::getNumValues() {
+i32 vscript::lua::ValueMediator<color4, void>::getValueCount() {
     return 4;
 }
 
@@ -336,21 +336,21 @@ bool vscript::lua::ValueMediator<color4, void>::tryRetrieve(Handle state, ui32 i
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::defaultValue() {                                                              \
         return TYPE##v2();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v2, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v2, void>::getValueCount() {                                                                  \
         return 2;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v2, void>::push(Handle state, const TYPE##v2& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
         return 2;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::pop(Handle state) {                                                           \
         TYPE##v2 value;                                                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::tryPop(Handle state, OUT TYPE##v2& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v2, void>::tryPop(Handle state, OUT TYPE##v2& value) {                                       \
         if (lua_isinteger(state, -1) &&                                                                                                 \
             lua_isinteger(state, -2)) {                                                                                                 \
             value = pop(state);                                                                                                         \
@@ -367,7 +367,7 @@ bool vscript::lua::ValueMediator<color4, void>::tryRetrieve(Handle state, ui32 i
         lua_remove(state, index - 1);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v2& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v2, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v2& value) {                      \
         if (lua_isinteger(state, index) &&                                                                                              \
             lua_isinteger(state, index - 1)) {                                                                                          \
             value = retrieve(state, index);                                                                                             \
@@ -388,21 +388,21 @@ INT_TYPE_VEC2(ui64)
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::defaultValue() {                                                              \
         return TYPE##v2();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v2, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v2, void>::getValueCount() {                                                                  \
         return 2;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v2, void>::push(Handle state, const TYPE##v2& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
         return 2;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::pop(Handle state) {                                                           \
         TYPE##v2 value;                                                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::tryPop(Handle state, OUT TYPE##v2& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v2, void>::tryPop(Handle state, OUT TYPE##v2& value) {                                       \
         if (lua_isnumber(state, -1) &&                                                                                                  \
             lua_isnumber(state, -2)) {                                                                                                  \
             value = pop(state);                                                                                                         \
@@ -419,7 +419,7 @@ INT_TYPE_VEC2(ui64)
         lua_remove(state, index - 1);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v2& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v2, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v2& value) {                      \
         if (lua_isnumber(state, index) &&                                                                                               \
             lua_isnumber(state, index - 1)) {                                                                                           \
             value = retrieve(state, index);                                                                                             \
@@ -435,23 +435,23 @@ FLT_TYPE_VEC2(f64)
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::defaultValue() {                                                              \
         return TYPE##v3();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v3, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v3, void>::getValueCount() {                                                                  \
         return 3;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v3, void>::push(Handle state, const TYPE##v3& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[2]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[2]);                                                                                     \
         return 3;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::pop(Handle state) {                                                           \
         TYPE##v3 value;                                                                                                                 \
-        value[2] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[2] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::tryPop(Handle state, OUT TYPE##v3& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v3, void>::tryPop(Handle state, OUT TYPE##v3& value) {                                       \
         if (lua_isinteger(state, -1) &&                                                                                                 \
             lua_isinteger(state, -2) &&                                                                                                 \
             lua_isinteger(state, -3)) {                                                                                                 \
@@ -471,9 +471,9 @@ FLT_TYPE_VEC2(f64)
         lua_remove(state, index - 2);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v3& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v3, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v3& value) {                      \
         if (lua_isinteger(state, index) &&                                                                                              \
-            lua_isinteger(state, index - 1)                                                                                             \
+            lua_isinteger(state, index - 1) &&                                                                                          \
             lua_isinteger(state, index - 2)) {                                                                                          \
             value = retrieve(state, index);                                                                                             \
             return true;                                                                                                                \
@@ -493,23 +493,23 @@ INT_TYPE_VEC3(ui64)
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::defaultValue() {                                                              \
         return TYPE##v3();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v3, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v3, void>::getValueCount() {                                                                  \
         return 3;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v3, void>::push(Handle state, const TYPE##v3& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[2]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[2]);                                                                                     \
         return 3;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::pop(Handle state) {                                                           \
         TYPE##v3 value;                                                                                                                 \
-        value[2] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[2] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::tryPop(Handle state, OUT TYPE##v3& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v3, void>::tryPop(Handle state, OUT TYPE##v3& value) {                                       \
         if (lua_isnumber(state, -1) &&                                                                                                  \
             lua_isnumber(state, -2) &&                                                                                                  \
             lua_isnumber(state, -3)) {                                                                                                  \
@@ -529,9 +529,9 @@ INT_TYPE_VEC3(ui64)
         lua_remove(state, index - 2);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v3& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v3, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v3& value) {                      \
         if (lua_isnumber(state, index) &&                                                                                               \
-            lua_isnumber(state, index - 1)                                                                                              \
+            lua_isnumber(state, index - 1) &&                                                                                           \
             lua_isnumber(state, index - 2)) {                                                                                           \
             value = retrieve(state, index);                                                                                             \
             return true;                                                                                                                \
@@ -546,25 +546,25 @@ FLT_TYPE_VEC3(f64)
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::defaultValue() {                                                              \
         return TYPE##v4();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v4, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v4, void>::getValueCount() {                                                                  \
         return 4;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v4, void>::push(Handle state, const TYPE##v4& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[2]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[3]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[2]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[3]);                                                                                     \
         return 4;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::pop(Handle state) {                                                           \
         TYPE##v4 value;                                                                                                                 \
-        value[3] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[2] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[3] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[2] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::tryPop(Handle state, OUT TYPE##v4& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v4, void>::tryPop(Handle state, OUT TYPE##v4& value) {                                       \
         if (lua_isinteger(state, -1) &&                                                                                                 \
             lua_isinteger(state, -2) &&                                                                                                 \
             lua_isinteger(state, -3) &&                                                                                                 \
@@ -587,10 +587,10 @@ FLT_TYPE_VEC3(f64)
         lua_remove(state, index - 3);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v4& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v4, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v4& value) {                      \
         if (lua_isinteger(state, index) &&                                                                                              \
-            lua_isinteger(state, index - 1)                                                                                             \
-            lua_isinteger(state, index - 2)                                                                                             \
+            lua_isinteger(state, index - 1) &&                                                                                          \
+            lua_isinteger(state, index - 2) &&                                                                                          \
             lua_isinteger(state, index - 3)) {                                                                                          \
             value = retrieve(state, index);                                                                                             \
             return true;                                                                                                                \
@@ -610,25 +610,25 @@ INT_TYPE_VEC4(ui64)
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::defaultValue() {                                                              \
         return TYPE##v4();                                                                                                              \
     }                                                                                                                                   \
-    i32 vscript::lua::ValueMediator<TYPE##v4, void>::getNumValues() {                                                                   \
+    i32 vscript::lua::ValueMediator<TYPE##v4, void>::getValueCount() {                                                                  \
         return 4;                                                                                                                       \
     }                                                                                                                                   \
     i32 vscript::lua::ValueMediator<TYPE##v4, void>::push(Handle state, const TYPE##v4& value) {                                        \
-        ScriptValueSender<TYPE>::push(state, value[0]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[1]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[2]);                                                                                 \
-        ScriptValueSender<TYPE>::push(state, value[3]);                                                                                 \
+        ValueMediator<TYPE>::push(state, value[0]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[1]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[2]);                                                                                     \
+        ValueMediator<TYPE>::push(state, value[3]);                                                                                     \
         return 4;                                                                                                                       \
     }                                                                                                                                   \
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::pop(Handle state) {                                                           \
         TYPE##v4 value;                                                                                                                 \
-        value[3] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[2] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[1] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
-        value[0] = ScriptValueSender<TYPE>::pop(state);                                                                                 \
+        value[3] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[2] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[1] = ValueMediator<TYPE>::pop(state);                                                                                     \
+        value[0] = ValueMediator<TYPE>::pop(state);                                                                                     \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::tryPop(Handle state, OUT TYPE##v4& value) {                                   \
+    bool vscript::lua::ValueMediator<TYPE##v4, void>::tryPop(Handle state, OUT TYPE##v4& value) {                                       \
         if (lua_isnumber(state, -1) &&                                                                                                  \
             lua_isnumber(state, -2) &&                                                                                                  \
             lua_isnumber(state, -3) &&                                                                                                  \
@@ -651,10 +651,10 @@ INT_TYPE_VEC4(ui64)
         lua_remove(state, index - 3);                                                                                                   \
         return value;                                                                                                                   \
     }                                                                                                                                   \
-    TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v4& value) {                  \
+    bool vscript::lua::ValueMediator<TYPE##v4, void>::tryRetrieve(Handle state, ui32 index, OUT TYPE##v4& value) {                      \
         if (lua_isnumber(state, index) &&                                                                                               \
-            lua_isnumber(state, index - 1)                                                                                              \
-            lua_isnumber(state, index - 2)                                                                                              \
+            lua_isnumber(state, index - 1) &&                                                                                           \
+            lua_isnumber(state, index - 2) &&                                                                                           \
             lua_isnumber(state, index - 3)) {                                                                                           \
             value = retrieve(state, index);                                                                                             \
             return true;                                                                                                                \

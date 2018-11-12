@@ -21,9 +21,15 @@
 
 #ifdef VORB_USING_SCRIPT
 
+#include <lua.hpp>
+
+#include "Vorb/types.h"
+
 namespace vorb {
     namespace script {
         namespace lua {
+            using Handle = lua_State*;
+
             // Forward declare the ValueMediator struct.
             // This struct is used to facilitate simpler templated pushing and popping of common types onto the lua state stack.
             template<typename Type, typename = void> struct ValueMediator;

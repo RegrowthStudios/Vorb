@@ -43,7 +43,6 @@ namespace vorb {
 
         // TODO(Matthew): Different properties on selected button.
         class ComboBox : public Widget {
-            friend class ComboBoxScriptFuncs;
         public:
             /*! \brief Default constructor. */
             ComboBox();
@@ -213,9 +212,9 @@ namespace vorb {
             /************************************************************************/
             /* LUA Callbacks                                                        */
             /************************************************************************/
-#ifdef VORB_USING_SCRIPT
-            std::vector<script::Function> m_valueChangeFuncs;
-#endif
+// #ifdef VORB_USING_SCRIPT
+//             std::vector<script::Function> m_valueChangeFuncs;
+// #endif
 
             /************************************************************************/
             /* Members                                                              */
@@ -225,7 +224,7 @@ namespace vorb {
             Button               m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons;    // Sub buttons
             std::vector<nString> m_items;
-            DropDownStyle        m_dropDownStyle;
+            // DropDownStyle        m_dropDownStyle;
             bool                 m_isDropped;
         };
     }

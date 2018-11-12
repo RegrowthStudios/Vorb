@@ -102,19 +102,19 @@ TEST(DelegateMemberAccess) {
 }
 
 TEST(Convention1) {
-    RDelegate<bool, bool> v = makeRDelegate(getOppositeValue);
+    Delegate<bool, bool> v = makeRDelegate(getOppositeValue);
     return v(false);
 }
 
 TEST(Convention2) {
     TestClassBase obj;
-    RDelegate<bool, bool> v = makeRDelegate(obj, &TestClassBase::getOppositeValue);
+    Delegate<bool, bool> v = makeRDelegate(obj, &TestClassBase::getOppositeValue);
     return v(false);
 }
 
 TEST(Convention3) {
     TestClassBase obj;
-    RDelegate<bool, bool>* v = makeRFunctor(obj, &TestClassBase::getOppositeValue);
+    Delegate<bool, bool>* v = makeRFunctor(obj, &TestClassBase::getOppositeValue);
     bool a = v->invoke(false);
     delete v;
     return a;

@@ -125,7 +125,6 @@ namespace vorb {
         };
 
         class Widget : public IWidget {
-            friend class WidgetScriptFuncs;
         public:
             /*! \brief Default constructor. */
             Widget();

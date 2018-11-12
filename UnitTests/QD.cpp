@@ -20,8 +20,8 @@ void adder(int& r, int a, int b) {
 }
 
 
-Delegate<int> sumthing() {
-    return makeDelegate<int>([] (int n) {
+Delegate<void, int> sumthing() {
+    return makeDelegate([] (int n) {
         printf("%d\n", n);
     });
 }
@@ -51,7 +51,7 @@ TEST(1) {
     }
 
     {
-        Delegate<>* ftor;
+        Delegate<void>* ftor;
         {
             auto fr = [&] () {
                 r += 10;

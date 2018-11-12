@@ -34,7 +34,7 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::CheckBoxScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::CheckBoxScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

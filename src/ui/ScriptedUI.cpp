@@ -1,6 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/ScriptedUI.h"
 
+#include "Vorb/ui/Viewport.h"
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/script/ViewScriptEnvironment.h"
 
@@ -67,7 +68,7 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport->init(name, dimensions, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
     view.scriptEnv = new ScriptEnv();
-    view.scriptEnv->init(viewport, m_window);
+    view.scriptEnv->init(view.viewport, m_window);
 
     prepareScriptEnv(view.scriptEnv);
 
@@ -84,7 +85,7 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport->init(name, position, size, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
     view.scriptEnv = new ScriptEnv();
-    view.scriptEnv->init(viewport, m_window);
+    view.scriptEnv->init(view.viewport, m_window);
 
     prepareScriptEnv(view.scriptEnv);
 
@@ -103,7 +104,7 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(const 
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(const nString& name, ZIndex zIndex, const vio::File& filepath VORB_UNUSED) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
     // TODO(Matthew): Implement building view from YAML.
@@ -247,7 +248,7 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ScriptEnv* scriptE
     vscript::IEnvironment<ScriptEnvironmentImpl>* env = scriptEnv->getEnv();
 
     env->setNamespaces("UI");
-    env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript);
+    env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript));
     env->addCDelegate("makeViewFromYAML",    makeDelegate(this, &ScriptedUI::makeViewFromYAML));
     env->addCDelegate("enableView",          makeDelegate(this, &ScriptedUI::enableView));
     env->addCDelegate("enableViewWithName",  makeDelegate(this, &ScriptedUI::enableViewWithName));

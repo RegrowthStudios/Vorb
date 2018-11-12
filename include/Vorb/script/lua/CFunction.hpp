@@ -21,9 +21,9 @@
 
 #ifdef VORB_USING_SCRIPT
 
-#include "ValueMediator.h"
-#include "../../Delegate.hpp"
-#include "../../IndexSequence.hpp"
+#include "Vorb/script/lua/ValueMediator.h"
+#include "Vorb/Delegate.hpp"
+#include "Vorb/IndexSequence.hpp"
 
 namespace vorb {
     namespace script {

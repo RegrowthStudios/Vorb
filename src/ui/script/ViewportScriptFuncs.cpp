@@ -11,6 +11,6 @@ void vui::ViewportScriptFuncs::registerFuncs(const nString& namespace_, vscript:
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ViewportScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::ViewportScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }

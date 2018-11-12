@@ -1,5 +1,6 @@
-#include "stdafx.h"
-#include "script/lua/LFunction.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/lua/Environment.h"
+#include "Vorb/script/lua/LFunction.h"
 
 const vscript::lua::LFunction vscript::lua::LFunction::Nil = vscript::lua::LFunction();
 
@@ -23,5 +24,5 @@ bool vscript::lua::LFunction::operator==(const LFunction & rhs) const {
 void vscript::lua::LFunction::dumpErrors() const {
     // lua_pcall strictly only adds one error at most to the stack on failure,
     // just cout that error message.
-    std::cout << ValueMediator<std::string>::pop(m_state) << std::endl;
+    printf(ValueMediator<const cString>::pop(m_state));
 }

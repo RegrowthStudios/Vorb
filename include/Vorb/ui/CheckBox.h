@@ -34,7 +34,6 @@ namespace vorb {
         class UIRenderer;
 
         class CheckBox : public TextWidget {
-            friend class CheckBoxScriptFuncs;
         public:
             /*! \brief Default constructor. */
             CheckBox();
@@ -101,9 +100,9 @@ namespace vorb {
             /************************************************************************/
             /* LUA Callbacks                                                        */
             /************************************************************************/
-#ifdef VORB_USING_SCRIPT
-            std::vector<script::Function> m_valueChangeFuncs;
-#endif
+// #ifdef VORB_USING_SCRIPT
+//             std::vector<script::Function> m_valueChangeFuncs;
+// #endif
 
             /************************************************************************/
             /* Members                                                              */

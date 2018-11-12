@@ -9,8 +9,8 @@
 vui::Widget::Widget() :
     IWidget(),
     m_positionType(PositionType::STATIC_TO_PARENT),
-    m_minRawSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }),
-    m_maxRawSize({ FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawMinSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_rawMaxSize({ FLT_MAX, FLT_MAX, { DimensionType::PIXEL, DimensionType::PIXEL } }),
     m_rawDockSize({ 0.0f, { DimensionType::PIXEL } }),
     m_rawPadding({ 0.0f, 0.0f, 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL, DimensionType::PIXEL } }),
     m_rawDimensions({ { 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }, { 0.0, 0.0, { DimensionType::PIXEL, DimensionType::PIXEL } } }) {
@@ -61,13 +61,13 @@ void vui::Widget::init(IWidget* parent, const nString& name, const Length2& posi
 }
 
 void vui::Widget::setMaxSize(const f32v2& maxRawSize) {
-    m_maxRawSize = { maxRawSize.x, maxRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+    m_rawMaxSize = { maxRawSize.x, maxRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
 
 void vui::Widget::setMinSize(const f32v2& minRawSize) {
-    m_minRawSize = { minRawSize.x, minRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
+    m_rawMinSize = { minRawSize.x, minRawSize.y, { DimensionType::PIXEL, DimensionType::PIXEL } };
 
     m_flags.needsDimensionUpdate = true;
 }
@@ -384,8 +384,8 @@ f32v2 vui::Widget::processLength(Length2 length) const {
 }
 
 void vui::Widget::applyMinMaxSizes() {
-    f32v2 processedMinSize = processLength(m_minRawSize);
-    f32v2 processedMaxSize = processLength(m_maxRawSize);
+    f32v2 processedMinSize = processLength(m_rawMinSize);
+    f32v2 processedMaxSize = processLength(m_rawMaxSize);
 
     if (m_size.x < processedMinSize.x) {
         IWidget::setWidth(processedMinSize.x);

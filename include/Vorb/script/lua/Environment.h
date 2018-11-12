@@ -59,7 +59,7 @@ namespace vorb {
                 /*!
                  * \brief Disposes of the environment.
                  */
-                virtual dispose() override;
+                virtual void dispose() override;
 
                 /*!
                  * \brief Load in a script from the provided filepath.
@@ -293,8 +293,8 @@ void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction s
     m_listenerPool.addAutoHook(*event, *lFunction);
 }
 
-template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
-DelegateType* getScriptDelegate(const nString& name) {
+template <typename ReturnType, typename ...Parameters, typename DelegateType>
+DelegateType* vscript::lua::Environment::getScriptDelegate(const nString& name) {
     // Get the LFunction we want to wrap.
     LFunction* lFunction = getLFunction(name);
 

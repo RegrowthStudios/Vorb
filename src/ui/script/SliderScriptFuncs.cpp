@@ -39,7 +39,7 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::SliderScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::SliderScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

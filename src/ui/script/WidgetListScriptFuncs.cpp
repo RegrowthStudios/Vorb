@@ -9,19 +9,19 @@
 template <typename ScriptEnvironmentImpl>
 void vui::WidgetListScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("UI", namespace_);
-    env->addCDelegate("getTexture",      makeDelegate(&impl::getTexture));
-    env->addCDelegate("setTexture",      makeDelegate(&impl::setTexture));
-    env->addCDelegate("getAutoScroll",      makeDelegate(&impl::getAutoScroll));
-    env->addCDelegate("setAutoScroll",      makeDelegate(&impl::setAutoScroll));
-    env->addCDelegate("getBackColor", makeDelegate(&impl::getBackColor));
-    env->addCDelegate("setBackColor", makeDelegate(&impl::setBackColor));
+    env->addCDelegate("getTexture",        makeDelegate(&impl::getTexture));
+    env->addCDelegate("setTexture",        makeDelegate(&impl::setTexture));
+    env->addCDelegate("getAutoScroll",     makeDelegate(&impl::getAutoScroll));
+    env->addCDelegate("setAutoScroll",     makeDelegate(&impl::setAutoScroll));
+    env->addCDelegate("getBackColor",      makeDelegate(&impl::getBackColor));
+    env->addCDelegate("setBackColor",      makeDelegate(&impl::setBackColor));
     env->addCDelegate("getBackHoverColor", makeDelegate(&impl::getBackHoverColor));
     env->addCDelegate("setBackHoverColor", makeDelegate(&impl::setBackHoverColor));
-    env->addCDelegate("getItemCount", makeDelegate(&impl::getItemCount));
-    env->addCDelegate("getSpacing", makeDelegate(&impl::getSpacing));
-    env->addCDelegate("setSpacing", makeDelegate(&impl::setSpacing));
-    env->addCDelegate("getMaxHeight", makeDelegate(&impl::getMaxHeight));
-    env->addCDelegate("setMaxHeight", makeDelegate(&impl::setMaxHeight));
+    env->addCDelegate("getItemCount",      makeDelegate(&impl::getItemCount));
+    env->addCDelegate("getSpacing",        makeDelegate(&impl::getSpacing));
+    env->addCDelegate("setSpacing",        makeDelegate(&impl::setSpacing));
+    env->addCDelegate("getMaxHeight",      makeDelegate(&impl::getMaxHeight));
+    env->addCDelegate("setMaxHeight",      makeDelegate(&impl::setMaxHeight));
     env->setNamespaces();
 
     WidgetScriptFuncs::registerFuncs(namespace_, env);

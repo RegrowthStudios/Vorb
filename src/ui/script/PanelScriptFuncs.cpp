@@ -23,7 +23,7 @@ void vui::PanelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IE
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::PanelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::PanelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

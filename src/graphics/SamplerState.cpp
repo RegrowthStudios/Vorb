@@ -10,7 +10,7 @@ vg::SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter t
     m_wrapR(texWrapR) {
     // Empty
 }
-vg::SamplerState(ui32 texMinFilter, ui32 texMagFilter, ui32 texWrapS, ui32 texWrapT, ui32 texWrapR) :
+vg::SamplerState::SamplerState(ui32 texMinFilter, ui32 texMagFilter, ui32 texWrapS, ui32 texWrapT, ui32 texWrapR) :
 	SamplerState(static_cast<TextureMinFilter>(texMinFilter), static_cast<TextureMagFilter>(texMagFilter), static_cast<TextureWrapMode>(texWrapS),
                     static_cast<TextureWrapMode>(texWrapT), static_cast<TextureWrapMode>(texWrapR)) {
     // Empty

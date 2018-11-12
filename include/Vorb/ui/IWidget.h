@@ -24,10 +24,6 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#ifdef VORB_USING_SCRIPT
-#include "Vorb/script/Function.h"
-#endif
-
 #include <limits>
 #include <vector>
 
@@ -352,14 +348,14 @@ namespace vorb {
             /************************************************************************/
             /* LUA Callbacks                                                        */
             /************************************************************************/
-#ifdef VORB_USING_SCRIPT
-            std::vector<script::Function> m_mouseClickFuncs;
-            std::vector<script::Function> m_mouseDownFuncs;
-            std::vector<script::Function> m_mouseUpFuncs;
-            std::vector<script::Function> m_mouseEnterFuncs;
-            std::vector<script::Function> m_mouseLeaveFuncs;
-            std::vector<script::Function> m_mouseMoveFuncs;
-#endif
+// #ifdef VORB_USING_SCRIPT
+//             std::vector<script::Function> m_mouseClickFuncs;
+//             std::vector<script::Function> m_mouseDownFuncs;
+//             std::vector<script::Function> m_mouseUpFuncs;
+//             std::vector<script::Function> m_mouseEnterFuncs;
+//             std::vector<script::Function> m_mouseLeaveFuncs;
+//             std::vector<script::Function> m_mouseMoveFuncs;
+// #endif
 
             /************************************************************************/
             /* Members                                                              */

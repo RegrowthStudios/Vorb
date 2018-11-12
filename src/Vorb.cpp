@@ -25,7 +25,7 @@
 void doNothing(void*) { 
     // Empty
 }
-std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
+// std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
 
 namespace vorb {
     // Current system settings

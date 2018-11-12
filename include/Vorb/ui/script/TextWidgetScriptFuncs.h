@@ -13,9 +13,9 @@
 
 #pragma once
 
-#ifndef Vorb_WidgetListScriptFuncs_h__
+#ifndef Vorb_TestWidgetScriptFuncs_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_WidgetListScriptFuncs_h__
+#define Vorb_TestWidgetScriptFuncs_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -63,4 +63,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_WidgetListScriptFuncs_h__
+#endif // !Vorb_TestWidgetScriptFuncs_h__

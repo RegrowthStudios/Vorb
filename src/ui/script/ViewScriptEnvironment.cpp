@@ -156,7 +156,7 @@ vui::ComboBox* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeComboBox(I
 
     m_widgets.push_back(comboBox);
 
-    return comboBox
+    return comboBox;
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -167,7 +167,7 @@ vui::Label* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeLabel(IWidget
 
     m_widgets.push_back(label);
 
-    return label
+    return label;
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -178,7 +178,7 @@ vui::Panel* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makePanel(IWidget
 
     m_widgets.push_back(panel);
 
-    return panel
+    return panel;
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -189,7 +189,7 @@ vui::Slider* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeSlider(IWidg
 
     m_widgets.push_back(slider);
 
-    return slider
+    return slider;
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -200,7 +200,7 @@ vui::WidgetList* vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::makeWidgetLi
 
     m_widgets.push_back(widgetList);
 
-    return widgetList
+    return widgetList;
 }
 
 template <typename ScriptEnvironmentImpl>

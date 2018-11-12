@@ -21,6 +21,8 @@
 
 #ifdef VORB_USING_SCRIPT
 
+#include "Vorb/types.h"
+
 #define SCRIPT_FUNCTION_TABLE "ScriptFunctions"
 
 namespace vorb {
@@ -189,7 +191,7 @@ namespace vscript  = vorb::script;
  * \param parameter The parameter to push.
  */
 template<typename Parameter>
-i32 pushParams(Handle state, Parameter parameter) {
+i32 pushParams(vscript::lua::Handle state, Parameter parameter) {
     return vscript::lua::ValueMediator<Parameter>::push(state, parameter);
 }
 /*!
@@ -203,7 +205,7 @@ i32 pushParams(Handle state, Parameter parameter) {
  * \param parameters The rest of the parameters to push.
  */
 template<typename Parameter, typename ...Parameters>
-i32 pushParams(Handle state, Parameter parameter, Parameters... parameters) {
+i32 pushParams(vscript::lua::Handle state, Parameter parameter, Parameters... parameters) {
     i32 result = vscript::lua::ValueMediator<Parameter>::push(state, parameter);
     return result + pushParams<Parameters...>(state, parameters...);
 }
@@ -212,7 +214,7 @@ i32 pushParams(Handle state, Parameter parameter, Parameters... parameters) {
  *
  * \param state The Lua stack.
  */
-inline i32 pushParams(Handle state) {
+inline i32 pushParams(vscript::lua::Handle) {
     return 0;
 }
 
@@ -270,7 +272,8 @@ inline void vscript::lua::RLFunction<ReturnTypes...>::call(OUT std::tuple<Return
     if (!tryPopValues<ReturnTypes...>(m_state, returnValues)) {
         // TODO(Matthew): Unify error handling across the environment?
         // Handle the failure.
-        std::cout << "Uh oh, could not get the return values as expected." << std::endl;
+        //std::cout << "Uh oh, could not get the return values as expected." << std::endl;
+        printf("Uh oh, could not get the return values as expected.");
 
         // Calculate the change in the stack depth.
         i32 deltaDepth = lua_gettop(m_state) - initialDepth;

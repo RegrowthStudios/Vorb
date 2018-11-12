@@ -1,17 +1,18 @@
-#include "stdafx.h"
-#include "script/lua/Environment.h"
+#include "Vorb/stdafx.h"
+#include "Vorb/script/lua/Environment.h"
 
-#include "script/lua/LFunction.h"
+#include "Vorb/io/File.h"
+#include "Vorb/io/FileStream.h"
+#include "Vorb/script/lua/LFunction.h"
 
 vscript::lua::Environment::Environment() :
     IEnvironment(),
     m_state(nullptr),
-    m_namespaceDepth(0),
-    m_maxScriptLength(INT32_MAX / 10) {
+    m_namespaceDepth(0) {
     // Empty
 }
 
-vscript::lua::Environment::init() {
+void vscript::lua::Environment::init() {
     // Initialise the Lua environment.
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
@@ -34,12 +35,12 @@ vscript::lua::Environment::init() {
     addCClosure("SubscribeToEvent", 1, &makeLCallback);
 }
 
-vscript::lua::Environment::init(const nString& filepath) {
+void vscript::lua::Environment::init(const vio::Path& filepath) {
     init();
     load(filepath);
 }
 
-vscript::lua::Environment::dispose() {
+void vscript::lua::Environment::dispose() {
     for (auto& lFunction : m_lFunctions) {
         delete lFunction.second;
     }
@@ -52,9 +53,9 @@ vscript::lua::Environment::dispose() {
 
 bool vscript::lua::Environment::load(const vio::Path& filepath) {
     // Get a File reference.
-    if (!file.isFile()) return false;
+    if (!filepath.isFile()) return false;
     vio::File file;
-    if (!file.asFile(&file)) return false;
+    if (!filepath.asFile(&file)) return false;
 
     cString script = nullptr;
     {
@@ -70,7 +71,7 @@ bool vscript::lua::Environment::load(const vio::Path& filepath) {
             return false;
         }
 
-        script = new char[l + 1];
+        script = new char[length + 1];
         size_t end = filestream.read(length, 1, script);
         script[end] = 0;
     }
@@ -117,12 +118,13 @@ bool vscript::lua::Environment::subscribeLFunction(const nString& eventName, LFu
     }
 
     // Call the adder function, which manages all the actual work as it knows the template data.
-    it->second.adder(m_listenerPool, lFunction, it->first);
+    EventAdder adder = it->second.adder;
+    (this->*adder)(lFunction, it->second.event);
 
     return true;
 }
 
-vscript::lua::LFunction* Script::Lua::Environment::getLFunction(const nString& name) {
+vscript::lua::LFunction* vscript::lua::Environment::getLFunction(const nString& name) {
     const auto& it = m_lFunctions.find(name);
     if (it == m_lFunctions.end()) {
         return nullptr;
@@ -153,7 +155,7 @@ void vscript::lua::Environment::pushNamespace(const nString& namespace_) {
 // Helper function for the next two functions; pops const cString values off the top of the stack in the correct order.
 using Index  = i32;
 using Values = std::vector<const cString>;
-static Values popValues(Handle state, i32 n) {
+static Values popValues(vscript::lua::Handle state, i32 n) {
     // Container to store the values popped, resized to minimise calls to new.
     Values values;
     values.resize(n);
@@ -283,7 +285,7 @@ int vscript::lua::makeLCallback(Handle state) {
     // Get the captured environment pointer.
     Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
     // Subscribe the generated lFunction to the desired event.
-    env->subscribeLFunction(eventName, lFunction, priority);
+    env->subscribeLFunction(eventName, lFunction);
 
     return 0;
 }

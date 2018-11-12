@@ -3,10 +3,11 @@
 
 #include "Vorb/graphics/SpriteFont.h"
 #include "Vorb/ui/ComboBox.h"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 #include "Vorb/script/IEnvironment.hpp"
 
 template <typename ScriptEnvironmentImpl>
-void vui::ComboBoxScriptFuncs::registerFuncs(nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("UI", namespace_);
     env->addCDelegate("addItem",           makeDelegate(&impl::addItem));
     env->addCDelegate("addItemAtIndex",    makeDelegate(&impl::addItemAtIndex));
@@ -75,7 +76,7 @@ void vui::ComboBoxScriptFuncs::registerFuncs(nString& namespace_, vscript::IEnvi
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ComboBoxScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::ComboBoxScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

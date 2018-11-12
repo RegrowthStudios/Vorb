@@ -32,8 +32,6 @@ namespace vorb {
     namespace ui {
 
         class WidgetList : public Widget {
-            friend class WidgetListScriptFuncs;
-
             using IWidgets = std::vector<IWidget*>;
         public:
             /*! \brief Default constructor. */

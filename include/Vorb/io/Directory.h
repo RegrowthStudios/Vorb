@@ -30,7 +30,7 @@
 namespace vorb {
     namespace io {
         typedef std::vector<Path> DirectoryEntries; ///< A list of directory entries
-        typedef Delegate<Sender, const Path&> DirectoryEntryCallback; ///< Type for a callback function
+        typedef Delegate<void, Sender, const Path&> DirectoryEntryCallback; ///< Type for a callback function
 
         /// Represents a directory that houses paths
         class Directory {

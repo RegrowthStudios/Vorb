@@ -60,7 +60,8 @@ namespace vorb {
 
             /// Default constructor that initializes hooks into itself
             MultiComponentTracker() : MultipleComponentSet() {
-                _fEntityAdded.reset(createDelegate<EntityID>([&] (void* sender, EntityID id) {
+                // TODO(Matthew): Maybe makeFunctor?
+                _fEntityAdded.reset(makeDelegate([&] (Sender sender, EntityID id) {
                     Components comp;
                     for (size_t i = 0; i < N; i++) {
                         comp.set(i, _tables[i]->getComponentID(id));
@@ -69,7 +70,7 @@ namespace vorb {
                 }));
                 onEntityAdded += _fEntityAdded.get();
                 
-                _fEntityRemoved.reset(createDelegate<EntityID>([&] (void* sender, EntityID id) {
+                _fEntityRemoved.reset(makeDelegate([&] (Sender sender, EntityID id) {
                     _trackedComponents.erase(id);
                 }));
                 onEntityRemoved += _fEntityRemoved.get();
@@ -83,8 +84,8 @@ namespace vorb {
             }
         private:
             std::unordered_map<EntityID, Components> _trackedComponents; ///< Stores tracked component IDs for each entity
-            std::shared_ptr<IDelegate<EntityID>> _fEntityAdded; ///< onEntityAdded listener
-            std::shared_ptr<IDelegate<EntityID>> _fEntityRemoved; ///< onEntityRemoved listener
+            std::shared_ptr<Delegate<void, Sender, EntityID>> _fEntityAdded; ///< onEntityAdded listener
+            std::shared_ptr<Delegate<void, Sender, EntityID>> _fEntityRemoved; ///< onEntityRemoved listener
         };
     }
 }

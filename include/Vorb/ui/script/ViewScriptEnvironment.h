@@ -23,24 +23,17 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/File.h"
 #include "Vorb/script/IEnvironment.hpp"
 
+// Forward Declarations
+DECL_VUI(class Button;  class CheckBox; class ComboBox; class GameWindow;
+         class IWidget; class Label;    class Panel;    class Slider;
+         class Widget;  class Viewport; class WidgetList)
+
 namespace vorb {
     namespace ui {
-        // Forward Declarations
-        class Button;
-        class CheckBox;
-        class ComboBox;
-        class GameWindow;
-        class IWidget;
-        class Label;
-        class Panel;
-        class Slider;
-        class Widget;
-        class Viewport;
-        class WidgetList;
-
         // TODO(Matthew): Provide function for loading specified fonts via Lua.
         // TODO(Matthew): Implement update mechanism for script env.
         template <typename ScriptEnvironmentImpl>

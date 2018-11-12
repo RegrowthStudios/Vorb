@@ -34,7 +34,6 @@ namespace vorb {
         class UIRenderer;
 
         class Slider : public Widget {
-            friend class SliderScriptFuncs;
         public:
             /*! @brief Default constructor. */
             Slider();
@@ -107,9 +106,9 @@ namespace vorb {
             /************************************************************************/
             /* LUA Callbacks                                                        */
             /************************************************************************/
-#ifdef VORB_USING_SCRIPT
-            std::vector<script::Function> m_valueChangeFuncs;
-#endif
+// #ifdef VORB_USING_SCRIPT
+//             std::vector<script::Function> m_valueChangeFuncs;
+// #endif
             DrawableRect m_drawableBar;
             DrawableRect m_drawableSlide;
             color4       m_barColor;

@@ -75,7 +75,6 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
 
     env->addCDelegate("isInBounds", makeDelegate(&impl::isInBounds));
 
-    env->addCDelegate("setDimensions",       makeDelegate(&impl::setDimensions));
     env->addCDelegate("setX",                makeDelegate(&impl::setX));
     env->addCDelegate("setY",                makeDelegate(&impl::setY));
     env->addCDelegate("setPosition",         makeDelegate(&impl::setPosition));
@@ -138,49 +137,49 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
 
 template <typename ScriptEnvironmentImpl>
 void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    m_env->setNamespaces("UI", "Widget", "ClippingState");
-    m_env->addValue("VISIBLE", vui::IWidget::ClippingState::VISIBLE);
-    m_env->addValue("HIDDEN",  vui::IWidget::ClippingState::HIDDEN);
-    m_env->addValue("INHERIT", vui::IWidget::ClippingState::INHERIT);
-    m_env->setNamespaces();
+    env->setNamespaces("UI", "Widget", "ClippingState");
+    env->addValue("VISIBLE", ClippingState::VISIBLE);
+    env->addValue("HIDDEN",  ClippingState::HIDDEN);
+    env->addValue("INHERIT", ClippingState::INHERIT);
+    env->setNamespaces();
 
-    m_env->setNamespaces("UI", "Widget", "DockState");
-    m_env->addValue("NONE",   vui::IWidget::DockState::NONE);
-    m_env->addValue("LEFT",   vui::IWidget::DockState::LEFT);
-    m_env->addValue("RIGHT",  vui::IWidget::DockState::RIGHT);
-    m_env->addValue("BOTTOM", vui::IWidget::DockState::BOTTOM);
-    m_env->addValue("TOP",    vui::IWidget::DockState::TOP);
-    m_env->addValue("FILL",   vui::IWidget::DockState::FILL);
-    m_env->setNamespaces();
+    env->setNamespaces("UI", "Widget", "DockState");
+    env->addValue("NONE",   DockState::NONE);
+    env->addValue("LEFT",   DockState::LEFT);
+    env->addValue("RIGHT",  DockState::RIGHT);
+    env->addValue("BOTTOM", DockState::BOTTOM);
+    env->addValue("TOP",    DockState::TOP);
+    env->addValue("FILL",   DockState::FILL);
+    env->setNamespaces();
 
-    m_env->setNamespaces("UI", "Widget", "PositionType");
-    m_env->addValue("STATIC_TO_WINDOW",     vui::Widget::PositionType::STATIC_TO_WINDOW);
-    m_env->addValue("STATIC_TO_VIEWPORT",   vui::Widget::PositionType::STATIC_TO_VIEWPORT);
-    m_env->addValue("STATIC_TO_PARENT",     vui::Widget::PositionType::STATIC_TO_PARENT);
-    m_env->addValue("RELATIVE_TO_WINDOW",   vui::Widget::PositionType::RELATIVE_TO_WINDOW);
-    m_env->addValue("RELATIVE_TO_VIEWPORT", vui::Widget::PositionType::RELATIVE_TO_VIEWPORT);
-    m_env->addValue("RELATIVE_TO_PARENT",   vui::Widget::PositionType::RELATIVE_TO_PARENT);
-    m_env->setNamespaces();
+    env->setNamespaces("UI", "Widget", "PositionType");
+    env->addValue("STATIC_TO_WINDOW",     PositionType::STATIC_TO_WINDOW);
+    env->addValue("STATIC_TO_VIEWPORT",   PositionType::STATIC_TO_VIEWPORT);
+    env->addValue("STATIC_TO_PARENT",     PositionType::STATIC_TO_PARENT);
+    env->addValue("RELATIVE_TO_WINDOW",   PositionType::RELATIVE_TO_WINDOW);
+    env->addValue("RELATIVE_TO_VIEWPORT", PositionType::RELATIVE_TO_VIEWPORT);
+    env->addValue("RELATIVE_TO_PARENT",   PositionType::RELATIVE_TO_PARENT);
+    env->setNamespaces();
 
-    m_env->setNamespaces("UI", "Widget", "DimensionType");
-    m_env->addValue("PIXEL",                      vui::Widget::DimensionType::PIXEL);
-    m_env->addValue("WIDTH_PERCENTAGE",           vui::Widget::DimensionType::WIDTH_PERCENTAGE);
-    m_env->addValue("HEIGHT_PERCENTAGE",          vui::Widget::DimensionType::HEIGHT_PERCENTAGE);
-    m_env->addValue("MIN_PERCENTAGE",             vui::Widget::DimensionType::MIN_PERCENTAGE);
-    m_env->addValue("MAX_PERCENTAGE",             vui::Widget::DimensionType::MAX_PERCENTAGE);
-    m_env->addValue("PARENT_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::PARENT_WIDTH_PERCENTAGE);
-    m_env->addValue("PARENT_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::PARENT_HEIGHT_PERCENTAGE);
-    m_env->addValue("PARENT_MIN_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MIN_PERCENTAGE);
-    m_env->addValue("PARENT_MAX_PERCENTAGE",      vui::Widget::DimensionType::PARENT_MAX_PERCENTAGE);
-    m_env->addValue("VIEWPORT_WIDTH_PERCENTAGE",  vui::Widget::DimensionType::VIEWPORT_WIDTH_PERCENTAGE);
-    m_env->addValue("VIEWPORT_HEIGHT_PERCENTAGE", vui::Widget::DimensionType::VIEWPORT_HEIGHT_PERCENTAGE);
-    m_env->addValue("VIEWPORT_MIN_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MIN_PERCENTAGE);
-    m_env->addValue("VIEWPORT_MAX_PERCENTAGE",    vui::Widget::DimensionType::VIEWPORT_MAX_PERCENTAGE);
-    m_env->addValue("WINDOW_WIDTH_PERCENTAGE",    vui::Widget::DimensionType::WINDOW_WIDTH_PERCENTAGE);
-    m_env->addValue("WINDOW_HEIGHT_PERCENTAGE",   vui::Widget::DimensionType::WINDOW_HEIGHT_PERCENTAGE);
-    m_env->addValue("WINDOW_MIN_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MIN_PERCENTAGE);
-    m_env->addValue("WINDOW_MAX_PERCENTAGE",      vui::Widget::DimensionType::WINDOW_MAX_PERCENTAGE);
-    m_env->setNamespaces();
+    env->setNamespaces("UI", "Widget", "DimensionType");
+    env->addValue("PIXEL",                      DimensionType::PIXEL);
+    env->addValue("WIDTH_PERCENTAGE",           DimensionType::WIDTH_PERCENTAGE);
+    env->addValue("HEIGHT_PERCENTAGE",          DimensionType::HEIGHT_PERCENTAGE);
+    env->addValue("MIN_PERCENTAGE",             DimensionType::MIN_PERCENTAGE);
+    env->addValue("MAX_PERCENTAGE",             DimensionType::MAX_PERCENTAGE);
+    env->addValue("PARENT_WIDTH_PERCENTAGE",    DimensionType::PARENT_WIDTH_PERCENTAGE);
+    env->addValue("PARENT_HEIGHT_PERCENTAGE",   DimensionType::PARENT_HEIGHT_PERCENTAGE);
+    env->addValue("PARENT_MIN_PERCENTAGE",      DimensionType::PARENT_MIN_PERCENTAGE);
+    env->addValue("PARENT_MAX_PERCENTAGE",      DimensionType::PARENT_MAX_PERCENTAGE);
+    env->addValue("VIEWPORT_WIDTH_PERCENTAGE",  DimensionType::VIEWPORT_WIDTH_PERCENTAGE);
+    env->addValue("VIEWPORT_HEIGHT_PERCENTAGE", DimensionType::VIEWPORT_HEIGHT_PERCENTAGE);
+    env->addValue("VIEWPORT_MIN_PERCENTAGE",    DimensionType::VIEWPORT_MIN_PERCENTAGE);
+    env->addValue("VIEWPORT_MAX_PERCENTAGE",    DimensionType::VIEWPORT_MAX_PERCENTAGE);
+    env->addValue("WINDOW_WIDTH_PERCENTAGE",    DimensionType::WINDOW_WIDTH_PERCENTAGE);
+    env->addValue("WINDOW_HEIGHT_PERCENTAGE",   DimensionType::WINDOW_HEIGHT_PERCENTAGE);
+    env->addValue("WINDOW_MIN_PERCENTAGE",      DimensionType::WINDOW_MIN_PERCENTAGE);
+    env->addValue("WINDOW_MAX_PERCENTAGE",      DimensionType::WINDOW_MAX_PERCENTAGE);
+    env->setNamespaces();
 }
 
 vui::Viewport* vui::WidgetScriptFuncs::impl::getViewport(IWidget* widget) {

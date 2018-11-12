@@ -12,7 +12,7 @@
 vui::ComboBox::ComboBox() :
     Widget(),
     m_maxDropHeight(FLT_MAX),
-    m_dropDownStyle(DropDownStyle::DROP_DOWN_LIST),
+    // m_dropDownStyle(DropDownStyle::DROP_DOWN_LIST),
     m_isDropped(false) {
     m_dropPanel.setAutoScroll(true);
     m_dropPanel.setClipping(Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });

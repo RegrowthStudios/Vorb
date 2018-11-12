@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <vector>
 
+#include "decorators.h"
 #include "Delegate.hpp"
 
 /************************************************************************\
@@ -60,9 +61,9 @@ protected:
 // subscription and all subscribers get processed.
 template <typename ...Parameters>
 class Event : public EventBase {
+public:
     using Subscriber  = Delegate<void, Sender, Parameters...>;
     using Subscribers = std::vector<Subscriber>;
-public:
     /*!
      * \brief Default Constructor
      *
@@ -71,19 +72,76 @@ public:
     Event(Sender sender = nullptr) :
         EventBase(sender)
     { /* Empty */ }
-    Event(const Event& event) = delete;
-    Event(Event&& event)      = delete;
+    /*!
+     * \brief Copies the event.
+     * WARNING: This neuters all delegates of the copy, you probably shouldn't be calling this.
+     *
+     * \param event The event to copy.
+     */
+    Event(const Event& event) {
+        m_sender      = event.m_sender;
+        m_subscribers = event.m_subscribers;
+
+        #ifdef DEBUG
+        #pragma message Are you sure you want to be using this?
+        #endif
+        for (auto& subscriber : m_subscribers) {
+            subscriber.neuter();
+        }
+    }
+    /*!
+     * \brief Moves the event.
+     * NOTE: If you must make new instances of an event, this is likely what you want to be doing. But
+     *       even then, chances are you don't want to make any new copy of the event.
+     *
+     * \param event The event to copy.
+     */
+    Event(Event&& event) {
+        m_sender      = event.m_sender;
+        m_subscribers = std::move(event.m_subscribers);
+    }
+
+    /*!
+     * \brief Copies the event.
+     * WARNING: This neuters all delegates of the copy, you probably shouldn't be calling this.
+     *
+     * \param event The event to copy.
+     */
+    Event& operator=(const Event& event) {
+        m_sender      = event.m_sender;
+        m_subscribers = event.m_subscribers;
+
+        #ifdef DEBUG
+        #pragma message Are you sure you want to be using this?
+        #endif
+        for (auto& subscriber : m_subscribers) {
+            subscriber.neuter();
+        }
+        return *this;
+    }
+    /*!
+     * \brief Moves the event.
+     * NOTE: If you must make new instances of an event, this is likely what you want to be doing. But
+     *       even then, chances are you don't want to make any new copy of the event.
+     *
+     * \param event The event to copy.
+     */
+    Event& operator=(Event&& event) {
+        m_sender      = event.m_sender;
+        m_subscribers = std::move(event.m_subscribers);
+        return *this;
+    }
 
     /*!
      * \brief Adds a subscriber to the event.
      *
      * \param subscriber The subscriber to add to the event.
      */
-    void add(Subscriber subscriber) {
-        // We don't want this copy of the delegate to manage any internal object that may be present.
-        subscriber.neuter();
-
+    void add(const Subscriber& subscriber) {
         m_subscribers.emplace_back(subscriber);
+
+        // We don't want this copy of the delegate to manage any internal object that may be present.
+        m_subscribers.back().neuter();
     }
     /*!
      * \brief Adds a subscriber to the event.
@@ -205,7 +263,7 @@ public:
      * \param functor The functor to subscribe to the provided event.
      */
     template<typename Functor, typename... Parameters>
-    void addAutoHook(Event<Parameters...>& event, Functor& functor) {
+    void addAutoHook(Event<Parameters...>& event, Functor functor) {
         auto delegate = event.template addFunctor<Functor>(functor);
 
         Deletor deletor = makeFunctor([&delegate, &event] () {

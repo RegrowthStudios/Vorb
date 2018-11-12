@@ -1,10 +1,6 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/graphics/SamplerState.h"
 
-#ifdef VORB_USING_SCRIPT
-#include "Vorb/script/lua/Environment.h"
-#endif
-
 vg::SamplerState::SamplerState(TextureMinFilter texMinFilter, TextureMagFilter texMagFilter, TextureWrapMode texWrapS, 
                                     TextureWrapMode texWrapT, TextureWrapMode texWrapR) :
     m_minFilter(texMinFilter),

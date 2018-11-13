@@ -142,8 +142,6 @@ namespace vorb {
             /* Setters                                                              */
             /************************************************************************/
             // TODO(Matthew): We need to store data about these calls in this class, so that future added items also get given the right settings.
-            // TODO(Matthew): Provide a setDropButtonXXX with a functor that chooses which buttons to apply the change to.
-            //                  & make it accessible to scripts!
             virtual void setFont(const vorb::graphics::SpriteFont* font);
             virtual void setMainButtonTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);

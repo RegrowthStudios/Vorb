@@ -219,6 +219,11 @@ public:
     }
 
     void neuter() {
+#if REFCOUNT_DELEGATES == 1
+        if (m_deletor) {
+            --m_deletor->refCount;
+        }
+#endif // REFCOUNT_DELEGATES == 1
         m_deletor = nullptr;
     }
 

@@ -43,6 +43,7 @@ namespace vorb {
 
         // TODO(Matthew): Different properties on selected button.
         class ComboBox : public Widget {
+            using DropButtonComparator = Delegate<bool, size_t, Button*>;
         public:
             /*! \brief Default constructor. */
             ComboBox();
@@ -149,36 +150,43 @@ namespace vorb {
             virtual void setDropButtonTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture, const nString& item);
             virtual void setDropButtonTexture(VGTexture texture, size_t index);
+            virtual void setDropButtonTexture(VGTexture texture, DropButtonComparator comparator);
             virtual void setBackColor(const color4& color);
             virtual void setMainButtonBackColor(const color4& color);
             virtual void setDropButtonBackColor(const color4& color);
             virtual void setDropButtonBackColor(const color4& color, const nString& item);
             virtual void setDropButtonBackColor(const color4& color, size_t index);
+            virtual void setDropButtonBackColor(const color4& color, DropButtonComparator comparator);
             virtual void setBackHoverColor(const color4& color);
             virtual void setMainButtonBackHoverColor(const color4& color);
             virtual void setDropButtonBackHoverColor(const color4& color);
             virtual void setDropButtonBackHoverColor(const color4& color, const nString& item);
             virtual void setDropButtonBackHoverColor(const color4& color, size_t index);
+            virtual void setDropButtonBackHoverColor(const color4& color, DropButtonComparator comparator);
             virtual void setTextColor(const color4& color);
             virtual void setMainButtonTextColor(const color4& color);
             virtual void setDropButtonTextColor(const color4& color);
             virtual void setDropButtonTextColor(const color4& color, const nString& item);
             virtual void setDropButtonTextColor(const color4& color, size_t index);
+            virtual void setDropButtonTextColor(const color4& color, DropButtonComparator comparator);
             virtual void setTextHoverColor(const color4& color);
             virtual void setMainButtonTextHoverColor(const color4& color);
             virtual void setDropButtonTextHoverColor(const color4& color);
             virtual void setDropButtonTextHoverColor(const color4& color, const nString& item);
             virtual void setDropButtonTextHoverColor(const color4& color, size_t index);
+            virtual void setDropButtonTextHoverColor(const color4& color, DropButtonComparator comparator);
             virtual void setTextScale(const f32v2& textScale);
             virtual void setMainButtonTextScale(const f32v2& textScale);
             virtual void setDropButtonTextScale(const f32v2& textScale);
             virtual void setDropButtonTextScale(const f32v2& textScale, const nString& item);
             virtual void setDropButtonTextScale(const f32v2& textScale, size_t index);
+            virtual void setDropButtonTextScale(const f32v2& textScale, DropButtonComparator comparator);
             virtual void setTextAlign(vg::TextAlign align);
             virtual void setMainButtonTextAlign(vg::TextAlign align);
             virtual void setDropButtonTextAlign(vg::TextAlign align);
             virtual void setDropButtonTextAlign(vg::TextAlign align, const nString& item);
             virtual void setDropButtonTextAlign(vg::TextAlign align, size_t index);
+            virtual void setDropButtonTextAlign(vg::TextAlign align, DropButtonComparator comparator);
             virtual void setText(const nString& text);
             virtual void setMaxDropHeight(f32 maxDropHeight);
 

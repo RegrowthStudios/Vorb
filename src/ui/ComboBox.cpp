@@ -228,6 +228,17 @@ void vui::ComboBox::setDropButtonTexture(VGTexture texture, size_t index) {
     m_buttons[index]->setTexture(texture);
 }
 
+void vui::ComboBox::setDropButtonTexture(VGTexture texture, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setTexture(texture);
+            return;
+        }
+        ++i;
+    }
+}
+
 void vui::ComboBox::setBackColor(const color4& color) {
     setMainButtonBackColor(color);
     setDropButtonBackColor(color);
@@ -255,6 +266,17 @@ void vui::ComboBox::setDropButtonBackColor(const color4& color, size_t index) {
     if (index >= m_buttons.size()) return;
 
     m_buttons[index]->setBackColor(color);
+}
+
+void vui::ComboBox::setDropButtonBackColor(const color4& color, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setBackColor(color);
+            return;
+        }
+        ++i;
+    }
 }
 
 void vui::ComboBox::setBackHoverColor(const color4& color) {
@@ -286,6 +308,17 @@ void vui::ComboBox::setDropButtonBackHoverColor(const color4& color, size_t inde
     m_buttons[index]->setBackHoverColor(color);
 }
 
+void vui::ComboBox::setDropButtonBackHoverColor(const color4& color, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setBackHoverColor(color);
+            return;
+        }
+        ++i;
+    }
+}
+
 void vui::ComboBox::setTextColor(const color4& color) {
     setMainButtonTextColor(color);
     setDropButtonTextColor(color);
@@ -315,6 +348,17 @@ void vui::ComboBox::setDropButtonTextColor(const color4& color, size_t index) {
     m_buttons[index]->setTextColor(color);
 }
 
+void vui::ComboBox::setDropButtonTextColor(const color4& color, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setTextColor(color);
+            return;
+        }
+        ++i;
+    }
+}
+
 void vui::ComboBox::setTextHoverColor(const color4& color) {
     setMainButtonTextHoverColor(color);
     setDropButtonTextHoverColor(color);
@@ -342,6 +386,17 @@ void vui::ComboBox::setDropButtonTextHoverColor(const color4& color, size_t inde
     if (index >= m_buttons.size()) return;
 
     m_buttons[index]->setTextHoverColor(color);
+}
+
+void vui::ComboBox::setDropButtonTextHoverColor(const color4& color, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setTextHoverColor(color);
+            return;
+        }
+        ++i;
+    }
 }
 
 
@@ -374,6 +429,17 @@ void vui::ComboBox::setDropButtonTextScale(const f32v2& textScale, size_t index)
     m_buttons[index]->setTextScale(textScale);
 }
 
+void vui::ComboBox::setDropButtonTextScale(const f32v2& textScale, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setTextScale(textScale);
+            return;
+        }
+        ++i;
+    }
+}
+
 void vui::ComboBox::setTextAlign(vg::TextAlign align) {
     m_mainButton.setTextAlign(align);
 
@@ -403,6 +469,17 @@ void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, size_t index) {
     if (index >= m_buttons.size()) return;
 
     m_buttons[index]->setTextAlign(align);
+}
+
+void vui::ComboBox::setDropButtonTextAlign(vg::TextAlign align, DropButtonComparator comparator) {
+    size_t i = 0;
+    for (auto& button : m_buttons) {
+        if (comparator(i, button)) {
+            button->setTextAlign(align);
+            return;
+        }
+        ++i;
+    }
 }
 
 void vui::ComboBox::setText(const nString& text) {

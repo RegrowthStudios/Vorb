@@ -36,6 +36,8 @@ namespace vorb {
         class ComboBox;
 
         namespace ComboBoxScriptFuncs {
+            using DropButtonComparator = Delegate<bool, size_t, Button*>;
+
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
@@ -78,36 +80,43 @@ namespace vorb {
                 void setDropButtonTexture(ComboBox* comboBox, VGTexture texture);
                 void setDropButtonTextureOfItem(ComboBox* comboBox, VGTexture texture, nString item);
                 void setDropButtonTextureAtIndex(ComboBox* comboBox, VGTexture texture, size_t index);
+                void setDropButtonTextureByCompare(ComboBox* comboBox, VGTexture texture, DropButtonComparator comparator);
                 void setBackColor(ComboBox* comboBox, color4 color);
                 void setMainButtonBackColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonBackColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setDropButtonBackColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator);
                 void setBackHoverColor(ComboBox* comboBox, color4 color);
                 void setMainButtonBackHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackHoverColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonBackHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setDropButtonBackHoverColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator);
                 void setTextColor(ComboBox* comboBox, color4 color);
                 void setMainButtonTextColor(ComboBox* comboBox, color4 color);
                 void setDropButtonTextColor(ComboBox* comboBox, color4 color);
                 void setDropButtonTextColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonTextColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setDropButtonTextColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator);
                 void setTextHoverColor(ComboBox* comboBox, color4 color);
                 void setMainButtonTextHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonTextHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonTextHoverColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonTextHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
+                void setDropButtonTextHoverColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator);
                 void setTextScale(ComboBox* comboBox, f32v2 textScale);
                 void setMainButtonTextScale(ComboBox* comboBox, f32v2 textScale);
                 void setDropButtonTextScale(ComboBox* comboBox, f32v2 textScale);
                 void setDropButtonTextScaleOfItem(ComboBox* comboBox, f32v2 textScale, nString item);
                 void setDropButtonTextScaleAtIndex(ComboBox* comboBox, f32v2 textScale, size_t index);
+                void setDropButtonTextScaleByCompare(ComboBox* comboBox, f32v2 textScale, DropButtonComparator comparator);
                 void setTextAlign(ComboBox* comboBox, vg::TextAlign align);
                 void setMainButtonTextAlign(ComboBox* comboBox, vg::TextAlign align);
                 void setDropButtonTextAlign(ComboBox* comboBox, vg::TextAlign align);
                 void setDropButtonTextAlignOfItem(ComboBox* comboBox, vg::TextAlign align, nString item);
                 void setDropButtonTextAlignAtIndex(ComboBox* comboBox, vg::TextAlign align, size_t index);
+                void setDropButtonTextAlignByCompare(ComboBox* comboBox, vg::TextAlign align, DropButtonComparator comparator);
                 void setText(ComboBox* comboBox, nString text);
                 void setMaxDropHeight(ComboBox* comboBox, f32 maxDropHeight);
 
@@ -144,44 +153,93 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("getText",           makeDelegate(&impl::getText));
     env->addCDelegate("getMaxDropHeight",  makeDelegate(&impl::getMaxDropHeight));
 
-    env->addCDelegate("setFont",                            makeDelegate(&impl::setFont));
-    env->addCDelegate("setMainButtonTexture",               makeDelegate(&impl::setMainButtonTexture));
-    env->addCDelegate("setDropBoxTexture",                  makeDelegate(&impl::setDropBoxTexture));
-    env->addCDelegate("setDropButtonTexture",               makeDelegate(&impl::setDropButtonTexture));
-    env->addCDelegate("setDropButtonTextureOfItem",         makeDelegate(&impl::setDropButtonTextureOfItem));
-    env->addCDelegate("setDropButtonTextureAtIndex",        makeDelegate(&impl::setDropButtonTextureAtIndex));
-    env->addCDelegate("setBackColor",                       makeDelegate(&impl::setBackColor));
-    env->addCDelegate("setMainButtonBackColor",             makeDelegate(&impl::setMainButtonBackColor));
-    env->addCDelegate("setDropButtonBackColor",             makeDelegate(&impl::setDropButtonBackColor));
-    env->addCDelegate("setDropButtonBackColorOfItem",       makeDelegate(&impl::setDropButtonBackColorOfItem));
-    env->addCDelegate("setDropButtonBackColorAtIndex",      makeDelegate(&impl::setDropButtonBackColorAtIndex));
-    env->addCDelegate("setBackHoverColor",                  makeDelegate(&impl::setBackHoverColor));
-    env->addCDelegate("setMainButtonBackHoverColor",        makeDelegate(&impl::setMainButtonBackHoverColor));
-    env->addCDelegate("setDropButtonBackHoverColor",        makeDelegate(&impl::setDropButtonBackHoverColor));
-    env->addCDelegate("setDropButtonBackHoverColorOfItem",  makeDelegate(&impl::setDropButtonBackHoverColorOfItem));
-    env->addCDelegate("setDropButtonBackHoverColorAtIndex", makeDelegate(&impl::setDropButtonBackHoverColorAtIndex));
-    env->addCDelegate("setTextColor",                       makeDelegate(&impl::setTextColor));
-    env->addCDelegate("setMainButtonTextColor",             makeDelegate(&impl::setMainButtonTextColor));
-    env->addCDelegate("setDropButtonTextColor",             makeDelegate(&impl::setDropButtonTextColor));
-    env->addCDelegate("setDropButtonTextColorOfItem",       makeDelegate(&impl::setDropButtonTextColorOfItem));
-    env->addCDelegate("setDropButtonTextColorAtIndex",      makeDelegate(&impl::setDropButtonTextColorAtIndex));
-    env->addCDelegate("setTextHoverColor",                  makeDelegate(&impl::setTextHoverColor));
-    env->addCDelegate("setMainButtonTextHoverColor",        makeDelegate(&impl::setMainButtonTextHoverColor));
-    env->addCDelegate("setDropButtonTextHoverColor",        makeDelegate(&impl::setDropButtonTextHoverColor));
-    env->addCDelegate("setDropButtonTextHoverColorOfItem",  makeDelegate(&impl::setDropButtonTextHoverColorOfItem));
-    env->addCDelegate("setDropButtonTextHoverColorAtIndex", makeDelegate(&impl::setDropButtonTextHoverColorAtIndex));
-    env->addCDelegate("setTextScale",                       makeDelegate(&impl::setTextScale));
-    env->addCDelegate("setMainButtonTextScale",             makeDelegate(&impl::setMainButtonTextScale));
-    env->addCDelegate("setDropButtonTextScale",             makeDelegate(&impl::setDropButtonTextScale));
-    env->addCDelegate("setDropButtonTextScaleOfItem",       makeDelegate(&impl::setDropButtonTextScaleOfItem));
-    env->addCDelegate("setDropButtonTextScaleAtIndex",      makeDelegate(&impl::setDropButtonTextScaleAtIndex));
-    env->addCDelegate("setTextAlign",                       makeDelegate(&impl::setTextAlign));
-    env->addCDelegate("setMainButtonTextAlign",             makeDelegate(&impl::setMainButtonTextAlign));
-    env->addCDelegate("setDropButtonTextAlign",             makeDelegate(&impl::setDropButtonTextAlign));
-    env->addCDelegate("setDropButtonTextAlignOfItem",       makeDelegate(&impl::setDropButtonTextAlignOfItem));
-    env->addCDelegate("setDropButtonTextAlignAtIndex",      makeDelegate(&impl::setDropButtonTextAlignAtIndex));
-    env->addCDelegate("setText",                            makeDelegate(&impl::setText));
-    env->addCDelegate("setMaxDropHeight",                   makeDelegate(&impl::setMaxDropHeight));
+    env->addCDelegate("setFont",                              makeDelegate(&impl::setFont));
+    env->addCDelegate("setMainButtonTexture",                 makeDelegate(&impl::setMainButtonTexture));
+    env->addCDelegate("setDropBoxTexture",                    makeDelegate(&impl::setDropBoxTexture));
+    env->addCDelegate("setDropButtonTexture",                 makeDelegate(&impl::setDropButtonTexture));
+    env->addCDelegate("setDropButtonTextureOfItem",           makeDelegate(&impl::setDropButtonTextureOfItem));
+    env->addCDelegate("setDropButtonTextureAtIndex",          makeDelegate(&impl::setDropButtonTextureAtIndex));
+    env->addCDelegate("setDropButtonTextureByCompare",        makeDelegate([env] (ComboBox* comboBox, VGTexture texture, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonTextureByCompare(comboBox, texture, *compare);
+    }));
+    env->addCDelegate("setBackColor",                         makeDelegate(&impl::setBackColor));
+    env->addCDelegate("setMainButtonBackColor",               makeDelegate(&impl::setMainButtonBackColor));
+    env->addCDelegate("setDropButtonBackColor",               makeDelegate(&impl::setDropButtonBackColor));
+    env->addCDelegate("setDropButtonBackColorOfItem",         makeDelegate(&impl::setDropButtonBackColorOfItem));
+    env->addCDelegate("setDropButtonBackColorAtIndex",        makeDelegate(&impl::setDropButtonBackColorAtIndex));
+    env->addCDelegate("setDropButtonBackColorByCompare",      makeDelegate([env] (ComboBox* comboBox, color4 color, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonBackColorByCompare(comboBox, color, *compare);
+    }));
+    env->addCDelegate("setBackHoverColor",                    makeDelegate(&impl::setBackHoverColor));
+    env->addCDelegate("setMainButtonBackHoverColor",          makeDelegate(&impl::setMainButtonBackHoverColor));
+    env->addCDelegate("setDropButtonBackHoverColor",          makeDelegate(&impl::setDropButtonBackHoverColor));
+    env->addCDelegate("setDropButtonBackHoverColorOfItem",    makeDelegate(&impl::setDropButtonBackHoverColorOfItem));
+    env->addCDelegate("setDropButtonBackHoverColorAtIndex",   makeDelegate(&impl::setDropButtonBackHoverColorAtIndex));
+    env->addCDelegate("setDropButtonBackHoverColorByCompare", makeDelegate([env] (ComboBox* comboBox, color4 color, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonBackHoverColorByCompare(comboBox, color, *compare);
+    }));
+    env->addCDelegate("setTextColor",                         makeDelegate(&impl::setTextColor));
+    env->addCDelegate("setMainButtonTextColor",               makeDelegate(&impl::setMainButtonTextColor));
+    env->addCDelegate("setDropButtonTextColor",               makeDelegate(&impl::setDropButtonTextColor));
+    env->addCDelegate("setDropButtonTextColorOfItem",         makeDelegate(&impl::setDropButtonTextColorOfItem));
+    env->addCDelegate("setDropButtonTextColorAtIndex",        makeDelegate(&impl::setDropButtonTextColorAtIndex));
+    env->addCDelegate("setDropButtonTextColorByCompare",      makeDelegate([env] (ComboBox* comboBox, color4 color, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonTextColorByCompare(comboBox, color, *compare);
+    }));
+    env->addCDelegate("setTextHoverColor",                    makeDelegate(&impl::setTextHoverColor));
+    env->addCDelegate("setMainButtonTextHoverColor",          makeDelegate(&impl::setMainButtonTextHoverColor));
+    env->addCDelegate("setDropButtonTextHoverColor",          makeDelegate(&impl::setDropButtonTextHoverColor));
+    env->addCDelegate("setDropButtonTextHoverColorOfItem",    makeDelegate(&impl::setDropButtonTextHoverColorOfItem));
+    env->addCDelegate("setDropButtonTextHoverColorAtIndex",   makeDelegate(&impl::setDropButtonTextHoverColorAtIndex));
+    env->addCDelegate("setDropButtonTextHoverColorByCompare", makeDelegate([env] (ComboBox* comboBox, color4 color, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonTextHoverColorByCompare(comboBox, color, *compare);
+    }));
+    env->addCDelegate("setTextScale",                         makeDelegate(&impl::setTextScale));
+    env->addCDelegate("setMainButtonTextScale",               makeDelegate(&impl::setMainButtonTextScale));
+    env->addCDelegate("setDropButtonTextScale",               makeDelegate(&impl::setDropButtonTextScale));
+    env->addCDelegate("setDropButtonTextScaleOfItem",         makeDelegate(&impl::setDropButtonTextScaleOfItem));
+    env->addCDelegate("setDropButtonTextScaleAtIndex",        makeDelegate(&impl::setDropButtonTextScaleAtIndex));
+    env->addCDelegate("setDropButtonTextScaleByCompare",      makeDelegate([env] (ComboBox* comboBox, f32v2 scale, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonTextScaleByCompare(comboBox, scale, *compare);
+    }));
+    env->addCDelegate("setTextAlign",                         makeDelegate(&impl::setTextAlign));
+    env->addCDelegate("setMainButtonTextAlign",               makeDelegate(&impl::setMainButtonTextAlign));
+    env->addCDelegate("setDropButtonTextAlign",               makeDelegate(&impl::setDropButtonTextAlign));
+    env->addCDelegate("setDropButtonTextAlignOfItem",         makeDelegate(&impl::setDropButtonTextAlignOfItem));
+    env->addCDelegate("setDropButtonTextAlignAtIndex",        makeDelegate(&impl::setDropButtonTextAlignAtIndex));
+    env->addCDelegate("setDropButtonTextAlignByCompare",      makeDelegate([env] (ComboBox* comboBox, vg::TextAlign align, nString compareName) {
+        auto& compare = env->getScriptDelegate(compareName);
+
+        if (!compare) return;
+
+        impl::setDropButtonTextAlignByCompare(comboBox, align, *compare);
+    }));
+    env->addCDelegate("setText",                              makeDelegate(&impl::setText));
+    env->addCDelegate("setMaxDropHeight",                     makeDelegate(&impl::setMaxDropHeight));
     env->setNamespaces();
 
     WidgetScriptFuncs::registerFuncs(namespace_, env);

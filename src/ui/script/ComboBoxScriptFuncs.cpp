@@ -109,6 +109,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextureAtIndex(ComboBox* combo
     comboBox->setDropButtonTexture(texture, index);
 }
 
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextureByCompare(ComboBox* comboBox, VGTexture texture, DropButtonComparator comparator) {
+    comboBox->setDropButtonTexture(texture, comparator);
+}
+
 void vui::ComboBoxScriptFuncs::impl::setBackColor(ComboBox* comboBox, color4 color) {
     comboBox->setBackColor(color);
 }
@@ -126,6 +130,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonBackColorOfItem(ComboBox* comb
 
 void vui::ComboBoxScriptFuncs::impl::setDropButtonBackColorAtIndex(ComboBox* comboBox, color4 color, size_t index) {
     comboBox->setDropButtonBackColor(color, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonBackColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
+    comboBox->setDropButtonBackColor(color, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setBackHoverColor(ComboBox* comboBox, color4 color) {
@@ -148,6 +156,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonBackHoverColorAtIndex(ComboBox
     comboBox->setDropButtonBackHoverColor(color, index);
 }
 
+void vui::ComboBoxScriptFuncs::impl::setDropButtonBackHoverColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
+    comboBox->setDropButtonBackHoverColor(color, comparator);
+}
+
 void vui::ComboBoxScriptFuncs::impl::setTextColor(ComboBox* comboBox, color4 color) {
     comboBox->setTextColor(color);
 }
@@ -165,6 +177,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextColorOfItem(ComboBox* comb
 
 void vui::ComboBoxScriptFuncs::impl::setDropButtonTextColorAtIndex(ComboBox* comboBox, color4 color, size_t index) {
     comboBox->setDropButtonTextColor(color, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
+    comboBox->setDropButtonTextColor(color, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setTextHoverColor(ComboBox* comboBox, color4 color) {
@@ -187,6 +203,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColorAtIndex(ComboBox
     comboBox->setDropButtonTextHoverColor(color, index);
 }
 
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
+    comboBox->setDropButtonTextHoverColor(color, comparator);
+}
+
 void vui::ComboBoxScriptFuncs::impl::setTextScale(ComboBox* comboBox, f32v2 textScale) {
     comboBox->setTextScale(textScale);
 }
@@ -207,6 +227,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextScaleAtIndex(ComboBox* com
     comboBox->setDropButtonTextScale(textScale, index);
 }
 
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextScaleByCompare(ComboBox* comboBox, f32v2 textScale, DropButtonComparator comparator) {
+    comboBox->setDropButtonTextScale(textScale, comparator);
+}
+
 void vui::ComboBoxScriptFuncs::impl::setTextAlign(ComboBox* comboBox, vg::TextAlign align) {
     comboBox->setTextAlign(align);
 }
@@ -225,6 +249,10 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextAlignOfItem(ComboBox* comb
 
 void vui::ComboBoxScriptFuncs::impl::setDropButtonTextAlignAtIndex(ComboBox* comboBox, vg::TextAlign align, size_t index) {
     comboBox->setDropButtonTextAlign(align, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextAlignByCompare(ComboBox* comboBox, vg::TextAlign align, DropButtonComparator comparator) {
+    comboBox->setDropButtonTextAlign(align, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setText(ComboBox* comboBox, nString text) {

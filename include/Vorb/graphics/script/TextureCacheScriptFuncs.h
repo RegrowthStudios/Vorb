@@ -24,15 +24,13 @@
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/GLEnums.h"
+#include "Vorb/graphics/TextureCache.h"
+#include "Vorb/graphics/SamplerState.h"
 
 DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        // Forward Declarations
-        class TextureCache;
-        class SamplerState;
-
         namespace TextureCacheScriptFuncs {
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache);
@@ -47,7 +45,7 @@ namespace vorb {
                                               SamplerState* samplingParameters,
                                       TextureInternalFormat internalFormat,
                                               TextureFormat textureFormat,
-                                                        i32 mipmapLevels);
+                                                        i32 mipmapLevels        );
 
                 VGTexture loadTextureDefault(TextureCache* cache, nString filepath);
 
@@ -57,5 +55,31 @@ namespace vorb {
     }
 }
 namespace vg = vorb::graphics;
+
+template <typename ScriptEnvironmentImpl>
+void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache) {
+    env->setNamespace("Graphics");
+    env->addCDelegate("loadTexture", [cache] (      nString filepath,
+                                              TextureTarget textureTarget,
+                                              SamplerState* samplingParameters,
+                                      TextureInternalFormat internalFormat,
+                                              TextureFormat textureFormat,
+                                                        i32 mipmapLevels    ){
+        return impl::loadTexture(cache, filepath, textureTarget, samplingParameters,
+                                    internalFormat, textureFormat, mipmapLevels);
+    });
+    env->addCDelegate("loadTextureDefault", [cache] (nString filepath){
+        return impl::loadTexture(cache, filepath);
+    });
+    env->addCDelegate("freeTexture", [cache] (VGTexture texture) {
+        return impl::freeTexture(cache, texture);
+    });
+    env->setNamespace();
+}
+
+template <typename ScriptEnvironmentImpl>
+void vg::TextureCacheScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    // Empty
+}
 
 #endif // !Vorb_TextureCacheScriptFuncs_h__

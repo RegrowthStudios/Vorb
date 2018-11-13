@@ -8,7 +8,7 @@ void vg::SamplerStateScriptFuncs::registerFuncs(const nString& namespace_, vscri
 
 template <typename ScriptEnvironmentImpl>
 void vg::SamplerStateScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    env.setNamespaces("SamplerState");
+    env.setNamespaces("Graphics", "SamplerState");
     env.addValue("POINT_WRAP",          &vg::SamplerState::POINT_WRAP);
     env.addValue("POINT_CLAMP",         &vg::SamplerState::POINT_CLAMP);
     env.addValue("LINEAR_WRAP",         &vg::SamplerState::LINEAR_WRAP);

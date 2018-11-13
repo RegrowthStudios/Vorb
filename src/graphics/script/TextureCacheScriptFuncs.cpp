@@ -4,8 +4,8 @@
 #include "Vorb/graphics/TextureCache.h"
 
 template <typename ScriptEnvironmentImpl>
-void vg::TextureCacheScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache) {
-    env->setNamespace(namespace_);
+void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache) {
+    env->setNamespace("Graphics");
     env->addCDelegate("loadTexture", [cache] (      nString filepath,
                                               TextureTarget textureTarget,
                                               SamplerState* samplingParameters,

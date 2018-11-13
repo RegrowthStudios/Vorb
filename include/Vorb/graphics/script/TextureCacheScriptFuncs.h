@@ -35,7 +35,7 @@ namespace vorb {
 
         namespace TextureCacheScriptFuncs {
             template <typename ScriptEnvironmentImpl>
-            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache);
+            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache);
 
             template <typename ScriptEnvironmentImpl>
             void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);

@@ -7,8 +7,8 @@
 
 
 template <typename ScriptEnvironmentImpl>
-void vui::GameWindowScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window) {
-    env->setNamespaces("UI", namespace_);
+void vui::GameWindowScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window) {
+    env->setNamespaces("UI", "GameWindow");
     env->addCDelegate("getNumSupportedResolutions", makeDelegate([window] () {
         return impl::getNumSupportedResolutions(window);
     }));

@@ -33,7 +33,7 @@ namespace vorb {
 
         namespace GameWindowScriptFuncs {
             template <typename ScriptEnvironmentImpl>
-            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window);
+            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window);
 
             template <typename ScriptEnvironmentImpl>
             void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);

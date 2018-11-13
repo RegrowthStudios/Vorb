@@ -137,13 +137,13 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
 
 template <typename ScriptEnvironmentImpl>
 void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    env->setNamespaces("UI", "Widget", "ClippingState");
+    env->setNamespaces("UI", "ClippingState");
     env->addValue("VISIBLE", ClippingState::VISIBLE);
     env->addValue("HIDDEN",  ClippingState::HIDDEN);
     env->addValue("INHERIT", ClippingState::INHERIT);
     env->setNamespaces();
 
-    env->setNamespaces("UI", "Widget", "DockState");
+    env->setNamespaces("UI", "DockState");
     env->addValue("NONE",   DockState::NONE);
     env->addValue("LEFT",   DockState::LEFT);
     env->addValue("RIGHT",  DockState::RIGHT);
@@ -152,7 +152,7 @@ void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironm
     env->addValue("FILL",   DockState::FILL);
     env->setNamespaces();
 
-    env->setNamespaces("UI", "Widget", "PositionType");
+    env->setNamespaces("UI", "PositionType");
     env->addValue("STATIC_TO_WINDOW",     PositionType::STATIC_TO_WINDOW);
     env->addValue("STATIC_TO_VIEWPORT",   PositionType::STATIC_TO_VIEWPORT);
     env->addValue("STATIC_TO_PARENT",     PositionType::STATIC_TO_PARENT);
@@ -161,7 +161,7 @@ void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironm
     env->addValue("RELATIVE_TO_PARENT",   PositionType::RELATIVE_TO_PARENT);
     env->setNamespaces();
 
-    env->setNamespaces("UI", "Widget", "DimensionType");
+    env->setNamespaces("UI", "DimensionType");
     env->addValue("PIXEL",                      DimensionType::PIXEL);
     env->addValue("WIDTH_PERCENTAGE",           DimensionType::WIDTH_PERCENTAGE);
     env->addValue("HEIGHT_PERCENTAGE",          DimensionType::HEIGHT_PERCENTAGE);

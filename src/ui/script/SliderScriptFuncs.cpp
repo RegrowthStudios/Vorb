@@ -2,46 +2,6 @@
 #include "Vorb/ui/script/SliderScriptFuncs.h"
 
 #include "Vorb/ui/Slider.h"
-#include "Vorb/ui/script/WidgetScriptFuncs.h"
-#include "Vorb/script/IEnvironment.hpp"
-
-template <typename ScriptEnvironmentImpl>
-void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    env->setNamespaces("UI", namespace_);
-    env->addCDelegate("getSlideTexture",    makeDelegate(&impl::getSlideTexture));
-    env->addCDelegate("setSlideTexture",    makeDelegate(&impl::setSlideTexture));
-    env->addCDelegate("getBarTexture",      makeDelegate(&impl::getBarTexture));
-    env->addCDelegate("setBarTexture",      makeDelegate(&impl::setBarTexture));
-    env->addCDelegate("getSlideColor",      makeDelegate(&impl::getSlideColor));
-    env->addCDelegate("setSlideColor",      makeDelegate(&impl::setSlideColor));
-    env->addCDelegate("getSlideHoverColor", makeDelegate(&impl::getSlideHoverColor));
-    env->addCDelegate("setSlideHoverColor", makeDelegate(&impl::setSlideHoverColor));
-    env->addCDelegate("getBarColor",        makeDelegate(&impl::getBarColor));
-    env->addCDelegate("setBarColor",        makeDelegate(&impl::setBarColor));
-    env->addCDelegate("getValue",           makeDelegate(&impl::getValue));
-    env->addCDelegate("setValue",           makeDelegate(&impl::setValue));
-    env->addCDelegate("getMin",             makeDelegate(&impl::getMin));
-    env->addCDelegate("setMin",             makeDelegate(&impl::setMin));
-    env->addCDelegate("getMax",             makeDelegate(&impl::getMax));
-    env->addCDelegate("setMax",             makeDelegate(&impl::setMax));
-    env->addCDelegate("getSlideSize",       makeDelegate(&impl::getSlideSize));
-    env->addCDelegate("setSlideSize",       makeDelegate(&impl::setSlideSize));
-    env->addCDelegate("getRawSlideSize",    makeDelegate(&impl::getRawSlideSize));
-    env->addCDelegate("setRawSlideSize",    makeDelegate(&impl::setRawSlideSize));
-    env->addCDelegate("isVertical",         makeDelegate(&impl::isVertical));
-    env->addCDelegate("setIsVertical",      makeDelegate(&impl::setIsVertical));
-    env->addCDelegate("isHorizontal",       makeDelegate(&impl::isHorizontal));
-    env->addCDelegate("getValueScaled",     makeDelegate(&impl::getValueScaled));
-    env->addCDelegate("setRange",           makeDelegate(&impl::setRange));
-    env->setNamespaces();
-
-    WidgetScriptFuncs::registerFuncs(namespace_, env);
-}
-
-template <typename ScriptEnvironmentImpl>
-void vui::SliderScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
-    // Empty
-}
 
 VGTexture vui::SliderScriptFuncs::impl::getSlideTexture(Slider* slider) {
     return slider->getSlideTexture();

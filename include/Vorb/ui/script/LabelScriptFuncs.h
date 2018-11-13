@@ -24,8 +24,8 @@
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
-
-DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
+#include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -62,5 +62,28 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+template <typename ScriptEnvironmentImpl>
+void vui::LabelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getLabelColor",      makeDelegate(&impl::getLabelColor));
+    env->addCDelegate("setLabelColor",      makeDelegate(&impl::setLabelColor));
+    env->addCDelegate("getLabelHoverColor",      makeDelegate(&impl::getLabelHoverColor));
+    env->addCDelegate("setLabelHoverColor",      makeDelegate(&impl::setLabelHoverColor));
+    env->addCDelegate("getLabelTexture", makeDelegate(&impl::getLabelTexture));
+    env->addCDelegate("setLabelTexture", makeDelegate(&impl::setLabelTexture));
+    env->addCDelegate("getLabelHoverTexture", makeDelegate(&impl::getLabelHoverTexture));
+    env->addCDelegate("setLabelHoverTexture", makeDelegate(&impl::setLabelHoverTexture));
+    env->addCDelegate("getTextHoverColor", makeDelegate(&impl::getTextHoverColor));
+    env->addCDelegate("setTextHoverColor", makeDelegate(&impl::setTextHoverColor));
+    env->setNamespaces();
+
+    TextWidgetScriptFuncs::registerFuncs(namespace_, env);
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::LabelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+    // Empty
+}
 
 #endif // !Vorb_LabelScriptFuncs_h__

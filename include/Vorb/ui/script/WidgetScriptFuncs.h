@@ -24,10 +24,8 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/VorbPreDecl.inl"
+#include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Widget.h"
-
-DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
@@ -212,5 +210,181 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getViewport",         makeDelegate(&impl::getViewport));
+    env->addCDelegate("getParent",           makeDelegate(&impl::getParent));
+    env->addCDelegate("getDimensions",       makeDelegate(&impl::getDimensions));
+    env->addCDelegate("getX",                makeDelegate(&impl::getX));
+    env->addCDelegate("getY",                makeDelegate(&impl::getY));
+    env->addCDelegate("getPosition",         makeDelegate(&impl::getPosition));
+    env->addCDelegate("getPaddedPosition",   makeDelegate(&impl::getPaddedPosition));
+    env->addCDelegate("getRelativeX",        makeDelegate(&impl::getRelativeX));
+    env->addCDelegate("getRelativeY",        makeDelegate(&impl::getRelativeY));
+    env->addCDelegate("getRelativePosition", makeDelegate(&impl::getRelativePosition));
+    env->addCDelegate("getWidth",            makeDelegate(&impl::getWidth));
+    env->addCDelegate("getHeight",           makeDelegate(&impl::getHeight));
+    env->addCDelegate("getSize",             makeDelegate(&impl::getSize));
+    env->addCDelegate("getPaddedSize",       makeDelegate(&impl::getPaddedSize));
+    env->addCDelegate("getPadding",          makeDelegate(&impl::getPadding));
+    env->addCDelegate("getPaddingLeft",      makeDelegate(&impl::getPaddingLeft));
+    env->addCDelegate("getPaddingTop",       makeDelegate(&impl::getPaddingTop));
+    env->addCDelegate("getPaddingRight",     makeDelegate(&impl::getPaddingRight));
+    env->addCDelegate("getPaddingBottom",    makeDelegate(&impl::getPaddingBottom));
+    env->addCDelegate("getClipping",         makeDelegate(&impl::getClipping));
+    env->addCDelegate("getClippingLeft",     makeDelegate(&impl::getClippingLeft));
+    env->addCDelegate("getClippingTop",      makeDelegate(&impl::getClippingTop));
+    env->addCDelegate("getClippingRight",    makeDelegate(&impl::getClippingRight));
+    env->addCDelegate("getClippingBottom",   makeDelegate(&impl::getClippingBottom));
+    env->addCDelegate("getClipRect",         makeDelegate(&impl::getClipRect));
+    env->addCDelegate("getZIndex",           makeDelegate(&impl::getZIndex));
+    env->addCDelegate("getDock",             makeDelegate(&impl::getDock));
+    env->addCDelegate("getDockState",        makeDelegate(&impl::getDockState));
+    env->addCDelegate("getDockSize",         makeDelegate(&impl::getDockSize));
+    env->addCDelegate("getName",             makeDelegate(&impl::getName));
+    env->addCDelegate("getChildOffset",      makeDelegate(&impl::getChildOffset));
+    env->addCDelegate("getChildOffsetX",     makeDelegate(&impl::getChildOffsetX));
+    env->addCDelegate("getChildOffsetY",     makeDelegate(&impl::getChildOffsetY));
+    env->addCDelegate("getFlags",            makeDelegate(&impl::getFlags));
+
+    env->addCDelegate("isEnabled",                  makeDelegate(&impl::isEnabled));
+    env->addCDelegate("isMouseIn",                  makeDelegate(&impl::isMouseIn));
+    env->addCDelegate("isClicking",                 makeDelegate(&impl::isClicking));
+    env->addCDelegate("ignoreOffset",               makeDelegate(&impl::ignoreOffset));
+    env->addCDelegate("needsDimensionUpdate",       makeDelegate(&impl::needsDimensionUpdate));
+    env->addCDelegate("needsZIndexReorder",         makeDelegate(&impl::needsZIndexReorder));
+    env->addCDelegate("needsDockRecalculation",     makeDelegate(&impl::needsDockRecalculation));
+    env->addCDelegate("needsClipRectRecalculation", makeDelegate(&impl::needsClipRectRecalculation));
+    env->addCDelegate("needsDrawableRecalculation", makeDelegate(&impl::needsDrawableRecalculation));
+
+    env->addCDelegate("getPositionType",     makeDelegate(&impl::getPositionType));
+    env->addCDelegate("getRawPosition",      makeDelegate(&impl::getRawPosition));
+    env->addCDelegate("getRawSize",          makeDelegate(&impl::getRawSize));
+    env->addCDelegate("getRawLeft",          makeDelegate(&impl::getRawLeft));
+    env->addCDelegate("getRawTop",           makeDelegate(&impl::getRawTop));
+    env->addCDelegate("getRawRight",         makeDelegate(&impl::getRawRight));
+    env->addCDelegate("getRawBottom",        makeDelegate(&impl::getRawBottom));
+    env->addCDelegate("getRawMinSize",       makeDelegate(&impl::getRawMinSize));
+    env->addCDelegate("getRawMaxSize",       makeDelegate(&impl::getRawMaxSize));
+    env->addCDelegate("getRawDockSize",      makeDelegate(&impl::getRawDockSize));
+    env->addCDelegate("getRawPadding",       makeDelegate(&impl::getRawPadding));
+    env->addCDelegate("getRawPaddingLeft",   makeDelegate(&impl::getRawPaddingLeft));
+    env->addCDelegate("getRawPaddingTop",    makeDelegate(&impl::getRawPaddingTop));
+    env->addCDelegate("getRawPaddingRight",  makeDelegate(&impl::getRawPaddingRight));
+    env->addCDelegate("getRawPaddingBottom", makeDelegate(&impl::getRawPaddingBottom));
+
+    env->addCDelegate("addWidget",    makeDelegate(&impl::addWidget));
+    env->addCDelegate("removeWidget", makeDelegate(&impl::removeWidget));
+
+    env->addCDelegate("isInBounds", makeDelegate(&impl::isInBounds));
+
+    env->addCDelegate("setX",                makeDelegate(&impl::setX));
+    env->addCDelegate("setY",                makeDelegate(&impl::setY));
+    env->addCDelegate("setPosition",         makeDelegate(&impl::setPosition));
+    env->addCDelegate("setRelativeX",        makeDelegate(&impl::setRelativeX));
+    env->addCDelegate("setRelativeY",        makeDelegate(&impl::setRelativeY));
+    env->addCDelegate("setRelativePosition", makeDelegate(&impl::setRelativePosition));
+    env->addCDelegate("setWidth",            makeDelegate(&impl::setWidth));
+    env->addCDelegate("setHeight",           makeDelegate(&impl::setHeight));
+    env->addCDelegate("setSize",             makeDelegate(&impl::setSize));
+    env->addCDelegate("setPadding",          makeDelegate(&impl::setPadding));
+    env->addCDelegate("setPaddingLeft",      makeDelegate(&impl::setPaddingLeft));
+    env->addCDelegate("setPaddingTop",       makeDelegate(&impl::setPaddingTop));
+    env->addCDelegate("setPaddingRight",     makeDelegate(&impl::setPaddingRight));
+    env->addCDelegate("setPaddingBottom",    makeDelegate(&impl::setPaddingBottom));
+    env->addCDelegate("setClipping",         makeDelegate(&impl::setClipping));
+    env->addCDelegate("setClippingLeft",     makeDelegate(&impl::setClippingLeft));
+    env->addCDelegate("setClippingTop",      makeDelegate(&impl::setClippingTop));
+    env->addCDelegate("setClippingRight",    makeDelegate(&impl::setClippingRight));
+    env->addCDelegate("setClippingBottom",   makeDelegate(&impl::setClippingBottom));
+    env->addCDelegate("setZIndex",           makeDelegate(&impl::setZIndex));
+    env->addCDelegate("setDock",             makeDelegate(&impl::setDock));
+    env->addCDelegate("setDockState",        makeDelegate(&impl::setDockState));
+    env->addCDelegate("setDockSize",         makeDelegate(&impl::setDockSize));
+    env->addCDelegate("setName",             makeDelegate(&impl::setName));
+    env->addCDelegate("setChildOffset",      makeDelegate(&impl::setChildOffset));
+    env->addCDelegate("setChildOffsetX",     makeDelegate(&impl::setChildOffsetX));
+    env->addCDelegate("setChildOffsetY",     makeDelegate(&impl::setChildOffsetY));
+    env->addCDelegate("setFlags",            makeDelegate(&impl::setFlags));
+
+    env->addCDelegate("setIgnoreOffset",               makeDelegate(&impl::ignoreOffset));
+    env->addCDelegate("setNeedsDimensionUpdate",       makeDelegate(&impl::setNeedsDimensionUpdate));
+    env->addCDelegate("setNeedsZIndexReorder",         makeDelegate(&impl::setNeedsZIndexReorder));
+    env->addCDelegate("setNeedsDockRecalculation",     makeDelegate(&impl::setNeedsDockRecalculation));
+    env->addCDelegate("setNeedsClipRectRecalculation", makeDelegate(&impl::setNeedsClipRectRecalculation));
+    env->addCDelegate("setNeedsDrawableRecalculation", makeDelegate(&impl::setNeedsDrawableRecalculation));
+
+    env->addCDelegate("setPositionType",     makeDelegate(&impl::setPositionType));
+    env->addCDelegate("setRawPosition",      makeDelegate(&impl::setRawPosition));
+    env->addCDelegate("setRawSize",          makeDelegate(&impl::setRawSize));
+    env->addCDelegate("setLeft",             makeDelegate(&impl::setLeft));
+    env->addCDelegate("setTop",              makeDelegate(&impl::setTop));
+    env->addCDelegate("setRight",            makeDelegate(&impl::setRight));
+    env->addCDelegate("setBottom",           makeDelegate(&impl::setBottom));
+    env->addCDelegate("setRawLeft",          makeDelegate(&impl::setRawLeft));
+    env->addCDelegate("setRawTop",           makeDelegate(&impl::setRawTop));
+    env->addCDelegate("setRawRight",         makeDelegate(&impl::setRawRight));
+    env->addCDelegate("setRawBottom",        makeDelegate(&impl::setRawBottom));
+    env->addCDelegate("setMinSize",          makeDelegate(&impl::setMinSize));
+    env->addCDelegate("setMaxSize",          makeDelegate(&impl::setMaxSize));
+    env->addCDelegate("setRawMinSize",       makeDelegate(&impl::setRawMinSize));
+    env->addCDelegate("setRawMaxSize",       makeDelegate(&impl::setRawMaxSize));
+    env->addCDelegate("setRawDockSize",      makeDelegate(&impl::setRawDockSize));
+    env->addCDelegate("setRawPadding",       makeDelegate(&impl::setRawPadding));
+    env->addCDelegate("setRawPaddingLeft",   makeDelegate(&impl::setRawPaddingLeft));
+    env->addCDelegate("setRawPaddingTop",    makeDelegate(&impl::setRawPaddingTop));
+    env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
+    env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
+    env->setNamespaces();
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::WidgetScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", "ClippingState");
+    env->addValue("VISIBLE", ClippingState::VISIBLE);
+    env->addValue("HIDDEN",  ClippingState::HIDDEN);
+    env->addValue("INHERIT", ClippingState::INHERIT);
+    env->setNamespaces();
+
+    env->setNamespaces("UI", "DockState");
+    env->addValue("NONE",   DockState::NONE);
+    env->addValue("LEFT",   DockState::LEFT);
+    env->addValue("RIGHT",  DockState::RIGHT);
+    env->addValue("BOTTOM", DockState::BOTTOM);
+    env->addValue("TOP",    DockState::TOP);
+    env->addValue("FILL",   DockState::FILL);
+    env->setNamespaces();
+
+    env->setNamespaces("UI", "PositionType");
+    env->addValue("STATIC_TO_WINDOW",     PositionType::STATIC_TO_WINDOW);
+    env->addValue("STATIC_TO_VIEWPORT",   PositionType::STATIC_TO_VIEWPORT);
+    env->addValue("STATIC_TO_PARENT",     PositionType::STATIC_TO_PARENT);
+    env->addValue("RELATIVE_TO_WINDOW",   PositionType::RELATIVE_TO_WINDOW);
+    env->addValue("RELATIVE_TO_VIEWPORT", PositionType::RELATIVE_TO_VIEWPORT);
+    env->addValue("RELATIVE_TO_PARENT",   PositionType::RELATIVE_TO_PARENT);
+    env->setNamespaces();
+
+    env->setNamespaces("UI", "DimensionType");
+    env->addValue("PIXEL",                      DimensionType::PIXEL);
+    env->addValue("WIDTH_PERCENTAGE",           DimensionType::WIDTH_PERCENTAGE);
+    env->addValue("HEIGHT_PERCENTAGE",          DimensionType::HEIGHT_PERCENTAGE);
+    env->addValue("MIN_PERCENTAGE",             DimensionType::MIN_PERCENTAGE);
+    env->addValue("MAX_PERCENTAGE",             DimensionType::MAX_PERCENTAGE);
+    env->addValue("PARENT_WIDTH_PERCENTAGE",    DimensionType::PARENT_WIDTH_PERCENTAGE);
+    env->addValue("PARENT_HEIGHT_PERCENTAGE",   DimensionType::PARENT_HEIGHT_PERCENTAGE);
+    env->addValue("PARENT_MIN_PERCENTAGE",      DimensionType::PARENT_MIN_PERCENTAGE);
+    env->addValue("PARENT_MAX_PERCENTAGE",      DimensionType::PARENT_MAX_PERCENTAGE);
+    env->addValue("VIEWPORT_WIDTH_PERCENTAGE",  DimensionType::VIEWPORT_WIDTH_PERCENTAGE);
+    env->addValue("VIEWPORT_HEIGHT_PERCENTAGE", DimensionType::VIEWPORT_HEIGHT_PERCENTAGE);
+    env->addValue("VIEWPORT_MIN_PERCENTAGE",    DimensionType::VIEWPORT_MIN_PERCENTAGE);
+    env->addValue("VIEWPORT_MAX_PERCENTAGE",    DimensionType::VIEWPORT_MAX_PERCENTAGE);
+    env->addValue("WINDOW_WIDTH_PERCENTAGE",    DimensionType::WINDOW_WIDTH_PERCENTAGE);
+    env->addValue("WINDOW_HEIGHT_PERCENTAGE",   DimensionType::WINDOW_HEIGHT_PERCENTAGE);
+    env->addValue("WINDOW_MIN_PERCENTAGE",      DimensionType::WINDOW_MIN_PERCENTAGE);
+    env->addValue("WINDOW_MAX_PERCENTAGE",      DimensionType::WINDOW_MAX_PERCENTAGE);
+    env->setNamespaces();
+}
 
 #endif // !Vorb_WidgetScriptFuncs_h__

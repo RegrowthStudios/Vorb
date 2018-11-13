@@ -2,30 +2,6 @@
 #include "Vorb/ui/script/PanelScriptFuncs.h"
 
 #include "Vorb/ui/Panel.h"
-#include "Vorb/script/IEnvironment.hpp"
-
-template <typename ScriptEnvironmentImpl>
-void vui::PanelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    env->setNamespaces("UI", namespace_);
-    env->addCDelegate("getTexture",     makeDelegate(&impl::getTexture));
-    env->addCDelegate("setTexture",     makeDelegate(&impl::setTexture));
-    env->addCDelegate("getAutoScroll",  makeDelegate(&impl::getAutoScroll));
-    env->addCDelegate("setAutoScroll",  makeDelegate(&impl::setAutoScroll));
-    env->addCDelegate("getSliderWidth", makeDelegate(&impl::getSliderWidth));
-    env->addCDelegate("setSliderWidth", makeDelegate(&impl::setSliderWidth));
-    env->addCDelegate("getColor",       makeDelegate(&impl::getColor));
-    env->addCDelegate("setColor",       makeDelegate(&impl::setColor));
-    env->addCDelegate("getHoverColor",  makeDelegate(&impl::getHoverColor));
-    env->addCDelegate("setHoverColor",  makeDelegate(&impl::setHoverColor));
-    env->setNamespaces();
-
-    WidgetScriptFuncs::registerFuncs(namespace_, env);
-}
-
-template <typename ScriptEnvironmentImpl>
-void vui::PanelScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
-    // Empty
-}
 
 VGTexture vui::PanelScriptFuncs::impl::getTexture(Panel* panel) {
     return panel->getTexture();

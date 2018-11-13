@@ -22,9 +22,7 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/VorbPreDecl.inl"
-
-DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
+#include "Vorb/script/IEnvironment.hpp"
 
 namespace vorb {
     namespace ui {
@@ -47,6 +45,26 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+template <typename ScriptEnvironmentImpl>
+void vui::GameWindowScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, const GameWindow* window) {
+    env->setNamespaces("UI", "GameWindow");
+    env->addCDelegate("getNumSupportedResolutions", makeDelegate([window] () {
+        return impl::getNumSupportedResolutions(window);
+    }));
+    env->addCDelegate("getSupportedResolution",     makeDelegate([window] (size_t resIndex) {
+        return impl::getSupportedResolution(window, resIndex);
+    }));
+    env->addCDelegate("getCurrentResolution",       makeDelegate([window] () {
+        return impl::getCurrentResolution(window);
+    }));
+    env->setNamespaces();
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::GameWindowScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+    // Empty
+}
 
 #endif // !Vorb_GameWindowScriptFuncs_h__
 

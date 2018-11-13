@@ -22,10 +22,9 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
-
-DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
+#include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
@@ -46,5 +45,15 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+template <typename ScriptEnvironmentImpl>
+void vui::ViewportScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    WidgetScriptFuncs::registerFuncs(namespace_, env);
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::ViewportScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+    // Empty
+}
 
 #endif // !Vorb_ViewportScriptFuncs_h__

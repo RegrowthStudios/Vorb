@@ -24,9 +24,10 @@
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/graphics/gtypes.h"
+#include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 DECL_VG(enum class GradientType)
-DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace ui {
@@ -65,5 +66,30 @@ namespace vorb {
     }
 }
 namespace vui = vorb::ui;
+
+template <typename ScriptEnvironmentImpl>
+void vui::ButtonScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", namespace_);
+    env->addCDelegate("getTexture",            makeDelegate(&impl::getTexture));
+    env->addCDelegate("setTexture",            makeDelegate(&impl::setTexture));
+    env->addCDelegate("getHoverTexture",       makeDelegate(&impl::getHoverTexture));
+    env->addCDelegate("setHoverTexture",       makeDelegate(&impl::setHoverTexture));
+    env->addCDelegate("getBackColor",          makeDelegate(&impl::getBackColor));
+    env->addCDelegate("setBackColor",          makeDelegate(&impl::setBackColor));
+    env->addCDelegate("getBackHoverColor",     makeDelegate(&impl::getBackHoverColor));
+    env->addCDelegate("setBackHoverColor",     makeDelegate(&impl::setBackHoverColor));
+    env->addCDelegate("getTextHoverColor",     makeDelegate(&impl::getTextHoverColor));
+    env->addCDelegate("setTextHoverColor",     makeDelegate(&impl::setTextHoverColor));
+    env->addCDelegate("setBackColorGrad",      makeDelegate(&impl::setBackColorGrad));
+    env->addCDelegate("setBackHoverColorGrad", makeDelegate(&impl::setBackHoverColorGrad));
+    env->setNamespaces();
+
+    TextWidgetScriptFuncs::registerFuncs(namespace_, env);
+}
+
+template <typename ScriptEnvironmentImpl>
+void vui::ButtonScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+    // Empty
+}
 
 #endif // !Vorb_ButtonScriptFuncs_h__

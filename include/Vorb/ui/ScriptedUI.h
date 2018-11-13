@@ -28,7 +28,6 @@
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/File.h"
-#include "Vorb/io/IOManager.h"
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/ui/Widget.h"
@@ -81,7 +80,7 @@ namespace vorb {
              * \param defaultFont The default font for views to use.
              * \param spriteBatch The spritebatch for view renderers to use.
              */
-            void init(const GameWindow* window, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr, vg::TextureCache* textureCache = nullptr);
+            void init(const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*!
              * \brief Disposes the managed views and resets pointers.
              */
@@ -101,6 +100,20 @@ namespace vorb {
              * Views called in order of z-index.
              */
             void draw();
+
+            /*!
+             * \brief Gets the texture cache used by the UI.
+             *
+             * \return A pointer to the texture cache used.
+             */
+            TextureCache* getTextureCache() { return m_textureCache; }
+
+            /*!
+             * \brief Sets the texture cache used by the UI.
+             *
+             * \param Pointer to the texture cache to be set.
+             */
+            void setTextureCache(TextureCache* textureCache) { m_textureCache = textureCache; }
 
             // TODO(Matthew): Hook this into some options state event? This would involve Vorb providing a game options supporting class - and optons might not be a well-generalisable thing. Worst case can put the onus on Vorb users to register it to an event/call it directly.
             /*!
@@ -274,18 +287,11 @@ vui::ScriptedUI<ScriptEnvironmentImpl>::~ScriptedUI() {
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ScriptedUI<ScriptEnvironmentImpl>::init(const GameWindow* window, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/, vg::TextureCache* textureCache /*= nullptr*/) {
+void vui::ScriptedUI<ScriptEnvironmentImpl>::init(const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_window       = window;
+    m_textureCache = textureCache;
     m_defaultFont  = defaultFont;
     m_spriteBatch  = spriteBatch;
-
-    if (textureCache) {
-        m_textureCache = textureCache ;
-    } else {
-        m_textureCache = new TextureCache();
-
-        // TODO(Matthew): Init with an IOManager instance.
-    }
 }
 
 template <typename ScriptEnvironmentImpl>

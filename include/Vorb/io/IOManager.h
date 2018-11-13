@@ -49,6 +49,7 @@ namespace vorb {
             EXECUTABLE = 2
         };
 
+        // TODO(Matthew): Support multiple directories to search within?
         /*! @brief Manages simple IO operations within a file system. 
          *  
          * When attempting any operations, it looks not only in the working directory specified by the program,

@@ -21,6 +21,9 @@
 #define Vorb_Delegate_h__
 //! @endcond
 
+#include <cstdio>
+#include "Vorb/types.h"
+
 /****************************************************************************\
  *                             Brief Overview                               *
  *                             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯                               *
@@ -97,6 +100,16 @@
 #   define NORETURN __declspec(noreturn)
 #endif
 
+// If we are in debug mode set REFCOUNT_DELEGATES & PRINT_REFCOUNT_DELEGATES, unless if we have already defined either.
+//  -> Set REFCOUNT_DELEGATES to anything other than 1 to disable even in debug.
+#if defined(DEBUG) && !defined(REFCOUNT_DELEGATES)
+#   define REFCOUNT_DELEGATES 1
+#endif
+//  -> Set PRINT_REFCOUNT_DELEGATES to 1 to enable printing refcounts on destruction of delegates.
+#if defined(DEBUG) && !defined(PRINT_REFCOUNT_DELEGATES)
+#   define PRINT_REFCOUNT_DELEGATES 0
+#endif
+
 /****************************************************************************\
  *                     The Delegate Implementation                          *
 \****************************************************************************/
@@ -114,7 +127,17 @@ protected:
     using GenericFunction       = void(*)();
     using GenericMemberFunction = void(TypelessMember::*)();
     using Executor              = ReturnType(*)(GenericObject, GenericMemberFunction, Parameters...);
+#if REFCOUNT_DELEGATES == 1
+    using RefCount = ui16;
+    using DeletorFunc           = void(*)(GenericObject);
+    struct DeletorStruct {
+        DeletorFunc del      = nullptr;
+        RefCount    refCount = 0;
+    };
+    using Deletor               = DeletorStruct*;
+#else
     using Deletor               = void(*)(GenericObject);
+#endif // REFCOUNT_DELEGATES == 1
     using StaticFunction        = ReturnType(*)(Parameters...);
     template<typename SpecificClass>
     using MemberFunction        = ReturnType(SpecificClass::*)(Parameters...);
@@ -125,27 +148,69 @@ public:
     Delegate() :
         m_object(nullptr), m_function(nullptr), m_executor(nullptr)
     { /* Empty */ }
-    Delegate(GenericObject object, GenericFunction function, Executor executor, Deletor deletor = nullptr) :
-        m_object(object), m_function(function), m_executor(executor), m_deletor(deletor)
+    Delegate(GenericFunction function, Executor executor) :
+        m_object(nullptr), m_function(function), m_executor(executor), m_deletor(nullptr)
     { /* Empty */ }
     Delegate(GenericObject object, GenericMemberFunction function, Executor executor, Deletor deletor = nullptr) :
         m_object(object), m_memberFunction(function), m_executor(executor), m_deletor(deletor)
+#if REFCOUNT_DELEGATES == 1
+    {
+        if (deletor) {
+            ++(deletor->refCount);
+        }
+    }
+#else
     { /* Empty */ }
+#endif // REFCOUNT_DELEGATES == 1
     /*!
      * WARNING: The object pointer is directly copied, rather than a deep copy of the object itself. Neuter this new instance if you don't want it managing the object.
      */
     Delegate(const Delegate& delegate) :
-        m_object(delegate.m_object), m_function(delegate.m_function), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor)
-    { /* EMPTY */ }
+        m_object(delegate.m_object), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor) {
+        // Make sure we assign the function pointer using the right type.
+        if (m_object) {
+            m_memberFunction = delegate.m_memberFunction;
+#if REFCOUNT_DELEGATES == 1
+            if (m_deletor) {
+                ++m_deletor->refCount;
+            }
+#endif // REFCOUNT_DELEGATES == 1
+        } else {
+            m_function       = delegate.m_function;
+        }
+    }
     Delegate(Delegate&& delegate) NOEXCEPT :
         m_object(delegate.m_object), m_function(delegate.m_function), m_executor(delegate.m_executor), m_deletor(delegate.m_deletor) {
+        // Make sure we assign the function pointer using the right type.
+        if (m_object) {
+            m_memberFunction = delegate.m_memberFunction;
+        } else {
+            m_function = delegate.m_function;
+        }
         delegate.m_deletor = nullptr;
         delegate.m_object  = nullptr;
     }
     // Destructor.
     ~Delegate() {
         if (m_deletor) {
+#if REFCOUNT_DELEGATES == 1
+            if (m_deletor->refCount > 1) {
+                --m_deletor->refCount;
+#   if PRINT_REFCOUNT_DELEGATES == 1
+                // TODO(Matthew): Member function pointers can't be accurately printed through a cast to void*.
+                printf("There are now %hu delegates with object: %p, and function pointer: %p.\n", m_deletor->refCount, (void*)m_object, (void*)m_function);
+#   endif // PRINT_REFCOUNT_DELEGATES == 1
+            } else {
+#   if PRINT_REFCOUNT_DELEGATES == 1
+                // TODO(Matthew): Member function pointers can't be accurately printed through a cast to void*.
+                printf("Deleting delegate with object: %p, and function pointer: %p.\n", (void*)m_object, (void*)m_function);
+#   endif // PRINT_REFCOUNT_DELEGATES == 1
+                m_deletor->del(m_object);
+                delete m_deletor;
+            }
+#else
             m_deletor(m_object);
+#endif // REFCOUNT_DELEGATES == 1
         }
         m_object   = nullptr;
         m_function = nullptr;
@@ -163,14 +228,27 @@ public:
      */
     Delegate& operator=(const Delegate& delegate) {
         m_object   = delegate.m_object;
-        m_function = delegate.m_function;
         m_executor = delegate.m_executor;
         m_deletor  = delegate.m_deletor;
+        if (m_object) {
+            m_memberFunction = delegate.m_memberFunction;
+#if REFCOUNT_DELEGATES == 1
+            if (m_deletor) {
+                ++m_deletor->refCount;
+            }
+#endif // REFCOUNT_DELEGATES == 1
+        } else {
+            m_function = delegate.m_function;
+        }
         return *this;
     }
     Delegate& operator=(Delegate&& delegate) {
         m_object   = delegate.m_object;
-        m_function = delegate.m_function;
+        if (m_object) {
+            m_memberFunction = delegate.m_memberFunction;
+        } else {
+            m_function = delegate.m_function;
+        }
         m_executor = delegate.m_executor;
         m_deletor  = delegate.m_deletor;
         delegate.m_deletor  = nullptr;
@@ -239,7 +317,7 @@ public:
     \**************************/
 
     static Delegate create(StaticFunction function) {
-        return Delegate(nullptr, (GenericFunction)function, &execute);
+        return Delegate(*(GenericFunction*)&function, &execute);
     }
 
     /*********************************************\
@@ -253,11 +331,11 @@ public:
 
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createNonConst(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
 
         /****
@@ -266,11 +344,11 @@ public:
 
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createConst(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
 
         /****
@@ -279,11 +357,11 @@ public:
 
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate create(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate createConst(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return Delegate(object, (GenericMemberFunction)function, &executeWithObject<SpecificClass>);
+        return Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>);
     }
 
     /*******************************************\
@@ -298,54 +376,99 @@ public:
           Non-const Function of Non-const Object
                                              ****/
 
+#if REFCOUNT_DELEGATES == 1
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createNonConstCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createNonConstCopy(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+#endif // REFCOUNT_DELEGATES == 1
 
         /****
           Non-const Function of Const Object
                                          ****/
 
     // This sounds bad, but mutable lambdas depend on this.
+#if REFCOUNT_DELEGATES == 1
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createNonConstCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createNonConstCopy(const SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+#endif // REFCOUNT_DELEGATES == 1
 
         /****
           Const Function of Non-const Object
                                          ****/
 
+
+#if REFCOUNT_DELEGATES == 1
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
-    static Delegate* createConstCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*object), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    static Delegate* createNonConstCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
     }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createNonConstCopy(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*object), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+#endif // REFCOUNT_DELEGATES == 1
 
         /****
           Const Function of Const Object
                                      ****/
 
+#if REFCOUNT_DELEGATES == 1
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
+    }
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createNonConstCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
+    }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
     }
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createConstCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
-        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), (GenericMemberFunction)function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+        return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
     }
+#endif // REFCOUNT_DELEGATES == 1
 protected:
     // Execution routine for static functions.
     static ReturnType execute(GenericObject, GenericMemberFunction function, Parameters... parameters) {

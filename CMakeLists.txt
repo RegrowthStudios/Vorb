@@ -185,6 +185,17 @@ set(vorb_graphics
     src/graphics/TextureCache.cpp
 )
 
+if(VORB_USE_SCRIPTING)
+set(vorb_graphics ${vorb_graphics}
+    include/Vorb/graphics/GLEnumsScriptFuncs.h
+    include/Vorb/graphics/SamplerStateScriptFuncs.h
+    include/Vorb/graphics/SpriteBatchScriptFuncs.h
+    include/Vorb/graphics/TextureCacheScriptFuncs.h
+#source
+    src/graphics/TextureCacheScriptFuncs.cpp
+)
+endif()
+
 set(vorb_io
     include/Vorb/io/Directory.h
     include/Vorb/io/File.h
@@ -322,7 +333,6 @@ set(vorb_ui ${vorb_ui}
     include/Vorb/ui/script/WidgetListScriptFuncs.h
     include/Vorb/ui/script/WidgetScriptFuncs.h
 #source
-    src/ui/ScriptedUI.cpp
     src/ui/script/ButtonScriptFuncs.cpp
     src/ui/script/CheckBoxScriptFuncs.cpp
     src/ui/script/ComboBoxScriptFuncs.cpp
@@ -331,8 +341,6 @@ set(vorb_ui ${vorb_ui}
     src/ui/script/PanelScriptFuncs.cpp
     src/ui/script/SliderScriptFuncs.cpp
     src/ui/script/TextWidgetScriptFuncs.cpp
-    src/ui/script/ViewportScriptFuncs.cpp
-    src/ui/script/ViewScriptEnvironment.cpp
     src/ui/script/WidgetListScriptFuncs.cpp
     src/ui/script/WidgetScriptFuncs.cpp
 )

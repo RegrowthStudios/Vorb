@@ -266,7 +266,7 @@ public:
     void addAutoHook(Event<Parameters...>& event, Functor functor) {
         auto delegate = event.template addFunctor<Functor>(functor);
 
-        Deletor deletor = makeFunctor([&delegate, &event] () {
+        Deletor deletor = makeFunctor([delegate, &event] () {
             event -= *delegate;
             delete delegate;
         });

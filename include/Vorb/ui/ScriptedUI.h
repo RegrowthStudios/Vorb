@@ -28,6 +28,7 @@
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/File.h"
+// TODO(Matthew): Enable adding more directories to look in for textures (e.g. so each mod can have its own texture dir / to support layering texture packs).
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/Viewport.h"
 #include "Vorb/ui/Widget.h"
@@ -54,7 +55,6 @@ namespace vorb {
 
         // TODO(Matthew): Subscription to widget events.
         // TODO(Matthew): Unsubscription from events (also in vscript::IEnvironment!).
-        // TODO(Matthew): Provide method to load textures.
         // TODO(Matthew): Make a non-scripted version.
         // TODO(Matthew): ValueMediator specialisations for Length & Length2.
         template <typename ScriptEnvironmentImpl>
@@ -266,7 +266,6 @@ namespace vorb {
             const GameWindow* m_window;       ///< Pointer to the window the UI views will be drawn to.
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
             vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
-            // TODO(Matthew): Enable adding more directories to look in for textures (each mod gets its own texture dir).
             TextureCache*     m_textureCache; ///< Cache for UI-related textures.
         };
     }

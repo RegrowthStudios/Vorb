@@ -12,6 +12,11 @@
  * \brief Lua implementation of the script environment.
  */
 
+// TODO(Matthew): Investigate lua_yield and lua_resume for coroutines.
+// TODO(Matthew): Investigate lua_newthread for having separate locals for each mod while sharing globals.
+//                    This could be good for mods.
+// TODO(Matthew): Investigate lua_loadbuffer & lua_pcall as a way to separate load and run?
+
 #pragma once
 
 #ifndef Vorb_Lua_Environment_h__

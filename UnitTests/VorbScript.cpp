@@ -109,7 +109,7 @@ TEST(LoadScript) {
     env.addCFunction("valPtr", vscript::fromFunction<valPtr>(valPtr));
     env.addCFunction("valRef", vscript::fromFunction<valRef>(valRef));
 
-    if (!env.load("data/add.lua")) return false;
+    if (!env.run("data/add.lua")) return false;
 
     i32 value;
     auto f = env["add"].as<i32>();

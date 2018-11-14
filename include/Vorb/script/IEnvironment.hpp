@@ -85,6 +85,33 @@ namespace vorb {
              * \param filepath The filepath from which to load the script.
              */
             virtual bool load(const vio::Path& filepath) = 0;
+            /*!
+             * \brief Load in the provided script string.
+             *
+             * \param script A string of script to load into the script environment.
+             */
+            virtual bool load(const nString& script) = 0;
+
+            /*!
+             * \brief Runs everything already loaded into the script environment.
+             */
+            virtual bool run() = 0;
+            /*!
+             * \brief Loads in the script at the provided filepath, then runs it.
+             *
+             * Anything loaded in before this call will also be ran if no other calls to run have been made since.
+             *
+             * \param filepath The filepath from which to load the script.
+             */
+            virtual bool run(const vio::Path& filepath) = 0;
+            /*!
+             * \brief Loads in the provided script string, then runs it.
+             *
+             * Anything loaded in before this call will also be ran if no other calls to run have been made since.
+             *
+             * \param script A string of script to load into the script environment.
+             */
+            virtual bool run(const nString& script) = 0;
 
             /*!
              * \brief Register an event with the script environment.

@@ -77,10 +77,57 @@ bool vscript::lua::Environment::load(const vio::Path& filepath) {
     }
 
     // Load and run script, clean up and return success state.
+    bool success = luaL_loadstring(m_state, script) == 0;
+    delete[] script;
+
+    return success;
+}
+
+bool vscript::lua::Environment::load(const nString& script) {
+    // Load and run script, returning success state.
+    return success = luaL_loadstring(m_state, script.c_str()) == 0;
+}
+
+bool vscript::lua::Environment::run() {
+    // Run Lua function currently on top of Lua state stack, returning success state.
+    return success = lua_pcall(m_state, 0 LUA_MULTRET, 0) == 0;
+}
+
+bool vscript::lua::Environment::run(const vio::Path& filepath) {
+    // Get a File reference.
+    if (!filepath.isFile()) return false;
+    vio::File file;
+    if (!filepath.asFile(&file)) return false;
+
+    cString script = nullptr;
+    {
+        // Get a File stream
+        vio::FileStream filestream = file.openReadOnly(false);
+        if (!filestream.isOpened()) return false;
+
+        // Get length of the file
+        vio::FileSeekOffset length = filestream.length();
+
+        // If the script length is too great, we should fail to avoid gobbling RAM.
+        if (length + 1 > m_maxScriptLength) {
+            return false;
+        }
+
+        script = new char[length + 1];
+        size_t end = filestream.read(length, 1, script);
+        script[end] = 0;
+    }
+
+    // Load and run script, clean up and return success state.
     bool success = luaL_dostring(m_state, script) == 0;
     delete[] script;
 
     return success;
+}
+
+bool vscript::lua::Environment::run(const nString& script) {
+    // Load and run script, and return success state.
+    return success = luaL_dostring(m_state, script.c_str()) == 0;
 }
 
 void vscript::lua::Environment::addCFunction(const nString& name, CFunction::Type function) {

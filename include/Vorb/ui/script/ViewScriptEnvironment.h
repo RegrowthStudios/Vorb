@@ -62,7 +62,7 @@ namespace vorb {
             void init(Viewport* viewport, const GameWindow* window);
             void dispose();
 
-            bool load(const vio::File& filepath);
+            bool run(const vio::File& filepath);
 
             ScriptEnv* getEnv() { return m_env; }
         protected:
@@ -128,8 +128,8 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::dispose() {
 }
 
 template <typename ScriptEnvironmentImpl>
-bool vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::load(const vio::File& filepath) {
-    m_env->load(filepath);
+bool vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::run(const vio::File& filepath) {
+    m_env->run(filepath);
 }
 
 template <typename ScriptEnvironmentImpl>

@@ -15,7 +15,7 @@
 // TODO(Matthew): Investigate lua_yield and lua_resume for coroutines.
 // TODO(Matthew): Investigate lua_newthread for having separate locals for each mod while sharing globals.
 //                    This could be good for mods.
-// TODO(Matthew): Investigate lua_loadbuffer & lua_pcall as a way to separate load and run?
+// TODO(Matthew): Handle errors.
 
 #pragma once
 
@@ -72,6 +72,36 @@ namespace vorb {
                  * \param filepath The filepath from which to load the script.
                  */
                 virtual bool load(const vio::Path& filepath) override;
+
+                /*!
+                * \brief Load in the provided script string.
+                *
+                * \param script A string of script to load into the script environment.
+                */
+                virtual bool load(const nString& script) override;
+
+                /*!
+                * \brief Runs everything already loaded into the script environment.
+                */
+                virtual bool run() override;
+
+                /*!
+                * \brief Loads in the script at the provided filepath, then runs it.
+                *
+                * Anything loaded in before this call will also be ran if no other calls to run have been made since.
+                *
+                * \param filepath The filepath from which to load the script.
+                */
+                virtual bool run(const vio::Path& filepath) override;
+
+                /*!
+                * \brief Loads in the provided script string, then runs it.
+                *
+                * Anything loaded in before this call will also be ran if no other calls to run have been made since.
+                *
+                * \param script A string of script to load into the script environment.
+                */
+                virtual bool run(const nString& script) override;
 
                 /*!
                  * \brief Adds the provided LFunction to the provided Event.

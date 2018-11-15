@@ -280,7 +280,7 @@ int vscript::lua::makeLCallback(Handle state) {
         return -1;
     }
 
-    const cString eventName;
+    const cString eventName = nullptr;
     // Try to pop string type value for the event name, if we fail to do so then we have an invalid parameter; fail.
     if (!ValueMediator<const cString>::tryRetrieve(state, 1, eventName)) {
         return -1;

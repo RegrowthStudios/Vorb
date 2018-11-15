@@ -144,7 +144,8 @@ namespace vorb {
                     rpopValues<Type1>(state, &tPopped);
 
                     // Concatenate tuples and swap with the pointer provided.
-                    std::swap(*tPtr, std::tuple_cat(tPopped, tToPop));
+                    auto catRes = std::tuple_cat(tPopped, tToPop);
+                    std::swap(*tPtr, catRes);
                 }
 
                 /*!

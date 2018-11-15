@@ -132,34 +132,44 @@ public:
         return *this;
     }
 
+
+#if !defined(REFCOUNT_DELEGATES) || REFCOUNT_DELEGATES != 1
     /*!
      * \brief Adds a subscriber to the event.
+     *
+     * Specialisation as on copy we need to neuter the delegate
+     * object if it isn't ref counted.
      *
      * \param subscriber The subscriber to add to the event.
      */
     void add(const Subscriber& subscriber) {
         m_subscribers.emplace_back(subscriber);
 
-        // We don't want this copy of the delegate to manage any internal object that may be present.
         m_subscribers.back().neuter();
-    }
-    /*!
-     * \brief Adds a subscriber to the event.
-     *
-     * \param subscriber The subscriber to add to the event.
-     */
-    void add(Subscriber&& subscriber) {
-        m_subscribers.emplace_back(subscriber);
     }
     /*!
      * \brief Adds a subscriber to the event.
      *
      * operator+= is an alias of add
      *
+     * Specialisation as on copy we need to neuter the delegate
+     * object if it isn't ref counted.
+     *
      * \param subscriber The subscriber to add to the event.
      */
     void operator+=(const Subscriber& subscriber) {
-        add(subscriber);
+        m_subscribers.emplace_back(subscriber);
+
+        m_subscribers.back().neuter();
+    }
+#endif
+    /*!
+     * \brief Adds a subscriber to the event.
+     *
+     * \param subscriber The subscriber to add to the event.
+     */
+    void add(Subscriber&& subscriber) {
+        m_subscribers.emplace_back(std::move(subscriber));
     }
     /*!
      * \brief Adds a subscriber to the event.
@@ -169,7 +179,7 @@ public:
      * \param subscriber The subscriber to add to the event.
      */
     void operator+=(Subscriber&& subscriber) {
-        add(std::forward<Subscriber>(subscriber));
+        add(std::move(subscriber));
     }
 
     /*!
@@ -181,12 +191,10 @@ public:
      * \return The created functor delegate.
      */
     template <typename Functor>
-    CALLER_DELETE Subscriber* addFunctor(Functor functor) {
-        Subscriber* subscriber = makeFunctor(std::move(functor));
-        
-        add(*subscriber);
+    CALLER_DELETE Subscriber* addFunctor(Functor&& functor) {
+        add(std::forward<Subscriber>(makeFunctor(std::forward<Functor>(functor))));
 
-        return subscriber;
+        return &m_subscribers.back();
     }
     /*!
      * \brief Adds a functor as a subscriber to this event.
@@ -201,12 +209,10 @@ public:
      * \return The created functor delegate.
      */
     template <typename Functor>
-    CALLER_DELETE Subscriber* addConstFunctor(Functor functor) {
-        Subscriber* subscriber = makeConstFunctor<void, Sender, Parameters...>(std::move(functor));
+    CALLER_DELETE Subscriber* addConstFunctor(Functor&& functor) {
+        add(std::forward<Subscriber>(makeConstFunctor<void, Sender, Parameters...>(std::forward<Functor>(functor))));
 
-        add(*subscriber);
-
-        return subscriber;
+        return &m_subscribers.back();
     }
     /*!
      * \brief Adds a functor as a subscriber to this event.
@@ -220,13 +226,11 @@ public:
      * 
      * \return The created functor delegate.
      */
-    template <typename Functor>
-    CALLER_DELETE Subscriber* addNonConstFunctor(Functor functor) {
-        Subscriber* subscriber = makeNonConstFunctor<void, Sender, Parameters...>(std::move(functor));
+    template <typename Functor, typename DecayedFunctor = typename std::decay<Functor>::type>
+    CALLER_DELETE Subscriber* addNonConstFunctor(Functor&& functor) {
+        add(std::forward<Subscriber>(makeNonConstFunctor<void, Sender, Parameters...>(std::forward<DecayedFunctor>(functor))));
 
-        add(*subscriber);
-
-        return subscriber;
+        return &m_subscribers.back();
     }
 
     /*!
@@ -284,7 +288,7 @@ protected:
  */
 class AutoDelegatePool {
 public:
-    using Deletor     = Delegate<void>*;       ///< A deletion function prototype.
+    using Deletor     = Delegate<void>;       ///< A deletion function prototype.
     using DeletorList = std::vector<Deletor>; ///< A container of deleters.
 
     /*!
@@ -303,15 +307,12 @@ public:
      * \param functor The functor to subscribe to the provided event.
      */
     template<typename Functor, typename... Parameters>
-    void addAutoHook(Event<Parameters...>& event, Functor functor) {
-        auto delegate = event.template addFunctor<Functor>(std::move(functor));
+    void addAutoHook(Event<Parameters...>& event, Functor&& functor) {
+        auto delegate = event.template addFunctor<Functor>(std::forward<Functor>(functor));
 
-        Deletor deletor = makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
             event -= *delegate;
-            delete delegate;
-        });
-
-        m_deletionFunctions.push_back(deletor);
+        })));
     }
     /*!
      * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
@@ -326,15 +327,12 @@ public:
      * \param functor The functor to subscribe to the provided event.
      */
     template<typename Functor, typename... Parameters>
-    void addConstAutoHook(Event<Parameters...>& event, Functor functor) {
-        auto delegate = event.template addConstFunctor<Functor>(std::move(functor));
+    void addConstAutoHook(Event<Parameters...>& event, Functor&& functor) {
+        auto delegate = event.template addConstFunctor<Functor>(std::forward<Functor>(functor));
 
-        Deletor deletor = makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
             event -= *delegate;
-            delete delegate;
-        });
-
-        m_deletionFunctions.push_back(deletor);
+        })));
     }
     /*!
      * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
@@ -349,23 +347,19 @@ public:
      * \param functor The functor to subscribe to the provided event.
      */
     template<typename Functor, typename... Parameters>
-    void addNonConstAutoHook(Event<Parameters...>& event, Functor functor) {
-        auto delegate = event.template addNonConstFunctor<Functor>(std::move(functor));
+    void addNonConstAutoHook(Event<Parameters...>& event, Functor&& functor) {
+        auto delegate = event.template addNonConstFunctor<Functor>(std::forward<Functor>(functor));
 
-        Deletor deletor = makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
             event -= *delegate;
-            delete delegate;
-        });
-
-        m_deletionFunctions.push_back(deletor);
+        })));
     }
 
     /*! \brief Properly disposes all delegates added to this pool. */
     void dispose() {
         // Delete each bound functor.
-        for (auto deletor : m_deletionFunctions) {
-            deletor->invoke();
-            delete deletor;
+        for (auto& deletor : m_deletionFunctions) {
+            deletor.invoke();
         }
 
         // Clear the list of deletors.

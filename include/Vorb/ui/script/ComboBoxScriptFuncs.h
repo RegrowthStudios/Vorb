@@ -34,6 +34,7 @@ namespace vorb {
     namespace ui {
         // Forward Declarations
         class ComboBox;
+        class Button;
 
         namespace ComboBoxScriptFuncs {
             using DropButtonComparator = Delegate<bool, size_t, Button*>;

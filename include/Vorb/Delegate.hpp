@@ -552,21 +552,27 @@ protected:
 
 // This is necessary for inferring the signature of the () operator for
 // functor objects such as lambdas and callable classes in general.
-
 template<typename SpecificClass>
-struct DelegateType : public DelegateType<decltype(&SpecificClass::operator())> {};
+struct _DelegateType : _DelegateType<decltype(&SpecificClass::operator())> {};
 
 // We provide two templated definitions, one for const operator() and one for non-const.
 template<typename SpecificClass, typename ReturnType, typename ...Parameters>
-struct DelegateType<ReturnType(SpecificClass::*)(Parameters...) const> {
+struct _DelegateType<ReturnType(SpecificClass::*)(Parameters...) const> {
 public:
     using type = Delegate<ReturnType, Parameters...>;    
 };
 template<typename SpecificClass, typename ReturnType, typename ...Parameters>
-struct DelegateType<ReturnType(SpecificClass::*)(Parameters...)> {
+struct _DelegateType<ReturnType(SpecificClass::*)(Parameters...)> {
 public:
     using type = Delegate<ReturnType, Parameters...>;    
 };
+
+template<typename SpecificClass, typename Check = void>
+struct DelegateType {};
+
+template<typename SpecificClass>
+struct DelegateType<SpecificClass, typename std::enable_if<std::is_class<SpecificClass>::value>::type> : public _DelegateType<SpecificClass> {};
+
 
 /****************************************************************************\
  *                     Creation Routines for Delegates                      *

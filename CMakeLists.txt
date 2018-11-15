@@ -187,12 +187,12 @@ set(vorb_graphics
 
 if(VORB_USE_SCRIPTING)
 set(vorb_graphics ${vorb_graphics}
-    include/Vorb/graphics/GLEnumsScriptFuncs.h
-    include/Vorb/graphics/SamplerStateScriptFuncs.h
-    include/Vorb/graphics/SpriteBatchScriptFuncs.h
-    include/Vorb/graphics/TextureCacheScriptFuncs.h
+    include/Vorb/graphics/script/GLEnumsScriptFuncs.h
+    include/Vorb/graphics/script/SamplerStateScriptFuncs.h
+    include/Vorb/graphics/script/SpriteBatchScriptFuncs.h
+    include/Vorb/graphics/script/TextureCacheScriptFuncs.h
 #source
-    src/graphics/TextureCacheScriptFuncs.cpp
+    src/graphics/script/TextureCacheScriptFuncs.cpp
 )
 endif()
 
@@ -240,6 +240,7 @@ set(vorb_io
 if(VORB_USE_SCRIPTING)
     set(vorb_script
         include/Vorb/script/IEnvironment.hpp
+        include/Vorb/script/ConsoleBackend.hpp
         include/Vorb/script/lua/Environment.h
         include/Vorb/script/lua/LFunction.h
         include/Vorb/script/lua/CFunction.hpp
@@ -280,7 +281,6 @@ set(vorb_ui
     include/Vorb/ui/Keys.inl
     include/Vorb/ui/KeyStrings.h
     include/Vorb/ui/Label.h
-    include/Vorb/ui/LuaDevConsole.h
     include/Vorb/ui/MainGame.h
     include/Vorb/ui/MouseInputDispatcher.h
     include/Vorb/ui/Panel.h
@@ -304,7 +304,6 @@ set(vorb_ui
     src/ui/IWidget.cpp
     src/ui/KeyboardEventDispatcher.cpp
     src/ui/Label.cpp
-    src/ui/LuaDevConsole.cpp
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
     src/ui/Panel.cpp

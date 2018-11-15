@@ -37,6 +37,7 @@ namespace vorb {
 }
 
 #include "CFunction.hpp"
+#include "LFunction.h"
 #include "../IEnvironment.hpp"
 
 namespace vorb {

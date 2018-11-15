@@ -20,7 +20,7 @@ vui::Label::~Label() {
 
 void vui::Label::addDrawables(UIRenderer& renderer) {
     // Add the label rect.
-    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));
 
     // Add the text <- after checkbox to be rendererd on top!
     TextWidget::addDrawables(renderer);

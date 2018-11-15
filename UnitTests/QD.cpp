@@ -45,7 +45,7 @@ TEST(1) {
     }
 
     {
-        auto rd = makeDelegate(deed, &DEED::incr);
+        auto rd = makeDelegate(&deed, &DEED::incr);
         rd();
         rd();
     }

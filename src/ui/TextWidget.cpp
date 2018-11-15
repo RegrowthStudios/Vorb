@@ -19,11 +19,11 @@ void vui::TextWidget::addDrawables(UIRenderer& renderer) {
     if (!m_drawableText.getFont()) {
         m_drawableText.setFont(m_defaultFont);
         // Add the text.
-        renderer.add(makeDelegate(m_drawableText, &DrawableText::draw));
+        renderer.add(makeDelegate(&m_drawableText, &DrawableText::draw));
         m_drawableText.setFont(nullptr);
     } else {
         // Add the text.
-        renderer.add(makeDelegate(m_drawableText, &DrawableText::draw));
+        renderer.add(makeDelegate(&m_drawableText, &DrawableText::draw));
     }
 }
 

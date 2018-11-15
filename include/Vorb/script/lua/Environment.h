@@ -337,7 +337,7 @@ DelegateType* vscript::lua::Environment::getScriptDelegate(const nString& name) 
     // If we couldn't find it, fail.
     if (lFunction == nullptr) return nullptr;
 
-    return new DelegateType(std::move(makeConstDelegate<ReturnType, Parameters...>(*lFunction)));
+    return new DelegateType(std::move(makeConstDelegate<ReturnType, Parameters...>(lFunction)));
 }
 
 #endif // VORB_USING_SCRIPT

@@ -206,7 +206,7 @@ namespace keg {
 
         // Iterate Values
         TypeValueIterator typeEval(dest, type, context);
-        auto eval = makeDelegate(typeEval, &TypeValueIterator::evaluate);
+        auto eval = makeDelegate(&typeEval, &TypeValueIterator::evaluate);
         context.reader.forAllInMap(data, &eval);
         return Error::NONE;
     }

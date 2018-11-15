@@ -43,7 +43,7 @@ void vui::ComboBox::dispose() {
 
 void vui::ComboBox::enable() {
     if (!m_flags.isEnabled) {
-        m_mainButton.MouseClick += makeDelegate(*this, &ComboBox::onMainButtonClick);
+        m_mainButton.MouseClick += makeDelegate(this, &ComboBox::onMainButtonClick);
     }
 
     Widget::enable();
@@ -58,7 +58,7 @@ void vui::ComboBox::enable() {
 
 void vui::ComboBox::disable() {
     if (m_flags.isEnabled) {
-        m_mainButton.MouseClick -= makeDelegate(*this, &ComboBox::onMainButtonClick);
+        m_mainButton.MouseClick -= makeDelegate(this, &ComboBox::onMainButtonClick);
     }
 
     Widget::disable();
@@ -84,7 +84,7 @@ vui::Button* vui::ComboBox::addItem(const nString& item) {
     }
 
     // Add listener for mouse clicks on the button to handle combobox logic.
-    button->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
+    button->MouseClick += makeDelegate(this, &ComboBox::onSubButtonClick);
 
     button->setSize(m_size);
     
@@ -116,7 +116,7 @@ vui::Button* vui::ComboBox::addItemAtIndex(size_t index, const nString& item) {
     }
 
     // Add listener for mouse clicks on the button to handle combobox logic.
-    button->MouseClick += makeDelegate(*this, &ComboBox::onSubButtonClick);
+    button->MouseClick += makeDelegate(this, &ComboBox::onSubButtonClick);
 
     button->setSize(m_size);
     

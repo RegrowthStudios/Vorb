@@ -112,10 +112,10 @@ void vui::IWidget::update(f32 dt /*= 0.0f*/) {
 void vui::IWidget::enable() {
     if (!m_flags.isEnabled) {
         m_flags.isEnabled = true;
-        vui::InputDispatcher::mouse.onButtonDown += makeDelegate(*this, &IWidget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp   += makeDelegate(*this, &IWidget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion     += makeDelegate(*this, &IWidget::onMouseMove);
-        vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(*this, &IWidget::onMouseFocusLost);
+        vui::InputDispatcher::mouse.onButtonDown += makeDelegate(this, &IWidget::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp   += makeDelegate(this, &IWidget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion     += makeDelegate(this, &IWidget::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost  += makeDelegate(this, &IWidget::onMouseFocusLost);
     }
 
     // Enable all children
@@ -125,10 +125,10 @@ void vui::IWidget::enable() {
 void vui::IWidget::disable() {
     if (m_flags.isEnabled) {
         m_flags.isEnabled = false;
-        vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(*this, &IWidget::onMouseDown);
-        vui::InputDispatcher::mouse.onButtonUp   -= makeDelegate(*this, &IWidget::onMouseUp);
-        vui::InputDispatcher::mouse.onMotion     -= makeDelegate(*this, &IWidget::onMouseMove);
-        vui::InputDispatcher::mouse.onFocusLost  -= makeDelegate(*this, &IWidget::onMouseFocusLost);
+        vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(this, &IWidget::onMouseDown);
+        vui::InputDispatcher::mouse.onButtonUp   -= makeDelegate(this, &IWidget::onMouseUp);
+        vui::InputDispatcher::mouse.onMotion     -= makeDelegate(this, &IWidget::onMouseMove);
+        vui::InputDispatcher::mouse.onFocusLost  -= makeDelegate(this, &IWidget::onMouseFocusLost);
     }
     m_flags.isClicking = false;
 

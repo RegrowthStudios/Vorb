@@ -25,7 +25,7 @@ vui::Button::~Button() {
 
 void vui::Button::addDrawables(UIRenderer& renderer) {
     // Add the button rect.
-    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));
     
     // Add the text <- after checkbox to be rendererd on top!
     TextWidget::addDrawables(renderer);

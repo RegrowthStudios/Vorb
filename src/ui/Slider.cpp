@@ -30,10 +30,10 @@ void vui::Slider::initBase() {
 
 void vui::Slider::addDrawables(UIRenderer& renderer) {
     // Add the bar rect.
-    renderer.add(makeDelegate(m_drawableBar, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableBar, &DrawableRect::draw));
 
     // Add the slide rect <- after the bar rect to draw on top!
-    renderer.add(makeDelegate(m_drawableSlide, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableSlide, &DrawableRect::draw));
 }
 
 void vui::Slider::updateDimensions(f32 dt) {

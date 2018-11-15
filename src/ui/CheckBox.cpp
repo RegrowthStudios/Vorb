@@ -30,7 +30,7 @@ void vui::CheckBox::initBase() {
 
 void vui::CheckBox::addDrawables(UIRenderer& renderer) {
     // Add the checkbox rect.
-    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));
 
     // Add the text <- after checkbox to be rendererd on top!
     TextWidget::addDrawables(renderer);

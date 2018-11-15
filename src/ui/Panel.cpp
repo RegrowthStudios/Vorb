@@ -39,8 +39,8 @@ void vui::Panel::initBase() {
 
 void vui::Panel::enable() {
     if (!m_flags.isEnabled) {
-        m_sliders.horizontal.ValueChange += makeDelegate(*this, &Panel::onSliderValueChange);
-        m_sliders.vertical.ValueChange   += makeDelegate(*this, &Panel::onSliderValueChange);
+        m_sliders.horizontal.ValueChange += makeDelegate(this, &Panel::onSliderValueChange);
+        m_sliders.vertical.ValueChange   += makeDelegate(this, &Panel::onSliderValueChange);
     }
 
     IWidget::enable();
@@ -51,8 +51,8 @@ void vui::Panel::enable() {
 
 void vui::Panel::disable() {
     if (m_flags.isEnabled) {
-        m_sliders.horizontal.ValueChange -= makeDelegate(*this, &Panel::onSliderValueChange);
-        m_sliders.vertical.ValueChange   -= makeDelegate(*this, &Panel::onSliderValueChange);
+        m_sliders.horizontal.ValueChange -= makeDelegate(this, &Panel::onSliderValueChange);
+        m_sliders.vertical.ValueChange   -= makeDelegate(this, &Panel::onSliderValueChange);
     }
 
     IWidget::disable();
@@ -60,7 +60,7 @@ void vui::Panel::disable() {
 
 void vui::Panel::addDrawables(UIRenderer& renderer) {
     // Add the panel rect.
-    renderer.add(makeDelegate(m_drawableRect, &DrawableRect::draw));
+    renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));
 }
 
 void vui::Panel::setTexture(VGTexture texture) {

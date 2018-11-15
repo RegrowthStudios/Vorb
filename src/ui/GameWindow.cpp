@@ -264,9 +264,9 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 
     // Push input from this window and receive quit signals
     vui::InputDispatcher::init(this);
-    vui::InputDispatcher::window.onClose += makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::onQuit += makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onResize += makeDelegate(*this, &GameWindow::onResize);
+    vui::InputDispatcher::window.onClose += makeDelegate(this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::onQuit += makeDelegate(this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize += makeDelegate(this, &GameWindow::onResize);
     m_quitSignal = false;
 
     return true;
@@ -274,9 +274,9 @@ bool vui::GameWindow::init(bool isResizable /*= true*/) {
 void vui::GameWindow::dispose() {
     if (!isInitialized()) return;
 
-    vui::InputDispatcher::onQuit -= makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onClose -= makeDelegate(*this, &GameWindow::onQuitSignal);
-    vui::InputDispatcher::window.onResize -= makeDelegate(*this, &GameWindow::onResize);
+    vui::InputDispatcher::onQuit -= makeDelegate(this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onClose -= makeDelegate(this, &GameWindow::onQuitSignal);
+    vui::InputDispatcher::window.onResize -= makeDelegate(this, &GameWindow::onResize);
     vui::InputDispatcher::dispose();
     saveSettings();
 

@@ -140,8 +140,8 @@ namespace vorb {
                  * \param name The name of the delegate to add.
                  * \param function The delegate to add.
                  */
-                template<typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
-                void addCDelegate(const nString& name, DelegateType&& delegate);
+                template<typename ReturnType, typename ...Parameters>
+                void addCDelegate(const nString& name, Delegate<ReturnType, Parameters...>&& delegate);
 
                 /*!
                  * \brief Add a Lua function to the list of registered Lua functions.
@@ -264,10 +264,10 @@ namespace vorb {
 }
 namespace vscript = vorb::script;
 
-template<typename ReturnType, typename ...Parameters, typename DelegateType>
-inline void vscript::lua::Environment::addCDelegate(const nString& name, DelegateType&& delegate) {
+template<typename ReturnType, typename ...Parameters>
+inline void vscript::lua::Environment::addCDelegate(const nString& name, Delegate<ReturnType, Parameters...>&& delegate) {
     // Create copy of delegate and store it.
-    m_cFunctions.emplace_back(new DelegateType(std::move(delegate)));
+    m_cFunctions.emplace_back(new Delegate<ReturnType, Parameters...>(std::move(delegate)));
 
     // Get function to wrap delegate.
     CFunction::Type function = CFunction::fromDelegate<ReturnType, Parameters...>();

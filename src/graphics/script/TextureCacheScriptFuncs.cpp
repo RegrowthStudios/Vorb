@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Vorb/stdafx.h"
 #include "Vorb/graphics/script/TextureCacheScriptFuncs.h"
 
 VGTexture vg::TextureCacheScriptFuncs::impl::loadTexture(           TextureCache* cache,

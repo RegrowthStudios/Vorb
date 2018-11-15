@@ -375,8 +375,6 @@ public:
      *             (Object Copy)               *
     \*******************************************/
 
-    // TODO(Matthew): Can we use move semantics to not use new twice in these?
-
         /****
           Non-const Function of Non-const Object
                                              ****/
@@ -472,6 +470,45 @@ public:
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static Delegate* createConstCopy(const SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
         return new Delegate(new SpecificClass(*const_cast<SpecificClass*>(object)), *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+#endif // REFCOUNT_DELEGATES == 1
+
+    /*******************************************\
+     *    Member Functions, Functor Classes    *
+     *               & Lambdas                 *
+     *             (Object Move)               *
+    \*******************************************/
+
+        /****
+          Non-const Function of Non-const Object
+                                             ****/
+
+#if REFCOUNT_DELEGATES == 1
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createMove(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
+    }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createMove(SpecificClass* object, MemberFunction<SpecificClass> function) {
+        return new Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
+    }
+#endif // REFCOUNT_DELEGATES == 1
+
+        /****
+          Const Function of Non-const Object
+                                         ****/
+
+
+#if REFCOUNT_DELEGATES == 1
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createMove(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, new DeletorStruct( { &destroy<SpecificClass>, 0 } ));
+    }
+#else
+    template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+    static Delegate* createMove(SpecificClass* object, ConstMemberFunction<SpecificClass> function) {
+        return new Delegate(object, *(GenericMemberFunction*)&function, &executeWithObject<SpecificClass>, &destroy<SpecificClass>);
     }
 #endif // REFCOUNT_DELEGATES == 1
 protected:
@@ -818,6 +855,35 @@ Delegate<ReturnType, Parameters...>* makeNonConstFunctor(const SpecificClass& ob
     Func function = &SpecificClass::operator();
 
     return Delegate<ReturnType, Parameters...>::template createCopy<SpecificClass>(&object, function);
+}
+
+/****************************************\
+ *    Functor Classes (Object Move)     *
+ *             & Lambdas                *
+\****************************************/
+
+// Const or non-const operator().
+template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+typename DelegateType<SpecificClass>::type* makeFunctor(SpecificClass&& object) {
+    return DelegateType<SpecificClass>::type::template createMove<SpecificClass>(new SpecificClass(std::move(object)), &SpecificClass::operator());
+}
+// Const operator().
+template<typename ReturnType, typename ...Parameters, typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+Delegate<ReturnType, Parameters...>* makeConstFunctor(SpecificClass&& object) {
+    using Func = ReturnType(SpecificClass::*)(Parameters...) const;
+
+    Func function = &SpecificClass::operator();
+
+    return Delegate<ReturnType, Parameters...>::template createMove<SpecificClass>(new SpecificClass(std::move(object)), function);
+}
+// Non-const operator().
+template<typename ReturnType, typename ...Parameters, typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
+Delegate<ReturnType, Parameters...>* makeNonConstFunctor(SpecificClass&& object) {
+    using Func = ReturnType(SpecificClass::*)(Parameters...);
+
+    Func function = &SpecificClass::operator();
+
+    return Delegate<ReturnType, Parameters...>::template createMove<SpecificClass>(new SpecificClass(std::move(object)), function);
 }
 
 #endif // !Vorb_Delegate_h__

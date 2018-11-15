@@ -219,7 +219,7 @@ static Values popValues(vscript::lua::Handle state, i32 n) {
 
     return values;
 }
-
+// TODO(Matthew): We shouldn't be making the Lua scripts choose their names in C, we should be able to determine a prefix. Using lua_newthread we can!
 int vscript::lua::makeLFunction(Handle state) {
     // Get "depth" of the function to make a reference to.
     // If this is 0 or 1, then there's no function to reference!

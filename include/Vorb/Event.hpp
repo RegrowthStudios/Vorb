@@ -182,8 +182,48 @@ public:
      */
     template <typename Functor>
     CALLER_DELETE Subscriber* addFunctor(Functor functor) {
-        Subscriber* subscriber = makeFunctor(functor);
+        Subscriber* subscriber = makeFunctor(std::move(functor));
         
+        add(*subscriber);
+
+        return subscriber;
+    }
+    /*!
+     * \brief Adds a functor as a subscriber to this event.
+     *
+     * This is a specialisation to deal with edge cases where we can't deduce from overloaded functions,
+     * for example if an operator() is template typename overloaded. The more obvious case is const, non-const
+     * overloading.
+     *
+     * \tparam Functor The type of the functor to be subscribed.
+     * \param functor The functor to be subscribed.
+     * 
+     * \return The created functor delegate.
+     */
+    template <typename Functor>
+    CALLER_DELETE Subscriber* addConstFunctor(Functor functor) {
+        Subscriber* subscriber = makeConstFunctor<void, Sender, Parameters...>(std::move(functor));
+
+        add(*subscriber);
+
+        return subscriber;
+    }
+    /*!
+     * \brief Adds a functor as a subscriber to this event.
+     *
+     * This is a specialisation to deal with edge cases where we can't deduce from overloaded functions,
+     * for example if an operator() is template typename overloaded. The more obvious case is const, non-const
+     * overloading.
+     *
+     * \tparam Functor The type of the functor to be subscribed.
+     * \param functor The functor to be subscribed.
+     * 
+     * \return The created functor delegate.
+     */
+    template <typename Functor>
+    CALLER_DELETE Subscriber* addNonConstFunctor(Functor functor) {
+        Subscriber* subscriber = makeNonConstFunctor<void, Sender, Parameters...>(std::move(functor));
+
         add(*subscriber);
 
         return subscriber;
@@ -264,7 +304,53 @@ public:
      */
     template<typename Functor, typename... Parameters>
     void addAutoHook(Event<Parameters...>& event, Functor functor) {
-        auto delegate = event.template addFunctor<Functor>(functor);
+        auto delegate = event.template addFunctor<Functor>(std::move(functor));
+
+        Deletor deletor = makeFunctor([delegate, &event] () {
+            event -= *delegate;
+            delete delegate;
+        });
+
+        m_deletionFunctions.push_back(deletor);
+    }
+    /*!
+     * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
+     *
+     * This is a specialisation to deal with edge cases where we can't deduce from overloaded functions,
+     * for example if an operator() is template typename overloaded. The more obvious case is const, non-const
+     * overloading.
+     *
+     * \tparam Functor The type of the functor provided.
+     * \tparam Parameters The parameters the event provides when triggered.
+     * \param event The event to subscribe the provided functor to.
+     * \param functor The functor to subscribe to the provided event.
+     */
+    template<typename Functor, typename... Parameters>
+    void addConstAutoHook(Event<Parameters...>& event, Functor functor) {
+        auto delegate = event.template addConstFunctor<Functor>(std::move(functor));
+
+        Deletor deletor = makeFunctor([delegate, &event] () {
+            event -= *delegate;
+            delete delegate;
+        });
+
+        m_deletionFunctions.push_back(deletor);
+    }
+    /*!
+     * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
+     *
+     * This is a specialisation to deal with edge cases where we can't deduce from overloaded functions,
+     * for example if an operator() is template typename overloaded. The more obvious case is const, non-const
+     * overloading.
+     *
+     * \tparam Functor The type of the functor provided.
+     * \tparam Parameters The parameters the event provides when triggered.
+     * \param event The event to subscribe the provided functor to.
+     * \param functor The functor to subscribe to the provided event.
+     */
+    template<typename Functor, typename... Parameters>
+    void addNonConstAutoHook(Event<Parameters...>& event, Functor functor) {
+        auto delegate = event.template addNonConstFunctor<Functor>(std::move(functor));
 
         Deletor deletor = makeFunctor([delegate, &event] () {
             event -= *delegate;

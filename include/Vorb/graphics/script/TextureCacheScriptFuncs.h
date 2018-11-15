@@ -69,7 +69,7 @@ void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvi
                                     internalFormat, textureFormat, mipmapLevels);
     });
     env->addCDelegate("loadTextureDefault", [cache] (nString filepath){
-        return impl::loadTexture(cache, filepath);
+        return impl::loadTextureDefault(cache, filepath);
     });
     env->addCDelegate("freeTexture", [cache] (VGTexture texture) {
         return impl::freeTexture(cache, texture);
@@ -78,7 +78,7 @@ void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvi
 }
 
 template <typename ScriptEnvironmentImpl>
-void vg::TextureCacheScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::TextureCacheScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

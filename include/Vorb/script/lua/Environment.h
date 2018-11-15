@@ -326,7 +326,7 @@ void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction s
     Event<Parameters...>* event     = static_cast<Event<Parameters...>*>(eventBase);
     LFunction*            lFunction = static_cast<LFunction*>(scriptFunction);
 
-    m_listenerPool.addAutoHook(*event, *lFunction);
+    m_listenerPool.addConstAutoHook(*event, std::move(*lFunction));
 }
 
 template <typename ReturnType, typename ...Parameters, typename DelegateType>
@@ -337,7 +337,7 @@ DelegateType* vscript::lua::Environment::getScriptDelegate(const nString& name) 
     // If we couldn't find it, fail.
     if (lFunction == nullptr) return nullptr;
 
-    return new DelegateType(std::move(makeDelegate<ReturnType, Parameters...>(*lFunction)));
+    return new DelegateType(std::move(makeConstDelegate<ReturnType, Parameters...>(*lFunction)));
 }
 
 #endif // VORB_USING_SCRIPT

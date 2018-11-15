@@ -57,6 +57,13 @@ namespace vorb {
                 LFunction(Handle state, const nString& name, Index index) :
                     m_state(state), m_name(name), m_index(index)
                 { /* EMPTY */ }
+                LFunction(LFunction&& lFunction) :
+                    m_state(lFunction.m_state), m_name(lFunction.m_name), m_index(lFunction.m_index)
+                {
+                    lFunction.m_state = nullptr;
+                    lFunction.m_name  = "";
+                    lFunction.m_index = 0;
+                }
                 ~LFunction();
 
                 /*!

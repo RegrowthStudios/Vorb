@@ -60,19 +60,18 @@ namespace vorb {
 
             /// Default constructor that initializes hooks into itself
             MultiComponentTracker() : MultipleComponentSet() {
-                // TODO(Matthew): Maybe makeFunctor?
-                _fEntityAdded.reset(makeDelegate([&] (Sender sender, EntityID id) {
+                _fEntityAdded.reset(new Delegate<void, Sender, EntityID>(std::move(makeFunctor([&] (Sender sender, EntityID id) {
                     Components comp;
                     for (size_t i = 0; i < N; i++) {
                         comp.set(i, _tables[i]->getComponentID(id));
                     }
                     _trackedComponents.insert(std::make_pair(id, comp));
-                }));
+                }))));
                 onEntityAdded += _fEntityAdded.get();
                 
-                _fEntityRemoved.reset(makeDelegate([&] (Sender sender, EntityID id) {
+                _fEntityRemoved.reset(new Delegate<void, Sender, EntityID>(std::move(makeFunctor([&] (Sender sender, EntityID id) {
                     _trackedComponents.erase(id);
-                }));
+                }))));
                 onEntityRemoved += _fEntityRemoved.get();
             }
 

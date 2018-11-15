@@ -45,7 +45,7 @@ namespace vorb {
 
             template<typename F>
             void set(F func) {
-                RPCFunction* f = makeFunctor(func);
+                RPCFunction* f = new vcore::RPCFunction(std::move(makeFunctor(func)));
                 data.f = f;
                 m_func.reset(f);
             }

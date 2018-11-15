@@ -193,8 +193,7 @@ namespace keg {
                 context.reader.free(node);
                 newDest += type->getSizeInBytes();
             });
-            context.reader.forAllInSequence(nArray, f);
-            delete f;
+            context.reader.forAllInSequence(nArray, &f);
         }
         return Error::TYPE_NOT_FOUND;
     }

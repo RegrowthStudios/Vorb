@@ -60,9 +60,8 @@ namespace vorb {
             void forEachEntry(DirectoryEntryCallback* f) const;
             template<typename F>
             void forEachEntry(F f) const {
-                DirectoryEntryCallback* fDel = makeFunctor(f);
-                forEachEntry(fDel);
-                delete fDel;
+                DirectoryEntryCallback fDel = makeFunctor(f);
+                forEachEntry(&fDel);
             }
 
             /// @return True if this directory contains no elements

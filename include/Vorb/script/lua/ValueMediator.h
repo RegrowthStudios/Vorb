@@ -136,7 +136,7 @@ namespace vorb {
                 void rpopValues(Handle state, OUT std::tuple<Type1, Type2, Types...>* tPtr) {
                     // Pop all but the first value - we want this recursive approach to pop in reverse order of
                     // types provided.
-                    std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2, Types>::defaultValue()... };
+                    std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2>::defaultValue(), ValueMediator<Types>::defaultValue()... };
                     rpopValues<Type2, Types...>(state, &tToPop);
 
                     // Pop the first value.
@@ -264,6 +264,7 @@ namespace vorb {
             // Provides support for pushing and popping pointer types by casting to and from void*.
             template<typename Type>
             struct ValueMediator<Type*, typename std::enable_if<std::is_pointer<Type*>::value>::type> {
+                using NoConstType = typename std::remove_const<Type>::type;
             public:
                 static Type* defaultValue() {
                     return (Type*)nullptr;
@@ -274,11 +275,11 @@ namespace vorb {
                 }
 
                 static i32 push(Handle state, Type* value) {
-                    return ValueMediator<void*>::push(state, const_cast<void*>(value));
+                    return ValueMediator<void*>::push(state, reinterpret_cast<void*>(const_cast<NoConstType*>(value)));
                 }
 
                 static Type* pop(Handle state) {
-                    return (Type*)ValueMediator<void*>::pop(state);
+                    return reinterpret_cast<Type*>(ValueMediator<void*>::pop(state));
                 }
 
                 static bool tryPop(Handle state, OUT Type*& value) {
@@ -287,14 +288,14 @@ namespace vorb {
                     bool success = ValueMediator<void*>::tryPop(state, result);
                     // If successful, set value to the Type* casted result of the pop.
                     if (success) {
-                        value = (Type*)result;
+                        value = reinterpret_cast<Type*>(result);
                     }
                     // Return success of pop.
                     return success;
                 }
 
                 static Type* retrieve(Handle state, ui32 index) {
-                    return (Type*)ValueMediator<void*>::retrieve(state, index);
+                    return reinterpret_cast<Type*>(ValueMediator<void*>::retrieve(state, index));
                 }
 
                 static bool tryRetrieve(Handle state, ui32 index, OUT Type*& value) {
@@ -303,7 +304,7 @@ namespace vorb {
                     bool success = ValueMediator<void*>::tryRetrieve(state, index, result);
                     // If successful, set value to the Type* casted result of the pop.
                     if (success) {
-                        value = (Type*)result;
+                        value = reinterpret_cast<Type*>(result);
                     }
                     // Return success of pop.
                     return success;

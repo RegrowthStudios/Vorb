@@ -55,6 +55,7 @@ namespace vorb {
                 m_maxScriptLength(INT_MAX) {
                 static_assert(std::is_base_of<IEnvironment, EnvironmentImpl>::value, "Environment implementation provided not deriving from IEnvironment interface.");
             }
+            virtual ~IEnvironment() { /* Empty */ }
 
             /*!
              * \brief Initialises the environment.
@@ -164,8 +165,8 @@ namespace vorb {
              * \param name The name of the delegate to add.
              * \param function The delegate to add.
              */
-            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
-            void addCDelegate(const nString& name, DelegateType&& delegate) {
+            template <typename ReturnType, typename ...Parameters>
+            void addCDelegate(const nString& name, Delegate<ReturnType, Parameters...>&& delegate) {
                 static_cast<EnvironmentImpl*>(this)->addCDelegate(name, std::move(delegate));
             }
 
@@ -179,8 +180,8 @@ namespace vorb {
              *
              * \return A pointer to the delegate, or nullptr if the script function wasn't found.
              */
-            template <typename ReturnType, typename ...Parameters, typename DelegateType = Delegate<ReturnType, Parameters...>>
-            DelegateType* getScriptDelegate(const nString& name) {
+            template <typename ReturnType, typename ...Parameters>
+            Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name) {
                 return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
             }
 

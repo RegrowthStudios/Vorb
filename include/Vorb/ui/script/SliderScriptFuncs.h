@@ -103,8 +103,8 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setMax",             makeDelegate(&impl::setMax));
     env->addCDelegate("getSlideSize",       makeDelegate(&impl::getSlideSize));
     env->addCDelegate("setSlideSize",       makeDelegate(&impl::setSlideSize));
-    env->addCDelegate("getRawSlideSize",    makeDelegate(&impl::getRawSlideSize));
-    env->addCDelegate("setRawSlideSize",    makeDelegate(&impl::setRawSlideSize));
+    // env->addCDelegate("getRawSlideSize",    makeDelegate(&impl::getRawSlideSize));
+    // env->addCDelegate("setRawSlideSize",    makeDelegate(&impl::setRawSlideSize));
     env->addCDelegate("isVertical",         makeDelegate(&impl::isVertical));
     env->addCDelegate("setIsVertical",      makeDelegate(&impl::setIsVertical));
     env->addCDelegate("isHorizontal",       makeDelegate(&impl::isHorizontal));

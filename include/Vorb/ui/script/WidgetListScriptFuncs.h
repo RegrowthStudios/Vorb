@@ -93,7 +93,7 @@ void vui::WidgetListScriptFuncs::registerFuncs(const nString& namespace_, vscrip
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::WidgetListScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::WidgetListScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

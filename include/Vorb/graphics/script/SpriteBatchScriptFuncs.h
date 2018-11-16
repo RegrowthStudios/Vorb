@@ -45,19 +45,19 @@ namespace vorb {
 
 namespace vg = vorb::graphics;
 template <typename ScriptEnvironmentImpl>
-void vg::SpriteBatchScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::SpriteBatchScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 
 template <typename ScriptEnvironmentImpl>
 void vg::SpriteBatchScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    env.setNamespaces("Graphics", "GradientType");
-    env.addValue("NONE",           vg::GradientType::NONE);
-    env.addValue("HORIZONTAL",     vg::GradientType::HORIZONTAL);
-    env.addValue("VERTICAL",       vg::GradientType::VERTICAL);
-    env.addValue("LEFT_DIAGONAL",  vg::GradientType::LEFT_DIAGONAL);
-    env.addValue("RIGHT_DIAGONAL", vg::GradientType::RIGHT_DIAGONAL);
-    env.setNamespaces();
+    env->setNamespaces("Graphics", "GradientType");
+    env->addValue("NONE",           vg::GradientType::NONE);
+    env->addValue("HORIZONTAL",     vg::GradientType::HORIZONTAL);
+    env->addValue("VERTICAL",       vg::GradientType::VERTICAL);
+    env->addValue("LEFT_DIAGONAL",  vg::GradientType::LEFT_DIAGONAL);
+    env->addValue("RIGHT_DIAGONAL", vg::GradientType::RIGHT_DIAGONAL);
+    env->setNamespaces();
 }
 
 #endif // !Vorb_SpriteBatchScriptFuncs_h__

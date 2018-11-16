@@ -62,7 +62,7 @@ namespace vorb {
             void init(Viewport* viewport, const GameWindow* window);
             void dispose();
 
-            bool run(const vio::File& filepath);
+            bool run(const vio::Path& filepath);
 
             ScriptEnv* getEnv() { return m_env; }
         protected:
@@ -107,8 +107,10 @@ template <typename ScriptEnvironmentImpl>
 void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::init(Viewport* viewport, const GameWindow* window) {
     m_window   = window;
     m_viewport = viewport;
-    m_env      = new ScriptEnv();
+    m_env      = new ScriptEnvironmentImpl();
     m_env->init();
+
+    prepareScriptEnv();
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -120,7 +122,7 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::dispose() {
 
     m_env->dispose();
 
-    delete m_env;
+    delete static_cast<ScriptEnvironmentImpl*>(m_env);
 
     m_env      = nullptr;
     m_window   = nullptr;
@@ -128,8 +130,8 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::dispose() {
 }
 
 template <typename ScriptEnvironmentImpl>
-bool vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::run(const vio::File& filepath) {
-    m_env->run(filepath);
+bool vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::run(const vio::Path& filepath) {
+    return m_env->run(filepath);
 }
 
 template <typename ScriptEnvironmentImpl>
@@ -188,7 +190,7 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
 
     SliderScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
-    ViewportScriptFuncs::registerFuncs<ScriptEnvironmentImpl>(m_env);
+    ViewportScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     WidgetScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
@@ -278,7 +280,7 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::destroyWidget(IWidget* w
     widget->dispose();
 
     // If we manage this widget, clear up memory.
-    auto& it = std::find(m_widgets.begin(), m_widgets.end(), widget);
+    auto it = std::find(m_widgets.begin(), m_widgets.end(), widget);
     if (it != m_widgets.end()) {
         m_widgets.erase(it);
         delete widget;

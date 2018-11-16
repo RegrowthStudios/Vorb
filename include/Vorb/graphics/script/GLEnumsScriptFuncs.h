@@ -45,7 +45,7 @@ namespace vorb {
 namespace vg = vorb::graphics;
 
 template <typename ScriptEnvironmentImpl>
-void vg::GLEnumsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::GLEnumsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 

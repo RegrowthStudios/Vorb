@@ -49,24 +49,24 @@ namespace vui = vorb::ui;
 
 template <typename ScriptEnvironmentImpl>
 void vui::GraphicsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, vg::TextureCache* cache) {
-    GLEnumsScriptFuncs::registerFuncs(env);
+    vg::GLEnumsScriptFuncs::registerFuncs(env);
 
-    SamplerStateScriptFuncs::registerFuncs(env);
+    vg::SamplerStateScriptFuncs::registerFuncs(env);
 
-    SpriteBatchScriptFuncs::registerFuncs(env);
+    vg::SpriteBatchScriptFuncs::registerFuncs(env);
 
-    TextureCacheScriptFuncs::registerFuncs(env, cache);
+    vg::TextureCacheScriptFuncs::registerFuncs(env, cache);
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::GraphicsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
-    GLEnumsScriptFuncs::registerConsts(env);
+void vui::GraphicsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    vg::GLEnumsScriptFuncs::registerConsts(env);
 
-    SamplerStateScriptFuncs::registerConsts(env);
+    vg::SamplerStateScriptFuncs::registerConsts(env);
 
-    SpriteBatchScriptFuncs::registerConsts(env);
+    vg::SpriteBatchScriptFuncs::registerConsts(env);
 
-    TextureCacheScriptFuncs::registerConsts(env);
+    vg::TextureCacheScriptFuncs::registerConsts(env);
 }
 
 #endif // !Vorb_GraphicsScriptFuncs_h__

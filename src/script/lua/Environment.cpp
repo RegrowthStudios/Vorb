@@ -115,12 +115,16 @@ bool vscript::lua::Environment::run(const vio::Path& filepath) {
 
         script = new char[length + 1];
         size_t end = filestream.read(length, 1, script);
-        script[end] = 0;
+        script[end] = '\0';
     }
 
     // Load and run script, clean up and return success state.
     bool success = luaL_dostring(m_state, script) == 0;
     delete[] script;
+
+    if (!success) {
+        printf("Error running script: %s\n", ValueMediator<const cString>::pop(m_state));
+    }
 
     return success;
 }

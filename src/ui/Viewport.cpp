@@ -7,7 +7,7 @@
 vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) :
     Widget(),
     m_window(window) {
-    // Empty
+    m_clipping = { ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN };
 }
 
 vui::Viewport::~Viewport() {
@@ -72,7 +72,7 @@ void vui::Viewport::draw() {
 
     addDescendantDrawables(m_renderer);
 
-    m_renderer.render(m_size);
+    m_renderer.render(f32v2(m_window->getViewportDims()));
 }
 
 void vui::Viewport::setGameWindow(const GameWindow* window) {

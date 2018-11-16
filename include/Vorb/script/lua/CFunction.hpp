@@ -61,18 +61,19 @@ namespace vorb {
                     * \param state The Lua state object.
                     * \param delegate The delegate to invoke.
                     */
-                    template<typename ReturnType, typename ...Parameters>
-                    i32 handleInvocation(Handle state, Delegate<ReturnType, Parameters...>* delegate) {
+                    template<typename ReturnType, typename Parameter1, typename ...Parameters,
+                                typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
+                    i32 handleInvocation(Handle state, Delegate<ReturnType, Parameter1, Parameters...>* delegate) {
                         // Pop parameters to be provided to the delegate off of the Lua stack.
-                        std::tuple<Parameters...> parameters = popValues<Parameters...>(state);
+                        std::tuple<Parameter1, Parameters...> parameters = popValues<Parameter1, Parameters...>(state);
 
                         // Invoke delegate, unpacking the tuple of parameters using the index sequence trick.
-                        ReturnType ret = invokeDelegate<ReturnType>(delegate, parameters, index_sequence_for<Parameters...>());
+                        ReturnType ret = invokeDelegate<ReturnType>(delegate, parameters, index_sequence_for<Parameter1, Parameters...>());
 
                         // Push the return value of the delegate onto the stack and return the number of items on the stack that the return value takes up.
                         return ValueMediator<ReturnType>::push(state, ret);
                     }
-                    template<typename ReturnType>
+                    template<typename ReturnType, typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
                     inline i32 handleInvocation(Handle state, Delegate<ReturnType>* delegate) {
                         // Just invoke delegate, no parameters to fetch off lua stack.
                         ReturnType ret = delegate->invoke();

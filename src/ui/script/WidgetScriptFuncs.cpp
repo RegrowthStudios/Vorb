@@ -24,6 +24,10 @@ f32 vui::WidgetScriptFuncs::impl::getY(IWidget* widget) {
     return widget->getY();
 }
 
+f32v2 vui::WidgetScriptFuncs::impl::getPosition(IWidget* widget) {
+    return widget->getPosition();
+}
+
 f32v2 vui::WidgetScriptFuncs::impl::getPaddedPosition(IWidget* widget) {
     return widget->getPaddedPosition();
 }
@@ -251,6 +255,10 @@ void vui::WidgetScriptFuncs::impl::setY(IWidget* widget, f32 y) {
     widget->setY(y);
 }
 
+void vui::WidgetScriptFuncs::impl::setPosition(IWidget* widget, f32v2 pos) {
+    widget->setPosition(pos);
+}
+
 void vui::WidgetScriptFuncs::impl::setRelativeX(IWidget* widget, f32 relX) {
     widget->setRelativeX(relX);
 }
@@ -287,11 +295,13 @@ void vui::WidgetScriptFuncs::impl::setPaddingTop(IWidget* widget, f32 top) {
     widget->setPaddingTop(top);
 }
 
-
 void vui::WidgetScriptFuncs::impl::setPaddingRight(IWidget* widget, f32 right) {
     widget->setPaddingRight(right);
 }
 
+void vui::WidgetScriptFuncs::impl::setPaddingBottom(IWidget* widget, f32 bottom) {
+    widget->setPaddingBottom(bottom);
+}
 
 void vui::WidgetScriptFuncs::impl::setClipping(IWidget* widget, Clipping clipping) {
     widget->setClipping(clipping);

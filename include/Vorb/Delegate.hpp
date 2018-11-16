@@ -683,7 +683,7 @@ typename DelegateType<DecayedClass>::type makeFunctor(SpecificClass&& object) {
 template<typename ReturnType, typename ...Parameters, typename SpecificClass, typename DecayedClass = typename std::decay<SpecificClass>::type,
             typename = typename std::enable_if<std::is_class<DecayedClass>::value>::type>
 Delegate<ReturnType, Parameters...> makeConstFunctor(SpecificClass&& object) {
-    using Func = ReturnType(SpecificClass::*)(Parameters...) const;
+    using Func = ReturnType(DecayedClass::*)(Parameters...) const;
 
     Func function = &DecayedClass::operator();
 
@@ -693,7 +693,7 @@ Delegate<ReturnType, Parameters...> makeConstFunctor(SpecificClass&& object) {
 template<typename ReturnType, typename ...Parameters, typename SpecificClass, typename DecayedClass = typename std::decay<SpecificClass>::type,
             typename = typename std::enable_if<std::is_class<DecayedClass>::value>::type>
 Delegate<ReturnType, Parameters...> makeNonConstFunctor(SpecificClass&& object) {
-    using Func = ReturnType(SpecificClass::*)(Parameters...);
+    using Func = ReturnType(DecayedClass::*)(Parameters...);
 
     Func function = &DecayedClass::operator();
 

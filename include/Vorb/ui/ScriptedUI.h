@@ -34,7 +34,7 @@
 #include "Vorb/ui/Widget.h"
 #include "Vorb/ui/script/ViewScriptEnvironment.h"
 
-DECL_VG(class SpriteBatch; class SpriteFont)
+DECL_VG(class SpriteBatch; class SpriteFont; class TextureCache)
 
 namespace vorb {
     namespace ui {
@@ -106,14 +106,14 @@ namespace vorb {
              *
              * \return A pointer to the texture cache used.
              */
-            TextureCache* getTextureCache() { return m_textureCache; }
+            vg::TextureCache* getTextureCache() { return m_textureCache; }
 
             /*!
              * \brief Sets the texture cache used by the UI.
              *
              * \param Pointer to the texture cache to be set.
              */
-            void setTextureCache(TextureCache* textureCache) { m_textureCache = textureCache; }
+            void setTextureCache(vg::TextureCache* textureCache) { m_textureCache = textureCache; }
 
             // TODO(Matthew): Hook this into some options state event? This would involve Vorb providing a game options supporting class - and optons might not be a well-generalisable thing. Worst case can put the onus on Vorb users to register it to an event/call it directly.
             /*!
@@ -156,7 +156,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the constructed view.
              */
-            Viewport* makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath);
+            Viewport* makeViewFromScript(nString name, ZIndex zIndex, nString filepath);
 
             /*!
              * \brief Creates a new view in this UI.
@@ -167,7 +167,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the constructed view.
              */
-            Viewport* makeViewFromYAML(const nString& name, ZIndex zIndex, const vio::File& filepath);
+            Viewport* makeViewFromYAML(nString name, ZIndex zIndex, nString filepath);
 
             /*!
              * \brief Gets the named view.
@@ -176,7 +176,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
              */
-            Viewport* getView(const nString& name);
+            Viewport* getView(nString name);
 
             /*!
              * \brief Gets the named view's script environment.
@@ -245,7 +245,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the named view, or nullptr if no view found as named.
              */
-            Viewport* setViewZIndex(const nString& name, ZIndex zIndex);
+            Viewport* setViewZIndex(nString name, ZIndex zIndex);
 
             /*!
              * \brief Runs a script 
@@ -254,7 +254,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
              */
-            Viewport* runViewScript(const nString& name, const vio::File& filepath);
+            Viewport* runViewScript(const nString& name, const vio::Path& filepath);
 
             // TODO(Matthew): Other run funcs? runViewScriptFunc? runViewScript capturing multiple views?
         protected:
@@ -266,7 +266,7 @@ namespace vorb {
             const GameWindow* m_window;       ///< Pointer to the window the UI views will be drawn to.
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
             vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
-            TextureCache*     m_textureCache; ///< Cache for UI-related textures.
+            vg::TextureCache* m_textureCache; ///< Cache for UI-related textures.
         };
     }
 }
@@ -311,7 +311,8 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::dispose() {
 template <typename ScriptEnvironmentImpl>
 void vui::ScriptedUI<ScriptEnvironmentImpl>::update(f32 dt /*= 1.0f*/) {
     for (auto& view : m_views) {
-        view.second.scriptEnv->update(dt);
+        // TODO(Matthew): Implement script env updating.
+        // view.second.scriptEnv->update(dt);
         view.second.viewport->update(dt);
     }
 }
@@ -355,6 +356,7 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.scriptEnv = new ScriptEnv();
     view.scriptEnv->init(view.viewport, m_window);
 
+    // TODO(Matthew): Add asscoiated viewport to this environment!
     prepareScriptEnv(view.scriptEnv);
 
     m_views.insert(std::make_pair(zIndex, view));
@@ -363,16 +365,16 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(const nString& name, ZIndex zIndex, const vio::File& filepath) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(nString name, ZIndex zIndex, nString filepath) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
-    view.scriptEnv.load(filepath);
+    view.scriptEnv->run(vio::Path(filepath));
 
     return view.viewport;
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(const nString& name, ZIndex zIndex, const vio::File& filepath VORB_UNUSED) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath VORB_UNUSED) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
     // TODO(Matthew): Implement building view from YAML.
@@ -382,7 +384,7 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(const nS
 
 // TODO(Matthew): Do we want to consider sorting by name, either not guaranteeing order of render of each viewport, or storing the information twice?
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::getView(const nString& name) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::getView(nString name) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
             return view.second.viewport;
@@ -440,7 +442,8 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::disableViewWithName(nStri
 
 template <typename ScriptEnvironmentImpl>
 bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(Viewport* viewport) {
-    for (auto& view : m_views) {
+    for (auto it = m_views.begin(); it != m_views.end(); ++it) {
+        auto& view = *it;
         if (view.second.viewport == viewport) {
             // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second.viewport->dispose();
@@ -451,7 +454,7 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(Viewport* viewport) {
             delete view.second.scriptEnv;
 
             // Erase view from the list of views.
-            m_views.erase(view);
+            m_views.erase(it);
 
             return true;
         }
@@ -461,7 +464,8 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(Viewport* viewport) {
 
 template <typename ScriptEnvironmentImpl>
 bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyViewWithName(nString name) {
-    for (auto& view : m_views) {
+    for (auto it = m_views.begin(); it != m_views.end(); ++it) {
+        auto& view = *it;
         if (view.second.viewport->getName() == name) {
             // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second.viewport->dispose();
@@ -472,7 +476,7 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyViewWithName(nString name) {
             delete view.second.scriptEnv;
 
             // Erase view from the list of views.
-            m_views.erase(view);
+            m_views.erase(it);
 
             return true;
         }
@@ -481,30 +485,29 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyViewWithName(nString name) {
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::setViewZIndex(const nString& name, ZIndex zIndex) {
-    for (auto& view : m_views) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::setViewZIndex(nString name, ZIndex zIndex) {
+    for (auto it = m_views.begin(); it != m_views.end(); ++it) {
+        auto& view = *it;
         if (view.second.viewport->getName() == name) {
-            Viewport* viewport = view.second.viewport;
-
             ScriptedView<ScriptEnvironmentImpl> newView;
-            view.viewport  = viewport;
-            view.scriptEnv = view.second.scriptEnv;
+            newView.viewport  = view.second.viewport;
+            newView.scriptEnv = view.second.scriptEnv;
 
-            m_views.erase(view);
+            m_views.erase(it);
 
             m_views.insert(std::make_pair(zIndex, newView));
 
-            return viewport;
+            return newView.viewport;
         }
     }
     return nullptr;
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nString& name, const vio::File& filepath) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nString& name, const vio::Path& filepath) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
-            view.second.scriptEnv->load(filepath);
+            view.second.scriptEnv->run(filepath);
             return view.second.viewport;
         }
     }

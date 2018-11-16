@@ -7,7 +7,7 @@ vecs::MultipleComponentSet::MultipleComponentSet() :
     onEntityAdded(this),
     onEntityRemoved(this) {
     // Entity added handler
-    _fEntityAdded.reset(new Delegate<void, Sender, ComponentID, EntityID>(std::move(makeFunctor([=] (Sender sender, ComponentID, EntityID eID) -> void {
+    _fEntityAdded.reset(new Delegate<void, Sender, ComponentID, EntityID>(makeFunctor([=] (Sender sender, ComponentID, EntityID eID) -> void {
         for (ComponentTableBase* table : this->_tables) {
             // See if a table doesn't contain the entity
             if (table == sender) continue;
@@ -15,17 +15,17 @@ vecs::MultipleComponentSet::MultipleComponentSet() :
         }
         this->_entities.insert(eID);
         onEntityAdded(eID);
-    }))));
+    })));
 
     // Entity removed handler
-    _fEntityRemoved.reset(new Delegate<void, Sender, ComponentID, EntityID>(std::move(makeFunctor([=] (Sender, ComponentID, EntityID eID) -> void {
+    _fEntityRemoved.reset(new Delegate<void, Sender, ComponentID, EntityID>(makeFunctor([=] (Sender, ComponentID, EntityID eID) -> void {
         // Always remove the entity from this list
         auto entity = this->_entities.find(eID);
         if (entity != _entities.end()) {
             _entities.erase(entity);
             onEntityRemoved(eID);
         }
-    }))));
+    })));
 }
 vecs::MultipleComponentSet::~MultipleComponentSet() {
     // Remove event hooks for last copy of set

@@ -58,8 +58,8 @@ namespace vg = vorb::graphics;
 
 template <typename ScriptEnvironmentImpl>
 void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, TextureCache* cache) {
-    env->setNamespace("Graphics");
-    env->addCDelegate("loadTexture", [cache] (      nString filepath,
+    env->setNamespaces("Graphics");
+    env->addCDelegate("loadTexture", makeFunctor([cache] (      nString filepath,
                                               TextureTarget textureTarget,
                                               SamplerState* samplingParameters,
                                       TextureInternalFormat internalFormat,
@@ -67,14 +67,14 @@ void vg::TextureCacheScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvi
                                                         i32 mipmapLevels    ){
         return impl::loadTexture(cache, filepath, textureTarget, samplingParameters,
                                     internalFormat, textureFormat, mipmapLevels);
-    });
-    env->addCDelegate("loadTextureDefault", [cache] (nString filepath){
+    }));
+    env->addCDelegate("loadTextureDefault", makeFunctor([cache] (nString filepath){
         return impl::loadTextureDefault(cache, filepath);
-    });
-    env->addCDelegate("freeTexture", [cache] (VGTexture texture) {
+    }));
+    env->addCDelegate("freeTexture", makeFunctor([cache] (VGTexture texture) {
         return impl::freeTexture(cache, texture);
-    });
-    env->setNamespace();
+    }));
+    env->setNamespaces();
 }
 
 template <typename ScriptEnvironmentImpl>

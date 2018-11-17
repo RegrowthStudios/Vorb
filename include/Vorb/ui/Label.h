@@ -68,6 +68,8 @@ namespace vorb {
 
             virtual void updateColor();
 
+            virtual void onMouseMove(Sender s, const MouseMotionEvent& e) override;
+
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/

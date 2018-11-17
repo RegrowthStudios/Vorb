@@ -82,3 +82,23 @@ void vui::Label::updateColor() {
         m_drawableRect.setColor(m_labelColor);
     }
 }
+
+void vui::Label::onMouseMove(Sender, const MouseMotionEvent& e) {
+    if (!m_flags.isEnabled) return;
+    if (isInBounds((f32)e.x, (f32)e.y)) {
+        if (!m_flags.isMouseIn) {
+            m_flags.isMouseIn = true;
+            MouseEnter(e);
+
+            updateColor();
+        }
+        MouseMove(e);
+    } else {
+        if (m_flags.isMouseIn) {
+            m_flags.isMouseIn = false;
+            MouseLeave(e);
+
+            updateColor();
+        }
+    }
+}

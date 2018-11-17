@@ -52,6 +52,7 @@
 namespace vorb {
     namespace ui {
         // TODO(Matthew): Provide function for loading specified fonts via Lua.
+        //                  From a brief look inside SpriteFont we want to revisit and refactor that to complete this.
         // TODO(Matthew): Implement update mechanism for script env.
         template <typename ScriptEnvironmentImpl>
         class ViewScriptEnvironment {
@@ -181,6 +182,10 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerFuncs() {
 
 template <typename ScriptEnvironmentImpl>
 void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
+    m_env->setNamespaces("UI", "View");
+    m_env->addValue("port", m_viewport);
+    m_env->setNamespaces();
+
     ButtonScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     CheckBoxScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);

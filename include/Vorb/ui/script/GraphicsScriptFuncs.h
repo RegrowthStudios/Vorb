@@ -27,6 +27,7 @@
 #include "Vorb/graphics/script/GLEnumsScriptFuncs.h"
 #include "Vorb/graphics/script/SamplerStateScriptFuncs.h"
 #include "Vorb/graphics/script/SpriteBatchScriptFuncs.h"
+#include "Vorb/graphics/script/SpriteFontScriptFuncs.h"
 #include "Vorb/graphics/script/TextureCacheScriptFuncs.h"
 #include "Vorb/script/IEnvironment.hpp"
 
@@ -55,6 +56,8 @@ void vui::GraphicsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnviron
 
     vg::SpriteBatchScriptFuncs::registerFuncs(env);
 
+    vg::SpriteFontScriptFuncs::registerFuncs(env);
+
     vg::TextureCacheScriptFuncs::registerFuncs(env, cache);
 }
 
@@ -65,6 +68,8 @@ void vui::GraphicsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnviro
     vg::SamplerStateScriptFuncs::registerConsts(env);
 
     vg::SpriteBatchScriptFuncs::registerConsts(env);
+
+    vg::SpriteFontScriptFuncs::registerConsts(env);
 
     vg::TextureCacheScriptFuncs::registerConsts(env);
 }

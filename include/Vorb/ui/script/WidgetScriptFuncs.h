@@ -69,7 +69,6 @@ namespace vorb {
                           f32 getPaddingTop       (IWidget* widget);
                           f32 getPaddingRight     (IWidget* widget);
                           f32 getPaddingBottom    (IWidget* widget);
-                // TODO(Matthew): Need to specialise ValueMediator for Clipping.
                      Clipping getClipping         (IWidget* widget);
                 ClippingState getClippingLeft     (IWidget* widget);
                 ClippingState getClippingTop      (IWidget* widget);
@@ -77,7 +76,6 @@ namespace vorb {
                 ClippingState getClippingBottom   (IWidget* widget);
                         f32v4 getClipRect         (IWidget* widget);
                        ZIndex getZIndex           (IWidget* widget);
-                // TODO(Matthew): Need to specialise ValueMediator for Dock.
                          Dock getDock             (IWidget* widget);
                     DockState getDockState        (IWidget* widget);
                           f32 getDockSize         (IWidget* widget);
@@ -85,7 +83,6 @@ namespace vorb {
                         f32v2 getChildOffset      (IWidget* widget);
                           f32 getChildOffsetX     (IWidget* widget);
                           f32 getChildOffsetY     (IWidget* widget);
-                // TODO(Matthew): Need to specialise ValueMediator for WidgetFlags.
                   WidgetFlags getFlags            (IWidget* widget);
 
 
@@ -145,14 +142,12 @@ namespace vorb {
                 void setPaddingTop       (IWidget* widget, f32 top);
                 void setPaddingRight     (IWidget* widget, f32 right);
                 void setPaddingBottom    (IWidget* widget, f32 bottom);
-                // TODO(Matthew): Need to specialise ValueMediator for Clipping.
                 void setClipping         (IWidget* widget, Clipping clipping);
                 void setClippingLeft     (IWidget* widget, ClippingState state);
                 void setClippingTop      (IWidget* widget, ClippingState state);
                 void setClippingRight    (IWidget* widget, ClippingState state);
                 void setClippingBottom   (IWidget* widget, ClippingState state);
                 void setZIndex           (IWidget* widget, ZIndex zIndex);
-                // TODO(Matthew): Need to specialise ValueMediator for Dock.
                 void setDock             (IWidget* widget, Dock dock);
                 void setDockState        (IWidget* widget, DockState state);
                 void setDockSize         (IWidget* widget, f32 size);
@@ -160,7 +155,6 @@ namespace vorb {
                 void setChildOffset      (IWidget* widget, f32v2 offset);
                 void setChildOffsetX     (IWidget* widget, f32 offset);
                 void setChildOffsetY     (IWidget* widget, f32 offset);
-                // TODO(Matthew): Need to specialise ValueMediator for WidgetFlags.
                 void setFlags            (IWidget* widget, WidgetFlags flags);
 
                 void setIgnoreOffset            (IWidget* widget, bool ignoreOffset);
@@ -233,24 +227,21 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("getPaddingTop",       makeDelegate(&impl::getPaddingTop));
     env->addCDelegate("getPaddingRight",     makeDelegate(&impl::getPaddingRight));
     env->addCDelegate("getPaddingBottom",    makeDelegate(&impl::getPaddingBottom));
-    // TODO(Matthew): Implement specialisation of ValueMediator for Clipping.
-    // env->addCDelegate("getClipping",         makeDelegate(&impl::getClipping));
+    env->addCDelegate("getClipping",         makeDelegate(&impl::getClipping));
     env->addCDelegate("getClippingLeft",     makeDelegate(&impl::getClippingLeft));
     env->addCDelegate("getClippingTop",      makeDelegate(&impl::getClippingTop));
     env->addCDelegate("getClippingRight",    makeDelegate(&impl::getClippingRight));
     env->addCDelegate("getClippingBottom",   makeDelegate(&impl::getClippingBottom));
     env->addCDelegate("getClipRect",         makeDelegate(&impl::getClipRect));
     env->addCDelegate("getZIndex",           makeDelegate(&impl::getZIndex));
-    // TODO(Matthew): Implement specialisation of ValueMediator for Dock.
-    // env->addCDelegate("getDock",             makeDelegate(&impl::getDock));
+    env->addCDelegate("getDock",             makeDelegate(&impl::getDock));
     env->addCDelegate("getDockState",        makeDelegate(&impl::getDockState));
     env->addCDelegate("getDockSize",         makeDelegate(&impl::getDockSize));
     env->addCDelegate("getName",             makeDelegate(&impl::getName));
     env->addCDelegate("getChildOffset",      makeDelegate(&impl::getChildOffset));
     env->addCDelegate("getChildOffsetX",     makeDelegate(&impl::getChildOffsetX));
     env->addCDelegate("getChildOffsetY",     makeDelegate(&impl::getChildOffsetY));
-    // TODO(Matthew): Implement specialisation of ValueMediator for WidgetFlags.
-    // env->addCDelegate("getFlags",            makeDelegate(&impl::getFlags));
+    env->addCDelegate("getFlags",            makeDelegate(&impl::getFlags));
 
     env->addCDelegate("isEnabled",                  makeDelegate(&impl::isEnabled));
     env->addCDelegate("isMouseIn",                  makeDelegate(&impl::isMouseIn));
@@ -263,21 +254,20 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("needsDrawableRecalculation", makeDelegate(&impl::needsDrawableRecalculation));
 
     env->addCDelegate("getPositionType",     makeDelegate(&impl::getPositionType));
-    // TODO(Matthew): Implement specialisation of ValueMediator for Length, Length2 & Length4.
-    // env->addCDelegate("getRawPosition",      makeDelegate(&impl::getRawPosition));
-    // env->addCDelegate("getRawSize",          makeDelegate(&impl::getRawSize));
-    // env->addCDelegate("getRawLeft",          makeDelegate(&impl::getRawLeft));
-    // env->addCDelegate("getRawTop",           makeDelegate(&impl::getRawTop));
-    // env->addCDelegate("getRawRight",         makeDelegate(&impl::getRawRight));
-    // env->addCDelegate("getRawBottom",        makeDelegate(&impl::getRawBottom));
-    // env->addCDelegate("getRawMinSize",       makeDelegate(&impl::getRawMinSize));
-    // env->addCDelegate("getRawMaxSize",       makeDelegate(&impl::getRawMaxSize));
-    // env->addCDelegate("getRawDockSize",      makeDelegate(&impl::getRawDockSize));
-    // env->addCDelegate("getRawPadding",       makeDelegate(&impl::getRawPadding));
-    // env->addCDelegate("getRawPaddingLeft",   makeDelegate(&impl::getRawPaddingLeft));
-    // env->addCDelegate("getRawPaddingTop",    makeDelegate(&impl::getRawPaddingTop));
-    // env->addCDelegate("getRawPaddingRight",  makeDelegate(&impl::getRawPaddingRight));
-    // env->addCDelegate("getRawPaddingBottom", makeDelegate(&impl::getRawPaddingBottom));
+    env->addCDelegate("getRawPosition",      makeDelegate(&impl::getRawPosition));
+    env->addCDelegate("getRawSize",          makeDelegate(&impl::getRawSize));
+    env->addCDelegate("getRawLeft",          makeDelegate(&impl::getRawLeft));
+    env->addCDelegate("getRawTop",           makeDelegate(&impl::getRawTop));
+    env->addCDelegate("getRawRight",         makeDelegate(&impl::getRawRight));
+    env->addCDelegate("getRawBottom",        makeDelegate(&impl::getRawBottom));
+    env->addCDelegate("getRawMinSize",       makeDelegate(&impl::getRawMinSize));
+    env->addCDelegate("getRawMaxSize",       makeDelegate(&impl::getRawMaxSize));
+    env->addCDelegate("getRawDockSize",      makeDelegate(&impl::getRawDockSize));
+    env->addCDelegate("getRawPadding",       makeDelegate(&impl::getRawPadding));
+    env->addCDelegate("getRawPaddingLeft",   makeDelegate(&impl::getRawPaddingLeft));
+    env->addCDelegate("getRawPaddingTop",    makeDelegate(&impl::getRawPaddingTop));
+    env->addCDelegate("getRawPaddingRight",  makeDelegate(&impl::getRawPaddingRight));
+    env->addCDelegate("getRawPaddingBottom", makeDelegate(&impl::getRawPaddingBottom));
 
     env->addCDelegate("addWidget",    makeDelegate(&impl::addWidget));
     env->addCDelegate("removeWidget", makeDelegate(&impl::removeWidget));
@@ -298,20 +288,20 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setPaddingTop",       makeDelegate(&impl::setPaddingTop));
     env->addCDelegate("setPaddingRight",     makeDelegate(&impl::setPaddingRight));
     env->addCDelegate("setPaddingBottom",    makeDelegate(&impl::setPaddingBottom));
-    // env->addCDelegate("setClipping",         makeDelegate(&impl::setClipping));
+    env->addCDelegate("setClipping",         makeDelegate(&impl::setClipping));
     env->addCDelegate("setClippingLeft",     makeDelegate(&impl::setClippingLeft));
     env->addCDelegate("setClippingTop",      makeDelegate(&impl::setClippingTop));
     env->addCDelegate("setClippingRight",    makeDelegate(&impl::setClippingRight));
     env->addCDelegate("setClippingBottom",   makeDelegate(&impl::setClippingBottom));
     env->addCDelegate("setZIndex",           makeDelegate(&impl::setZIndex));
-    // env->addCDelegate("setDock",             makeDelegate(&impl::setDock));
+    env->addCDelegate("setDock",             makeDelegate(&impl::setDock));
     env->addCDelegate("setDockState",        makeDelegate(&impl::setDockState));
     env->addCDelegate("setDockSize",         makeDelegate(&impl::setDockSize));
     env->addCDelegate("setName",             makeDelegate(&impl::setName));
     env->addCDelegate("setChildOffset",      makeDelegate(&impl::setChildOffset));
     env->addCDelegate("setChildOffsetX",     makeDelegate(&impl::setChildOffsetX));
     env->addCDelegate("setChildOffsetY",     makeDelegate(&impl::setChildOffsetY));
-    // env->addCDelegate("setFlags",            makeDelegate(&impl::setFlags));
+    env->addCDelegate("setFlags",            makeDelegate(&impl::setFlags));
 
     env->addCDelegate("setIgnoreOffset",               makeDelegate(&impl::ignoreOffset));
     env->addCDelegate("setNeedsDimensionUpdate",       makeDelegate(&impl::setNeedsDimensionUpdate));
@@ -321,26 +311,26 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setNeedsDrawableRecalculation", makeDelegate(&impl::setNeedsDrawableRecalculation));
 
     env->addCDelegate("setPositionType",     makeDelegate(&impl::setPositionType));
-    // env->addCDelegate("setRawPosition",      makeDelegate(&impl::setRawPosition));
-    // env->addCDelegate("setRawSize",          makeDelegate(&impl::setRawSize));
+    env->addCDelegate("setRawPosition",      makeDelegate(&impl::setRawPosition));
+    env->addCDelegate("setRawSize",          makeDelegate(&impl::setRawSize));
     env->addCDelegate("setLeft",             makeDelegate(&impl::setLeft));
     env->addCDelegate("setTop",              makeDelegate(&impl::setTop));
     env->addCDelegate("setRight",            makeDelegate(&impl::setRight));
     env->addCDelegate("setBottom",           makeDelegate(&impl::setBottom));
-    // env->addCDelegate("setRawLeft",          makeDelegate(&impl::setRawLeft));
-    // env->addCDelegate("setRawTop",           makeDelegate(&impl::setRawTop));
-    // env->addCDelegate("setRawRight",         makeDelegate(&impl::setRawRight));
-    // env->addCDelegate("setRawBottom",        makeDelegate(&impl::setRawBottom));
+    env->addCDelegate("setRawLeft",          makeDelegate(&impl::setRawLeft));
+    env->addCDelegate("setRawTop",           makeDelegate(&impl::setRawTop));
+    env->addCDelegate("setRawRight",         makeDelegate(&impl::setRawRight));
+    env->addCDelegate("setRawBottom",        makeDelegate(&impl::setRawBottom));
     env->addCDelegate("setMinSize",          makeDelegate(&impl::setMinSize));
     env->addCDelegate("setMaxSize",          makeDelegate(&impl::setMaxSize));
-    // env->addCDelegate("setRawMinSize",       makeDelegate(&impl::setRawMinSize));
-    // env->addCDelegate("setRawMaxSize",       makeDelegate(&impl::setRawMaxSize));
-    // env->addCDelegate("setRawDockSize",      makeDelegate(&impl::setRawDockSize));
-    // env->addCDelegate("setRawPadding",       makeDelegate(&impl::setRawPadding));
-    // env->addCDelegate("setRawPaddingLeft",   makeDelegate(&impl::setRawPaddingLeft));
-    // env->addCDelegate("setRawPaddingTop",    makeDelegate(&impl::setRawPaddingTop));
-    // env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
-    // env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
+    env->addCDelegate("setRawMinSize",       makeDelegate(&impl::setRawMinSize));
+    env->addCDelegate("setRawMaxSize",       makeDelegate(&impl::setRawMaxSize));
+    env->addCDelegate("setRawDockSize",      makeDelegate(&impl::setRawDockSize));
+    env->addCDelegate("setRawPadding",       makeDelegate(&impl::setRawPadding));
+    env->addCDelegate("setRawPaddingLeft",   makeDelegate(&impl::setRawPaddingLeft));
+    env->addCDelegate("setRawPaddingTop",    makeDelegate(&impl::setRawPaddingTop));
+    env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
+    env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
     env->setNamespaces();
 }
 

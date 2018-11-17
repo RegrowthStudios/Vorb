@@ -323,6 +323,7 @@ set(vorb_ui ${vorb_ui}
     include/Vorb/ui/script/CheckBoxScriptFuncs.h
     include/Vorb/ui/script/ComboBoxScriptFuncs.h
     include/Vorb/ui/script/GameWindowScriptFuncs.h
+    include/Vorb/ui/script/GraphicsScriptFuncs.h
     include/Vorb/ui/script/LabelScriptFuncs.h
     include/Vorb/ui/script/PanelScriptFuncs.h
     include/Vorb/ui/script/SliderScriptFuncs.h
@@ -331,6 +332,7 @@ set(vorb_ui ${vorb_ui}
     include/Vorb/ui/script/ViewScriptEnvironment.h
     include/Vorb/ui/script/WidgetListScriptFuncs.h
     include/Vorb/ui/script/WidgetScriptFuncs.h
+    include/Vorb/ui/script/lua/ValueMediator.h
 #source
     src/ui/script/ButtonScriptFuncs.cpp
     src/ui/script/CheckBoxScriptFuncs.cpp
@@ -342,6 +344,7 @@ set(vorb_ui ${vorb_ui}
     src/ui/script/TextWidgetScriptFuncs.cpp
     src/ui/script/WidgetListScriptFuncs.cpp
     src/ui/script/WidgetScriptFuncs.cpp
+    src/ui/script/lua/ValueMediator.cpp
 )
 endif()
 

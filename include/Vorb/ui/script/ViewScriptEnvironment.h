@@ -23,6 +23,8 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
+#include "Vorb/ui/script/lua/ValueMediator.h"
+
 #include "Vorb/io/File.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/Button.h"
@@ -163,6 +165,9 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerFuncs() {
 
     GameWindowScriptFuncs::registerFuncs<ScriptEnvironmentImpl>(m_env, m_window);
 
+    // TODO(Matthew): Provide actual texture cache object!
+    GraphicsScriptFuncs::registerFuncs<ScriptEnvironmentImpl>(m_env, nullptr);
+
     LabelScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Label", m_env);
 
     PanelScriptFuncs::registerFuncs<ScriptEnvironmentImpl>("Panel", m_env);
@@ -183,6 +188,8 @@ void vui::ViewScriptEnvironment<ScriptEnvironmentImpl>::registerConsts() {
     ComboBoxScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     GameWindowScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
+
+    GraphicsScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 
     LabelScriptFuncs::registerConsts<ScriptEnvironmentImpl>(m_env);
 

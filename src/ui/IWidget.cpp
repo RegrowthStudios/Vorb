@@ -651,10 +651,12 @@ void vui::IWidget::calculateDockedWidgets() {
 }
 
 void vui::IWidget::calculateClipRect() {
+    f32v4 oldClipRect = m_clipRect;
+
     f32v4 parentClipRect = DEFAULT_CLIP_RECT;
     if (m_parent) {
         parentClipRect = m_parent->getClipRect();
-    } else if (m_viewport) {
+    } else if (m_viewport && m_viewport != this) {
         parentClipRect = m_viewport->getClipRect();
     }
 
@@ -705,7 +707,9 @@ void vui::IWidget::calculateClipRect() {
         assert(false);
     }
 
-    markChildrenToCalculateClipRect();
+    if (oldClipRect != m_clipRect) {
+        markChildrenToCalculateClipRect();
+    }
 }
 
 void vui::IWidget::markChildrenToCalculateClipRect() {

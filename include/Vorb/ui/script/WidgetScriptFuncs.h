@@ -51,7 +51,6 @@ namespace vorb {
 
                     Viewport* getViewport         (IWidget* widget);
                      IWidget* getParent           (IWidget* widget);
-                // TODO(Matthew): Can we send pointers to all children?
                         f32v4 getDimensions       (IWidget* widget);
                           f32 getX                (IWidget* widget);
                           f32 getY                (IWidget* widget);

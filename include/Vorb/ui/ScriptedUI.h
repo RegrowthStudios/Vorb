@@ -355,7 +355,6 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.scriptEnv = new ScriptEnv();
     view.scriptEnv->init(view.viewport, m_window);
 
-    // TODO(Matthew): Add asscoiated viewport to this environment!
     prepareScriptEnv(view.scriptEnv);
 
     m_views.insert(std::make_pair(zIndex, view));
@@ -381,7 +380,7 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString 
     return view.viewport;
 }
 
-// TODO(Matthew): Do we want to consider sorting by name, either not guaranteeing order of render of each viewport, or storing the information twice?
+// TODO(Matthew): Do we want to sort by name, either not guaranteeing order of render of each viewport, or storing the information twice?
 template <typename ScriptEnvironmentImpl>
 vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::getView(nString name) {
     for (auto& view : m_views) {

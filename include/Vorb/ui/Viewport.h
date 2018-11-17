@@ -38,7 +38,7 @@ namespace vorb {
         // Forward Declarations
         class GameWindow;
 
-        // TODO(Matthew): The current rendering model involves traversing the entire UI structure to add drawables on each frame. This isn't obviously too slow so for now it's good enough, and provides a SUPER easy way to get depth support in a way that makes sense (supporting z-index contexts a la CSS). However, we can do better potentially if we can utilise the depth testing of OpenGL. We can probably preserve this and the flat array inside UIRenderer if we store information about how deep we are into the UI structure in each widget, but I haven't delved into the notion yet.
+        // TODO(Matthew): The current rendering model involves traversing the entire UI structure to add drawables on each frame. This isn't obviously too slow so for now it's good enough, and provides a SUPER easy way to get depth support in a way that makes sense (supporting z-index contexts a la CSS). However, we can do better potentially if we can utilise the depth testing of OpenGL. We can probably preserve this and the flat array inside UIRenderer if we can know how deep the UI structure is at its deepest widget, and where we are in that depth for each widget.
         class Viewport : public Widget {
         public:
             Viewport(const GameWindow* window = nullptr);

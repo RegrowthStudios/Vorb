@@ -9,7 +9,7 @@
 //
 
 /*! \file ValueMediator.h
- * \brief Lua implementation of the script environment.
+ * \brief Value mediator between Lua script env and C++.
  */
 
 #pragma once
@@ -37,28 +37,28 @@ namespace vorb {
             // Define a couple of macros to declare the various ValueMediator specialisations.
             // In principle the type of the value to be pushed or popped could take up multiple values on the stack (e.g. a 2D vector would be 2 number values),
             // so we return an integer from push indicating the number of values pushed onto the stack.
-#define VALUE_MEDIATOR_REF(TYPE)                                                \
-            template<>                                                          \
-            struct ValueMediator<TYPE, void> {                                  \
-            public:                                                             \
-                static TYPE defaultValue();                                     \
-                static i32 getValueCount();                                     \
-                static i32 push(Handle state, const TYPE& value);               \
-                static TYPE pop(Handle state);                                  \
+#define VALUE_MEDIATOR_REF(TYPE)                                                    \
+            template<>                                                              \
+            struct ValueMediator<TYPE, void> {                                      \
+            public:                                                                 \
+                static TYPE defaultValue();                                         \
+                static i32 getValueCount();                                         \
+                static i32 push(Handle state, const TYPE& value);                   \
+                static TYPE pop(Handle state);                                      \
                 static bool tryPop(Handle state, OUT TYPE& value);                  \
-                static TYPE retrieve(Handle state, ui32 index);                 \
+                static TYPE retrieve(Handle state, ui32 index);                     \
                 static bool tryRetrieve(Handle state, ui32 index, OUT TYPE& value); \
             }
-#define VALUE_MEDIATOR_VAL(TYPE)                                                \
-            template<>                                                          \
-            struct ValueMediator<TYPE, void> {                                  \
-            public:                                                             \
-                static TYPE defaultValue();                                     \
-                static i32 getValueCount();                                     \
-                static i32 push(Handle state, TYPE value);                      \
-                static TYPE pop(Handle state);                                  \
+#define VALUE_MEDIATOR_VAL(TYPE)                                                    \
+            template<>                                                              \
+            struct ValueMediator<TYPE, void> {                                      \
+            public:                                                                 \
+                static TYPE defaultValue();                                         \
+                static i32 getValueCount();                                         \
+                static i32 push(Handle state, TYPE value);                          \
+                static TYPE pop(Handle state);                                      \
                 static bool tryPop(Handle state, OUT TYPE& value);                  \
-                static TYPE retrieve(Handle state, ui32 index);                 \
+                static TYPE retrieve(Handle state, ui32 index);                     \
                 static bool tryRetrieve(Handle state, ui32 index, OUT TYPE& value); \
             }
 #define VALUE_MEDIATOR_VEC(TYPE)      \
@@ -363,7 +363,7 @@ namespace vorb {
         }
     }
 }
-namespace vscript  = vorb::script;
+namespace vscript = vorb::script;
 
 #endif // VORB_USING_SCRIPT
 

@@ -18,7 +18,9 @@ vui::Panel::Panel() :
     m_flipVertical(false),
     m_sliderWidth(15.0f),
     m_backColor(color::Transparent),
-    m_backHoverColor(color::Transparent) {
+    m_backHoverColor(color::Transparent),
+    m_texture(0),
+    m_hoverTexture(0) {
     m_flags.needsDrawableRecalculation = true;
 }
 

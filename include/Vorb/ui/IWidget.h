@@ -109,6 +109,7 @@ namespace vorb {
         class UIRenderer;
         class Viewport;
 
+        // TODO(Matthew): Modularise properties (i.e. move to structs) so that we can more easily maintain things like hover, selection, transitions etc.
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font     = vorb::graphics::SpriteFont;

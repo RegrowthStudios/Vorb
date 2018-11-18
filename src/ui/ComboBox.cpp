@@ -192,7 +192,7 @@ bool vui::ComboBox::isInDropBounds(f32 x, f32 y) const {
     return m_dropPanel.isInBounds(x, y);
 }
 
-const vorb::graphics::SpriteFont* vui::ComboBox::getDropButtonFont(const nString& item) {
+const vorb::graphics::SpriteFont* vui::ComboBox::getDropButtonFont(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -201,13 +201,13 @@ const vorb::graphics::SpriteFont* vui::ComboBox::getDropButtonFont(const nString
     return nullptr;
 }
 
-const vorb::graphics::SpriteFont* vui::ComboBox::getDropButtonFont(size_t index) {
+const vorb::graphics::SpriteFont* vui::ComboBox::getDropButtonFont(size_t index) const {
     if (index >= m_buttons.size()) return nullptr;
 
     return m_buttons[index]->getFont();
 }
 
-VGTexture vui::ComboBox::getDropButtonTexture(const nString& item) {
+VGTexture vui::ComboBox::getDropButtonTexture(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -216,13 +216,13 @@ VGTexture vui::ComboBox::getDropButtonTexture(const nString& item) {
     return 0;
 }
 
-VGTexture vui::ComboBox::getDropButtonTexture(size_t index) {
+VGTexture vui::ComboBox::getDropButtonTexture(size_t index) const {
     if (index >= m_buttons.size()) return 0;
 
     return m_buttons[index]->getTexture();
 }
 
-VGTexture vui::ComboBox::getDropButtonHoverTexture(const nString& item) {
+VGTexture vui::ComboBox::getDropButtonHoverTexture(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -231,43 +231,43 @@ VGTexture vui::ComboBox::getDropButtonHoverTexture(const nString& item) {
     return 0;
 }
 
-VGTexture vui::ComboBox::getDropButtonHoverTexture(size_t index) {
+VGTexture vui::ComboBox::getDropButtonHoverTexture(size_t index) const {
     if (index >= m_buttons.size()) return 0;
 
     return m_buttons[index]->getHoverTexture();
 }
 
-color4 vui::ComboBox::getDropButtonBackColor(const nString& item) {
+color4 vui::ComboBox::getDropButtonBackColor(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
-        return button->getColor();
+        return button->getBackColor();
     }
     return color4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-color4 vui::ComboBox::getDropButtonBackColor(size_t index) {
+color4 vui::ComboBox::getDropButtonBackColor(size_t index) const {
     if (index >= m_buttons.size()) return color4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    return m_buttons[index]->getColor();
+    return m_buttons[index]->getBackColor();
 }
 
-color4 vui::ComboBox::getDropButtonBackHoverColor(const nString& item) {
+color4 vui::ComboBox::getDropButtonBackHoverColor(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
-        return button->getHoverColor();
+        return button->getBackHoverColor();
     }
     return color4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-color4 vui::ComboBox::getDropButtonBackHoverColor(size_t index) {
+color4 vui::ComboBox::getDropButtonBackHoverColor(size_t index) const {
     if (index >= m_buttons.size()) return color4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    return m_buttons[index]->getHoverColor();
+    return m_buttons[index]->getBackHoverColor();
 }
 
-color4 vui::ComboBox::getDropButtonTextColor(const nString& item) {
+color4 vui::ComboBox::getDropButtonTextColor(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -276,13 +276,13 @@ color4 vui::ComboBox::getDropButtonTextColor(const nString& item) {
     return color4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-color4 vui::ComboBox::getDropButtonTextColor(size_t index) {
+color4 vui::ComboBox::getDropButtonTextColor(size_t index) const {
     if (index >= m_buttons.size()) return color4(0.0f, 0.0f, 0.0f, 0.0f);
 
     return m_buttons[index]->getTextColor();
 }
 
-color4 vui::ComboBox::getDropButtonTextHoverColor(const nString& item) {
+color4 vui::ComboBox::getDropButtonTextHoverColor(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -291,13 +291,13 @@ color4 vui::ComboBox::getDropButtonTextHoverColor(const nString& item) {
     return color4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-color4 vui::ComboBox::getDropButtonTextHoverColor(size_t index) {
+color4 vui::ComboBox::getDropButtonTextHoverColor(size_t index) const {
     if (index >= m_buttons.size()) return color4(0.0f, 0.0f, 0.0f, 0.0f);
 
     return m_buttons[index]->getTextHoverColor();
 }
 
-f32v2 vui::ComboBox::getDropButtonTextScale(const nString& item) {
+f32v2 vui::ComboBox::getDropButtonTextScale(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -306,13 +306,13 @@ f32v2 vui::ComboBox::getDropButtonTextScale(const nString& item) {
     return f32v2(0.0f);
 }
 
-f32v2 vui::ComboBox::getDropButtonTextScale(size_t index) {
+f32v2 vui::ComboBox::getDropButtonTextScale(size_t index) const {
     if (index >= m_buttons.size()) return f32v2(0.0f);
 
     return m_buttons[index]->getTextScale();
 }
 
-vg::TextAlign vui::ComboBox::getDropButtonTextAlign(const nString& item) {
+vg::TextAlign vui::ComboBox::getDropButtonTextAlign(const nString& item) const {
     for (auto& button : m_buttons) {
         if (button->getText() != item) continue;
 
@@ -321,7 +321,7 @@ vg::TextAlign vui::ComboBox::getDropButtonTextAlign(const nString& item) {
     return vg::TextAlign::NONE;
 }
 
-vg::TextAlign vui::ComboBox::getDropButtonTextAlign(size_t index) {
+vg::TextAlign vui::ComboBox::getDropButtonTextAlign(size_t index) const {
     if (index >= m_buttons.size()) return vg::TextAlign::NONE;
 
     return m_buttons[index]->getTextAlign();
@@ -455,7 +455,7 @@ void vui::ComboBox::setMainButtonBackColor(const color4& color) {
 }
 
 void vui::ComboBox::setDropBoxBackColor(const color4& color) {
-    m_dropPanel.setBackColor(color);
+    m_dropPanel.setColor(color);
 }
 
 void vui::ComboBox::setDropButtonBackColor(const color4& color) {
@@ -499,7 +499,7 @@ void vui::ComboBox::setMainButtonBackHoverColor(const color4& color) {
 }
 
 void vui::ComboBox::setDropBoxBackHoverColor(const color4& color) {
-    m_dropPanel.setBackHoverColor(color);
+    m_dropPanel.setHoverColor(color);
 }
 
 void vui::ComboBox::setDropButtonBackHoverColor(const color4& color) {

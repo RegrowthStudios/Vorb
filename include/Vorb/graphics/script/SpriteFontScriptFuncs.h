@@ -52,6 +52,7 @@ void vg::SpriteFontScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnviro
 template <typename ScriptEnvironmentImpl>
 void vg::SpriteFontScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("Graphics", "TextAlign");
+    env->addValue("NONE",         vg::TextAlign::NONE);
     env->addValue("LEFT",         vg::TextAlign::LEFT);
     env->addValue("TOP_LEFT",     vg::TextAlign::TOP_LEFT);
     env->addValue("TOP",          vg::TextAlign::TOP);

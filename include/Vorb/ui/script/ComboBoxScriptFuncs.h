@@ -36,6 +36,7 @@ namespace vorb {
         class ComboBox;
         class Button;
 
+        // TODO(Matthew): "OfItem" -> "ByName"?
         namespace ComboBoxScriptFuncs {
             using DropButtonComparator = Delegate<bool, size_t, Button*>;
 
@@ -58,17 +59,40 @@ namespace vorb {
                 /************************************************************************/
                 /* Getters                                                              */
                 /************************************************************************/
-                VGTexture getTexture(ComboBox* comboBox);
-                const vorb::graphics::SpriteFont* getFont(ComboBox* comboBox);
-                color4 getBackColor(ComboBox* comboBox);
-                color4 getBackHoverColor(ComboBox* comboBox);
-                color4 getTextColor(ComboBox* comboBox);
-                color4 getTextHoverColor(ComboBox* comboBox);
-                f32v2 getTextScale(ComboBox* comboBox);
+                VGTexture getMainButtonTexture(ComboBox* comboBox);
+                VGTexture getDropBoxTexture(ComboBox* comboBox);
+                VGTexture getDropButtonTextureOfItem(ComboBox* comboBox, nString item);
+                VGTexture getDropButtonTextureAtIndex(ComboBox* comboBox, size_t index);
+                VGTexture getMainButtonHoverTexture(ComboBox* comboBox);
+                VGTexture getDropBoxHoverTexture(ComboBox* comboBox);
+                VGTexture getDropButtonHoverTextureOfItem(ComboBox* comboBox, nString item);
+                VGTexture getDropButtonHoverTextureAtIndex(ComboBox* comboBox, size_t index);
+                const vorb::graphics::SpriteFont* getMainButtonFont(ComboBox* comboBox);
+                const vorb::graphics::SpriteFont* getDropButtonFontOfItem(ComboBox* comboBox, nString item);
+                const vorb::graphics::SpriteFont* getDropButtonFontAtIndex(ComboBox* comboBox, size_t index);
+                color4 getMainButtonBackColor(ComboBox* comboBox);
+                color4 getDropBoxBackColor(ComboBox* comboBox);
+                color4 getDropButtonBackColorOfItem(ComboBox* comboBox, nString item);
+                color4 getDropButtonBackColorAtIndex(ComboBox* comboBox, size_t index);
+                color4 getMainButtonBackHoverColor(ComboBox* comboBox);
+                color4 getDropBoxBackHoverColor(ComboBox* comboBox);
+                color4 getDropButtonBackHoverColorOfItem(ComboBox* comboBox, nString item);
+                color4 getDropButtonBackHoverColorAtIndex(ComboBox* comboBox, size_t index);
+                color4 getMainButtonTextColor(ComboBox* comboBox);
+                color4 getDropButtonTextColorOfItem(ComboBox* comboBox, nString item);
+                color4 getDropButtonTextColorAtIndex(ComboBox* comboBox, size_t index);
+                color4 getMainButtonTextHoverColor(ComboBox* comboBox);
+                color4 getDropButtonTextHoverColorOfItem(ComboBox* comboBox, nString item);
+                color4 getDropButtonTextHoverColorAtIndex(ComboBox* comboBox, size_t index);
+                f32v2 getMainButtonTextScale(ComboBox* comboBox);
+                f32v2 getDropButtonTextScaleOfItem(ComboBox* comboBox, nString item);
+                f32v2 getDropButtonTextScaleAtIndex(ComboBox* comboBox, size_t index);
+                vg::TextAlign getMainButtonTextAlign(ComboBox* comboBox);
+                vg::TextAlign getDropButtonTextAlignOfItem(ComboBox* comboBox, nString item);
+                vg::TextAlign getDropButtonTextAlignAtIndex(ComboBox* comboBox, size_t index);
                 nString getItem(ComboBox* comboBox, size_t index);
                 size_t getItemIndex(ComboBox* comboBox, nString item);
                 size_t getItemCount(ComboBox* comboBox);
-                vg::TextAlign getTextAlign(ComboBox* comboBox);
                 nString getText(ComboBox* comboBox);
                 f32 getMaxDropHeight(ComboBox* comboBox);
 
@@ -76,20 +100,33 @@ namespace vorb {
                 /* Setters                                                              */
                 /************************************************************************/
                 void setFont(ComboBox* comboBox, vg::SpriteFont* font);
+                void setMainButtonFont(ComboBox* comboBox, vg::SpriteFont* font);
+                void setDropButtonFont(ComboBox* comboBox, vg::SpriteFont* font);
+                void setDropButtonFontOfItem(ComboBox* comboBox, vg::SpriteFont* font, nString item);
+                void setDropButtonFontAtIndex(ComboBox* comboBox, vg::SpriteFont* font, size_t index);
+                void setDropButtonFontByCompare(ComboBox* comboBox, vg::SpriteFont* font, DropButtonComparator comparator);
                 void setMainButtonTexture(ComboBox* comboBox, VGTexture texture);
                 void setDropBoxTexture(ComboBox* comboBox, VGTexture texture);
                 void setDropButtonTexture(ComboBox* comboBox, VGTexture texture);
                 void setDropButtonTextureOfItem(ComboBox* comboBox, VGTexture texture, nString item);
                 void setDropButtonTextureAtIndex(ComboBox* comboBox, VGTexture texture, size_t index);
                 void setDropButtonTextureByCompare(ComboBox* comboBox, VGTexture texture, DropButtonComparator comparator);
+                void setMainButtonHoverTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropBoxHoverTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropButtonHoverTexture(ComboBox* comboBox, VGTexture texture);
+                void setDropButtonHoverTextureOfItem(ComboBox* comboBox, VGTexture texture, nString item);
+                void setDropButtonHoverTextureAtIndex(ComboBox* comboBox, VGTexture texture, size_t index);
+                void setDropButtonHoverTextureByCompare(ComboBox* comboBox, VGTexture texture, DropButtonComparator comparator);
                 void setBackColor(ComboBox* comboBox, color4 color);
                 void setMainButtonBackColor(ComboBox* comboBox, color4 color);
+                void setDropBoxBackColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonBackColorAtIndex(ComboBox* comboBox, color4 color, size_t index);
                 void setDropButtonBackColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator);
                 void setBackHoverColor(ComboBox* comboBox, color4 color);
                 void setMainButtonBackHoverColor(ComboBox* comboBox, color4 color);
+                void setDropBoxBackHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackHoverColor(ComboBox* comboBox, color4 color);
                 void setDropButtonBackHoverColorOfItem(ComboBox* comboBox, color4 color, nString item);
                 void setDropButtonBackHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index);

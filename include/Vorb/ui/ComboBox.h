@@ -35,12 +35,6 @@ namespace vorb {
         /// Forward Declarations
         class UIRenderer;
 
-        // enum class DropDownStyle {
-        //     SIMPLE,
-        //     DROP_DOWN,
-        //     DROP_DOWN_LIST
-        // };
-
         // TODO(Matthew): Different properties on selected button.
         class ComboBox : public Widget {
             using DropButtonComparator = Delegate<bool, size_t, Button*>;
@@ -58,9 +52,6 @@ namespace vorb {
             virtual void disable() override;
 
             virtual void addDrawables(UIRenderer&) override { /* Empty */ }
-
-            /*!\brief Updates the position relative to parent */
-            // virtual void updatePosition() override;
 
             /*! \brief Adds an item to the combo box.
              * 
@@ -122,40 +113,74 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            // TODO(Matthew): Write getters to match each of the kinds of setter.
-            virtual                  const VGTexture& getTexture()           const { return m_mainButton.getTexture();        }
-            virtual const vorb::graphics::SpriteFont* getFont()              const { return m_mainButton.getFont();           }
-            virtual                     const color4& getBackColor()         const { return m_mainButton.getBackColor();      }
-            virtual                     const color4& getBackHoverColor()    const { return m_mainButton.getBackHoverColor(); }
-            virtual                     const color4& getTextColor()         const { return m_mainButton.getTextColor();      }
-            virtual                     const color4& getTextHoverColor()    const { return m_mainButton.getTextHoverColor(); }
-            virtual                             f32v2 getTextScale()         const { return m_mainButton.getTextScale();      }
-            virtual      const std::vector <nString>& getItems()             const { return m_items;                          }
-            virtual                            size_t getItemCount()         const { return m_buttons.size();                 }
-            virtual                    const nString& getItem(size_t index)  const { return m_items.at(index);                }
-            virtual                            size_t getItemIndex(nString item)  const { return std::distance(m_items.begin(), std::find(m_items.begin(), m_items.end(), item));                }
-            virtual              const vg::TextAlign& getTextAlign()         const { return m_mainButton.getTextAlign();      }
-            virtual                    const nString& getText()              const { return m_mainButton.getText();           }
-            virtual                        const f32& getMaxDropHeight()     const { return m_maxDropHeight;                  }
+            virtual const vorb::graphics::SpriteFont* getMainButtonFont()           const { return m_mainButton.getFont();           }
+            virtual                         VGTexture getMainButtonTexture()        const { return m_mainButton.getTexture();        }
+            virtual                         VGTexture getDropBoxTexture()           const { return m_dropPanel.getTexture();         }
+            virtual                         VGTexture getMainButtonHoverTexture()   const { return m_mainButton.getHoverTexture();   }
+            virtual                         VGTexture getDropBoxHoverTexture()      const { return m_dropPanel.getHoverTexture();    }
+            virtual                            color4 getMainButtonBackColor()      const { return m_mainButton.getBackColor();      }
+            virtual                            color4 getDropBoxBackColor()         const { return m_dropPanel.getColor();           }
+            virtual                            color4 getMainButtonBackHoverColor() const { return m_mainButton.getBackHoverColor(); }
+            virtual                            color4 getDropBoxBackHoverColor()    const { return m_dropPanel.getHoverColor();      }
+            virtual                            color4 getMainButtonTextColor()      const { return m_mainButton.getTextColor();      }
+            virtual                            color4 getMainButtonTextHoverColor() const { return m_mainButton.getTextHoverColor(); }
+            virtual                             f32v2 getMainButtonTextScale()      const { return m_mainButton.getTextScale();      }
+            virtual                     vg::TextAlign getMainButtonTextAlign()      const { return m_mainButton.getTextAlign();      }
+            virtual const vorb::graphics::SpriteFont* getDropButtonFont(const nString& item)           const;
+            virtual const vorb::graphics::SpriteFont* getDropButtonFont(size_t index)                  const;
+            virtual                         VGTexture getDropButtonTexture(const nString& item)        const;
+            virtual                         VGTexture getDropButtonTexture(size_t index)               const;
+            virtual                         VGTexture getDropButtonHoverTexture(const nString& item)   const;
+            virtual                         VGTexture getDropButtonHoverTexture(size_t index)          const;
+            virtual                            color4 getDropButtonBackColor(const nString& item)      const;
+            virtual                            color4 getDropButtonBackColor(size_t index)             const;
+            virtual                            color4 getDropButtonBackHoverColor(const nString& item) const;
+            virtual                            color4 getDropButtonBackHoverColor(size_t index)        const;
+            virtual                            color4 getDropButtonTextColor(const nString& item)      const;
+            virtual                            color4 getDropButtonTextColor(size_t index)             const;
+            virtual                            color4 getDropButtonTextHoverColor(const nString& item) const;
+            virtual                            color4 getDropButtonTextHoverColor(size_t index)        const;
+            virtual                             f32v2 getDropButtonTextScale(const nString& item)      const;
+            virtual                             f32v2 getDropButtonTextScale(size_t index)             const;
+            virtual                     vg::TextAlign getDropButtonTextAlign(const nString& item)      const;
+            virtual                     vg::TextAlign getDropButtonTextAlign(size_t index)             const;
+            virtual      const std::vector <nString>& getItems()                 const { return m_items;                          }
+            virtual                            size_t getItemCount()             const { return m_buttons.size();                 }
+            virtual                    const nString& getItem(size_t index)      const { return m_items.at(index);                }
+            virtual                            size_t getItemIndex(nString item) const { return std::distance(m_items.begin(), std::find(m_items.begin(), m_items.end(), item));                }
+            virtual                    const nString& getText()                  const { return m_mainButton.getText();           }
+            virtual                        const f32& getMaxDropHeight()         const { return m_maxDropHeight;                  }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
-            // TODO(Matthew): We need to store data about these calls in this class, so that future added items also get given the right settings.
             virtual void setFont(const vorb::graphics::SpriteFont* font);
+            virtual void setMainButtonFont(const vorb::graphics::SpriteFont* font);
+            virtual void setDropButtonFont(const vorb::graphics::SpriteFont* font);
+            virtual void setDropButtonFont(const vorb::graphics::SpriteFont* font, const nString& item);
+            virtual void setDropButtonFont(const vorb::graphics::SpriteFont* font, size_t index);
+            virtual void setDropButtonFont(const vorb::graphics::SpriteFont* font, DropButtonComparator comparator);
             virtual void setMainButtonTexture(VGTexture texture);
             virtual void setDropBoxTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture);
             virtual void setDropButtonTexture(VGTexture texture, const nString& item);
             virtual void setDropButtonTexture(VGTexture texture, size_t index);
             virtual void setDropButtonTexture(VGTexture texture, DropButtonComparator comparator);
+            virtual void setMainButtonHoverTexture(VGTexture texture);
+            virtual void setDropBoxHoverTexture(VGTexture texture);
+            virtual void setDropButtonHoverTexture(VGTexture texture);
+            virtual void setDropButtonHoverTexture(VGTexture texture, const nString& item);
+            virtual void setDropButtonHoverTexture(VGTexture texture, size_t index);
+            virtual void setDropButtonHoverTexture(VGTexture texture, DropButtonComparator comparator);
             virtual void setBackColor(const color4& color);
+            virtual void setDropBoxBackColor(const color4& color);
             virtual void setMainButtonBackColor(const color4& color);
             virtual void setDropButtonBackColor(const color4& color);
             virtual void setDropButtonBackColor(const color4& color, const nString& item);
             virtual void setDropButtonBackColor(const color4& color, size_t index);
             virtual void setDropButtonBackColor(const color4& color, DropButtonComparator comparator);
             virtual void setBackHoverColor(const color4& color);
+            virtual void setDropBoxBackHoverColor(const color4& color);
             virtual void setMainButtonBackHoverColor(const color4& color);
             virtual void setDropButtonBackHoverColor(const color4& color);
             virtual void setDropButtonBackHoverColor(const color4& color, const nString& item);
@@ -230,7 +255,6 @@ namespace vorb {
             Button               m_mainButton; // Main button for dropping
             std::vector<Button*> m_buttons;    // Sub buttons
             std::vector<nString> m_items;
-            // DropDownStyle        m_dropDownStyle;
             bool                 m_isDropped;
         };
     }

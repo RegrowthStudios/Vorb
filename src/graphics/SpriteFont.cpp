@@ -18,7 +18,8 @@
 #include <iostream>
 
 // X Offset multipliers for vg::TextAlign
-const f32 X_OFF_MULTS[9] = {
+const f32 X_OFF_MULTS[10] = {
+    0.0f, // NONE
     0.0f, // LEFT
     0.0f, // TOP_LEFT
     -0.5f, // TOP

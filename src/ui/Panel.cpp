@@ -64,7 +64,15 @@ void vui::Panel::addDrawables(UIRenderer& renderer) {
 }
 
 void vui::Panel::setTexture(VGTexture texture) {
-    m_drawableRect.setTexture(texture);
+    m_texture = texture;
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Panel::setHoverTexture(VGTexture texture) {
+    m_hoverTexture = texture;
+
+    m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Panel::setAutoScroll(bool autoScroll) {
@@ -135,6 +143,7 @@ void vui::Panel::calculateDrawables() {
     m_drawableRect.setPosition(getPaddedPosition());
     m_drawableRect.setSize(getPaddedSize());
     m_drawableRect.setClipRect(m_clipRect);
+    m_drawableRect.setTexture(m_flags.isMouseIn ? m_hoverTexture : m_texture);
 
     updateColor();
 }

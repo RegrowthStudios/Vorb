@@ -7,6 +7,10 @@ VGTexture vui::PanelScriptFuncs::impl::getTexture(Panel* panel) {
     return panel->getTexture();
 }
 
+VGTexture vui::PanelScriptFuncs::impl::getHoverTexture(Panel* panel) {
+    return panel->getHoverTexture();
+}
+
 bool vui::PanelScriptFuncs::impl::getAutoScroll(Panel* panel) {
     return panel->getAutoScroll();
 }
@@ -25,6 +29,10 @@ color4 vui::PanelScriptFuncs::impl::getHoverColor(Panel* panel) {
 
 void vui::PanelScriptFuncs::impl::setTexture(Panel* panel, VGTexture texture) {
     panel->setTexture(texture);
+}
+
+void vui::PanelScriptFuncs::impl::setHoverTexture(Panel* panel, VGTexture texture) {
+    panel->setHoverTexture(texture);
 }
 
 void vui::PanelScriptFuncs::impl::setAutoScroll(Panel* panel, bool autoScroll) {

@@ -52,16 +52,18 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const VGTexture& getTexture()     const { return m_drawableRect.getTexture(); }
-            virtual             bool getAutoScroll()  const { return m_autoScroll;                }
-            virtual              f32 getSliderWidth() const { return m_sliderWidth;               }
-            virtual    const color4& getColor()       const { return m_backColor;                 }
-            virtual    const color4& getHoverColor()  const { return m_backHoverColor;            }
+            virtual const VGTexture& getTexture()      const { return m_texture;        }
+            virtual const VGTexture& getHoverTexture() const { return m_hoverTexture;   }
+            virtual             bool getAutoScroll()   const { return m_autoScroll;     }
+            virtual              f32 getSliderWidth()  const { return m_sliderWidth;    }
+            virtual    const color4& getColor()        const { return m_backColor;      }
+            virtual    const color4& getHoverColor()   const { return m_backHoverColor; }
 
             /************************************************************************/
             /* Setters                                                              */
             /************************************************************************/
             virtual void setTexture(VGTexture texture);
+            virtual void setHoverTexture(VGTexture texture);
             virtual void setAutoScroll(bool autoScroll);
             virtual void setSliderWidth(f32 width);
             virtual void setColor(const color4& color);
@@ -98,8 +100,8 @@ namespace vorb {
             f32  m_sliderWidth;    ///< The width, in pixels, of the sliders.
 
             DrawableRect m_drawableRect;
-            color4 m_backColor;      ///< Colour of the panel.
-            color4 m_backHoverColor; ///< Colour of the panel on hover.
+            color4       m_backColor, m_backHoverColor; ///< Colour of the panel with and without hover.
+            VGTexture    m_texture,   m_hoverTexture;   ///< Texture of the panel with and without hover.
         };
     }
 }

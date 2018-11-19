@@ -8,9 +8,7 @@
 //
 
 /*! \file Widget.h
-* @brief 
-* Base class for all Widgets.
-*
+* @brief Base class for all Vorb-provided widgets.
 */
 
 #pragma once

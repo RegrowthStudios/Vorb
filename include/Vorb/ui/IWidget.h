@@ -8,16 +8,14 @@
 //
 
 /*! \file IWidget.h
-* \brief 
-* Abstract Container for widgets
-*
+* \brief Abstract interface for widgets, provides basic features such as dimensions, hierarchy, clipping, padding and docking.
 */
 
 #pragma once
 
-#ifndef Vorb_IContainer_h__
+#ifndef Vorb_IWidget_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_IContainer_h__
+#define Vorb_IWidget_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -382,4 +380,4 @@ namespace vorb {
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_IContainer_h__
+#endif // !Vorb_IWidget_h__

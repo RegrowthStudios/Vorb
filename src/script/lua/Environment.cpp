@@ -32,7 +32,7 @@ void vscript::lua::Environment::init() {
 
     // Create a event subscription closure for Lua functions that captures this environment instance.
     ValueMediator<void*>::push(m_state, (void*)this);
-    addCClosure("SubscribeToEvent", 1, &makeLCallback);
+    addCClosure("SubscribeToGlobalEvent", 1, &makeLCallback);
 }
 
 void vscript::lua::Environment::init(const vio::Path& filepath) {
@@ -151,17 +151,6 @@ bool vscript::lua::Environment::addLFunction(LFunction* lFunction) {
 }
 
 bool vscript::lua::Environment::subscribeLFunction(const nString& eventName, LFunction* lFunction) {
-    // First see if the lFunction we just got already exists in the environment's register.
-    LFunction* registeredLFunction = getLFunction(lFunction->getName());
-    if (registeredLFunction == nullptr) {
-        // Add the unregistered LFunction to the register.
-        // If we fail to register it then we can't susbcribe it to an event.
-        if (!addLFunction(lFunction)) {
-            return false;
-        }
-        registeredLFunction = lFunction;
-    }
-
     // Find the event we want to register to, if we don't find it then return false.
     const auto& it = m_events.find(eventName);
     if (it == m_events.end()) {
@@ -265,8 +254,18 @@ int vscript::lua::makeLFunction(Handle state) {
         }
     }
 
-    // Create an lFunction wrapper associated with the lua function referenced by the current index value in the lua registry index.
-    LFunction* lFunction = new LFunction(state, name, currIndex);
+    // First see if the lFunction we just got already exists in the environment's register.
+    LFunction* lFunction = getLFunction(name);
+    if (registeredLFunction == nullptr) {
+        // LFunction doesn't yet exist, make one and add to register.
+        lFunction = new LFunction(state, name, currIndex);
+
+        // Add the unregistered LFunction to the register.
+        // If we fail to register it then we can't susbcribe it to an event.
+        if (!addLFunction(lFunction)) {
+            return -2;
+        }
+    }
 
     // Get the captured environment pointer.
     Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
@@ -330,8 +329,18 @@ int vscript::lua::makeLCallback(Handle state) {
         }
     }
 
-    // Create an lFunction wrapper associated with the lua function referenced by the current index value in the lua registry index.
-    LFunction* lFunction = new LFunction(state, functionName, currIndex);
+    // First see if the lFunction we just got already exists in the environment's register.
+    LFunction* lFunction = getLFunction(functionName);
+    if (registeredLFunction == nullptr) {
+        // LFunction doesn't yet exist, make one and add to register.
+        lFunction = new LFunction(state, functionName, currIndex);
+
+        // Add the unregistered LFunction to the register.
+        // If we fail to register it then we can't susbcribe it to an event.
+        if (!addLFunction(lFunction)) {
+            return -2;
+        }
+    }
 
     // Get the captured environment pointer.
     Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));

@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/TextWidget.h"
+#include "Vorb/ui/widgets/TextWidget.h"
 #include "Vorb/ui/UIRenderer.h"
-#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/widgets/Viewport.h"
 
 vui::TextWidget::TextWidget() :
     Widget(),

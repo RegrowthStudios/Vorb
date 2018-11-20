@@ -1,8 +1,8 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/Slider.h"
+#include "Vorb/ui/widgets/Slider.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
-#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/widgets/Viewport.h"
 #include "Vorb/utils.h"
 
 vui::Slider::Slider() :

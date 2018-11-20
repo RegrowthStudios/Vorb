@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/WidgetList.h"
+#include "Vorb/ui/widgets/WidgetList.h"
 
 vui::WidgetList::WidgetList() :
     Widget(),

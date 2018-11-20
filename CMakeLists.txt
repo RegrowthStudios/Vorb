@@ -266,54 +266,54 @@ set(vorb_sound
 )
 
 set(vorb_ui
-    include/Vorb/ui/Button.h
-    include/Vorb/ui/CheckBox.h
-    include/Vorb/ui/ComboBox.h
     include/Vorb/ui/Drawables.h
     include/Vorb/ui/FocusController.h
     include/Vorb/ui/GameWindow.h
     include/Vorb/ui/IGameScreen.h
     include/Vorb/ui/InputDispatcher.h
     include/Vorb/ui/InputDispatcherEventCatcher.h
-    include/Vorb/ui/IWidget.h
     include/Vorb/ui/KeyboardEventDispatcher.h
     include/Vorb/ui/KeyMappings.inl
     include/Vorb/ui/Keys.inl
     include/Vorb/ui/KeyStrings.h
-    include/Vorb/ui/Label.h
     include/Vorb/ui/MainGame.h
     include/Vorb/ui/MouseInputDispatcher.h
-    include/Vorb/ui/Panel.h
     include/Vorb/ui/ScreenList.h
-    include/Vorb/ui/Slider.h
     include/Vorb/ui/TextInputListener.hpp
-    include/Vorb/ui/TextWidget.h
     include/Vorb/ui/UIRenderer.h
-    include/Vorb/ui/Viewport.h
-    include/Vorb/ui/Widget.h
-    include/Vorb/ui/WidgetList.h
     include/Vorb/ui/WindowEventDispatcher.h
+    include/Vorb/ui/widgets/Button.h
+    include/Vorb/ui/widgets/CheckBox.h
+    include/Vorb/ui/widgets/ComboBox.h
+    include/Vorb/ui/widgets/IWidget.h
+    include/Vorb/ui/widgets/Label.h
+    include/Vorb/ui/widgets/Panel.h
+    include/Vorb/ui/widgets/Slider.h
+    include/Vorb/ui/widgets/TextWidget.h
+    include/Vorb/ui/widgets/Viewport.h
+    include/Vorb/ui/widgets/Widget.h
+    include/Vorb/ui/widgets/WidgetList.h
 #source
-    src/ui/Button.cpp
-    src/ui/CheckBox.cpp
-    src/ui/ComboBox.cpp
     src/ui/Drawables.cpp
     src/ui/FocusController.cpp
     src/ui/GameWindow.cpp
     src/ui/InputDispatcher.cpp
-    src/ui/IWidget.cpp
     src/ui/KeyboardEventDispatcher.cpp
-    src/ui/Label.cpp
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
-    src/ui/Panel.cpp
     src/ui/ScreenList.cpp
-    src/ui/Slider.cpp
-    src/ui/TextWidget.cpp
     src/ui/UIRenderer.cpp
-    src/ui/Viewport.cpp
-    src/ui/Widget.cpp
-    src/ui/WidgetList.cpp
+    src/ui/widgets/Button.cpp
+    src/ui/widgets/CheckBox.cpp
+    src/ui/widgets/ComboBox.cpp
+    src/ui/widgets/IWidget.cpp
+    src/ui/widgets/Label.cpp
+    src/ui/widgets/Panel.cpp
+    src/ui/widgets/Slider.cpp
+    src/ui/widgets/TextWidget.cpp
+    src/ui/widgets/Viewport.cpp
+    src/ui/widgets/Widget.cpp
+    src/ui/widgets/WidgetList.cpp
 )
 
 if(VORB_USE_SCRIPTING)

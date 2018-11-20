@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/script/IEnvironment.hpp"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Widget.h"
 
 namespace vorb {
     namespace ui {

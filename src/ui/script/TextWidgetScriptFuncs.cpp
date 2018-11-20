@@ -2,7 +2,7 @@
 #include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
-#include "Vorb/ui/TextWidget.h"
+#include "Vorb/ui/widgets/TextWidget.h"
 
 const vg::SpriteFont* vui::TextWidgetScriptFuncs::impl::getFont(TextWidget* textWidget) {
     return textWidget->getFont();

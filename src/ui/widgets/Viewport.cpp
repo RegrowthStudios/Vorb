@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/InputDispatcher.h"
-#include "Vorb/ui/Viewport.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Viewport.h"
+#include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/GameWindow.h"
 
 vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) :

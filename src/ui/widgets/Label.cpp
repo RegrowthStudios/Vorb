@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/Label.h"
+#include "Vorb/ui/widgets/Label.h"
 #include "Vorb/ui/UIRenderer.h"
-#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/widgets/Viewport.h"
 
 vui::Label::Label() :
     TextWidget(),

@@ -1,9 +1,9 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/IWidget.h"
+#include "Vorb/ui/widgets/IWidget.h"
 #include "Vorb/ui/InputDispatcher.h"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/UIRenderer.h"
-#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/widgets/Viewport.h"
 #include "Vorb/utils.h"
 
 vui::IWidget::IWidget() :

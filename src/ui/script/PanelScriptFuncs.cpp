@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/PanelScriptFuncs.h"
 
-#include "Vorb/ui/Panel.h"
+#include "Vorb/ui/widgets/Panel.h"
 
 VGTexture vui::PanelScriptFuncs::impl::getTexture(Panel* panel) {
     return panel->getTexture();

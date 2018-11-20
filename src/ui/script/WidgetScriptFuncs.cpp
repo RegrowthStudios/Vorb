@@ -2,7 +2,7 @@
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
-#include "Vorb/ui/Viewport.h"
+#include "Vorb/ui/widgets/Viewport.h"
 
 vui::Viewport* vui::WidgetScriptFuncs::impl::getViewport(IWidget* widget) {
     return widget->getViewport();

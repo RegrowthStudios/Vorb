@@ -26,7 +26,7 @@
 
 #include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/IGameScreen.h"
 

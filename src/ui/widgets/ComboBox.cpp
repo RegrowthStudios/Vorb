@@ -1,5 +1,5 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/ui/ComboBox.h"
+#include "Vorb/ui/widgets/ComboBox.h"
 
 #ifndef VORB_USING_PCH
 #undef min

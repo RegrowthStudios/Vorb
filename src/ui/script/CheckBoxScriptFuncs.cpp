@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/CheckBoxScriptFuncs.h"
 
-#include "Vorb/ui/CheckBox.h"
+#include "Vorb/ui/widgets/CheckBox.h"
 
 void vui::CheckBoxScriptFuncs::impl::check(CheckBox* checkBox) {
     checkBox->check();

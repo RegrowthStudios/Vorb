@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/WidgetListScriptFuncs.h"
 
-#include "Vorb/ui/WidgetList.h"
+#include "Vorb/ui/widgets/WidgetList.h"
 
 void vui::WidgetListScriptFuncs::impl::addItem(WidgetList* widgetList, IWidget* item) {
     widgetList->addItem(item);

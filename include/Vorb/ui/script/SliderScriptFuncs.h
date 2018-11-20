@@ -24,7 +24,7 @@
 
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/script/IEnvironment.hpp"
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
 
 namespace vorb {

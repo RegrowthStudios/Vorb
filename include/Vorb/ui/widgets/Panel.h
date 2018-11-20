@@ -25,8 +25,8 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/ui/Drawables.h"
-#include "Vorb/ui/Widget.h"
-#include "Vorb/ui/Slider.h"
+#include "Vorb/ui/widgets/Widget.h"
+#include "Vorb/ui/widgets/Slider.h"
 
 namespace vorb {
     namespace ui {

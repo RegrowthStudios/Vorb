@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/LabelScriptFuncs.h"
 
-#include "Vorb/ui/Label.h"
+#include "Vorb/ui/widgets/Label.h"
 
 color4 vui::LabelScriptFuncs::impl::getLabelColor(Label* label) {
     return label->getLabelColor();

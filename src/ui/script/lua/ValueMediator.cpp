@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/lua/ValueMediator.h"
 
-#include "Vorb/ui/Widget.h"
+#include "Vorb/ui/widgets/Widget.h"
 
 // Provides support for pushing and popping Clipping.
 vui::Clipping vscript::lua::ValueMediator<vui::Clipping, void>::defaultValue() {

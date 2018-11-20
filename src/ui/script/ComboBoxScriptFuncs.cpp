@@ -2,7 +2,7 @@
 #include "Vorb/ui/script/ComboBoxScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteFont.h"
-#include "Vorb/ui/ComboBox.h"
+#include "Vorb/ui/widgets/ComboBox.h"
 
 
 void vui::ComboBoxScriptFuncs::impl::addItem(ComboBox* comboBox, nString item) {

@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/SliderScriptFuncs.h"
 
-#include "Vorb/ui/Slider.h"
+#include "Vorb/ui/widgets/Slider.h"
 
 VGTexture vui::SliderScriptFuncs::impl::getSlideTexture(Slider* slider) {
     return slider->getSlideTexture();

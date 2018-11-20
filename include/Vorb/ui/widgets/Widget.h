@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "Vorb/Event.hpp"
-#include "Vorb/ui/IWidget.h"
+#include "Vorb/ui/widgets/IWidget.h"
 
 namespace vorb {
     namespace ui {

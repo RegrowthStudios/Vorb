@@ -2,7 +2,7 @@
 #include "Vorb/ui/script/ButtonScriptFuncs.h"
 
 #include "Vorb/graphics/SpriteBatch.h"
-#include "Vorb/ui/Button.h"
+#include "Vorb/ui/widgets/Button.h"
 #include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 
 VGTexture  vui::ButtonScriptFuncs::impl::getTexture(Button* button) {

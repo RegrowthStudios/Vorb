@@ -279,6 +279,7 @@ namespace vorb {
             Event<const MouseMotionEvent&> MouseLeave; ///< Occurs when mouse pointer leaves the container.
             Event<const MouseMotionEvent&> MouseMove;  ///< Occurs when mouse pointer is moved over container.
             // TODO(Ben): Lots more events!
+            // TODO(Matthew): Events for property changes (such as resize, file drop etc.?).
 
         protected:
             /*! \brief Initialiser for general set-up. */
@@ -342,18 +343,6 @@ namespace vorb {
             virtual void onMouseUp(Sender, const MouseButtonEvent& e);
             virtual void onMouseMove(Sender, const MouseMotionEvent& e);
             virtual void onMouseFocusLost(Sender, const MouseEvent& e);
-
-            /************************************************************************/
-            /* LUA Callbacks                                                        */
-            /************************************************************************/
-// #ifdef VORB_USING_SCRIPT
-//             std::vector<script::Function> m_mouseClickFuncs;
-//             std::vector<script::Function> m_mouseDownFuncs;
-//             std::vector<script::Function> m_mouseUpFuncs;
-//             std::vector<script::Function> m_mouseEnterFuncs;
-//             std::vector<script::Function> m_mouseLeaveFuncs;
-//             std::vector<script::Function> m_mouseMoveFuncs;
-// #endif
 
             /************************************************************************/
             /* Members                                                              */

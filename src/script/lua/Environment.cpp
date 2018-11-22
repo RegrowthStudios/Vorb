@@ -311,25 +311,27 @@ int vscript::lua::makeLFunction(Handle state) {
         }
     }
 
+    // Get the captured environment pointer.
+    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
+
     // First see if the lFunction we just got already exists in the environment's register.
-    LFunction* lFunction = getLFunction(name);
+    LFunction* lFunction = env->getLFunction(name);
     if (registeredLFunction == nullptr) {
         // LFunction doesn't yet exist, make one and add to register.
         lFunction = new LFunction(state, name, currIndex);
 
         // Add the unregistered LFunction to the register.
-        // If we fail to register it then we can't susbcribe it to an event.
-        if (!addLFunction(lFunction)) {
+        // If we succeed, return.
+        if (env->addLFunction(lFunction)) {
+            return 0;
+        } else {
+            // If we reached here, we failed to register a new LFunction object due to some failure in addLFunction.
             return -2;
         }
     }
 
-    // Get the captured environment pointer.
-    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
-    // Add the generated lFunction to the environment's registry.
-    env->addLFunction(lFunction);
-
-    return 0;
+    // If we reached here, we failed to register a new Lua function due to one of the same name already existing.
+    return -3;
 }
 
 int vscript::lua::makeLCallback(Handle state) {
@@ -386,21 +388,22 @@ int vscript::lua::makeLCallback(Handle state) {
         }
     }
 
+    // Get the captured environment pointer.
+    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
+
     // First see if the lFunction we just got already exists in the environment's register.
-    LFunction* lFunction = getLFunction(functionName);
+    LFunction* lFunction = env->getLFunction(functionName);
     if (registeredLFunction == nullptr) {
         // LFunction doesn't yet exist, make one and add to register.
         lFunction = new LFunction(state, functionName, currIndex);
 
         // Add the unregistered LFunction to the register.
         // If we fail to register it then we can't susbcribe it to an event.
-        if (!addLFunction(lFunction)) {
+        if (!env->addLFunction(lFunction)) {
             return -2;
         }
     }
 
-    // Get the captured environment pointer.
-    Environment* env = static_cast<Environment*>(lua_touserdata(state, lua_upvalueindex(1)));
     // Subscribe the generated lFunction to the desired event.
     env->subscribeLFunction(eventName, lFunction);
 

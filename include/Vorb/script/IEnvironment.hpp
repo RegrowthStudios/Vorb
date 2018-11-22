@@ -185,6 +185,16 @@ namespace vorb {
                 return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
             }
 
+            // ISSUE(Matthew): This could potentially be funky for languages other than Lua.
+            /*!
+             * \brief Creates a new script function from script env state.
+             *
+             * \return A pointer to the created script function.
+             */
+            GenericScriptFunction createScriptFunction() {
+                return static_cast<EnvironmentImpl*>(this)->createScriptFunction();
+            }
+
             /*!
              * \brief Adds the given value to the top of the lua stack.
              *

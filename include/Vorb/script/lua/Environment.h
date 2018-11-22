@@ -194,6 +194,13 @@ namespace vorb {
                 Delegate<void, Parameters...>* getScriptDelegate(const nString& name);
 
                 /*!
+                 * \brief Creates a new script function from script env state.
+                 *
+                 * \return A pointer to the created script function.
+                 */
+                GenericScriptFunction createScriptFunction();
+
+                /*!
                  * \brief Adds the given value to the top of the lua stack.
                  *
                  * \param name The key to give the value to be added to the Lua stack.

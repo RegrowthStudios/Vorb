@@ -156,7 +156,7 @@ namespace vorb {
                 void setChildOffsetY     (IWidget* widget, f32 offset);
                 void setFlags            (IWidget* widget, WidgetFlags flags);
 
-                void setIgnoreOffset            (IWidget* widget, bool ignoreOffset);
+                void setIgnoreOffset               (IWidget* widget, bool ignoreOffset);
                 void setNeedsDimensionUpdate       (IWidget* widget, bool flag);
                 void setNeedsZIndexReorder         (IWidget* widget, bool flag);
                 void setNeedsDockRecalculation     (IWidget* widget, bool flag);
@@ -188,16 +188,6 @@ namespace vorb {
                 void setRawPaddingTop    (Widget* widget, Length top);
                 void setRawPaddingRight  (Widget* widget, Length right);
                 void setRawPaddingBottom (Widget* widget, Length bottom);
-
-                /******************************************************************/
-                /* Widget Event Handlers                                          */
-                /******************************************************************/
-                // void onMouseClick(Sender s, const MouseButtonEvent& e);
-                // void onMouseDown(Sender s, const MouseButtonEvent& e);
-                // void onMouseUp(Sender s, const MouseButtonEvent& e);
-                // void onMouseEnter(Sender s, const MouseMotionEvent& e);
-                // void onMouseLeave(Sender s, const MouseMotionEvent& e);
-                // void onMouseMove(Sender s, const MouseMotionEvent& e);
             }
         }
     }
@@ -330,6 +320,37 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setRawPaddingTop",    makeDelegate(&impl::setRawPaddingTop));
     env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
     env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
+
+    env->addCDelegate("onMouseClick", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseClick);
+    }));
+    env->addCDelegate("onMouseDown", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseDown);
+    }));
+    env->addCDelegate("onMouseUp", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseUp);
+    }));
+    env->addCDelegate("onMouseEnter", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseEnter);
+    }));
+    env->addCDelegate("onMouseLeave", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseLeave);
+    }));
+    env->addCDelegate("onMouseMove", makeFunctor([=](Widget* widget) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseMove);
+    }));
     env->setNamespaces();
 }
 

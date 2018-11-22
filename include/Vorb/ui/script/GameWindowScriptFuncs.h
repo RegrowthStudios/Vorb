@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/InputDispatcher.h"
 
 namespace vorb {
     namespace ui {
@@ -57,6 +58,22 @@ void vui::GameWindowScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvir
     }));
     env->addCDelegate("getCurrentResolution",       makeFunctor([window] () {
         return impl::getCurrentResolution(window);
+    }));
+
+    env->addCDelegate("onResize", makeFunctor([=]() {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &vui::InputDispatcher::window.onResize);
+    }));
+    env->addCDelegate("onFile", makeFunctor([=]() {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<const WindowFileEvent&>(scriptFunc, &vui::InputDispatcher::window.onFile);
+    }));
+    env->addCDelegate("onClose", makeFunctor([=]() {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<>(scriptFunc, &vui::InputDispatcher::window.onClose);
     }));
     env->setNamespaces();
 }

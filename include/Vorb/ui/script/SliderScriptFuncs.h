@@ -110,6 +110,12 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("isHorizontal",       makeDelegate(&impl::isHorizontal));
     env->addCDelegate("getValueScaled",     makeDelegate(&impl::getValueScaled));
     env->addCDelegate("setRange",           makeDelegate(&impl::setRange));
+
+    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<i32>(scriptFunc, &checkBox->onValueChange);
+    }));
     env->setNamespaces();
 
     WidgetScriptFuncs::registerFuncs(namespace_, env);

@@ -25,12 +25,10 @@
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/script/TextWidgetScriptFuncs.h"
+#include "Vorb/ui/widgets/CheckBox.h"
 
 namespace vorb {
     namespace ui {
-        // Forward Declarations
-        class CheckBox;
-
         namespace CheckBoxScriptFuncs {
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
@@ -101,6 +99,12 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setTextHoverColor",        makeDelegate(&impl::setTextHoverColor));
     env->addCDelegate("isChecked",                makeDelegate(&impl::isChecked));
     env->addCDelegate("setChecked",               makeDelegate(&impl::setChecked));
+
+    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
+        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+
+        env->template addScriptFunctionToEvent<bool>(scriptFunc, &checkBox->onValueChange);
+    }));
     env->setNamespaces();
 
     TextWidgetScriptFuncs::registerFuncs(namespace_, env);

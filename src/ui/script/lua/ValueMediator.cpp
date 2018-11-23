@@ -1,9 +1,14 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/script/lua/ValueMediator.h"
 
+#include "Vorb/ui/MouseInputDispatcher.h"
+#include "Vorb/ui/WindowEventDispatcher.h"
 #include "Vorb/ui/widgets/Widget.h"
 
-// Provides support for pushing and popping Clipping.
+/************************************************************************/
+/* Clipping                                                             */
+/************************************************************************/
+
 vui::Clipping vscript::lua::ValueMediator<vui::Clipping, void>::defaultValue() {
     return vui::DEFAULT_CLIPPING;
 }
@@ -75,7 +80,13 @@ bool vscript::lua::ValueMediator<vui::Clipping, void>::tryRetrieve(Handle state,
     return success;
 }
 
-// Provides support for pushing and popping Dock.
+
+
+
+/************************************************************************/
+/* Dock                                                                 */
+/************************************************************************/
+
 vui::Dock vscript::lua::ValueMediator<vui::Dock, void>::defaultValue() {
     return vui::Dock{ vui::DockState::NONE, 0.0f };
 }
@@ -133,7 +144,13 @@ bool vscript::lua::ValueMediator<vui::Dock, void>::tryRetrieve(Handle state, ui3
     return success;
 }
 
-// Provides support for pushing and popping WidgetFlags.
+
+
+
+/************************************************************************/
+/* WidgetFlags                                                          */
+/************************************************************************/
+
 vui::WidgetFlags vscript::lua::ValueMediator<vui::WidgetFlags, void>::defaultValue() {
     return vui::WidgetFlags{ false, false, false, false, false, false, false, false, false };
 }
@@ -232,7 +249,13 @@ bool vscript::lua::ValueMediator<vui::WidgetFlags, void>::tryRetrieve(Handle sta
     return success;
 }
 
-// Provides support for pushing and popping Length.
+
+
+
+/************************************************************************/
+/* Length                                                               */
+/************************************************************************/
+
 vui::Length vscript::lua::ValueMediator<vui::Length, void>::defaultValue() {
     return vui::Length{ 0, { vui::DimensionType::PIXEL } };
 }
@@ -290,7 +313,13 @@ bool vscript::lua::ValueMediator<vui::Length, void>::tryRetrieve(Handle state, u
     return success;
 }
 
-// Provides support for pushing and popping Length2.
+
+
+
+/************************************************************************/
+/* Length2                                                              */
+/************************************************************************/
+
 vui::Length2 vscript::lua::ValueMediator<vui::Length2, void>::defaultValue() {
     return vui::Length2{ 0, 0, { vui::DimensionType::PIXEL, vui::DimensionType::PIXEL } };
 }
@@ -358,7 +387,13 @@ bool vscript::lua::ValueMediator<vui::Length2, void>::tryRetrieve(Handle state, 
     return success;
 }
 
-// Provides support for pushing and popping Length4.
+
+
+
+/************************************************************************/
+/* Length4                                                              */
+/************************************************************************/
+
 vui::Length4 vscript::lua::ValueMediator<vui::Length4, void>::defaultValue() {
     return vui::Length4{ 0, 0, 0, 0, { vui::DimensionType::PIXEL, vui::DimensionType::PIXEL, vui::DimensionType::PIXEL, vui::DimensionType::PIXEL } };
 }
@@ -441,6 +476,429 @@ bool vscript::lua::ValueMediator<vui::Length4, void>::tryRetrieve(Handle state, 
     // If successful, set value to the Type casted result of the pop.
     if (success) {
         value = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* MouseEvent                                                           */
+/************************************************************************/
+
+vui::MouseEvent vscript::lua::ValueMediator<vui::MouseEvent, void>::defaultValue() {
+    return vui::MouseEvent{ 0, 0 };
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseEvent, void>::getValueCount() {
+    return 2;
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseEvent, void>::push(Handle state, const vui::MouseEvent& mouseEvent) {
+    return ValueMediator<i32>::push(state, mouseEvent.x)
+         + ValueMediator<i32>::push(state, mouseEvent.y);
+}
+
+vui::MouseEvent vscript::lua::ValueMediator<vui::MouseEvent, void>::pop(Handle state) {
+    vui::MouseEvent mouseEvent;
+
+    mouseEvent.y = ValueMediator<i32>::pop(state);
+    mouseEvent.x = ValueMediator<i32>::pop(state);
+
+    return mouseEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseEvent, void>::tryPop(Handle state, OUT vui::MouseEvent& mouseEvent) {
+    vui::MouseEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryPop(state, result.y)
+                && ValueMediator<i32>::tryPop(state, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::MouseEvent vscript::lua::ValueMediator<vui::MouseEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::MouseEvent mouseEvent;
+
+    mouseEvent.y = ValueMediator<i32>::retrieve(state, index);
+    mouseEvent.x = ValueMediator<i32>::retrieve(state, index);
+
+    return mouseEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::MouseEvent& mouseEvent) {
+    vui::MouseEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryRetrieve(state, index, result.y)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* MouseButtonEvent                                                     */
+/************************************************************************/
+
+// TODO(Matthew): Pass MouseButton enum consts to env.
+
+vui::MouseButtonEvent vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::defaultValue() {
+    return vui::MouseButtonEvent{ 0, 0, vui::MouseButton::UNKNOWN, 0 };
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::getValueCount() {
+    return 4;
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::push(Handle state, const vui::MouseButtonEvent& mouseButtonEvent) {
+    return ValueMediator<i32>::push(state, mouseButtonEvent.x)
+         + ValueMediator<i32>::push(state, mouseButtonEvent.y)
+         + ValueMediator<vui::MouseButton>::push(state, mouseButtonEvent.button)
+         + ValueMediator<ui8>::push(state, mouseButtonEvent.clicks);
+}
+
+vui::MouseButtonEvent vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::pop(Handle state) {
+    vui::MouseButtonEvent mouseButtonEvent;
+
+    mouseButtonEvent.clicks = ValueMediator<ui8>::pop(state);
+    mouseButtonEvent.button = ValueMediator<vui::MouseButton>::pop(state);
+    mouseButtonEvent.y      = ValueMediator<i32>::pop(state);
+    mouseButtonEvent.x      = ValueMediator<i32>::pop(state);
+
+    return mouseButtonEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::tryPop(Handle state, OUT vui::MouseButtonEvent& mouseButtonEvent) {
+    vui::MouseButtonEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<ui8>::tryPop(state, result.clicks)
+                && ValueMediator<vui::MouseButton>::tryPop(state, result.button)
+                && ValueMediator<i32>::tryPop(state, result.y)
+                && ValueMediator<i32>::tryPop(state, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseButtonEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::MouseButtonEvent vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::MouseButtonEvent mouseButtonEvent;
+
+    mouseButtonEvent.clicks = ValueMediator<ui8>::retrieve(state, index);
+    mouseButtonEvent.button = ValueMediator<vui::MouseButton>::retrieve(state, index);
+    mouseButtonEvent.y      = ValueMediator<i32>::retrieve(state, index);
+    mouseButtonEvent.x      = ValueMediator<i32>::retrieve(state, index);
+
+    return mouseButtonEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseButtonEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::MouseButtonEvent& mouseButtonEvent) {
+    vui::MouseButtonEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<ui8>::tryRetrieve(state, index, result.clicks)
+                && ValueMediator<vui::MouseButton>::tryRetrieve(state, index, result.button)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.y)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseButtonEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* MouseMotionEvent                                                     */
+/************************************************************************/
+
+// TODO(Matthew): Pass MouseButton enum consts to env.
+
+vui::MouseMotionEvent vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::defaultValue() {
+    return vui::MouseMotionEvent{ 0, 0, 0, 0 };
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::getValueCount() {
+    return 4;
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::push(Handle state, const vui::MouseMotionEvent& mouseMotionEvent) {
+    return ValueMediator<i32>::push(state, mouseMotionEvent.x)
+         + ValueMediator<i32>::push(state, mouseMotionEvent.y)
+         + ValueMediator<i32>::push(state, mouseMotionEvent.dx)
+         + ValueMediator<i32>::push(state, mouseMotionEvent.dy);
+}
+
+vui::MouseMotionEvent vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::pop(Handle state) {
+    vui::MouseMotionEvent mouseMotionEvent;
+
+    mouseMotionEvent.dy = ValueMediator<i32>::pop(state);
+    mouseMotionEvent.dx = ValueMediator<i32>::pop(state);
+    mouseMotionEvent.y  = ValueMediator<i32>::pop(state);
+    mouseMotionEvent.x  = ValueMediator<i32>::pop(state);
+
+    return mouseMotionEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::tryPop(Handle state, OUT vui::MouseMotionEvent& mouseMotionEvent) {
+    vui::MouseMotionEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryPop(state, result.dy)
+                && ValueMediator<i32>::tryPop(state, result.dx)
+                && ValueMediator<i32>::tryPop(state, result.y)
+                && ValueMediator<i32>::tryPop(state, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseMotionEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::MouseMotionEvent vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::MouseMotionEvent mouseMotionEvent;
+
+    mouseMotionEvent.dy = ValueMediator<i32>::retrieve(state, index);
+    mouseMotionEvent.dx = ValueMediator<i32>::retrieve(state, index);
+    mouseMotionEvent.y  = ValueMediator<i32>::retrieve(state, index);
+    mouseMotionEvent.x  = ValueMediator<i32>::retrieve(state, index);
+
+    return mouseMotionEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseMotionEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::MouseMotionEvent& mouseMotionEvent) {
+    vui::MouseMotionEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryRetrieve(state, index, result.dy)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.dx)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.y)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseMotionEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* MouseWheelEvent                                                     */
+/************************************************************************/
+
+vui::MouseWheelEvent vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::defaultValue() {
+    return vui::MouseWheelEvent{ 0, 0, 0, 0, 0, 0 };
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::getValueCount() {
+    return 6;
+}
+
+i32 vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::push(Handle state, const vui::MouseWheelEvent& mouseWheelEvent) {
+    return ValueMediator<i32>::push(state, mouseWheelEvent.x)
+         + ValueMediator<i32>::push(state, mouseWheelEvent.y)
+         + ValueMediator<i32>::push(state, mouseWheelEvent.dx)
+         + ValueMediator<i32>::push(state, mouseWheelEvent.dy)
+         + ValueMediator<i32>::push(state, mouseWheelEvent.sx)
+         + ValueMediator<i32>::push(state, mouseWheelEvent.sy);
+}
+
+vui::MouseWheelEvent vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::pop(Handle state) {
+    vui::MouseWheelEvent mouseWheelEvent;
+
+    mouseWheelEvent.sy = ValueMediator<i32>::pop(state);
+    mouseWheelEvent.sx = ValueMediator<i32>::pop(state);
+    mouseWheelEvent.dy = ValueMediator<i32>::pop(state);
+    mouseWheelEvent.dx = ValueMediator<i32>::pop(state);
+    mouseWheelEvent.y  = ValueMediator<i32>::pop(state);
+    mouseWheelEvent.x  = ValueMediator<i32>::pop(state);
+
+    return mouseWheelEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::tryPop(Handle state, OUT vui::MouseWheelEvent& mouseWheelEvent) {
+    vui::MouseWheelEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryPop(state, result.sy)
+                && ValueMediator<i32>::tryPop(state, result.sx)
+                && ValueMediator<i32>::tryPop(state, result.dy)
+                && ValueMediator<i32>::tryPop(state, result.dx)
+                && ValueMediator<i32>::tryPop(state, result.y)
+                && ValueMediator<i32>::tryPop(state, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseWheelEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::MouseWheelEvent vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::MouseWheelEvent mouseWheelEvent;
+
+    mouseWheelEvent.sy = ValueMediator<i32>::retrieve(state, index);
+    mouseWheelEvent.sx = ValueMediator<i32>::retrieve(state, index);
+    mouseWheelEvent.dy = ValueMediator<i32>::retrieve(state, index);
+    mouseWheelEvent.dx = ValueMediator<i32>::retrieve(state, index);
+    mouseWheelEvent.y  = ValueMediator<i32>::retrieve(state, index);
+    mouseWheelEvent.x  = ValueMediator<i32>::retrieve(state, index);
+
+    return mouseWheelEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::MouseWheelEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::MouseWheelEvent& mouseWheelEvent) {
+    vui::MouseWheelEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<i32>::tryRetrieve(state, index, result.sy)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.sx)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.dy)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.dx)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.y)
+                && ValueMediator<i32>::tryRetrieve(state, index, result.x);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        mouseWheelEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* WindowResizeEvent                                                    */
+/************************************************************************/
+
+vui::WindowResizeEvent vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::defaultValue() {
+    return vui::WindowResizeEvent{ 0, 0 };
+}
+
+i32 vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::getValueCount() {
+    return 2;
+}
+
+i32 vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::push(Handle state, const vui::WindowResizeEvent& windowResizeEvent) {
+    return ValueMediator<ui32>::push(state, windowResizeEvent.w)
+         + ValueMediator<ui32>::push(state, windowResizeEvent.h);
+}
+
+vui::WindowResizeEvent vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::pop(Handle state) {
+    vui::WindowResizeEvent windowResizeEvent;
+
+    windowResizeEvent.h  = ValueMediator<ui32>::pop(state);
+    windowResizeEvent.w  = ValueMediator<ui32>::pop(state);
+
+    return windowResizeEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::tryPop(Handle state, OUT vui::WindowResizeEvent& windowResizeEvent) {
+    vui::WindowResizeEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<ui32>::tryPop(state, result.h)
+                && ValueMediator<ui32>::tryPop(state, result.w);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        windowResizeEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::WindowResizeEvent vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::WindowResizeEvent windowResizeEvent;
+
+    windowResizeEvent.h  = ValueMediator<ui32>::retrieve(state, index);
+    windowResizeEvent.w  = ValueMediator<ui32>::retrieve(state, index);
+
+    return windowResizeEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::WindowResizeEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::WindowResizeEvent& windowResizeEvent) {
+    vui::WindowResizeEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<ui32>::tryRetrieve(state, index, result.h)
+                && ValueMediator<ui32>::tryRetrieve(state, index, result.w);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        windowResizeEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+
+
+
+/************************************************************************/
+/* WindowFileEvent                                                      */
+/************************************************************************/
+
+vui::WindowFileEvent vscript::lua::ValueMediator<vui::WindowFileEvent, void>::defaultValue() {
+    return vui::WindowFileEvent{ nullptr };
+}
+
+i32 vscript::lua::ValueMediator<vui::WindowFileEvent, void>::getValueCount() {
+    return 1;
+}
+
+i32 vscript::lua::ValueMediator<vui::WindowFileEvent, void>::push(Handle state, const vui::WindowFileEvent& windowFileEvent) {
+    return ValueMediator<const cString>::push(state, windowFileEvent.file);
+}
+
+vui::WindowFileEvent vscript::lua::ValueMediator<vui::WindowFileEvent, void>::pop(Handle state) {
+    vui::WindowFileEvent windowFileEvent;
+
+    windowFileEvent.file = ValueMediator<const cString>::pop(state);
+
+    return windowFileEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::WindowFileEvent, void>::tryPop(Handle state, OUT vui::WindowFileEvent& windowFileEvent) {
+    vui::WindowFileEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<const cString>::tryPop(state, result.file);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        windowFileEvent = result;
+    }
+    // Return success of pop.
+    return success;
+}
+
+vui::WindowFileEvent vscript::lua::ValueMediator<vui::WindowFileEvent, void>::retrieve(Handle state, ui32 index) {
+    vui::WindowFileEvent windowFileEvent;
+
+    windowFileEvent.file = ValueMediator<const cString>::retrieve(state, index);
+
+    return windowFileEvent;
+}
+
+bool vscript::lua::ValueMediator<vui::WindowFileEvent, void>::tryRetrieve(Handle state, ui32 index, OUT vui::WindowFileEvent& windowFileEvent) {
+    vui::WindowFileEvent result;
+    // Try to pop the length.
+    bool success = ValueMediator<const cString>::tryRetrieve(state, index, result.file);
+    // If successful, set value to the popped Clipping.
+    if (success) {
+        windowFileEvent = result;
     }
     // Return success of pop.
     return success;

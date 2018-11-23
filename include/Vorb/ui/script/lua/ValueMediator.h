@@ -23,7 +23,10 @@
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/script/lua/ValueMediator.h"
 
-DECL_VUI(struct Clipping; struct Dock; struct WidgetFlags; struct Length; struct Length2; struct Length4)
+DECL_VUI(struct Clipping; struct Dock;    struct WidgetFlags; struct Length;
+         struct Length2;  struct Length4; struct MouseEvent;  struct MouseButtonEvent;
+         struct MouseMotionEvent;  struct MouseWheelEvent; struct WindowFileEvent;
+         struct WindowResizeEvent)
 
 namespace vorb {
     namespace script {
@@ -59,6 +62,14 @@ namespace vorb {
             VALUE_MEDIATOR_VAL(vui::Length);
             VALUE_MEDIATOR_REF(vui::Length2);
             VALUE_MEDIATOR_REF(vui::Length4);
+
+            VALUE_MEDIATOR_REF(vui::MouseEvent);
+            VALUE_MEDIATOR_REF(vui::MouseButtonEvent);
+            VALUE_MEDIATOR_REF(vui::MouseMotionEvent);
+            VALUE_MEDIATOR_REF(vui::MouseWheelEvent);
+
+            VALUE_MEDIATOR_REF(vui::WindowResizeEvent);
+            VALUE_MEDIATOR_REF(vui::WindowFileEvent);
 #undef VALUE_MEDIATOR_VAL
         }
     }

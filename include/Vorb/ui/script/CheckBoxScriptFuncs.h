@@ -103,7 +103,7 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<bool>(scriptFunc, &checkBox->onValueChange);
+        env->template addScriptFunctionToEvent<bool>(scriptFunc, &checkBox->ValueChange);
     }));
     env->setNamespaces();
 

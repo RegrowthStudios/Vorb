@@ -324,32 +324,32 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("onMouseClick", makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseClick);
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseClick);
     }));
-    env->addCDelegate("onMouseDown", makeFunctor([=](Widget* widget) {
+    env->addCDelegate("onMouseDown",  makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseDown);
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseDown);
     }));
-    env->addCDelegate("onMouseUp", makeFunctor([=](Widget* widget) {
+    env->addCDelegate("onMouseUp",    makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->onMouseUp);
+        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseUp);
     }));
     env->addCDelegate("onMouseEnter", makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseEnter);
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseEnter);
     }));
     env->addCDelegate("onMouseLeave", makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseLeave);
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseLeave);
     }));
-    env->addCDelegate("onMouseMove", makeFunctor([=](Widget* widget) {
+    env->addCDelegate("onMouseMove",  makeFunctor([=](Widget* widget) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->onMouseMove);
+        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseMove);
     }));
     env->setNamespaces();
 }

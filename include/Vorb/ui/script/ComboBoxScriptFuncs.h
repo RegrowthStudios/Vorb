@@ -27,6 +27,7 @@
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
+#include "Vorb/ui/widgets/ComboBox.h"
 
 DECL_VG(class SpriteFont; enum class TextAlign)
 
@@ -326,10 +327,10 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setText",                              makeDelegate(&impl::setText));
     env->addCDelegate("setMaxDropHeight",                     makeDelegate(&impl::setMaxDropHeight));
 
-    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
+    env->addCDelegate("onValueChange", makeFunctor([=](ComboBox* comboBox) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<const nString&>(scriptFunc, &checkBox->onValueChange);
+        env->template addScriptFunctionToEvent<const nString&>(scriptFunc, &comboBox->ValueChange);
     }));
     env->setNamespaces();
 

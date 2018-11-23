@@ -26,6 +26,7 @@
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
+#include "Vorb/ui/widgets/Slider.h"
 
 namespace vorb {
     namespace ui {
@@ -111,10 +112,10 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("getValueScaled",     makeDelegate(&impl::getValueScaled));
     env->addCDelegate("setRange",           makeDelegate(&impl::setRange));
 
-    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
+    env->addCDelegate("onValueChange", makeFunctor([=](Slider* slider) {
         vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
 
-        env->template addScriptFunctionToEvent<i32>(scriptFunc, &checkBox->onValueChange);
+        env->template addScriptFunctionToEvent<i32>(scriptFunc, &slider->ValueChange);
     }));
     env->setNamespaces();
 

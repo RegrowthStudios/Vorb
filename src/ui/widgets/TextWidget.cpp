@@ -88,5 +88,8 @@ void vui::TextWidget::updateTextPosition() {
         case vg::TextAlign::CENTER:
             m_drawableText.setPosition(pos + size / 2.0f);
             break;
+        default:
+            assert(false);
+            break;
     }
 }

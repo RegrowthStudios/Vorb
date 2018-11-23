@@ -44,6 +44,13 @@ namespace vorb {
             Viewport(const GameWindow* window = nullptr);
             virtual ~Viewport();
 
+#if defined(VORB_COMPILER_CLANG)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#elif defined(VORB_COMPILER_GCC)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+#endif
             /*! @brief Initializes the viewport and its renderer.
              *
              * @param name: The name of the viewport.
@@ -61,6 +68,11 @@ namespace vorb {
              * @param defaultFont: The optional SpriteBatch to use.
              */
             virtual void init(const nString& name, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+#if defined(VORB_COMPILER_CLANG)
+#pragma clang diagnostic pop
+#elif defined(VORB_COMPILER_GCC)
+#pragma GCC diagnostic pop
+#endif
             /*! @brief Frees all resources. */
             virtual void dispose() override;
 

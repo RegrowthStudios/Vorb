@@ -213,12 +213,12 @@ static Values popValues(vscript::lua::Handle state, i32 n) {
     return values;
 }
 
-GenericScriptFunction vscript::lua::Environment::createScriptFunction() {
+vscript::GenericScriptFunction vscript::lua::Environment::createScriptFunction() {
     // Get "depth" of the function to make a reference to.
     // If this is 0 or 1, then there's no function to reference!
     i32 depth = lua_gettop(m_state);
     if (depth <= 1) {
-        return -1;
+        return nullptr;
     }
 
     // Pop the values provided, ensuring they're all string types.
@@ -255,14 +255,14 @@ GenericScriptFunction vscript::lua::Environment::createScriptFunction() {
     }
 
     // First see if the lFunction we just got already exists in the environment's register.
-    LFunction* lFunction = env->getLFunction(name);
-    if (registeredLFunction != nullptr) return nullptr;
+    LFunction* lFunction = getLFunction(name);
+    if (lFunction != nullptr) return nullptr;
 
     // LFunction doesn't yet exist, make one and add to register.
     lFunction = new LFunction(m_state, name, currIndex);
 
     // Add the unregistered LFunction to the register.
-    if (!env->addLFunction(lFunction)) {
+    if (!addLFunction(lFunction)) {
         // If we reached here, we failed to register a new LFunction object due to some failure in addLFunction.
         return nullptr;
     }
@@ -316,7 +316,7 @@ int vscript::lua::makeLFunction(Handle state) {
 
     // First see if the lFunction we just got already exists in the environment's register.
     LFunction* lFunction = env->getLFunction(name);
-    if (registeredLFunction == nullptr) {
+    if (lFunction == nullptr) {
         // LFunction doesn't yet exist, make one and add to register.
         lFunction = new LFunction(state, name, currIndex);
 
@@ -393,7 +393,7 @@ int vscript::lua::makeLCallback(Handle state) {
 
     // First see if the lFunction we just got already exists in the environment's register.
     LFunction* lFunction = env->getLFunction(functionName);
-    if (registeredLFunction == nullptr) {
+    if (lFunction == nullptr) {
         // LFunction doesn't yet exist, make one and add to register.
         lFunction = new LFunction(state, functionName, currIndex);
 

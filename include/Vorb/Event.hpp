@@ -73,23 +73,17 @@ public:
         EventBase(sender)
     { /* Empty */ }
     /*!
-     * \brief Copies the event.
-     * WARNING: This neuters all delegates of the copy, you probably shouldn't be calling this.
+     * \brief Copies the event and subscribers. Ownership must be considered.
+     * \warning If delegates are not refcounted, whichever event will have the shortest lifetime needs to be neutered.
      *
      * \param event The event to copy.
      */
     Event(const Event& event) {
         m_sender      = event.m_sender;
         m_subscribers = event.m_subscribers;
-
-        for (auto& subscriber : m_subscribers) {
-            subscriber.neuter();
-        }
     }
     /*!
-     * \brief Moves the event.
-     * NOTE: If you must make new instances of an event, this is likely what you want to be doing. But
-     *       even then, chances are you don't want to make any new copy of the event.
+     * \brief Moves the event. Ownership is guaranteed to be transferred.
      *
      * \param event The event to copy.
      */
@@ -99,35 +93,45 @@ public:
     }
 
     /*!
-     * \brief Copies the event.
-     * WARNING: This neuters all delegates of the copy, you probably shouldn't be calling this.
+     * \brief Copies the event and subscribers. Ownership must be considered.
+     * \warning If delegates are not refcounted, whichever event will have the shortest lifetime needs to be neutered.
      *
      * \param event The event to copy.
+     *
+     * \return The event that has been copied to.
      */
     Event& operator=(const Event& event) {
         m_sender      = event.m_sender;
         m_subscribers = event.m_subscribers;
 
-        for (auto& subscriber : m_subscribers) {
-            subscriber.neuter();
-        }
         return *this;
     }
     /*!
-     * \brief Moves the event.
-     * NOTE: If you must make new instances of an event, this is likely what you want to be doing. But
-     *       even then, chances are you don't want to make any new copy of the event.
+     * \brief Moves the event. Ownership is guaranteed to be transferred.
      *
-     * \param event The event to copy.
+     * \param event The event to move.
+     *
+     * \return The event that has been copied to.
      */
     Event& operator=(Event&& event) {
         m_sender      = event.m_sender;
         m_subscribers = std::move(event.m_subscribers);
+
         return *this;
     }
 
+    /*!
+     * \brief Neuters all subscribers of the event.
+     */
+    void neuter() {
+#if REFCOUNT_DELEGATES != 1
+        for (auto& subscriber : m_subscribers) {
+            subscriber.neuter();
+        }
+#endif
+    }
 
-#if !defined(REFCOUNT_DELEGATES) || REFCOUNT_DELEGATES != 1
+#if REFCOUNT_DELEGATES != 1
     /*!
      * \brief Adds a subscriber to the event.
      *
@@ -145,7 +149,8 @@ public:
     /*!
      * \brief Adds a subscriber to the event.
      *
-     * operator+= is an alias of add
+     * operator+= is an alias of add, where the subscriber is taken to not
+     * be owned (i.e. own = false).
      *
      * Specialisation as on copy we need to neuter the delegate
      * object if it isn't ref counted.
@@ -165,17 +170,18 @@ public:
      * \param stub This does nothing, it just ensures no errors if ref counting is enabled.
      */
     void add(Subscriber&& subscriber, bool = true) {
-        m_subscribers.emplace_back(std::move(subscriber));
+        m_subscribers.emplace_back(std::forward<Subscriber>(subscriber));
     }
     /*!
      * \brief Adds a subscriber to the event.
      *
-     * operator+= is an alias of add
+     * operator+= is an alias of add, where the subscriber is taken to not
+     * be owned (i.e. own = false).
      *
      * \param subscriber The subscriber to add to the event.
      */
     void operator+=(Subscriber&& subscriber) {
-        add(std::move(subscriber));
+        add(std::forward<Subscriber>(subscriber));
     }
 
     /*!
@@ -306,9 +312,9 @@ public:
     void addAutoHook(Event<Parameters...>& event, Functor&& functor) {
         auto delegate = event.template addFunctor<Functor>(std::forward<Functor>(functor));
 
-        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(makeFunctor([delegate, &event] () {
             event -= *delegate;
-        })));
+        }));
     }
     /*!
      * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
@@ -326,9 +332,9 @@ public:
     void addConstAutoHook(Event<Parameters...>& event, Functor&& functor) {
         auto delegate = event.template addConstFunctor<Functor>(std::forward<Functor>(functor));
 
-        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(makeFunctor([delegate, &event] () {
             event -= *delegate;
-        })));
+        }));
     }
     /*!
      * \brief Binds the provided functor to an event, and stores a deletor for later clean-up.
@@ -346,9 +352,9 @@ public:
     void addNonConstAutoHook(Event<Parameters...>& event, Functor&& functor) {
         auto delegate = event.template addNonConstFunctor<Functor>(std::forward<Functor>(functor));
 
-        m_deletionFunctions.emplace_back(std::move(makeFunctor([delegate, &event] () {
+        m_deletionFunctions.emplace_back(makeFunctor([delegate, &event] () {
             event -= *delegate;
-        })));
+        }));
     }
 
     /*! \brief Properly disposes all delegates added to this pool. */

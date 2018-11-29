@@ -100,14 +100,16 @@
 #   define NORETURN __declspec(noreturn)
 #endif
 
-// If we are in debug mode set REFCOUNT_DELEGATES & PRINT_REFCOUNT_DELEGATES, unless if we have already defined either.
-//  -> Set REFCOUNT_DELEGATES to anything other than 1 to disable even in debug.
-#if defined(DEBUG) && !defined(REFCOUNT_DELEGATES)
-#   define REFCOUNT_DELEGATES 1
+#if !defined(REFCOUNT_DELEGATES)
+#    define REFCOUNT_DELEGATES 0
 #endif
-//  -> Set PRINT_REFCOUNT_DELEGATES to 1 to enable printing refcounts on destruction of delegates.
-#if defined(DEBUG) && !defined(PRINT_REFCOUNT_DELEGATES)
-#   define PRINT_REFCOUNT_DELEGATES 0
+
+#if !defined(PRINT_REFCOUNT_DELEGATES)
+#    if defined(DEBUG)
+#        define PRINT_REFCOUNT_DELEGATES 1
+#    else
+#        define PRINT_REFCOUNT_DELEGATES 0
+#    endif
 #endif
 
 /****************************************************************************\
@@ -118,7 +120,12 @@
 class DelegateBase {
     // Empty
 };
-// Interface for delegates.
+/*!
+ * \brief Delegate implementation, wraps callables of any kind with the given return type and parameter types. Ownership of objects is possible for functors.
+ *
+ * Note: Define the macro REFCOUNT_DELEGATES to 1 in order to have ref counted delegates. Further, for debug purposes you can define PRINT_REFCOUNT_DELEGATES to 1,
+ * this defualts to 1 in the case DEBUG is defined.
+ */
 template<typename ReturnType, typename ...Parameters>
 class Delegate : public DelegateBase {
 protected:
@@ -174,6 +181,10 @@ public:
 #if REFCOUNT_DELEGATES == 1
             if (m_deletor) {
                 ++m_deletor->refCount;
+#   if PRINT_REFCOUNT_DELEGATES == 1
+                // TODO(Matthew): Member function pointers can't be accurately printed through a cast to void*.
+                printf("There are now %hu delegates with object: %p, and function pointer: %p.\n", m_deletor->refCount, (void*)m_object, (void*)m_function);
+#   endif // PRINT_REFCOUNT_DELEGATES == 1
             }
 #endif // REFCOUNT_DELEGATES == 1
         } else {
@@ -242,6 +253,10 @@ public:
 #if REFCOUNT_DELEGATES == 1
             if (m_deletor) {
                 ++m_deletor->refCount;
+#   if PRINT_REFCOUNT_DELEGATES == 1
+                // TODO(Matthew): Member function pointers can't be accurately printed through a cast to void*.
+                printf("There are now %hu delegates with object: %p, and function pointer: %p.\n", m_deletor->refCount, (void*)m_object, (void*)m_function);
+#   endif // PRINT_REFCOUNT_DELEGATES == 1
             }
 #endif // REFCOUNT_DELEGATES == 1
         } else {

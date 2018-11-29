@@ -193,12 +193,12 @@ namespace vorb {
                              typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
                 CALLER_DELETE Delegate<void, Parameters...>* getScriptDelegate(const nString& name);
 
-                // /*!
-                //  * \brief Creates a new script function from script env state.
-                //  *
-                //  * \return A pointer to the created script function.
-                //  */
-                // GenericScriptFunction createScriptFunction();
+                /*!
+                 * \brief Creates a new script function from script env state.
+                 *
+                 * \return A pointer to the created script function.
+                 */
+                GenericScriptFunction createScriptFunction();
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.

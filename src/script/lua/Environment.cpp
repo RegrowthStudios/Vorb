@@ -214,62 +214,62 @@ static Values popValues(vscript::lua::Handle state, i32 n) {
     return values;
 }
 
-// vscript::GenericScriptFunction vscript::lua::Environment::createScriptFunction() {
-//     // Get "depth" of the function to make a reference to.
-//     // If this is 0 or 1, then there's no function to reference!
-//     i32 depth = lua_gettop(m_state);
-//     if (depth <= 1) {
-//         return nullptr;
-//     }
+vscript::GenericScriptFunction vscript::lua::Environment::createScriptFunction() {
+    // Get "depth" of the function to make a reference to.
+    // If this is 0 or 1, then there's no function to reference!
+    i32 depth = lua_gettop(m_state);
+    if (depth <= 1) {
+        return nullptr;
+    }
 
-//     // Pop the values provided, ensuring they're all string types.
-//     // If they aren't, then we don't assume anything and must fail.
-//     Values values = popValues(m_state, depth);
-//     if (values.empty()) {
-//         return nullptr;
-//     }
+    // Pop the values provided, ensuring they're all string types.
+    // If they aren't, then we don't assume anything and must fail.
+    Values values = popValues(m_state, depth);
+    if (values.empty()) {
+        return nullptr;
+    }
 
-//     nString name(values.front());
+    nString name(values.front());
 
-//     // First see if the lFunction we just got already exists in the environment's register.
-//     LFunction* lFunction = getLFunction(name);
-//     if (lFunction != nullptr) return nullptr;
+    // First see if the lFunction we just got already exists in the environment's register.
+    LFunction* lFunction = getLFunction(name);
+    if (lFunction != nullptr) return nullptr;
 
-//     Index currIndex;
+    Index currIndex;
 
-//     // Get our script function table in the Lua registry.
-//     lua_getfield(m_state, LUA_REGISTRYINDEX, SCRIPT_FUNCTION_TABLE);
+    // Get our script function table in the Lua registry.
+    lua_getfield(m_state, LUA_REGISTRYINDEX, SCRIPT_FUNCTION_TABLE);
 
-//     // Get the first layer (table, or function itself) and create a reference to it in the table.
-//     // Store the index of the reference as the current index value in the lua registry index.
-//     lua_getglobal(m_state, values.at(1));
-//     currIndex = luaL_ref(m_state, -2);
+    // Get the first layer (table, or function itself) and create a reference to it in the table.
+    // Store the index of the reference as the current index value in the lua registry index.
+    lua_getglobal(m_state, values.at(1));
+    currIndex = luaL_ref(m_state, -2);
 
-//     auto it = values.begin();
-//     if (++(++it) != values.end()) {
-//         for (; it != values.end(); ++it) {
-//             // Get a raw access to the table referenced at the last index added to the list. 
-//             lua_rawgeti(m_state, -1, currIndex);
-//             // Get the value of the field with key equal to the value currently pointer to by the iterator.
-//             lua_getfield(m_state, -1, *it);
-//             // Create a reference to this value, be it another table or function, and set it as the new current index value.
-//             currIndex = luaL_ref(m_state, -3);
-//             // Pop the raw access to the previous table.
-//             lua_pop(m_state, 1);
-//         }
-//     }
+    auto it = values.begin();
+    if (++(++it) != values.end()) {
+        for (; it != values.end(); ++it) {
+            // Get a raw access to the table referenced at the last index added to the list. 
+            lua_rawgeti(m_state, -1, currIndex);
+            // Get the value of the field with key equal to the value currently pointer to by the iterator.
+            lua_getfield(m_state, -1, *it);
+            // Create a reference to this value, be it another table or function, and set it as the new current index value.
+            currIndex = luaL_ref(m_state, -3);
+            // Pop the raw access to the previous table.
+            lua_pop(m_state, 1);
+        }
+    }
 
-//     // LFunction doesn't yet exist, make one and add to register.
-//     lFunction = new LFunction(m_state, name, currIndex);
+    // LFunction doesn't yet exist, make one and add to register.
+    lFunction = new LFunction(m_state, name, currIndex);
 
-//     // Add the unregistered LFunction to the register.
-//     if (!addLFunction(lFunction)) {
-//         // If we reached here, we failed to register a new LFunction object due to some failure in addLFunction.
-//         return nullptr;
-//     }
+    // Add the unregistered LFunction to the register.
+    if (!addLFunction(lFunction)) {
+        // If we reached here, we failed to register a new LFunction object due to some failure in addLFunction.
+        return nullptr;
+    }
 
-//     return lFunction;
-// }
+    return lFunction;
+}
 // TODO(Matthew): We shouldn't be making the Lua scripts choose their names in C, we should be able to determine a prefix. Using lua_newthread we can!
 int vscript::lua::makeLFunction(Handle state) {
     // Get "depth" of the function to make a reference to.

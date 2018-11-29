@@ -82,9 +82,6 @@ public:
         m_sender      = event.m_sender;
         m_subscribers = event.m_subscribers;
 
-        #ifdef DEBUG
-        #pragma message Are you sure you want to be using this?
-        #endif
         for (auto& subscriber : m_subscribers) {
             subscriber.neuter();
         }
@@ -111,9 +108,6 @@ public:
         m_sender      = event.m_sender;
         m_subscribers = event.m_subscribers;
 
-        #ifdef DEBUG
-        #pragma message Are you sure you want to be using this?
-        #endif
         for (auto& subscriber : m_subscribers) {
             subscriber.neuter();
         }
@@ -141,11 +135,12 @@ public:
      * object if it isn't ref counted.
      *
      * \param subscriber The subscriber to add to the event.
+     * \param own Whether the event owns the subscriber it.
      */
-    void add(const Subscriber& subscriber) {
+    void add(const Subscriber& subscriber, bool own = false) {
         m_subscribers.emplace_back(subscriber);
 
-        m_subscribers.back().neuter();
+        if (!own) m_subscribers.back().neuter();
     }
     /*!
      * \brief Adds a subscriber to the event.
@@ -167,8 +162,9 @@ public:
      * \brief Adds a subscriber to the event.
      *
      * \param subscriber The subscriber to add to the event.
+     * \param stub This does nothing, it just ensures no errors if ref counting is enabled.
      */
-    void add(Subscriber&& subscriber) {
+    void add(Subscriber&& subscriber, bool = true) {
         m_subscribers.emplace_back(std::move(subscriber));
     }
     /*!
@@ -192,7 +188,7 @@ public:
      */
     template <typename Functor>
     CALLER_DELETE Subscriber* addFunctor(Functor&& functor) {
-        add(std::forward<Subscriber>(makeFunctor(std::forward<Functor>(functor))));
+        add(makeFunctor(std::forward<Functor>(functor)));
 
         return &m_subscribers.back();
     }
@@ -210,7 +206,7 @@ public:
      */
     template <typename Functor>
     CALLER_DELETE Subscriber* addConstFunctor(Functor&& functor) {
-        add(std::forward<Subscriber>(makeConstFunctor<void, Sender, Parameters...>(std::forward<Functor>(functor))));
+        add(makeConstFunctor<void, Sender, Parameters...>(std::forward<Functor>(functor)));
 
         return &m_subscribers.back();
     }
@@ -228,7 +224,7 @@ public:
      */
     template <typename Functor, typename DecayedFunctor = typename std::decay<Functor>::type>
     CALLER_DELETE Subscriber* addNonConstFunctor(Functor&& functor) {
-        add(std::forward<Subscriber>(makeNonConstFunctor<void, Sender, Parameters...>(std::forward<DecayedFunctor>(functor))));
+        add(makeNonConstFunctor<void, Sender, Parameters...>(std::forward<DecayedFunctor>(functor)));
 
         return &m_subscribers.back();
     }

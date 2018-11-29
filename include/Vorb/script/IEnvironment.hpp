@@ -181,19 +181,19 @@ namespace vorb {
              * \return A pointer to the delegate, or nullptr if the script function wasn't found.
              */
             template <typename ReturnType, typename ...Parameters>
-            Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name) {
+            CALLER_DELETE Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name) {
                 return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
             }
 
             // ISSUE(Matthew): This could potentially be funky for languages other than Lua.
-            /*!
-             * \brief Creates a new script function from script env state.
-             *
-             * \return A pointer to the created script function.
-             */
-            GenericScriptFunction createScriptFunction() {
-                return static_cast<EnvironmentImpl*>(this)->createScriptFunction();
-            }
+            // /*!
+            //  * \brief Creates a new script function from script env state.
+            //  *
+            //  * \return A pointer to the created script function.
+            //  */
+            // GenericScriptFunction createScriptFunction() {
+            //     return static_cast<EnvironmentImpl*>(this)->createScriptFunction();
+            // }
 
             /*!
              * \brief Adds the given value to the top of the lua stack.

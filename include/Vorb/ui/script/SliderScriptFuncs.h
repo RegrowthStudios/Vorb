@@ -112,10 +112,13 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("getValueScaled",     makeDelegate(&impl::getValueScaled));
     env->addCDelegate("setRange",           makeDelegate(&impl::setRange));
 
-    env->addCDelegate("onValueChange", makeFunctor([=](Slider* slider) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
+    env->addCDelegate("onValueChange", makeFunctor([=](Slider* slider, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, i32>(name);
 
-        env->template addScriptFunctionToEvent<i32>(scriptFunc, &slider->ValueChange);
+        slider->ValueChange.add(*del, true);
+
+        delete del;
     }));
     env->setNamespaces();
 

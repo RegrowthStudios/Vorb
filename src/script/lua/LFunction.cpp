@@ -6,7 +6,7 @@
 
 const vscript::lua::LFunction vscript::lua::LFunction::Nil = vscript::lua::LFunction();
 
-vscript::lua::LFunction::~LFunction() {
+void vscript::lua::LFunction::dispose() {
     if (m_state != nullptr) {
         // Get script function table and unreference the function wrapped by this instance.
         lua_getfield(m_state, LUA_REGISTRYINDEX, SCRIPT_FUNCTION_TABLE);

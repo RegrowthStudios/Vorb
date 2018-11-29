@@ -188,17 +188,17 @@ namespace vorb {
                  */
                 template <typename ReturnType, typename ...Parameters,
                              typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
-                Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name);
+                CALLER_DELETE Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name);
                 template <typename ReturnType, typename ...Parameters,
                              typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
-                Delegate<void, Parameters...>* getScriptDelegate(const nString& name);
+                CALLER_DELETE Delegate<void, Parameters...>* getScriptDelegate(const nString& name);
 
-                /*!
-                 * \brief Creates a new script function from script env state.
-                 *
-                 * \return A pointer to the created script function.
-                 */
-                GenericScriptFunction createScriptFunction();
+                // /*!
+                //  * \brief Creates a new script function from script env state.
+                //  *
+                //  * \return A pointer to the created script function.
+                //  */
+                // GenericScriptFunction createScriptFunction();
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.
@@ -220,6 +220,13 @@ namespace vorb {
                  */
                 template<typename ...Namespaces>
                 void setNamespaces(Namespaces... namespaces);
+
+                /*!
+                 * \brief Returns the Lua handle.
+                 *
+                 * \return The Lua handle.
+                 */
+                Handle getHandle() { return m_state; }
             protected:
                 VORB_NON_COPYABLE(Environment);
 
@@ -338,7 +345,7 @@ void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction s
     Event<Parameters...>* event     = static_cast<Event<Parameters...>*>(eventBase);
     LFunction*            lFunction = static_cast<LFunction*>(scriptFunction);
 
-    m_listenerPool.addConstAutoHook(*event, std::move(*lFunction));
+    m_listenerPool.addConstAutoHook(*event, *lFunction);
 }
 
 // TODO(Matthew): Support multiple return types.
@@ -353,7 +360,7 @@ Delegate<ReturnType, Parameters...>* vscript::lua::Environment::getScriptDelegat
     // Construct returning LFunction.
     SRLFunction<ReturnType> srlFunction = lFunction->template withSingleReturn<ReturnType>();
 
-    return new Delegate<ReturnType, Parameters...>(std::move(makeConstFunctor<ReturnType, Parameters...>(srlFunction)));
+    return new Delegate<ReturnType, Parameters...>(makeConstFunctor<ReturnType, Parameters...>(srlFunction));
 }
 
 template <typename, typename ...Parameters, typename>
@@ -364,7 +371,7 @@ Delegate<void, Parameters...>* vscript::lua::Environment::getScriptDelegate(cons
     // If we couldn't find it, fail.
     if (lFunction == nullptr) return nullptr;
 
-    return new Delegate<void, Parameters...>(std::move(makeConstDelegate<void, Parameters...>(lFunction)));
+    return new Delegate<void, Parameters...>(makeConstFunctor<void, Parameters...>(*lFunction));
 }
 
 #endif // VORB_USING_SCRIPT

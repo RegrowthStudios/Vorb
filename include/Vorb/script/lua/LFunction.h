@@ -78,7 +78,12 @@ namespace vorb {
                     lFunction.m_name  = "";
                     lFunction.m_index = 0;
                 }
-                ~LFunction();
+                ~LFunction() { /* Empty */ }
+
+                /*!
+                 * \brief Disposes of the LFunction.
+                 */
+                void dispose();
 
                 /*!
                  * \brief Functions to call the wrapped lua function.
@@ -179,8 +184,6 @@ namespace vorb {
                 SRLFunction(const LFunction& lFunction) :
                     LFunction(lFunction.m_state, lFunction.m_name, lFunction.m_index)
                 { /* EMPTY */ }
-                // We don't want to be unreferencing here as this class is simply a copy
-                // of an LFunction with a return type.
                 ~SRLFunction()
                 { /* EMPTY */ }
 
@@ -234,8 +237,6 @@ namespace vorb {
                 RLFunction(const LFunction& lFunction) :
                     LFunction(lFunction.m_state, lFunction.m_name, lFunction.m_index)
                 { /* EMPTY */ }
-                // We don't want to be unreferencing here as this class is simply a copy
-                // of an LFunction with a return type.
                 ~RLFunction()
                 { /* EMPTY */ }
 
@@ -312,10 +313,10 @@ inline void vscript::lua::LFunction::call(Parameters... parameters) const {
     lua_rawgeti(m_state, -1, m_index);
 
     // Push the parameters of this call onto the stack.
-    pushParams(m_state, parameters...);
+    i32 numberParams = pushParams(m_state, parameters...);
 
     // Call the function with the provided parameters.
-    if (lua_pcall(m_state, sizeof...(Parameters), 0, 0) != 0) {
+    if (lua_pcall(m_state, numberParams, 0, 0) != 0) {
         // Print any errors that arose.
         dumpErrors();
     }
@@ -348,13 +349,13 @@ inline ReturnType vscript::lua::SRLFunction<ReturnType>::call(Parameters ...para
     lua_rawgeti(m_state, -1, m_index);
 
     // Push the parameters of this call onto the stack.
-    pushParams(m_state, parameters...);
+    i32 numberParams = pushParams(m_state, parameters...);
 
     // Store the depth of the stack before calling the lua function.
     i32 initialDepth = lua_gettop(m_state);
 
     // Call the function with the provided parameters.
-    if (lua_pcall(m_state, sizeof...(Parameters), ValueMediator<ReturnType>::getValueCount(), 0) != 0) {
+    if (lua_pcall(m_state, numberParams, ValueMediator<ReturnType>::getValueCount(), 0) != 0) {
         // Print any errors that arose.
         dumpErrors();
     }
@@ -395,13 +396,13 @@ inline void vscript::lua::RLFunction<ReturnTypes...>::call(OUT std::tuple<Return
     lua_rawgeti(m_state, -1, m_index);
 
     // Push the parameters of this call onto the stack.
-    pushParams(m_state, parameters...);
+    i32 numberParams = pushParams(m_state, parameters...);
 
     // Store the depth of the stack before calling the lua function.
     i32 initialDepth = lua_gettop(m_state);
 
     // Call the function with the provided parameters.
-    if (lua_pcall(m_state, sizeof...(Parameters), getTotalValueCount<ReturnTypes...>(), 0) != 0) {
+    if (lua_pcall(m_state, numberParams, getTotalValueCount<ReturnTypes...>(), 0) != 0) {
         // Print any errors that arose.
         dumpErrors();
     }

@@ -100,10 +100,13 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("isChecked",                makeDelegate(&impl::isChecked));
     env->addCDelegate("setChecked",               makeDelegate(&impl::setChecked));
 
-    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
+    env->addCDelegate("onValueChange", makeFunctor([=](CheckBox* checkBox, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, bool>(name);
 
-        env->template addScriptFunctionToEvent<bool>(scriptFunc, &checkBox->ValueChange);
+        checkBox->ValueChange.add(*del, true);
+
+        delete del;
     }));
     env->setNamespaces();
 

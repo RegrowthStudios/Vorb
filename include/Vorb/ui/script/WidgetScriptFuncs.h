@@ -321,35 +321,48 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
     env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
 
-    env->addCDelegate("onMouseClick", makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
+    env->addCDelegate("onMouseClick", makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseClick);
+        widget->MouseClick.add(*del, true);
+
+        // delete del;
     }));
-    env->addCDelegate("onMouseDown",  makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    env->addCDelegate("onMouseDown",  makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseDown);
+        widget->MouseDown.add(*del, true);
+
+        // delete del;
     }));
-    env->addCDelegate("onMouseUp",    makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    env->addCDelegate("onMouseUp",    makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseButtonEvent&>(scriptFunc, &widget->MouseUp);
+        widget->MouseUp.add(*del, true);
+
+        // delete del;
     }));
-    env->addCDelegate("onMouseEnter", makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    env->addCDelegate("onMouseEnter", makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseEnter);
+        widget->MouseEnter.add(*del, true);
+
+        // delete del;
     }));
-    env->addCDelegate("onMouseLeave", makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    env->addCDelegate("onMouseLeave", makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseLeave);
+        widget->MouseLeave.add(*del, true);
+
+        // delete del;
     }));
-    env->addCDelegate("onMouseMove",  makeFunctor([=](Widget* widget) {
-        vscript::GenericScriptFunction scriptFunc = env->createScriptFunction();
+    env->addCDelegate("onMouseMove",  makeFunctor([=](Widget* widget, nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const MouseMotionEvent&>(scriptFunc, &widget->MouseMove);
+        widget->MouseMove.add(*del, true);
+
+        // delete del;
     }));
     env->setNamespaces();
 }

@@ -329,9 +329,12 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setText",                              makeDelegate(&impl::setText));
     env->addCDelegate("setMaxDropHeight",                     makeDelegate(&impl::setMaxDropHeight));
 
-    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
-    env->addCDelegate("onValueChange", makeFunctor([=](ComboBox* comboBox, nString name) {
+    env->setNamespaces("UI", namespace_, "onValueChange");
+    env->addCDelegate("subscribe", makeFunctor([=](ComboBox* comboBox, nString name) {
         comboBox->ValueChange.add(env->template getScriptDelegate<void, Sender, const nString&>(name), true);
+    }));
+    env->addCDelegate("unsubscribe",  makeFunctor([=](ComboBox* comboBox, nString name) {
+        comboBox->ValueChange.remove(env->template getScriptDelegate<void, Sender, const nString&>(name, false));
     }));
     env->setNamespaces();
 

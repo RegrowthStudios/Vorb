@@ -123,15 +123,16 @@ namespace vorb {
                  * \tparam Parameters The parameters accepted by the script funciton.
                  *
                  * \param name The name of the script function.
+             * \param create Whether to try to create a register for the script function named if it isn't already registered.
                  *
                  * \return A pointer to the delegate, or nullptr if the script function wasn't found.
                  */
                 template <typename ReturnType, typename ...Parameters,
                              typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
-                CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name);
+                CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name, bool create = true);
                 template <typename ReturnType, typename ...Parameters,
                              typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
-                CALLER_DELETE Delegate<void, Parameters...> getScriptDelegate(const nString& name);
+                CALLER_DELETE Delegate<void, Parameters...> getScriptDelegate(const nString& name, bool create = true);
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.
@@ -296,6 +297,7 @@ inline bool vscript::lua::Environment::addValue(const nString& name, Type value)
 
 template<typename ...Namespaces>
 inline void vscript::lua::Environment::setNamespaces(Namespaces... namespaces) {
+    // TODO(Matthew): Does popping like this actually work? Some things may be pushed onto stack above namespaces...
     // Pop any namespaces currently set.
     if (m_namespaceDepth > 0) {
         lua_pop(m_state, m_namespaceDepth);
@@ -316,14 +318,14 @@ inline void vscript::lua::Environment::pushNamespaces(Namespace namespace_, Name
 
 // TODO(Matthew): Support multiple return types.
 template <typename ReturnType, typename ...Parameters, typename>
-Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name) {
+Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name, bool create /*= true*/) {
     // Get the LFunction we want to wrap.
     LFunction* lFunction = getLFunction(name);
 
     // If we couldn't find it, try to make it.
     if (lFunction == nullptr) {
         // If we couldn't make it, fail.
-        if (makeLFunction(name) != 0) return NilDelegate<ReturnType, Parameters...>;
+        if (!create || makeLFunction(name) != 0) return NilDelegate<ReturnType, Parameters...>;
 
         lFunction = getLFunction(name);
     }
@@ -335,14 +337,14 @@ Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate
 }
 
 template <typename, typename ...Parameters, typename>
-Delegate<void, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name) {
+Delegate<void, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name, bool create /*= true*/) {
     // Get the LFunction we want to wrap.
     LFunction* lFunction = getLFunction(name);
 
     // If we couldn't find it, fail.
     if (lFunction == nullptr) {
         // If we couldn't make it, fail.
-        if (makeLFunction(name) != 0) return NilDelegate<void, Parameters...>;
+        if (!create || makeLFunction(name) != 0) return NilDelegate<void, Parameters...>;
 
         lFunction = getLFunction(name);
     }

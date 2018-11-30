@@ -60,15 +60,26 @@ void vui::GameWindowScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvir
         return impl::getCurrentResolution(window);
     }));
 
-    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
-    env->addCDelegate("onResize", makeFunctor([=](nString name) {
+    env->setNamespaces("UI", "GameWindow", "onResize");
+    env->addCDelegate("subscribe", makeFunctor([=](nString name) {
         vui::InputDispatcher::window.onResize.add(env->template getScriptDelegate<void, Sender, const WindowResizeEvent&>(name), true);
     }));
-    env->addCDelegate("onFile", makeFunctor([=](nString name) {
+    env->addCDelegate("unsubscribe",  makeFunctor([=](nString name) {
+        vui::InputDispatcher::window.onResize.remove(env->template getScriptDelegate<void, Sender, const WindowResizeEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", "GameWindow", "onFile");
+    env->addCDelegate("subscribe", makeFunctor([=](nString name) {
         vui::InputDispatcher::window.onFile.add(env->template getScriptDelegate<void, Sender, const WindowFileEvent&>(name), true);
     }));
-    env->addCDelegate("onClose", makeFunctor([=](nString name) {
+    env->addCDelegate("unsubscribe",  makeFunctor([=](nString name) {
+        vui::InputDispatcher::window.onFile.remove(env->template getScriptDelegate<void, Sender, const WindowFileEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", "GameWindow", "onClose");
+    env->addCDelegate("subscribe", makeFunctor([=](nString name) {
         vui::InputDispatcher::window.onClose.add(env->template getScriptDelegate<void, Sender>(name), true);
+    }));
+    env->addCDelegate("unsubscribe",  makeFunctor([=](nString name) {
+        vui::InputDispatcher::window.onClose.remove(env->template getScriptDelegate<void, Sender>(name, false));
     }));
     env->setNamespaces();
 }

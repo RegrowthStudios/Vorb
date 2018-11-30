@@ -134,12 +134,13 @@ namespace vorb {
              * \tparam Parameters The parameters accepted by the script funciton.
              *
              * \param name The name of the script function.
+             * \param create Whether to try to create a register for the script function named if it isn't already registered.
              *
              * \return A pointer to the delegate, or nullptr if the script function wasn't found.
              */
             template <typename ReturnType, typename ...Parameters>
-            CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name) {
-                return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
+            CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name, bool create = true) {
+                return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name, create);
             }
 
             /*!

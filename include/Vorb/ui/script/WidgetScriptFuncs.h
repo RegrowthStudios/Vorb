@@ -321,24 +321,48 @@ void vui::WidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setRawPaddingRight",  makeDelegate(&impl::setRawPaddingRight));
     env->addCDelegate("setRawPaddingBottom", makeDelegate(&impl::setRawPaddingBottom));
 
-    // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
-    env->addCDelegate("onMouseClick", makeFunctor([=](Widget* widget, nString name) {
+
+    env->setNamespaces("UI", namespace_, "onMouseClick");
+    env->addCDelegate("subscribe", makeFunctor([=](Widget* widget, nString name) {
         widget->MouseClick.add(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name), true);
     }));
-    env->addCDelegate("onMouseDown",  makeFunctor([=](Widget* widget, nString name) {
+    env->addCDelegate("unsubscribe", makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseClick.remove(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", namespace_, "onMouseDown");
+    env->addCDelegate("subscribe",  makeFunctor([=](Widget* widget, nString name) {
         widget->MouseDown.add(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name), true);
     }));
-    env->addCDelegate("onMouseUp",    makeFunctor([=](Widget* widget, nString name) {
+    env->addCDelegate("unsubscribe",  makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseDown.remove(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", namespace_, "onMouseUp");
+    env->addCDelegate("subscribe",    makeFunctor([=](Widget* widget, nString name) {
         widget->MouseUp.add(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name), true);
     }));
-    env->addCDelegate("onMouseEnter", makeFunctor([=](Widget* widget, nString name) {
+    env->addCDelegate("unsubscribe",    makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseUp.remove(env->template getScriptDelegate<void, Sender, const MouseButtonEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", namespace_, "onMouseEnter");
+    env->addCDelegate("subscribe", makeFunctor([=](Widget* widget, nString name) {
         widget->MouseEnter.add(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name), true);
     }));
-    env->addCDelegate("onMouseLeave", makeFunctor([=](Widget* widget, nString name) {
+    env->addCDelegate("unsubscribe",    makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseEnter.remove(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", namespace_, "onMouseLeave");
+    env->addCDelegate("subscribe", makeFunctor([=](Widget* widget, nString name) {
         widget->MouseLeave.add(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name), true);
     }));
-    env->addCDelegate("onMouseMove",  makeFunctor([=](Widget* widget, nString name) {
+    env->addCDelegate("unsubscribe",    makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseLeave.remove(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name, false));
+    }));
+    env->setNamespaces("UI", namespace_, "onMouseMove");
+    env->addCDelegate("subscribe",  makeFunctor([=](Widget* widget, nString name) {
         widget->MouseMove.add(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name), true);
+    }));
+    env->addCDelegate("unsubscribe",    makeFunctor([=](Widget* widget, nString name) {
+        widget->MouseMove.remove(env->template getScriptDelegate<void, Sender, const MouseMotionEvent&>(name, false));
     }));
     env->setNamespaces();
 }

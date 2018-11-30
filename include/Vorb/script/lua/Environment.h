@@ -184,6 +184,16 @@ namespace vorb {
                  */
                 void addCClosure(const nString& name, ui8 upvalueCount, CFunction::Type function);
 
+
+                /*!
+                * \brief Makes an LFunction instance from the given name.
+                *
+                * \param name The name of the Lua function to create an LFunction register of.
+                *
+                * \return The success code (0 for success, negative for failure).
+                */
+                i32 makeLFunction(const nString& name);
+
                 /*!
                  * \brief Add a Lua function to the list of registered Lua functions.
                  *
@@ -310,8 +320,13 @@ Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate
     // Get the LFunction we want to wrap.
     LFunction* lFunction = getLFunction(name);
 
-    // If we couldn't find it, fail.
-    if (lFunction == nullptr) return NilDelegate<ReturnType, Parameters...>;
+    // If we couldn't find it, try to make it.
+    if (lFunction == nullptr) {
+        // If we couldn't make it, fail.
+        if (makeLFunction(name) != 0) return NilDelegate<ReturnType, Parameters...>;
+
+        lFunction = getLFunction(name);
+    }
 
     // Construct returning LFunction.
     SRLFunction<ReturnType> srlFunction = lFunction->template withSingleReturn<ReturnType>();
@@ -325,7 +340,12 @@ Delegate<void, Parameters...> vscript::lua::Environment::getScriptDelegate(const
     LFunction* lFunction = getLFunction(name);
 
     // If we couldn't find it, fail.
-    if (lFunction == nullptr) return NilDelegate<void, Parameters...>;
+    if (lFunction == nullptr) {
+        // If we couldn't make it, fail.
+        if (makeLFunction(name) != 0) return NilDelegate<void, Parameters...>;
+
+        lFunction = getLFunction(name);
+    }
 
     return makeConstDelegate<void, Parameters...>(lFunction);
 }

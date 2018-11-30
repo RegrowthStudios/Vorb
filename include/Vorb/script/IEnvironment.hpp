@@ -115,49 +115,6 @@ namespace vorb {
             virtual bool run(const nString& script) = 0;
 
             /*!
-             * \brief Register an event with the script environment.
-             * 
-             * The notion behind this is that we are able to add the subscriber
-             * to the appropriate event using a generic function pointer. This
-             * way we need not use any templating here.
-             *
-             * \param name The name of the event for use by lua scripts when subscribing.
-             * \param eventData The event to be registered with a pointer to the
-             *                  function which adds subscribers to the event.
-             */
-            bool registerEvent(const nString& name, EventData eventData) {
-                return m_events.insert({ name, eventData }).second;
-            }
-            /*!
-             * \brief Register an event with the script environment.
-             *
-             * The notion behind this is that we are able to add the subscriber
-             * to the appropriate event using a generic function pointer. This
-             * way we need not use any templating here.
-             *
-             * \param name The name of the event for use by lua scripts when subscribing.
-             * \param eventData The event to be registered with a pointer to the
-             *                  function which adds subscribers to the event.
-             */
-            template <typename ...Parameters>
-            bool registerEvent(const nString& name, Event<Parameters...>* event) {
-                return m_events.insert({ name, { static_cast<EventBase*>(event), &EnvironmentImpl::template addScriptFunctionToEvent<Parameters...> } }).second;
-            }
-
-            /*!
-             * \brief Adds the provided LFunction to the provided Event.
-             *
-             * \tparam Parameters The list of parameter types provided by the Event on trigger.
-             *
-             * \param scriptFunction The Lua function to register to the event.
-             * \param eventBase The event to subscribe the Lua function to.
-             */
-            template <typename ...Parameters>
-            void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-                static_cast<EnvironmentImpl*>(this)->template addScriptFunctionToEvent<Parameters...>(scriptFunction, eventBase);
-            }
-
-            /*!
              * \brief Add a C++ delegate as a hook with name "name" for Lua scripts to call.
              *
              * Note that this instance is here to act as a fake virtualisation of member template.
@@ -183,16 +140,6 @@ namespace vorb {
             template <typename ReturnType, typename ...Parameters>
             CALLER_DELETE Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name) {
                 return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
-            }
-
-            // ISSUE(Matthew): This could potentially be funky for languages other than Lua.
-            /*!
-             * \brief Creates a new script function from script env state.
-             *
-             * \return A pointer to the created script function.
-             */
-            GenericScriptFunction createScriptFunction() {
-                return static_cast<EnvironmentImpl*>(this)->createScriptFunction();
             }
 
             /*!

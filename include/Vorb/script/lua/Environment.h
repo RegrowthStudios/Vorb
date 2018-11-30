@@ -47,6 +47,8 @@ namespace vorb {
 
             class Environment : public IEnvironment<Environment> {
                 using LFunctionList = std::unordered_map<nString, LFunction*>;
+
+                friend int registerLFunction(Handle state);
             public:
                 Environment();
                 Environment(const nString& filepath);
@@ -106,37 +108,6 @@ namespace vorb {
                 virtual bool run(const nString& script) override;
 
                 /*!
-                 * \brief Adds the provided LFunction to the provided Event.
-                 *
-                 * \tparam Parameters The list of parameter types provided by the Event on trigger.
-                 *
-                 * \param scriptFunction The Lua function to register to the event.
-                 * \param eventBase The event to subscribe the Lua function to.
-                 */
-                template <typename ...Parameters>
-                void addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase);
-
-                // TODO(Matthew): Can addCFunction and addCClosure be generalised for the interface?
-                /*!
-                 * \brief Add a C++ function as a hook with name "name" for Lua scripts to call.
-                 *
-                 * \param name The name of the function to add.
-                 * \param function The function to add.
-                 *
-                 * Warning: function must satisfy the signature int(*)(lua_State*).
-                 */
-                void addCFunction(const nString& name, CFunction::Type function);
-                /*!
-                 * \brief Add a C++ function that captures upvalueCount many upvalues - variables accessible at every call of the function.
-                 *
-                 * \param name The name of the function to add as a closure.
-                 * \param upvalueCount The number of values at the top of the Lua stack to capture in this closure.
-                 * \param function The function to add.
-                 *
-                 * Warning: function must satisfy the signature int(*)(lua_State*).
-                 */
-                void addCClosure(const nString& name, ui8 upvalueCount, CFunction::Type function);
-                /*!
                  * \brief Add a C++ delegate as a hook with name "name" for Lua scripts to call.
                  *
                  * \param name The name of the delegate to add.
@@ -144,37 +115,6 @@ namespace vorb {
                  */
                 template<typename ReturnType, typename ...Parameters>
                 void addCDelegate(const nString& name, Delegate<ReturnType, Parameters...>&& delegate);
-
-                /*!
-                 * \brief Add a Lua function to the list of registered Lua functions.
-                 *
-                 * NOTE: This should only be called by makeLFunction.
-                 *
-                 * \param lFunction The Lua function to register.
-                 *
-                 * \return True on successful register, false otherwise.
-                 */
-                bool addLFunction(LFunction* lFunction);
-                /*!
-                 * \brief Subscribe a Lua callback to the named event.
-                 *
-                 * NOTE: This should only be called by makeLCallback.
-                 *
-                 * \param eventName The event to subscribe the Lua function to.
-                 * \param lFunction The Lua function to register.
-                 *
-                 * \return True on successful subscription, false otherwise.
-                 */
-                bool subscribeLFunction(const nString& eventName, LFunction* lFunction);
-
-                /*!
-                 * \brief Retrieves the named Lua function from the registered list.
-                 *
-                 * \param lFunction The Lua function to register.
-                 *
-                 * \return Pointer to the function obtained, or nullptr if not found.
-                 */
-                LFunction* getLFunction(const nString& name);
 
                 /*!
                  * \brief Returns a pointer delegate wrapping the named script function.
@@ -192,13 +132,6 @@ namespace vorb {
                 template <typename ReturnType, typename ...Parameters,
                              typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
                 CALLER_DELETE Delegate<void, Parameters...>* getScriptDelegate(const nString& name);
-
-                /*!
-                 * \brief Creates a new script function from script env state.
-                 *
-                 * \return A pointer to the created script function.
-                 */
-                GenericScriptFunction createScriptFunction();
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.
@@ -229,6 +162,45 @@ namespace vorb {
                 Handle getHandle() { return m_state; }
             protected:
                 VORB_NON_COPYABLE(Environment);
+
+                // TODO(Matthew): Can addCFunction and addCClosure be generalised for the interface?
+                /*!
+                 * \brief Add a C++ function as a hook with name "name" for Lua scripts to call.
+                 *
+                 * \param name The name of the function to add.
+                 * \param function The function to add.
+                 *
+                 * Warning: function must satisfy the signature int(*)(lua_State*).
+                 */
+                void addCFunction(const nString& name, CFunction::Type function);
+                /*!
+                 * \brief Add a C++ function that captures upvalueCount many upvalues - variables accessible at every call of the function.
+                 *
+                 * \param name The name of the function to add as a closure.
+                 * \param upvalueCount The number of values at the top of the Lua stack to capture in this closure.
+                 * \param function The function to add.
+                 *
+                 * Warning: function must satisfy the signature int(*)(lua_State*).
+                 */
+                void addCClosure(const nString& name, ui8 upvalueCount, CFunction::Type function);
+
+                /*!
+                 * \brief Add a Lua function to the list of registered Lua functions.
+                 *
+                 * \param lFunction The Lua function to register.
+                 *
+                 * \return True on successful register, false otherwise.
+                 */
+                bool addLFunction(LFunction* lFunction);
+
+                /*!
+                 * \brief Retrieves the named Lua function from the registered list.
+                 *
+                 * \param lFunction The Lua function to register.
+                 *
+                 * \return Pointer to the function obtained, or nullptr if not found.
+                 */
+                LFunction* getLFunction(const nString& name);
 
                 /*!
                  * \brief Recursively pushes tables onto the top of the lua stack.
@@ -270,15 +242,7 @@ namespace vorb {
              *
              * \return The number of elements returned to the Lua stack.
              */
-            int makeLFunction(Handle state);
-            /*!
-             * \brief Makes an LFunction instance of the registering Lua function, subscribing it to the specified event.
-             *
-             * \param state The Lua state handle managing the script the registering function is from.
-             *
-             * \return The number of elements returned to the Lua stack.
-             */
-            int makeLCallback(Handle state);
+            int registerLFunction(Handle state);
         }
     }
 }
@@ -338,14 +302,6 @@ inline void vscript::lua::Environment::pushNamespaces(Namespace namespace_, Name
     // Should be good enough solution given the insane depth of namespaces needed to cause stack overflow.
     pushNamespace(namespace_);
     pushNamespaces(namespaces...);
-}
-
-template <typename ...Parameters>
-void vscript::lua::Environment::addScriptFunctionToEvent(GenericScriptFunction scriptFunction, EventBase* eventBase) {
-    Event<Parameters...>* event     = static_cast<Event<Parameters...>*>(eventBase);
-    LFunction*            lFunction = static_cast<LFunction*>(scriptFunction);
-
-    m_listenerPool.addConstAutoHook(*event, *lFunction);
 }
 
 // TODO(Matthew): Support multiple return types.

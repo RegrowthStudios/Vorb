@@ -61,20 +61,29 @@ void vui::GameWindowScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvir
     }));
 
     // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
-    env->addCDelegate("onResize", makeFunctor([=]() {
-        auto scriptFunction = env->createScriptFunction();
+    env->addCDelegate("onResize", makeFunctor([=](nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const WindowResizeEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const WindowResizeEvent&>(scriptFunction, &vui::InputDispatcher::window.onResize);
+        vui::InputDispatcher::window.onResize.add(*del, true);
+
+        del->neuter();
+        delete del;
     }));
-    env->addCDelegate("onFile", makeFunctor([=]() {
-        auto scriptFunction = env->createScriptFunction();
+    env->addCDelegate("onFile", makeFunctor([=](nString name) {
+        auto del = env->template getScriptDelegate<void, Sender, const WindowFileEvent&>(name);
 
-        env->template addScriptFunctionToEvent<const WindowFileEvent&>(scriptFunction, &vui::InputDispatcher::window.onFile);
+        vui::InputDispatcher::window.onFile.add(*del, true);
+
+        del->neuter();
+        delete del;
     }));
-    env->addCDelegate("onClose", makeFunctor([=]() {
-        auto scriptFunction = env->createScriptFunction();
+    env->addCDelegate("onClose", makeFunctor([=](nString name) {
+        auto del = env->template getScriptDelegate<void, Sender>(name);
 
-        env->template addScriptFunctionToEvent<>(scriptFunction, &vui::InputDispatcher::window.onClose);
+        vui::InputDispatcher::window.onClose.add(*del, true);
+
+        del->neuter();
+        delete del;
     }));
     env->setNamespaces();
 }

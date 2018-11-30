@@ -41,6 +41,8 @@ namespace vorb {
         namespace ComboBoxScriptFuncs {
             using DropButtonComparator = Delegate<bool, size_t, Button*>;
 
+            const DropButtonComparator NilDropButtonComparator = NilDelegate<bool, size_t, Button*>;
+
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
@@ -220,11 +222,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonFontOfItem",             makeDelegate(&impl::setDropButtonFontOfItem));
     env->addCDelegate("setDropButtonFontAtIndex",            makeDelegate(&impl::setDropButtonFontAtIndex));
     env->addCDelegate("setDropButtonFontByCompare",          makeFunctor([env] (ComboBox* comboBox, vg::SpriteFont* font, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonFontByCompare(comboBox, font, *compare);
+        impl::setDropButtonFontByCompare(comboBox, font, compare);
     }));
     env->addCDelegate("setMainButtonTexture",                 makeDelegate(&impl::setMainButtonTexture));
     env->addCDelegate("setDropBoxTexture",                    makeDelegate(&impl::setDropBoxTexture));
@@ -232,11 +234,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonTextureOfItem",           makeDelegate(&impl::setDropButtonTextureOfItem));
     env->addCDelegate("setDropButtonTextureAtIndex",          makeDelegate(&impl::setDropButtonTextureAtIndex));
     env->addCDelegate("setDropButtonTextureByCompare",        makeFunctor([env] (ComboBox* comboBox, VGTexture texture, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextureByCompare(comboBox, texture, *compare);
+        impl::setDropButtonTextureByCompare(comboBox, texture, compare);
     }));
     env->addCDelegate("setMainButtonHoverTexture",            makeDelegate(&impl::setMainButtonHoverTexture));
     env->addCDelegate("setDropBoxHoverTexture",               makeDelegate(&impl::setDropBoxHoverTexture));
@@ -244,11 +246,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonHoverTextureOfItem",      makeDelegate(&impl::setDropButtonHoverTextureOfItem));
     env->addCDelegate("setDropButtonHoverTextureAtIndex",     makeDelegate(&impl::setDropButtonHoverTextureAtIndex));
     env->addCDelegate("setDropButtonHoverTextureByCompare",   makeFunctor([env] (ComboBox* comboBox, VGTexture texture, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonHoverTextureByCompare(comboBox, texture, *compare);
+        impl::setDropButtonHoverTextureByCompare(comboBox, texture, compare);
     }));
     env->addCDelegate("setBackColor",                         makeDelegate(&impl::setBackColor));
     env->addCDelegate("setMainButtonBackColor",               makeDelegate(&impl::setMainButtonBackColor));
@@ -257,11 +259,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonBackColorOfItem",         makeDelegate(&impl::setDropButtonBackColorOfItem));
     env->addCDelegate("setDropButtonBackColorAtIndex",        makeDelegate(&impl::setDropButtonBackColorAtIndex));
     env->addCDelegate("setDropButtonBackColorByCompare",      makeFunctor([env] (ComboBox* comboBox, color4 color, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonBackColorByCompare(comboBox, color, *compare);
+        impl::setDropButtonBackColorByCompare(comboBox, color, compare);
     }));
     env->addCDelegate("setBackHoverColor",                    makeDelegate(&impl::setBackHoverColor));
     env->addCDelegate("setMainButtonBackHoverColor",          makeDelegate(&impl::setMainButtonBackHoverColor));
@@ -270,11 +272,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonBackHoverColorOfItem",    makeDelegate(&impl::setDropButtonBackHoverColorOfItem));
     env->addCDelegate("setDropButtonBackHoverColorAtIndex",   makeDelegate(&impl::setDropButtonBackHoverColorAtIndex));
     env->addCDelegate("setDropButtonBackHoverColorByCompare", makeFunctor([env] (ComboBox* comboBox, color4 color, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonBackHoverColorByCompare(comboBox, color, *compare);
+        impl::setDropButtonBackHoverColorByCompare(comboBox, color, compare);
     }));
     env->addCDelegate("setTextColor",                         makeDelegate(&impl::setTextColor));
     env->addCDelegate("setMainButtonTextColor",               makeDelegate(&impl::setMainButtonTextColor));
@@ -282,11 +284,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonTextColorOfItem",         makeDelegate(&impl::setDropButtonTextColorOfItem));
     env->addCDelegate("setDropButtonTextColorAtIndex",        makeDelegate(&impl::setDropButtonTextColorAtIndex));
     env->addCDelegate("setDropButtonTextColorByCompare",      makeFunctor([env] (ComboBox* comboBox, color4 color, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextColorByCompare(comboBox, color, *compare);
+        impl::setDropButtonTextColorByCompare(comboBox, color, compare);
     }));
     env->addCDelegate("setTextHoverColor",                    makeDelegate(&impl::setTextHoverColor));
     env->addCDelegate("setMainButtonTextHoverColor",          makeDelegate(&impl::setMainButtonTextHoverColor));
@@ -294,11 +296,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonTextHoverColorOfItem",    makeDelegate(&impl::setDropButtonTextHoverColorOfItem));
     env->addCDelegate("setDropButtonTextHoverColorAtIndex",   makeDelegate(&impl::setDropButtonTextHoverColorAtIndex));
     env->addCDelegate("setDropButtonTextHoverColorByCompare", makeFunctor([env] (ComboBox* comboBox, color4 color, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextHoverColorByCompare(comboBox, color, *compare);
+        impl::setDropButtonTextHoverColorByCompare(comboBox, color, compare);
     }));
     env->addCDelegate("setTextScale",                         makeDelegate(&impl::setTextScale));
     env->addCDelegate("setMainButtonTextScale",               makeDelegate(&impl::setMainButtonTextScale));
@@ -306,11 +308,11 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonTextScaleOfItem",         makeDelegate(&impl::setDropButtonTextScaleOfItem));
     env->addCDelegate("setDropButtonTextScaleAtIndex",        makeDelegate(&impl::setDropButtonTextScaleAtIndex));
     env->addCDelegate("setDropButtonTextScaleByCompare",      makeFunctor([env] (ComboBox* comboBox, f32v2 scale, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextScaleByCompare(comboBox, scale, *compare);
+        impl::setDropButtonTextScaleByCompare(comboBox, scale, compare);
     }));
     env->addCDelegate("setTextAlign",                         makeDelegate(&impl::setTextAlign));
     env->addCDelegate("setMainButtonTextAlign",               makeDelegate(&impl::setMainButtonTextAlign));
@@ -318,23 +320,18 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setDropButtonTextAlignOfItem",         makeDelegate(&impl::setDropButtonTextAlignOfItem));
     env->addCDelegate("setDropButtonTextAlignAtIndex",        makeDelegate(&impl::setDropButtonTextAlignAtIndex));
     env->addCDelegate("setDropButtonTextAlignByCompare",      makeFunctor([env] (ComboBox* comboBox, vg::TextAlign align, nString compareName) {
-        DropButtonComparator* compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
+        DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
-        if (!compare) return;
+        if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextAlignByCompare(comboBox, align, *compare);
+        impl::setDropButtonTextAlignByCompare(comboBox, align, compare);
     }));
     env->addCDelegate("setText",                              makeDelegate(&impl::setText));
     env->addCDelegate("setMaxDropHeight",                     makeDelegate(&impl::setMaxDropHeight));
 
     // TODO(Matthew): Need to give ownership of these delegates to someone in order to not end up leaking them.
     env->addCDelegate("onValueChange", makeFunctor([=](ComboBox* comboBox, nString name) {
-        auto del = env->template getScriptDelegate<void, Sender, const nString&>(name);
-
-        comboBox->ValueChange.add(*del, true);
-
-        del->neuter();
-        delete del;
+        comboBox->ValueChange.add(env->template getScriptDelegate<void, Sender, const nString&>(name), true);
     }));
     env->setNamespaces();
 

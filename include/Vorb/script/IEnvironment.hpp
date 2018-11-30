@@ -138,7 +138,7 @@ namespace vorb {
              * \return A pointer to the delegate, or nullptr if the script function wasn't found.
              */
             template <typename ReturnType, typename ...Parameters>
-            CALLER_DELETE Delegate<ReturnType, Parameters...>* getScriptDelegate(const nString& name) {
+            CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name) {
                 return static_cast<EnvironmentImpl*>(this)->template getScriptDelegate<ReturnType, Parameters...>(name);
             }
 

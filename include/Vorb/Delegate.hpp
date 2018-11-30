@@ -473,6 +473,8 @@ protected:
     Executor m_executor;
     Deletor  m_deletor;
 };
+template<typename ReturnType, typename ...Parameters>
+const Delegate<ReturnType, Parameters...> NilDelegate = Delegate<ReturnType, Parameters...>();
 
 /****************************************************************************\
  *                 Helper for Template Parameter Inference                  *

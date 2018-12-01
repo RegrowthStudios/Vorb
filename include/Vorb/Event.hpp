@@ -70,7 +70,8 @@ public:
      * \param sender The owner of the event.
      */
     Event(Sender sender = nullptr) :
-        EventBase(sender)
+        EventBase(sender),
+        m_triggering(false)
     { /* Empty */ }
     /*!
      * \brief Copies the event and subscribers. Ownership must be considered.
@@ -79,8 +80,10 @@ public:
      * \param event The event to copy.
      */
     Event(const Event& event) {
-        m_sender      = event.m_sender;
-        m_subscribers = event.m_subscribers;
+        m_sender       = event.m_sender;
+        m_subscribers  = event.m_subscribers;
+        m_removalQueue = event.m_removalQueue;
+        m_triggering   = false;
     }
     /*!
      * \brief Moves the event. Ownership is guaranteed to be transferred.
@@ -88,8 +91,10 @@ public:
      * \param event The event to copy.
      */
     Event(Event&& event) {
-        m_sender      = event.m_sender;
-        m_subscribers = std::move(event.m_subscribers);
+        m_sender       = event.m_sender;
+        m_subscribers  = std::move(event.m_subscribers);
+        m_removalQueue = std::move(event.m_removalQueue);
+        m_triggering   = false;
     }
 
     /*!
@@ -101,8 +106,10 @@ public:
      * \return The event that has been copied to.
      */
     Event& operator=(const Event& event) {
-        m_sender      = event.m_sender;
-        m_subscribers = event.m_subscribers;
+        m_sender       = event.m_sender;
+        m_subscribers  = event.m_subscribers;
+        m_removalQueue = event.m_removalQueue;
+        m_triggering   = false;
 
         return *this;
     }
@@ -114,8 +121,10 @@ public:
      * \return The event that has been copied to.
      */
     Event& operator=(Event&& event) {
-        m_sender      = event.m_sender;
-        m_subscribers = std::move(event.m_subscribers);
+        m_sender       = event.m_sender;
+        m_subscribers  = std::move(event.m_subscribers);
+        m_removalQueue = std::move(event.m_removalQueue);
+        m_triggering   = false;
 
         return *this;
     }
@@ -241,9 +250,14 @@ public:
      * \param subscriber The subscriber to remove from the event.
      */
     void remove(const Subscriber& subscriber) {
-        const auto& it = std::find(m_subscribers.begin(), m_subscribers.end(), subscriber);
-        if (it != m_subscribers.end()) {
-            m_subscribers.erase(it);
+        // We don't want to be invalidating iterators by removing subscribers mid-trigger.
+        if (m_triggering) {
+            m_removalQueue.emplace_back(subscriber);
+        } else {
+            const auto& it = std::find(m_subscribers.begin(), m_subscribers.end(), subscriber);
+            if (it != m_subscribers.end()) {
+                m_subscribers.erase(it);
+            }
         }
     }
     /*!
@@ -263,8 +277,21 @@ public:
      * \param parameters The parameters to pass to subscribers.
      */
     void trigger(Parameters... parameters) {
+        // We don't want to be invalidating iterators by removing subscribers mid-trigger.
+        m_triggering = true;
+
         for (auto& subscriber : m_subscribers) {
             subscriber(m_sender, parameters...);
+        }
+
+        m_triggering = false;
+
+        // Remove any subscribers that requested to be unsubscribed during triggering.
+        for (auto& unsubscriber : m_removalQueue) {
+            const auto& it = std::find(m_subscribers.begin(), m_subscribers.end(), unsubscriber);
+            if (it != m_subscribers.end()) {
+                m_subscribers.erase(it);
+            }
         }
     }
     /*!
@@ -279,6 +306,8 @@ public:
     }
 protected:
     Subscribers m_subscribers;
+    Subscribers m_removalQueue;
+    bool        m_triggering;
 };
 
 /**************************************************************************\

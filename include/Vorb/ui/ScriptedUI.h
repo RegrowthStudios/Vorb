@@ -50,18 +50,16 @@ namespace vorb {
         template <typename ScriptEnvironmentImpl>
         struct ScriptedView {
             Viewport* viewport;
-            ViewScriptEnvironment<ScriptEnvironmentImpl>* scriptEnv;
+            ViewScriptEnvironment<ScriptEnvironmentImpl>* viewEnv;
         };
 
-        // TODO(Matthew): Subscription to widget events.
-        // TODO(Matthew): Unsubscription from events (also in vscript::IEnvironment!).
         // TODO(Matthew): Make a non-scripted version.
         template <typename ScriptEnvironmentImpl>
         class ScriptedUI {
         public:
-            using ZIndex    = ui16;
-            using ScriptEnv = ViewScriptEnvironment<ScriptEnvironmentImpl>;
-            using UIViews   = std::map<ZIndex, ScriptedView<ScriptEnvironmentImpl>>;
+            using ZIndex  = ui16;
+            using ViewEnv = ViewScriptEnvironment<ScriptEnvironmentImpl>;
+            using UIViews = std::map<ZIndex, ScriptedView<ScriptEnvironmentImpl>>;
 
             /*!
              * \brief Just ensures ScriptedUI instance is in valid state, use init to prepare instance for use.
@@ -75,15 +73,17 @@ namespace vorb {
             /*!
              * \brief Initialises the instance for use.
              *
+             * \param ownerScreen The screen that owns this scripted UI.
              * \param window The game window this UI will be rendered to.
+             * \param textureCache The cache to use for textures used by this UI.
              * \param defaultFont The default font for views to use.
              * \param spriteBatch The spritebatch for view renderers to use.
              */
-            void init(const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*!
              * \brief Disposes the managed views and resets pointers.
              */
-            void dispose();
+            virtual void dispose();
 
             /*!
              * \brief Tells each view to update.
@@ -92,13 +92,13 @@ namespace vorb {
              *
              * \param dt The time delta between this update and the last.
              */
-            void update(f32 dt = 0.0f);
+            virtual void update(f32 dt = 0.0f);
             /*!
              * \brief Tells each view to draw.
              *
              * Views called in order of z-index.
              */
-            void draw();
+            virtual void draw();
 
             /*!
              * \brief Gets the texture cache used by the UI.
@@ -184,7 +184,7 @@ namespace vorb {
              *
              * \return A pointer to the view script env of the view found, or nullptr if no view found as named.
              */
-            ScriptEnv* getEnv(const nString& name);
+            ViewEnv* getEnv(const nString& name);
 
             /*!
              * \brief Enables the pointed-to view.
@@ -259,8 +259,9 @@ namespace vorb {
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
 
-            void prepareScriptEnv(ScriptEnv* scriptEnv);
+            virtual void prepareScriptEnv(ViewEnv* viewEnv);
 
+            vui::IGameScreen* m_ownerScreen;  ///< The screen that owns this UI.
             UIViews           m_views;        ///< List of UI views in draw order.
             const GameWindow* m_window;       ///< Pointer to the window the UI views will be drawn to.
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
@@ -285,7 +286,8 @@ vui::ScriptedUI<ScriptEnvironmentImpl>::~ScriptedUI() {
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ScriptedUI<ScriptEnvironmentImpl>::init(const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::ScriptedUI<ScriptEnvironmentImpl>::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+    m_ownerScreen  = ownerScreen;
     m_window       = window;
     m_textureCache = textureCache;
     m_defaultFont  = defaultFont;
@@ -296,9 +298,9 @@ template <typename ScriptEnvironmentImpl>
 void vui::ScriptedUI<ScriptEnvironmentImpl>::dispose() {
     for (auto& view : m_views) {
         view.second.viewport->dispose();
-        view.second.scriptEnv->dispose();
+        view.second.viewEnv->dispose();
         delete view.second.viewport;
-        delete view.second.scriptEnv;
+        delete view.second.viewEnv;
     }
     UIViews().swap(m_views);
 
@@ -311,7 +313,7 @@ template <typename ScriptEnvironmentImpl>
 void vui::ScriptedUI<ScriptEnvironmentImpl>::update(f32 dt /*= 1.0f*/) {
     for (auto& view : m_views) {
         // TODO(Matthew): Implement script env updating.
-        // view.second.scriptEnv->update(dt);
+        // view.second.viewEnv->update(dt);
         view.second.viewport->update(dt);
     }
 }
@@ -335,10 +337,10 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport = new Viewport(m_window);
     view.viewport->init(name, dimensions, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
-    view.scriptEnv = new ScriptEnv();
-    view.scriptEnv->init(view.viewport, m_window);
+    view.viewEnv = new ViewEnv();
+    view.viewEnv->init(view.viewport, m_window);
 
-    prepareScriptEnv(view.scriptEnv);
+    prepareScriptEnv(view.viewEnv);
 
     m_views.insert(std::make_pair(zIndex, view));
 
@@ -352,10 +354,10 @@ vui::ScriptedView<ScriptEnvironmentImpl> vui::ScriptedUI<ScriptEnvironmentImpl>:
     view.viewport = new Viewport(m_window);
     view.viewport->init(name, position, size, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
 
-    view.scriptEnv = new ScriptEnv();
-    view.scriptEnv->init(view.viewport, m_window);
+    view.viewEnv = new ViewEnv();
+    view.viewEnv->init(view.viewport, m_window);
 
-    prepareScriptEnv(view.scriptEnv);
+    prepareScriptEnv(view.viewEnv);
 
     m_views.insert(std::make_pair(zIndex, view));
 
@@ -366,7 +368,7 @@ template <typename ScriptEnvironmentImpl>
 vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(nString name, ZIndex zIndex, nString filepath) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
-    view.scriptEnv->run(vio::Path(filepath));
+    view.viewEnv->run(vio::Path(filepath));
 
     return view.viewport;
 }
@@ -395,7 +397,7 @@ template <typename ScriptEnvironmentImpl>
 vui::ViewScriptEnvironment<ScriptEnvironmentImpl>* vui::ScriptedUI<ScriptEnvironmentImpl>::getEnv(const nString& name) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
-            return view.second.scriptEnv;
+            return view.second.viewEnv;
         }
     }
     return nullptr;
@@ -445,11 +447,11 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyView(Viewport* viewport) {
         if (view.second.viewport == viewport) {
             // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second.viewport->dispose();
-            view.second.scriptEnv->dispose();
+            view.second.viewEnv->dispose();
 
             // Free our memory.
             delete view.second.viewport;
-            delete view.second.scriptEnv;
+            delete view.second.viewEnv;
 
             // Erase view from the list of views.
             m_views.erase(it);
@@ -467,11 +469,11 @@ bool vui::ScriptedUI<ScriptEnvironmentImpl>::destroyViewWithName(nString name) {
         if (view.second.viewport->getName() == name) {
             // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second.viewport->dispose();
-            view.second.scriptEnv->dispose();
+            view.second.viewEnv->dispose();
 
             // Free our memory.
             delete view.second.viewport;
-            delete view.second.scriptEnv;
+            delete view.second.viewEnv;
 
             // Erase view from the list of views.
             m_views.erase(it);
@@ -489,7 +491,7 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::setViewZIndex(nString nam
         if (view.second.viewport->getName() == name) {
             ScriptedView<ScriptEnvironmentImpl> newView;
             newView.viewport  = view.second.viewport;
-            newView.scriptEnv = view.second.scriptEnv;
+            newView.viewEnv = view.second.viewEnv;
 
             m_views.erase(it);
 
@@ -505,7 +507,7 @@ template <typename ScriptEnvironmentImpl>
 vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nString& name, const vio::Path& filepath) {
     for (auto& view : m_views) {
         if (view.second.viewport->getName() == name) {
-            view.second.scriptEnv->run(filepath);
+            view.second.viewEnv->run(filepath);
             return view.second.viewport;
         }
     }
@@ -513,8 +515,8 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::runViewScript(const nStri
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ScriptEnv* scriptEnv) {
-    vscript::IEnvironment<ScriptEnvironmentImpl>* env = scriptEnv->getEnv();
+void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ViewEnv* viewEnv) {
+    vscript::IEnvironment<ScriptEnvironmentImpl>* env = viewEnv->getEnv();
 
     env->setNamespaces("UI");
     env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript));

@@ -309,10 +309,10 @@ bool vscript::lua::ValueMediator<color4, void>::tryPop(Handle state, OUT color4&
 color4 vscript::lua::ValueMediator<color4, void>::retrieve(Handle state, ui32 index) {
     if (index < 4) return color4();
     color4 value;
-    value.a = lua_tointeger(state, index);
-    value.b = lua_tointeger(state, index - 1);
-    value.g = lua_tointeger(state, index - 2);
-    value.r = lua_tointeger(state, index - 3);
+    value.a = static_cast<ui8>(lua_tointeger(state, index));
+    value.b = static_cast<ui8>(lua_tointeger(state, index - 1));
+    value.g = static_cast<ui8>(lua_tointeger(state, index - 2));
+    value.r = static_cast<ui8>(lua_tointeger(state, index - 3));
     lua_remove(state, index);
     lua_remove(state, index - 1);
     lua_remove(state, index - 2);
@@ -361,8 +361,8 @@ bool vscript::lua::ValueMediator<color4, void>::tryRetrieve(Handle state, ui32 i
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 2) return TYPE##v2();                                                                                               \
         TYPE##v2 value;                                                                                                                 \
-        value[0] = lua_tointeger(state, index);                                                                                         \
-        value[1] = lua_tointeger(state, index - 1);                                                                                     \
+        value[0] = static_cast<TYPE>(lua_tointeger(state, index));                                                                      \
+        value[1] = static_cast<TYPE>(lua_tointeger(state, index - 1));                                                                  \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         return value;                                                                                                                   \
@@ -413,8 +413,8 @@ INT_TYPE_VEC2(ui64)
     TYPE##v2 vscript::lua::ValueMediator<TYPE##v2, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 2) return TYPE##v2();                                                                                               \
         TYPE##v2 value;                                                                                                                 \
-        value[0] = lua_tonumber(state, index);                                                                                          \
-        value[1] = lua_tonumber(state, index - 1);                                                                                      \
+        value[0] = static_cast<TYPE>(lua_tonumber(state, index));                                                                       \
+        value[1] = static_cast<TYPE>(lua_tonumber(state, index - 1));                                                                   \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         return value;                                                                                                                   \
@@ -463,9 +463,9 @@ FLT_TYPE_VEC2(f64)
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 3) return TYPE##v3();                                                                                               \
         TYPE##v3 value;                                                                                                                 \
-        value[0] = lua_tointeger(state, index);                                                                                         \
-        value[1] = lua_tointeger(state, index - 1);                                                                                     \
-        value[2] = lua_tointeger(state, index - 2);                                                                                     \
+        value[0] = static_cast<TYPE>(lua_tointeger(state, index));                                                                      \
+        value[1] = static_cast<TYPE>(lua_tointeger(state, index - 1));                                                                  \
+        value[2] = static_cast<TYPE>(lua_tointeger(state, index - 2));                                                                  \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         lua_remove(state, index - 2);                                                                                                   \
@@ -521,9 +521,9 @@ INT_TYPE_VEC3(ui64)
     TYPE##v3 vscript::lua::ValueMediator<TYPE##v3, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 3) return TYPE##v3();                                                                                               \
         TYPE##v3 value;                                                                                                                 \
-        value[0] = lua_tonumber(state, index);                                                                                          \
-        value[1] = lua_tonumber(state, index - 1);                                                                                      \
-        value[2] = lua_tonumber(state, index - 2);                                                                                      \
+        value[0] = static_cast<TYPE>(lua_tonumber(state, index));                                                                       \
+        value[1] = static_cast<TYPE>(lua_tonumber(state, index - 1));                                                                   \
+        value[2] = static_cast<TYPE>(lua_tonumber(state, index - 2));                                                                   \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         lua_remove(state, index - 2);                                                                                                   \
@@ -577,10 +577,10 @@ FLT_TYPE_VEC3(f64)
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 3) return TYPE##v4();                                                                                               \
         TYPE##v4 value;                                                                                                                 \
-        value[0] = lua_tointeger(state, index);                                                                                         \
-        value[1] = lua_tointeger(state, index - 1);                                                                                     \
-        value[2] = lua_tointeger(state, index - 2);                                                                                     \
-        value[3] = lua_tointeger(state, index - 3);                                                                                     \
+        value[0] = static_cast<TYPE>(lua_tointeger(state, index));                                                                      \
+        value[1] = static_cast<TYPE>(lua_tointeger(state, index - 1));                                                                  \
+        value[2] = static_cast<TYPE>(lua_tointeger(state, index - 2));                                                                  \
+        value[3] = static_cast<TYPE>(lua_tointeger(state, index - 3));                                                                  \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         lua_remove(state, index - 2);                                                                                                   \
@@ -641,10 +641,10 @@ INT_TYPE_VEC4(ui64)
     TYPE##v4 vscript::lua::ValueMediator<TYPE##v4, void>::retrieve(Handle state, ui32 index) {                                          \
         if (index < 3) return TYPE##v4();                                                                                               \
         TYPE##v4 value;                                                                                                                 \
-        value[0] = lua_tonumber(state, index);                                                                                          \
-        value[1] = lua_tonumber(state, index - 1);                                                                                      \
-        value[2] = lua_tonumber(state, index - 2);                                                                                      \
-        value[3] = lua_tonumber(state, index - 3);                                                                                      \
+        value[0] = static_cast<TYPE>(lua_tonumber(state, index));                                                                       \
+        value[1] = static_cast<TYPE>(lua_tonumber(state, index - 1));                                                                   \
+        value[2] = static_cast<TYPE>(lua_tonumber(state, index - 2));                                                                   \
+        value[3] = static_cast<TYPE>(lua_tonumber(state, index - 3));                                                                   \
         lua_remove(state, index);                                                                                                       \
         lua_remove(state, index - 1);                                                                                                   \
         lua_remove(state, index - 2);                                                                                                   \

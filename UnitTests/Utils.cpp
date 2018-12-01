@@ -216,7 +216,7 @@ TEST(DelegateSpeed) {
     {
         vorb::MTDetailedSamplerContext context;
         OValue ovalue(3);
-        auto f = makeRDelegate(ovalue, &OValue::add);
+        auto f = makeDelegate(ovalue, &OValue::add);
         printf("Delegate: %d\n", sizeof(f));
 
         i32 val = 0;

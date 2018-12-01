@@ -39,7 +39,7 @@ TEST(1) {
     int r = 10;
 
     {
-        auto rd = makeRDelegate(shite);
+        auto rd = makeDelegate(shite);
         int* v = rd();
         *v = 5;
     }

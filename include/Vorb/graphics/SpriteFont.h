@@ -39,6 +39,7 @@ namespace vorb {
         };
 
         enum class TextAlign {
+            NONE,
             LEFT,
             TOP_LEFT,
             TOP,

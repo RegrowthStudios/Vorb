@@ -24,12 +24,12 @@
 
 #include <queue>
 
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 #include "Vorb/ThreadSync.h"
 
 namespace vorb {
     namespace core {
-        typedef Delegate<Sender, void*> RPCFunction; ///< Supported RPC function prototype
+        typedef Delegate<void, Sender, void*> RPCFunction; ///< Supported RPC function prototype
 
         struct RPCData {
             RPCFunction* f = nullptr; ///< Function to invoke on separate thread

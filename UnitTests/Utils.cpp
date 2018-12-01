@@ -7,7 +7,7 @@
 #include <random>
 #include <thread>
 
-#include <include/Events.hpp>
+#include <include/Event.hpp>
 #include <include/Random.h>
 #include <include/RingBuffer.hpp>
 #include <include/Timing.h>
@@ -216,7 +216,7 @@ TEST(DelegateSpeed) {
     {
         vorb::MTDetailedSamplerContext context;
         OValue ovalue(3);
-        auto f = makeRDelegate(ovalue, &OValue::add);
+        auto f = makeDelegate(ovalue, &OValue::add);
         printf("Delegate: %d\n", sizeof(f));
 
         i32 val = 0;

@@ -24,7 +24,7 @@
 
 #include "Entity.h"
 #include "ECS.h"
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../IDGenerator.h"
 
 namespace vorb {

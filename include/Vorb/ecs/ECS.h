@@ -27,7 +27,7 @@
 
 #include "Entity.h"
 #include "BitTable.hpp"
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../IDGenerator.h"
 
 namespace vorb {
@@ -113,7 +113,7 @@ namespace vorb {
             Event<EntityID> onEntityRemoved; ///< Called when an entity is removed from this system
             Event<NamedComponent> onComponentAdded; ///< Called when a component table is added to this system
         private:
-            typedef std::pair<ComponentTableBase*, std::shared_ptr<Delegate<Sender, EntityID>>> ComponentSubscriber;
+            typedef std::pair<ComponentTableBase*, std::shared_ptr<Delegate<void, Sender, EntityID>>> ComponentSubscriber;
             typedef std::unordered_map<nString, ComponentSubscriber> ComponentSubscriberSet;
 
             EntitySet m_entities; ///< List of entities

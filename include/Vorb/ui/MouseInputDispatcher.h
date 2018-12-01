@@ -27,7 +27,7 @@
 
 #include <atomic>
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 
 namespace vorb {
     namespace ui {
@@ -55,6 +55,13 @@ namespace vorb {
         /// Mouse button event data
         struct MouseButtonEvent : public MouseEvent {
         public:
+            MouseButtonEvent() = default;
+            constexpr MouseButtonEvent(i32 x_, i32 y_, MouseButton button_, ui8 clicks_) :
+                MouseEvent{x_, y_},
+                button(button_),
+                clicks(clicks_)
+            { /* Empty */ }
+
             MouseButton button; ///< The mouse button
             ui8 clicks; ///< Number of clicks done with this button (1 for single, 2 for double)
         };
@@ -62,6 +69,13 @@ namespace vorb {
         /// Mouse motion event data
         struct MouseMotionEvent : public MouseEvent {
         public:
+            MouseMotionEvent() = default;
+            constexpr MouseMotionEvent(i32 x_, i32 y_, i32 dx_, i32 dy_) :
+                MouseEvent{x_, y_},
+                dx(dx_),
+                dy(dy_)
+            { /* Empty */ }
+
             i32 dx; ///< Mouse displacement in X direction (in pixels)
             i32 dy; ///< Mouse displacement in Y direction (in pixels)
         };
@@ -69,6 +83,15 @@ namespace vorb {
         /// Mouse wheel scroll event data
         struct MouseWheelEvent : public MouseEvent {
         public:
+            MouseWheelEvent() = default;
+            constexpr MouseWheelEvent(i32 x_, i32 y_, i32 dx_, i32 dy_, i32 sx_, i32 sy_) :
+                MouseEvent{x_, y_},
+                dx(dx_),
+                dy(dy_),
+                sx(sx_),
+                sy(sy_)
+            { /* Empty */ }
+
             i32 dx; ///< Scroll value change in X direction
             i32 dy; ///< Scroll value change in Y direction
             i32 sx; ///< Total scroll value in X direction

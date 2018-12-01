@@ -20,12 +20,12 @@
 #include "Vorb/sound/SoundEngine.h"
 #include "Vorb/utils.h"
 #include "Vorb/VorbLibs.h"
-#include "Vorb/Events.hpp"
+#include "Vorb/Event.hpp"
 
 void doNothing(void*) { 
     // Empty
 }
-std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
+// std::vector<DelegateBase::Deleter> DelegateBase::m_deleters(1, { doNothing });
 
 namespace vorb {
     // Current system settings

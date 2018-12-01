@@ -25,7 +25,7 @@
 #endif // !VORB_USING_PCH
 
 #include <vector>
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "MouseInputDispatcher.h"
 
 namespace vorb {

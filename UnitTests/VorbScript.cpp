@@ -4,12 +4,11 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH Vorb_Script_
 
-#include <include/script/Environment.h>
-#include <include/script/Script.h>
-#include <include/script/REPL.h>
+#include <include/script/lua/Environment.h>
+#include <include/script/ConsoleBackend.hpp>
 
 TEST(CreateEnvironment) {
-    vscript::Environment env;
+    vscript::lua::Environment env;
     if (!env.getHandle()) return false;
     printf("Handle: %lx\n", (ptrdiff_t)env.getHandle());
     return true;
@@ -95,34 +94,35 @@ TEST(MoveValue) {
 }
 
 TEST(LoadScript) {
-    vscript::Environment env;
-    auto c = vscript::fromFunction<sum>(sum);
+    vscript::lua::Environment env;
 
     TestObject to;
-    env.addCRDelegate("TestObject_increment", makeRDelegate(to, &TestObject::increment));
+    env.addCDelegate("TestObject_increment", makeDelegate(to, &TestObject::increment));
 
-    env.addCRDelegate("getUnitX", makeRDelegate(getUnitX));
-    env.addCRDelegate("stuffs", makeRDelegate(stuff));
-    env.addCFunction("printVec", vscript::fromFunction<printVec>(printVec));
+    env.addCDelegate("getUnitX", makeDelegate(getUnitX));
+    env.addCDelegate("stuffs", makeDelegate(stuff));
+    env.addCDelegate("printVec", makeDelegate(printVec));
     env.setNamespaces("Test", "Namespace");
-    env.addCFunction("valEnum", vscript::fromFunction<valEnum>(valEnum));
-    env.addCFunction("valPtr", vscript::fromFunction<valPtr>(valPtr));
-    env.addCFunction("valRef", vscript::fromFunction<valRef>(valRef));
+    env.addCDelegate("valEnum", makeDelegate(valEnum));
+    env.addCDelegate("valPtr", makeDelegate(valPtr));
+    env.addCDelegate("valRef", makeDelegate(valRef));
 
-    if (!env.load("data/add.lua")) return false;
+    if (!env.run("data/add.lua")) return false;
 
     i32 value;
-    auto f = env["add"].as<i32>();
+    auto f = env.template getScriptDelegate<i32, i32, i32>("add");
     value = f(1, 5);
     value = f(1, 6);
     value = f(1, 7);
     value = f(1, 8);
-    auto f2 = env["add2"].as<i32>();
+    auto f2 = env.template getScriptDelegate<i32, i32, i32>("add2");
     return value == 13 && to.x == 4 && f2(5, 7) == 12;
 }
 
 ui32 consoleColor = 0;
+#ifdef VORB_OS_WINDOWS
 HANDLE hndConsole = 0;
+#endif
 void writeError(const cString msg) {
     fputs(msg, stderr);
 }
@@ -134,7 +134,9 @@ void setColor(ui32 color) {
         consoleColor = color;
         fflush(stdout);
         fflush(stderr);
+#ifdef VORB_OS_WINDOWS
         SetConsoleTextAttribute(hndConsole, color);
+#endif
     }
 }
 void onREPLOut(Sender, const cString msg) {
@@ -147,15 +149,18 @@ void onREPLErr(Sender, const cString msg) {
 }
 
 TEST(REPL) {
+#ifdef VORB_OS_WINDOWS
     hndConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
+#endif
+    
     // Create REPL
-    vscript::Environment env = {};
+    vscript::lua::Environment env = {};
     env.addCDelegate("printErr", makeDelegate(writeError));
-    env.addCDelegate("sleep", makeDelegate(luaSleep));
-    vscript::REPL repl(&env);
-    repl.onStream[VORB_REPL_STREAM_OUT] += makeDelegate(onREPLOut);
-    repl.onStream[VORB_REPL_STREAM_ERR] += makeDelegate(onREPLErr);
+    env.addCDelegate("sleep",    makeDelegate(luaSleep));
+    vscript::ConsoleBackend<vscript::lua::Environment> repl();
+    repl.init(&env);
+    repl.onConsoleOutput.out += makeDelegate(onREPLOut);
+    repl.onConsoleOutput.err += makeDelegate(onREPLErr);
 
     char buf[1024];
     while (true) {

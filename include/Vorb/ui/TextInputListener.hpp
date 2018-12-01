@@ -15,7 +15,7 @@
 #ifndef TextInputListener_h__
 #define TextInputListener_h__
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "InputDispatcher.h"
 
 namespace vorb {

@@ -185,6 +185,17 @@ set(vorb_graphics
     src/graphics/TextureCache.cpp
 )
 
+if(VORB_USE_SCRIPTING)
+set(vorb_graphics ${vorb_graphics}
+    include/Vorb/graphics/script/GLEnumsScriptFuncs.h
+    include/Vorb/graphics/script/SamplerStateScriptFuncs.h
+    include/Vorb/graphics/script/SpriteBatchScriptFuncs.h
+    include/Vorb/graphics/script/TextureCacheScriptFuncs.h
+#source
+    src/graphics/script/TextureCacheScriptFuncs.cpp
+)
+endif()
+
 set(vorb_io
     include/Vorb/io/Directory.h
     include/Vorb/io/File.h
@@ -228,19 +239,16 @@ set(vorb_io
 
 if(VORB_USE_SCRIPTING)
     set(vorb_script
-        include/Vorb/script/Environment.h
-        include/Vorb/script/Function.h
-        include/Vorb/script/GraphicsScriptInterface.h
-        include/Vorb/script/REPL.h
-        include/Vorb/script/Script.h
-        include/Vorb/script/ScriptImpl.h
-        include/Vorb/script/ScriptValueSenders.h
+        include/Vorb/script/IEnvironment.hpp
+        include/Vorb/script/ConsoleBackend.hpp
+        include/Vorb/script/lua/Environment.h
+        include/Vorb/script/lua/LFunction.h
+        include/Vorb/script/lua/CFunction.hpp
+        include/Vorb/script/lua/ValueMediator.h
     #source
-        src/script/Environment.cpp
-        src/script/GraphicsScriptInterface.cpp
-        src/script/REPL.cpp
-        src/script/ScriptImpl.cpp
-        src/script/ScriptValueSenders.cpp
+        src/script/lua/Environment.cpp
+        src/script/lua/LFunction.cpp
+        src/script/lua/ValueMediator.cpp
     )
 endif()
 
@@ -258,83 +266,85 @@ set(vorb_sound
 )
 
 set(vorb_ui
-    include/Vorb/ui/Button.h
-    include/Vorb/ui/CheckBox.h
-    include/Vorb/ui/ComboBox.h
     include/Vorb/ui/Drawables.h
     include/Vorb/ui/FocusController.h
     include/Vorb/ui/GameWindow.h
     include/Vorb/ui/IGameScreen.h
     include/Vorb/ui/InputDispatcher.h
     include/Vorb/ui/InputDispatcherEventCatcher.h
-    include/Vorb/ui/IWidget.h
     include/Vorb/ui/KeyboardEventDispatcher.h
     include/Vorb/ui/KeyMappings.inl
     include/Vorb/ui/Keys.inl
     include/Vorb/ui/KeyStrings.h
-    include/Vorb/ui/Label.h
-    include/Vorb/ui/LuaDevConsole.h
     include/Vorb/ui/MainGame.h
     include/Vorb/ui/MouseInputDispatcher.h
-    include/Vorb/ui/Panel.h
     include/Vorb/ui/ScreenList.h
-    include/Vorb/ui/Slider.h
     include/Vorb/ui/TextInputListener.hpp
-    include/Vorb/ui/TextWidget.h
     include/Vorb/ui/UIRenderer.h
-    include/Vorb/ui/Viewport.h
-    include/Vorb/ui/Widget.h
-    include/Vorb/ui/WidgetList.h
     include/Vorb/ui/WindowEventDispatcher.h
+    include/Vorb/ui/widgets/Button.h
+    include/Vorb/ui/widgets/CheckBox.h
+    include/Vorb/ui/widgets/ComboBox.h
+    include/Vorb/ui/widgets/IWidget.h
+    include/Vorb/ui/widgets/Label.h
+    include/Vorb/ui/widgets/Panel.h
+    include/Vorb/ui/widgets/Slider.h
+    include/Vorb/ui/widgets/TextWidget.h
+    include/Vorb/ui/widgets/Viewport.h
+    include/Vorb/ui/widgets/Widget.h
+    include/Vorb/ui/widgets/WidgetList.h
 #source
-    src/ui/Button.cpp
-    src/ui/CheckBox.cpp
-    src/ui/ComboBox.cpp
     src/ui/Drawables.cpp
     src/ui/FocusController.cpp
     src/ui/GameWindow.cpp
     src/ui/InputDispatcher.cpp
-    src/ui/IWidget.cpp
     src/ui/KeyboardEventDispatcher.cpp
-    src/ui/Label.cpp
-    src/ui/LuaDevConsole.cpp
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
-    src/ui/Panel.cpp
     src/ui/ScreenList.cpp
-    src/ui/Slider.cpp
-    src/ui/TextWidget.cpp
     src/ui/UIRenderer.cpp
-    src/ui/Viewport.cpp
-    src/ui/Widget.cpp
-    src/ui/WidgetList.cpp
+    src/ui/widgets/Button.cpp
+    src/ui/widgets/CheckBox.cpp
+    src/ui/widgets/ComboBox.cpp
+    src/ui/widgets/IWidget.cpp
+    src/ui/widgets/Label.cpp
+    src/ui/widgets/Panel.cpp
+    src/ui/widgets/Slider.cpp
+    src/ui/widgets/TextWidget.cpp
+    src/ui/widgets/Viewport.cpp
+    src/ui/widgets/Widget.cpp
+    src/ui/widgets/WidgetList.cpp
 )
 
 if(VORB_USE_SCRIPTING)
 set(vorb_ui ${vorb_ui}
-    include/Vorb/ui/ButtonScriptFuncs.h
-    include/Vorb/ui/CheckBoxScriptFuncs.h
-    include/Vorb/ui/ComboBoxScriptFuncs.h
-    include/Vorb/ui/FormScriptEnvironment.h
-    include/Vorb/ui/GameWindowScriptFuncs.h
-    include/Vorb/ui/LabelScriptFuncs.h
-    include/Vorb/ui/PanelScriptFuncs.h
     include/Vorb/ui/ScriptedUI.h
-    include/Vorb/ui/SliderScriptFuncs.h
-    include/Vorb/ui/WidgetListScriptFuncs.h
-    include/Vorb/ui/WidgetScriptFuncs.h
+    include/Vorb/ui/script/ButtonScriptFuncs.h
+    include/Vorb/ui/script/CheckBoxScriptFuncs.h
+    include/Vorb/ui/script/ComboBoxScriptFuncs.h
+    include/Vorb/ui/script/GameWindowScriptFuncs.h
+    include/Vorb/ui/script/GraphicsScriptFuncs.h
+    include/Vorb/ui/script/LabelScriptFuncs.h
+    include/Vorb/ui/script/PanelScriptFuncs.h
+    include/Vorb/ui/script/SliderScriptFuncs.h
+    include/Vorb/ui/script/TextWidgetScriptFuncs.h
+    include/Vorb/ui/script/ViewportScriptFuncs.h
+    include/Vorb/ui/script/ViewScriptEnvironment.h
+    include/Vorb/ui/script/WidgetListScriptFuncs.h
+    include/Vorb/ui/script/WidgetScriptFuncs.h
+    include/Vorb/ui/script/lua/ValueMediator.h
 #source
-    src/ui/ButtonScriptFuncs.cpp
-    src/ui/CheckBoxScriptFuncs.cpp
-    src/ui/ComboBoxScriptFuncs.cpp
-    src/ui/FormScriptEnvironment.cpp
-    src/ui/GameWindowScriptFuncs.cpp
-    src/ui/LabelScriptFuncs.cpp
-    src/ui/PanelScriptFuncs.cpp
-    src/ui/ScriptedUI.cpp
-    src/ui/SliderScriptFuncs.cpp
-    src/ui/WidgetListScriptFuncs.cpp
-    src/ui/WidgetScriptFuncs.cpp
+    src/ui/script/ButtonScriptFuncs.cpp
+    src/ui/script/CheckBoxScriptFuncs.cpp
+    src/ui/script/ComboBoxScriptFuncs.cpp
+    src/ui/script/GameWindowScriptFuncs.cpp
+    src/ui/script/LabelScriptFuncs.cpp
+    src/ui/script/PanelScriptFuncs.cpp
+    src/ui/script/SliderScriptFuncs.cpp
+    src/ui/script/TextWidgetScriptFuncs.cpp
+    src/ui/script/WidgetListScriptFuncs.cpp
+    src/ui/script/WidgetScriptFuncs.cpp
+    src/ui/script/lua/ValueMediator.cpp
 )
 endif()
 
@@ -361,7 +371,8 @@ set(vorb_headers
     include/Vorb/concurrentqueue.h
     include/Vorb/Constants.h
     include/Vorb/decorators.h
-    include/Vorb/Events.hpp
+    include/Vorb/Delegate.hpp
+    include/Vorb/Event.hpp
     include/Vorb/FastConversion.inl
     include/Vorb/FixedSizeArrayRecycler.hpp
     include/Vorb/Graphics.h

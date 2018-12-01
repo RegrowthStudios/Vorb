@@ -23,7 +23,7 @@
 #include "../decorators.h"
 #endif // !VORB_USING_PCH
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "GameWindow.h"
 #include "ScreenList.h"
 

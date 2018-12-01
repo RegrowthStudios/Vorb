@@ -24,7 +24,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../Vorb.h"
 #include "gtypes.h"
 #include "GLEnums.h"

@@ -193,8 +193,7 @@ namespace keg {
                 context.reader.free(node);
                 newDest += type->getSizeInBytes();
             });
-            context.reader.forAllInSequence(nArray, f);
-            delete f;
+            context.reader.forAllInSequence(nArray, &f);
         }
         return Error::TYPE_NOT_FOUND;
     }
@@ -206,7 +205,7 @@ namespace keg {
 
         // Iterate Values
         TypeValueIterator typeEval(dest, type, context);
-        auto eval = makeDelegate(typeEval, &TypeValueIterator::evaluate);
+        auto eval = makeDelegate(&typeEval, &TypeValueIterator::evaluate);
         context.reader.forAllInMap(data, &eval);
         return Error::NONE;
     }

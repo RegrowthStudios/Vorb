@@ -26,7 +26,7 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#include "../Events.hpp"
+#include "../Event.hpp"
 #include "../VorbPreDecl.inl"
 #include "../graphics/SpriteBatch.h"
 #include "../graphics/GLRenderTarget.h"
@@ -44,7 +44,7 @@ namespace vorb {
         // TODO(Matthew): The spritebatch does FUNKY shit when text extends beyond clip rect, trying to do some wrapping but it's borked.
         class UIRenderer {
         public:
-            using DrawFunc = Delegate<vg::SpriteBatch*>;
+            using DrawFunc = Delegate<void, vg::SpriteBatch*>;
 
             /// Constructor
             UIRenderer();

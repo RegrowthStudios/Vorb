@@ -4,7 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH QD_
 
-#include <include/Events.hpp>
+#include <include/Event.hpp>
 
 class DEED {
 public:
@@ -20,8 +20,8 @@ void adder(int& r, int a, int b) {
 }
 
 
-Delegate<int> sumthing() {
-    return makeDelegate<int>([] (int n) {
+Delegate<void, int> sumthing() {
+    return makeDelegate([] (int n) {
         printf("%d\n", n);
     });
 }
@@ -39,19 +39,19 @@ TEST(1) {
     int r = 10;
 
     {
-        auto rd = makeRDelegate(shite);
+        auto rd = makeDelegate(shite);
         int* v = rd();
         *v = 5;
     }
 
     {
-        auto rd = makeDelegate(deed, &DEED::incr);
+        auto rd = makeDelegate(&deed, &DEED::incr);
         rd();
         rd();
     }
 
     {
-        Delegate<>* ftor;
+        Delegate<void>* ftor;
         {
             auto fr = [&] () {
                 r += 10;

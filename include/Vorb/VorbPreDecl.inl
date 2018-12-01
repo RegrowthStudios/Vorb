@@ -100,5 +100,6 @@ namespace vscript = vorb::script;
 #define DECL_VECS(...) namespace vorb { namespace ecs { __VA_ARGS__; }  }
 #define DECL_VNET(...) namespace vorb { namespace net { __VA_ARGS__; }  }
 #define DECL_VSCRIPT(...) namespace vorb { namespace script { __VA_ARGS__; }  }
+#define DECL_VSCRIPT_LUA(...) namespace vorb { namespace script { namespace lua { __VA_ARGS__; } }  }
 
 #endif // !Vorb_VorbPreDecl_inl__

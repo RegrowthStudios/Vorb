@@ -4,7 +4,7 @@
 #undef UNIT_TEST_BATCH
 #define UNIT_TEST_BATCH DE_
 
-#include "include/Events.hpp"
+#include "include/Event.hpp"
 
 #include "TestClasses.h"
 
@@ -81,7 +81,7 @@ TEST(DelegateMemberAccess) {
 
 #define TEST_VALUE(OBJ, CLASS, FUNC, VALUE) \
     { \
-        auto d = makeRDelegate(OBJ, &CLASS::FUNC); \
+        auto d = makeDelegate(OBJ, &CLASS::FUNC); \
         if (d() != VALUE) { \
             printf("Delegate ("#OBJ","#CLASS"::"#FUNC") != "#VALUE"\n"); \
             return false; \
@@ -102,19 +102,19 @@ TEST(DelegateMemberAccess) {
 }
 
 TEST(Convention1) {
-    RDelegate<bool, bool> v = makeRDelegate(getOppositeValue);
+    Delegate<bool, bool> v = makeDelegate(getOppositeValue);
     return v(false);
 }
 
 TEST(Convention2) {
     TestClassBase obj;
-    RDelegate<bool, bool> v = makeRDelegate(obj, &TestClassBase::getOppositeValue);
+    Delegate<bool, bool> v = makeDelegate(obj, &TestClassBase::getOppositeValue);
     return v(false);
 }
 
 TEST(Convention3) {
     TestClassBase obj;
-    RDelegate<bool, bool>* v = makeRFunctor(obj, &TestClassBase::getOppositeValue);
+    Delegate<bool, bool>* v = makeRFunctor(obj, &TestClassBase::getOppositeValue);
     bool a = v->invoke(false);
     delete v;
     return a;
@@ -124,9 +124,9 @@ TEST(OverridenFuncs) {
     TestClassBase objBase;
     TestClassDerived objDerived;
 
-    auto v1 = makeRDelegate(objBase, &TestClassBase::overridenFunc);
-    auto v2 = makeRDelegate(objDerived, &TestClassDerived::overridenFunc);
-    auto v3 = makeRDelegate((TestClassBase&)objDerived, &TestClassBase::overridenFunc);
+    auto v1 = makeDelegate(objBase, &TestClassBase::overridenFunc);
+    auto v2 = makeDelegate(objDerived, &TestClassDerived::overridenFunc);
+    auto v3 = makeDelegate((TestClassBase&)objDerived, &TestClassBase::overridenFunc);
 
     return v1() == 3 && v2() == 6 && v3() == 3;
 }
@@ -135,9 +135,9 @@ TEST(VirtualFuncs) {
     TestClassBase objBase;
     TestClassDerived objDerived;
 
-    auto v1 = makeRDelegate(objBase, &TestClassBase::virtualFunc);
-    auto v2 = makeRDelegate(objDerived, &TestClassDerived::virtualFunc);
-    auto v3 = makeRDelegate((TestClassBase&)objDerived, &TestClassBase::virtualFunc);
+    auto v1 = makeDelegate(objBase, &TestClassBase::virtualFunc);
+    auto v2 = makeDelegate(objDerived, &TestClassDerived::virtualFunc);
+    auto v3 = makeDelegate((TestClassBase&)objDerived, &TestClassBase::virtualFunc);
 
     return v1() == 1 && v2() == 4 && v3() == 4;
 }
@@ -147,12 +147,12 @@ TEST(NonVirtualBaseFuncs) {
     TestClassDerived objDerived;
     TestClassSuperDerived objSuperDerived;
 
-    auto v1 = makeRDelegate(objBase, &TestClassBase::nonVirtualBaseFunc);
-    auto v2 = makeRDelegate(objDerived, &TestClassDerived::nonVirtualBaseFunc);
-    auto v3 = makeRDelegate((TestClassBase&)objDerived, &TestClassBase::nonVirtualBaseFunc);
-    auto v4 = makeRDelegate(objSuperDerived, &TestClassSuperDerived::nonVirtualBaseFunc);
-    auto v5 = makeRDelegate((TestClassDerived&)objSuperDerived, &TestClassDerived::nonVirtualBaseFunc);
-    auto v6 = makeRDelegate((TestClassBase&)objSuperDerived, &TestClassBase::nonVirtualBaseFunc);
+    auto v1 = makeDelegate(objBase, &TestClassBase::nonVirtualBaseFunc);
+    auto v2 = makeDelegate(objDerived, &TestClassDerived::nonVirtualBaseFunc);
+    auto v3 = makeDelegate((TestClassBase&)objDerived, &TestClassBase::nonVirtualBaseFunc);
+    auto v4 = makeDelegate(objSuperDerived, &TestClassSuperDerived::nonVirtualBaseFunc);
+    auto v5 = makeDelegate((TestClassDerived&)objSuperDerived, &TestClassDerived::nonVirtualBaseFunc);
+    auto v6 = makeDelegate((TestClassBase&)objSuperDerived, &TestClassBase::nonVirtualBaseFunc);
 
     return v1() == 2 && v2() == 5 && v3() == 2 && v4() == 7 && v5() == 7 && v6() == 2;
 }

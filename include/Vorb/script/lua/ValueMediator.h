@@ -110,6 +110,18 @@ namespace vorb {
 
             namespace impl {
                 /*!
+                 * \brief Workaround for MSVC being shit.
+                 *
+                 * \tparam The type for whihc to get a default values.
+                 *
+                 * \return The default value of the type specified.
+                 */
+                template <typename Type>
+                Type getDefault() {
+                    return ValueMediator<Type>::defaultValue();
+                }
+                
+                /*!
                  * \brief rpopValues provides a recursive method to pop all expected values from the Lua stack.
                  *
                  * These three functions provide a recursive method to pop all expected values from
@@ -136,7 +148,7 @@ namespace vorb {
                 void rpopValues(Handle state, OUT std::tuple<Type1, Type2, Types...>* tPtr) {
                     // Pop all but the first value - we want this recursive approach to pop in reverse order of
                     // types provided.
-                    std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2>::defaultValue(), ValueMediator<Types>::defaultValue()... };
+                    std::tuple<Type2, Types...> tToPop{ ValueMediator<Type2>::defaultValue(), getDefault<Types>()... };
                     rpopValues<Type2, Types...>(state, &tToPop);
 
                     // Pop the first value.

@@ -127,12 +127,8 @@ namespace vorb {
                  *
                  * \return A pointer to the delegate, or nullptr if the script function wasn't found.
                  */
-                template <typename ReturnType, typename ...Parameters,
-                             typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
+                template <typename ReturnType, typename ...Parameters>
                 CALLER_DELETE Delegate<ReturnType, Parameters...> getScriptDelegate(const nString& name, bool create = true);
-                template <typename ReturnType, typename ...Parameters,
-                             typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
-                CALLER_DELETE Delegate<void, Parameters...> getScriptDelegate(const nString& name, bool create = true);
 
                 /*!
                  * \brief Adds the given value to the top of the lua stack.
@@ -316,8 +312,32 @@ inline void vscript::lua::Environment::pushNamespaces(Namespace namespace_, Name
     pushNamespaces(namespaces...);
 }
 
+/*!
+ * \brief Workaround for MSVC being shit. Constructs the appropriate delegate for the given LFunction and desired signature.
+ *
+ * \tparam ReturnType The type the delegate returns.
+ * \tparam Paramaters The types of the parameters the delegate takes for invocation.
+ *
+ * \param lFunction The Lua function to make a delegate for.
+ *
+ * \return The delegate made.
+ */
+template <typename ReturnType, typename ...Parameters,
+            typename = typename std::enable_if<!std::is_same<void, ReturnType>::value>::type>
+Delegate<ReturnType, Parameters...> makeScriptDelegate(vscript::lua::LFunction* lFunction) {
+    // Construct returning LFunction.
+    vscript::lua::SRLFunction<ReturnType> srlFunction = lFunction->template withSingleReturn<ReturnType>();
+
+    return makeConstFunctor<ReturnType, Parameters...>(srlFunction);
+}
+template <typename ReturnType, typename ...Parameters,
+            typename = typename std::enable_if<std::is_same<void, ReturnType>::value>::type>
+Delegate<void, Parameters...> makeScriptDelegate(vscript::lua::LFunction* lFunction) {
+    return makeConstDelegate<void, Parameters...>(lFunction);
+}
+
 // TODO(Matthew): Support multiple return types.
-template <typename ReturnType, typename ...Parameters, typename>
+template <typename ReturnType, typename ...Parameters>
 Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name, bool create /*= true*/) {
     // Get the LFunction we want to wrap.
     LFunction* lFunction = getLFunction(name);
@@ -329,27 +349,8 @@ Delegate<ReturnType, Parameters...> vscript::lua::Environment::getScriptDelegate
 
         lFunction = getLFunction(name);
     }
-
-    // Construct returning LFunction.
-    SRLFunction<ReturnType> srlFunction = lFunction->template withSingleReturn<ReturnType>();
-
-    return makeConstFunctor<ReturnType, Parameters...>(srlFunction);
-}
-
-template <typename, typename ...Parameters, typename>
-Delegate<void, Parameters...> vscript::lua::Environment::getScriptDelegate(const nString& name, bool create /*= true*/) {
-    // Get the LFunction we want to wrap.
-    LFunction* lFunction = getLFunction(name);
-
-    // If we couldn't find it, fail.
-    if (lFunction == nullptr) {
-        // If we couldn't make it, fail.
-        if (!create || makeLFunction(name) != 0) return NilDelegate<void, Parameters...>;
-
-        lFunction = getLFunction(name);
-    }
-
-    return makeConstDelegate<void, Parameters...>(lFunction);
+    
+    return makeScriptDelegate<ReturnType, Parameters...>(lFunction);
 }
 
 #endif // VORB_USING_SCRIPT

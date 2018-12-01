@@ -153,7 +153,7 @@ protected:
 public:
     // Constructors.
     Delegate() :
-        m_object(nullptr), m_function(nullptr), m_executor(nullptr)
+        m_object(nullptr), m_function(nullptr), m_executor(nullptr), m_deletor(nullptr)
     { /* Empty */ }
     Delegate(GenericFunction function, Executor executor) :
         m_object(nullptr), m_function(function), m_executor(executor), m_deletor(nullptr)

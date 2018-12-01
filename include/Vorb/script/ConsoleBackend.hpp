@@ -55,12 +55,12 @@ namespace vorb {
              * \param env A pointer to the script environment to invoke commands through.
              * \param commandHistorySize The number of commands to store in the command history.
              */
-            init(Environment* env, size_t commandHistorySize = DEFAULT_COMMAND_HISTORY_SIZE);
+            void init(Environment* env, size_t commandHistorySize = DEFAULT_COMMAND_HISTORY_SIZE);
 
             /*!
              * \brief Disposes the console backend instance.
              */
-            dispose();
+            void dispose();
 
             /*!
              * \brief Invokes the provided command within the console.
@@ -92,7 +92,7 @@ namespace vorb {
             IEnvironment<EnvironmentImpl>* m_env;            ///< The script environment in which to invoke provided commands.
             ConsoleOutStreams              m_streams;        ///< Temporary streams to capture output of the scripts
 
-            inline void checkOut(MemFile* stream, i64 initialPos, Event<const cString>* event);
+            inline void checkOut(FILE* stream, i64 initialPos, Event<const cString>* event);
         };
     }
 }
@@ -107,15 +107,15 @@ vscript::ConsoleBackend<EnvironmentImpl>::ConsoleBackend() :
 { /* Empty */ }
 
 template <typename EnvironmentImpl>
-~vscript::ConsoleBackend<EnvironmentImpl>::ConsoleBackend() {
-    dispose();
+vscript::ConsoleBackend<EnvironmentImpl>::~ConsoleBackend() {
+    // Empty
 }
 
 template <typename EnvironmentImpl>
-vscript::ConsoleBackend<EnvironmentImpl>::init(Environment* env, size_t commandHistorySize /*= DEFAULT_COMMAND_HISTORY_SIZE*/) {
+void vscript::ConsoleBackend<EnvironmentImpl>::init(Environment* env, size_t commandHistorySize /*= DEFAULT_COMMAND_HISTORY_SIZE*/) {
     assert(commandHistorySize > 0);
 
-    m_commandHistory = new nString(commandHistorySize);
+    m_commandHistory = new nString[commandHistorySize];
     m_size = commandHistorySize;
 
     m_env = env;
@@ -125,7 +125,7 @@ vscript::ConsoleBackend<EnvironmentImpl>::init(Environment* env, size_t commandH
 }
 
 template <typename EnvironmentImpl>
-vscript::ConsoleBackend<EnvironmentImpl>::dispose() {
+void vscript::ConsoleBackend<EnvironmentImpl>::dispose() {
     if (m_commandHistory) delete m_commandHistory;
     m_commandHistory = nullptr;
     m_size  = 0;
@@ -139,19 +139,19 @@ vscript::ConsoleBackend<EnvironmentImpl>::dispose() {
 }
 
 template <typename EnvironmentImpl>
-vscript::ConsoleBackend<EnvironmentImpl>::invokeCommand(const nString& command) {
+void vscript::ConsoleBackend<EnvironmentImpl>::invokeCommand(const nString& command) {
     // Record the initial cursor values of the two capturing streams.
     i64 initialPosOut = ftell(m_streams.out);
-    i64 initialPosErr = ftell(m_streams.in);
+    i64 initialPosErr = ftell(m_streams.err);
 
-    // TODO(Matthew): This feels super dirty for multi-threaded...
+    // TODO(Matthew): This feels super dirty for multi-threaded... on develop branch there is some interesting code regarding this.
     // Store temporaries of the current stdout, stderr objects.
     FILE oldOut = *stdout;
     FILE oldErr = *stderr;
 
     // Set stdout & stderr to be our MemFile instances.
-    *stdout = m_streams.out;
-    *stderr = m_streams.err;
+    *stdout = *m_streams.out;
+    *stderr = *m_streams.err;
 
     // Run the command in our script environment.
     m_env->run(command);
@@ -201,7 +201,7 @@ void vscript::ConsoleBackend<EnvironmentImpl>::checkOut(FILE* stream, i64 initia
     buffer[length] = '\0';
 
     // Trigger our event.
-    event->call(buffer);
+    event->trigger(buffer);
 
     // Clean up.
     delete[] buffer;

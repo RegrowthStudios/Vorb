@@ -27,7 +27,9 @@ DECL_VUI(class Viewport)
 namespace vorb {
     namespace ui {
         namespace UILoader {
-            bool load(const vio::IOManager& iom, const cString filepath, OUT Viewport& viewport);
+            using WidgetParser = Delegate<vui::IWidget*, const nString&, keg::Node>;
+
+            bool load(const vio::IOManager& iom, const cString filepath, OUT Viewport& viewport, WidgetParser* customWidgetParser = nullptr);
 
             bool save(const cString filepath, const Viewport& viewport);
         }

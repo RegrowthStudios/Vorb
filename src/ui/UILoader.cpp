@@ -22,6 +22,8 @@
 //                exclusive fields or callbacks to perform setting rather than direct memory offsets. In the
 //                future Keg could be extended to do these things and this rewritten.
 
+// TODO(Matthew): On failed parse, ensure clean up covers all thus-far created widgets!
+
 vui::IWidget* parseWidget(keg::ReadContext& context, const nString& type, keg::Node node, vui::UILoader::WidgetParser* customWidgetParser) {
     // Ensure node is a map.
     if (keg::getType(node) != keg::NodeType::MAP) return nullptr;
@@ -36,41 +38,57 @@ vui::IWidget* parseWidget(keg::ReadContext& context, const nString& type, keg::N
         return widget;
     });
 
-    // For each entry in the map, send it off for parsing to the correct parser.
+    // For each entry in the map, create the appropriate widget and send it off for parsing to the correct parser.
     bool success = true;
-    Delegate<void, Sender, const nString&, keg::Node> process;
+    Delegate<void, Sender, const nString&, keg::Node> processEntry;
+    vui::IWidget* widget;
     if (type == "button") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseButtonEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::Button();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseButtonEntry(context, static_cast<vui::Button*>(widget), key, value, widgetParser);
         });
     } else if (type == "checkbox") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseCheckBoxEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::CheckBox();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseCheckBoxEntry(context, static_cast<vui::CheckBox*>(widget), key, value, widgetParser);
         });
     } else if (type == "combobox") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseComboBoxEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::ComboBox();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseComboBoxEntry(context, static_cast<vui::ComboBox*>(widget), key, value, widgetParser);
         });
     } else if (type == "label") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseLabelEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::Label();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseLabelEntry(context, static_cast<vui::Label*>(widget), key, value, widgetParser);
         });
     } else if (type == "panel") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parsePanelEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::Panel();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parsePanelEntry(context, static_cast<vui::Panel*>(widget), key, value, widgetParser);
         });
     } else if (type == "slider") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseSliderEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::Slider();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseSliderEntry(context, static_cast<vui::Slider*>(widget), key, value, widgetParser);
         });
     } else if (type == "widget_list") {
-        process = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = success && vui::parseWidgetListEntry(context, viewport, key, value, widgetParser);
+        widget = new vui::WidgetList();
+        processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+            success = success && vui::parseWidgetListEntry(context, static_cast<vui::WidgetList*>(widget), key, value, widgetParser);
         });
+    } else {
+        return nullptr;
     }
-    context.reader.forAllInMap(node, &process);
+    widget->init("");
+    context.reader.forAllInMap(node, &processEntry);
 
-    return success;
+    if (success) {
+        return widget;
+    } else {
+        delete widget;
+        return nullptr;
+    }
 }
 
 bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node node, vui::UILoader::WidgetParser* customWidgetParser) {
@@ -89,10 +107,10 @@ bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node
 
     // For each entry in the map, send it off for parsing.
     bool success = true;
-    auto processViewport = makeFunctor([&](Sender, const nString& key, keg::Node value) {
+    auto processViewportEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
         success = success && vui::parseWidgetEntry(context, viewport, key, value, &widgetParser);
     });
-    context.reader.forAllInMap(node, &processViewport);
+    context.reader.forAllInMap(node, &processViewportEntry);
 
     return success;
 }

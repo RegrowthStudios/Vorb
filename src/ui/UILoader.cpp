@@ -18,9 +18,9 @@
 #include "Vorb/ui/widgets/yaml/Slider.h"
 #include "Vorb/ui/widgets/yaml/WidgetList.h"
 
-// TODO(Matthew): Could be a lot cleaner if done through Keg, but as is Keg doesn't seem to support mutually
-//                exclusive fields or callbacks to perform setting rather than direct memory offsets. In the
-//                future Keg could be extended to do these things and this rewritten.
+// TODO(Matthew): Could be a lot cleaner if done entirely through Keg, but as is Keg doesn't seem to support
+//                callbacks to perform setting rather than direct memory offsets. In the future Keg could be
+//                extended to do that and this rewritten.
 
 // TODO(Matthew): On failed parse, ensure clean up covers all thus-far created widgets!
 

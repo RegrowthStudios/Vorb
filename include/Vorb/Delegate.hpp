@@ -454,7 +454,7 @@ protected:
     template<typename SpecificClass, typename = typename std::enable_if<std::is_class<SpecificClass>::value>::type>
     static ReturnType executeWithObject(GenericObject object, GenericMemberFunction function, Parameters... parameters) {
         // Cast generic object and member function pointers to specific type pointers then invoke the function.
-        MemberFunction<SpecificClass> operation = (MemberFunction<SpecificClass>)function;
+        MemberFunction<SpecificClass> operation = *(MemberFunction<SpecificClass>*)&(function);
         SpecificClass*                   target = (SpecificClass*)object;
 
         return (target->*operation)(parameters...);

@@ -79,8 +79,8 @@ public:
      *
      * \param event The event to copy.
      */
-    Event(const Event& event) {
-        m_sender       = event.m_sender;
+    Event(const Event& event) :
+        EventBase(event.m_sender) {
         m_subscribers  = event.m_subscribers;
         m_removalQueue = event.m_removalQueue;
         m_triggering   = false;
@@ -90,8 +90,8 @@ public:
      *
      * \param event The event to copy.
      */
-    Event(Event&& event) {
-        m_sender       = event.m_sender;
+    Event(Event&& event) :
+        EventBase(event.m_sender) {
         m_subscribers  = std::move(event.m_subscribers);
         m_removalQueue = std::move(event.m_removalQueue);
         m_triggering   = false;

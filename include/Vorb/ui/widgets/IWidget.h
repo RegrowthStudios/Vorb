@@ -48,6 +48,10 @@ namespace vorb {
         };
         //! Bitfield of clipping flags.
         struct Clipping {
+            Clipping()=default;
+            Clipping(const Clipping &)=default;
+            Clipping(ClippingState left, ClippingState top, ClippingState right, ClippingState bottom):left(left), top(top), right(right), bottom(bottom) {}
+
             ClippingState left   : 2;
             ClippingState top    : 2;
             ClippingState right  : 2;

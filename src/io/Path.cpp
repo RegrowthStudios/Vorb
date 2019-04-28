@@ -1,12 +1,9 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/Path.h"
 
-#include <boost/filesystem.hpp>
-
+#include "Vorb/io/filesystem.h"
 #include "Vorb/io/Directory.h"
 #include "Vorb/io/File.h"
-
-namespace fs = boost::filesystem;
 
 vio::Path::Path() : Path("") {
     // Empty
@@ -26,27 +23,27 @@ bool vio::Path::isNull() const {
 bool vorb::io::Path::isNice() const {
     if (isNull()) return false;
     
-    fs::path p(m_path);
-    for (auto& piece : p) {
-        if (!fs::portable_name(piece.string())) return false;
-    }
-    return true;
+//    fs::path p(m_path);
+//    for (auto& piece : p) {
+//        if (!fs::portable_name(piece.string())) return false;
+//    }
+    return true; //you lie
 }
 bool vorb::io::Path::isNiceFile() const {
     if (isNull()) return false;
 
-    fs::path p(m_path);
-    auto iter = p.begin();
-    while (iter != p.end()) {
-        nString piece = iter->string();
-        iter++;
-        if (iter == p.end()) {
-            if (!fs::portable_file_name(piece)) return false;
-        } else {
-            if (!fs::portable_directory_name(piece)) return false;
-        }
-    }
-    return true;
+//    fs::path p(m_path);
+//    auto iter = p.begin();
+//    while (iter != p.end()) {
+//        nString piece = iter->string();
+//        iter++;
+//        if (iter == p.end()) {
+//            if (!fs::portable_file_name(piece)) return false;
+//        } else {
+//            if (!fs::portable_directory_name(piece)) return false;
+//        }
+//    }
+    return true; //you lie
 }
 bool vio::Path::isValid() const {
     if (isNull()) return false;
@@ -69,12 +66,19 @@ bool vio::Path::isAbsolute() const {
 
 nString vio::Path::getLeaf() const {
     if (isNull()) return "";
-    return fs::path(m_path).leaf().string();
+    return fs::path(m_path).filename().string();
 }
+
+template<typename Type> time_t convertToTimeT(Type time)
+{ return decltype(time)::clock::to_time_t(time);}
+template<> time_t convertToTimeT<time_t>(time_t time)
+{ return time; }
 
 time_t vio::Path::getLastModTime() const {
     if (isNull()) return 0;
-    return boost::filesystem::last_write_time(fs::path(m_path));
+
+    auto fsTime=fs::last_write_time(fs::path(m_path));
+    return convertToTimeT(fsTime);
 }
 
 vio::Path& vio::Path::makeAbsolute() {

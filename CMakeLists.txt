@@ -1,5 +1,13 @@
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 cmake_policy(SET CMP0054 NEW)
+
+macro(remove_flag_from_target _target _flag)
+    get_target_property(_target_cxx_flags ${_target} COMPILE_OPTIONS)
+    if(_target_cxx_flags)
+        list(REMOVE_ITEM _target_cxx_flags ${_flag})
+        set_target_properties(${_target} PROPERTIES COMPILE_OPTIONS "${_target_cxx_flags}")
+    endif()
+endmacro()
 
 set(HUNTER_STATUS_DEBUG ON)
 #setup cache server and suppot upload
@@ -93,8 +101,8 @@ hunter_add_package(glm)
 find_package(glm CONFIG REQUIRED)
 hunter_add_package(glew)
 find_package(glew CONFIG REQUIRED)
-hunter_add_package(Boost COMPONENTS filesystem system)
-find_package(Boost REQUIRED COMPONENTS filesystem system)
+#hunter_add_package(Boost COMPONENTS filesystem system)
+#find_package(Boost REQUIRED COMPONENTS filesystem system)
 hunter_add_package(SDL2)
 find_package(SDL2 CONFIG REQUIRED)
 hunter_add_package(SDL_ttf)
@@ -115,6 +123,53 @@ initialize_for_platform()
 
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Vorb)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/deps)
+
+set(VORB_REQUIRES_CXX17 OFF)
+set(VORB_BOOST_FILESYSTEM 0)
+set(VORB_STD_FILESYSTEM 1)
+set(VORB_EXPERIMENTAL_FILESYSTEM 2)
+set(VORB_USE_FILESYSTEM ${VORB_BOOST_FILESYSTEM})
+
+#find what filesystem to use
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    add_definitions(-DNOMINMAX)
+
+    if(MSVC_VERSION GREATER_EQUAL 1900)
+        set(VORB_USE_FILESYSTEM ${VORB_EXPERIMENTAL_FILESYSTEM})
+        if(MSVC_VERSION GREATER 1900)
+            include(CheckCXXCompilerFlag)
+            
+            CHECK_CXX_COMPILER_FLAG("/std:c++17" _cpp_17_flag_supported)
+            if(_cpp_17_flag_supported)
+                set(VORB_USE_FILESYSTEM ${VORB_STD_FILESYSTEM})
+                set(VORB_REQUIRES_CXX17 ON)
+            endif()
+        endif()
+    endif()
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
+        set(VORB_USE_FILESYSTEM ${VORB_STD_FILESYSTEM})
+    endif()
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(VORB_USE_FILESYSTEM ${VORB_EXPERIMENTAL_FILESYSTEM})
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 8.0)
+        set(VORB_USE_FILESYSTEM ${VORB_STD_FILESYSTEM})
+        set(VORB_REQUIRES_CXX17 ON)
+    endif()
+endif()
+
+if(VORB_REQUIRES_CXX17)
+    set(CMAKE_CXX_STANDARD 17)
+else()
+    set(CMAKE_CXX_STANDARD 14)
+endif()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(VORB_USE_FILESYSTEM EQUAL ${VORB_BOOST_FILESYSTEM})
+    hunter_add_package(Boost COMPONENTS filesystem system)
+    find_package(Boost REQUIRED COMPONENTS filesystem system)
+endif()
 
 set(vorb_ecs
     include/Vorb/ecs/BitTable.hpp
@@ -448,24 +503,45 @@ source_group("voxel" FILES ${vorb_voxel})
 source_group("include" FILES ${vorb_headers})
 source_group("source" FILES ${vorb_source})
 
-target_link_libraries(vorb
+set(vorb_libraries
     SDL2::SDL2main
     SDL2::SDL2
     SDL_ttf::SDL_ttf
     glew::glew
-    Boost::filesystem
-    Boost::system
     glm
     enet::enet
     yaml-cpp::yaml-cpp
-#    OpenSSL::SSL
-#    OpenSSL::Crypto
     Lua::lua_lib
     PNG::png
 )
+if(VORB_USE_FILESYSTEM EQUAL ${VORB_BOOST_FILESYSTEM})
+    set(vorb_libraries ${vorb_libraries}
+        Boost::filesystem
+        Boost::system
+    )
+endif()
+
+target_link_libraries(vorb ${vorb_libraries})
 
 target_include_directories(vorb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_definitions(vorb PUBLIC -DVORB_IMPL_GRAPHICS_OPENGL -DVORB_IMPL_UI_SDL -DVORB_IMPL_FONT_SDL -DVORB_IMPL_SOUND_FMOD)
+target_compile_definitions(vorb PUBLIC "-DVORB_USE_FILESYSTEM=${VORB_USE_FILESYSTEM}")
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    if(VORB_USE_FILESYSTEM EQUAL ${VORB_STD_FILESYSTEM})
+        target_compile_options(vorb PUBLIC "/std:c++17")
+    endif()
+endif()
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    if(VORB_USE_FILESYSTEM GREATER ${VORB_BOOST_FILESYSTEM})
+        target_compile_options(vorb PUBLIC "-lstdc++fs")
+        if(VORB_USE_FILESYSTEM EQUAL ${VORB_STD_FILESYSTEM})
+            remove_flag_from_target(vorb "-std=c++14")
+#            target_compile_options(vorb PUBLIC "-std=c++17")
+        endif()
+        target_link_libraries(vorb stdc++fs)
+    endif()
+endif()
+
 
 if(VORB_USE_SCRIPTING)
     target_compile_definitions(vorb PUBLIC -DVORB_USING_SCRIPT)

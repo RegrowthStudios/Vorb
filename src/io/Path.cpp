@@ -20,45 +20,116 @@ m_path(p) {
 bool vio::Path::isNull() const {
     return m_path.empty() || m_path.length() == 0;
 }
+
+/************************************************************************\
+ * Adapted from Boost::Filesystem portability functions.                *
+ *                                                                      *
+ * Copyright 2002-2005 Beman Dawes                                      *
+ *                                                                      *
+ * Use, modification, and distribution is subject to the Boost Software *
+ * License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy *
+ * at http://www.boost.org/LICENSE_1_0.txt)                             *
+\************************************************************************/
+
+const nString invalidWindowsChars("\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F<>:\"/\\|\0");
+
+const nString validPOSIXChars( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-");
+
+bool isPOSIXFragment(const nString& fragment) {
+    return fragment.size() != 0
+            && fragment.find_first_not_of(validPOSIXChars) == std::string::npos;
+}
+
+bool isWindowsFragment(const nString& fragment)
+{
+    return fragment.size() != 0
+            && fragment[0] != ' '
+            && fragment.find_first_of(invalidWindowsChars) == nString::npos
+            && *(fragment.end() - 1) != ' '
+            && (*(fragment.end() - 1) != '.'
+                || fragment.length() == 1
+                || fragment == "..");
+}
+
+bool isNiceFragment(const nString& fragment) {
+    return fragment.size() != 0
+            && (fragment == "."
+                || fragment == ".."
+                || (isWindowsFragment(fragment)
+                    && isPOSIXFragment(fragment)
+                    && fragment[0] != '.'
+                    && fragment[0] != '-'));
+}
+
+bool isNiceDirectoryFragment(const nString& fragment)
+{
+    return fragment == "."
+            || fragment == ".."
+            || (isNiceFragment(fragment)
+                && fragment.find('.') == nString::npos);
+}
+
+bool isNiceFileFragment(const nString& fragment)
+{
+    nString::size_type pos;
+    return isNiceFragment(fragment)
+            && fragment != "."
+            && fragment != ".."
+            && ((pos = fragment.find('.')) == std::string::npos
+                || (fragment.find('.', pos + 1) == std::string::npos
+                && (pos + 5) > fragment.length()));
+}
+
+/****************************************************************\
+ * End adaptation from Boost::Filesystem portability functions. *
+\****************************************************************/
+
 bool vorb::io::Path::isNice() const {
     if (isNull()) return false;
     
-//    fs::path p(m_path);
-//    for (auto& piece : p) {
-//        if (!fs::portable_name(piece.string())) return false;
-//    }
-    return true; //you lie
+    fs::path p(m_path);
+    for (auto& piece : p) {
+        if (!isNiceFragment(piece.string())) return false;
+    }
+
+    return true;
 }
+
 bool vorb::io::Path::isNiceFile() const {
     if (isNull()) return false;
 
-//    fs::path p(m_path);
-//    auto iter = p.begin();
-//    while (iter != p.end()) {
-//        nString piece = iter->string();
-//        iter++;
-//        if (iter == p.end()) {
-//            if (!fs::portable_file_name(piece)) return false;
-//        } else {
-//            if (!fs::portable_directory_name(piece)) return false;
-//        }
-//    }
-    return true; //you lie
+    fs::path p(m_path);
+    auto iter = p.begin();
+    while (iter != p.end()) {
+        nString piece = iter->string();
+        iter++;
+        if (iter == p.end()) {
+            if (!isNiceFileFragment(piece)) return false;
+        } else {
+            if (!isNiceDirectoryFragment(piece)) return false;
+        }
+    }
+
+    return true;
 }
+
 bool vio::Path::isValid() const {
     if (isNull()) return false;
     return fs::exists(fs::path(m_path));
 }
+
 bool vio::Path::isFile() const {
     if (isNull()) return false;
     fs::path p(m_path);
     return fs::exists(p) && fs::is_regular_file(p);
 }
+
 bool vio::Path::isDirectory() const {
     if (isNull()) return false;
     fs::path p(m_path);
     return fs::exists(p) && fs::is_directory(p);
 }
+
 bool vio::Path::isAbsolute() const {
     if (isNull()) return false;
     return fs::path(m_path).is_absolute();
@@ -69,15 +140,19 @@ nString vio::Path::getLeaf() const {
     return fs::path(m_path).filename().string();
 }
 
-template<typename Type> time_t convertToTimeT(Type time)
-{ return decltype(time)::clock::to_time_t(time);}
-template<> time_t convertToTimeT<time_t>(time_t time)
-{ return time; }
+template<typename Type> time_t convertToTimeT(Type time) {
+    return Type::clock::to_time_t(time);
+}
+
+template<> time_t convertToTimeT<time_t>(time_t time) {
+    return time;
+}
 
 time_t vio::Path::getLastModTime() const {
     if (isNull()) return 0;
 
-    auto fsTime=fs::last_write_time(fs::path(m_path));
+    auto fsTime = fs::last_write_time(fs::path(m_path));
+
     return convertToTimeT(fsTime);
 }
 
@@ -88,6 +163,7 @@ vio::Path& vio::Path::makeAbsolute() {
     m_path = p.string();
     return *this;
 }
+
 vio::Path& vio::Path::makeCanonical() {
     if (isNull() || !isNice()) return *this;
     fs::path p(m_path);
@@ -103,6 +179,7 @@ vio::Path& vio::Path::append(const nString& dir) {
     m_path = p.string();
     return *this;
 }
+
 vio::Path& vio::Path::concatenate(const nString& dir) {
     if (isNull()) return *this;
     fs::path p(m_path);
@@ -110,6 +187,7 @@ vio::Path& vio::Path::concatenate(const nString& dir) {
     m_path = p.string();
     return *this;
 }
+
 vio::Path& vio::Path::trimEnd() {
     if (isNull()) return *this;
     fs::path p(m_path);
@@ -125,6 +203,7 @@ bool vio::Path::asDirectory(OUT Directory* dir) const {
     }
     return false;
 }
+
 bool vio::Path::asFile(OUT File* f) const {
     if (isNull()) return false;
     *f = File(*this);

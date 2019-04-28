@@ -64,7 +64,7 @@ namespace vorb {
 
         // Correctly retrieve initial path
 //        vio::Path path = fs::initial_path().string();
-        vio::Path path=fs::current_path().string(); //only ever called once so it really is just current path
+        vio::Path path = fs::current_path().string(); // Only ever called once so it really is just current path.
 
         // Set the executable directory
 #ifdef VORB_OS_WINDOWS

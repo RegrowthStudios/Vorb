@@ -1,9 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/Directory.h"
 
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+#include "Vorb/io/filesystem.h"
 
 vio::Directory::Directory(const Path& p) :
     m_path(p) {

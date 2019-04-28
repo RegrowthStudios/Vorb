@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/graphics/SpriteFont.h"
 
-#include <boost/filesystem.hpp>
+#include "Vorb/io/filesystem.h"
 
 #if defined(VORB_IMPL_FONT_SDL)
 //#if defined(VORB_OS_WINDOWS)
@@ -214,9 +214,9 @@ void vg::SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDicti
     ui32 startTime = SDL_GetTicks(), searchCount = 0;
 #endif // DEBUG
 
-    boost::filesystem::path fontDirectory(getenv("SystemRoot"));
+    fs::path fontDirectory(getenv("SystemRoot"));
     fontDirectory /= "Fonts";
-    boost::filesystem::directory_iterator dirIter(fontDirectory);
+    fs::directory_iterator dirIter(fontDirectory);
     nString fontExtTTF = ".ttf";
     nString fontExtFON = ".fon";
     while (true) {
@@ -227,7 +227,7 @@ void vg::SpriteFont::getInstalledFonts(std::map<nString, nString>& fontFileDicti
 #ifdef DEBUG
         searchCount++;
 #endif // DEBUG
-        if (!boost::filesystem::is_directory(dirFile)) {
+        if (!fs::is_directory(dirFile)) {
             nString fExt = dirFile.extension().string();
             if (fExt == fontExtTTF || fExt == fontExtFON) {
                 nString fontFile = dirFile.string();

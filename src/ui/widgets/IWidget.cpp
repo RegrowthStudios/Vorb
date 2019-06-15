@@ -72,9 +72,10 @@ void vui::IWidget::dispose() {
     }
     IWidgets().swap(m_widgets);
 
-    if (m_parent) {
-        m_parent->removeWidget(this);
-    }
+//cant call this as it will invalidate the m_widgets vector of parent and crash
+//    if (m_parent) {
+//        m_parent->removeWidget(this);
+//    }
 
     disable();
 }

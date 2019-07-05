@@ -137,6 +137,272 @@ namespace vorb {
             return parsePartTextAlign(value, textAlign);
         }
 
+        /************************\
+         *    Clipping State    *
+        \************************/
+
+        bool parsePartClippingState(keg::Node value, OUT vui::ClippingState& clippingState, size_t offset = 0) {
+            nString name = value->data[offset].as<nString>();
+
+            if (name == "visible") {
+                clippingState = vui::ClippingState::VISIBLE;
+                return true;
+            } else if (name == "hidden") {
+                clippingState = vui::ClippingState::HIDDEN;
+                return true;
+            } else if (name == "inherit") {
+                clippingState = vui::ClippingState::INHERIT;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool parseClippingState(keg::Node value, OUT vg::ClippingState& clippingState) {
+            if (keg::getType(value) != keg::NodeType::VALUE) return false;
+
+            return parsePartClippingState(value, clippingState);
+        }
+
+        /******************\
+         *    Clipping    *
+        \******************/
+
+        bool parseClipping(keg::Node value, OUT vui::ClippingState* clipping) {
+            if (keg::getType(value) != keg::NodeType::MAP
+                    || value->data.size() != 4) return false;
+
+            if (!(parseClippingState(value->data["left"].as<nString>(),        clipping[0])
+                    && parseClippingState(value->data["top"].as<nString>(),    clipping[1])
+                    && parseClippingState(value->data["right"].as<nString>(),  clipping[2])
+                    && parseClippingState(value->data["bottom"].as<nString>(), clipping[3]))) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /********************\
+         *    Dock State    *
+        \********************/
+
+        bool parsePartDockState(keg::Node value, OUT vui::DockState& dockState, size_t offset = 0) {
+            nString name = value->data[offset].as<nString>();
+
+            if (name == "none") {
+                dockState = vui::DockState::NONE;
+                return true;
+            } else if (name == "left") {
+                dockState = vui::DockState::LEFT;
+                return true;
+            } else if (name == "right") {
+                dockState = vui::DockState::RIGHT;
+                return true;
+            } else if (name == "bottom") {
+                dockState = vui::DockState::BOTTOM;
+                return true;
+            } else if (name == "top") {
+                dockState = vui::DockState::TOP;
+                return true;
+            } else if (name == "fill") {
+                dockState = vui::DockState::FILL;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool parseDockState(keg::Node value, OUT vui::DockState& dockState) {
+            if (keg::getType(value) != keg::NodeType::VALUE) return false;
+
+            return parsePartDockState(value, dockState);
+        }
+
+        /********************\
+         *       Dock       *
+        \********************/
+
+        bool parseDock(keg::Node value, OUT vui::Dock& dock) {
+            if (keg::getType(value) != keg::NodeType::MAP
+                    || value->data.size() != 2) return false;
+
+            if (!value->data["state"] || !value->data["size"]) return false;
+
+            if (!parseDockState({ value->data["state"] }, dock.state)) return false;
+
+            dock.size = value->data["size"].as<f32>();
+        }
+
+        /***********************\
+         *    Position Type    *
+        \***********************/
+
+        bool parsePartPositionType(keg::Node value, OUT vui::PositionType& positionType, size_t offset = 0) {
+            nString name = value->data[offset].as<nString>();
+
+            if (name == "static_to_window") {
+                positionType = vui::PositionType::STATIC_TO_WINDOW;
+                return true;
+            } else if (name == "static_to_viewport") {
+                positionType = vui::PositionType::STATIC_TO_VIEWPORT;
+                return true;
+            } else if (name == "static_to_parent") {
+                positionType = vui::PositionType::STATIC_TO_PARENT;
+                return true;
+            } else if (name == "relative_to_window") {
+                positionType = vui::PositionType::RELATIVE_TO_WINDOW;
+                return true;
+            } else if (name == "relative_to_viewport") {
+                positionType = vui::PositionType::RELATIVE_TO_VIEWPORT;
+                return true;
+            } else if (name == "relative_to_parent") {
+                positionType = vui::PositionType::RELATIVE_TO_PARENT;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool parsePositionType(keg::Node value, OUT vui::PositionType& positionType) {
+            if (keg::getType(value) != keg::NodeType::VALUE) return false;
+
+            return parsePartPositionType(value, positionType);
+        }
+
+        /************************\
+         *    Dimension Type    *
+        \************************/
+
+        bool parsePartDimensionType(keg::Node value, OUT vui::DimensionType& dimensionType, size_t offset = 0) {
+            nString name = value->data[offset].as<nString>();
+
+            if (name == "pixel") {
+                dimensionType = vui::DimensionType::PIXEL;
+                return true;
+            } else if (name == "width_percentage") {
+                dimensionType = vui::DimensionType::WIDTH_PERCENTAGE;
+                return true;
+            } else if (name == "height_percentage") {
+                dimensionType = vui::DimensionType::HEIGHT_PERCENTAGE;
+                return true;
+            } else if (name == "min_percentage") {
+                dimensionType = vui::DimensionType::MIN_PERCENTAGE;
+                return true;
+            } else if (name == "max_percentage") {
+                dimensionType = vui::DimensionType::MAX_PERCENTAGE;
+                return true;
+            } else if (name == "parent_width_percentage") {
+                dimensionType = vui::DimensionType::PARENT_WIDTH_PERCENTAGE;
+                return true;
+            } else if (name == "parent_height_percentage") {
+                dimensionType = vui::DimensionType::PARENT_HEIGHT_PERCENTAGE;
+                return true;
+            } else if (name == "parent_min_percentage") {
+                dimensionType = vui::DimensionType::PARENT_MIN_PERCENTAGE;
+                return true;
+            } else if (name == "parent_max_percentage") {
+                dimensionType = vui::DimensionType::PARENT_MAX_PERCENTAGE;
+                return true;
+            } else if (name == "viewport_width_percentage") {
+                dimensionType = vui::DimensionType::VIEWPORT_WIDTH_PERCENTAGE;
+                return true;
+            } else if (name == "viewport_height_percentage") {
+                dimensionType = vui::DimensionType::VIEWPORT_HEIGHT_PERCENTAGE;
+                return true;
+            } else if (name == "viewport_min_percentage") {
+                dimensionType = vui::DimensionType::VIEWPORT_MIN_PERCENTAGE;
+                return true;
+            } else if (name == "viewport_max_percentage") {
+                dimensionType = vui::DimensionType::VIEWPORT_MAX_PERCENTAGE;
+                return true;
+            } else if (name == "window_width_percentage") {
+                dimensionType = vui::DimensionType::WINDOW_WIDTH_PERCENTAGE;
+                return true;
+            } else if (name == "window_height_percentage") {
+                dimensionType = vui::DimensionType::WINDOW_HEIGHT_PERCENTAGE;
+                return true;
+            } else if (name == "window_min_percentage") {
+                dimensionType = vui::DimensionType::WINDOW_MIN_PERCENTAGE;
+                return true;
+            } else if (name == "window_max_percentage") {
+                dimensionType = vui::DimensionType::WINDOW_MAX_PERCENTAGE;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool parseDimensionType(keg::Node value, OUT vui::DimensionType& dimensionType) {
+            if (keg::getType(value) != keg::NodeType::VALUE) return false;
+
+            return parsePartDimensionType(value, dimensionType);
+        }
+
+        /**********************\
+         *       Length       *
+        \**********************/
+
+        bool parseLength(keg::Node value, OUT vui::Length& length) {
+            if (keg::getType(value) != keg::NodeType::MAP
+                    || value->data.size() != 2) return false;
+
+            if (!(value->data["x"] && value->data["dim_x"])) return false;
+
+            vui::DimensionType dimType;
+            if (!parseDimensionType(value->data["dim_x"].as<nString>(), dimType)) return false;
+
+            length.x = value->data["x"].as<f32>();
+            length.dimension.x = dimType;
+
+            return true;
+        }
+
+        bool parseLength2(keg::Node value, OUT vui::Length2& length) {
+            if (keg::getType(value) != keg::NodeType::MAP
+                    || value->data.size() != 4) return false;
+
+            if (!(value->data["x"] && value->data["dim_x"]
+                    && value->data["y"] && value->data["dim_y"])) return false;
+
+            vui::DimensionType dimType1, dimType2;
+            if (!(parseDimensionType(value->data["dim_x"].as<nString>(), dimType1)
+                    && parseDimensionType(value->data["dim_y"].as<nString>(), dimType2))) return false;
+
+            length.x = value->data["x"].as<f32>();
+            length.y = value->data["y"].as<f32>();
+            length.dimension.x = dimType1;
+            length.dimension.y = dimType2;
+
+            return true;
+        }
+
+        bool parseLength4(keg::Node value, OUT vui::Length4& length) {
+            if (keg::getType(value) != keg::NodeType::MAP
+                    || value->data.size() != 8) return false;
+
+            if (!(value->data["x"] && value->data["dim_x"]
+                    && value->data["y"] && value->data["dim_y"]
+                    && value->data["z"] && value->data["dim_z"]
+                    && value->data["w"] && value->data["dim_w"])) return false;
+
+            vui::DimensionType dimType1, dimType2, dimType3, dimType4;
+            if (!(parseDimensionType(value->data["dim_x"].as<nString>(), dimType1)
+                    && parseDimensionType(value->data["dim_y"].as<nString>(), dimType2)
+                    && parseDimensionType(value->data["dim_z"].as<nString>(), dimType3)
+                    && parseDimensionType(value->data["dim_w"].as<nString>(), dimType4))) return false;
+
+            length.x = value->data["x"].as<f32>();
+            length.y = value->data["y"].as<f32>();
+            length.z = value->data["z"].as<f32>();
+            length.w = value->data["w"].as<f32>();
+            length.dimension.x = dimType1;
+            length.dimension.y = dimType2;
+            length.dimension.z = dimType3;
+            length.dimension.w = dimType4;
+
+            return true;
+        }
+
         /*******************\
          *      Color      *
         \*******************/

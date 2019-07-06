@@ -15,7 +15,7 @@ vui::WidgetList::~WidgetList() {
 void vui::WidgetList::initBase() {
     m_panel.init(this, getName() + "_panel");
 
-    m_panel.setClipping({ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
+    m_panel.setClipping(vui::Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
 }
 
 void vui::WidgetList::dispose() {

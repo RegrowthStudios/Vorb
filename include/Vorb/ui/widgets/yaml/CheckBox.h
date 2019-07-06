@@ -19,7 +19,10 @@
 //! @endcond
 
 #include "Vorb/types.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Keg.h"
+
+DECL_VG(class TextureCache);
 
 namespace vorb {
     namespace ui {
@@ -38,7 +41,7 @@ namespace vorb {
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
+        bool parseCheckBoxEntry(keg::ReadContext& context, CheckBox* checkBox, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
     }
 }
 namespace vui = vorb::ui;

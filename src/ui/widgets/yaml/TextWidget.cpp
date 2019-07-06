@@ -8,7 +8,7 @@
 bool vui::parseTextWidgetEntry(keg::ReadContext& context, vui::TextWidget* textWidget, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser) {
     if (name == "text") {
         nString text;
-        if (!parseString(*value, text)) return false;
+        if (!parseValue(*value, text)) return false;
 
         textWidget->setText(text);
     } else if (name == "text_scale") {

@@ -173,10 +173,10 @@ namespace vorb {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 4) return false;
 
-            if (!(parseClippingState(value.data["left"].as<nString>(),        clipping[0])
-                    && parseClippingState(value.data["top"].as<nString>(),    clipping[1])
-                    && parseClippingState(value.data["right"].as<nString>(),  clipping[2])
-                    && parseClippingState(value.data["bottom"].as<nString>(), clipping[3]))) {
+            if (!(parseClippingState({ value.data["left"] },        clipping[0])
+                    && parseClippingState({ value.data["top"] },    clipping[1])
+                    && parseClippingState({ value.data["right"] },  clipping[2])
+                    && parseClippingState({ value.data["bottom"] }, clipping[3]))) {
                 return false;
             }
 
@@ -232,6 +232,8 @@ namespace vorb {
             if (!parseDockState({ value.data["state"] }, dock.state)) return false;
 
             dock.size = value.data["size"].as<f32>();
+
+            return true;
         }
 
         /***********************\
@@ -350,7 +352,7 @@ namespace vorb {
             if (!(value.data["x"] && value.data["dim_x"])) return false;
 
             vui::DimensionType dimType;
-            if (!parseDimensionType(value.data["dim_x"].as<nString>(), dimType)) return false;
+            if (!parseDimensionType({ value.data["dim_x"] }, dimType)) return false;
 
             length.x = value.data["x"].as<f32>();
             length.dimension.x = dimType;
@@ -366,8 +368,8 @@ namespace vorb {
                     && value.data["y"] && value.data["dim_y"])) return false;
 
             vui::DimensionType dimType1, dimType2;
-            if (!(parseDimensionType(value.data["dim_x"].as<nString>(), dimType1)
-                    && parseDimensionType(value.data["dim_y"].as<nString>(), dimType2))) return false;
+            if (!(parseDimensionType({ value.data["dim_x"] }, dimType1)
+                    && parseDimensionType({ value.data["dim_y"] }, dimType2))) return false;
 
             length.x = value.data["x"].as<f32>();
             length.y = value.data["y"].as<f32>();
@@ -387,10 +389,10 @@ namespace vorb {
                     && value.data["w"] && value.data["dim_w"])) return false;
 
             vui::DimensionType dimType1, dimType2, dimType3, dimType4;
-            if (!(parseDimensionType(value.data["dim_x"].as<nString>(), dimType1)
-                    && parseDimensionType(value.data["dim_y"].as<nString>(), dimType2)
-                    && parseDimensionType(value.data["dim_z"].as<nString>(), dimType3)
-                    && parseDimensionType(value.data["dim_w"].as<nString>(), dimType4))) return false;
+            if (!(parseDimensionType({ value.data["dim_x"] }, dimType1)
+                    && parseDimensionType({ value.data["dim_y"] }, dimType2)
+                    && parseDimensionType({ value.data["dim_z"] }, dimType3)
+                    && parseDimensionType({ value.data["dim_w"] }, dimType4))) return false;
 
             length.x = value.data["x"].as<f32>();
             length.y = value.data["y"].as<f32>();
@@ -415,9 +417,9 @@ namespace vorb {
 
         i8 parseLengthOrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::VALUE) {
-                return parseBasic(*value, lengthOrRaw.raw) ? 1 : -1;
+                return parseValue(value, lengthOrRaw.raw) ? 1 : -1;
             } else {
-                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+                return parseLength(value, lengthOrRaw.length) ? 2 : -1;
             }
 
             return -1;
@@ -428,12 +430,12 @@ namespace vorb {
             f32v2        raw;
         };
 
-        i8 parseLength2OrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
+        i8 parseLength2OrRaw(keg::YAMLNode value, OUT Length2OrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::SEQUENCE
                     && value.data.size() == 2) {
-                return parseVec2(*value, lengthOrRaw.raw) ? 1 : -1;
+                return parseVec2(value, lengthOrRaw.raw) ? 1 : -1;
             } else {
-                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+                return parseLength2(value, lengthOrRaw.length) ? 2 : -1;
             }
 
             return -1;
@@ -447,9 +449,9 @@ namespace vorb {
         i8 parseLength4OrRaw(keg::YAMLNode value, OUT Length4OrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::SEQUENCE
                     && value.data.size() == 4) {
-                return parseVec4(*value, lengthOrRaw.raw) ? 1 : -1;
+                return parseVec4(value, lengthOrRaw.raw) ? 1 : -1;
             } else {
-                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+                return parseLength4(value, lengthOrRaw.length) ? 2 : -1;
             }
 
             return -1;

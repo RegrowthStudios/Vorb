@@ -16,12 +16,12 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
         color4 color;
         if (!parseColor(*value, color)) return false;
 
-        slider->setSliderColor(color);
+        slider->setSlideColor(color);
     } else if (name == "slider_hover_color") {
-        color4           color1;
-        if (!parseColor(*value, color1)) return false;
+        color4 color;
+        if (!parseColor(*value, color)) return false;
 
-        slider->setSliderHoverColor(color1, color2, gradType);
+        slider->setSlideHoverColor(color);
     } else if (name == "slider_texture") {
         if (keg::getType(value) != keg::NodeType::VALUE) return false;
 
@@ -40,40 +40,40 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
         slider->setBarTexture(tex.id);
     } else if (name == "value") {
         i32 slideValue;
-        if (!parseBasic(*value, slideValue)) return false;
+        if (!parseValue(*value, slideValue)) return false;
 
         slider->setValue(slideValue);
     } else if (name == "range") {
         i32v2 range;
         if (!parseVec2(*value, range)) return false;
 
-        slider->setRange(range);
+        slider->setRange(range[0], range[1]);
     } else if (name == "min") {
         i32 minVal;
-        if (!parseBasic(*value, minVal)) return false;
+        if (!parseValue(*value, minVal)) return false;
 
         slider->setMin(minVal);
     } else if (name == "max") {
         i32 maxVal;
-        if (!parseBasic(*value, maxVal)) return false;
+        if (!parseValue(*value, maxVal)) return false;
 
         slider->setMin(maxVal);
     } else if (name == "slide_size") {
-        LengthOrRaw lengthOrRaw;
+        Length2OrRaw lengthOrRaw;
 
-        switch (parseLengthOrRaw(*value, lengthOrRaw)) {
+        switch (parseLength2OrRaw(*value, lengthOrRaw)) {
         case 1:
-            slider->setSliderSize(lengthOrRaw.raw);
+            slider->setSlideSize(lengthOrRaw.raw);
             break;
         case 2:
-            slider->setSliderSize(lengthOrRaw.length);
+            slider->setSlideSize(lengthOrRaw.length);
             break;
         default:
             return false;
         }
     } else if (name == "vertical") {
         bool isVertical;
-        if (!parseBasic(*value, isVertical)) return false;
+        if (!parseValue(*value, isVertical)) return false;
 
         slider->setIsVertical(isVertical);
     } else {

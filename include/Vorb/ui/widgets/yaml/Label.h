@@ -19,7 +19,10 @@
 //! @endcond
 
 #include "Vorb/types.h"
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Keg.h"
+
+DECL_VG(class TextureCache);
 
 namespace vorb {
     namespace ui {
@@ -38,7 +41,7 @@ namespace vorb {
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
+        bool parseLabelEntry(keg::ReadContext& context, Label* label, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
     }
 }
 namespace vui = vorb::ui;

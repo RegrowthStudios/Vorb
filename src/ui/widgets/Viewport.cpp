@@ -7,7 +7,7 @@
 vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) :
     Widget(),
     m_window(window) {
-    m_clipping = { ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN };
+    m_clipping = vui::Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN };
 }
 
 vui::Viewport::~Viewport() {

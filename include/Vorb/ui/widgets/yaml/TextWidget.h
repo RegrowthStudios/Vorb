@@ -41,7 +41,7 @@ namespace vorb {
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parseTextWidgetEntry(keg::ReadContext& context, vui::TextWidget* label, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser);
+        bool parseTextWidgetEntry(keg::ReadContext& context, TextWidget* label, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser);
     }
 }
 namespace vui = vorb::ui;

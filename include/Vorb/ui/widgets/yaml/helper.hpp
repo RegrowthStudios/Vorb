@@ -404,6 +404,57 @@ namespace vorb {
             return true;
         }
 
+        /****************************\
+         *       Length or Raw      *
+        \****************************/
+
+        union LengthOrRaw {
+            vui::Length length;
+            f32         raw;
+        };
+
+        i8 parseLengthOrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
+            if (keg::getType(&value) == keg::NodeType::VALUE) {
+                return parseBasic(*value, lengthOrRaw.raw) ? 1 : -1;
+            } else {
+                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+            }
+
+            return -1;
+        }
+
+        union Length2OrRaw {
+            vui::Length2 length;
+            f32v2        raw;
+        };
+
+        i8 parseLength2OrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
+            if (keg::getType(&value) == keg::NodeType::SEQUENCE
+                    && value.data.size() == 2) {
+                return parseVec2(*value, lengthOrRaw.raw) ? 1 : -1;
+            } else {
+                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+            }
+
+            return -1;
+        }
+
+        union Length4OrRaw {
+            vui::Length4 length;
+            f32v4        raw;
+        };
+
+        i8 parseLength4OrRaw(keg::YAMLNode value, OUT Length4OrRaw& lengthOrRaw) {
+            if (keg::getType(&value) == keg::NodeType::SEQUENCE
+                    && value.data.size() == 4) {
+                return parseVec4(*value, lengthOrRaw.raw) ? 1 : -1;
+            } else {
+                return parseLength(*value, lengthOrRaw.length) ? 2 : -1;
+            }
+
+            return -1;
+        }
+
         /*******************\
          *      Color      *
         \*******************/

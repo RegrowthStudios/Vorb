@@ -8,7 +8,7 @@
 bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser) {
     if (name == "positioning") {
         vui::PositionType positionType;
-        if (!parsePositionType(value, positionType)) return false;
+        if (!parsePositionType(*value, positionType)) return false;
 
         widget->setPositionType(positionType);
     } else if (name == "raw_dimensions") {
@@ -19,12 +19,9 @@ bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const
 
         vui::Length2 position, size;
 
-        keg::YAMLNode tmp  = { value->data["position"] };
-        keg::Node     node = &tmp;
-        if (!parseLength2(node, position)) return false;
+        if (!parseLength2({ value->data["position"] }, position)) return false;
 
-        tmp = { value->data["size"] };
-        if (!parseLength2(node, size)) return false;
+        if (!parseLength2({ value->data["size"] }, size)) return false;
 
         widget->setRawPosition(position);
         widget->setRawSize(size);
@@ -32,23 +29,15 @@ bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const
         if (keg::getType(value) != keg::NodeType::MAP
                 || value->data.size() != 4) return false;
 
-        if (!(value->data["left"] && value->data["top"])
+        if (!(value->data["left"] && value->data["top"]
                 && value->data["right"] && value->data["bottom"])) return false;
 
         vui::Length left, top, right, bottom;
 
-        keg::YAMLNode tmp  = { value->data["left"] };
-        keg::Node     node = &tmp;
-        if (!parseLength(node, left)) return false;
-
-        tmp = { value->data["top"] };
-        if (!parseLength(node, top)) return false;
-
-        tmp = { value->data["right"] };
-        if (!parseLength(node, right)) return false;
-
-        tmp = { value->data["bottom"] };
-        if (!parseLength(node, bottom)) return false;
+        if (!parseLength({ value->data["left"]   }, left))   return false;
+        if (!parseLength({ value->data["top"]    }, top))    return false;
+        if (!parseLength({ value->data["right"]  }, right))  return false;
+        if (!parseLength({ value->data["bottom"] }, bottom)) return false;
 
         widget->setRawLeft(left);
         widget->setRawTop(top);
@@ -57,25 +46,25 @@ bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const
     } else if (name == "raw_min_size") {
         vui::Length2 minSize;
 
-        if (!parseLength2(value, minSize)) return false;
+        if (!parseLength2(*value, minSize)) return false;
 
         widget->setRawMinSize(minSize);
     } else if (name == "raw_max_size") {
         vui::Length2 maxSize;
 
-        if (!parseLength2(value, maxSize)) return false;
+        if (!parseLength2(*value, maxSize)) return false;
 
         widget->setRawMaxSize(maxSize);
     } else if (name == "raw_dock_size") {
         vui::Length dockSize;
 
-        if (!parseLength(value, dockSize)) return false;
+        if (!parseLength(*value, dockSize)) return false;
 
         widget->setRawDockSize(dockSize);
     } else if (name == "raw_padding") {
         vui::Length4 padding;
 
-        if (!parseLength4(value, padding)) return false;
+        if (!parseLength4(*value, padding)) return false;
 
         widget->setRawPadding(padding);
     }

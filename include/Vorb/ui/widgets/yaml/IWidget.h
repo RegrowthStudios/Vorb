@@ -24,29 +24,7 @@
 namespace vorb {
     namespace ui {
         // Forward Declarations.
-        enum ClippingState;
-        enum DockState;
         class  IWidget;
-
-        /*!
-         * \brief Parses the clipping state corresponding to the given name.
-         *
-         * \param name The name of the clipping state to be parsed.
-         * \param clippingState The output state if parsed successfully.
-         *
-         * \return True if parsing is successful, false otherwise.
-         */
-        bool parseClippingState(const nString& name, OUT vui::ClippingState& clippingState);
-
-        /*!
-         * \brief Parses the dock state corresponding to the given name.
-         *
-         * \param name The name of the dock state to be parsed.
-         * \param dockState The output state if parsed successfully.
-         *
-         * \return True if parsing is successful, false otherwise.
-         */
-        bool parseDockState(const nString& name, OUT vui::DockState& dockState);
 
         /*!
          * \brief Parses the entry of the currently-parsing IWidget corresponding to the given YAML node.

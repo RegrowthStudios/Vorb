@@ -67,7 +67,9 @@ bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const
         if (!parseLength4(*value, padding)) return false;
 
         widget->setRawPadding(padding);
+    } else {
+        return vui::parseIWidgetEntry(context, widget, name, value, widgetParser);
     }
 
-    return vui::parseIWidgetEntry(context, widget, name, value, widgetParser);
+    return true;
 }

@@ -36,7 +36,9 @@ bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nS
         if (!parseColor(*value, color)) return false;
 
         label->setTextHoverColor(color);
+    } else {
+        return vui::parseTextWidgetEntry(context, label, name, value, widgetParser);
     }
 
-    return vui::parseTextWidgetEntry(context, label, name, value, widgetParser);
+    return true;
 }

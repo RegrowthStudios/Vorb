@@ -65,7 +65,9 @@ bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox,
         if (!parseValue(*value, checked)) return false;
 
         checkBox->setChecked(checked);
+    } else {
+        return vui::parseTextWidgetEntry(context, checkBox, name, value, widgetParser);
     }
 
-    return vui::parseTextWidgetEntry(context, checkBox, name, value, widgetParser);
+    return true;
 }

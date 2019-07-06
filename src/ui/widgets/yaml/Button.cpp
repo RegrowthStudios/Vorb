@@ -50,7 +50,9 @@ bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const
         if (!parseColor(*value, color)) return false;
 
         button->setTextHoverColor(color);
+    } else {
+        return vui::parseTextWidgetEntry(context, button, name, value, widgetParser);
     }
 
-    return vui::parseTextWidgetEntry(context, button, name, value, widgetParser);
+    return true;
 }

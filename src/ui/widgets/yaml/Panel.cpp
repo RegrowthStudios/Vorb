@@ -41,7 +41,9 @@ bool vui::parsePanelEntry(keg::ReadContext& context, vui::Panel* panel, const nS
         if (!parseValue(*value, width)) return false;
 
         panel->setSliderWidth(width);
+    } else {
+        return vui::parseWidgetEntry(context, panel, name, value, widgetParser);
     }
 
-    return vui::parseWidgetEntry(context, panel, name, value, widgetParser);
+    return true;
 }

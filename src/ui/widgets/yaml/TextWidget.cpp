@@ -28,7 +28,9 @@ bool vui::parseTextWidgetEntry(keg::ReadContext& context, vui::TextWidget* textW
         textWidget->setTextColor(color);
     } else if (name == "font") {
         // TODO(Matthew): Implement. This should likely have a cache mechanism.
+    } else {
+        return vui::parseWidgetEntry(context, textWidget, name, value, widgetParser);
     }
 
-    return vui::parseWidgetEntry(context, textWidget, name, value, widgetParser);
+    return true;
 }

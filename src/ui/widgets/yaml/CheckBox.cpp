@@ -29,28 +29,28 @@ bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox,
         checkBox->setBoxCheckedHoverColor(color);
     } else if (name == "bg_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         checkBox->setUncheckedTexture(tex.id);
     } else if (name == "bg_hover_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         checkBox->setUncheckedHoverTexture(tex.id);
     } else if (name == "bg_checked_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         checkBox->setCheckedTexture(tex.id);
     } else if (name == "bg_checked_hover_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
@@ -62,7 +62,7 @@ bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox,
         checkBox->setTextHoverColor(color);
     } else if (name == "checked") {
         bool checked;
-        if (!parseBool(*value, checked)) return false;
+        if (!parseValue(*value, checked)) return false;
 
         checkBox->setChecked(checked);
     }

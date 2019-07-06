@@ -19,14 +19,14 @@ bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nS
         label->setLabelHoverColor(color);
     } else if (name == "bg_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         label->setLabelTexture(tex.id);
     } else if (name == "bg_hover_texture") {
         nString texturePath;
-        if (!parseString(*value, texturePath)) return false;
+        if (!parseValue(*value, texturePath)) return false;
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 

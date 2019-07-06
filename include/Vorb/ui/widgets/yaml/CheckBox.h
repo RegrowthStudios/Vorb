@@ -34,7 +34,7 @@ namespace vorb {
          * \param CheckBox The CheckBox to be built up using the given parsed CheckBox data.
          * \param name The name of the CheckBox property to be parsed.
          * \param node The node of the CheckBox property to be parsed.
-         * \param widgetParser Marshals parsing of the widgets that are children of the Label being parsed.
+         * \param widgetParser Marshals parsing of the widgets that are children of the CheckBox being parsed.
          *
          * \return True if parsing is successful, false otherwise.
          */

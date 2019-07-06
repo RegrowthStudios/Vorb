@@ -4,26 +4,15 @@
 
 namespace vorb {
     namespace ui {
-        /**************\
-         *    Bool    *
-        \**************/
+        /***************\
+         *    Basic    *
+        \***************/
 
-        bool parseBool(keg::YAMLNode value, OUT bool& val) {
+        template <typename Type>
+        bool parseValue(keg::YAMLNode value, OUT Type& parsed) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
-            val = value.data[0].as<bool>();
-
-            return true;
-        }
-
-        /****************\
-         *    String    *
-        \****************/
-
-        bool parseString(keg::YAMLNode value, OUT nString& str) {
-            if (keg::getType(&value) != keg::NodeType::VALUE) return false;
-
-            str = value.data[0].as<nString>();
+            parsed = value.data[0].as<Type>();
 
             return true;
         }

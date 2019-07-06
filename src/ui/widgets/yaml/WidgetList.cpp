@@ -4,7 +4,7 @@
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/WidgetList.h"
 #include "Vorb/ui/widgets/yaml/helper.hpp"
-#include "Vorb/ui/widgets/yaml/TextWidget.h"
+#include "Vorb/ui/widgets/yaml/Widget.h"
 
 bool vui::parseWidgetListEntry(keg::ReadContext& context, vui::WidgetList* widgetList, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {
     if (name == "bg_color") {
@@ -35,9 +35,31 @@ bool vui::parseWidgetListEntry(keg::ReadContext& context, vui::WidgetList* widge
 
         widgetList->setSpacing(maxHeight);
     } else if (name == "children") {
-        // TODO(Matthew): Implement adding/creating etc. children for widget list.
+        if (keg::getType(value) != keg::NodeType::MAP) return false;
+
+        bool success = true;
+        auto handleWidgetParse = makeFunctor([&](Sender, const nString& type, keg::Node node) {
+            vui::IWidget* child = nullptr;
+            if (keg::getType(node) != keg::NodeType::MAP &&
+                    node->data.size() == 2 &&
+                        node->data["index"] && node->data["item"]) {
+                keg::YAMLNode tmp = { node->data["item"] };
+                child = widgetParser->invoke(type, &tmp);
+
+                widgetList->addItemAtIndex(node->data["index"].as<size_t>(), child);
+            } else {
+                child = widgetParser->invoke(type, node);
+
+                widgetList->addItem(child);
+            }
+
+            success = success && (child != nullptr);
+        });
+        context.reader.forAllInMap(value, &handleWidgetParse);
+
+        return success;
     } else {
-        return vui::parseTextWidgetEntry(context, widgetList, name, value, widgetParser);
+        return vui::parseWidgetEntry(context, widgetList, name, value, widgetParser);
     }
 
     return true;

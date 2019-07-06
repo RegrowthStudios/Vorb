@@ -4,6 +4,18 @@
 
 namespace vorb {
     namespace ui {
+        /**************\
+         *    Bool    *
+        \**************/
+
+        bool parseBool(keg::YAMLNode value, OUT bool& val) {
+            if (keg::getType(&value) != keg::NodeType::VALUE) return false;
+
+            val = value.data[0].as<bool>();
+
+            return true;
+        }
+
         /****************\
          *    String    *
         \****************/

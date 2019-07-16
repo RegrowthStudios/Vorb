@@ -1,0 +1,84 @@
+//
+// Mod.h
+// Vorb Engine
+//
+// Created by Matthew Marshall on 16 July 2019
+// Copyright 2019 Regrowth Studios
+// MIT License
+//
+
+/*! \file Mod.h
+ * \brief Holds all things needed for a given mod. This includes the mod's metadata, but also
+ * basic utilities such as an IO manager, texture cache etc.
+ */
+
+#pragma once
+
+#ifndef Vorb_Mod_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_Mod_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "../types.h"
+#endif // !VORB_USING_PCH
+
+#include "ModIOManager.h"
+
+namespace vorb {
+    namespace mod {
+        struct ModMetadata {
+            nString name;
+            nString author;
+        };
+
+        class Mod {
+        public:
+            Mod();
+            ~Mod() {
+                // Empty.
+            }
+
+            // TODO(Matthew): We need to decide on the initialisation process. This is the entry point, so likely require something
+            //                like "mod.yaml" which contains metadata, perhaps also specifies the mod's entry points for startup
+            //                and shutdown? 
+            /*!
+             * \brief Initialises the mod, setting up necessary data, including loading
+             * associated metadata.
+             */
+            void init(nString dir);
+            /*!
+             * \brief Disposes of the mod.
+             */
+            void dispose();
+
+            // TODO(Matthew): Determine start up and shut down processes for mods.
+            //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
+            /*!
+             * \brief Starts up the mod.
+             */
+            void startup();
+            /*!
+             * \brief Shuts down the mod.
+             */
+            void shutdown();
+
+            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
+            /*!
+             * \brief Run update loop of the mod.
+             *
+             * \param dt The time since the last frame.
+             */
+            void update(f32 dt = 0.0f);
+
+        protected:
+            ModMetadata  m_metadata;
+            // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.
+            //                    To achieve this, we should make an IOManager interface, and add an optional IOManager pointer to the appropriate cache fetch functions.
+            ModIOManager m_iomanager;
+        };
+    }
+}
+namespace vmod = vorb::mod;
+
+#endif // !Vorb_Mod_h__

@@ -32,11 +32,11 @@ namespace vorb {
         // TODO(Matthew): Would be nice to have a way to cache UI, but it'll be bloody hard because of the event hooks and such
         //                that are not simple data. We can come back to this.
         namespace UILoader {
-            using WidgetParser = Delegate<vui::IWidget*, const nString&, keg::Node>;
+            using WidgetParser = Delegate<IWidget*, const nString&, keg::Node>;
 
-            bool loadWidgetFromYAML(const vio::IOManager& iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
+            IWidget* loadWidgetFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
 
-            bool loadFromYAML(const vio::IOManager& iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
+            bool loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
         }
     }
 }

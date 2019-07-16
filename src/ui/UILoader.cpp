@@ -29,7 +29,10 @@
 //                callbacks to perform setting rather than direct memory offsets. In the future Keg could be
 //                extended to do that and this rewritten.
 
-// TODO(Matthew): On failed parse, ensure clean up covers all thus-far created widgets!
+// TODO(Matthew): Can we support YAML specifying Lua scripts to build specific widget (sub-trees) and/or specify
+//                Lua functions to subscribe to events?
+//                    This seems non-trivial as right now YAML and Lua are largely decoupled due to having two
+//                    separate UI classes, of which both must support YAML and only ScriptedUI must support Lua.
 
 // TODO(Matthew): Can we put all the widgets in the same container to reduce fragmentation of their data?
 //                Would involve creating some kind of generic container that is element-wise sized on max-sized widget kind.
@@ -107,14 +110,14 @@ bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node
 
 
 
-bool vui::UILoader::loadFromYAML(const vio::IOManager& iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser /*= nullptr*/) {
+bool vui::UILoader::loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser /*= nullptr*/) {
     // Check if the filepath given can be resolved.
     vio::Path path;
-    if (!iom.resolvePath(filepath, path)) return false;
+    if (!iom->resolvePath(filepath, path)) return false;
 
     // Read the file, check something was indeed read in.
     nString data;
-    iom.readFileToString(path, data);
+    iom->readFileToString(path, data);
     if (data.empty()) return false;
 
     // Set up a YAML read context.

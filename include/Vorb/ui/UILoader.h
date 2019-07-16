@@ -34,8 +34,28 @@ namespace vorb {
         namespace UILoader {
             using WidgetParser = Delegate<IWidget*, const nString&, keg::Node>;
 
+            // TODO(Matthew): Implement this function.
+            /*!
+             * \brief Loads a widget and its descendents from a YAML file.
+             *
+             * \param vio::IOManager*   iom The IOManager instance to use for loading the YAML data.
+             * \param const cString     filepath The filepath of the YAML data (relative to the IOManager instance's base).
+             * \param vg::TextureCache* textureCache The texture cache to use for loading any of the widgets' textures from.
+             * \param vui::UILoader::WidgetParser customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing.
+             *
+             * \return A pointer to the created widget (tree), or nullptr if creation failed.
+             */
             IWidget* loadWidgetFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
 
+            /*!
+             * \brief Loads a widget and its descendents from a YAML file.
+             *
+             * \param vio::IOManager*   iom The IOManager instance to use for loading the YAML data.
+             * \param const cString     filepath The filepath of the YAML data (relative to the IOManager instance's base).
+             * \param vg::TextureCache* textureCache The texture cache to use for loading any of the widgets' textures from.
+             * \param vui::Viewport*    viewport A pointer to the viewport to be used as a base for the loaded UI.
+             * \param vui::UILoader::WidgetParser customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing. 
+             */
             bool loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
         }
     }

@@ -33,11 +33,12 @@
 namespace vorb {
     namespace mod {
         /*!
-         * \brief Manages simple IO operations within a file system with restrictions on searchable directories.
+         * \brief Manages simple mod-specific IO operations within permitted directories.
          *  
-         * When attempting any operations, it looks only in the list of specified searchable directories. Valid paths
-         * must all be relative to one of these searchable directories. The prioritisation of these directories is in
-         * reverse order to their insertion into the list.
+         * When attempting any write operations, the only permitted root directory is the mod's own
+         * specific directory (Mods/MOD_NAME/). When attempting read-only operations, the permitted directories are
+         * the mod's own directory (Mods/MOD_NAME/), the global mod directory (Mods/), and any specified vanilla
+         * asset directory (e.g. Fonts/). The latter are used primarily when the IO manager is used by an asset cache.
          */
         class ModIOManager {
         public:

@@ -53,7 +53,6 @@ namespace vorb {
             ViewScriptEnvironment<ScriptEnvironmentImpl>* viewEnv;
         };
 
-        // TODO(Matthew): Make a non-scripted version.
         template <typename ScriptEnvironmentImpl>
         class ScriptedUI {
         public:

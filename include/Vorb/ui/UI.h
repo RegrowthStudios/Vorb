@@ -28,6 +28,7 @@
 #include "Vorb/io/File.h"
 
 DECL_VG(class TextureCache; class SpriteBatch; class SpriteFont)
+DECL_VIO(class IOManager)
 DECL_VUI(class IGameScreen)
 
 namespace vorb {
@@ -61,7 +62,7 @@ namespace vorb {
              * \param defaultFont The default font for views to use.
              * \param spriteBatch The spritebatch for view renderers to use.
              */
-            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*!
              * \brief Disposes the managed views and resets pointers.
              */
@@ -216,6 +217,7 @@ namespace vorb {
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
             vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
             vg::TextureCache* m_textureCache; ///< Cache for UI-related textures.
+            vio::IOManager*   m_iom;          ///< IO Manager for getting necessary YAML files.
         };
     }
 }

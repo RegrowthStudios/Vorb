@@ -4,8 +4,10 @@
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/graphics/SpriteBatch.h"
 #include "Vorb/graphics/SpriteFont.h"
+#include "Vorb/io/IOManager.h"
 #include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/IGameScreen.h"
+#include "Vorb/ui/UILoader.h"
 #include "Vorb/ui/widgets/Viewport.h"
 
 vui::UI::UI() :
@@ -19,9 +21,10 @@ vui::UI::~UI() {
     // Empty
 }
 
-void vui::UI::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::UI::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_ownerScreen  = ownerScreen;
     m_window       = window;
+    m_iom          = iom;
     m_textureCache = textureCache;
     m_defaultFont  = defaultFont;
     m_spriteBatch  = spriteBatch;
@@ -73,10 +76,16 @@ vui::Viewport* vui::UI::makeView(const nString& name, ZIndex zIndex, const Lengt
     return viewport;
 }
 
-vui::Viewport* vui::UI::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath VORB_UNUSED) {
+// TODO(Matthew): Limit time to make? Need to not get stuck on this, and in principle through
+//                  file references we could easily get an infinite loop.
+vui::Viewport* vui::UI::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath) {
     Viewport* viewport = makeView(name, zIndex);
 
-    // TODO(Matthew): Implement building view from YAML.
+    if (!UILoader::loadFromYAML(m_iom, filepath.c_str(), m_textureCache, viewport)) {
+        destroyView(viewport);
+
+        viewport = nullptr;
+    }
 
     return viewport;
 }

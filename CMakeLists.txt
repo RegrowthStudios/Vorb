@@ -280,6 +280,7 @@ set(vorb_ui
     include/Vorb/ui/MouseInputDispatcher.h
     include/Vorb/ui/ScreenList.h
     include/Vorb/ui/TextInputListener.hpp
+    include/Vorb/ui/UILoader.h
     include/Vorb/ui/UIRenderer.h
     include/Vorb/ui/WindowEventDispatcher.h
     include/Vorb/ui/widgets/Button.h
@@ -313,6 +314,7 @@ set(vorb_ui
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
     src/ui/ScreenList.cpp
+    src/ui/UILoader.cpp
     src/ui/UIRenderer.cpp
     src/ui/widgets/Button.cpp
     src/ui/widgets/CheckBox.cpp

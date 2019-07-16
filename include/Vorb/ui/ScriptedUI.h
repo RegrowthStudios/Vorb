@@ -258,6 +258,10 @@ namespace vorb {
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
 
+            // TODO(Matthew): It seems to me that this is rather stupid, we essentially end up with each UI
+            //                able to create other UI but each ends up with its own script environment, and,
+            //                at least as implemented, we don't give any other script the ability to create
+            //                any UI.
             virtual void prepareScriptEnv(ViewEnv* viewEnv);
 
             vui::IGameScreen* m_ownerScreen;  ///< The screen that owns this UI.
@@ -373,10 +377,15 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(nStrin
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath VORB_UNUSED) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
-    // TODO(Matthew): Implement building view from YAML.
+    if (!UILoader::loadFromYAML(m_iom, filepath.c_str(), m_textureCache, view.viewport)) {
+        destroyView(view.viewport);
+
+        view.viewport = nullptr;
+        view.viewEnv  = nullptr;
+    }
 
     return view.viewport;
 }
@@ -520,6 +529,9 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ViewEnv* viewEnv) 
     env->setNamespaces("UI");
     env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript));
     env->addCDelegate("makeViewFromYAML",    makeDelegate(this, &ScriptedUI::makeViewFromYAML));
+    env->addCDelegate("makeWidgetFromYAML", makeFunctor([=](nString filepath) {
+        return UILoader::loadWidgetFromYAML(m_iom, filepath.c_str(), m_textureCache);
+    }));
     env->addCDelegate("enableView",          makeDelegate(this, &ScriptedUI::enableView));
     env->addCDelegate("enableViewWithName",  makeDelegate(this, &ScriptedUI::enableViewWithName));
     env->addCDelegate("disableView",         makeDelegate(this, &ScriptedUI::disableView));

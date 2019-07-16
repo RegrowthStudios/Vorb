@@ -18,20 +18,25 @@
 #define Vorb_UILoader_h__
 //! @endcond
 
+#include "Vorb/Delegate.hpp"
 #include "Vorb/types.h"
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/io/YAMLNode.h"
 
+DECL_VG(class TextureCache)
 DECL_VIO(class IOManager)
-DECL_VUI(class Viewport)
+DECL_VUI(class IWidget; class Viewport)
 
 namespace vorb {
     namespace ui {
+        // TODO(Matthew): Would be nice to have a way to cache UI, but it'll be bloody hard because of the event hooks and such
+        //                that are not simple data. We can come back to this.
         namespace UILoader {
             using WidgetParser = Delegate<vui::IWidget*, const nString&, keg::Node>;
 
-            bool load(const vio::IOManager& iom, const cString filepath, OUT Viewport& viewport, WidgetParser* customWidgetParser = nullptr);
+            bool loadWidgetFromYAML(const vio::IOManager& iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
 
-            bool save(const cString filepath, const Viewport& viewport);
+            bool loadFromYAML(const vio::IOManager& iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
         }
     }
 }

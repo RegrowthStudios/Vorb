@@ -70,6 +70,13 @@ namespace vorb {
              */
             static void setGlobalModDirectory(const vio::Path& path);
 
+            /*! \brief Returns the mod directory searched by this IO manager. */
+            vio::Path getModDirectory()              { return m_modDir;          }
+            /*! \brief Returns the vanilla asset directory searched by this IO manager. */
+            vio::Path getVanillaAssetDirectory()     { return m_vanillaAssetDir; }
+            /*! \brief Returns the global mod directory. */
+            static vio::Path getGlobalModDirectory() { return globalModDir;      }
+
             /*!
              * \brief Find the absolute description of a path.
              * 

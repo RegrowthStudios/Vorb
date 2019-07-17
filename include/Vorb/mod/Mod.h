@@ -23,13 +23,18 @@
 #include "../types.h"
 #endif // !VORB_USING_PCH
 
-#include "ModIOManager.h"
+#include "Vorb/mod/ModIOManager.h"
+#include "Vorb/io/Keg.h"
 
 namespace vorb {
     namespace mod {
         struct ModMetadata {
             nString name;
             nString author;
+            // TODO(Matthew): More metadata info.
+        };
+        const ModMetadata NULL_METADATA = {
+            "", ""
         };
 
         class Mod {
@@ -41,27 +46,35 @@ namespace vorb {
 
             // TODO(Matthew): We need to decide on the initialisation process. This is the entry point, so likely require something
             //                like "mod.yaml" which contains metadata, perhaps also specifies the mod's entry points for startup
-            //                and shutdown? 
+            //                and shutdown?
             /*!
              * \brief Initialises the mod, setting up necessary data, including loading
              * associated metadata.
+             *
+             * \param dir: The directory name of the mod to be initialised (not the full path, just the name of the directory inside of Mods/).
+             *
+             * \return True if the mod was correctly initialised, false otherwise.
              */
-            void init(nString dir);
+            virtual bool init(const nString& dir);
             /*!
              * \brief Disposes of the mod.
              */
-            void dispose();
+            virtual void dispose();
 
             // TODO(Matthew): Determine start up and shut down processes for mods.
             //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
             /*!
              * \brief Starts up the mod.
+             *
+             * \return True if successfully started, false otherwise.
              */
-            void startup();
+            virtual bool startup();
             /*!
              * \brief Shuts down the mod.
+             *
+             * \return True if successfully shutdown, false otherwise.
              */
-            void shutdown();
+            virtual bool shutdown();
 
             // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
             /*!
@@ -69,16 +82,20 @@ namespace vorb {
              *
              * \param dt The time since the last frame.
              */
-            void update(f32 dt = 0.0f);
+            virtual void update(f32 dt = 0.0f);
 
         protected:
             ModMetadata  m_metadata;
             // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.
             //                    To achieve this, we should make an IOManager interface, and add an optional IOManager pointer to the appropriate cache fetch functions.
             ModIOManager m_iomanager;
+
+            bool m_isStarted;
         };
     }
 }
 namespace vmod = vorb::mod;
+
+KEG_TYPE_DECL(ModMetadata);
 
 #endif // !Vorb_Mod_h__

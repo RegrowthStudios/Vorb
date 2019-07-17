@@ -180,7 +180,7 @@ namespace vorb {
              */
             bool directoryExists(const vio::Path& path) const;
         private:
-            static vio::Path m_globalModDir; ///< The global mod directory (Mods/) - this is read-only.
+            static vio::Path globalModDir; ///< The global mod directory (Mods/) - this is read-only.
 
             vio::Path m_vanillaAssetDir; ///< The vanilla asset directory (e.g. Models/, Textures/ etc.) that may be needed for texture cache etc. - this is read-only and can be Null.
             vio::Path m_modDir; ///< The mod's own directory (Mods/MOD_NAME/) - this is read-writable.

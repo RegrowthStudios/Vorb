@@ -10,7 +10,7 @@ vmod::ModIOManager::ModIOManager() :
 }
 
 void vmod::ModIOManager::setGlobalModDirectory(const vio::Path& path) {
-    m_globalModDir = path;
+    globalModDir = path;
 }
 void vmod::ModIOManager::setVanillaAssetDirectory(const vio::Path& path/* = vio::Path("")*/) {
     m_vanillaAssetDir = path;
@@ -80,8 +80,8 @@ bool vmod::ModIOManager::resolvePath(const vio::Path& path, vio::Path& resultAbs
         }
     }
 
-    if (m_globalModDir.isValid()) {
-        pSearch = m_globalModDir / path;
+    if (globalModDir.isValid()) {
+        pSearch = globalModDir / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;
             return true;
@@ -119,8 +119,8 @@ bool vmod::ModIOManager::assurePath(const vio::Path& path, OUT vio::Path& result
         }
     }
 
-    if (m_globalModDir.isValid()) {
-        pSearch = m_globalModDir / path;
+    if (globalModDir.isValid()) {
+        pSearch = globalModDir / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;
             if (wasExisting) *wasExisting = true;
@@ -181,4 +181,4 @@ bool vmod::ModIOManager::directoryExists(const vio::Path& path) const {
     return res.isDirectory();
 }
 
-vio::Path vmod::ModIOManager::m_globalModDir = "";
+vio::Path vmod::ModIOManager::globalModDir = "";

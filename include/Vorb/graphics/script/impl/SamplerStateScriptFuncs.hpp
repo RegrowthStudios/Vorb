@@ -1,6 +1,6 @@
 
 //
-// SamplerStateScriptFuncs.h
+// SamplerStateScriptFuncs.hpp
 // Vorb Engine
 //
 // Created by Matthew Marshall on 12 Nov 2018
@@ -8,15 +8,15 @@
 // MIT License
 //
 
-/*! \file SamplerStateScriptFuncs.h
+/*! \file SamplerStateScriptFuncs.hpp
 * \brief Registers functions and consts for sampler state to a script environment.
 */
 
 #pragma once
 
-#ifndef Vorb_SamplerStateScriptFuncs_h__
+#ifndef Vorb_SamplerStateScriptFuncs_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_SamplerStateScriptFuncs_h__
+#define Vorb_SamplerStateScriptFuncs_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -29,15 +29,13 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        namespace SamplerStateScriptFuncs {
-            template <typename ScriptEnvironmentImpl>
-            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+        namespace impl {
+            namespace SamplerStateScriptFuncs {
+                template <typename ScriptEnvironmentImpl>
+                void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            template <typename ScriptEnvironmentImpl>
-            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
-
-            namespace impl {
-                // Empty
+                template <typename ScriptEnvironmentImpl>
+                void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
             }
         }
     }
@@ -45,12 +43,12 @@ namespace vorb {
 
 namespace vg = vorb::graphics;
 template <typename ScriptEnvironmentImpl>
-void vg::SamplerStateScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+void vg::impl::SamplerStateScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 
 template <typename ScriptEnvironmentImpl>
-void vg::SamplerStateScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::impl::SamplerStateScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("Graphics", "SamplerState");
     env->addValue("POINT_WRAP",          &vg::SamplerState::POINT_WRAP);
     env->addValue("POINT_CLAMP",         &vg::SamplerState::POINT_CLAMP);
@@ -63,4 +61,4 @@ void vg::SamplerStateScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnv
     env->setNamespaces();
 }
 
-#endif // !Vorb_SamplerStateScriptFuncs_h__
+#endif // !Vorb_SamplerStateScriptFuncs_hpp__

@@ -1,6 +1,6 @@
 
 //
-// SpriteFontScriptFuncs.h
+// SpriteFontScriptFuncs.hpp
 // Vorb Engine
 //
 // Created by Matthew Marshall on 12 Nov 2018
@@ -8,15 +8,15 @@
 // MIT License
 //
 
-/*! \file SpriteFontScriptFuncs.h
+/*! \file SpriteFontScriptFuncs.hpp
 * \brief Registers functions and consts for sprite batch to a script environment.
 */
 
 #pragma once
 
-#ifndef Vorb_SpriteFontScriptFuncs_h__
+#ifndef Vorb_SpriteFontScriptFuncs_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_SpriteFontScriptFuncs_h__
+#define Vorb_SpriteFontScriptFuncs_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -29,15 +29,13 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        namespace SpriteFontScriptFuncs {
-            template <typename ScriptEnvironmentImpl>
-            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+        namespace impl {
+            namespace SpriteFontScriptFuncs {
+                template <typename ScriptEnvironmentImpl>
+                void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            template <typename ScriptEnvironmentImpl>
-            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
-
-            namespace impl {
-                // Empty
+                template <typename ScriptEnvironmentImpl>
+                void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
             }
         }
     }
@@ -45,12 +43,12 @@ namespace vorb {
 
 namespace vg = vorb::graphics;
 template <typename ScriptEnvironmentImpl>
-void vg::SpriteFontScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+void vg::impl::SpriteFontScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 
 template <typename ScriptEnvironmentImpl>
-void vg::SpriteFontScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::impl::SpriteFontScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("Graphics", "TextAlign");
     env->addValue("NONE",         vg::TextAlign::NONE);
     env->addValue("LEFT",         vg::TextAlign::LEFT);
@@ -65,4 +63,4 @@ void vg::SpriteFontScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvir
     env->setNamespaces();
 }
 
-#endif // !Vorb_SpriteFontScriptFuncs_h__
+#endif // !Vorb_SpriteFontScriptFuncs_hpp__

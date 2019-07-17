@@ -1,4 +1,3 @@
-
 //
 // GLEnumsScriptFuncs.h
 // Vorb Engine
@@ -29,15 +28,13 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        namespace GLEnumsScriptFuncs {
-            template <typename ScriptEnvironmentImpl>
-            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+        namespace impl {
+            namespace GLEnumsScriptFuncs {
+                template <typename ScriptEnvironmentImpl>
+                void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            template <typename ScriptEnvironmentImpl>
-            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
-
-            namespace impl {
-                // Empty
+                template <typename ScriptEnvironmentImpl>
+                void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
             }
         }
     }
@@ -45,12 +42,12 @@ namespace vorb {
 namespace vg = vorb::graphics;
 
 template <typename ScriptEnvironmentImpl>
-void vg::GLEnumsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+void vg::impl::GLEnumsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 
 template <typename ScriptEnvironmentImpl>
-void vg::GLEnumsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::impl::GLEnumsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     // vg::TextureInternalFormat
     env->setNamespaces("Graphics", "TextureInternalFormat");
     env->addValue("NONE",                               vg::TextureInternalFormat::NONE);

@@ -1,6 +1,6 @@
 
 //
-// SpriteBatchScriptFuncs.h
+// SpriteBatchScriptFuncs.hpp
 // Vorb Engine
 //
 // Created by Matthew Marshall on 12 Nov 2018
@@ -8,15 +8,15 @@
 // MIT License
 //
 
-/*! \file SpriteBatchScriptFuncs.h
+/*! \file SpriteBatchScriptFuncs.hpp
 * \brief Registers functions and consts for sprite batch to a script environment.
 */
 
 #pragma once
 
-#ifndef Vorb_SpriteBatchScriptFuncs_h__
+#ifndef Vorb_SpriteBatchScriptFuncs_hpp__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_SpriteBatchScriptFuncs_h__
+#define Vorb_SpriteBatchScriptFuncs_hpp__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -29,15 +29,13 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        namespace SpriteBatchScriptFuncs {
-            template <typename ScriptEnvironmentImpl>
-            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+        namespace impl {
+            namespace SpriteBatchScriptFuncs {
+                template <typename ScriptEnvironmentImpl>
+                void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
-            template <typename ScriptEnvironmentImpl>
-            void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
-
-            namespace impl {
-                // Empty
+                template <typename ScriptEnvironmentImpl>
+                void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
             }
         }
     }
@@ -45,12 +43,12 @@ namespace vorb {
 
 namespace vg = vorb::graphics;
 template <typename ScriptEnvironmentImpl>
-void vg::SpriteBatchScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
+void vg::impl::SpriteBatchScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>*) {
     // Empty
 }
 
 template <typename ScriptEnvironmentImpl>
-void vg::SpriteBatchScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::impl::SpriteBatchScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("Graphics", "GradientType");
     env->addValue("NONE",           vg::GradientType::NONE);
     env->addValue("HORIZONTAL",     vg::GradientType::HORIZONTAL);
@@ -60,4 +58,4 @@ void vg::SpriteBatchScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvi
     env->setNamespaces();
 }
 
-#endif // !Vorb_SpriteBatchScriptFuncs_h__
+#endif // !Vorb_SpriteBatchScriptFuncs_hpp__

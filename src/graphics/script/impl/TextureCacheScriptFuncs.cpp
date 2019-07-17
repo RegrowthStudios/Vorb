@@ -1,7 +1,7 @@
 #include "Vorb/stdafx.h"
-#include "Vorb/graphics/script/TextureCacheScriptFuncs.h"
+#include "Vorb/graphics/script/impl/TextureCacheScriptFuncs.h"
 
-VGTexture vg::TextureCacheScriptFuncs::impl::loadTexture(           TextureCache* cache,
+VGTexture vg::impl::TextureCacheScriptFuncs::impl::loadTexture(           TextureCache* cache,
                                                                           nString filepath,
                                                                 vg::TextureTarget textureTarget,
                                                                 vg::SamplerState* samplingParameters,
@@ -12,10 +12,10 @@ VGTexture vg::TextureCacheScriptFuncs::impl::loadTexture(           TextureCache
                       internalFormat, textureFormat, mipmapLevels).id;
 }
 
-VGTexture vg::TextureCacheScriptFuncs::impl::loadTextureDefault(TextureCache* cache, nString filepath) {
+VGTexture vg::impl::TextureCacheScriptFuncs::impl::loadTextureDefault(TextureCache* cache, nString filepath) {
     return cache->addTexture(filepath).id;
 }
 
-bool vg::TextureCacheScriptFuncs::impl::freeTexture(TextureCache* cache, VGTexture texture) {
+bool vg::impl::TextureCacheScriptFuncs::impl::freeTexture(TextureCache* cache, VGTexture texture) {
     return cache->freeTexture(texture);
 }

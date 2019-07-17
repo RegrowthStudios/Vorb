@@ -140,6 +140,11 @@ nString vio::Path::getLeaf() const {
     return fs::path(m_path).filename().string();
 }
 
+nString vio::Path::getExtension() const {
+    if (isNull()) return "";
+    return fs::path(m_path).extension().string();
+}
+
 template<typename Type> time_t convertToTimeT(Type time) {
     return Type::clock::to_time_t(time);
 }

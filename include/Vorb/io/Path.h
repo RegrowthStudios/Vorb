@@ -85,6 +85,8 @@ namespace vorb {
 
             /// @return The last part of this path
             nString getLeaf() const;
+            /// @return The extension of this path
+            nString getExtension() const;
             /// Access the last time the element referred to by the path was modified
             /// @pre: This path must be valid
             /// @return The last time this path was modified

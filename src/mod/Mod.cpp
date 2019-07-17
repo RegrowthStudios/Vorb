@@ -21,12 +21,7 @@ bool vmod::Mod::init(const nString& dir) {
 
     m_iomanager.setModDirectory(modDir);
 
-    // Grab mod metadata from file.
-    cString modMetadata = m_iomanager.readFileToString("mod.yaml");
-    if (modMetadata == nullptr) return false;
-
-    // Attempt to parse metadata.
-    if (keg::parse(&m_metadata, modMetadata, "ModMetadata") != keg::Error::NONE) return false;
+    if (!loadMetadata()) return false;
 
     // TODO(Matthew): More initialisation.
 
@@ -44,6 +39,8 @@ void vmod::Mod::dispose() {
 bool vmod::Mod::startup() {
     if (m_isStarted) return false;
 
+    if (!loadEntryPoints()) return false;
+
     // TODO(Matthew): Implement.
 }
 
@@ -57,4 +54,26 @@ void vmod::Mod::update(f32 dt/* = 0.0f*/) {
     if (!m_isStarted) return;
 
     // TODO(Matthew): Implement.
+}
+
+bool vmod::Mod::loadMetadata() {
+    // Grab mod metadata from file.
+    cString modMetadata = m_iomanager.readFileToString(METADATA_FILENAME);
+    if (modMetadata == nullptr) return false;
+
+    // Attempt to parse metadata.
+    if (keg::parse(&m_metadata, modMetadata, "ModMetadata") != keg::Error::NONE) return false;
+
+    return true;
+}
+
+bool vmod::Mod::loadEntryPoints() {
+    // Grab mod metadata from file.
+    cString modEntryPoints = m_iomanager.readFileToString(ENTRY_POINTS_FILENAME);
+    if (modEntryPoints == nullptr) return false;
+
+    // Attempt to parse metadata.
+    if (keg::parse(&m_metadata, modEntryPoints, "ModEntryPoints") != keg::Error::NONE) return false;
+
+    return true;
 }

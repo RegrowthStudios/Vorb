@@ -37,6 +37,16 @@ namespace vorb {
             "", ""
         };
 
+        struct ModEntryPoints {
+            std::vector<nString> blockFiles;
+            std::vector<nString> caFiles;
+            std::vector<nString> musicFiles;
+            // TODO(Matthew): Expand as features get implemented, e.g. ecs stuff, creatures, ore gen, etc.
+        };
+
+        const nString METADATA_FILENAME     = "mod.yaml";
+        const nString ENTRY_POINTS_FILENAME = "startup.yaml";
+
         class Mod {
         public:
             Mod();
@@ -44,9 +54,6 @@ namespace vorb {
                 // Empty.
             }
 
-            // TODO(Matthew): We need to decide on the initialisation process. This is the entry point, so likely require something
-            //                like "mod.yaml" which contains metadata, perhaps also specifies the mod's entry points for startup
-            //                and shutdown?
             /*!
              * \brief Initialises the mod, setting up necessary data, including loading
              * associated metadata.
@@ -85,6 +92,24 @@ namespace vorb {
             virtual void update(f32 dt = 0.0f);
 
         protected:
+            /*!
+             * \brief Loads metadata.
+             *
+             * The metadata is specified in the file "mod.yaml".
+             *
+             * \return True if metadata loaded correctly, false otherwise.
+             */
+            bool loadMetadata();
+
+            /*!
+             * \brief Loads the entry points of the mod.
+             *
+             * The entry points are specified in "startup.yaml".
+             *
+             * \return True if metadata loaded correctly, false otherwise.
+             */
+            bool loadEntryPoints();
+
             ModMetadata  m_metadata;
             // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.
             //                    To achieve this, we should make an IOManager interface, and add an optional IOManager pointer to the appropriate cache fetch functions.

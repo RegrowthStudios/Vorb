@@ -213,6 +213,10 @@ bool vio::IOManager::makeDirectory(const Path& path) const {
     return buildDirectoryTree(m_pathSearch / path, false);
 }
 
+bool vio::IOManager::rename(const Path& src, const Path& dest) {
+    return src.rename(dest);
+}
+
 bool vio::IOManager::fileExists(const Path& path) const {
     Path res;
     if (!resolvePath(path, res)) return false;

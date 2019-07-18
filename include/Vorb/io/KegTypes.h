@@ -30,6 +30,7 @@ namespace keg {
         KegVec2(const ui8* data) :
             x(static_cast<T>(data[0])),
             y(static_cast<T>(data[1])) {}
+        KegVec2(const KegVec2& v) = default;
         KegVec2(const GLMCONV& v) : x(v.x), y(v.y) {}
 
         union {
@@ -70,6 +71,7 @@ namespace keg {
             x(static_cast<T>(data[0])),
             y(static_cast<T>(data[1])),
             z(static_cast<T>(data[2])) {}
+        KegVec3(const KegVec3& v) = default;
         KegVec3(const GLMCONV& v) : x(v.x), y(v.y), z(v.z) {}
 
         union {
@@ -115,6 +117,7 @@ namespace keg {
             y(static_cast<T>(data[1])),
             z(static_cast<T>(data[2])),
             w(static_cast<T>(data[3])) {}
+        KegVec4(const KegVec4& v) = default;
         KegVec4(const GLMCONV& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 
         union {

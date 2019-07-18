@@ -145,8 +145,14 @@ nString vio::Path::getExtension() const {
     return fs::path(m_path).extension().string();
 }
 
+// TODO(Matthew): Thanks to terrible decisions by terrible people, there is no way to convert
+//                the file time clock to the system time clock, nor in any other way convert
+//                last write times to time_t... We have to somehow deal with this, the easiest
+//                may be to finally give up on boost filesystem and in extension some older
+//                VS/GCC/Clang versions.
 template<typename Type> time_t convertToTimeT(Type time) {
-    return Type::clock::to_time_t(time);
+    //return Type::clock::to_time_t(time);
+    return 0;
 }
 
 template<> time_t convertToTimeT<time_t>(time_t time) {

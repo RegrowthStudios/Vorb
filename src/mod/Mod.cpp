@@ -4,8 +4,16 @@
 KEG_TYPE_DEF(ModMetadata, vmod::ModMetadata, kt) {
     using namespace keg;
     kt.addValue("name",   Value::basic(offsetof(vmod::ModMetadata, name), BasicType::STRING));
-    kt.addValue("author", Value::basic(offsetof(vmod::ModMetadata, name), BasicType::STRING));
+    kt.addValue("author", Value::basic(offsetof(vmod::ModMetadata, author), BasicType::STRING));
     // TODO(Matthew): More metadata info.
+}
+
+KEG_TYPE_DEF(ModEntryPoints, vmod::ModEntryPoints, kt) {
+    using namespace keg;
+    kt.addValue("blockFiles", Value::array(offsetof(vmod::ModEntryPoints, blockFiles), BasicType::STRING));
+    kt.addValue("caFiles",    Value::array(offsetof(vmod::ModEntryPoints, caFiles),    BasicType::STRING));
+    kt.addValue("musicFiles", Value::array(offsetof(vmod::ModEntryPoints, musicFiles), BasicType::STRING));
+    // TODO(Matthew): More entry point info.
 }
 
 vmod::Mod::Mod() :

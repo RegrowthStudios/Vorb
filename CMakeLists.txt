@@ -242,12 +242,13 @@ set(vorb_graphics
 
 if(VORB_USE_SCRIPTING)
 set(vorb_graphics ${vorb_graphics}
-    include/Vorb/graphics/script/GLEnumsScriptFuncs.h
-    include/Vorb/graphics/script/SamplerStateScriptFuncs.h
-    include/Vorb/graphics/script/SpriteBatchScriptFuncs.h
-    include/Vorb/graphics/script/TextureCacheScriptFuncs.h
+    include/Vorb/graphics/script/Graphics.hpp
+    include/Vorb/graphics/script/impl/GLEnumsScriptFuncs.hpp
+    include/Vorb/graphics/script/impl/SamplerStateScriptFuncs.hpp
+    include/Vorb/graphics/script/impl/SpriteBatchScriptFuncs.hpp
+    include/Vorb/graphics/script/impl/TextureCacheScriptFuncs.h
 #source
-    src/graphics/script/TextureCacheScriptFuncs.cpp
+    src/graphics/script/impl/TextureCacheScriptFuncs.cpp
 )
 endif()
 
@@ -535,8 +536,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STR
     if(VORB_USE_FILESYSTEM GREATER ${VORB_BOOST_FILESYSTEM})
         target_compile_options(vorb PUBLIC "-lstdc++fs")
         if(VORB_USE_FILESYSTEM EQUAL ${VORB_STD_FILESYSTEM})
-            remove_flag_from_target(vorb "-std=c++14")
-#            target_compile_options(vorb PUBLIC "-std=c++17")
+            if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+                if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 8.0)
+                    remove_flag_from_target(vorb "-std=c++14")
+                    remove_flag_from_target(vorb "-std=c++11")
+                    target_compile_options(vorb PUBLIC "-std=c++17")
+                endif()
+            endif()
         endif()
         target_link_libraries(vorb stdc++fs)
     endif()

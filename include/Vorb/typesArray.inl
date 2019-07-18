@@ -255,6 +255,40 @@ public:
     const T& at(const size_t& i) const {
         return ((T*)m_data)[i];
     }
+
+
+    /*!
+     * \brief Enables iteration over the contents of the array.
+     *
+     * \return A pointer to the first element stored.
+     */
+    T* begin() {
+        return m_length > 0 ? &((T*)m_data)[0] : nullptr;
+    }
+    /*!
+     * \brief Enables iteration over the contents of the array.
+     *
+     * \return A pointer to the first element stored.
+     */
+    T* end() {
+        return m_length > 0 ? &((T*)m_data)[m_length - 1] : nullptr;
+    }
+    /*!
+     * \brief Enables iteration over the contents of the array.
+     *
+     * \return A pointer to the first element stored.
+     */
+    const T* begin() const {
+        return m_length > 0 ? &((T*)m_data)[0] : nullptr;
+    }
+    /*!
+     * \brief Enables iteration over the contents of the array.
+     *
+     * \return A pointer to the first element stored.
+     */
+    const T* end() const {
+        return m_length > 0 ? &((T*)m_data)[m_length - 1] : nullptr;
+    }
 };
 
 /*! \example "Vorb Array Usage"

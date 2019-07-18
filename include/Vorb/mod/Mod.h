@@ -38,9 +38,9 @@ namespace vorb {
         };
 
         struct ModEntryPoints {
-            std::vector<nString> blockFiles;
-            std::vector<nString> caFiles;
-            std::vector<nString> musicFiles;
+            Array<nString> blockFiles;
+            Array<nString> caFiles;
+            Array<nString> musicFiles;
             // TODO(Matthew): Expand as features get implemented, e.g. ecs stuff, creatures, ore gen, etc.
         };
 
@@ -122,5 +122,6 @@ namespace vorb {
 namespace vmod = vorb::mod;
 
 KEG_TYPE_DECL(ModMetadata);
+KEG_TYPE_DECL(ModEntryPoints);
 
 #endif // !Vorb_Mod_h__

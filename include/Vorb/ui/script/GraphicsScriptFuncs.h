@@ -24,11 +24,11 @@
 
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/graphics/TextureCache.h"
-#include "Vorb/graphics/script/GLEnumsScriptFuncs.h"
-#include "Vorb/graphics/script/SamplerStateScriptFuncs.h"
-#include "Vorb/graphics/script/SpriteBatchScriptFuncs.h"
-#include "Vorb/graphics/script/SpriteFontScriptFuncs.h"
-#include "Vorb/graphics/script/TextureCacheScriptFuncs.h"
+#include "Vorb/graphics/script/impl/GLEnumsScriptFuncs.hpp"
+#include "Vorb/graphics/script/impl/SamplerStateScriptFuncs.hpp"
+#include "Vorb/graphics/script/impl/SpriteBatchScriptFuncs.hpp"
+#include "Vorb/graphics/script/impl/SpriteFontScriptFuncs.hpp"
+#include "Vorb/graphics/script/impl/TextureCacheScriptFuncs.h"
 #include "Vorb/script/IEnvironment.hpp"
 
 namespace vorb {
@@ -50,28 +50,32 @@ namespace vui = vorb::ui;
 
 template <typename ScriptEnvironmentImpl>
 void vui::GraphicsScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, vg::TextureCache* cache) {
-    vg::GLEnumsScriptFuncs::registerFuncs(env);
+    using namespace vg::impl;
 
-    vg::SamplerStateScriptFuncs::registerFuncs(env);
+    GLEnumsScriptFuncs::registerFuncs(env);
 
-    vg::SpriteBatchScriptFuncs::registerFuncs(env);
+    SamplerStateScriptFuncs::registerFuncs(env);
 
-    vg::SpriteFontScriptFuncs::registerFuncs(env);
+    SpriteBatchScriptFuncs::registerFuncs(env);
 
-    vg::TextureCacheScriptFuncs::registerFuncs(env, cache);
+    SpriteFontScriptFuncs::registerFuncs(env);
+
+    TextureCacheScriptFuncs::registerFuncs(env, cache);
 }
 
 template <typename ScriptEnvironmentImpl>
 void vui::GraphicsScriptFuncs::registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
-    vg::GLEnumsScriptFuncs::registerConsts(env);
+    using namespace vg::impl;
 
-    vg::SamplerStateScriptFuncs::registerConsts(env);
+    GLEnumsScriptFuncs::registerConsts(env);
 
-    vg::SpriteBatchScriptFuncs::registerConsts(env);
+    SamplerStateScriptFuncs::registerConsts(env);
 
-    vg::SpriteFontScriptFuncs::registerConsts(env);
+    SpriteBatchScriptFuncs::registerConsts(env);
 
-    vg::TextureCacheScriptFuncs::registerConsts(env);
+    SpriteFontScriptFuncs::registerConsts(env);
+
+    TextureCacheScriptFuncs::registerConsts(env);
 }
 
 #endif // !Vorb_GraphicsScriptFuncs_h__

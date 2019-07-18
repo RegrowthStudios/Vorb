@@ -63,6 +63,13 @@ namespace vorb {
             /// @return True if this path is rooted
             bool isAbsolute() const;
 
+            /*!
+             * \brief Makes the given path nice in terms of valid POSIX/Windows characters.
+             *
+             * \return Self
+             */
+            Path& makeNice();
+
             /// Places this path value on the root
             /// @return Self
             Path& makeAbsolute();
@@ -82,6 +89,13 @@ namespace vorb {
                 p.makeCanonical();
                 return p;
             }
+
+            /*!
+             * \brief Renames/moves the file or directory at current path to the given path.
+             *
+             * \param path: The path to rename/move this file or directory to.
+             */
+            bool rename(const Path& path);
 
             /// @return The last part of this path
             nString getLeaf() const;

@@ -5,6 +5,16 @@
 #include "Vorb/io/Directory.h"
 #include "Vorb/io/File.h"
 
+namespace vorb {
+    namespace io {
+        #if VORB_USE_FILESYSTEM == 0
+            namespace system = boost::system;
+        #else
+            namespace system = std;
+        #endif
+    }
+}
+
 vio::Path::Path() : Path("") {
     // Empty
 }
@@ -40,8 +50,7 @@ bool isPOSIXFragment(const nString& fragment) {
             && fragment.find_first_not_of(validPOSIXChars) == std::string::npos;
 }
 
-bool isWindowsFragment(const nString& fragment)
-{
+bool isWindowsFragment(const nString& fragment) {
     return fragment.size() != 0
             && fragment[0] != ' '
             && fragment.find_first_of(invalidWindowsChars) == nString::npos
@@ -61,16 +70,14 @@ bool isNiceFragment(const nString& fragment) {
                     && fragment[0] != '-'));
 }
 
-bool isNiceDirectoryFragment(const nString& fragment)
-{
+bool isNiceDirectoryFragment(const nString& fragment) {
     return fragment == "."
             || fragment == ".."
             || (isNiceFragment(fragment)
                 && fragment.find('.') == nString::npos);
 }
 
-bool isNiceFileFragment(const nString& fragment)
-{
+bool isNiceFileFragment(const nString& fragment) {
     nString::size_type pos;
     return isNiceFragment(fragment)
             && fragment != "."
@@ -133,6 +140,31 @@ bool vio::Path::isDirectory() const {
 bool vio::Path::isAbsolute() const {
     if (isNull()) return false;
     return fs::path(m_path).is_absolute();
+}
+
+vio::Path& vio::Path::makeNice() {
+    for (auto index = m_path.find_first_not_of(validPOSIXChars); index != nString::npos;) {
+        m_path[index] = '_';
+    }
+
+    // This should not be necessary.
+    for (auto index = m_path.find_first_of(invalidWindowsChars); index != nString::npos;) {
+        m_path[index] = '_';
+    }
+
+    return *this;
+}
+
+bool vio::Path::rename(const Path& path) {
+    if (!isValid()) return false;
+
+    fs::path src  = fs::path(m_path);
+    fs::path dest = fs::path(path.getString());
+
+    system::error_code ec;
+    fs::rename(src, dest, ec);
+
+    return ec.value() == 0;
 }
 
 nString vio::Path::getLeaf() const {

@@ -151,6 +151,16 @@ namespace vorb {
             /// @param path: The directory path to make
             bool makeDirectory(const Path& path) const;
 
+            /*!
+             * \brief Renames/moves a file or directory to a new location.
+             *
+             * \param src: The path to the source file or directory.
+             * \param dest: The path to the destination for this file or directory.
+             *
+             * \return bool True if successfully renamed/moved, false otherwise.
+             */
+            bool rename(const Path& src, const Path& dest);
+
             /// Check if a file exists
             /// @param path: The path to the file
             /// @return true if file exists

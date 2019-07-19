@@ -78,14 +78,3 @@ bool vmod::Mod::loadMetadata() {
 
     return true;
 }
-
-bool vmod::Mod::loadEntryPoints() {
-    // Grab mod metadata from file.
-    cString modEntryPoints = m_iomanager.readFileToString(ENTRY_POINTS_FILENAME);
-    if (modEntryPoints == nullptr) return false;
-
-    // Attempt to parse metadata.
-    if (keg::parse(&m_metadata, modEntryPoints, "ModEntryPoints") != keg::Error::NONE) return false;
-
-    return true;
-}

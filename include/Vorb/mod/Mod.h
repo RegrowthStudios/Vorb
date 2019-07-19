@@ -45,7 +45,7 @@ namespace vorb {
         };
 
         const nString METADATA_FILENAME     = "mod.yaml";
-        const nString ENTRY_POINTS_FILENAME = "startup.yaml";
+        const nString ENTRY_POINTS_FILENAME = "entry_points.yaml";
 
         class Mod {
         public:
@@ -108,15 +108,6 @@ namespace vorb {
              * \return True if metadata loaded correctly, false otherwise.
              */
             bool loadMetadata();
-
-            /*!
-             * \brief Loads the entry points of the mod.
-             *
-             * The entry points are specified in "startup.yaml".
-             *
-             * \return True if metadata loaded correctly, false otherwise.
-             */
-            bool loadEntryPoints();
 
             ModMetadata  m_metadata;
             // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.

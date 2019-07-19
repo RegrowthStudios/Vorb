@@ -145,6 +145,16 @@ namespace vorb {
                  */
                 void registerMultiEntryPoint(const nString& entryPoint);
 
+                /*!
+                 * \brief Loads the entry point data for the named mod.
+                 *
+                 * \param modName: The name of the mod to load the entry point data for.
+                 * \param forUpdate: Whether this entry data is for an update or install.
+                 *
+                 * \return True if entry data is successfully loaded, false otherwise.
+                 */
+                bool loadEntryData(const nString& modName, bool forUpdate = false);
+
                 vio::IOManager* m_iomanager; ///< The IO manager used for file handling.
 
                 nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.

@@ -64,7 +64,7 @@ bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate
 }
 
 bool vmod::install::Installer::install(const nString& modName) {
-
+    loadEntryData(modName);
 }
 
 bool vmod::install::Installer::update(const nString& modName) {
@@ -73,4 +73,24 @@ bool vmod::install::Installer::update(const nString& modName) {
 
 bool vmod::install::Installer::uninstall(const nString& modName) {
 
+}
+
+void vmod::install::Installer::registerSingleEntryPoint(const nString& entryPoint) {
+    m_entryPoints.emplace_back(std::make_pair(entryPoint, EntryPointKind::SINGLE));
+}
+
+void vmod::install::Installer::registerMultiEntryPoint(const nString& entryPoint) {
+    m_entryPoints.emplace_back(std::make_pair(entryPoint, EntryPointKind::MULTI));
+}
+
+bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpdate/* = false*/) {
+    nString modDirName = Mod::generateModDirName(modName);
+
+    vio::Path entryPointFilepath = vio::Path(forUpdate ? m_updateDir : m_installDir) / modDirName / ENTRY_POINTS_FILENAME;
+
+    // Grab mod metadata from file.
+    cString modEntryPoints = m_iomanager->readFileToString(entryPointFilepath);
+    if (modEntryPoints == nullptr) return false;
+
+    // TODO(Matthew): Implement.
 }

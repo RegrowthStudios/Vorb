@@ -64,6 +64,10 @@ void vmod::Mod::update(f32 dt/* = 0.0f*/) {
     // TODO(Matthew): Implement.
 }
 
+nString vmod::Mod::generateModDirName(const nString& modName) {
+    return vio::Path(modName).makeNice().getString();
+}
+
 bool vmod::Mod::loadMetadata() {
     // Grab mod metadata from file.
     cString modMetadata = m_iomanager.readFileToString(METADATA_FILENAME);

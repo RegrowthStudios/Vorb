@@ -87,10 +87,18 @@ namespace vorb {
             /*!
              * \brief Run update loop of the mod.
              *
-             * \param dt The time since the last frame.
+             * \param dt: The time since the last frame.
              */
             virtual void update(f32 dt = 0.0f);
 
+            /*!
+             * \brief Generates the mod directory name for the named mod.
+             *
+             * \param modName: The name of the mod to generate the dir name for.
+             *
+             * \return The generated mod directory name.
+             */
+            static nString generateModDirName(const nString& modName);
         protected:
             /*!
              * \brief Loads metadata.

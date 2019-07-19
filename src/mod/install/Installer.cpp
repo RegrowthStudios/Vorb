@@ -3,6 +3,7 @@
 
 #include "Vorb/io/IOManager.h"
 #include "Vorb/io/Keg.h"
+#include "Vorb/io/YAMLImpl.h"
 #include "Vorb/mod/Mod.h"
 #include "Vorb/mod/install/InstallStrategy.h"
 
@@ -103,12 +104,57 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
     // If the file isn't a map, it's wrongly formatted.
     if (keg::getType(node) != keg::NodeType::MAP) return false;
 
-    auto processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value){
+    // TODO(Matthew): Make this neater...
+    bool success = true;
+    auto processEntry = makeFunctor([this, &success](Sender, const nString& key, keg::Node node){
+        for (auto& entryPoint : m_entryPoints) {
+            if (entryPoint.first == key) {
+                if (entryPoint.second == EntryPointKind::SINGLE) {
+                    // If it's a single entry point, allow value or sequence (length = 1) node.
+                    if (keg::getType(node) == keg::NodeType::VALUE) {
+                        nString entryLoc = node->data.as<nString>();
 
+                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1,entryLoc)));
+                    } else if (keg::getType(node) == keg::NodeType::SEQUENCE
+                                && node->data.size() == 1) {
+                        nString entryLoc = node->data[0].as<nString>();
+
+                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1,entryLoc)));
+                    } else {
+                        success = false;
+                        break;
+                    }
+                } else /*if (entryPoint.second == EntryPointKind::MULTI)*/ {
+                    // If it's a multi entry point, allow value or sequence (any length) node.
+                    if (keg::getType(node) == keg::NodeType::VALUE) {
+                        nString entryLoc = node->data.as<nString>();
+
+                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1, entryLoc)));
+                    } else if (keg::getType(node) == keg::NodeType::SEQUENCE) {
+                        std::vector<nString> entryLocs = std::vector<nString>(node->data.size());
+
+                        for (const auto& entryLoc : node->data) {
+                            entryLocs.emplace_back(entryLoc.as<nString>());
+                        }
+
+                        m_entryData.emplace_back(std::make_pair(key, entryLocs));
+                    } else {
+                        success = false;
+                        break;
+                    }
+                }
+            }
+        }
     });
     kegContext.reader.forAllInMap(node, &processEntry);
-    // TODO(Matthew): Implement parsing.
 
+    // If parse failed, clear out the entry data.
+    if (!success) {
+        EntryData().swap(m_entryData);
+    }
+
+    // We're done parsing, clean up and return the success of the parse.
     kegContext.reader.dispose();
-    return true;
+
+    return success;
 }

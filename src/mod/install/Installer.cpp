@@ -4,6 +4,7 @@
 #include "Vorb/io/IOManager.h"
 #include "Vorb/io/Keg.h"
 #include "Vorb/mod/Mod.h"
+#include "Vorb/mod/install/InstallStrategy.h"
 
 vmod::install::Installer::Installer() :
     m_iomanager(nullptr) {
@@ -22,6 +23,16 @@ void vmod::install::Installer::dispose() {
     m_installDir   = "";
     m_updateDir    = "";
     m_globalModDir = "";
+
+    InstallStrategies().swap(m_strategies);
+    EntryPoints().swap(m_entryPoints);
+    EntryData().swap(m_entryData);
+}
+
+bool vmod::install::Installer::registerInstallStrategy(InstallStrategy* strategy) {
+    if (!strategy->prepare(this)) return false;
+
+    m_strategies.push_back(strategy);
 }
 
 bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate/* = false*/, bool force/* = false*/) {

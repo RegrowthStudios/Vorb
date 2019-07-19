@@ -30,6 +30,8 @@ DECL_VIO(class IOManager; class Path)
 namespace vorb {
     namespace mod {
         namespace install {
+            struct InstallStrategy;
+
             // TODO(Matthew): Provide registration functions that are used to specify
             //                YAML docs that mod can provide deltas to merge in.
             //                    Don't want to hardcode anything like this, though
@@ -40,6 +42,16 @@ namespace vorb {
             // TODO(Matthew): For scripted mods, do we want to let them themselves provide
             //                pre/post handlers for these procedures?
             class Installer {
+                friend InstallStrategy;
+
+                enum class EntryPointKind {
+                    SINGLE,
+                    MULTI
+                };
+
+                using InstallStrategies = std::vector<InstallStrategy*>;
+                using EntryPoints       = std::unordered_map<nString, EntryPointKind>;
+                using EntryData         = std::unordered_map<nString, std::vector<nString>>;
             public:
                 Installer();
                 ~Installer() {
@@ -59,6 +71,15 @@ namespace vorb {
                  * \brief Disposes of the installer.
                  */
                 void dispose();
+
+                /*!
+                 * \brief Registers the given install strategy to the installer.
+                 *
+                 * \param strategy: The strategy to register.
+                 *
+                 * \return True if the strategy was successfully registered, false otherwise.
+                 */
+                bool registerInstallStrategy(InstallStrategy* strategy);
 
                 /*!
                  * \brief Preloads the mod at the given filepath.
@@ -106,12 +127,35 @@ namespace vorb {
                  * \param modName: The name of the mod to run update for.
                  */
                 bool uninstall(const nString& modName);
-
             protected:
+                /*!
+                 * \brief Registers an entry point to be extracted from entry points file.
+                 *
+                 * In this case, the entry point names only one file to be accessed.
+                 *
+                 * \param entryPoint: Name of the entry point to register.
+                 */
+                void registerSingleEntryPoint(const nString& entryPoint);
+                /*!
+                 * \brief Registers an entry point to be extracted from entry points file.
+                 *
+                 * In this case, the entry point names multiple files to be accessed.
+                 *
+                 * \param entryPoint: Name of the entry point to register.
+                 */
+                void registerMultiEntryPoint(const nString& entryPoint);
+
                 vio::IOManager* m_iomanager; ///< The IO manager used for file handling.
-                nString m_installDir; ///< The install directory that full mod contents are put into for future reference.
-                nString m_updateDir; ///< The update directory that full mod contents are put into for an update.
+
+                nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.
+                nString m_updateDir;    ///< The update directory that full mod contents are put into for an update.
                 nString m_globalModDir; ///< The global mod directory into which active mod contents are placed.
+
+                InstallStrategies m_strategies;  ///< The list of strategies to be executed on various installer actions.
+                EntryPoints       m_entryPoints; ///< A map of entry points to look for in the entry points file.
+                EntryData         m_entryData;   ///< This is populated just prior to any given mod being actioned by
+                                                 ///  this installer (be that install, update or uninstall). It is
+                                                 ///  cleared after.
             };
         }
     }

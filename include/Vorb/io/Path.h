@@ -95,7 +95,7 @@ namespace vorb {
              *
              * \param path: The path to rename/move this file or directory to.
              */
-            bool rename(const Path& path);
+            bool rename(const Path& path) const;
 
             /// @return The last part of this path
             nString getLeaf() const;

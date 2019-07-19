@@ -155,7 +155,7 @@ vio::Path& vio::Path::makeNice() {
     return *this;
 }
 
-bool vio::Path::rename(const Path& path) {
+bool vio::Path::rename(const Path& path) const {
     if (!isValid()) return false;
 
     fs::path src  = fs::path(m_path);

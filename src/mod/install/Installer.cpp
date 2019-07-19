@@ -24,7 +24,7 @@ void vmod::install::Installer::dispose() {
     m_globalModDir = "";
 }
 
-bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate/* = false*/) {
+bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate/* = false*/, bool force/* = false*/) {
     // Filepath MUST be absolute. No guesses wanted for which directory to look in.
     if (!filepath.isAbsolute()) return false;
 
@@ -44,8 +44,9 @@ bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate
     nString modDir = Mod::generateModDirName(metadata.name);
 
     // Check that the given mod is not already preloaded into install or update dir.
+    // If it is, and we are not forcing the preload, then we must fail.
     vio::Path preloadLocation = vio::Path(forUpdate ? m_updateDir : m_installDir) / modDir;
-    if (preloadLocation.isValid()) return false;
+    if (preloadLocation.isValid() && !force) return false;
 
     // Move the mod contents to the appropriate directory.
     m_iomanager->rename(filepath, preloadLocation);

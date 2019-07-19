@@ -68,11 +68,13 @@ namespace vorb {
                  *
                  * \param filepath: The (absolute) filepath to the current mod location.
                  * \param forUpdate: If true, the mod is loaded into a temporary dir ready
-                 *                   for update process.
+                 * for update process.
+                 * \param force: If true, any contents at the specified location will be
+                 * deleted and the new contents preloaded.
                  *
                  * \return True if the mod was preloaded, false otherwise.
                  */
-                bool preload(const vio::Path& filepath, bool forUpdate = false);
+                bool preload(const vio::Path& filepath, bool forUpdate = false, bool force = false);
 
                 /*!
                  * Installs the named mod.

@@ -92,5 +92,23 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
     cString modEntryPoints = m_iomanager->readFileToString(entryPointFilepath);
     if (modEntryPoints == nullptr) return false;
 
-    // TODO(Matthew): Implement.
+    // Set up the necessary keg context to parse the entry file.
+    keg::ReadContext kegContext;
+    kegContext.env = keg::getGlobalEnvironment();
+    kegContext.reader.init(modEntryPoints);
+
+    // Get first node of the document.
+    keg::Node node = kegContext.reader.getFirst();
+
+    // If the file isn't a map, it's wrongly formatted.
+    if (keg::getType(node) != keg::NodeType::MAP) return false;
+
+    auto processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value){
+
+    });
+    kegContext.reader.forAllInMap(node, &processEntry);
+    // TODO(Matthew): Implement parsing.
+
+    kegContext.reader.dispose();
+    return true;
 }

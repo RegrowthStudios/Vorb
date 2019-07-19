@@ -30,6 +30,15 @@ DECL_VIO(class IOManager; class Path)
 namespace vorb {
     namespace mod {
         namespace install {
+            // TODO(Matthew): Provide registration functions that are used to specify
+            //                YAML docs that mod can provide deltas to merge in.
+            //                    Don't want to hardcode anything like this, though
+            //                    we should provide good defaults, just as for script
+            //                    environment builders.
+            // TODO(Matthew): Do we want to provide pre & post install/update/uninstall 
+            //                events for other mods to hook into?
+            // TODO(Matthew): For scripted mods, do we want to let them themselves provide
+            //                pre/post handlers for these procedures?
             class Installer {
             public:
                 Installer();
@@ -65,7 +74,35 @@ namespace vorb {
                  */
                 bool preload(const vio::Path& filepath, bool forUpdate = false);
 
+                /*!
+                 * Installs the named mod.
+                 *
+                 * This entails merging edits into appropriate yaml files, installing
+                 * assets into own mod directory, generating any extra files via scripted
+                 * installer, etc..
+                 *
+                 * \param modName: The name of the mod to run installation for.
+                 */
                 bool install(const nString& modName);
+                /*!
+                 * Updates the named mod.
+                 *
+                 * This entails merging edits into appropriate yaml files, installing
+                 * any new assets into own mod directory, generating any extra files via 
+                 * scripted updater, etc..
+                 *
+                 * \param modName: The name of the mod to run update for.
+                 */
+                bool update(const nString& modName);
+                /*!
+                 * Uninstalls the named mod.
+                 *
+                 * This entails removing edits from appropriate yaml files, clearing own 
+                 * mod directory, and running any uninstall procedure in scripted 
+                 * uninstaller, etc..
+                 *
+                 * \param modName: The name of the mod to run update for.
+                 */
                 bool uninstall(const nString& modName);
 
             protected:

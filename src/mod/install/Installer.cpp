@@ -55,6 +55,10 @@ bool vmod::install::Installer::install(const nString& modName) {
 
 }
 
+bool vmod::install::Installer::update(const nString& modName) {
+
+}
+
 bool vmod::install::Installer::uninstall(const nString& modName) {
 
 }

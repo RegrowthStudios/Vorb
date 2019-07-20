@@ -47,8 +47,6 @@ void vmod::Mod::dispose() {
 bool vmod::Mod::startup() {
     if (m_isStarted) return false;
 
-    if (!loadEntryPoints()) return false;
-
     // TODO(Matthew): Implement.
 }
 

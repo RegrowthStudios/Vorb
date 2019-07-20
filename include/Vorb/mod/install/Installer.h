@@ -155,11 +155,35 @@ namespace vorb {
                  */
                 bool loadEntryData(const nString& modName, bool forUpdate = false);
 
+                /*!
+                 * \brief Loads the manifest data.
+                 *
+                 * \param pathname: The relative path to the resource for which manifest data should
+                 * be obtained.
+                 *
+                 * \return Root node of manifest data. 
+                 */
+                keg::Node loadCurrentManifestData(const nString& pathname);
+
+                /*!
+                 * \brief Loads the manifest data.
+                 *
+                 * \param modName: The mod to obtain the manifest data for.
+                 * \param pathname: The relative path to the resource for which manifest data should
+                 * be obtained.
+                 *
+                 * \return Root node of manifest data. 
+                 */
+                keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
+
                 vio::IOManager* m_iomanager; ///< The IO manager used for file handling.
 
                 nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.
                 nString m_updateDir;    ///< The update directory that full mod contents are put into for an update.
                 nString m_globalModDir; ///< The global mod directory into which active mod contents are placed.
+                nString m_manifestDir;  ///< The directory in which the manifest information is stored. This data is used to
+                                        ///  keep track of changes as a result of installs/updates/uninstalls, permitting
+                                        ///  quicker changes to things such as load order.
 
                 InstallStrategies m_strategies;  ///< The list of strategies to be executed on various installer actions.
                 EntryPoints       m_entryPoints; ///< A map of entry points to look for in the entry points file.

@@ -164,3 +164,7 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
 
     return success;
 }
+
+keg::Node vmod::install::Installer::loadManifestData() {
+    vio::Path manifestFilepath = vio::Path(m_manifestDir);
+}

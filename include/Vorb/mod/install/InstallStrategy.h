@@ -41,44 +41,49 @@ namespace vorb {
                  *
                  * \return True if successfully prepared, false otherwise.
                  */
-                virtual bool prepare(Installer* installer) = 0;
+                virtual bool prepare(Installer* installer);
 
                 /*!
                  * \brief Execute strategy during installation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install(Installer* installer) = 0;
+                virtual bool install() = 0;
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall(Installer* installer) = 0;
+                virtual bool uninstall() = 0;
             protected:
                 /*!
                  * \brief Registers an entry point to be extracted from entry points file.
                  *
                  * In this case, the entry point names only one file to be accessed.
                  *
-                 * \param installer: The installer that the entry point should be registered to.
                  * \param entryPoint: Name of the entry point to register.
                  */
-                void registerSingleEntryPoint(Installer* installer, const nString& entryPoint);
+                void registerSingleEntryPoint(const nString& entryPoint);
                 /*!
                  * \brief Registers an entry point to be extracted from entry points file.
                  *
                  * In this case, the entry point names multiple files to be accessed.
                  *
-                 * \param installer: The installer that the entry point should be registered to.
                  * \param entryPoint: Name of the entry point to register.
                  */
-                void registerMultiEntryPoint(Installer* installer, const nString& entryPoint);
+                void registerMultiEntryPoint(const nString& entryPoint);
+
+                vio::IOManager* getIOManager() { return m_installer->m_iomanager; }
+
+                const nString& getInstallDir()   { return m_installer->m_installDir;   }
+                const nString& getUpdateDir()    { return m_installer->m_updateDir;    }
+                const nString& getGlobalModDir() { return m_installer->m_globalModDir; }
+                const nString& getManifestDir()  { return m_installer->m_manifestDir;  }
+
+                const Installer::EntryData& getEntryData() { return m_installer->m_entryData; }
+
+                Installer* m_installer;
             };
 
             /*!
@@ -98,20 +103,16 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install(Installer* installer);
+                virtual bool install();
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall(Installer* installer);
+                virtual bool uninstall();
             protected:
                 vio::Path filepath; ///< The path to the file, should be relative to the root game directory.
             };
@@ -136,20 +137,16 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install(Installer* installer);
+                virtual bool install();
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall(Installer* installer);
+                virtual bool uninstall();
             protected:
                 vio::Path            dirpath;   ///< The path to the directory, should be relative to the root
                                                 ///  game directory.
@@ -172,20 +169,16 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install(Installer* installer);
+                virtual bool install();
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
-                 * \param installer: The installer that this strategy is being executed by.
-                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall(Installer* installer);
+                virtual bool uninstall();
             protected:
                 vio::Path dest;      ///< The file into which data is merged.
                 nString   listEntry; ///< The field name in the entry-points YAML file from which all files to

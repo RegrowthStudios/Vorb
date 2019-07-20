@@ -44,13 +44,22 @@ namespace vorb {
                 virtual bool prepare(Installer* installer) = 0;
 
                 /*!
-                 * \brief Execute strategy during installation. This is called on installation.
+                 * \brief Execute strategy during installation.
                  *
                  * \param installer: The installer that this strategy is being executed by.
                  *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool execute(Installer* installer) = 0;
+                virtual bool install(Installer* installer) = 0;
+
+                /*!
+                 * \brief Execute strategy during uninstallation.
+                 *
+                 * \param installer: The installer that this strategy is being executed by.
+                 *
+                 * \return True if successfully executed, false otherwise.
+                 */
+                virtual bool uninstall(Installer* installer) = 0;
             protected:
                 /*!
                  * \brief Registers an entry point to be extracted from entry points file.
@@ -87,13 +96,22 @@ namespace vorb {
                 virtual bool prepare(Installer* installer);
 
                 /*!
-                 * \brief Execute strategy during installation. This is called on installation.
+                 * \brief Execute strategy during installation.
                  *
                  * \param installer: The installer that this strategy is being executed by.
                  *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool execute(Installer* installer);
+                virtual bool install(Installer* installer);
+
+                /*!
+                 * \brief Execute strategy during uninstallation.
+                 *
+                 * \param installer: The installer that this strategy is being executed by.
+                 *
+                 * \return True if successfully executed, false otherwise.
+                 */
+                virtual bool uninstall(Installer* installer);
             protected:
                 vio::Path filepath; ///< The path to the file, should be relative to the root game directory.
             };
@@ -116,13 +134,22 @@ namespace vorb {
                 virtual bool prepare(Installer* installer);
 
                 /*!
-                 * \brief Execute strategy during installation. This is called on installation.
+                 * \brief Execute strategy during installation.
                  *
                  * \param installer: The installer that this strategy is being executed by.
                  *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool execute(Installer* installer);
+                virtual bool install(Installer* installer);
+
+                /*!
+                 * \brief Execute strategy during uninstallation.
+                 *
+                 * \param installer: The installer that this strategy is being executed by.
+                 *
+                 * \return True if successfully executed, false otherwise.
+                 */
+                virtual bool uninstall(Installer* installer);
             protected:
                 vio::Path            dirpath;   ///< The path to the directory, should be relative to the root
                                                 ///  game directory.
@@ -143,13 +170,22 @@ namespace vorb {
                 virtual bool prepare(Installer* installer);
 
                 /*!
-                 * \brief Execute strategy during installation. This is called on installation.
+                 * \brief Execute strategy during installation.
                  *
                  * \param installer: The installer that this strategy is being executed by.
                  *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool execute(Installer* installer);
+                virtual bool install(Installer* installer);
+
+                /*!
+                 * \brief Execute strategy during uninstallation.
+                 *
+                 * \param installer: The installer that this strategy is being executed by.
+                 *
+                 * \return True if successfully executed, false otherwise.
+                 */
+                virtual bool uninstall(Installer* installer);
             protected:
                 vio::Path dest;      ///< The file into which data is merged.
                 nString   listEntry; ///< The field name in the entry-points YAML file from which all files to

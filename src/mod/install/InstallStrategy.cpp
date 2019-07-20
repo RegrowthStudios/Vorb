@@ -16,7 +16,11 @@ bool vmod::install::ReplaceStrategy::prepare(Installer* installer) {
     // Empty.
 }
 
-bool vmod::install::ReplaceStrategy::execute(Installer* installer) {
+bool vmod::install::ReplaceStrategy::install(Installer* installer) {
+    
+}
+
+bool vmod::install::ReplaceStrategy::uninstall(Installer* installer) {
     
 }
 
@@ -24,14 +28,22 @@ bool vmod::install::ReplaceInDirStrategy::prepare(Installer* installer) {
 
 }
 
-bool vmod::install::ReplaceInDirStrategy::execute(Installer* installer) {
+bool vmod::install::ReplaceInDirStrategy::install(Installer* installer) {
+    
+}
 
+bool vmod::install::ReplaceInDirStrategy::uninstall(Installer* installer) {
+    
 }
 
 bool vmod::install::MergeYAMLStrategy::prepare(Installer* installer) {
     registerMultiEntryPoint(installer, listEntry);
 }
 
-bool vmod::install::MergeYAMLStrategy::execute(Installer* installer) {
+bool vmod::install::MergeYAMLStrategy::install(Installer* installer) {
+    
+}
+
+bool vmod::install::MergeYAMLStrategy::uninstall(Installer* installer) {
     
 }

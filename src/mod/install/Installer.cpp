@@ -66,6 +66,10 @@ bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate
 
 bool vmod::install::Installer::install(const nString& modName) {
     loadEntryData(modName);
+
+    for (auto& strategy : m_strategies) {
+        strategy->install(this);
+    }
 }
 
 bool vmod::install::Installer::update(const nString& modName) {
@@ -73,7 +77,9 @@ bool vmod::install::Installer::update(const nString& modName) {
 }
 
 bool vmod::install::Installer::uninstall(const nString& modName) {
-
+    for (auto& strategy : m_strategies) {
+        strategy->uninstall(this);
+    }
 }
 
 void vmod::install::Installer::registerSingleEntryPoint(const nString& entryPoint) {

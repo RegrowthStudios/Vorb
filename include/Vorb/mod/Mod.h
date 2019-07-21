@@ -46,6 +46,7 @@ namespace vorb {
 
         const nString METADATA_FILENAME     = "mod.yaml";
         const nString ENTRY_POINTS_FILENAME = "entry_points.yaml";
+        const nString MANIFEST_FILENAME     = "manifest.yaml";
 
         class Mod {
         public:

@@ -156,6 +156,24 @@ namespace vorb {
                 bool loadEntryData(const nString& modName, bool forUpdate = false);
 
                 /*!
+                 * \brief Gneerates the filepath for the given manifest data.
+                 *
+                 * \param modName: The name of the mod for which to obtain the manifest data.
+                 * \param pathname: The path to the resource for which to generate the manifest filepath.
+                 *
+                 * \return The path generated.
+                 */
+                vio::Path generateManifestFilepath(const nString& modName, const nString& pathname);
+                /*!
+                 * \brief Gneerates the filepath for the given manifest data.
+                 *
+                 * \param pathname: The path to the resource for which to generate the manifest filepath.
+                 *
+                 * \return The path generated.
+                 */
+                vio::Path generateManifestFilepath(const nString& pathname);
+
+                /*!
                  * \brief Loads the manifest data.
                  *
                  * \param pathname: The relative path to the resource for which manifest data should

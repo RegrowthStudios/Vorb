@@ -102,7 +102,11 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
     // Set up the necessary keg context to parse the entry file.
     keg::ReadContext kegContext;
     kegContext.env = keg::getGlobalEnvironment();
-    kegContext.reader.init(modEntryPoints);
+    try {
+        kegContext.reader.init(modEntryPoints);
+    } catch (keg::ParserException& e) {
+        return false;
+    }
 
     // Get first node of the document.
     keg::Node node = kegContext.reader.getFirst();
@@ -165,6 +169,37 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
     return success;
 }
 
-keg::Node vmod::install::Installer::loadManifestData() {
-    vio::Path manifestFilepath = vio::Path(m_manifestDir);
+vio::Path vmod::install::Installer::generateManifestFilepath(const nString& modName, const nString& pathname) {
+    return vio::Path(m_manifestDir) / Mod::generateModDirName(modName) / vio::Path(pathname).makeNice() / MANIFEST_FILENAME;
+}
+
+vio::Path vmod::install::Installer::generateManifestFilepath(const nString& pathname) {
+    return generateManifestFilepath("current", pathname);
+}
+
+keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathname) {
+    vio::Path manifestFilepath = generateManifestFilepath(pathname);
+
+    // Check that a manifest file exists for the given resource.
+    if (!manifestFilepath.isFile()) return nullptr;
+
+    // Load in manifest data.
+    cString manifestData = m_iomanager->readFileToString(manifesttFilepath);
+    if (manifestData == nullptr) return false;
+
+    // Set up the necessary keg context to parse the entry file.
+    keg::ReadContext kegContext;
+    kegContext.env = keg::getGlobalEnvironment();
+    try {
+        kegContext.reader.init(manifestData);
+    } catch (keg::ParserException& e) {
+        return false;
+    }
+
+    // Get first node of the document.
+    keg::Node node = kegContext.reader.getFirst();
+}
+
+keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, const nString& pathname) {
+    vio::Path manifestFilepath = vio::Path(m_manifestDir) / modName / pathname / MANIFEST_FILENAME;
 }

@@ -22,7 +22,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 namespace vorb {

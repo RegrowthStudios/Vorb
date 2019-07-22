@@ -215,7 +215,7 @@ namespace vorb {
                 std::tuple<Types...> values{ ValueMediator<Types>::defaultValue()... };
                 impl::rpopValues(state, &values);
 
-                return std::move(values);
+                return values;
             }
             template<typename ...Types>
             bool tryPopValues(Handle state, std::tuple<Types...>& values) {

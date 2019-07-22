@@ -293,6 +293,19 @@ set(vorb_io
     src/io/YAMLConverters.cpp
 )
 
+set(vorb_mod
+    include/Vorb/mod/Mod.h
+    include/Vorb/mod/ModIOManager.h
+    include/Vorb/mod/ScriptedMod.hpp
+    include/Vorb/mod/install/Installer.h
+    include/Vorb/mod/install/InstallStrategy.h
+#source
+    src/mod/Mod.cpp
+    src/mod/ModIOManager.cpp
+    src/mod/install/Installer.cpp
+    src/mod/install/InstallStrategy.cpp
+)
+
 if(VORB_USE_SCRIPTING)
     set(vorb_script
         include/Vorb/script/IEnvironment.hpp
@@ -485,6 +498,7 @@ add_library(vorb
     ${vorb_ecs}
     ${vorb_graphics}
     ${vorb_io}
+    ${vorb_mod}
     ${vorb_script}
     ${vorb_sound}
     ${vorb_ui}
@@ -496,6 +510,7 @@ add_library(vorb
 source_group("ecs" FILES ${vorb_ecs})
 source_group("graphics" FILES ${vorb_graphics})
 source_group("io" FILES ${vorb_io})
+source_group("mod" FILES ${vorb_mod})
 source_group("script" FILES ${vorb_script})
 source_group("sound" FILES ${vorb_sound})
 source_group("ui" FILES ${vorb_ui})

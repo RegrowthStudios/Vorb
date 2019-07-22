@@ -22,7 +22,7 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 #include "Vorb/io/Directory.h"

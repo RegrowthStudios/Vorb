@@ -22,7 +22,7 @@
 #include <utility>
 #include <vector>
 
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 #include "ComponentTableBase.h"

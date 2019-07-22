@@ -21,7 +21,7 @@
 #ifndef VORB_USING_PCH
 #include <GL/glew.h>
 
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 /************************************************************************/

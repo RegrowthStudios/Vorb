@@ -21,7 +21,7 @@
 #ifndef VORB_USING_PCH
 #include <map>
 
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 // Implementation of a specialized interval tree based on a red-black tree

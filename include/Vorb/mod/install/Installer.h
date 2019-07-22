@@ -20,10 +20,14 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/io/Keg.h"
+
+#include <vector>
+#include <unordered_map>
 
 DECL_VIO(class IOManager; class Path)
 
@@ -48,11 +52,11 @@ namespace vorb {
                     SINGLE,
                     MULTI
                 };
-
+            public:
                 using InstallStrategies = std::vector<InstallStrategy*>;
                 using EntryPoints       = std::unordered_map<nString, EntryPointKind>;
                 using EntryData         = std::unordered_map<nString, std::vector<nString>>;
-            public:
+
                 Installer();
                 ~Installer() {
                     // Empty.

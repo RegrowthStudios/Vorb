@@ -2,7 +2,6 @@
 #include "Vorb/mod/install/Installer.h"
 
 #include "Vorb/io/IOManager.h"
-#include "Vorb/io/Keg.h"
 #include "Vorb/io/YAMLImpl.h"
 #include "Vorb/mod/Mod.h"
 #include "Vorb/mod/install/InstallStrategy.h"
@@ -34,6 +33,8 @@ bool vmod::install::Installer::registerInstallStrategy(InstallStrategy* strategy
     if (!strategy->prepare(this)) return false;
 
     m_strategies.push_back(strategy);
+
+    return true;
 }
 
 bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate/* = false*/, bool force/* = false*/) {
@@ -61,33 +62,41 @@ bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate
     if (preloadLocation.isValid() && !force) return false;
 
     // Move the mod contents to the appropriate directory.
-    m_iomanager->rename(filepath, preloadLocation);
+    return m_iomanager->rename(filepath, preloadLocation);
 }
 
 bool vmod::install::Installer::install(const nString& modName) {
+    // TODO(Matthew): Implement rollback on any fail.
+
     loadEntryData(modName);
 
     for (auto& strategy : m_strategies) {
-        strategy->install(this);
+        strategy->install();
     }
+
+    return true;
 }
 
-bool vmod::install::Installer::update(const nString& modName) {
-
+bool vmod::install::Installer::update(const nString& modName VORB_UNUSED) {
+    return false;
 }
 
-bool vmod::install::Installer::uninstall(const nString& modName) {
+bool vmod::install::Installer::uninstall(const nString& modName VORB_UNUSED) {
+    // TODO(Matthew): Implement rollback on any fail.
+
     for (auto& strategy : m_strategies) {
-        strategy->uninstall(this);
+        strategy->uninstall();
     }
+
+    return true;
 }
 
 void vmod::install::Installer::registerSingleEntryPoint(const nString& entryPoint) {
-    m_entryPoints.emplace_back(std::make_pair(entryPoint, EntryPointKind::SINGLE));
+    m_entryPoints.emplace(std::make_pair(entryPoint, EntryPointKind::SINGLE));
 }
 
 void vmod::install::Installer::registerMultiEntryPoint(const nString& entryPoint) {
-    m_entryPoints.emplace_back(std::make_pair(entryPoint, EntryPointKind::MULTI));
+    m_entryPoints.emplace(std::make_pair(entryPoint, EntryPointKind::MULTI));
 }
 
 bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpdate/* = false*/) {
@@ -104,7 +113,7 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
     kegContext.env = keg::getGlobalEnvironment();
     try {
         kegContext.reader.init(modEntryPoints);
-    } catch (keg::ParserException& e) {
+    } catch (YAML::ParserException& e) {
         return false;
     }
 
@@ -124,12 +133,12 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
                     if (keg::getType(node) == keg::NodeType::VALUE) {
                         nString entryLoc = node->data.as<nString>();
 
-                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1,entryLoc)));
+                        m_entryData.emplace(std::make_pair(key, std::vector<nString>(1,entryLoc)));
                     } else if (keg::getType(node) == keg::NodeType::SEQUENCE
                                 && node->data.size() == 1) {
                         nString entryLoc = node->data[0].as<nString>();
 
-                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1,entryLoc)));
+                        m_entryData.emplace(std::make_pair(key, std::vector<nString>(1,entryLoc)));
                     } else {
                         success = false;
                         break;
@@ -139,7 +148,7 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
                     if (keg::getType(node) == keg::NodeType::VALUE) {
                         nString entryLoc = node->data.as<nString>();
 
-                        m_entryData.emplace_back(std::make_pair(key, std::vector<nString>(1, entryLoc)));
+                        m_entryData.emplace(std::make_pair(key, std::vector<nString>(1, entryLoc)));
                     } else if (keg::getType(node) == keg::NodeType::SEQUENCE) {
                         std::vector<nString> entryLocs = std::vector<nString>(node->data.size());
 
@@ -147,7 +156,7 @@ bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpd
                             entryLocs.emplace_back(entryLoc.as<nString>());
                         }
 
-                        m_entryData.emplace_back(std::make_pair(key, entryLocs));
+                        m_entryData.emplace(std::make_pair(key, entryLocs));
                     } else {
                         success = false;
                         break;
@@ -184,16 +193,16 @@ keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathn
     if (!manifestFilepath.isFile()) return nullptr;
 
     // Load in manifest data.
-    cString manifestData = m_iomanager->readFileToString(manifesttFilepath);
-    if (manifestData == nullptr) return false;
+    cString manifestData = m_iomanager->readFileToString(manifestFilepath);
+    if (manifestData == nullptr) return nullptr;
 
     // Set up the necessary keg context to parse the entry file.
     keg::ReadContext kegContext;
     kegContext.env = keg::getGlobalEnvironment();
     try {
         kegContext.reader.init(manifestData);
-    } catch (keg::ParserException& e) {
-        return false;
+    } catch (YAML::ParserException& e) {
+        return nullptr;
     }
 
     // Return first node of the document.
@@ -207,16 +216,16 @@ keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName
     if (!manifestFilepath.isFile()) return nullptr;
 
     // Load in manifest data.
-    cString manifestData = m_iomanager->readFileToString(manifesttFilepath);
-    if (manifestData == nullptr) return false;
+    cString manifestData = m_iomanager->readFileToString(manifestFilepath);
+    if (manifestData == nullptr) return nullptr;
 
     // Set up the necessary keg context to parse the entry file.
     keg::ReadContext kegContext;
     kegContext.env = keg::getGlobalEnvironment();
     try {
         kegContext.reader.init(manifestData);
-    } catch (keg::ParserException& e) {
-        return false;
+    } catch (YAML::ParserException& e) {
+        return nullptr;
     }
 
     // Return first node of the document.

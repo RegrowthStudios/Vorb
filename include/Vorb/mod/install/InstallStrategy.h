@@ -20,11 +20,13 @@
 //! @endcond
 
 #ifndef VORB_USING_PCH
-#include "../types.h"
+#include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Path.h"
+
+#include <vector>
 
 DECL_VIO(class IOManager)
 
@@ -74,14 +76,14 @@ namespace vorb {
                  */
                 void registerMultiEntryPoint(const nString& entryPoint);
 
-                vio::IOManager* getIOManager() { return m_installer->m_iomanager; }
+                vio::IOManager* getIOManager();
 
-                const nString& getInstallDir()   { return m_installer->m_installDir;   }
-                const nString& getUpdateDir()    { return m_installer->m_updateDir;    }
-                const nString& getGlobalModDir() { return m_installer->m_globalModDir; }
-                const nString& getManifestDir()  { return m_installer->m_manifestDir;  }
+                const nString& getInstallDir();
+                const nString& getUpdateDir();
+                const nString& getGlobalModDir();
+                const nString& getManifestDir();
 
-                const Installer::EntryData& getEntryData() { return m_installer->m_entryData; }
+                Installer::EntryData* getEntryData();
 
                 Installer* m_installer;
             };

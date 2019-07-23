@@ -186,7 +186,7 @@ namespace vorb {
                  */
                 CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
 
-                static keg::Node vanillaOwner;
+                static keg::YAMLNode vanillaOwner;
 
                 vio::IOManager*  m_iomanager;  ///< The IO manager used for file handling.
                 keg::ReadContext m_kegContext; ///< The context for reading YAML files.

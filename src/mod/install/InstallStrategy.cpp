@@ -21,7 +21,11 @@ void vmod::install::InstallStrategy::registerMultiEntryPoint(const nString& entr
 }
 
 bool vmod::install::InstallStrategy::ownerIsVanilla(keg::Node node) {
-    return m_installer->ownerIsVanilla(node);
+    return node->data.as<nString>() == Installer::vanillaOwner.data.as<nString>();
+}
+
+keg::Node vmod::install::InstallStrategy::getVanillaOwner() {
+    return &Installer::vanillaOwner;
 }
 
 vio::IOManager* vmod::install::InstallStrategy::getIOManager() {
@@ -98,9 +102,6 @@ bool vmod::install::ReplaceStrategy::install(const nString& modName) {
 
     saveCurrentManifestData(filepath, manifest);
 
-    // TODO(Matthew): Not totally clear on clean-up, but assume this suffices for now...
-    delete manifest;
-
     return true;
 }
 
@@ -136,12 +137,13 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
     // TODO(Matthew): Not convinced rename by default recursively builds directories...
     if (!oldAssetPath.rename(filepath)) return false;
 
-        manifest->data = owner;
-    if (manifest )
-    saveCurrentManifestData(filepath, manifest);
-
-    // TODO(Matthew): Not totally clear on clean-up, but assume this suffices for now...
-    delete manifest;
+    // If we are reverting to vanilla asset, delete manifest,
+    // otherwise, save new one.
+    if (ownerIsVanilla(owner)) {
+        deleteCurrentManifestData(filepath);
+    } else {
+        saveCurrentManifestData(filepath, manifest);
+    }
 
     return true;
 }

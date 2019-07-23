@@ -82,6 +82,8 @@ namespace vorb {
 
                 bool ownerIsVanilla(keg::Node node);
 
+                CALLEE_DELETE keg::Node getVanillaOwner();
+
                 vio::IOManager* getIOManager();
 
                 const nString& getInstallDir();

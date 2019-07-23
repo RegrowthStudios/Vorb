@@ -231,6 +231,6 @@ keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName
 }
 
 
-vmod::install::Installer::vanillaOwner = keg::Node({
+keg::YAMLNode vmod::install::Installer::vanillaOwner = keg::Node({
     YAML::Load("'%%none");
 });

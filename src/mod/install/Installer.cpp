@@ -37,7 +37,7 @@ bool vmod::install::Installer::registerInstallStrategy(InstallStrategy* strategy
     return true;
 }
 
-bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate/* = false*/, bool force/* = false*/) {
+bool vmod::install::Installer::preload(const vio::Path& filepath, bool force/* = false*/) {
     // Filepath MUST be absolute. No guesses wanted for which directory to look in.
     if (!filepath.isAbsolute()) return false;
 
@@ -58,7 +58,7 @@ bool vmod::install::Installer::preload(const vio::Path& filepath, bool forUpdate
 
     // Check that the given mod is not already preloaded into install or update dir.
     // If it is, and we are not forcing the preload, then we must fail.
-    vio::Path preloadLocation = vio::Path(forUpdate ? m_updateDir : m_installDir) / modDir;
+    vio::Path preloadLocation = m_updateDir / modDir;
     if (preloadLocation.isValid() && !force) return false;
 
     // Move the mod contents to the appropriate directory.
@@ -75,10 +75,6 @@ bool vmod::install::Installer::install(const nString& modName) {
     }
 
     return true;
-}
-
-bool vmod::install::Installer::update(const nString& modName VORB_UNUSED) {
-    return false;
 }
 
 bool vmod::install::Installer::uninstall(const nString& modName VORB_UNUSED) {
@@ -99,10 +95,10 @@ void vmod::install::Installer::registerMultiEntryPoint(const nString& entryPoint
     m_entryPoints.emplace(std::make_pair(entryPoint, EntryPointKind::MULTI));
 }
 
-bool vmod::install::Installer::loadEntryData(const nString& modName, bool forUpdate/* = false*/) {
+bool vmod::install::Installer::loadEntryData(const nString& modName) {
     nString modDirName = Mod::generateModDirName(modName);
 
-    vio::Path entryPointFilepath = vio::Path(forUpdate ? m_updateDir : m_installDir) / modDirName / ENTRY_POINTS_FILENAME;
+    vio::Path entryPointFilepath = vio::Path(m_updateDir) / modDirName / ENTRY_POINTS_FILENAME;
 
     // Grab mod metadata from file.
     cString modEntryPoints = m_iomanager->readFileToString(entryPointFilepath);
@@ -190,7 +186,9 @@ keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathn
     vio::Path manifestFilepath = generateManifestFilepath(pathname);
 
     // Check that a manifest file exists for the given resource.
-    if (!manifestFilepath.isFile()) return nullptr;
+    if (!manifestFilepath.isFile()) return new keg::Node({
+        YAML::Load("'%%none'");
+    });
 
     // Load in manifest data.
     cString manifestData = m_iomanager->readFileToString(manifestFilepath);

@@ -92,14 +92,12 @@ namespace vorb {
                  * sub-directory of installDir.
                  *
                  * \param filepath: The (absolute) filepath to the current mod location.
-                 * \param forUpdate: If true, the mod is loaded into a temporary dir ready
-                 * for update process.
                  * \param force: If true, any contents at the specified location will be
                  * deleted and the new contents preloaded.
                  *
                  * \return True if the mod was preloaded, false otherwise.
                  */
-                bool preload(const vio::Path& filepath, bool forUpdate = false, bool force = false);
+                bool preload(const vio::Path& filepath bool force = false);
 
                 /*!
                  * Installs the named mod.
@@ -111,16 +109,7 @@ namespace vorb {
                  * \param modName: The name of the mod to run installation for.
                  */
                 bool install(const nString& modName);
-                /*!
-                 * Updates the named mod.
-                 *
-                 * This entails merging edits into appropriate yaml files, installing
-                 * any new assets into own mod directory, generating any extra files via 
-                 * scripted updater, etc..
-                 *
-                 * \param modName: The name of the mod to run update for.
-                 */
-                bool update(const nString& modName);
+
                 /*!
                  * Uninstalls the named mod.
                  *
@@ -153,11 +142,10 @@ namespace vorb {
                  * \brief Loads the entry point data for the named mod.
                  *
                  * \param modName: The name of the mod to load the entry point data for.
-                 * \param forUpdate: Whether this entry data is for an update or install.
                  *
                  * \return True if entry data is successfully loaded, false otherwise.
                  */
-                bool loadEntryData(const nString& modName, bool forUpdate = false);
+                bool loadEntryData(const nString& modName);
 
                 /*!
                  * \brief Gneerates the filepath for the given manifest data.
@@ -185,7 +173,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                keg::Node loadCurrentManifestData(const nString& pathname);
+                CALLER_DELETE keg::Node loadCurrentManifestData(const nString& pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -196,13 +184,14 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
+                CALLER_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
 
                 vio::IOManager* m_iomanager; ///< The IO manager used for file handling.
 
                 nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.
-                nString m_updateDir;    ///< The update directory that full mod contents are put into for an update.
+                nString m_updateDir;    ///< The update directory that full mod contents are put into for an update (or future installation).
                 nString m_globalModDir; ///< The global mod directory into which active mod contents are placed.
+                nString m_backupDir;    ///< This is the directory in which any vanilla assets are placed that a mod replaces.
                 nString m_manifestDir;  ///< The directory in which the manifest information is stored. This data is used to
                                         ///  keep track of changes as a result of installs/updates/uninstalls, permitting
                                         ///  quicker changes to things such as load order.

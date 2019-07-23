@@ -48,16 +48,20 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install() = 0;
+                virtual bool install(const nString& modName) = 0;
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall() = 0;
+                virtual bool uninstall(const nString& modName) = 0;
             protected:
                 /*!
                  * \brief Registers an entry point to be extracted from entry points file.
@@ -81,9 +85,31 @@ namespace vorb {
                 const nString& getInstallDir();
                 const nString& getUpdateDir();
                 const nString& getGlobalModDir();
+                const nString& getBackupDir();
                 const nString& getManifestDir();
 
                 Installer::EntryData* getEntryData();
+
+                /*!
+                 * \brief Loads the manifest data.
+                 *
+                 * \param pathname: The relative path to the resource for which manifest data should
+                 * be obtained.
+                 *
+                 * \return Root node of manifest data. 
+                 */
+                keg::Node loadCurrentManifestData(const nString& pathname);
+
+                /*!
+                 * \brief Loads the manifest data.
+                 *
+                 * \param modName: The mod to obtain the manifest data for.
+                 * \param pathname: The relative path to the resource for which manifest data should
+                 * be obtained.
+                 *
+                 * \return Root node of manifest data. 
+                 */
+                keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
 
                 Installer* m_installer;
             };
@@ -105,18 +131,22 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install();
+                virtual bool install(const nString& modName);
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall();
-            protected:
-                vio::Path filepath; ///< The path to the file, should be relative to the root game directory.
+                virtual bool uninstall(const nString& modName);
+
+                nString filepath; ///< The path to the file, should be relative to the root game directory.
             };
 
             /*!
@@ -139,18 +169,22 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install();
+                virtual bool install(const nString& modName);
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall();
-            protected:
-                vio::Path            dirpath;   ///< The path to the directory, should be relative to the root
+                virtual bool uninstall(const nString& modName);
+
+                nString              dirpath;   ///< The path to the directory, should be relative to the root
                                                 ///  game directory.
                 std::vector<nString> extension; ///< A collection of extensions to match files to.
             };
@@ -171,20 +205,24 @@ namespace vorb {
                 /*!
                  * \brief Execute strategy during installation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool install();
+                virtual bool install(const nString& modName);
 
                 /*!
                  * \brief Execute strategy during uninstallation.
                  *
+                 * \param modName: The name of the mod to be installed.
+                 *
                  * \return True if successfully executed, false otherwise.
                  */
-                virtual bool uninstall();
-            protected:
-                vio::Path dest;      ///< The file into which data is merged.
-                nString   listEntry; ///< The field name in the entry-points YAML file from which all files to
-                                     ///  use for merging are listed.
+                virtual bool uninstall(const nString& modName);
+
+                nString dest;      ///< The file into which data is merged.
+                nString listEntry; ///< The field name in the entry-points YAML file from which all files to
+                                   ///  use for merging are listed.
             };
         }
     }

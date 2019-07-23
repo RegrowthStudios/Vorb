@@ -167,6 +167,20 @@ bool vio::Path::rename(const Path& path) const {
     return ec.value() == 0;
 }
 
+bool vio::Path::remove() const {
+    if (!isValid()) return false;
+
+    system::error_code ec;
+    return fs::remove(fs::path(m_path), ec);
+}
+
+ui32 vio::Path::removeAll() const {
+    if (!isValid()) return false;
+
+    system::error_code ec;
+    return fs::remove_all(fs::path(m_path), ec);
+}
+
 nString vio::Path::getLeaf() const {
     if (isNull()) return "";
     return fs::path(m_path).filename().string();

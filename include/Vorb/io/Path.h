@@ -97,6 +97,19 @@ namespace vorb {
              */
             bool rename(const Path& path) const;
 
+            /*!
+             * \brief Deletes the named file or empty directory.
+             *
+             * \return True if a file or directory was deleted, false otherwise.
+             */
+            bool remove() const;
+            /*!
+             * \nroef Deletes the named file or (arbitrarily filled) directory.
+             *
+             * \return The number of files and directories deleted.
+             */
+            ui32 removeAll() const;
+
             /// @return The last part of this path
             nString getLeaf() const;
             /// @return The extension of this path

@@ -11,18 +11,29 @@ vmod::install::Installer::Installer() :
     // Empty.
 }
 
-void vmod::install::Installer::init(vio::IOManager* iom, const nString& installDir, const nString& updateDir, const nString& globalModDir) {
+void vmod::install::Installer::init(vio::IOManager* iom, const nString& installDir, const nString& updateDir, const nString& globalModDir, const nString& backupDir, const nString& manifestDir) {
     m_iomanager    = iom;
+
     m_installDir   = installDir;
     m_updateDir    = updateDir;
     m_globalModDir = globalModDir;
+    m_backupDir    = backupDir;
+    m_manifestDir  = manifestDir;
+
+    // Set up the necessary keg context to parse the entry file.
+    m_kegContext.env = keg::getGlobalEnvironment();
 }
 
 void vmod::install::Installer::dispose() {
     m_iomanager    = nullptr;
+
     m_installDir   = "";
     m_updateDir    = "";
     m_globalModDir = "";
+    m_backupDir    = "";
+    m_manifestDir  = "";
+
+    m_kegContext.reader.dispose();
 
     InstallStrategies().swap(m_strategies);
     EntryPoints().swap(m_entryPoints);
@@ -105,16 +116,14 @@ bool vmod::install::Installer::loadEntryData(const nString& modName) {
     if (modEntryPoints == nullptr) return false;
 
     // Set up the necessary keg context to parse the entry file.
-    keg::ReadContext kegContext;
-    kegContext.env = keg::getGlobalEnvironment();
     try {
-        kegContext.reader.init(modEntryPoints);
+        m_kegContext.reader.init(modEntryPoints);
     } catch (YAML::ParserException& e) {
         return false;
     }
 
     // Get first node of the document.
-    keg::Node node = kegContext.reader.getFirst();
+    keg::Node node = m_kegContext.reader.getFirst();
 
     // If the file isn't a map, it's wrongly formatted.
     if (keg::getType(node) != keg::NodeType::MAP) return false;
@@ -161,15 +170,12 @@ bool vmod::install::Installer::loadEntryData(const nString& modName) {
             }
         }
     });
-    kegContext.reader.forAllInMap(node, &processEntry);
+    m_kegContext.reader.forAllInMap(node, &processEntry);
 
     // If parse failed, clear out the entry data.
     if (!success) {
         EntryData().swap(m_entryData);
     }
-
-    // We're done parsing, clean up and return the success of the parse.
-    kegContext.reader.dispose();
 
     return success;
 }
@@ -194,17 +200,14 @@ keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathn
     cString manifestData = m_iomanager->readFileToString(manifestFilepath);
     if (manifestData == nullptr) return nullptr;
 
-    // Set up the necessary keg context to parse the entry file.
-    keg::ReadContext kegContext;
-    kegContext.env = keg::getGlobalEnvironment();
     try {
-        kegContext.reader.init(manifestData);
+        m_kegContext.reader.init(manifestData);
     } catch (YAML::ParserException& e) {
         return nullptr;
     }
 
     // Return first node of the document.
-    return kegContext.reader.getFirst();
+    return m_kegContext.reader.getFirst();
 }
 
 keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, const nString& pathname) {
@@ -217,15 +220,17 @@ keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName
     cString manifestData = m_iomanager->readFileToString(manifestFilepath);
     if (manifestData == nullptr) return nullptr;
 
-    // Set up the necessary keg context to parse the entry file.
-    keg::ReadContext kegContext;
-    kegContext.env = keg::getGlobalEnvironment();
     try {
-        kegContext.reader.init(manifestData);
+        m_kegContext.reader.init(manifestData);
     } catch (YAML::ParserException& e) {
         return nullptr;
     }
 
     // Return first node of the document.
-    return kegContext.reader.getFirst();
+    return m_kegContext.reader.getFirst();
 }
+
+
+vmod::install::Installer::vanillaOwner = keg::Node({
+    YAML::Load("'%%none");
+});

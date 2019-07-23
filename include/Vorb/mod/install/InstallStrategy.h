@@ -80,6 +80,8 @@ namespace vorb {
                  */
                 void registerMultiEntryPoint(const nString& entryPoint);
 
+                bool ownerIsVanilla(keg::Node node);
+
                 vio::IOManager* getIOManager();
 
                 const nString& getInstallDir();

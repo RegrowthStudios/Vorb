@@ -173,7 +173,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLER_DELETE keg::Node loadCurrentManifestData(const nString& pathname);
+                CALLEE_DELETE keg::Node loadCurrentManifestData(const nString& pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -184,9 +184,12 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLER_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
+                CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
 
-                vio::IOManager* m_iomanager; ///< The IO manager used for file handling.
+                static keg::Node vanillaOwner;
+
+                vio::IOManager*  m_iomanager;  ///< The IO manager used for file handling.
+                keg::ReadContext m_kegContext; ///< The context for reading YAML files.
 
                 nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.
                 nString m_updateDir;    ///< The update directory that full mod contents are put into for an update (or future installation).

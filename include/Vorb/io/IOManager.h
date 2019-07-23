@@ -156,10 +156,14 @@ namespace vorb {
              *
              * \param src: The path to the source file or directory.
              * \param dest: The path to the destination for this file or directory.
+             * \param force: If true, then the rename is forced - any existing file
+             * or directory is first removed.
+             *
+             * NOTE: Forced renames are NOT atomic.
              *
              * \return bool True if successfully renamed/moved, false otherwise.
              */
-            bool rename(const Path& src, const Path& dest);
+            bool rename(const Path& src, const Path& dest, bool force = false);
 
             /// Check if a file exists
             /// @param path: The path to the file

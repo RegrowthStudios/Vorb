@@ -32,21 +32,23 @@ vio::IOManager* vmod::install::InstallStrategy::getIOManager() {
     return m_installer->m_iomanager;
 }
 
-const nString& vmod::install::InstallStrategy::getInstallDir()   {
+vio::Path vmod::install::InstallStrategy::getInstallDir()   {
     return m_installer->m_installDir;
 }
-const nString& vmod::install::InstallStrategy::getUpdateDir()    {
+
+vio::Path vmod::install::InstallStrategy::getUpdateDir()    {
     return m_installer->m_updateDir;
 }
-const nString& vmod::install::InstallStrategy::getGlobalModDir() {
+
+vio::Path vmod::install::InstallStrategy::getGlobalModDir() {
     return m_installer->m_globalModDir;
 }
 
-const nString& vmod::install::InstallStrategy::getBackupDir() {
+vio::Path vmod::install::InstallStrategy::getBackupDir() {
     return m_installer->m_backupDir;
 }
 
-const nString& vmod::install::InstallStrategy::getManifestDir()  {
+vio::Path vmod::install::InstallStrategy::getManifestDir()  {
     return m_installer->m_manifestDir;
 }
 
@@ -54,11 +56,11 @@ vmod::install::Installer::EntryData* vmod::install::InstallStrategy::getEntryDat
     return &m_installer->m_entryData;
 }
 
-keg::Node vmod::install::InstallStrategy::loadCurrentManifestData(const nString& pathname) {
+keg::Node vmod::install::InstallStrategy::loadCurrentManifestData(const vio::Path& pathname) {
     return m_installer->loadCurrentManifestData(pathname);
 }
 
-keg::Node vmod::install::InstallStrategy::loadManifestDataOfMod(const nString& modName, const nString& pathname) {
+keg::Node vmod::install::InstallStrategy::loadManifestDataOfMod(const nString& modName, const vio::Path& pathname) {
     return m_installer->loadManifestDataOfMod(modName, pathname);
 }
 

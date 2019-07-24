@@ -70,7 +70,7 @@ namespace vorb {
                  * \param updateDir: The directory into which the mod file contents are placed for an update.
                  * \param globalModDir: The directory into which active mod files are installed.
                  */
-                void init(vio::IOManager* iom, const nString& installDir, const nString& updateDir, const nString& globalModDir);
+                void init(vio::IOManager* iom, vio::Path installDir, vio::Path updateDir, vio::Path globalModDir, vio::Path backupDir, vio::Path manifestDir);
                 /*!
                  * \brief Disposes of the installer.
                  */
@@ -97,7 +97,7 @@ namespace vorb {
                  *
                  * \return True if the mod was preloaded, false otherwise.
                  */
-                bool preload(const vio::Path& filepath bool force = false);
+                bool preload(const vio::Path& filepath, bool force = false);
 
                 /*!
                  * Installs the named mod.
@@ -155,7 +155,7 @@ namespace vorb {
                  *
                  * \return The path generated.
                  */
-                vio::Path generateManifestFilepath(const nString& modName, const nString& pathname);
+                vio::Path generateManifestFilepath(const nString& modName, vio::Path pathname);
                 /*!
                  * \brief Gneerates the filepath for the given manifest data.
                  *
@@ -163,7 +163,7 @@ namespace vorb {
                  *
                  * \return The path generated.
                  */
-                vio::Path generateManifestFilepath(const nString& pathname);
+                vio::Path generateManifestFilepath(vio::Path pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -173,7 +173,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLEE_DELETE keg::Node loadCurrentManifestData(const nString& pathname);
+                CALLEE_DELETE keg::Node loadCurrentManifestData(vio::Path pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -184,18 +184,18 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
+                CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, vio::Path pathname);
 
                 static keg::YAMLNode vanillaOwner;
 
                 vio::IOManager*  m_iomanager;  ///< The IO manager used for file handling.
                 keg::ReadContext m_kegContext; ///< The context for reading YAML files.
 
-                nString m_installDir;   ///< The install directory that full mod contents are put into for future reference.
-                nString m_updateDir;    ///< The update directory that full mod contents are put into for an update (or future installation).
-                nString m_globalModDir; ///< The global mod directory into which active mod contents are placed.
-                nString m_backupDir;    ///< This is the directory in which any vanilla assets are placed that a mod replaces.
-                nString m_manifestDir;  ///< The directory in which the manifest information is stored. This data is used to
+                vio::Path m_installDir;   ///< The install directory that full mod contents are put into for future reference.
+                vio::Path m_updateDir;    ///< The update directory that full mod contents are put into for an update (or future installation).
+                vio::Path m_globalModDir; ///< The global mod directory into which active mod contents are placed.
+                vio::Path m_backupDir;    ///< This is the directory in which any vanilla assets are placed that a mod replaces.
+                vio::Path m_manifestDir;  ///< The directory in which the manifest information is stored. This data is used to
                                         ///  keep track of changes as a result of installs/updates/uninstalls, permitting
                                         ///  quicker changes to things such as load order.
 

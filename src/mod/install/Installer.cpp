@@ -11,7 +11,7 @@ vmod::install::Installer::Installer() :
     // Empty.
 }
 
-void vmod::install::Installer::init(vio::IOManager* iom, const nString& installDir, const nString& updateDir, const nString& globalModDir, const nString& backupDir, const nString& manifestDir) {
+void vmod::install::Installer::init(vio::IOManager* iom, vio::Path installDir, vio::Path updateDir, vio::Path globalModDir, vio::Path backupDir, vio::Path manifestDir) {
     m_iomanager    = iom;
 
     m_installDir   = installDir;
@@ -82,7 +82,7 @@ bool vmod::install::Installer::install(const nString& modName) {
     loadEntryData(modName);
 
     for (auto& strategy : m_strategies) {
-        strategy->install();
+        strategy->install(modName);
     }
 
     return true;
@@ -92,7 +92,7 @@ bool vmod::install::Installer::uninstall(const nString& modName VORB_UNUSED) {
     // TODO(Matthew): Implement rollback on any fail.
 
     for (auto& strategy : m_strategies) {
-        strategy->uninstall();
+        strategy->uninstall(modName);
     }
 
     return true;
@@ -180,21 +180,19 @@ bool vmod::install::Installer::loadEntryData(const nString& modName) {
     return success;
 }
 
-vio::Path vmod::install::Installer::generateManifestFilepath(const nString& modName, const nString& pathname) {
-    return vio::Path(m_manifestDir) / Mod::generateModDirName(modName) / vio::Path(pathname).makeNice() / MANIFEST_FILENAME;
+vio::Path vmod::install::Installer::generateManifestFilepath(const nString& modName, vio::Path pathname) {
+    return m_manifestDir / Mod::generateModDirName(modName) / pathname.makeNice() / MANIFEST_FILENAME;
 }
 
-vio::Path vmod::install::Installer::generateManifestFilepath(const nString& pathname) {
+vio::Path vmod::install::Installer::generateManifestFilepath(vio::Path pathname) {
     return generateManifestFilepath("current", pathname);
 }
 
-keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathname) {
+keg::Node vmod::install::Installer::loadCurrentManifestData(vio::Path pathname) {
     vio::Path manifestFilepath = generateManifestFilepath(pathname);
 
     // Check that a manifest file exists for the given resource.
-    if (!manifestFilepath.isFile()) return new keg::Node({
-        YAML::Load("'%%none'");
-    });
+    if (!manifestFilepath.isFile()) return &vanillaOwner;
 
     // Load in manifest data.
     cString manifestData = m_iomanager->readFileToString(manifestFilepath);
@@ -210,7 +208,7 @@ keg::Node vmod::install::Installer::loadCurrentManifestData(const nString& pathn
     return m_kegContext.reader.getFirst();
 }
 
-keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, const nString& pathname) {
+keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, vio::Path pathname) {
     vio::Path manifestFilepath = generateManifestFilepath(modName, pathname);
 
     // Check that a manifest file exists for the given resource.
@@ -231,6 +229,6 @@ keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName
 }
 
 
-keg::YAMLNode vmod::install::Installer::vanillaOwner = keg::Node({
-    YAML::Load("'%%none");
+keg::YAMLNode vmod::install::Installer::vanillaOwner = keg::YAMLNode({
+    YAML::Load("'%%none")
 });

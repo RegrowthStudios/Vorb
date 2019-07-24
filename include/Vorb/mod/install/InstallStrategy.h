@@ -86,11 +86,11 @@ namespace vorb {
 
                 vio::IOManager* getIOManager();
 
-                const nString& getInstallDir();
-                const nString& getUpdateDir();
-                const nString& getGlobalModDir();
-                const nString& getBackupDir();
-                const nString& getManifestDir();
+                vio::Path getInstallDir();
+                vio::Path getUpdateDir();
+                vio::Path getGlobalModDir();
+                vio::Path getBackupDir();
+                vio::Path getManifestDir();
 
                 Installer::EntryData* getEntryData();
 
@@ -102,7 +102,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                keg::Node loadCurrentManifestData(const nString& pathname);
+                keg::Node loadCurrentManifestData(const vio::Path& pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -113,7 +113,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                keg::Node loadManifestDataOfMod(const nString& modName, const nString& pathname);
+                keg::Node loadManifestDataOfMod(const nString& modName, const vio::Path& pathname);
 
                 Installer* m_installer;
             };
@@ -150,7 +150,7 @@ namespace vorb {
                  */
                 virtual bool uninstall(const nString& modName);
 
-                nString filepath; ///< The path to the file, should be relative to the root game directory.
+                vio::Path filepath; ///< The path to the file, should be relative to the root game directory.
             };
 
             /*!
@@ -188,7 +188,7 @@ namespace vorb {
                  */
                 virtual bool uninstall(const nString& modName);
 
-                nString              dirpath;   ///< The path to the directory, should be relative to the root
+                vio::Path            dirpath;   ///< The path to the directory, should be relative to the root
                                                 ///  game directory.
                 std::vector<nString> extension; ///< A collection of extensions to match files to.
             };
@@ -224,8 +224,8 @@ namespace vorb {
                  */
                 virtual bool uninstall(const nString& modName);
 
-                nString dest;      ///< The file into which data is merged.
-                nString listEntry; ///< The field name in the entry-points YAML file from which all files to
+                vio::Path dest;      ///< The file into which data is merged.
+                vio::Path listEntry; ///< The field name in the entry-points YAML file from which all files to
                                    ///  use for merging are listed.
             };
         }

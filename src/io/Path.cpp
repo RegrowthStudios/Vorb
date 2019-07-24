@@ -155,6 +155,21 @@ vio::Path& vio::Path::makeNice() {
     return *this;
 }
 
+vio::Path vio::Path::getNice() const {
+    vio::Path tmp(*this);
+
+    for (auto index = m_path.find_first_not_of(validPOSIXChars); index != nString::npos;) {
+        tmp.m_path[index] = '_';
+    }
+
+    // This should not be necessary.
+    for (auto index = m_path.find_first_of(invalidWindowsChars); index != nString::npos;) {
+        tmp.m_path[index] = '_';
+    }
+
+    return tmp;
+}
+
 bool vio::Path::rename(const Path& path) const {
     if (!isValid()) return false;
 

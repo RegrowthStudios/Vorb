@@ -155,7 +155,7 @@ namespace vorb {
                  *
                  * \return The path generated.
                  */
-                vio::Path generateManifestFilepath(const nString& modName, vio::Path pathname);
+                vio::Path generateManifestFilepath(const nString& modName, const vio::Path& pathname);
                 /*!
                  * \brief Gneerates the filepath for the given manifest data.
                  *
@@ -163,7 +163,7 @@ namespace vorb {
                  *
                  * \return The path generated.
                  */
-                vio::Path generateManifestFilepath(vio::Path pathname);
+                vio::Path generateManifestFilepath(const vio::Path& pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -173,7 +173,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLEE_DELETE keg::Node loadCurrentManifestData(vio::Path pathname);
+                CALLEE_DELETE keg::Node loadCurrentManifestData(const vio::Path& pathname);
 
                 /*!
                  * \brief Loads the manifest data.
@@ -184,7 +184,7 @@ namespace vorb {
                  *
                  * \return Root node of manifest data. 
                  */
-                CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, vio::Path pathname);
+                CALLEE_DELETE keg::Node loadManifestDataOfMod(const nString& modName, const vio::Path& pathname);
 
                 static keg::YAMLNode vanillaOwner;
 

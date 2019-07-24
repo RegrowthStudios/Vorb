@@ -104,6 +104,8 @@ namespace vorb {
                  */
                 keg::Node loadCurrentManifestData(const vio::Path& pathname);
 
+                bool saveCurrentManifestData(const vio::Path& pathname, keg::Node manifest);
+
                 /*!
                  * \brief Loads the manifest data.
                  *

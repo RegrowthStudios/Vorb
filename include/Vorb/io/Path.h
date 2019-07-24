@@ -69,6 +69,12 @@ namespace vorb {
              * \return Self
              */
             Path& makeNice();
+            /*!
+             * \brief Makes the given path nice in terms of valid POSIX/Windows characters.
+             *
+             * \return Self
+             */
+            Path getNice() const;
 
             /// Places this path value on the root
             /// @return Self

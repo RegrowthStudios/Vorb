@@ -180,15 +180,15 @@ bool vmod::install::Installer::loadEntryData(const nString& modName) {
     return success;
 }
 
-vio::Path vmod::install::Installer::generateManifestFilepath(const nString& modName, vio::Path pathname) {
-    return m_manifestDir / Mod::generateModDirName(modName) / pathname.makeNice() / MANIFEST_FILENAME;
+vio::Path vmod::install::Installer::generateManifestFilepath(const nString& modName, const vio::Path& pathname) {
+    return m_manifestDir / Mod::generateModDirName(modName) / pathname.getNice() / MANIFEST_FILENAME;
 }
 
-vio::Path vmod::install::Installer::generateManifestFilepath(vio::Path pathname) {
+vio::Path vmod::install::Installer::generateManifestFilepath(const vio::Path& pathname) {
     return generateManifestFilepath("current", pathname);
 }
 
-keg::Node vmod::install::Installer::loadCurrentManifestData(vio::Path pathname) {
+keg::Node vmod::install::Installer::loadCurrentManifestData(const vio::Path& pathname) {
     vio::Path manifestFilepath = generateManifestFilepath(pathname);
 
     // Check that a manifest file exists for the given resource.
@@ -208,7 +208,7 @@ keg::Node vmod::install::Installer::loadCurrentManifestData(vio::Path pathname) 
     return m_kegContext.reader.getFirst();
 }
 
-keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, vio::Path pathname) {
+keg::Node vmod::install::Installer::loadManifestDataOfMod(const nString& modName, const vio::Path& pathname) {
     vio::Path manifestFilepath = generateManifestFilepath(modName, pathname);
 
     // Check that a manifest file exists for the given resource.

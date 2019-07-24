@@ -69,7 +69,7 @@ bool vmod::install::ReplaceStrategy::prepare(Installer* installer) {
 bool vmod::install::ReplaceStrategy::install(const nString& modName) {
     vio::Path newResourcePath = getUpdateDir() / Mod::generateModDirName(modName) / filepath;
 
-    // If the proposed new resource doesn't exist, we  can leave happy.
+    // If the proposed new resource doesn't exist, we can leave happy.
     if (!newResourcePath.isFile()) return true;
 
     // Load the current manifest data so we can put back a resource as needed.
@@ -78,28 +78,30 @@ bool vmod::install::ReplaceStrategy::install(const nString& modName) {
     // Manifest should be simply the name of the mod that previously replaced this asset.
     if (keg::getType(manifest) != keg::NodeType::VALUE) return false;
 
-    nString owner = manifest->data.as<nString>();
-
     // Check if the resource is so-far untouched by mods.
     //     If a mod has touched it then we should make sure to
     //     put their resource back in their install directory.
     //     If no mod has touched it, then we can just store the
     //     vanilla asset in some defined vanilla backup.
     vio::Path backupAssetPath;
-    if (ownerIsVanilla(owner)) {
+    if (ownerIsVanilla(manifest)) {
         backupAssetPath = getBackupDir() / filepath;
     } else {
+        nString owner = manifest->data.as<nString>();
+
         backupAssetPath = getInstallDir() / owner / filepath;
     }
-    // TODO(Matthew): Not convinced rename by default recursively builds directories...
+    // TODO(Matthew): Not sure rename recursively builds directories...
     if (!filepath.rename(backupAssetPath)) return false;
 
+    // Place new resource in-place.
     newResourcePath.rename(filepath);
 
+    // Save the current manifest into this mod's manifest directory.
     saveManifestDataOfMod(modName, filepath, manifest);
 
+    // Update the manifest to point to this mod and save as current manifest.
     manifest->data = modName;
-
     saveCurrentManifestData(filepath, manifest);
 
     return true;
@@ -113,6 +115,7 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
     if (manifest == nullptr) return true;
 
     // TODO(Matthew): Follow through with that promise of destroying install dir.
+    // TODO(Matthew): Maybe we'd rather put it in a temporary directory, and have some way of rolling back changes.
     // Move the old asset to this mod's install dir for now (we'll clean that up later  on
     // successful uninstall).
     filepath.rename(getInstallDir() / Mod::generateModDirName(modName) / filepath);
@@ -120,17 +123,17 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
     // Manifest should exist and simply the name of the mod that previously replaced this asset before this mod was installed.
     if (keg::getType(manifest) != keg::NodeType::VALUE) return false;
 
-    nString owner = manifest->data.as<nString>();
-
     // Check if the resource is so-far untouched by mods.
     //     If a mod has touched it then we should make sure to
     //     reinstate their resource.
     //     If no mod has touched it, then we can just restore the
     //     vanilla asset.
     vio::Path oldAssetPath;
-    if (ownerIsVanilla(owner)) {
+    if (ownerIsVanilla(manifest)) {
         oldAssetPath = getBackupDir() / filepath;
     } else {
+        nString owner = manifest->data.as<nString>();
+
         oldAssetPath = getInstallDir() / owner / filepath;
     }
 

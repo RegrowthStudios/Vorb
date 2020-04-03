@@ -59,6 +59,9 @@ namespace vorb {
             IOManagerBase() {
                 // Empty.
             }
+            virtual ~IOManagerBase() {
+                // Empty.
+            }
 
             /*! \brief Find the absolute description of a path.
              * 
@@ -194,6 +197,9 @@ namespace vorb {
              * @param path: The path used as the search directory.
              */
             IOManager(const Path& path);
+            virtual ~IOManager() {
+                // Empty.
+            }
 
             /*! @brief Change the searching directory for this manager.
              * 

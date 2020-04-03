@@ -74,6 +74,7 @@ bool vmod::install::ReplaceStrategy::install(const nString& modName) {
     // If the proposed new resource doesn't exist, we can leave happy.
     if (!newResourcePath.isFile()) return true;
 
+    // TODO(Matthew): What if resource doesn't already exist as installed? Replace should still succeed...
     // Load the current manifest data so we can put back a resource as needed.
     keg::Node manifest = loadCurrentManifestData(filepath);
 
@@ -93,6 +94,7 @@ bool vmod::install::ReplaceStrategy::install(const nString& modName) {
 
         backupAssetPath = getInstallDir() / owner / filepath;
     }
+    // Make the move of existing resource to its owner's directory.
     // TODO(Matthew): Not sure rename recursively builds directories...
     if (!filepath.rename(backupAssetPath)) return false;
 
@@ -116,6 +118,8 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
     // If manifest does not exist we have nothing to do, so let's leave.
     if (manifest == nullptr) return true;
 
+    // TODO(Matthew): Check current manifest! If this mod isn't owner we shouldn't perform uninstall...
+
     // TODO(Matthew): Follow through with that promise of destroying install dir.
     // TODO(Matthew): Maybe we'd rather put it in a temporary directory, and have some way of rolling back changes.
     // Move the old asset to this mod's install dir for now (we'll clean that up later  on
@@ -138,7 +142,7 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
 
         oldAssetPath = getInstallDir() / owner / filepath;
     }
-
+    // Make the move of old resource to the active directory.
     // TODO(Matthew): Not convinced rename by default recursively builds directories...
     if (!oldAssetPath.rename(filepath)) return false;
 

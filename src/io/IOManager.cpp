@@ -4,6 +4,100 @@
 #include "Vorb/io/FileOps.h"
 #include "Vorb/utils.h"
 
+vio::FileStream vio::IOManagerBase::openFile(const Path& path, FileOpenFlags flags /*= FileOpenFlags::READ_ONLY_EXISTING*/) const {
+    Path filePath;
+    if ((flags & FileOpenFlags::CREATE) != FileOpenFlags::NONE) {
+        if (!assurePath(path, filePath, true)) return FileStream();
+    } else {
+        if (!resolvePath(path, filePath)) return FileStream();
+    }
+
+    File f;
+    if (!filePath.asFile(&f)) return FileStream();
+
+    return f.open(flags);
+}
+
+bool vio::IOManagerBase::readFileToString(const Path& path, nString& data) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
+    if (!fs.isOpened()) return false;
+
+    size_t length = (size_t)fs.length();
+    data.resize(length + 1);
+    if (length > 0) length = fs.read(length, 1, &(data[0]));
+    data[length] = 0;
+    return true;
+}
+cString vio::IOManagerBase::readFileToString(const Path& path) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
+    if (!fs.isOpened()) return nullptr;
+
+    size_t length = (size_t)fs.length();
+    cString data = new char[length + 1];
+    if (length > 0) length = fs.read(length, 1, data);
+    data[length] = 0;
+    return data;
+}
+
+bool vio::IOManagerBase::readFileToData(const Path& path, std::vector<ui8>& data) const {
+    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING | FileOpenFlags::BINARY);
+    if (!fs.isOpened()) return false;
+
+    size_t length = (size_t)fs.length();
+    data.resize(length);
+    if (length > 0) fs.read(length, 1, &(data[0]));
+    return true;
+}
+
+bool vio::IOManagerBase::writeStringToFile(const Path& path, const nString& data, FileOpenFlags flags /*= FileOpenFlags::WRITE_ONLY_APPEND*/) const {
+    if (flags != FileOpenFlags::WRITE_ONLY_APPEND && flags != FileOpenFlags::WRITE_ONLY_CREATE) return false;
+
+    Path filepath;
+    if (!resolvePath(path, filepath)) return false;
+
+    File f;
+    if (!filepath.asFile(&f)) return false;
+
+    FileStream fs = f.open(flags);
+    if (!fs.isOpened()) return false;
+
+    fs.write(data.c_str());
+
+    return true;
+}
+
+bool vio::IOManagerBase::makeDirectory(const Path& path) const {
+    Path tmp;
+    return assurePath(path, tmp, false);
+}
+
+bool vio::IOManagerBase::rename(const Path& src, const Path& dest, bool force/* = false*/) {
+    Path resSrc, resDest;
+    if (force) {
+        if (!assurePath(src, resSrc, true)) return false;
+        if (!assurePath(dest, resDest, true)) return false;
+
+        resDest.removeAll();
+    } else {
+        if (!resolvePath(src, resSrc)) return false;
+        if (!resolvePath(dest, resDest)) return false;
+    }
+
+    return resSrc.rename(resDest);
+}
+
+bool vio::IOManagerBase::fileExists(const Path& path) const {
+    Path res;
+    if (!resolvePath(path, res)) return false;
+    return res.isFile();
+}
+
+bool vio::IOManagerBase::directoryExists(const Path& path) const {
+    Path res;
+    if (!resolvePath(path, res)) return false;
+    return res.isDirectory();
+}
+
 vio::IOManager::IOManager() :
     m_pathSearch("") {
     // Search Directory Defaults To CWD
@@ -29,50 +123,6 @@ void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& 
     if (dirPath.asDirectory(&dir)) {
         dir.appendEntries(entries);
     }
-}
-
-vio::FileStream vio::IOManager::openFile(const Path& path, const FileOpenFlags& flags) const {
-    Path filePath;
-    if ((flags & FileOpenFlags::CREATE) != FileOpenFlags::NONE) {
-        if (!assurePath(path, filePath, IOManagerDirectory::SEARCH, true)) return FileStream();
-    } else {
-        if (!resolvePath(path, filePath)) return FileStream();
-    }
-
-    File f;
-    if (!filePath.asFile(&f)) return FileStream();
-
-    return f.open(flags);
-}
-
-bool vio::IOManager::readFileToString(const Path& path, nString& data) const {
-    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
-    if (!fs.isOpened()) return false;
-
-    size_t length = (size_t)fs.length();
-    data.resize(length + 1);
-    if (length > 0) length = fs.read(length, 1, &(data[0]));
-    data[length] = 0;
-    return true;
-}
-cString vio::IOManager::readFileToString(const Path& path) const {
-    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING);
-    if (!fs.isOpened()) return nullptr;
-
-    size_t length = (size_t)fs.length();
-    cString data = new char[length + 1];
-    if (length > 0) length = fs.read(length, 1, data);
-    data[length] = 0;
-    return data;
-}
-bool vio::IOManager::readFileToData(const Path& path, std::vector<ui8>& data) const {
-    FileStream fs = openFile(path, FileOpenFlags::READ_ONLY_EXISTING | FileOpenFlags::BINARY);
-    if (!fs.isOpened()) return false;
-
-    size_t length = (size_t)fs.length();
-    data.resize(length);
-    if (length > 0) fs.read(length, 1, &(data[0]));
-    return true;
 }
 
 bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) const {
@@ -114,6 +164,9 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
     }
 
     return false;
+}
+bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting) const {
+    return assurePath(path, resultAbsolutePath, IOManagerDirectory::SEARCH, isFile, wasExisting);
 }
 bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, IOManagerDirectory creationDirectory, bool isFile, OPT bool* wasExisting) const {
     // Guilty until proven innocent
@@ -197,39 +250,6 @@ bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, 
     }
 
     return false;
-}
-
-bool vio::IOManager::writeStringToFile(const Path& path, const nString& data) const {
-    Path fPath = m_pathSearch / path;
-    File f;
-    if (!fPath.asFile(&f)) return false;
-    FileStream fs = f.open(FileOpenFlags::WRITE_ONLY_APPEND);
-    if (!fs.isOpened()) return false;
-    fs.write(data.c_str());
-    return true;
-}
-
-bool vio::IOManager::makeDirectory(const Path& path) const {
-    return buildDirectoryTree(m_pathSearch / path, false);
-}
-
-bool vio::IOManager::rename(const Path& src, const Path& dest, bool force/* = false*/) {
-    if (force && dest.isValid()) {
-        dest.removeAll();
-    }
-
-    return src.rename(dest);
-}
-
-bool vio::IOManager::fileExists(const Path& path) const {
-    Path res;
-    if (!resolvePath(path, res)) return false;
-    return res.isFile();
-}
-bool vio::IOManager::directoryExists(const Path& path) const {
-    Path res;
-    if (!resolvePath(path, res)) return false;
-    return res.isDirectory();
 }
 
 vio::Path vio::IOManager::m_pathExec = "";

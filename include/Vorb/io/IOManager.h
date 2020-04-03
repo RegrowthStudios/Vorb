@@ -49,13 +49,140 @@ namespace vorb {
             EXECUTABLE = 2
         };
 
+        /*!
+         * \brief Provides a base for IO management.
+         */
+        class IOManagerBase {
+        public:
+            /*! \brief Initialises an IOManagerBase instance.
+             */
+            IOManagerBase() {
+                // Empty.
+            }
+
+            /*! \brief Find the absolute description of a path.
+             * 
+             * If a path is already absolute, this method will not attempt to 
+             * go through the list of directories and test path combinations.
+             * 
+             * \param path: The path to search.
+             * \param resultAbsolutePath: The resulting absolute path will be stored here.
+             * \return True if the path exists and was resolved properly in this environment.
+             */
+            virtual bool resolvePath(const Path& path, OUT Path& resultAbsolutePath) const = 0;
+            /*! \brief Assure the existence of a path if it is nicely formed.
+             *
+             * If a path is already absolute, this method will not attempt to
+             * go through the list of directories and test path combinations.
+             *
+             * \param path: The path to assure.
+             * \param resultAbsolutePath: The resulting absolute path will be stored here.
+             * \param creationDirectory: The directory type to create the path if it does not exist.
+             * \param isFile: If the path does not exist, true to create a file, else create a directory.
+             * \param wasExisting: The predication of the path's existence will be stored here if non-null.
+             * \return True if the path was resolved properly in this environment.
+             */
+            virtual bool assurePath(const Path& path, OUT Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const = 0;
+
+            /*!
+             * \brief Open a file using standard flags ("r", "w", "b", etc.).
+             * 
+             * \param path: The path to the file to open.
+             * \param flags: The flags with which to open the file.
+             * 
+             * \return File stream, empty if file couldn't be opened. 
+             */
+            FileStream openFile(const Path& path, FileOpenFlags flags = FileOpenFlags::READ_ONLY_EXISTING) const;
+
+            /*!
+             * \brief Reads an entire file to a string.
+             *
+             * \param path: The path to the file to read.
+             * \param data: The string buffer to populate.
+             * 
+             * \return True if the file was read, false otherwise.
+             */
+            bool readFileToString(const Path& path, OUT nString& data) const;
+            /*!
+             * \brief Reads an entire file to a  C-string.
+             *
+             * \param path: The path to the file to read.
+             * 
+             * \return Pointer to C-string buffer if file read successfully, nullptr otherwise.
+             */
+            CALLER_DELETE cString readFileToString(const Path& path) const;
+
+            /*!
+             * \brief Read an entire file to a binary buffer.
+             *
+             * \param path: The path to the file to read.
+             * \param data: The binary buffer to populate.
+             *
+             * \return True if the file was read, false otherwise.
+             */
+            bool readFileToData(const Path& path, OUT std::vector<ui8>& data) const;
+
+            /*!
+             * \brief Write a string to a file.
+             *
+             * \param path: The path to the file to write to.
+             * \param data: The data to write to the file.
+             * \param flags: The flags with which to write the string.
+             *
+             * \return True if the data was written, false otherwise.
+             */
+            bool writeStringToFile(const Path& path, const nString& data, FileOpenFlags flags = FileOpenFlags::WRITE_ONLY_APPEND) const;
+
+            /*!
+             * \brief Create directories (recursively) to satisfy the path.
+             * This is essentially a simplified call to assurePath.
+             *
+             * \param path: The path to the deepest directory to create.
+             *
+             * \return True if the directories were created, false otherwise.
+             */
+            bool makeDirectory(const Path& path) const;
+
+            /*!
+             * \brief Renames/moves a file or directory to a new location.
+             *
+             * \param src: The path to the source file or directory.
+             * \param dest: The path to the destination for this file or directory.
+             * \param force: If true, then the rename is forced - any existing file
+             * or directory is first removed.
+             *
+             * NOTE: Forced renames are NOT atomic.
+             *
+             * \return bool True if successfully renamed/moved, false otherwise.
+             */
+            bool rename(const Path& src, const Path& dest, bool force = false);
+
+            /*!
+             * \brief Determining if the file exists.
+             *
+             * \param path: The path of the file to determine the existence of.
+             *
+             * \return True if the file exists, false otherwise.
+             */
+            bool fileExists(const Path& path) const;
+
+            /*!
+             * \brief Determining if the directory exists.
+             *
+             * \param path: The path of the directory to determine the existence of.
+             *
+             * \return True if the directory exists, false otherwise.
+             */
+            bool directoryExists(const Path& path) const;
+        };
+
         /*! @brief Manages simple IO operations within a file system. 
          *  
          * When attempting any operations, it looks not only in the working directory specified by the program,
          * but it also attempts to search in 2 other places. The order of importance and resolution for these directories
          * is: Search, Current Working Directory, and Executing.
          */
-        class IOManager {
+        class IOManager: public IOManagerBase {
         public:
             /*! @brief Create an IO manager with default program directories.
              * 
@@ -116,7 +243,19 @@ namespace vorb {
              * @param resultAbsolutePath: The resulting absolute path will be stored here.
              * @return True if the path exists and was resolved properly in this environment.
              */
-            bool resolvePath(const Path& path, OUT Path& resultAbsolutePath) const;
+            virtual bool resolvePath(const Path& path, OUT Path& resultAbsolutePath) const override;
+            /*! @brief Assure the existence of a path if it is nicely formed.
+             *
+             * If a path is already absolute, this method will not attempt to
+             * go through the list of directories and test path combinations.
+             *
+             * @param path: The path to assure.
+             * @param resultAbsolutePath: The resulting absolute path will be stored here.
+             * @param isFile: If the path does not exist, true to create a file, else create a directory.
+             * @param wasExisting: The predication of the path's existence will be stored here if non-null.
+             * @return True if the path was resolved properly in this environment.
+             */
+            virtual bool assurePath(const Path& path, OUT Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const override;
             /*! @brief Assure the existence of a path if it is nicely formed.
              *
              * If a path is already absolute, this method will not attempt to
@@ -130,50 +269,6 @@ namespace vorb {
              * @return True if the path was resolved properly in this environment.
              */
             bool assurePath(const Path& path, OUT Path& resultAbsolutePath, IOManagerDirectory creationDirectory, bool isFile, OPT bool* wasExisting = nullptr) const;
-
-            // Open A File Using STD Flags ("r", "w", "b", etc.) 
-            // Returns NULL If It Can't Be Found
-            FileStream openFile(const Path& path, const FileOpenFlags& flags) const;
-
-            // Read An Entire File To A String
-            // Returns false If File Can't Be Found
-            bool readFileToString(const Path& path, OUT nString& data) const;
-            CALLER_DELETE cString readFileToString(const Path& path) const;
-            bool readFileToData(const Path& path, OUT std::vector<ui8>& data) const;
-
-            /// Writes a string to a file. Creates file if it doesn't exist
-            /// @param path: The path to the file
-            /// @param data: The data to write to file
-            /// @return true on success
-            bool writeStringToFile(const Path& path, const nString& data) const;
-
-            /// Makes a directory
-            /// @param path: The directory path to make
-            bool makeDirectory(const Path& path) const;
-
-            /*!
-             * \brief Renames/moves a file or directory to a new location.
-             *
-             * \param src: The path to the source file or directory.
-             * \param dest: The path to the destination for this file or directory.
-             * \param force: If true, then the rename is forced - any existing file
-             * or directory is first removed.
-             *
-             * NOTE: Forced renames are NOT atomic.
-             *
-             * \return bool True if successfully renamed/moved, false otherwise.
-             */
-            bool rename(const Path& src, const Path& dest, bool force = false);
-
-            /// Check if a file exists
-            /// @param path: The path to the file
-            /// @return true if file exists
-            bool fileExists(const Path& path) const;
-
-            /// Check if a directory exists
-            /// @param path: The path to the directory
-            /// @return true if directory exists
-            bool directoryExists(const Path& path) const;
         private:
             static Path m_pathCWD; ///< The global current working directory.
             static Path m_pathExec; ///< The global executable directory.

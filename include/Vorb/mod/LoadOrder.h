@@ -53,14 +53,10 @@ namespace vorb {
             /*!
              * \brief Initialises the load order manager with the IOManager
              * needed to acquire load orders.
-             * 
-             * Note: the IOManager instance provided should already have its
-             * search directory set to the location that load order profiles
-             * may be located.
              *
-             * \param ioManager: The IOManager with which to acquire load orders.
+             * \param loadOrderConfigDir: The directory in which the load order config is stored.
              */
-            void init(CALLER_DELETE vio::IOManager* ioManager);
+            void init(const vio::Path& loadOrderConfigDir);
             /*! \brief Disposes the load order manager.
              */
             void dispose();
@@ -73,7 +69,7 @@ namespace vorb {
              */
             void acquireLoadOrders();
 
-            vio::IOManager* m_ioManager; ///< The IO manager with which load orders are acquired.
+            vio::IOManager m_ioManager; ///< The IO manager with which load orders are acquired.
 
             LoadOrders m_loadOrders; ///< The list of load order profiles.
             /*!

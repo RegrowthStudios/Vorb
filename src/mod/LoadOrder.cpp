@@ -19,15 +19,14 @@ vmod::LoadOrderManager::LoadOrderManager() :
         // Empty.
 }
 
-void vmod::LoadOrderManager::init(vio::IOManager* ioManager) {
-    m_ioManager = ioManager;
-    m_ioManager->setSearchOnly(true);
+void vmod::LoadOrderManager::init(const vio::Path& loadOrderConfigDir) {
+    m_ioManager = vio::IOManager(loadOrderConfigDir, true);
 
     acquireLoadOrders();
 }
 
 void vmod::LoadOrderManager::dispose() {
-    m_ioManager = nullptr;
+    m_ioManager = vio::IOManager();
     m_currentLoadOrder = nullptr;
 
     m_loadOrders = {};
@@ -51,7 +50,7 @@ const vmod::LoadOrderProfiles& vmod::LoadOrderManager::getAllLoadOrders() const 
 
 void vmod::LoadOrderManager::acquireLoadOrders() {
     // Get load order profiles from file.
-    cString profilesRaw = m_ioManager->readFileToString(LOAD_ORDER_PROFILES_FILENAME);
+    cString profilesRaw = m_ioManager.readFileToString(LOAD_ORDER_PROFILES_FILENAME);
     if (profilesRaw == nullptr) return;
 
     // Attempt to parse load order profiles.
@@ -65,4 +64,6 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
             m_currentLoadOrder = &loadOrder;
         }
     }
+
+    // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
 }

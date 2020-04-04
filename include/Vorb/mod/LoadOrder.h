@@ -40,8 +40,8 @@ namespace vorb {
         };
         using LoadOrderProfiles = Array<LoadOrderProfile>;
         struct LoadOrders {
-            nString currentProfileName;
-            LoadOrderProfiles profiles;
+            LoadOrderProfile  currentProfile; ///< The currently installed profile.
+            LoadOrderProfiles profiles; ///< List of profiles currently inactive.
         };
 
         const nString LOAD_ORDER_PROFILES_FILENAME = "load_order_profiles.yaml";
@@ -76,7 +76,7 @@ namespace vorb {
              * The currently active load order profile. If none is active,
              * then this will be set to nullptr.
              */
-            LoadOrderProfile* m_currentLoadOrder;
+            LoadOrderProfile m_currentLoadOrder;
         };
     }
 }

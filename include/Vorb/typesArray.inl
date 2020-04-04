@@ -276,14 +276,14 @@ public:
      *
      * \param idx: The index of the element to erase.
      */
-    void erase(size_t idx) {
+    bool erase(size_t idx) {
         auto deleter = std::get_deleter<void(*)(ui8*)>(m_sharedData);
 
         // If there is no owned deleter, this is an invalid operation.
         assert(deleter != nullptr);
 
         // Check we're not out of range.
-        if (idx > m_length - 1) return;
+        if (idx > m_length - 1) return false;
 
         T* arr = static_cast<T*>(m_data);
 
@@ -295,6 +295,8 @@ public:
 
         // Shrink array length.
         --m_length;
+
+        return true;
     }
 
     /*! \brief Pops element at index off array.

@@ -28,7 +28,7 @@
 
 namespace vorb {
     namespace mod {
-        struct LoadOrderProfile {
+        struct LoadOrderProfileKeg {
             // TODO(Matthew): Fill this out with more data points as we go.
             nString name; ///< Name of load order profile.
             nString createdTimestamp; ///< Profile creation timestamp.
@@ -38,7 +38,23 @@ namespace vorb {
                                  ///  array is therefore lowest priority: the later
                                  ///  mods will overwrite the earlier ones).
         };
-        using LoadOrderProfiles = Array<LoadOrderProfile>;
+        using LoadOrderProfilesKeg = Array<LoadOrderProfileKeg>;
+        struct LoadOrdersKeg {
+            LoadOrderProfileKeg  currentProfile; ///< The currently installed profile.
+            LoadOrderProfilesKeg profiles; ///< List of profiles currently inactive.
+        };
+
+        struct LoadOrderProfile {
+            // TODO(Matthew): Fill this out with more data points as we go.
+            nString name; ///< Name of load order profile.
+            nString createdTimestamp; ///< Profile creation timestamp.
+            nString lastModifiedTimestamp; ///< Profile last modified timestamp.
+
+            std::vector<nString> mods; ///< List of mods by name in load order (first in
+                                       ///  array is therefore lowest priority: the later
+                                       ///  mods will overwrite the earlier ones).
+        };
+        using LoadOrderProfiles = std::vector<LoadOrderProfile>;
         struct LoadOrders {
             LoadOrderProfile  currentProfile; ///< The currently installed profile.
             LoadOrderProfiles profiles; ///< List of profiles currently inactive.
@@ -61,9 +77,13 @@ namespace vorb {
              */
             void dispose();
 
-            const LoadOrderProfile& getLoadOrder(const nString& name) const;
-            const LoadOrderProfile& getCurrentLoadOrder() const;
-            const LoadOrderProfiles& getAllLoadOrders() const;
+            bool addLoadOrderProfile(LoadOrderProfile&& profile);
+            bool replaceLoadOrderProfile(LoadOrderProfile&& profile);
+            bool removeLoadOrderProfile(const nString& name);
+
+            const LoadOrderProfile& getLoadOrderProfile(const nString& name) const;
+            const LoadOrderProfile& getCurrentLoadOrderProfile() const;
+            const LoadOrderProfiles& getAllLoadOrderProfiles() const;
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */

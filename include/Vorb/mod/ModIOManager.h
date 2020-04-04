@@ -28,6 +28,7 @@
 #include "Vorb/io/Directory.h"
 #include "Vorb/io/File.h"
 #include "Vorb/io/FileStream.h"
+#include "Vorb/io/IOManager.h"
 #include "Vorb/io/Path.h"
 
 namespace vorb {
@@ -40,7 +41,7 @@ namespace vorb {
          * the mod's own directory (Mods/MOD_NAME/), the global mod directory (Mods/), and any specified vanilla
          * asset directory (e.g. Fonts/). The latter are used primarily when the IO manager is used by an asset cache.
          */
-        class ModIOManager {
+        class ModIOManager: public vio::IOManagerBase {
         public:
             /*!
              * \brief Create an IO manager with default program directories.
@@ -87,7 +88,7 @@ namespace vorb {
              *
              * \return True if the path exists and was resolved as within one of the searchable directories.
              */
-            bool resolvePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath) const;
+            virtual bool resolvePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath) const override;
             /*!
              * \brief Assure the existence of a path if it is nicely formed.
              *
@@ -103,89 +104,7 @@ namespace vorb {
              *
              * \return True if the path was resolved properly as within one of the searchable directories.
              */
-            bool assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const;
-
-            /*!
-             * \brief Opens a file using the standard flags ("r", "w", "b", etc.).
-             * 
-             * Note: the mode chosen for opening a file also decides which of the searchable directories
-             * are used for finding and opening the named file. For example, if a writeable mode is chosen,
-             * then only the mod's own directory will be searchable.
-             * 
-             * \param path: The path to the file to be opened.
-             * \param flags: The flags for choosing how the file be opened.
-             *
-             * \return An empty file stream if the file couldn't be opened, otherwise a valid file stream.
-             */
-            vio::FileStream openFile(const vio::Path& path, const vio::FileOpenFlags& flags) const;
-
-            /*!
-             * \brief Reads a file to the provided string.
-             *
-             * \param path: The path to the file to be read.
-             * \param data: The string in which to place the read file contents.
-             *
-             * \return True if the file is found and read, false otherwise.
-             */
-            bool readFileToString(const vio::Path& path, OUT nString& data) const;
-            /*!
-             * \brief Reads a file to a C-string.
-             *
-             * \param path: The path to the file to be read.
-             *
-             * \return A \0 terminated C-string of the file's contents if read, nullptr otherwise.
-             */
-            CALLER_DELETE cString readFileToString(const vio::Path& path) const;
-            /*!
-             * \brief Reads a file to the provided string.
-             *
-             * \param path: The path to the file to be read.
-             * \param data: The vector of chars in which to place the read file contents.
-             *
-             * \return True if the file is found and read, false otherwise.
-             */
-            bool readFileToData(const vio::Path& path, OUT std::vector<ui8>& data) const;
-
-            /*!
-             * \brief Writes a string to the given file. If the file does not yet exist, it is created.
-             * 
-             * Note: This is a naive function, and it always appends where possible.
-             * 
-             * Note: This function can only write to a file within the mod's own directory.
-             *
-             * \param path: The path to the file to be written.
-             * \param data: The data to write to the file.
-             */
-            bool writeStringToFile(const vio::Path& path, const nString& data) const;
-
-            /*!
-             * \brief Creates a directory.
-             *
-             * Note: This function can only create a directory within the mod's own directory.
-             *
-             * \param path: The path of the directory to make.
-             *
-             * \return True if the directory was made, false otherwise.
-             */
-            bool makeDirectory(const vio::Path& path) const;
-
-            /*!
-             * \brief Checks if the named file exists.
-             *
-             * \param path: The path of the file to check for existence.
-             *
-             * \return True if the file exists, false otherwise.
-             */
-            bool fileExists(const vio::Path& path) const;
-
-            /*!
-             * \brief Checks if the named directory exists.
-             *
-             * \param path: The path of the directory to check for existence.
-             *
-             * \return True if the directory exists, false otherwise.
-             */
-            bool directoryExists(const vio::Path& path) const;
+            virtual bool assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const override;
         private:
             static vio::Path globalModDir; ///< The global mod directory (Mods/) - this is read-only.
 

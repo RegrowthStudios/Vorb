@@ -105,7 +105,8 @@ vio::IOManager::IOManager() :
     setSearchDirectory(m_pathCWD);
 }
 vio::IOManager::IOManager(const Path& path, bool searchOnly /*= false*/) :
-m_pathSearch(path) {
+    m_pathSearch(path),
+    m_searchOnly(searchOnly) {
     // Empty
 }
 

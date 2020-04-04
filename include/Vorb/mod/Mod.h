@@ -8,8 +8,9 @@
 //
 
 /*! \file Mod.h
- * \brief Holds all things needed for a given mod. This includes the mod's metadata, but also
- * basic utilities such as an IO manager, texture cache etc.
+ * \brief Provides classes for mods in active and inactive
+ * states. These provide such things as the mod's metadata,
+ * and basic utilities such as an IO manager, texture cache, etc.
  */
 
 #pragma once
@@ -23,8 +24,9 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
-#include "Vorb/mod/ModIOManager.h"
 #include "Vorb/io/Keg.h"
+#include "Vorb/io/Path.h"
+#include "Vorb/mod/ModIOManager.h"
 
 namespace vorb {
     namespace mod {
@@ -48,7 +50,102 @@ namespace vorb {
         const nString ENTRY_POINTS_FILENAME = "entry_points.yaml";
         const nString MANIFEST_FILENAME     = "manifest.yaml";
 
-        class Mod {
+        class ModBase {
+        public:
+            /*!
+             * \brief Initialises the mod, setting up necessary data, including loading
+             * associated metadata.
+             *
+             * \param dir: The directory name of the mod to be initialised (not the full path, just the name of the directory inside of Mods/).
+             *
+             * \return True if the mod was correctly initialised, false otherwise.
+             */
+            virtual bool init(const vio::Path& activeDir, const vio::Path& referenceDir);
+            /*!
+             * \brief Disposes of the mod.
+             */
+            virtual void dispose() = 0;
+        protected:
+            /*!
+             * \brief Loads metadata.
+             *
+             * The metadata is specified in the file "mod.yaml".
+             *
+             * \return True if metadata loaded correctly, false otherwise.
+             */
+            virtual bool loadMetadata() = 0;
+
+            ModMetadata  m_metadata;
+            // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.
+            //                    To achieve this, we should make an IOManager interface, and add an optional IOManager pointer to the appropriate cache fetch functions.
+            ModIOManager m_iomanager;
+        };
+
+        template <typename ScriptEnvironment = void,
+            typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
+        class Mod : public ModBase {
+        public:
+            Mod();
+            ~Mod() {
+                // Empty.
+            }
+
+            // TODO(Matthew): We need to decide on the initialisation process. This is the entry point, so likely require something
+            //                like "mod.yaml" which contains metadata, perhaps also specifies the mod's entry points for startup
+            //                and shutdown? 
+            /*!
+             * \brief Initialises the mod, setting up necessary data, including loading
+             * associated metadata.
+             */
+            virtual bool init(const nString& dir);
+            /*!
+             * \brief Disposes of the mod.
+             */
+            virtual void dispose();
+
+            // TODO(Matthew): Determine start up and shut down processes for mods.
+            //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
+            /*!
+             * \brief Starts up the mod.
+             */
+            virtual bool startup();
+            /*!
+             * \brief Shuts down the mod.
+             */
+            virtual bool shutdown();
+
+            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
+            /*!
+             * \brief Run update loop of the mod.
+             *
+             * \param dt The time since the last frame.
+             */
+            virtual void update(f32 dt = 0.0f);
+
+            /*!
+             * \brief Registers a script env builder to be used for building a mod's script environment.
+             *
+             * Note: These builders should be registered by subsystems in order for them to register constants, C callbacks
+             * and so forth to the script environment.
+             *
+             * \param scriptEnvBuilder The script environment builder to be registered.
+             */
+            static void registerScriptEnvBuilder(Delegate<ScriptEnvironment*>&& scriptEnvBuilder);
+        protected:
+            /*!
+             * \brief Builds the script environment.
+             *
+             * \param scriptEnv The script environment to build.
+             */
+            static void buildScriptEnv(ScriptEnvironment* scriptEnv);
+
+            static std::vector<Delegate<ScriptEnvironment*>> scriptEnvBuilders; ///< The list of builders to use in building a script environment.
+
+            ScriptEnvironment m_scriptEnv;
+        };
+
+        template <typename = void>
+        class Mod: public ModBase {
         public:
             Mod();
             ~Mod() {
@@ -63,11 +160,11 @@ namespace vorb {
              *
              * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual bool init(const nString& dir);
+            virtual bool init(const nString& dir) override;
             /*!
              * \brief Disposes of the mod.
              */
-            virtual void dispose();
+            virtual void dispose() override;
 
             // TODO(Matthew): Determine start up and shut down processes for mods.
             //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
@@ -108,15 +205,13 @@ namespace vorb {
              *
              * \return True if metadata loaded correctly, false otherwise.
              */
-            bool loadMetadata();
+            virtual bool loadMetadata() override;
 
-            ModMetadata  m_metadata;
-            // TODO(Matthew): We want to be able to pass our own ModIOManager into the texture and font caches as we only want certain directories to be readable.
-            //                    To achieve this, we should make an IOManager interface, and add an optional IOManager pointer to the appropriate cache fetch functions.
-            ModIOManager m_iomanager;
-
-            bool m_isStarted;
+            bool m_isStarted; ///< Tracks whether this mod is started or not.
         };
+
+        template <typename ScriptEnvironment>
+        using Mods = std::vector<Mod<ScriptEnvironment>>;
     }
 }
 namespace vmod = vorb::mod;

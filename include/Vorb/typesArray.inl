@@ -20,7 +20,8 @@ public:
     ArrayBase():
         m_data(nullptr),
         m_elementSize(0),
-        m_length(0)
+        m_length(0),
+        m_capacity(0)
     {}
     /*! @brief Construct an array with element information.
      *
@@ -29,7 +30,8 @@ public:
     ArrayBase(size_t elemSize) :
         m_data(nullptr),
         m_elementSize(elemSize),
-        m_length(0)
+        m_length(0),
+        m_capacity(0)
     {
         // Empty
     }
@@ -54,6 +56,14 @@ public:
         return m_length;
     }
 
+    /*! \brief Obtain the capcity of the array in elemnts.
+     *
+     * \return Number of elements that can be stored in the array (0 for none)
+     */
+    const size_t& size() const {
+        return m_capacity;
+    }
+
     /*! @brief Make this array to hold a new set of data
      *
      * The array copies over all the data found within the data block.
@@ -64,6 +74,7 @@ public:
      */
     void setData(void* data, size_t len) {
         m_length = len;
+        m_capacity = len;
         if (m_length > 0) {
             // Create a new internal array
             m_sharedData.reset(new ui8[m_elementSize * m_length], [] (ui8* p) { delete[] p; });
@@ -97,8 +108,30 @@ public:
      */
     void ownData(CALLEE_DELETE void* data, size_t len, void(*fDealloc)(void*)) {
         m_length = len;
+        m_capacity = len;
         m_sharedData.reset((ui8*)data, [=] (ui8* p) { fDealloc(p); });
         m_data = m_sharedData.get();
+    }
+
+    /*! \brief Resizes the array to the size given.
+     *
+     * \param len: The new length to resize to.
+     */
+    void resize(size_t len) {
+        auto deleter = std::get_deleter<void(*)(ui8*)>(m_sharedData);
+
+        // If there is no owned deleter, this is an invalid operation.
+        assert(deleter != nullptr);
+
+        std::shared_ptr<ui8> newSharedData(new ui8[m_elementSize * len], deleter);
+
+        if (len > m_length) {
+            std::memcpy(newSharedData.get(), m_data, m_elementSize * len);
+        } else {
+            std::memcpy(newSharedData.get(), m_data, m_elementSize * m_length);
+        }
+
+        m_sharedData.swap(newSharedData);
     }
 
     /*! @brief Obtain a reference to an element in the array.
@@ -164,6 +197,7 @@ protected:
     void* m_data; ///< Cached pointer from the shared data
     size_t m_elementSize; ///< The size of the elements in bytes
     size_t m_length; ///< The length of the array in elements
+    size_t m_capacity; ///< The length of the allocated memory underlying the array in elements.
 };
 
 /*! @brief An array filled with known element types.
@@ -205,6 +239,88 @@ public:
         m_data = arr.m_data;
         m_elementSize = arr.m_elementSize;
         m_length = arr.m_length;
+        m_capacity = arr.m_capacity;
+    }
+
+    /*! \brief Pushes a copy of the provided element onto the array.
+     *
+     * \param elem: The element to push back.
+     */
+    void push_back(const T& elem) {
+        // If there is no owned deleter, this is an invalid operation.
+        assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
+
+        if (m_capacity <= m_length) {
+            resize(m_capacity * 2);
+        }
+
+        static_cast<T*>(m_data)[m_length] = elem;
+    }
+    /*! \brief Pushes the provided element onto the array.
+     *
+     * \param elem: The element to push back.
+     */
+    void push_back(T&& elem) {
+        // If there is no owned deleter, this is an invalid operation.
+        assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
+
+        if (m_capacity <= m_length) {
+            resize(m_capacity * 2);
+        }
+
+        static_cast<T*>(m_data)[m_length] = std::forward<T>(elem);
+    }
+
+
+    /*! \brief Erases element at index.
+     *
+     * \param idx: The index of the element to erase.
+     */
+    void erase(size_t idx) {
+        auto deleter = std::get_deleter<void(*)(ui8*)>(m_sharedData);
+
+        // If there is no owned deleter, this is an invalid operation.
+        assert(deleter != nullptr);
+
+        // Check we're not out of range.
+        if (idx > m_length - 1) return;
+
+        T* arr = static_cast<T*>(m_data);
+
+        // Delete the to-be-erased element.
+        deleter(arr[idx]);
+
+        // Place final element in place of now-erased element.
+        arr[idx] = arr[m_length - 1];
+
+        // Shrink array length.
+        --m_length;
+    }
+
+    /*! \brief Pops element at index off array.
+     *
+     * \param idx: The index of the element to erase.
+     */
+    T pop(size_t idx) {
+        // If there is no owned deleter, this is an invalid operation.
+        assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
+
+        // Check we're not out of range.
+        if (idx > m_length - 1) return;
+
+        T* arr = static_cast<T*>(m_data);
+
+        // Take copy of the to-be-popped element.
+        T tmp = arr[idx];
+
+        // Place final element in place of to-be-popped element.
+        arr[idx] = arr[m_length - 1];
+
+        // Shrink array length.
+        --m_length;
+
+        // Return popped element.
+        return tmp;
     }
 
     /*! @brief Obtain a reference to an element in the array.

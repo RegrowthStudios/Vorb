@@ -99,11 +99,12 @@ bool vio::IOManagerBase::directoryExists(const Path& path) const {
 }
 
 vio::IOManager::IOManager() :
-    m_pathSearch("") {
+    m_pathSearch(""),
+    m_searchOnly(false) {
     // Search Directory Defaults To CWD
     setSearchDirectory(m_pathCWD);
 }
-vio::IOManager::IOManager(const Path& path) :
+vio::IOManager::IOManager(const Path& path, bool searchOnly /*= false*/) :
 m_pathSearch(path) {
     // Empty
 }
@@ -118,6 +119,10 @@ void vio::IOManager::setExecutableDirectory(const Path& s) {
     m_pathExec = s;
 }
 
+void vio::IOManager::setSearchOnly(bool searchOnly) {
+    m_searchOnly = searchOnly;
+}
+
 void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& entries) const {
     Directory dir;
     if (dirPath.asDirectory(&dir)) {
@@ -127,7 +132,7 @@ void vio::IOManager::getDirectoryEntries(const Path& dirPath, DirectoryEntries& 
 
 bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) const {
     // Special case if the path is already an absolute path
-    if (path.isAbsolute()) {
+    if (path.isAbsolute() && !m_searchOnly) {
         if (path.isValid()) {
             resultAbsolutePath = path;
             return true;
@@ -147,7 +152,7 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
         }
     }
 
-    if (m_pathCWD.isValid()) {
+    if (m_pathCWD.isValid() && !m_searchOnly) {
         pSearch = m_pathCWD / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;
@@ -155,7 +160,7 @@ bool vio::IOManager::resolvePath(const Path& path, Path& resultAbsolutePath) con
         }
     }
 
-    if (m_pathExec.isValid()) {
+    if (m_pathExec.isValid() && !m_searchOnly) {
         pSearch = m_pathExec / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;
@@ -172,8 +177,12 @@ bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, 
     // Guilty until proven innocent
     if (wasExisting) *wasExisting = false;
 
+    // If we are to use search directory only, then we can only create
+    // directories within that.
+    if (m_searchOnly) creationDirectory = IOManagerDirectory::SEARCH;
+
     // Special case if the path is already an absolute path
-    if (path.isAbsolute()) {
+    if (path.isAbsolute() && !m_searchOnly) {
         if (path.isValid()) {
             resultAbsolutePath = path;
             if (wasExisting) *wasExisting = true;
@@ -205,7 +214,7 @@ bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, 
         }
     }
 
-    if (m_pathCWD.isValid()) {
+    if (m_pathCWD.isValid() && !m_searchOnly) {
         pSearch = m_pathCWD / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;
@@ -214,7 +223,7 @@ bool vio::IOManager::assurePath(const Path& path, OUT Path& resultAbsolutePath, 
         }
     }
 
-    if (m_pathExec.isValid()) {
+    if (m_pathExec.isValid() && !m_searchOnly) {
         pSearch = m_pathExec / path;
         if (pSearch.isValid()) {
             resultAbsolutePath = pSearch;

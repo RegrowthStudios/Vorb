@@ -195,8 +195,10 @@ namespace vorb {
             /*! \brief Create an IO manager that searches within a specified directory.
              * 
              * \param path: The path used as the search directory.
+             * \param searchOnly: Whether to only use search directory in path
+             * resolution and assurance
              */
-            IOManager(const Path& path);
+            IOManager(const Path& path, bool searchOnly = false);
             virtual ~IOManager() {
                 // Empty.
             }
@@ -217,6 +219,13 @@ namespace vorb {
              */
             static void setExecutableDirectory(const Path& s);
 
+            /*! \brief Set whether to use search directory only for path resolution
+             * and assurance.
+             *
+             * \param searchOnly: True if so, false if not.
+             */
+            void setSearchOnly(bool searchOnly);
+
             /*! \return The search directory used by this manager.
              */
             const Path& getSearchDirectory() const {
@@ -231,6 +240,13 @@ namespace vorb {
              */
             static const Path& getExecutableDirectory() {
                 return m_pathExec;
+            }
+
+            /*! \return Whether we are using search directory only in path resolution
+             * and assurance.
+             */
+            bool isSearchOnly() const {
+                return m_searchOnly;
             }
 
             /*! \brief Obtain all the path entries in a directory.
@@ -281,6 +297,9 @@ namespace vorb {
             static Path m_pathExec; ///< The global executable directory.
 
             Path m_pathSearch; ///< The first path used in the searching process.
+
+            bool m_searchOnly; ///< If true, then only search directory is used for path
+                               ///  resolution and assurance.
         };
     }
 }

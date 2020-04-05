@@ -123,7 +123,7 @@ public:
         // If there is no owned deleter, this is an invalid operation.
         assert(deleter != nullptr);
 
-        std::shared_ptr<ui8> newSharedData(new ui8[m_elementSize * len], deleter);
+        std::shared_ptr<ui8> newSharedData(new ui8[m_elementSize * len], *deleter);
 
         if (len > m_length) {
             std::memcpy(newSharedData.get(), m_data, m_elementSize * len);

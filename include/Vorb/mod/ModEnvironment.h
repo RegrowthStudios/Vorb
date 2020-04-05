@@ -126,9 +126,13 @@ namespace vorb {
             vio::Path m_globalModDir; ///< The directory in which active mods are located.
         };
 
-        template <typename ScriptEnvironment = void,
-            typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
-        class ModEnvironment {
+        template <typename ScriptEnvironment = void, typename Enable = void>
+        class ModEnvironment;
+
+        template <typename ScriptEnvironment>
+        class ModEnvironment<ScriptEnvironment,
+                                typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
+            : public ModEnvironmentBase {
         public:
             ~ModEnvironment() {
                 // Empty.
@@ -147,10 +151,13 @@ namespace vorb {
              */
             virtual bool prepareActiveMods() override;
 
+            Mods<ScriptEnvironment> m_activeMods; ///< List of currently active mods.
         };
 
-        template <typename = void>
-        class ModEnvironment {
+        template <typename ScriptEnvironment>
+        class ModEnvironment<ScriptEnvironment,
+                                typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
+            : public ModEnvironmentBase {
         public:
             ~ModEnvironment() {
                 // Empty.
@@ -169,7 +176,7 @@ namespace vorb {
              */
             virtual bool prepareActiveMods() override;
 
-            Mods m_activeMods; ///< List of currently active mods.
+            Mods<> m_activeMods; ///< List of currently active mods.
         };
     }
 }

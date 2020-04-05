@@ -103,9 +103,13 @@ namespace vorb {
             vio::IOManager m_installIOManager; ///< IO manager used to install/uninstall mod.
         };
 
-        template <typename ScriptEnvironment = void,
-            typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
-        class Mod : public ModBase {
+        template <typename ScriptEnvironment = void, typename Enable = void>
+        class Mod;
+
+        template <typename ScriptEnvironment>
+        class Mod<ScriptEnvironment,
+                    typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
+            : public ModBase {
         public:
             Mod();
             ~Mod() {
@@ -165,8 +169,10 @@ namespace vorb {
             ScriptEnvironment m_scriptEnv;
         };
 
-        template <typename = void>
-        class Mod: public ModBase {
+        template <typename ScriptEnvironment>
+        class Mod<ScriptEnvironment,
+                    typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
+            : public ModBase {
         public:
             Mod();
             ~Mod() {
@@ -203,7 +209,7 @@ namespace vorb {
             }
         };
 
-        template <typename ScriptEnvironment>
+        template <typename ScriptEnvironment = void>
         using Mods = std::vector<Mod<ScriptEnvironment>>;
     }
 }

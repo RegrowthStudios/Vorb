@@ -294,13 +294,16 @@ set(vorb_io
 )
 
 set(vorb_mod
+    include/Vorb/mod/LoadOrder.h
     include/Vorb/mod/Mod.h
+    include/Vorb/mod/ModEnvironment.h
     include/Vorb/mod/ModIOManager.h
-    include/Vorb/mod/ScriptedMod.hpp
     include/Vorb/mod/install/Installer.h
     include/Vorb/mod/install/InstallStrategy.h
 #source
+    src/mod/LoadOrder.cpp
     src/mod/Mod.cpp
+    src/mod/ModEnvironment.cpp
     src/mod/ModIOManager.cpp
     src/mod/install/Installer.cpp
     src/mod/install/InstallStrategy.cpp

@@ -60,7 +60,7 @@ public:
      *
      * \return Number of elements that can be stored in the array (0 for none)
      */
-    const size_t& size() const {
+    const size_t& capacity() const {
         return m_capacity;
     }
 

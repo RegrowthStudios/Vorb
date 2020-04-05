@@ -61,14 +61,16 @@ void vmod::LoadOrderManager::dispose() {
     m_loadOrders = {};
 }
 
-bool vmod::LoadOrderManager::addLoadOrderProfile(LoadOrderProfile&& profile) {
+void vmod::LoadOrderManager::addLoadOrderProfile(LoadOrderProfile&& profile) {
     m_loadOrders.profiles.push_back(std::forward<LoadOrderProfile>(profile));
 }
 
 bool vmod::LoadOrderManager::replaceLoadOrderProfile(LoadOrderProfile&& profile) {
-    removeLoadOrderProfile(profile.name);
+    bool didReplace = removeLoadOrderProfile(profile.name);
 
     m_loadOrders.profiles.push_back(std::forward<LoadOrderProfile>(profile));
+
+    return didReplace;
 }
 
 bool vmod::LoadOrderManager::removeLoadOrderProfile(const nString& name) {
@@ -88,16 +90,18 @@ bool vmod::LoadOrderManager::removeLoadOrderProfile(const nString& name) {
     return false;
 }
 
-const vmod::LoadOrderProfile& vmod::LoadOrderManager::getLoadOrderProfile(const nString& name) const {
+const vmod::LoadOrderProfile* vmod::LoadOrderManager::getLoadOrderProfile(const nString& name) const {
     for (auto& loadOrder: m_loadOrders.profiles) {
         if (loadOrder.name == name) {
-            return loadOrder;
+            return &loadOrder;
         }
     }
+
+    return nullptr;
 }
 
-const vmod::LoadOrderProfile& vmod::LoadOrderManager::getCurrentLoadOrderProfile() const {
-    return m_currentLoadOrder;
+const vmod::LoadOrderProfile* vmod::LoadOrderManager::getCurrentLoadOrderProfile() const {
+    return &m_currentLoadOrder;
 }
 
 const vmod::LoadOrderProfiles& vmod::LoadOrderManager::getAllLoadOrderProfiles() const {

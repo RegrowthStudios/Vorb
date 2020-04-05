@@ -61,12 +61,12 @@ namespace vorb {
              */
             void dispose();
 
-            bool addLoadOrderProfile(LoadOrderProfile&& profile);
+            void addLoadOrderProfile(LoadOrderProfile&& profile);
             bool replaceLoadOrderProfile(LoadOrderProfile&& profile);
             bool removeLoadOrderProfile(const nString& name);
 
-            const LoadOrderProfile& getLoadOrderProfile(const nString& name) const;
-            const LoadOrderProfile& getCurrentLoadOrderProfile() const;
+            const LoadOrderProfile* getLoadOrderProfile(const nString& name) const;
+            const LoadOrderProfile* getCurrentLoadOrderProfile() const;
             const LoadOrderProfiles& getAllLoadOrderProfiles() const;
         protected:
             /*! \brief Acquires all load order profiles currently specified.

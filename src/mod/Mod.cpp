@@ -16,60 +16,37 @@ KEG_TYPE_DEF(ModEntryPoints, vmod::ModEntryPoints, kt) {
     // TODO(Matthew): More entry point info.
 }
 
+bool vmod::ModBase::init(const vio::Path& installDir, const vio::Path& referenceDir){
+    m_activeIOManager.setModDirectory(installDir);
 
-vmod::ActiveMod::ActiveMod() :
-    m_isStarted(false) {
-    // Empty.
+    // If the active directory exists now, then the mod is installed,
+    // thus it is considered to be in an active state.
+    m_isInstalled = !installDir.isDirectory();
+
+    m_installIOManager.setSearchDirectory(referenceDir);
+    m_installIOManager.setSearchOnly(true);
+
+    // We successfully init if we can load metadata of the mod.
+    return loadMetadata();
 }
 
-bool vmod::ActiveMod::init(const nString& dir) {
-    vio::Path modDir = ModIOManager::getGlobalModDirectory() / vio::Path(dir);
-
-    // Ensure proposed mod directory exists.
-    if (!modDir.isDirectory()) return false;
-
-    m_iomanager.setModDirectory(modDir);
-
-    if (!loadMetadata()) return false;
-
-    // TODO(Matthew): More initialisation.
-
-    return true;
-}
-
-void vmod::ActiveMod::dispose() {
-    if (m_isStarted) shutdown();
-
+void vmod::ModBase::dispose() {
+    m_activeIOManager = ModIOManager();
+    m_installIOManager = vio::IOManager();
     m_metadata = NULL_METADATA;
-    m_iomanager.setModDirectory("");
-    m_iomanager.setVanillaAssetDirectory("");
 }
 
-bool vmod::ActiveMod::startup() {
-    if (m_isStarted) return false;
+bool vmod::ModBase::loadMetadata() {
+    cString modMetadata = nullptr;
 
-    // TODO(Matthew): Implement.
-}
+    // Read the metadata in the expected location.
+    if (m_isInstalled) {
+        modMetadata = m_activeIOManager.readFileToString(METADATA_FILENAME);
+    } else {
+        modMetadata = m_installIOManager.readFileToString(METADATA_FILENAME);
+    }
 
-bool vmod::ActiveMod::shutdown() {
-    if (!m_isStarted) return false;
-
-    // TODO(Matthew): Implement.
-}
-
-void vmod::ActiveMod::update(f32 dt/* = 0.0f*/) {
-    if (!m_isStarted) return;
-
-    // TODO(Matthew): Implement.
-}
-
-nString vmod::ActiveMod::generateModDirName(const nString& modName) {
-    return vio::Path(modName).makeNice().getString();
-}
-
-bool vmod::ActiveMod::loadMetadata() {
-    // Grab mod metadata from file.
-    cString modMetadata = m_iomanager.readFileToString(METADATA_FILENAME);
+    // Check we got something from reading the metadata.
     if (modMetadata == nullptr) return false;
 
     // Attempt to parse metadata.

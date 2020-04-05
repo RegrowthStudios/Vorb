@@ -51,6 +51,25 @@ namespace vorb {
              */
             void dispose();
 
+            // TODO(Matthew): Determine start up and shut down processes for mods.
+            //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
+            /*!
+             * \brief Starts up the mod.
+             */
+            virtual bool startup() = 0;
+            /*!
+             * \brief Shuts down the mod.
+             */
+            virtual bool shutdown() = 0;
+
+            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
+            /*!
+             * \brief Run update loop of the mod.
+             *
+             * \param dt The time since the last frame.
+             */
+            virtual void update(f32 dt = 0.0f) = 0;
+
             /*!
              * \brief Deactivates the current load order. This entails
              * uninstalling the associated mods from the game's working
@@ -78,20 +97,15 @@ namespace vorb {
             void setGlobalModDir(const vio::Path& globalModDir);
             /*! \return A reference to the global mod directory path.
              */
-            const vio::Path& getGlobalModDir() const {
-                return m_globalModDir;
-            }
+            const vio::Path& getGlobalModDir() const { return m_globalModDir; }
 
             /*! \return A reference to the load order manager.
              */
-            LoadOrderManager& getLoadOrderManager() {
-                return m_loadOrderManager;
-            }
+            LoadOrderManager& getLoadOrderManager() { return m_loadOrderManager;}
             /*! \return A reference to the load order manager.
              */
-            const LoadOrderManager& getLoadOrderManager() const {
-                return m_loadOrderManager;
-            }
+            const LoadOrderManager& getLoadOrderManager() const { return m_loadOrderManager; }
+
             /*! \return A reference to the active mods.
              */
             virtual const ModBase& getActiveMods() const = 0;

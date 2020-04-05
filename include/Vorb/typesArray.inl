@@ -277,10 +277,8 @@ public:
      * \param idx: The index of the element to erase.
      */
     bool erase(size_t idx) {
-        auto deleter = std::get_deleter<void(*)(ui8*)>(m_sharedData);
-
         // If there is no owned deleter, this is an invalid operation.
-        assert(deleter != nullptr);
+        assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
 
         // Check we're not out of range.
         if (idx > m_length - 1) return false;
@@ -288,7 +286,7 @@ public:
         T* arr = static_cast<T*>(m_data);
 
         // Delete the to-be-erased element.
-        deleter(arr[idx]);
+        arr[idx].~T();
 
         // Place final element in place of now-erased element.
         arr[idx] = arr[m_length - 1];

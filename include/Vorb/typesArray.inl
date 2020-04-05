@@ -297,16 +297,18 @@ public:
         return true;
     }
 
+
     /*! \brief Pops element at index off array.
      *
      * \param idx: The index of the element to erase.
      */
+    template <typename T_ = T, typename = typename std::enable_if<!std::is_move_assignable<T_>::value>::type>
     T pop(size_t idx) {
         // If there is no owned deleter, this is an invalid operation.
         assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
 
         // Check we're not out of range.
-        if (idx > m_length - 1) return;
+        assert(idx > m_length - 1);
 
         T* arr = static_cast<T*>(m_data);
 
@@ -321,6 +323,32 @@ public:
 
         // Return popped element.
         return tmp;
+    }
+    /*! \brief Pops element at index off array.
+     *
+     * \param idx: The index of the element to erase.
+     */
+    template <typename T_ = T, typename = typename std::enable_if<std::is_move_assignable<T_>::value>::type>
+    T&& pop(size_t idx) {
+        // If there is no owned deleter, this is an invalid operation.
+        assert(std::get_deleter<void(*)(ui8*)>(m_sharedData) != nullptr);
+
+        // Check we're not out of range.
+        assert(idx > m_length - 1);
+
+        T* arr = static_cast<T*>(m_data);
+
+        // Take copy of the to-be-popped element.
+        T tmp = std::move(arr[idx]);
+
+        // Place final element in place of to-be-popped element.
+        arr[idx] = arr[m_length - 1];
+
+        // Shrink array length.
+        --m_length;
+
+        // Return popped element.
+        return std::move(tmp);
     }
 
     /*! @brief Obtain a reference to an element in the array.

@@ -26,9 +26,20 @@
 #include "Vorb/io/Path.h"
 #include "Vorb/mod/LoadOrder.h"
 #include "Vorb/mod/Mod.h"
+#include "Vorb/mod/install/Installer.h"
 
 namespace vorb {
     namespace mod {
+        enum class Action {
+            INSTALL,
+            UNINSTALL
+        };
+
+        struct ActionForMod {
+            Action how;
+            const ModBase* mod;
+        };
+
         class ModEnvironmentBase {
         public:
             ModEnvironmentBase() {
@@ -71,23 +82,23 @@ namespace vorb {
             virtual void update(f32 dt = 0.0f) = 0;
 
             /*!
-             * \brief Deactivates the current load order. This entails
-             * uninstalling the associated mods from the game's working
-             * directory.
+             * \brief Uninstalls the current load order.
              *
-             * \return True if the load order was successfully deactivated,
+             * \return True if the load order was successfully uninstalled,
              * false otherwise.
              */
-            bool deactivateCurrentLoadOrder();
+            bool uninstallCurrentLoadOrder();
 
             /*!
-             * \brief Activates the named load order. This entails
-             * installing the associated mods to the game's working directory.
+             * \brief Installs the named load order. This entails determining
+             * the minimum changes to be made between current load order and the
+             * new load order, and then performing the necessary uninstalls and
+             * installs from/to the game's working directory.
              *
-             * \return True if the load order was successfully activated,
+             * \return True if the load order was successfully installed,
              * false otherwise.
              */
-            bool activateLoadOrder(const nString& name);
+            bool installLoadOrder(const nString& name);
 
             /*!
              * \brief Set the global mod directory of the mod environment.
@@ -108,20 +119,27 @@ namespace vorb {
 
             /*! \return A reference to the active mods.
              */
-            virtual const ModBase& getActiveMods() const = 0;
+            virtual const ModBases& getInstalledMods() const = 0;
+            /*! \return A reference to the active mods.
+             */
+            virtual const ModBase* getInstalledMod(const nString& name) const = 0;
+            /*! \return A reference to the active mods.
+             */
+            virtual const ModBases& getStagedMods() const = 0;
         protected:
             /*!
-             * \brief Prepares the currently active mods. This entails getting
+             * \brief Prepares the currently installed mods. This entails getting
              * their metadata and running any initialisation they require.
              *
              * Note: This does _not_ constitute enabling them!
              *
-             * \return True if the active mods were prepared successfully,
+             * \return True if the installed mods were prepared successfully,
              * false otherwise.
              */
-            virtual bool prepareActiveMods() = 0;
+            virtual bool prepareInstalledMods() = 0;
 
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
+            install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
 
             vio::Path m_globalModDir; ///< The directory in which active mods are located.
         };

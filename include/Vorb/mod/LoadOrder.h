@@ -46,6 +46,11 @@ namespace vorb {
 
         const nString LOAD_ORDER_PROFILES_FILENAME = "load_order_profiles.yaml";
 
+        enum class Action;
+
+        struct ActionForMod;
+        using ActionForMods = std::vector<ActionForMod>;
+
         class LoadOrderManager {
         public:
             LoadOrderManager();
@@ -68,6 +73,18 @@ namespace vorb {
             const LoadOrderProfile* getLoadOrderProfile(const nString& name) const;
             const LoadOrderProfile* getCurrentLoadOrderProfile() const;
             const LoadOrderProfiles& getAllLoadOrderProfiles() const;
+
+            /*!
+             * \brief Determines the minimal set of actions to take to
+             * change the source load order profile into looking like
+             * the target load order profile.
+             *
+             * \param source: The source load order profile.
+             * \param target: The target load order profile.
+             *
+             * \return The set of actions to take to convert one to the other.
+             */
+            static ActionForMods& diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target);
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */

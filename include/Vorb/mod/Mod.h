@@ -84,6 +84,13 @@ namespace vorb {
              * \param dt The time since the last frame.
              */
             virtual void update(f32 dt = 0.0f) = 0;
+
+            /*!
+             * \return Provide a reference to the mod metadata.
+             */
+            const ModMetadata& getModMetadata() {
+                return m_metadata;
+            }
         protected:
             /*!
              * \brief Loads metadata.
@@ -102,6 +109,7 @@ namespace vorb {
             ModIOManager   m_activeIOManager; ///< IO manager used by the mod itself.
             vio::IOManager m_installIOManager; ///< IO manager used to install/uninstall mod.
         };
+        using ModBases = std::vector<ModBase>;
 
         template <typename ScriptEnvironment = void, typename Enable = void>
         class Mod;

@@ -5,6 +5,7 @@ KEG_TYPE_DEF(ModMetadata, vmod::ModMetadata, kt) {
     using namespace keg;
     kt.addValue("name",   Value::basic(offsetof(vmod::ModMetadata, name), BasicType::STRING));
     kt.addValue("author", Value::basic(offsetof(vmod::ModMetadata, author), BasicType::STRING));
+    kt.addValue("version", Value::basic(offsetof(vmod::ModMetadata, version), BasicType::STRING));
     // TODO(Matthew): More metadata info.
 }
 

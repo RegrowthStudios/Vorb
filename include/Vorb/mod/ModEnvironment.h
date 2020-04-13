@@ -30,6 +30,11 @@
 
 namespace vorb {
     namespace mod {
+        // TODO(Matthew): There may be a way to do partial mod installs, that is
+        //      updates. It would be difficult with partial YAML updates but at
+        //      file-level it naively sounds fine. Some complication in needing to
+        //      know one file's dependency on another. E.g. a script on some asset
+        //      being a certain form. But then load order is problem anyway for that.
         enum class Action {
             INSTALL,
             UNINSTALL

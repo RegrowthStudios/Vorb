@@ -51,6 +51,8 @@ namespace vorb {
         struct ActionForMod;
         using ActionForMods = std::vector<ActionForMod>;
 
+        class ModEnvironmentBase;
+
         class LoadOrderManager {
         public:
             LoadOrderManager();
@@ -61,7 +63,7 @@ namespace vorb {
              *
              * \param loadOrderConfigDir: The directory in which the load order config is stored.
              */
-            void init(const vio::Path& loadOrderConfigDir);
+            void init(const ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir);
             /*! \brief Disposes the load order manager.
              */
             void dispose();
@@ -84,11 +86,13 @@ namespace vorb {
              *
              * \return The set of actions to take to convert one to the other.
              */
-            static ActionForMods& diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target);
+            ActionForMods& diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target);
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */
             void acquireLoadOrders();
+
+            const ModEnvironmentBase* m_modEnvironment; ///< The mod environment this load order sits in.
 
             vio::IOManager m_ioManager; ///< The IO manager with which load orders are acquired.
 

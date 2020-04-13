@@ -1,6 +1,8 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/mod/LoadOrder.h"
 
+#include "Vorb/mod/ModEnvironment.h"
+
 KEG_TYPE_DEF(LoadOrderProfile, vmod::LoadOrderProfile, kt) {
     using namespace keg;
     kt.addValue(
@@ -48,7 +50,8 @@ vmod::LoadOrderManager::LoadOrderManager() {
         // Empty.
 }
 
-void vmod::LoadOrderManager::init(const vio::Path& loadOrderConfigDir) {
+void vmod::LoadOrderManager::init(const ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir) {
+    m_modEnvironment = modEnv;
     m_ioManager = vio::IOManager(loadOrderConfigDir, true);
 
     acquireLoadOrders();
@@ -119,4 +122,61 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     }
 
     // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
+}
+
+vmod::ActionForMods& vmod::LoadOrderManager::diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target) {
+    // TODO(Matthew): For now this is very strict, to not do maximal action up to a given point,
+    //      all mods up to that point must match in name and version in both source and target.
+    //      We'd like to be able to relax this condition in time.
+    ActionForMods actions;
+
+    size_t i;
+
+    // While the two load orders match we don't need to do anything.
+    for (i = 0; i < source.mods.size(); ++i) {
+        if (target.mods.size() <= i) break;
+        
+        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(source.mods[i]);
+        const ModBase* targetMod = m_modEnvironment->getInstalledMod(target.mods[i]);
+
+        // TODO(Matthew): Probably do something other than assert here, but
+        //      certainly abort install procedure as we have a malformed
+        //      understanding of a mod package.
+        assert(sourceMod != nullptr);
+        assert(targetMod != nullptr);
+
+        if (source.mods[i] != target.mods[i]
+                || sourceMod->getModMetadata().version
+                    != targetMod->getModMetadata().version) {
+            break;
+        }
+    }
+
+    // Now that we've found our first difference, we need to uninstall all mods
+    // down to that point of difference, that is, in reverse of their load order.
+    for (size_t j = source.mods.size() - 1; j >= i; --j) {
+        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(source.mods[i]);
+
+        assert(sourceMod != nullptr);
+
+        actions.emplace_back(ActionForMod{
+            Action::UNINSTALL,
+            sourceMod
+        });
+    }
+
+    // We can now install each of the target mods starting from the point of
+    // difference.
+    for (; i < target.mods.size(); ++i) {
+        const ModBase* targetMod = m_modEnvironment->getInstalledMod(target.mods[i]);
+
+        assert(targetMod != nullptr);
+
+        actions.emplace_back(ActionForMod{
+            Action::INSTALL,
+            targetMod
+        });
+    }
+
+    return actions;
 }

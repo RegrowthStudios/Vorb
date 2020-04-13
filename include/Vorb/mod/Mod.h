@@ -34,6 +34,7 @@ namespace vorb {
         struct ModMetadata {
             nString name;
             nString author;
+            nString version;
             // TODO(Matthew): More metadata info.
         };
         const ModMetadata NULL_METADATA = {
@@ -88,7 +89,7 @@ namespace vorb {
             /*!
              * \return Provide a reference to the mod metadata.
              */
-            const ModMetadata& getModMetadata() {
+            const ModMetadata& getModMetadata() const {
                 return m_metadata;
             }
         protected:

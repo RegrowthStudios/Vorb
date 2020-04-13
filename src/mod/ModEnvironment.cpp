@@ -3,7 +3,7 @@
 
 void vmod::ModEnvironmentBase::init(const vio::Path& globalModDir, const vio::Path& loadOrderDir) {
     m_globalModDir = globalModDir;
-    m_loadOrderManager.init(loadOrderDir);
+    m_loadOrderManager.init(this, loadOrderDir);
 
     // TODO(Matthew): Initialise the installer.
 
@@ -32,7 +32,7 @@ bool vmod::ModEnvironmentBase::installLoadOrder(const nString& name) {
     const LoadOrderProfile* currentLoadOrder = m_loadOrderManager.getCurrentLoadOrderProfile();
     const LoadOrderProfile* newLoadOrder = m_loadOrderManager.getLoadOrderProfile(name);
 
-    auto& actions = LoadOrderManager::diffLoadOrders(currentLoadOrder, newLoadOrder);
+    auto& actions = m_loadOrderManager.diffLoadOrders(*currentLoadOrder, *newLoadOrder);
 
     for (auto& action : actions) {
         if (action.how == Action::UNINSTALL) {

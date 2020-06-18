@@ -77,6 +77,9 @@ namespace vorb {
             VALUE_MEDIATOR_VEC(ui64);
             VALUE_MEDIATOR_VEC(f32);
             VALUE_MEDIATOR_VEC(f64);
+#if defined(VORB_OS_MAC)
+            VALUE_MEDIATOR_VAL(ulong);
+#endif
             VALUE_MEDIATOR_VAL(bool);
             VALUE_MEDIATOR_REF(nString);
             VALUE_MEDIATOR_VAL(const cString);

@@ -47,6 +47,9 @@ MEDIATE_INTEGER(ui8)
 MEDIATE_INTEGER(ui16)
 MEDIATE_INTEGER(ui32)
 MEDIATE_INTEGER(ui64)
+#if defined(VORB_OS_MAC)
+MEDIATE_INTEGER(ulong)
+#endif
 #undef MEDIATE_INTEGER
 
 /************************************************************************/

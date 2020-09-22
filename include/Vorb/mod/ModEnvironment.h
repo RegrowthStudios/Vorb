@@ -122,15 +122,28 @@ namespace vorb {
              */
             const LoadOrderManager& getLoadOrderManager() const { return m_loadOrderManager; }
 
-            /*! \return A reference to the active mods.
+            /*! \return A reference to the installed mods.
              */
-            virtual const ModBases& getInstalledMods() const = 0;
-            /*! \return A reference to the active mods.
+            const ModBases& getInstalledMods() const { return m_installedMods; }
+            /*!
+             * \brief Get the named mod as installed.
+             *
+             * \param name: The name of the mod to get.
+             *
+             * \return Pointer to the named installed mod if found, nullptr if no matching installed mod found.
              */
-            virtual const ModBase* getInstalledMod(const nString& name) const = 0;
-            /*! \return A reference to the active mods.
+            const ModBase* getInstalledMod(const nString& name) const;
+            /*! \return A reference to the staged mods.
              */
-            virtual const ModBases& getStagedMods() const = 0;
+            const ModBases& getStagedMods() const { return m_stagedMods; }
+            /*!
+             * \brief Get the named mod as staged.
+             *
+             * \param name: The name of the mod to get.
+             *
+             * \return Pointer to the named staged mod if found, nullptr if no matching staged mod found.
+             */
+            const ModBase* getStagedMod(const nString& name) const;
         protected:
             /*!
              * \brief Prepares the currently installed mods. This entails getting
@@ -147,6 +160,9 @@ namespace vorb {
             install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
 
             vio::Path m_globalModDir; ///< The directory in which active mods are located.
+
+            ModBases m_installedMods; ///< List of currently installed mods.
+            ModBases m_stagedMods; ///< List of currently staged mods.
         };
 
         template <typename ScriptEnvironment = void, typename Enable = void>
@@ -160,10 +176,6 @@ namespace vorb {
             ~ModEnvironment() {
                 // Empty.
             }
-
-            /*! \return A reference to the active mods.
-             */
-            virtual const ModBase& getActiveMods() const override;
         protected:
             /*!
              * \brief Prepares the currently active mods. This entails getting
@@ -172,9 +184,7 @@ namespace vorb {
              * \return True if the active mods were prepared successfully,
              * false otherwise.
              */
-            virtual bool prepareActiveMods() override;
-
-            Mods<ScriptEnvironment> m_activeMods; ///< List of currently active mods.
+            virtual bool prepareInstalledMods() override;
         };
 
         template <typename ScriptEnvironment>
@@ -185,10 +195,6 @@ namespace vorb {
             ~ModEnvironment() {
                 // Empty.
             }
-
-            /*! \return A reference to the active mods.
-             */
-            virtual const ModBase& getActiveMods() const override;
         protected:
             /*!
              * \brief Prepares the currently active mods. This entails getting
@@ -197,9 +203,7 @@ namespace vorb {
              * \return True if the active mods were prepared successfully,
              * false otherwise.
              */
-            virtual bool prepareActiveMods() override;
-
-            Mods<> m_activeMods; ///< List of currently active mods.
+            virtual bool prepareInstalledMods() override;
         };
     }
 }

@@ -43,3 +43,19 @@ bool vmod::ModEnvironmentBase::installLoadOrder(const nString& name) {
         }
     }
 }
+
+const vmod::ModBase* vmod::ModEnvironmentBase::getInstalledMod(const nString& name) const {
+    for (auto& mod : m_installedMods) {
+        if (mod.getModMetadata().name == name) {
+            return &mod;
+        }
+    }
+}
+
+const vmod::ModBase* vmod::ModEnvironmentBase::getStagedMod(const nString& name) const {
+    for (auto& mod : m_stagedMods) {
+        if (mod.getModMetadata().name == name) {
+            return &mod;
+        }
+    }
+}

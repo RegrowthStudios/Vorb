@@ -1,21 +1,26 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/mod/ModEnvironment.h"
 
-void vmod::ModEnvironmentBase::init(const vio::Path& globalModDir, const vio::Path& loadOrderDir) {
-    m_globalModDir = globalModDir;
+void vmod::ModEnvironmentBase::init(const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir) {
+    m_stagedModDir = stagedModDir;
+    m_installedModDir = installedModDir;
     m_loadOrderManager.init(this, loadOrderDir);
 
     // TODO(Matthew): Initialise the installer.
 
-    prepareActiveMods();
+    prepareInstalledMods();
 }
 
 void vmod::ModEnvironmentBase::dispose() {
     m_loadOrderManager.dispose();
 }
 
-void vmod::ModEnvironmentBase::setGlobalModDir(const vio::Path& globalModDir) {
-    m_globalModDir = globalModDir;
+void vmod::ModEnvironmentBase::setStagedModDir(const vio::Path& stagedModDir) {
+    m_stagedModDir = stagedModDir;
+}
+
+void vmod::ModEnvironmentBase::setInstalledModDir(const vio::Path& installedModDir) {
+    m_installedModDir = installedModDir;
 }
 
 bool vmod::ModEnvironmentBase::uninstallCurrentLoadOrder() {

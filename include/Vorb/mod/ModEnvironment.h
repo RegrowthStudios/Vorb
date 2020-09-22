@@ -59,10 +59,14 @@ namespace vorb {
              * load order manager, preparing environment with currently active
              * mods.
              *
+             * \param stagedModDir: The directory in which not-yet-installed mods
+             * are located.
+             * \param installedModDir: The directory in which installed mods are
+             * located.
              * \param loadOrderDir: The directory in which the load order
              * metadata can be located.
              */
-            void init(const vio::Path& globalModDir, const vio::Path& loadOrderDir);
+            void init(const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir);
             /*! \brief Cleans up the mod environment.
              */
             void dispose();
@@ -106,14 +110,24 @@ namespace vorb {
             bool installLoadOrder(const nString& name);
 
             /*!
-             * \brief Set the global mod directory of the mod environment.
+             * \brief Set the directory that staged mods are found in.
              *
-             * \param globalModDir: The directory to set it to.
+             * \param stagedModDir: The directory to set it to.
              */
-            void setGlobalModDir(const vio::Path& globalModDir);
-            /*! \return A reference to the global mod directory path.
+            void setStagedModDir(const vio::Path& stagedModDir);
+            /*! \return A reference to the directory that staged mods are found in.
              */
-            const vio::Path& getGlobalModDir() const { return m_globalModDir; }
+            const vio::Path& getStagedModDir() const { return m_stagedModDir; }
+
+            /*!
+             * \brief Set the directory that installed mods are found in.
+             *
+             * \param installedModDir: The directory to set it to.
+             */
+            void setInstalledModDir(const vio::Path& installedModDir);
+            /*! \return A reference to the directory that installed mods are found in.
+             */
+            const vio::Path& getInstalledModDir() const { return m_installedModDir; }
 
             /*! \return A reference to the load order manager.
              */
@@ -159,7 +173,8 @@ namespace vorb {
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
             install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
 
-            vio::Path m_globalModDir; ///< The directory in which active mods are located.
+            vio::Path m_installedModDir; ///< The directory in which installed mods are located.
+            vio::Path m_stagedModDir; ///< The directory in which not-yet-installed mods are located.
 
             ModBases m_installedMods; ///< List of currently installed mods.
             ModBases m_stagedMods; ///< List of currently staged mods.

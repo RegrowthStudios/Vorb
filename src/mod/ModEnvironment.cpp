@@ -29,10 +29,9 @@ bool vmod::ModEnvironmentBase::uninstallCurrentLoadOrder() {
 }
 
 bool vmod::ModEnvironmentBase::installLoadOrder(const nString& name) {
-    const LoadOrderProfile* currentLoadOrder = m_loadOrderManager.getCurrentLoadOrderProfile();
     const LoadOrderProfile* newLoadOrder = m_loadOrderManager.getLoadOrderProfile(name);
 
-    auto& actions = m_loadOrderManager.diffLoadOrders(*currentLoadOrder, *newLoadOrder);
+    auto& actions = m_loadOrderManager.diffActiveLoadOrderWithInactive(*newLoadOrder);
 
     for (auto& action : actions) {
         if (action.how == Action::UNINSTALL) {

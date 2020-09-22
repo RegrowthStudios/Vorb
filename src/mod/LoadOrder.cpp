@@ -124,11 +124,11 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
 }
 
-vmod::ActionForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
+vmod::ActionsForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
     // TODO(Matthew): For now this is very strict, to not do maximal action up to a given point,
     //      all mods up to that point must match in name and version in both source and target.
     //      We'd like to be able to relax this condition in time.
-    ActionForMods actions;
+    ActionsForMods actions;
 
     size_t i;
 
@@ -139,10 +139,17 @@ vmod::ActionForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(con
         const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
         const ModBase* targetMod = m_modEnvironment->getStagedMod(target.mods[i]);
 
+        // If source mod isn't found, then we should "uninstall" down to here as regardless
+        // we'll need to reinstall this mod in the other load order profile even if it matches.
+        if (sourceMod == nullptr) {
+            break;
+        }
+
         // TODO(Matthew): Probably do something other than assert here, but
         //      certainly abort install procedure as we have a malformed
-        //      or missing a mod package.
-        assert(sourceMod != nullptr);
+        //      or missing mod package. We should already have a check in
+        //      place that a to-be-installed load order profile has all
+        //      mods present in staged directory.
         assert(targetMod != nullptr);
 
         if (sourceMod->getModMetadata().name
@@ -158,7 +165,12 @@ vmod::ActionForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(con
     for (size_t j = m_currentLoadOrder.mods.size() - 1; j >= i; --j) {
         const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
 
-        assert(sourceMod != nullptr);
+        // If source mod isn't found, then we can't uninstall the mod.
+        // For now we just roll over this. In situations where this occurs
+        // a full game reinstall may be necessitated.
+        if (sourceMod == nullptr) {
+            continue;
+        }
 
         actions.emplace_back(ActionForMod{
             Action::UNINSTALL,
@@ -171,6 +183,11 @@ vmod::ActionForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(con
     for (; i < target.mods.size(); ++i) {
         const ModBase* targetMod = m_modEnvironment->getInstalledMod(target.mods[i]);
 
+        // TODO(Matthew): Probably do something other than assert here, but
+        //      certainly abort install procedure as we have a malformed
+        //      or missing mod package. We should already have a check in
+        //      place that a to-be-installed load order profile has all
+        //      mods present in staged directory.
         assert(targetMod != nullptr);
 
         actions.emplace_back(ActionForMod{

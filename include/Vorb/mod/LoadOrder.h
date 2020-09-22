@@ -49,7 +49,7 @@ namespace vorb {
         enum class Action;
 
         struct ActionForMod;
-        using ActionForMods = std::vector<ActionForMod>;
+        using ActionsForMods = std::vector<ActionForMod>;
 
         class ModEnvironmentBase;
 
@@ -85,7 +85,7 @@ namespace vorb {
              *
              * \return The set of actions to take to make the currently active load order profile the target one.
              */
-            ActionForMods& diffActiveLoadOrderWithInactive(const LoadOrderProfile& target);
+            ActionsForMods& diffActiveLoadOrderWithInactive(const LoadOrderProfile& target);
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */

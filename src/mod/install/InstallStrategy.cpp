@@ -148,7 +148,7 @@ bool vmod::install::ReplaceStrategy::uninstall(const nString& modName) {
 
     // If we are reverting to vanilla asset, delete manifest,
     // otherwise, save new one.
-    if (ownerIsVanilla(owner)) {
+    if (ownerIsVanilla(manifest)) {
         deleteCurrentManifestData(filepath);
     } else {
         saveCurrentManifestData(filepath, manifest);

@@ -1,14 +1,15 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/mod/ModEnvironment.h"
 
-void vmod::ModEnvironmentBase::init(const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir) {
+void vmod::ModEnvironmentBase::init(vio::IOManager* ioManager, const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir) {
+    m_ioManager = ioManager;
+    
     m_stagedModDir = stagedModDir;
     m_installedModDir = installedModDir;
     m_loadOrderManager.init(this, loadOrderDir);
 
-    // TODO(Matthew): Initialise the installer.
-
     prepareInstalledMods();
+    prepareStagedMods();
 }
 
 void vmod::ModEnvironmentBase::dispose() {
@@ -63,4 +64,50 @@ const vmod::ModBase* vmod::ModEnvironmentBase::getStagedMod(const nString& name)
             return &mod;
         }
     }
+}
+
+void vmod::ModEnvironmentBase::prepareInstalledMods() {
+    vio::Directory* dir = nullptr;
+    m_installedModDir.asDirectory(dir);
+    
+    dir->forEachEntry([this](vio::Directory dir, const vio::Path& entry) {
+        // We're only interested in mods as directories within the installed directory.
+        if (!entry.isDirectory()) return;
+
+        vio::Path metadataFilepath = entry / METADATA_FILENAME;
+        if (!metadataFilepath.isFile()) return;
+
+        // Grab mod metadata from file.
+        cString metadataRaw = m_ioManager->readFileToString(metadataFilepath);
+        if (metadataRaw == nullptr) return;
+
+        // Attempt to parse metadata.
+        ModMetadata metadata;
+        if (keg::parse(&metadata, metadataRaw, "ModMetadata") != keg::Error::NONE) return;
+
+        addInstalledMod(metadata);
+    });
+}
+
+void vmod::ModEnvironmentBase::prepareStagedMods() {
+    vio::Directory* dir = nullptr;
+    m_stagedModDir.asDirectory(dir);
+    
+    dir->forEachEntry([this](vio::Directory dir, const vio::Path& entry) {
+        // We're only interested in mods as directories within the staged directory.
+        if (!entry.isDirectory()) return;
+
+        vio::Path metadataFilepath = entry / METADATA_FILENAME;
+        if (!metadataFilepath.isFile()) return;
+
+        // Grab mod metadata from file.
+        cString metadataRaw = m_ioManager->readFileToString(metadataFilepath);
+        if (metadataRaw == nullptr) return;
+
+        // Attempt to parse metadata.
+        ModMetadata metadata;
+        if (keg::parse(&metadata, metadataRaw, "ModMetadata") != keg::Error::NONE) return;
+
+        addStagedMod(metadata);
+    });
 }

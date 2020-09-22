@@ -59,6 +59,7 @@ namespace vorb {
              * load order manager, preparing environment with currently active
              * mods.
              *
+             * \param ioManager: The IO manager to use for handling file operations.
              * \param stagedModDir: The directory in which not-yet-installed mods
              * are located.
              * \param installedModDir: The directory in which installed mods are
@@ -66,7 +67,7 @@ namespace vorb {
              * \param loadOrderDir: The directory in which the load order
              * metadata can be located.
              */
-            void init(const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir);
+            void init(vio::IOManager* ioManager, const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir);
             /*! \brief Cleans up the mod environment.
              */
             void dispose();
@@ -159,16 +160,21 @@ namespace vorb {
              */
             const ModBase* getStagedMod(const nString& name) const;
         protected:
-            /*!
-             * \brief Prepares the currently installed mods. This entails getting
-             * their metadata and running any initialisation they require.
-             *
-             * Note: This does _not_ constitute enabling them!
-             *
-             * \return True if the installed mods were prepared successfully,
-             * false otherwise.
+            /*! \brief Builds list of installed mods.
              */
-            virtual bool prepareInstalledMods() = 0;
+            void prepareInstalledMods();
+            /*! \brief Builds list of staged mods.
+             */
+            void prepareStagedMods();
+
+            /*! \brief Adds a new mod to the installed mods list.
+             */
+            virtual void addInstalledMod(ModMetadata metadata) = 0;
+            /*! \brief Adds a new mod to the staged mods list.
+             */
+            virtual void addStagedMod(ModMetadata metadata) = 0;
+
+            vio::IOManager*  m_ioManager;  ///< The IO manager used for file handling.
 
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
             install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.

@@ -195,7 +195,7 @@ namespace keg {
             });
             context.reader.forAllInSequence(nArray, &f);
         }
-        return Error::TYPE_NOT_FOUND;
+        return Error::NONE;
     }
 
     Error parse(ui8* dest, keg::Node& data, ReadContext& context, Type* type) {

@@ -78,15 +78,14 @@ namespace vorb {
 
             /*!
              * \brief Determines the minimal set of actions to take to
-             * change the source load order profile into looking like
-             * the target load order profile.
+             * change the active load order profile to be the target
+             * load order profile.
              *
-             * \param source: The source load order profile.
              * \param target: The target load order profile.
              *
-             * \return The set of actions to take to convert one to the other.
+             * \return The set of actions to take to make the currently active load order profile the target one.
              */
-            ActionForMods& diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target);
+            ActionForMods& diffActiveLoadOrderWithInactive(const LoadOrderProfile& target);
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */

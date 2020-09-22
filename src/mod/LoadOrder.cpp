@@ -124,7 +124,7 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
 }
 
-vmod::ActionForMods& vmod::LoadOrderManager::diffLoadOrders(const LoadOrderProfile& source, const LoadOrderProfile& target) {
+vmod::ActionForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
     // TODO(Matthew): For now this is very strict, to not do maximal action up to a given point,
     //      all mods up to that point must match in name and version in both source and target.
     //      We'd like to be able to relax this condition in time.
@@ -133,19 +133,20 @@ vmod::ActionForMods& vmod::LoadOrderManager::diffLoadOrders(const LoadOrderProfi
     size_t i;
 
     // While the two load orders match we don't need to do anything.
-    for (i = 0; i < source.mods.size(); ++i) {
+    for (i = 0; i < m_currentLoadOrder.mods.size(); ++i) {
         if (target.mods.size() <= i) break;
         
-        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(source.mods[i]);
-        const ModBase* targetMod = m_modEnvironment->getInstalledMod(target.mods[i]);
+        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
+        const ModBase* targetMod = m_modEnvironment->getStagedMod(target.mods[i]);
 
         // TODO(Matthew): Probably do something other than assert here, but
         //      certainly abort install procedure as we have a malformed
-        //      understanding of a mod package.
+        //      or missing a mod package.
         assert(sourceMod != nullptr);
         assert(targetMod != nullptr);
 
-        if (source.mods[i] != target.mods[i]
+        if (sourceMod->getModMetadata().name
+                    != targetMod->getModMetadata().name
                 || sourceMod->getModMetadata().version
                     != targetMod->getModMetadata().version) {
             break;
@@ -154,8 +155,8 @@ vmod::ActionForMods& vmod::LoadOrderManager::diffLoadOrders(const LoadOrderProfi
 
     // Now that we've found our first difference, we need to uninstall all mods
     // down to that point of difference, that is, in reverse of their load order.
-    for (size_t j = source.mods.size() - 1; j >= i; --j) {
-        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(source.mods[i]);
+    for (size_t j = m_currentLoadOrder.mods.size() - 1; j >= i; --j) {
+        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
 
         assert(sourceMod != nullptr);
 

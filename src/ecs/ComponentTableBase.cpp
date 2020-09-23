@@ -3,6 +3,8 @@
 
 #include "Vorb/ecs/ECS.h"
 
+#include <stdexcept>
+
 vecs::ComponentTableBase::ComponentTableBase() :
     onEntityAdded(this),
     onEntityRemoved(this) {

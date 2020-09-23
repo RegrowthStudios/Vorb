@@ -176,7 +176,7 @@ namespace vorb {
             vio::Path m_modDir; ///< The directory in which installed mods are located.
 
             ModBases m_mods; ///< List of all mods the environment is aware of.
-            ModBases m_activeMods; ///< List of all active mods according to the current load order.
+            ModBasePtrs m_activeMods; ///< List of all active mods according to the current load order.
         };
 
         template <typename ScriptEnvironment>

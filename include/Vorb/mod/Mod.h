@@ -38,7 +38,7 @@ namespace vorb {
             // TODO(Matthew): More metadata info.
         };
         const ModMetadata NULL_METADATA = {
-            "", ""
+            "", "", ""
         };
 
         struct ModEntryPoints {

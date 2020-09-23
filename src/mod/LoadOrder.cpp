@@ -124,7 +124,7 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
 }
 
-vmod::ActionsForMods& vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
+vmod::ActionsForMods vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
     // TODO(Matthew): For now this is very strict, to not do maximal action up to a given point,
     //      all mods up to that point must match in name and version in both source and target.
     //      We'd like to be able to relax this condition in time.

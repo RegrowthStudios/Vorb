@@ -7,7 +7,7 @@
 // MIT License
 //
 
-/*! \file ModdIOManager.h
+/*! \file ModIOManager.h
  * \brief An IO manager for mods. This IO manager is specifically designed for usage as the underlying utility
  * to search mod directories and write to those directories. It permits only search and writing relative paths
  * within directories. Further, those directories have associated permissions so that a mod can't, for example,

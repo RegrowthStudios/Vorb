@@ -53,7 +53,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
     deactivateCurrentLoadOrder();
 
     // Do a first pass over mods to activate to ensure all are present.
-    for (auto& modName : newLoadOrder->mods) {
+    for (auto& modName : reverse(newLoadOrder->mods)) {
         const ModBase* mod = getMod(modName);
 
         // If mod is nullptr, then we are missing a mod needed for the new
@@ -67,7 +67,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
     // TODO(Matthew): Build compiled data assets for new load order.
 
     // Given all mods in the new load order are present, activate them.
-    for (auto& modName : newLoadOrder->mods) {
+    for (auto& modName : reverse(newLoadOrder->mods)) {
         const ModBase* mod = getMod(modName);
 
         mod->startup();

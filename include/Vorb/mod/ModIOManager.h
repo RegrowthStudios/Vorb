@@ -38,30 +38,29 @@ namespace vorb {
     namespace mod {
         /*!
          * \brief Manages simple mod-specific IO operations within permitted directories.
-         *  
+         *
          * When attempting any write operations, the only permitted root directory is the mod's own
-         * specific directory (Mods/MOD_NAME/). When attempting read-only operations, the permitted directories are
-         * the mod's own directory (Mods/MOD_NAME/), the global mod directory (Mods/), and any specified vanilla
-         * asset directory (e.g. Fonts/). The latter are used primarily when the IO manager is used by an asset cache.
+         * specific directory (Mods/MOD_DIR/). When attempting read operations this IO manager defers
+         * to the load-order-aware data asset IO manager.
          */
         class ModIOManager: public vio::IOManagerBase {
         public:
             /*!
              * \brief Create an IO manager with default program directories.
-             * 
+             *
              * It uses the current working directory as its search directory.
              */
             ModIOManager();
 
             /*!
              * \brief Sets the mod directory of this mod IO manager.
-             * 
+             *
              * \param path: New mod directory.
              */
             void setModDirectory(const vio::Path& path);
             /*!
              * \brief Sets the load-order-aware data asset IO manager for read operations.
-             * 
+             *
              * \param dataAssetIOManager: The data asset IO manager.
              */
             void setDataAssetIOManager(const DataAssetIOManager* dataAssetIOManager);
@@ -71,9 +70,9 @@ namespace vorb {
 
             /*!
              * \brief Find the absolute description of a path.
-             * 
+             *
              * If a path is already absolute, this method return false.
-             * 
+             *
              * \param path: The path to search.
              * \param resultAbsolutePath: The resulting absolute path will be stored here.
              *

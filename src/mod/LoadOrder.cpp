@@ -46,7 +46,8 @@ KEG_TYPE_DEF(LoadOrders, vmod::LoadOrders, kt) {
     );
 }
 
-vmod::LoadOrderManager::LoadOrderManager() {
+vmod::LoadOrderManager::LoadOrderManager() :
+    m_modEnvironment(nullptr), m_currentLoadOrder(nullptr) {
         // Empty.
 }
 
@@ -60,12 +61,17 @@ void vmod::LoadOrderManager::init(const ModEnvironmentBase* modEnv, const vio::P
 void vmod::LoadOrderManager::dispose() {
     m_ioManager = vio::IOManager();
 
-    m_currentLoadOrder = {};
     m_loadOrders = {};
 }
 
-void vmod::LoadOrderManager::addLoadOrderProfile(LoadOrderProfile&& profile) {
+bool vmod::LoadOrderManager::addLoadOrderProfile(LoadOrderProfile&& profile) {
+    if (getLoadOrderProfile(profile.name) == nullptr) {
+        return false;
+    }
+
     m_loadOrders.profiles.push_back(std::forward<LoadOrderProfile>(profile));
+
+    return true;
 }
 
 bool vmod::LoadOrderManager::replaceLoadOrderProfile(LoadOrderProfile&& profile) {
@@ -85,7 +91,7 @@ bool vmod::LoadOrderManager::removeLoadOrderProfile(const nString& name) {
             break;
         }
     }
-    
+
     if (isFound) {
         return m_loadOrders.profiles.erase(idx);
     }
@@ -104,11 +110,27 @@ const vmod::LoadOrderProfile* vmod::LoadOrderManager::getLoadOrderProfile(const 
 }
 
 const vmod::LoadOrderProfile* vmod::LoadOrderManager::getCurrentLoadOrderProfile() const {
-    return &m_currentLoadOrder;
+    return m_currentLoadOrder;
 }
 
 const vmod::LoadOrderProfiles& vmod::LoadOrderManager::getAllLoadOrderProfiles() const {
     return m_loadOrders.profiles;
+}
+
+void vmod::LoadOrderManager::setCurrentLoadOrderProfile(const LoadOrderProfile* profile) {
+    m_currentLoadOrder = profile;
+}
+
+bool vmod::LoadOrderManager::setCurrentLoadOrderProfile(const nString& name) {
+    const LoadOrderProfile* loadOrderProfileToMakeCurrent = getLoadOrderProfile(name);
+
+    if (loadOrderProfileToMakeCurrent == nullptr) {
+        return false;
+    }
+
+    m_currentLoadOrder = loadOrderProfileToMakeCurrent;
+
+    return true;
 }
 
 void vmod::LoadOrderManager::acquireLoadOrders() {
@@ -120,81 +142,4 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     if (keg::parse(&m_loadOrders, profilesRaw, "LoadOrders") != keg::Error::NONE) {
         printf("Could not parse load order profiles.");
     }
-
-    // TODO(Matthew): Here or at mod set-up (that is, ActiveMod instantiation) check validity of current load order against mod folders.
-}
-
-vmod::ActionsForMods vmod::LoadOrderManager::diffActiveLoadOrderWithInactive(const LoadOrderProfile& target) {
-    // TODO(Matthew): For now this is very strict, to not do maximal action up to a given point,
-    //      all mods up to that point must match in name and version in both source and target.
-    //      We'd like to be able to relax this condition in time.
-    ActionsForMods actions;
-
-    size_t i;
-
-    // While the two load orders match we don't need to do anything.
-    for (i = 0; i < m_currentLoadOrder.mods.size(); ++i) {
-        if (target.mods.size() <= i) break;
-        
-        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
-        const ModBase* targetMod = m_modEnvironment->getStagedMod(target.mods[i]);
-
-        // If source mod isn't found, then we should "uninstall" down to here as regardless
-        // we'll need to reinstall this mod in the other load order profile even if it matches.
-        if (sourceMod == nullptr) {
-            break;
-        }
-
-        // TODO(Matthew): Probably do something other than assert here, but
-        //      certainly abort install procedure as we have a malformed
-        //      or missing mod package. We should already have a check in
-        //      place that a to-be-installed load order profile has all
-        //      mods present in staged directory.
-        assert(targetMod != nullptr);
-
-        if (sourceMod->getModMetadata().name
-                    != targetMod->getModMetadata().name
-                || sourceMod->getModMetadata().version
-                    != targetMod->getModMetadata().version) {
-            break;
-        }
-    }
-
-    // Now that we've found our first difference, we need to uninstall all mods
-    // down to that point of difference, that is, in reverse of their load order.
-    for (size_t j = m_currentLoadOrder.mods.size() - 1; j >= i; --j) {
-        const ModBase* sourceMod = m_modEnvironment->getInstalledMod(m_currentLoadOrder.mods[i]);
-
-        // If source mod isn't found, then we can't uninstall the mod.
-        // For now we just roll over this. In situations where this occurs
-        // a full game reinstall may be necessitated.
-        if (sourceMod == nullptr) {
-            continue;
-        }
-
-        actions.emplace_back(ActionForMod{
-            Action::UNINSTALL,
-            sourceMod
-        });
-    }
-
-    // We can now install each of the target mods starting from the point of
-    // difference.
-    for (; i < target.mods.size(); ++i) {
-        const ModBase* targetMod = m_modEnvironment->getInstalledMod(target.mods[i]);
-
-        // TODO(Matthew): Probably do something other than assert here, but
-        //      certainly abort install procedure as we have a malformed
-        //      or missing mod package. We should already have a check in
-        //      place that a to-be-installed load order profile has all
-        //      mods present in staged directory.
-        assert(targetMod != nullptr);
-
-        actions.emplace_back(ActionForMod{
-            Action::INSTALL,
-            targetMod
-        });
-    }
-
-    return actions;
 }

@@ -59,15 +59,11 @@ namespace vorb {
              * load order manager, preparing environment with currently active
              * mods.
              *
-             * \param ioManager: The IO manager to use for handling file operations.
-             * \param stagedModDir: The directory in which not-yet-installed mods
-             * are located.
-             * \param installedModDir: The directory in which installed mods are
-             * located.
+             * \param modDir: The directory in which mods are located.
              * \param loadOrderDir: The directory in which the load order
              * metadata can be located.
              */
-            void init(vio::IOManager* ioManager, const vio::Path& stagedModDir, const vio::Path& installedModDir, const vio::Path& loadOrderDir);
+            void init(const vio::Path& modDir, const vio::Path& loadOrderDir);
             /*! \brief Cleans up the mod environment.
              */
             void dispose();
@@ -92,43 +88,47 @@ namespace vorb {
             virtual void update(f32 dt = 0.0f) = 0;
 
             /*!
-             * \brief Uninstalls the current load order.
+             * \brief Deactivates the current load order.
              *
-             * \return True if the load order was successfully uninstalled,
+             * \return True if the load order was successfully deactivated,
              * false otherwise.
              */
-            bool uninstallCurrentLoadOrder();
+            bool deactivateCurrentLoadOrder();
 
             /*!
-             * \brief Installs the named load order. This entails determining
+             * \brief Activates the given load order. This entails determining
              * the minimum changes to be made between current load order and the
              * new load order, and then performing the necessary uninstalls and
              * installs from/to the game's working directory.
              *
-             * \return True if the load order was successfully installed,
+             * \param newLoadOrder: The load order to make active.
+             *
+             * \return True if the load order was successfully activated,
              * false otherwise.
              */
-            bool installLoadOrder(const nString& name);
+            bool setActiveLoadOrder(const LoadOrderProfile* newLoadOrder);
+            /*!
+             * \brief Activates the named load order. This entails determining
+             * the minimum changes to be made between current load order and the
+             * new load order, and then performing the necessary uninstalls and
+             * installs from/to the game's working directory.
+             * 
+             * \param name: The name of the load order to make active.
+             *
+             * \return True if the load order was successfully activated,
+             * false otherwise.
+             */
+            bool setActiveLoadOrder(const nString& name);
 
             /*!
-             * \brief Set the directory that staged mods are found in.
+             * \brief Set the directory that mods are found in.
              *
-             * \param stagedModDir: The directory to set it to.
+             * \param modDir: The directory to set it to.
              */
-            void setStagedModDir(const vio::Path& stagedModDir);
-            /*! \return A reference to the directory that staged mods are found in.
+            void setModDir(const vio::Path& modDir);
+            /*! \return A reference to the directory that mods are found in.
              */
-            const vio::Path& getStagedModDir() const { return m_stagedModDir; }
-
-            /*!
-             * \brief Set the directory that installed mods are found in.
-             *
-             * \param installedModDir: The directory to set it to.
-             */
-            void setInstalledModDir(const vio::Path& installedModDir);
-            /*! \return A reference to the directory that installed mods are found in.
-             */
-            const vio::Path& getInstalledModDir() const { return m_installedModDir; }
+            const vio::Path& getModDir() const { return m_modDir; }
 
             /*! \return A reference to the load order manager.
              */
@@ -137,95 +137,110 @@ namespace vorb {
              */
             const LoadOrderManager& getLoadOrderManager() const { return m_loadOrderManager; }
 
-            /*! \return A reference to the installed mods.
+            /*! \return A reference to all mods the environment is aware of.
              */
-            const ModBases& getInstalledMods() const { return m_installedMods; }
+            const ModBases& getMods() const { return m_mods; }
             /*!
-             * \brief Get the named mod as installed.
+             * \brief Get the named mod.
              *
              * \param name: The name of the mod to get.
              *
-             * \return Pointer to the named installed mod if found, nullptr if no matching installed mod found.
+             * \return Pointer to the named mod if found, nullptr if no matching mod found.
              */
-            const ModBase* getInstalledMod(const nString& name) const;
-            /*! \return A reference to the staged mods.
+            const ModBase* getMod(const nString& name) const;
+            /*! \return A reference to the active mods.
              */
-            const ModBases& getStagedMods() const { return m_stagedMods; }
+            const ModBases& getActiveMods() const { return m_activeMods; }
             /*!
-             * \brief Get the named mod as staged.
+             * \brief Get the named active mod.
              *
              * \param name: The name of the mod to get.
              *
-             * \return Pointer to the named staged mod if found, nullptr if no matching staged mod found.
+             * \return Pointer to the named active mod if found, nullptr if no matching active mod found.
              */
-            const ModBase* getStagedMod(const nString& name) const;
+            const ModBase* getActiveMod(const nString& name) const;
+
+            /*! \brief Discovers all mods available to the environment.
+             */
+            void discoverMods();
         protected:
-            /*! \brief Builds list of installed mods.
+            /*! \brief Registers a new mod to the installed mods list.
              */
-            void prepareInstalledMods();
-            /*! \brief Builds list of staged mods.
-             */
-            void prepareStagedMods();
+            virtual void registerMod(ModMetadata metadata, const vio::Path& dir) = 0;
 
-            /*! \brief Adds a new mod to the installed mods list.
-             */
-            virtual void addInstalledMod(ModMetadata metadata) = 0;
-            /*! \brief Adds a new mod to the staged mods list.
-             */
-            virtual void addStagedMod(ModMetadata metadata) = 0;
-
-            vio::IOManager*  m_ioManager;  ///< The IO manager used for file handling.
+            vio::IOManager  m_ioManager;  ///< The IO manager used for file handling.
 
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
             install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
 
-            vio::Path m_installedModDir; ///< The directory in which installed mods are located.
-            vio::Path m_stagedModDir; ///< The directory in which not-yet-installed mods are located.
+            vio::Path m_modDir; ///< The directory in which installed mods are located.
 
-            ModBases m_installedMods; ///< List of currently installed mods.
-            ModBases m_stagedMods; ///< List of currently staged mods.
-        };
-
-        template <typename ScriptEnvironment = void, typename Enable = void>
-        class ModEnvironment;
-
-        template <typename ScriptEnvironment>
-        class ModEnvironment<ScriptEnvironment,
-                                typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
-            : public ModEnvironmentBase {
-        public:
-            ~ModEnvironment() {
-                // Empty.
-            }
-        protected:
-            /*!
-             * \brief Prepares the currently active mods. This entails getting
-             * their metadata and running any initialisation they require.
-             *
-             * \return True if the active mods were prepared successfully,
-             * false otherwise.
-             */
-            virtual bool prepareInstalledMods() override;
+            ModBases m_mods; ///< List of all mods the environment is aware of.
+            ModBases m_activeMods; ///< List of all active mods according to the current load order.
         };
 
         template <typename ScriptEnvironment>
-        class ModEnvironment<ScriptEnvironment,
-                                typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
+        class ModEnvironment
             : public ModEnvironmentBase {
         public:
+            using ScriptEnvBuilder = Delegate<ScriptEnvironment*>;
+            using ScriptEnvBuilders = std::vector<ScriptEnvBuilder>;
+
             ~ModEnvironment() {
                 // Empty.
             }
-        protected:
+
             /*!
-             * \brief Prepares the currently active mods. This entails getting
-             * their metadata and running any initialisation they require.
+             * \brief Registers a script env builder to be used for building a mod's script environment.
              *
-             * \return True if the active mods were prepared successfully,
-             * false otherwise.
+             * Note: These builders should be registered by subsystems in order for them to register constants, C callbacks
+             * and so forth to the script environment.
+             *
+             * \param scriptEnvBuilder The script environment builder to be registered.
              */
-            virtual bool prepareInstalledMods() override;
+            template <typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::value>
+            void registerScriptEnvBuilder(ScriptEnvBuilder&& scriptEnvBuilder) {
+                m_scriptEnvBuilders.emplace_back(std::forward<ScriptEnvBuilder>(scriptEnvBuilder));
+            }
+            /*! \return The list of script environment builders used for building each mod's script environment.
+             */
+            const ScriptEnvBuilders& getScriptEnvBuilders() {
+                return m_scriptEnvBuilders;
+            }
+        protected:
+            /*! \brief Registers a new mod to the mods list.
+             */
+            virtual void registerMod(ModMetadata metadata, const vio::Path& dir) override;
+
+            /*! \brief Builds a script environment for use by a mod.
+             */
+            ScriptEnvironment* buildScriptEnv();
+
+            ScriptEnvBuilders m_scriptEnvBuilders; ///< The list of builders to use in building a script environment for mods.
         };
+
+        template <typename ScriptEnvironment>
+        void ModEnvironment<ScriptEnvironment>::registerMod(ModMetadata metadata, const vio::Path& dir) {
+            Mod<ScriptEnvironment> newMod;
+
+            if (!std::is_same<ScriptEnvironment, void>::value) {
+                ScriptEnvironment* scriptEnv = buildScriptEnv();
+                newMod.init(metadata, dir, scriptEnv);
+            } else {
+                newMod.init(metadata, dir);
+            }
+        }
+
+        template <typename ScriptEnvironment>
+        ScriptEnvironment* ModEnvironment<ScriptEnvironment>::buildScriptEnv() {
+            ScriptEnvironment* scriptEnv = new ScriptEnvironment();
+
+            for (auto& builder : m_scriptEnvBuilders) {
+                builder(scriptEnv);
+            }
+
+            return scriptEnv;
+        }
     }
 }
 namespace vmod = vorb::mod;

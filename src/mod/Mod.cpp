@@ -17,41 +17,19 @@ KEG_TYPE_DEF(ModEntryPoints, vmod::ModEntryPoints, kt) {
     // TODO(Matthew): More entry point info.
 }
 
-bool vmod::ModBase::init(const vio::Path& installDir, const vio::Path& referenceDir){
-    m_activeIOManager.setModDirectory(installDir);
+vmod::ModBase::ModBase() :
+    m_metadata(NULL_METADATA),
+    m_isStarted(false) {
+    // Empty.
+}
 
-    // If the active directory exists now, then the mod is installed,
-    // thus it is considered to be in an active state.
-    m_isInstalled = !installDir.isDirectory();
-
-    m_installIOManager.setSearchDirectory(referenceDir);
-    m_installIOManager.setSearchOnly(true);
-
-    // We successfully init if we can load metadata of the mod.
-    return loadMetadata();
+void vmod::ModBase::init(ModMetadata metadata, const vio::Path& modDir){
+    m_ioManager.setModDirectory(modDir);
+    m_metadata = metadata;
 }
 
 void vmod::ModBase::dispose() {
-    m_activeIOManager = ModIOManager();
-    m_installIOManager = vio::IOManager();
+    m_ioManager = ModIOManager();
+    m_isStarted = false;
     m_metadata = NULL_METADATA;
-}
-
-bool vmod::ModBase::loadMetadata() {
-    cString modMetadata = nullptr;
-
-    // Read the metadata in the expected location.
-    if (m_isInstalled) {
-        modMetadata = m_activeIOManager.readFileToString(METADATA_FILENAME);
-    } else {
-        modMetadata = m_installIOManager.readFileToString(METADATA_FILENAME);
-    }
-
-    // Check we got something from reading the metadata.
-    if (modMetadata == nullptr) return false;
-
-    // Attempt to parse metadata.
-    if (keg::parse(&m_metadata, modMetadata, "ModMetadata") != keg::Error::NONE) return false;
-
-    return true;
 }

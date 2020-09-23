@@ -8,9 +8,9 @@
 //
 
 /*! \file Mod.h
- * \brief Provides classes for mods installed or otherwise.
- * These provide such things as the mod's metadata, and
- * basic utilities such as an IO manager, texture cache, etc.
+ * \brief Provides classes for mods that handle startup and
+ * shutdown procedures, as well as setting up a script
+ * environment where needed.
  */
 
 #pragma once
@@ -54,16 +54,20 @@ namespace vorb {
 
         class ModBase {
         public:
+            ModBase();
+            virtual ~ModBase() {
+                // Empty.
+            }
+
             /*!
-             * \brief Initialises the mod, setting up necessary data, including loading
-             * associated metadata.
+             * \brief Initialises the mod, setting up necessary data.
              *
-             * \param installDir: The directory where the mod is or would be installed.
-             * \param referenceDir: The directory where the initial mod download is stored.
+             * \param metadata: The metadata of the mod.
+             * \param modDir: The directory of the mod.
              *
              * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual bool init(const vio::Path& installDir, const vio::Path& referenceDir);
+            virtual void init(ModMetadata metadata, const vio::Path& modDir);
             /*!
              * \brief Disposes of the mod.
              */
@@ -72,11 +76,11 @@ namespace vorb {
             /*!
              * \brief Starts up the mod.
              */
-            virtual bool startup() = 0;
+            virtual bool startup() const = 0;
             /*!
              * \brief Shuts down the mod.
              */
-            virtual bool shutdown() = 0;
+            virtual bool shutdown() const = 0;
 
             // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
             /*!
@@ -93,22 +97,11 @@ namespace vorb {
                 return m_metadata;
             }
         protected:
-            /*!
-             * \brief Loads metadata.
-             *
-             * The metadata is specified in the file "mod.yaml".
-             *
-             * \return True if metadata loaded correctly, false otherwise.
-             */
-            bool loadMetadata();
-
             ModMetadata m_metadata; ///< Metadata of mod, such as name, author, etc.
 
-            bool m_isInstalled; ///< Whether mod is installed.
             bool m_isStarted; ///< Whether the mod is started.
 
-            ModIOManager   m_activeIOManager; ///< IO manager used by the mod itself.
-            vio::IOManager m_installIOManager; ///< IO manager used to install/uninstall mod.
+            ModIOManager   m_ioManager; ///< IO manager used by the mod itself.
         };
         using ModBases = std::vector<ModBase>;
 
@@ -123,6 +116,31 @@ namespace vorb {
             Mod();
             ~Mod() {
                 // Empty.
+            }
+
+            /*!
+             * \brief Initialises the mod, setting up necessary data.
+             *
+             * \param metadata: The metadata of the mod.
+             * \param modDir: The directory of the mod.
+             * \param scriptEnv: The script environment used by the mod.
+             *
+             * \return True if the mod was correctly initialised, false otherwise.
+             */
+            virtual void init(ModMetadata metadata, const vio::Path& modDir, CALLEE_DELETE ScriptEnvironment* scriptEnv) override {
+                ModBase::init(metadata, modDir);
+
+                m_scriptEnv = scriptEnv;
+            }
+            /*!
+             * \brief Disposes of the mod.
+             */
+            virtual void dispose() override {
+                m_scriptEnv->dispose();
+                delete m_scriptEnv;
+                m_scriptEnv = nullptr;
+
+                ModBase::dispose();
             }
 
             // TODO(Matthew): Determine start up and shut down processes for mods.
@@ -149,33 +167,8 @@ namespace vorb {
             virtual void update(f32 dt = 0.0f) override {
                 // Empty.
             }
-
-            /*!
-             * \brief Registers a script env builder to be used for building a mod's script environment.
-             *
-             * Note: These builders should be registered by subsystems in order for them to register constants, C callbacks
-             * and so forth to the script environment.
-             *
-             * \param scriptEnvBuilder The script environment builder to be registered.
-             */
-            static void registerScriptEnvBuilder(Delegate<ScriptEnvironment*>&& scriptEnvBuilder) {
-                scriptEnvBuilders.emplace_back(std::forward<Delegate<ScriptEnvironment*>>(scriptEnvBuilder));
-            }
         protected:
-            /*!
-             * \brief Builds the script environment.
-             *
-             * \param scriptEnv The script environment to build.
-             */
-            static void buildScriptEnv(ScriptEnvironment* scriptEnv) {
-                for (auto& builder : scriptEnvBuilders) {
-                    builder(scriptEnv);
-                }
-            }
-
-            static std::vector<Delegate<ScriptEnvironment*>> scriptEnvBuilders; ///< The list of builders to use in building a script environment.
-
-            ScriptEnvironment m_scriptEnv;
+            ScriptEnvironment* m_scriptEnv;
         };
 
         template <typename ScriptEnvironment>

@@ -40,8 +40,8 @@ namespace vorb {
         };
         using LoadOrderProfiles = Array<LoadOrderProfile>;
         struct LoadOrders {
-            LoadOrderProfile  currentProfile; ///< The currently installed profile.
-            LoadOrderProfiles profiles; ///< List of profiles currently inactive.
+            nString  currentProfile; ///< The name of the currently installed profile.
+            LoadOrderProfiles profiles; ///< List of profiles.
         };
 
         const nString LOAD_ORDER_PROFILES_FILENAME = "load_order_profiles.yaml";
@@ -68,7 +68,7 @@ namespace vorb {
              */
             void dispose();
 
-            void addLoadOrderProfile(LoadOrderProfile&& profile);
+            bool addLoadOrderProfile(LoadOrderProfile&& profile);
             bool replaceLoadOrderProfile(LoadOrderProfile&& profile);
             bool removeLoadOrderProfile(const nString& name);
 
@@ -76,16 +76,8 @@ namespace vorb {
             const LoadOrderProfile* getCurrentLoadOrderProfile() const;
             const LoadOrderProfiles& getAllLoadOrderProfiles() const;
 
-            /*!
-             * \brief Determines the minimal set of actions to take to
-             * change the active load order profile to be the target
-             * load order profile.
-             *
-             * \param target: The target load order profile.
-             *
-             * \return The set of actions to take to make the currently active load order profile the target one.
-             */
-            ActionsForMods diffActiveLoadOrderWithInactive(const LoadOrderProfile& target);
+            void setCurrentLoadOrderProfile(const LoadOrderProfile* profile);
+            bool setCurrentLoadOrderProfile(const nString& name);
         protected:
             /*! \brief Acquires all load order profiles currently specified.
              */
@@ -96,11 +88,7 @@ namespace vorb {
             vio::IOManager m_ioManager; ///< The IO manager with which load orders are acquired.
 
             LoadOrders m_loadOrders; ///< The list of load order profiles.
-            /*!
-             * The currently active load order profile. If none is active,
-             * then this will be set to nullptr.
-             */
-            LoadOrderProfile m_currentLoadOrder;
+            const LoadOrderProfile* m_currentLoadOrder; ///< The current load order profile.
         };
     }
 }

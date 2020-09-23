@@ -633,4 +633,15 @@ size_t offsetMember(U T::*member) {
     return (const volatile char*)&((T*)nullptr->*member) - (const volatile char*)nullptr;
 }
 
+/*! \brief Provides a basic wrapper for range-based for looping over the reverse of a container.
+ */
+template <typename T>
+struct reversion_wrapper { T& iterable; };
+template <typename T>
+auto begin (reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
+template <typename T>
+auto end (reversion_wrapper<T> w) { return std::rend(w.iterable); }
+template <typename T>
+reversion_wrapper<T> reverse (T&& iterable) { return { iterable }; }
+
 #endif // !Vorb_types_h__

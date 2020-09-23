@@ -150,7 +150,7 @@ namespace vorb {
             const ModBase* getMod(const nString& name) const;
             /*! \return A reference to the active mods.
              */
-            const ModBases& getActiveMods() const { return m_activeMods; }
+            const ModBasePtrs& getActiveMods() const { return m_activeMods; }
             /*!
              * \brief Get the named active mod.
              *

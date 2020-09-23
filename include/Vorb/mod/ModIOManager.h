@@ -25,11 +25,14 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Directory.h"
 #include "Vorb/io/File.h"
 #include "Vorb/io/FileStream.h"
 #include "Vorb/io/IOManager.h"
 #include "Vorb/io/Path.h"
+
+DECL_VMOD(class DataAssetIOManager)
 
 namespace vorb {
     namespace mod {
@@ -57,26 +60,14 @@ namespace vorb {
              */
             void setModDirectory(const vio::Path& path);
             /*!
-             * \brief Sets the vanilla asset directory of this mod IO manager.
-             *
-             * If called with no path, it will set the vanilla asset directory to a Null path.
-             *
-             * \param path: New vanilla asset directory.
+             * \brief Sets the load-order-aware data asset IO manager for read operations.
+             * 
+             * \param dataAssetIOManager: The data asset IO manager.
              */
-            void setVanillaAssetDirectory(const vio::Path& path = vio::Path(""));
-            /*!
-             * \brief Sets the global mod directory of all mod IO managers.
-             *
-             * \param path: New global mod directory.
-             */
-            static void setGlobalModDirectory(const vio::Path& path);
+            void setDataAssetIOManager(const DataAssetIOManager* dataAssetIOManager);
 
             /*! \brief Returns the mod directory searched by this IO manager. */
-            vio::Path getModDirectory()              { return m_modDir;          }
-            /*! \brief Returns the vanilla asset directory searched by this IO manager. */
-            vio::Path getVanillaAssetDirectory()     { return m_vanillaAssetDir; }
-            /*! \brief Returns the global mod directory. */
-            static vio::Path getGlobalModDirectory() { return globalModDir;      }
+            vio::Path getModDirectory() { return m_modDir; }
 
             /*!
              * \brief Find the absolute description of a path.
@@ -106,10 +97,9 @@ namespace vorb {
              */
             virtual bool assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const override;
         private:
-            static vio::Path globalModDir; ///< The global mod directory (Mods/) - this is read-only.
+            const DataAssetIOManager* m_dataAssetIOManager; ///< The load-order-aware data asset IO manager - this is read-only.
 
-            vio::Path m_vanillaAssetDir; ///< The vanilla asset directory (e.g. Models/, Textures/ etc.) that may be needed for texture cache etc. - this is read-only and can be Null.
-            vio::Path m_modDir; ///< The mod's own directory (Mods/MOD_NAME/) - this is read-writable.
+            vio::Path m_modDir; ///< The mod's own directory - this is read-writable.
         };
     }
 }

@@ -2,21 +2,19 @@
 #include "Vorb/mod/ModIOManager.h"
 
 #include "Vorb/io/FileOps.h"
+#include "Vorb/mod/DataAssetIOManager.h"
 #include "Vorb/utils.h"
 
 vmod::ModIOManager::ModIOManager() :
-    m_vanillaAssetDir(""),
+    m_dataAssetIOManager(nullptr),
     m_modDir("") {
 }
 
-void vmod::ModIOManager::setGlobalModDirectory(const vio::Path& path) {
-    globalModDir = path;
-}
-void vmod::ModIOManager::setVanillaAssetDirectory(const vio::Path& path/* = vio::Path("")*/) {
-    m_vanillaAssetDir = path;
-}
 void vmod::ModIOManager::setModDirectory(const vio::Path& path) {
     m_modDir = path;
+}
+void vmod::ModIOManager::setDataAssetIOManager(const DataAssetIOManager* dataAssetIOManager) {
+    m_dataAssetIOManager = dataAssetIOManager;
 }
 
 bool vmod::ModIOManager::resolvePath(const vio::Path& path, vio::Path& resultAbsolutePath) const {
@@ -25,92 +23,57 @@ bool vmod::ModIOManager::resolvePath(const vio::Path& path, vio::Path& resultAbs
         return false;
     }
 
-    // Search in order of mod's own dir, then global mod dir, then any vanilla asset dir.
-    vio::Path pSearch;
-
-    if (m_modDir.isValid()) {
-        pSearch = m_modDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            return true;
-        }
-    }
-
-    if (globalModDir.isValid()) {
-        pSearch = globalModDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            return true;
-        }
-    }
-
-    if (m_vanillaAssetDir.isValid()) {
-        pSearch = m_vanillaAssetDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            return true;
-        }
-    }
-
-    return false;
+    // Read-operations should be performed by data asset IO manager, as this is load-order-aware.
+    return m_dataAssetIOManager->resolvePath(path, resultAbsolutePath);
 }
 
 bool vmod::ModIOManager::assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting) const {
     // Guilty until proven innocent
-    if (wasExisting) *wasExisting = false;
+    if (wasExisting != nullptr) *wasExisting = false;
 
     // Mods cannot have absolute paths assured.
     if (path.isAbsolute()) {
         return false;
     }
 
-    // Search in order
-    vio::Path pSearch;
+    // Try first to find asset through data asset IO manager.
+    bool isFound = m_dataAssetIOManager->resolvePath(path, resultAbsolutePath);
 
-    if (m_modDir.isValid()) {
-        pSearch = m_modDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            if (wasExisting) *wasExisting = true;
-            return true;
-        }
-    }
-
-    if (globalModDir.isValid()) {
-        pSearch = globalModDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            if (wasExisting) *wasExisting = true;
-            return true;
-        }
-    }
-
-    if (m_vanillaAssetDir.isValid()) {
-        pSearch = m_vanillaAssetDir / path;
-        if (pSearch.isValid()) {
-            resultAbsolutePath = pSearch;
-            if (wasExisting) *wasExisting = true;
-            return true;
+    // If we found something, we need to check if the kind of thing (directory/file)
+    // matches expectation, and return the appropriate information.
+    if (isFound) {
+        if (wasExisting != nullptr) {
+            if (isFile == resultAbsolutePath.isFile()) {
+                *wasExisting = true;
+                return true;
+            } else {
+                *wasExisting = false;
+                return false;
+            }
+        } else {
+            if (isFile == resultAbsolutePath.isFile()) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     if (path.isNice()) {
         // If we have gotten here, a file must be attempted to be made.
         //   Therefore the only base directory permitted is the mod's own directory.
-        pSearch = m_modDir / path;
-        pSearch.makeAbsolute();
+        vio::Path pathToCreate = m_modDir / path;
+        pathToCreate.makeAbsolute();
 
-        if (!vio::buildDirectoryTree(pSearch, isFile)) return false;
+        if (!vio::buildDirectoryTree(pathToCreate, isFile)) return false;
         if (isFile) {
             vio::File f;
-            pSearch.asFile(&f);
+            pathToCreate.asFile(&f);
             f.create(true);
         }
-        resultAbsolutePath = pSearch;
+        resultAbsolutePath = pathToCreate;
         return true;
     }
 
     return false;
 }
-
-vio::Path vmod::ModIOManager::globalModDir = "";

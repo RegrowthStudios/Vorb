@@ -27,7 +27,7 @@ bool vmod::ModEnvironmentBase::deactivateCurrentLoadOrder() {
     if (currentLoadOrder == nullptr) return true;
 
     // Let every mod perform a deactivation procedure as needed.
-    for (auto& modName : currentLoadOrder->mods) {
+    for (auto& modName : reverse(currentLoadOrder->mods)) {
         const ModBase* mod = getActiveMod(modName);
 
         if (mod != nullptr) mod->shutdown();

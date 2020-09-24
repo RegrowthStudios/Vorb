@@ -174,6 +174,118 @@ bool vmod::DataAssetIOManager::readVanillaFileToData(const vio::Path& path, OUT 
     return true;
 }
 
+bool vmod::DataAssetIOManager::readEachFileToString(const vio::Path& path, OUT std::vector<nString>& data) {
+    // No absolute filepaths here.
+    if (path.isAbsolute()) return false;
+
+    data.clear();
+
+    vio::Path searchPath;
+
+    // Check for valid path in each mod directory in priority-order.
+    if (m_modEnv != nullptr) {
+        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+
+        // Iterate active mods in priority order and 
+        for (const ModBase* mod : loadOrder) {
+            searchPath = mod->getModDir() / path;
+
+            nString res;
+            setSafeMode(false);
+            if (readFileToString(searchPath, res)) {
+                data.emplace_back(std::move(res));
+            }
+            setSafeMode();
+        }
+    }
+
+    // Check for valid path in vanilla data directory.
+    searchPath = vanillaDataDir / path;
+
+    nString res;
+    setSafeMode(false);
+    if (readFileToString(searchPath, res)) {
+        data.emplace_back(std::move(res));
+    }
+    setSafeMode();
+
+    return data.size() > 0;
+}
+
+std::vector<CALLER_DELETE cString> vmod::DataAssetIOManager::readEachFileToString(const vio::Path& path) {
+    // No absolute filepaths here.
+    if (path.isAbsolute()) return std::vector<cString>();
+
+    std::vector<cString> buffers;
+
+    vio::Path searchPath;
+
+    // Check for valid path in each mod directory in priority-order.
+    if (m_modEnv != nullptr) {
+        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+
+        // Iterate active mods in priority order and 
+        for (const ModBase* mod : loadOrder) {
+            searchPath = mod->getModDir() / path;
+
+            setSafeMode(false);
+            cString res = readFileToString(searchPath);
+            setSafeMode();
+
+            if (res != nullptr) buffers.push_back(res);
+        }
+    }
+
+    // Check for valid path in vanilla data directory.
+    searchPath = vanillaDataDir / path;
+
+    setSafeMode(false);
+    cString res = readFileToString(searchPath);
+    setSafeMode();
+
+    if (res != nullptr) buffers.push_back(res);
+
+    return buffers;
+}
+
+bool vmod::DataAssetIOManager::readEachFileToData(const vio::Path& path, OUT std::vector<std::vector<ui8>>& data) {
+    // No absolute filepaths here.
+    if (path.isAbsolute()) return false;
+
+    data.clear();
+
+    vio::Path searchPath;
+
+    // Check for valid path in each mod directory in priority-order.
+    if (m_modEnv != nullptr) {
+        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+
+        // Iterate active mods in priority order and 
+        for (const ModBase* mod : loadOrder) {
+            searchPath = mod->getModDir() / path;
+
+            std::vector<ui8> res;
+            setSafeMode(false);
+            if (readFileToData(searchPath, res)) {
+                data.emplace_back(std::move(res));
+            }
+            setSafeMode();
+        }
+    }
+
+    // Check for valid path in vanilla data directory.
+    searchPath = vanillaDataDir / path;
+
+    std::vector<ui8> res;
+    setSafeMode(false);
+    if (readFileToData(searchPath, res)) {
+        data.emplace_back(std::move(res));
+    }
+    setSafeMode();
+
+    return data.size() > 0;
+}
+
 void vmod::DataAssetIOManager::setSafeMode(bool safeMode /*= true*/) {
     m_safeMode = safeMode;
 }

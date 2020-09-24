@@ -169,6 +169,42 @@ namespace vorb {
              * \return True if the file was read, false otherwise.
              */
             bool readVanillaFileToData(const vio::Path& path, OUT std::vector<ui8>& data);
+
+            /*!
+             * \brief Reads file as in every mod and vanilla data directories
+             * into a vector of strings.
+             *
+             *
+             * \param path: The path to the file to read.
+             * \param data: The vector of string buffers to populate.
+             * \param mod: The mod whose file to load.
+             *
+             * \return True if the file was read, false otherwise.
+             */
+            bool readEachFileToString(const vio::Path& path, OUT std::vector<nString>& data);
+            /*!
+             * \brief Reads file as in every mod and vanilla data directories
+             * into a vector of C-strings.
+             *
+             * \param path: The path to the file to read.
+             * \param mod: The mod whose file to load.
+             *
+             * \return Vector of C-string buffers of files read, empty if none
+             * found.
+             */
+            std::vector<CALLER_DELETE cString> readEachFileToString(const vio::Path& path);
+
+            /*!
+             * \brief Reads file as in every mod and vanilla data directories
+             * into a vector of binary buffers.
+             *
+             * \param path: The path to the file to read.
+             * \param data: The binary buffer to populate.
+             * \param mod: The mod whose file to load.
+             *
+             * \return True if the file was read, false otherwise.
+             */
+            bool readEachFileToData(const vio::Path& path, OUT std::vector<std::vector<ui8>>& data);
         private:
             static vio::Path vanillaDataDir; ///< The vanilla data directory.
 

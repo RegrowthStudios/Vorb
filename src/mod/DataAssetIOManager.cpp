@@ -19,6 +19,10 @@ void vmod::DataAssetIOManager::setModEnvironment(const ModEnvironmentBase* modEn
     m_modEnv = modEnv;
 }
 
+void vmod::DataAssetIOManager::setVanillaDataDir(const vio::Path& vanillaDataDir_) {
+    vanillaDataDir = vanillaDataDir_;
+}
+
 bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath) const {
     if (path.isAbsolute()) {
         // While is safe mode absolute filepaths cannot be read.
@@ -34,10 +38,11 @@ bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path&
         return false;
     }
 
+    vio::Path searchPath;
+
+    // Check for valid path in each mod directory in priority-order.
     if (m_modEnv != nullptr) {
         const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
-
-        vio::Path searchPath;
 
         // Iterate active mods in priority order and 
         for (const ModBase* mod : loadOrder) {
@@ -50,7 +55,13 @@ bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path&
         }
     }
 
-    
+    // Check for valid path in vanilla data directory.
+    searchPath = vanillaDataDir / path;
+
+    if (searchPath.isValid()) {
+        resultAbsolutePath = searchPath;
+        return true;
+    }
 }
 
 bool vmod::DataAssetIOManager::assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting /*= nullptr*/) const {
@@ -143,3 +154,5 @@ bool vmod::DataAssetIOManager::readMergeableAssetToData(const vio::Path& path, O
 void vmod::DataAssetIOManager::setSafeMode(bool safeMode /*= true*/) {
     m_safeMode = safeMode;
 }
+
+vio::Path vmod::DataAssetIOManager::vanillaDataDir = "";

@@ -67,6 +67,16 @@ namespace vorb {
             void setModEnvironment(const ModEnvironmentBase* modEnv);
 
             /*!
+             * \brief Set the vanilla data directory for all data asset IO
+             * managers.
+             *
+             * This directory path should be absolute.
+             *
+             * \param vanillaDataDir: The vanilla data directory.
+             */
+            static void setVanillaDataDir(const vio::Path& vanillaDataDir);
+
+            /*!
              * \brief Find the absolute description of a path.
              * 
              * If a path is already absolute, this method return false.
@@ -169,6 +179,8 @@ namespace vorb {
              */
             bool readMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data);
         private:
+            static vio::Path vanillaDataDir; ///< The vanilla data directory.
+
             void setSafeMode(bool safeMode = true);
 
             const ModEnvironmentBase* m_modEnv; ///< The mod evnironment in which this IO manager operates.

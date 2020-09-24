@@ -9,8 +9,7 @@
 
 /*! \file DataAssetIOManager.h
  * \brief An IO manager for reading data assets, this manager is load-order-aware and
- * handles locating the most relevant version of a data asset in this context. Merging
- * strategies are supported also for compiling YAML files composed of multiple fragments.
+ * handles locating the most relevant version of a data asset in this context.
  */
 
 #pragma once

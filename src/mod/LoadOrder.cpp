@@ -32,9 +32,9 @@ KEG_TYPE_DEF(LoadOrders, vmod::LoadOrders, kt) {
     using namespace keg;
     kt.addValue(
         "currentProfile",
-        Value::custom(
+        Value::basic(
             offsetof(vmod::LoadOrders, currentProfile),
-            "LoadOrderProfile"
+            BasicType::STRING
         )
     );
     kt.addValue(

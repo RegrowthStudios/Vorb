@@ -1,0 +1,184 @@
+//
+// DataAssetIOManager.h
+// Vorb Engine
+//
+// Created by Matthew Marshall on 23 Sept 2020
+// Copyright 2020 Regrowth Studios
+// MIT License
+//
+
+/*! \file DataAssetIOManager.h
+ * \brief An IO manager for reading data assets, this manager is load-order-aware and
+ * handles locating the most relevant version of a data asset in this context. Merging
+ * strategies are supported also for compiling YAML files composed of multiple fragments.
+ */
+
+#pragma once
+
+#ifndef Vorb_DataAssetIOManager_h__
+//! @cond DOXY_SHOW_HEADER_GUARDS
+#define Vorb_DataAssetIOManager_h__
+//! @endcond
+
+#ifndef VORB_USING_PCH
+#include "Vorb/types.h"
+#endif // !VORB_USING_PCH
+
+#include "Vorb/VorbPreDecl.inl"
+#include "Vorb/io/IOManager.h"
+#include "Vorb/io/Path.h"
+
+DECL_VMOD(class ModEnvironmentBase)
+
+namespace vorb {
+    namespace mod {
+        /*!
+         * \brief An IO manager for reading data assets, this manager is load-order-aware
+         * and handles locating the most relevant version of a data asset in this context.
+         * 
+         * When a merge strategy is used, caching is performed within a load-order-specific
+         * directory, which is the highest-priority read directory.
+         *
+         * This IO Manager MUST be used on a single thread for security.
+         */
+        class DataAssetIOManager: public vio::IOManagerBase {
+        public:
+            /*!
+             * \brief Create an IO manager with default program directories.
+             *
+             * No load order is yet available so only vanilla assets are acquired.
+             */
+            DataAssetIOManager();
+
+            /*!
+             * \brief Sets the global mod directory.
+             *
+             * \param globalModDir: New global mod directory.
+             */
+            void setGlobalModDirectory(const vio::Path& globalModDir);
+            /*! \brief Returns the global mod directory. */
+            const vio::Path& getGlobalModDirectory() { return m_globalModDir; }
+
+            /*!
+             * \brief Set the mod environment in which we operate.
+             *
+             * \param modEnv: The mod environment in which we operate.
+             */
+            void setModEnvironment(const ModEnvironmentBase* modEnv);
+
+            /*!
+             * \brief Find the absolute description of a path.
+             * 
+             * If a path is already absolute, this method return false.
+             * 
+             * \param path: The path to search.
+             * \param resultAbsolutePath: The resulting absolute path will be stored here.
+             *
+             * \return True if the path exists and was resolved as within one of the searchable directories.
+             */
+            virtual bool resolvePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath) const override;
+            /*!
+             * \brief Assure the existence of a path if it is nicely formed.
+             *
+             * If a path is already absolute, this method will return false.
+             *
+             * Note: Assuring a path will, where necessary and possible, create a file. This will therefore
+             * only assure paths within the mod's own directory.
+             *
+             * \param path: The path to assure.
+             * \param resultAbsolutePath: The resulting absolute path will be stored here.
+             * \param isFile: If the path does not exist, true to create a file, else create a directory.
+             * \param wasExisting: The predication of the path's existence will be stored here if non-null.
+             *
+             * \return True if the path was resolved properly as within one of the searchable directories.
+             */
+            virtual bool assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const override;
+
+            /*!
+             * \brief Reads an asset that is non-mergeable (file) to string. That is,
+             * the highest-priority mod or in last-case vanilla version of the file is
+             * read to string.
+             *
+             *
+             * \param path: The path to the asset to read.
+             * \param data: The string buffer to populate.
+             *
+             * \return True if the asset was read, false otherwise.
+             */
+            bool readNonMergeableAssetToString(const vio::Path& path, OUT nString& data);
+            /*!
+             * \brief Reads an asset that is non-mergeable (file) to C-string. That is,
+             * the highest-priority mod or in last-case vanilla version of the file is
+             * read to C-string.
+             *
+             * \param path: The path to the asset to read.
+             *
+             * \return Pointer to C-string buffer if asset read successfully, nullptr otherwise.
+             */
+            CALLER_DELETE cString readNonMergeableAssetToString(const vio::Path& path);
+
+            /*!
+             * \brief Read an asset that is non-mergeable (file) to a binary buffer. That
+             * is, the highest-priority mod or in last-case vanilla version of the file is
+             * read to a binary buffer.
+             *
+             * \param path: The path to the asset to read.
+             * \param data: The binary buffer to populate.
+             *
+             * \return True if the asset was read, false otherwise.
+             */
+            bool readNonMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data);
+
+            /*!
+             * \brief Reads an asset that is mergeable (potentially multiple files) to a
+             * string. That is, the asset is read into a string by merging the same file
+             * as stored in all mod directories and the vanilla data directory,
+             * performing the merge in reverse-priority order (i.e. vanilla first,
+             * highest-priority mod last).
+             *
+             * \param path: The path to the asset to read.
+             * \param data: The string buffer to populate.
+             *
+             * \return True if the asset was read, false otherwise.
+             */
+            bool readMergeableAssetToString(const vio::Path& path, OUT nString& data);
+            /*!
+             * \brief Reads an asset that is mergeable (potentially multiple files) to a
+             * C-string. That is, the asset is read into a C-string by merging the same
+             * file as stored in all mod directories and the vanilla data directory,
+             * performing the merge in reverse-priority order (i.e. vanilla first,
+             * highest-priority mod last).
+             *
+             * \param path: The path to the asset to read.
+             *
+             * \return Pointer to C-string buffer if asset read successfully, nullptr otherwise.
+             */
+            CALLER_DELETE cString readMergeableAssetToString(const vio::Path& path);
+
+            /*!
+             * \brief Reads an asset that is mergeable (potentially multiple files) to a
+             * binary buffer. That is, the asset is read into a binary buffer by merging
+             * the same file as stored in all mod directories and the vanilla data
+             * directory, performing the merge in reverse-priority order (i.e. vanilla
+             * first, highest-priority mod last).
+             *
+             * \param path: The path to the asset to read.
+             * \param data: The binary buffer to populate.
+             *
+             * \return True if the asset was read, false otherwise.
+             */
+            bool readMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data);
+        private:
+            void setSafeMode(bool safeMode = true);
+
+            const ModEnvironmentBase* m_modEnv; ///< The mod evnironment in which this IO manager operates.
+
+            vio::Path m_globalModDir; ///< The global mod directory (Mods/) - this is read-only.
+
+            bool m_safeMode;
+        };
+    }
+}
+namespace vmod = vorb::mod;
+
+#endif // !Vorb_DataAssetIOManager_h__

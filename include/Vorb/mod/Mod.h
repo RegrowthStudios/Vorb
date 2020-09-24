@@ -89,7 +89,7 @@ namespace vorb {
              *
              * \param dt The time since the last frame.
              */
-            virtual void update(f32 dt = 0.0f) = 0;
+            virtual void update(f32 dt = 0.0f) const = 0;
 
             /*! \return A reference to the mod metadata.
              */
@@ -161,13 +161,13 @@ namespace vorb {
             /*!
              * \brief Starts up the mod.
              */
-            virtual bool startup() override {
+            virtual bool startup() const override {
                 return true;
             }
             /*!
              * \brief Shuts down the mod.
              */
-            virtual bool shutdown() override {
+            virtual bool shutdown() const override {
                 return true;
             }
 
@@ -177,7 +177,7 @@ namespace vorb {
              *
              * \param dt The time since the last frame.
              */
-            virtual void update(f32 dt = 0.0f) override {
+            virtual void update(f32 dt = 0.0f) const override {
                 // Empty.
             }
         protected:
@@ -201,7 +201,7 @@ namespace vorb {
              *
              * \return True if successfully started, false otherwise.
              */
-            virtual bool startup() {
+            virtual bool startup() const override {
                 return true;
             }
             /*!
@@ -209,7 +209,7 @@ namespace vorb {
              *
              * \return True if successfully shutdown, false otherwise.
              */
-            virtual bool shutdown() {
+            virtual bool shutdown() const override {
                 return true;
             }
 
@@ -219,7 +219,7 @@ namespace vorb {
              *
              * \param dt: The time since the last frame.
              */
-            virtual void update(f32 dt = 0.0f) {
+            virtual void update(f32 dt = 0.0f) const override {
                 // Empty.
             }
         };

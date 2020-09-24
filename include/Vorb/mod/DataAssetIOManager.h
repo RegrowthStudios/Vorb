@@ -28,7 +28,7 @@
 #include "Vorb/io/IOManager.h"
 #include "Vorb/io/Path.h"
 
-DECL_VMOD(class ModEnvironmentBase)
+DECL_VMOD(class ModEnvironmentBase; class ModBase)
 
 namespace vorb {
     namespace mod {
@@ -105,79 +105,71 @@ namespace vorb {
             virtual bool assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting = nullptr) const override;
 
             /*!
-             * \brief Reads an asset that is non-mergeable (file) to string. That is,
-             * the highest-priority mod or in last-case vanilla version of the file is
-             * read to string.
+             * \brief Reads file at given path to string within the given mod's
+             * directory.
              *
              *
-             * \param path: The path to the asset to read.
+             * \param path: The path to the file to read.
              * \param data: The string buffer to populate.
+             * \param mod: The mod whose file to load.
              *
-             * \return True if the asset was read, false otherwise.
+             * \return True if the file was read, false otherwise.
              */
-            bool readNonMergeableAssetToString(const vio::Path& path, OUT nString& data);
+            bool readModFileToString(const vio::Path& path, OUT nString& data, const ModBase* mod);
             /*!
-             * \brief Reads an asset that is non-mergeable (file) to C-string. That is,
-             * the highest-priority mod or in last-case vanilla version of the file is
-             * read to C-string.
+             * \brief Reads file at given path to C-string within the given mod's
+             * directory.
              *
-             * \param path: The path to the asset to read.
+             * \param path: The path to the file to read.
+             * \param mod: The mod whose file to load.
              *
-             * \return Pointer to C-string buffer if asset read successfully, nullptr otherwise.
+             * \return Pointer to C-string buffer if file read successfully, nullptr otherwise.
              */
-            CALLER_DELETE cString readNonMergeableAssetToString(const vio::Path& path);
+            CALLER_DELETE cString readModFileToString(const vio::Path& path, const ModBase* mod);
 
             /*!
-             * \brief Read an asset that is non-mergeable (file) to a binary buffer. That
-             * is, the highest-priority mod or in last-case vanilla version of the file is
-             * read to a binary buffer.
+             * \brief Reads file at given path to binary buffer within the given
+             * mod's directory.
              *
              * \param path: The path to the asset to read.
              * \param data: The binary buffer to populate.
+             * \param mod: The mod whose file to load.
              *
              * \return True if the asset was read, false otherwise.
              */
-            bool readNonMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data);
+            bool readModFileToData(const vio::Path& path, OUT std::vector<ui8>& data, const ModBase* mod);
 
             /*!
-             * \brief Reads an asset that is mergeable (potentially multiple files) to a
-             * string. That is, the asset is read into a string by merging the same file
-             * as stored in all mod directories and the vanilla data directory,
-             * performing the merge in reverse-priority order (i.e. vanilla first,
-             * highest-priority mod last).
+             * \brief Reads file in vanilla data directory to string.
              *
-             * \param path: The path to the asset to read.
+             *
+             * \param path: The path to the file to read.
              * \param data: The string buffer to populate.
+             * \param mod: The mod whose file to load.
              *
-             * \return True if the asset was read, false otherwise.
+             * \return True if the file was read, false otherwise.
              */
-            bool readMergeableAssetToString(const vio::Path& path, OUT nString& data);
+            bool readVanillaFileToString(const vio::Path& path, OUT nString& data);
             /*!
-             * \brief Reads an asset that is mergeable (potentially multiple files) to a
-             * C-string. That is, the asset is read into a C-string by merging the same
-             * file as stored in all mod directories and the vanilla data directory,
-             * performing the merge in reverse-priority order (i.e. vanilla first,
-             * highest-priority mod last).
+             * \brief Reads file in vanilla data directory to C-string.
              *
-             * \param path: The path to the asset to read.
+             * \param path: The path to the file to read.
+             * \param mod: The mod whose file to load.
              *
-             * \return Pointer to C-string buffer if asset read successfully, nullptr otherwise.
+             * \return Pointer to C-string buffer if file read successfully, nullptr otherwise.
              */
-            CALLER_DELETE cString readMergeableAssetToString(const vio::Path& path);
+            CALLER_DELETE cString readVanillaFileToString(const vio::Path& path);
 
             /*!
-             * \brief Reads an asset that is mergeable (potentially multiple files) to a
-             * binary buffer. That is, the asset is read into a binary buffer by merging
-             * the same file as stored in all mod directories and the vanilla data
-             * directory, performing the merge in reverse-priority order (i.e. vanilla
-             * first, highest-priority mod last).
+             * \brief Reads file in vanilla data directory to binary buffer.
              *
-             * \param path: The path to the asset to read.
+             * \param path: The path to the file to read.
              * \param data: The binary buffer to populate.
+             * \param mod: The mod whose file to load.
              *
-             * \return True if the asset was read, false otherwise.
+             * \return True if the file was read, false otherwise.
              */
-            bool readMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data);
+            bool readVanillaFileToData(const vio::Path& path, OUT std::vector<ui8>& data);
         private:
             static vio::Path vanillaDataDir; ///< The vanilla data directory.
 

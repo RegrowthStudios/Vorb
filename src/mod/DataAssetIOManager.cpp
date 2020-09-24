@@ -102,11 +102,10 @@ bool vmod::DataAssetIOManager::assurePath(const vio::Path& path, OUT vio::Path& 
     return false;
 }
 
-bool vmod::DataAssetIOManager::readNonMergeableAssetToString(const vio::Path& path, OUT nString& data) {
-    vio::Path absPath;
-    bool isFound = resolvePath(path, absPath);
+bool vmod::DataAssetIOManager::readModFileToString(const vio::Path& path, OUT nString& data, const ModBase* mod) {
+    vio::Path absPath = mod->getModDir() / path;
 
-    if (!isFound) return false;
+    if (!absPath.isValid()) return false;
 
     setSafeMode(false);
     readFileToString(absPath, data);
@@ -115,11 +114,10 @@ bool vmod::DataAssetIOManager::readNonMergeableAssetToString(const vio::Path& pa
     return true;
 }
 
-CALLER_DELETE cString vmod::DataAssetIOManager::readNonMergeableAssetToString(const vio::Path& path) {
-    vio::Path absPath;
-    bool isFound = resolvePath(path, absPath);
+CALLER_DELETE cString vmod::DataAssetIOManager::readModFileToString(const vio::Path& path, const ModBase* mod) {
+    vio::Path absPath = mod->getModDir() / path;
 
-    if (!isFound) return nullptr;
+    if (!absPath.isValid()) return nullptr;
 
     setSafeMode(false);
     cString res = readFileToString(absPath);
@@ -128,11 +126,10 @@ CALLER_DELETE cString vmod::DataAssetIOManager::readNonMergeableAssetToString(co
     return res;
 }
 
-bool vmod::DataAssetIOManager::readNonMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data) {
-    vio::Path absPath;
-    bool isFound = resolvePath(path, absPath);
+bool vmod::DataAssetIOManager::readModFileToData(const vio::Path& path, OUT std::vector<ui8>& data, const ModBase* mod) {
+    vio::Path absPath = mod->getModDir() / path;
 
-    if (!isFound) return false;
+    if (!absPath.isValid()) return false;
 
     setSafeMode(false);
     readFileToData(absPath, data);
@@ -141,16 +138,40 @@ bool vmod::DataAssetIOManager::readNonMergeableAssetToData(const vio::Path& path
     return true;
 }
 
-bool vmod::DataAssetIOManager::readMergeableAssetToString(const vio::Path& path, OUT nString& data) {
-    // TODO(Matthew): Implement.
+bool vmod::DataAssetIOManager::readVanillaFileToString(const vio::Path& path, OUT nString& data) {
+    vio::Path absPath = vanillaDataDir / path;
+
+    if (!absPath.isValid()) return false;
+
+    setSafeMode(false);
+    readFileToString(absPath, data);
+    setSafeMode();
+
+    return true;
 }
 
-CALLER_DELETE cString vmod::DataAssetIOManager::readMergeableAssetToString(const vio::Path& path) {
-    // TODO(Matthew): Implement.
+CALLER_DELETE cString vmod::DataAssetIOManager::readVanillaFileToString(const vio::Path& path) {
+    vio::Path absPath = vanillaDataDir / path;
+
+    if (!absPath.isValid()) return nullptr;
+
+    setSafeMode(false);
+    cString res = readFileToString(absPath);
+    setSafeMode();
+
+    return res;
 }
 
-bool vmod::DataAssetIOManager::readMergeableAssetToData(const vio::Path& path, OUT std::vector<ui8>& data) {
-    // TODO(Matthew): Implement.
+bool vmod::DataAssetIOManager::readVanillaFileToData(const vio::Path& path, OUT std::vector<ui8>& data) {
+    vio::Path absPath = vanillaDataDir / path;
+
+    if (!absPath.isValid()) return false;
+
+    setSafeMode(false);
+    readFileToData(absPath, data);
+    setSafeMode();
+
+    return true;
 }
 
 void vmod::DataAssetIOManager::setSafeMode(bool safeMode /*= true*/) {

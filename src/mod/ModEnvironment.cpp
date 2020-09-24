@@ -1,6 +1,8 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/mod/ModEnvironment.h"
 
+#include <algorithm>
+
 void vmod::ModEnvironmentBase::init(const vio::Path& modDir, const vio::Path& loadOrderDir) {
     m_ioManager = vio::IOManager(modDir, true);
 
@@ -27,7 +29,7 @@ bool vmod::ModEnvironmentBase::deactivateCurrentLoadOrder() {
     if (currentLoadOrder == nullptr) return true;
 
     // Let every mod perform a deactivation procedure as needed.
-    for (auto& modName : reverse(currentLoadOrder->mods)) {
+    for (auto& modName : currentLoadOrder->mods) {
         const ModBase* mod = getActiveMod(modName);
 
         if (mod != nullptr) mod->shutdown();
@@ -74,6 +76,9 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
 
         m_activeMods.push_back(mod);
     }
+
+    // Swap order of active mods to be in priority order.
+    std::reverse(m_activeMods.begin(), m_activeMods.end());
 
     return true;
 }

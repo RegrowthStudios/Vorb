@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Vorb/stdafx.h"
 #include "Vorb/mod/DataAssetIOManager.h"
 
 #include "Vorb/mod/LoadOrder.h"
@@ -50,7 +50,7 @@ bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path&
         }
     }
 
-
+    
 }
 
 bool vmod::DataAssetIOManager::assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting /*= nullptr*/) const {

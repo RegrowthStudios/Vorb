@@ -294,6 +294,7 @@ set(vorb_io
 )
 
 set(vorb_mod
+    include/Vorb/mod/DataAssetIOManager.h
     include/Vorb/mod/LoadOrder.h
     include/Vorb/mod/Mod.h
     include/Vorb/mod/ModEnvironment.h
@@ -301,6 +302,7 @@ set(vorb_mod
 #    include/Vorb/mod/install/Installer.h
 #    include/Vorb/mod/install/InstallStrategy.h
 #source
+    src/mod/DataAssetIOManager.cpp
     src/mod/LoadOrder.cpp
     src/mod/Mod.cpp
     src/mod/ModEnvironment.cpp

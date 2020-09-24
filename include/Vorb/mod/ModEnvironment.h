@@ -24,6 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/io/Path.h"
+#include "Vorb/mod/DataAssetIOManager.h"
 #include "Vorb/mod/LoadOrder.h"
 #include "Vorb/mod/Mod.h"
 #include "Vorb/mod/install/Installer.h"
@@ -168,7 +169,8 @@ namespace vorb {
              */
             virtual void registerMod(ModMetadata metadata, const vio::Path& dir) = 0;
 
-            vio::IOManager  m_ioManager;  ///< The IO manager used for file handling.
+            vio::IOManager m_ioManager; ///< The IO manager used for file handling when obtaining files like mod metadata.
+            DataAssetIOManager m_dataAssetIOManager; ///< The IO manager used for obtaining assets in a load-order-aware manner.
 
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
             install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
@@ -225,7 +227,7 @@ namespace vorb {
 
             if (!std::is_same<ScriptEnvironment, void>::value) {
                 ScriptEnvironment* scriptEnv = buildScriptEnv();
-                newMod.init(metadata, dir, scriptEnv);
+                newMod.init(metadata, dir, m_dataAssetIOManager, scriptEnv);
             } else {
                 newMod.init(metadata, dir);
             }

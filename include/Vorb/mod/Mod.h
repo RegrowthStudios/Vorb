@@ -64,10 +64,11 @@ namespace vorb {
              *
              * \param metadata: The metadata of the mod.
              * \param modDir: The directory of the mod.
+             * \param dataAssetIOManager: The data asset IO manager to be used for read operations.
              *
              * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual void init(ModMetadata metadata, const vio::Path& modDir);
+            virtual void init(ModMetadata metadata, const vio::Path& modDir, const DataAssetIOManager* dataAssetIOManager);
             /*!
              * \brief Disposes of the mod.
              */
@@ -90,18 +91,23 @@ namespace vorb {
              */
             virtual void update(f32 dt = 0.0f) = 0;
 
-            /*!
-             * \return Provide a reference to the mod metadata.
+            /*! \return A reference to the mod metadata.
              */
             const ModMetadata& getModMetadata() const {
                 return m_metadata;
             }
+            /*! \return The directory of the mod.
+             */
+            const vio::Path& getModDir() const {
+                return m_modDir;
+            }
         protected:
             ModMetadata m_metadata; ///< Metadata of mod, such as name, author, etc.
+            vio::Path m_modDir;
 
             bool m_isStarted; ///< Whether the mod is started.
 
-            ModIOManager   m_ioManager; ///< IO manager used by the mod itself.
+            ModIOManager m_ioManager; ///< IO manager used by the mod itself.
         };
         using ModBases = std::vector<ModBase>;
         using ModBasePtrs = std::vector<const ModBase*>;
@@ -124,12 +130,18 @@ namespace vorb {
              *
              * \param metadata: The metadata of the mod.
              * \param modDir: The directory of the mod.
+             * \param dataAssetIOManager: The data asset IO manager to be used for read operations.
              * \param scriptEnv: The script environment used by the mod.
              *
              * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual void init(ModMetadata metadata, const vio::Path& modDir, CALLEE_DELETE ScriptEnvironment* scriptEnv) override {
-                ModBase::init(metadata, modDir);
+            virtual void init(
+                ModMetadata metadata,
+                const vio::Path& modDir,
+                const DataAssetIOManager* dataAssetIOManager,
+                CALLEE_DELETE ScriptEnvironment* scriptEnv
+            ) override {
+                ModBase::init(metadata, modDir, dataAssetIOManager);
 
                 m_scriptEnv = scriptEnv;
             }

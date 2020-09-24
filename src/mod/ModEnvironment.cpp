@@ -6,6 +6,9 @@
 void vmod::ModEnvironmentBase::init(const vio::Path& modDir, const vio::Path& loadOrderDir) {
     m_ioManager = vio::IOManager(modDir, true);
 
+    m_dataAssetIOManager.setGlobalModDirectory(modDir);
+    m_dataAssetIOManager.setModEnvironment(this);
+
     m_modDir = modDir;
     m_loadOrderManager.init(this, loadOrderDir);
 

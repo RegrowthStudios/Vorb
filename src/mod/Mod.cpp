@@ -23,8 +23,10 @@ vmod::ModBase::ModBase() :
     // Empty.
 }
 
-void vmod::ModBase::init(ModMetadata metadata, const vio::Path& modDir){
+void vmod::ModBase::init(ModMetadata metadata, const vio::Path& modDir, const DataAssetIOManager* dataAssetIOManager) {
+    m_modDir = modDir;
     m_ioManager.setModDirectory(modDir);
+    m_ioManager.setDataAssetIOManager(dataAssetIOManager);
     m_metadata = metadata;
 }
 

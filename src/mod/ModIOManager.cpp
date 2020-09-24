@@ -28,13 +28,13 @@ bool vmod::ModIOManager::resolvePath(const vio::Path& path, vio::Path& resultAbs
 }
 
 bool vmod::ModIOManager::assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting) const {
-    // Guilty until proven innocent
-    if (wasExisting != nullptr) *wasExisting = false;
-
     // Mods cannot have absolute paths assured.
     if (path.isAbsolute()) {
         return false;
     }
+
+    // Guilty until proven innocent
+    if (wasExisting != nullptr) *wasExisting = false;
 
     // Try first to find asset through data asset IO manager.
     bool isFound = m_dataAssetIOManager->resolvePath(path, resultAbsolutePath);

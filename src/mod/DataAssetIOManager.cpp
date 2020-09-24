@@ -62,6 +62,8 @@ bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path&
         resultAbsolutePath = searchPath;
         return true;
     }
+
+    return false;
 }
 
 bool vmod::DataAssetIOManager::assurePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath, bool isFile, OPT bool* wasExisting /*= nullptr*/) const {

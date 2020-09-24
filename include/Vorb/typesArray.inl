@@ -9,7 +9,13 @@
  * length information. It is recommended that only POD data types are
  * used since no constructors or destructors are called.
  */
- #include <cstring>
+#include <cstring>
+#include <iterator>
+
+template <typename T>
+using ReverseArrayIterator = std::reverse_iterator<T*>;
+template <typename T>
+using ConstReverseArrayIterator = std::reverse_iterator<const T*>;
 
 class ArrayBase {
     template <typename T> friend class Array;
@@ -432,6 +438,39 @@ public:
      */
     const T* end() const {
         return m_length > 0 ? &((T*)m_data)[m_length - 1] : nullptr;
+    }
+
+    /*!
+     * \brief Enables reverse iteration over the contents of the array.
+     *
+     * \return A reverse iterator to the final element stored.
+     */
+    ReverseArrayIterator<T> rbegin() {
+        return ReverseArrayIterator<T>(end());
+    }
+    /*!
+     * \brief Enables reverse iteration over the contents of the array.
+     *
+     * \return A reverse iterator to the first element stored.
+     */
+    ReverseArrayIterator<T> rend() {
+        return ReverseArrayIterator<T>(begin());
+    }
+    /*!
+     * \brief Enables reverse iteration over the contents of the array.
+     *
+     * \return A const reverse iterator to the final element stored.
+     */
+    ConstReverseArrayIterator<T> rbegin() const {
+        return ConstReverseArrayIterator<T>(end());
+    }
+    /*!
+     * \brief Enables reverse iteration over the contents of the array.
+     *
+     * \return A const reverse iterator to the first element stored.
+     */
+    ConstReverseArrayIterator<T> rend() const {
+        return ConstReverseArrayIterator<T>(begin());
     }
 };
 

@@ -4,13 +4,23 @@
 #include <algorithm>
 
 void vmod::ModEnvironmentBase::init(const vio::Path& modDir, const vio::Path& loadOrderDir) {
-    m_ioManager = vio::IOManager(modDir, true);
+    vio::Path modDir_ = modDir;
+    if (!modDir_.isAbsolute()) {
+        modDir_ = vio::IOManager::getExecutableDirectory() / modDir_;
+    }
+
+    vio::Path loadOrderDir_ = loadOrderDir;
+    if (!loadOrderDir_.isAbsolute()) {
+        loadOrderDir_ = vio::IOManager::getExecutableDirectory() / loadOrderDir_;
+    }
+
+    m_ioManager = vio::IOManager(modDir_, true);
 
     m_dataAssetIOManager.setGlobalModDirectory(modDir);
     m_dataAssetIOManager.setModEnvironment(this);
 
-    m_modDir = modDir;
-    m_loadOrderManager.init(this, loadOrderDir);
+    m_modDir = modDir_;
+    m_loadOrderManager.init(this, loadOrderDir_);
 
     discoverMods();
 }

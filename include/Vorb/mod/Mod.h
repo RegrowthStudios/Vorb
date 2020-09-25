@@ -120,7 +120,9 @@ namespace vorb {
                     typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
             : public ModBase {
         public:
-            Mod();
+            Mod() {
+                // Empty.
+            }
             ~Mod() {
                 // Empty.
             }
@@ -135,12 +137,12 @@ namespace vorb {
              *
              * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual void init(
+            void init(
                 ModMetadata metadata,
                 const vio::Path& modDir,
                 const DataAssetIOManager* dataAssetIOManager,
                 CALLEE_DELETE ScriptEnvironment* scriptEnv
-            ) override {
+            ) {
                 ModBase::init(metadata, modDir, dataAssetIOManager);
 
                 m_scriptEnv = scriptEnv;
@@ -189,7 +191,9 @@ namespace vorb {
                     typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
             : public ModBase {
         public:
-            Mod();
+            Mod() {
+                // Empty.
+            }
             ~Mod() {
                 // Empty.
             }

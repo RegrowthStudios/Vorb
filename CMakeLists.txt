@@ -299,16 +299,12 @@ set(vorb_mod
     include/Vorb/mod/Mod.h
     include/Vorb/mod/ModEnvironment.h
     include/Vorb/mod/ModIOManager.h
-#    include/Vorb/mod/install/Installer.h
-#    include/Vorb/mod/install/InstallStrategy.h
 #source
     src/mod/DataAssetIOManager.cpp
     src/mod/LoadOrder.cpp
     src/mod/Mod.cpp
     src/mod/ModEnvironment.cpp
     src/mod/ModIOManager.cpp
-#    src/mod/install/Installer.cpp
-#    src/mod/install/InstallStrategy.cpp
 )
 
 if(VORB_USE_SCRIPTING)

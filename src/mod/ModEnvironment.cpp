@@ -16,7 +16,6 @@ void vmod::ModEnvironmentBase::init(const vio::Path& modDir, const vio::Path& lo
 
     m_ioManager = vio::IOManager(modDir_, true);
 
-    m_dataAssetIOManager.setGlobalModDirectory(modDir);
     m_dataAssetIOManager.setModEnvironment(this);
 
     m_modDir = modDir_;

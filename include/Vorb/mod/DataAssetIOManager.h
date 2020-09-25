@@ -54,9 +54,9 @@ namespace vorb {
              *
              * \param globalModDir: New global mod directory.
              */
-            void setGlobalModDirectory(const vio::Path& globalModDir);
+            static void setGlobalModDirectory(const vio::Path& globalModDir);
             /*! \brief Returns the global mod directory. */
-            const vio::Path& getGlobalModDirectory() { return m_globalModDir; }
+            static const vio::Path& getGlobalModDirectory() { return globalModDir; }
 
             /*!
              * \brief Set the mod environment in which we operate.
@@ -206,13 +206,12 @@ namespace vorb {
              */
             bool readEachFileToData(const vio::Path& path, OUT std::vector<std::vector<ui8>>& data);
         private:
-            static vio::Path vanillaDataDir; ///< The vanilla data directory.
+            static vio::Path vanillaDataDir; ///< The vanilla data directory (e.g. Data/) - this is read-only.
+            static vio::Path globalModDir; ///< The global mod directory (e.g. Mods/) - this is read-only.
 
             void setSafeMode(bool safeMode = true);
 
             const ModEnvironmentBase* m_modEnv; ///< The mod evnironment in which this IO manager operates.
-
-            vio::Path m_globalModDir; ///< The global mod directory (Mods/) - this is read-only.
 
             bool m_safeMode;
         };

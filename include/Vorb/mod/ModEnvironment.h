@@ -249,9 +249,9 @@ namespace vorb {
 
             if (!std::is_void<ScriptEnvironment>::value) {
                 ScriptEnvironment* scriptEnv = buildScriptEnv();
-                newMod.init(metadata, dir, m_dataAssetIOManager, scriptEnv);
+                newMod.init(metadata, dir, &m_dataAssetIOManager, scriptEnv);
             } else {
-                newMod.init(metadata, dir, m_dataAssetIOManager);
+                newMod.ModBase::init(metadata, dir, &m_dataAssetIOManager);
             }
         }
 

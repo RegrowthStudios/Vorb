@@ -183,7 +183,7 @@ namespace vorb {
         class ModEnvironment
             : public ModEnvironmentBase {
         public:
-            using ScriptEnvBuilder = Delegate<ScriptEnvironment*>;
+            using ScriptEnvBuilder = Delegate<void, ScriptEnvironment*>;
             using ScriptEnvBuilders = std::vector<ScriptEnvBuilder>;
 
             ~ModEnvironment() {

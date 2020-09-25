@@ -26,6 +26,13 @@ KEG_TYPE_DEF(LoadOrderProfile, vmod::LoadOrderProfile, kt) {
             BasicType::STRING
         )
     );
+    kt.addValue(
+        "mods",
+        Value::array(
+            offsetof(vmod::LoadOrderProfile, mods),
+            BasicType::STRING
+        )
+    );
 }
 
 KEG_TYPE_DEF(LoadOrders, vmod::LoadOrders, kt) {

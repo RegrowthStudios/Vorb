@@ -225,11 +225,11 @@ namespace vorb {
         void ModEnvironment<ScriptEnvironment>::registerMod(ModMetadata metadata, const vio::Path& dir) {
             Mod<ScriptEnvironment> newMod;
 
-            if (!std::is_same<ScriptEnvironment, void>::value) {
+            if (!std::is_void<ScriptEnvironment>::value) {
                 ScriptEnvironment* scriptEnv = buildScriptEnv();
                 newMod.init(metadata, dir, m_dataAssetIOManager, scriptEnv);
             } else {
-                newMod.init(metadata, dir);
+                newMod.init(metadata, dir, m_dataAssetIOManager);
             }
         }
 

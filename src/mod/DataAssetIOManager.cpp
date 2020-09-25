@@ -12,7 +12,11 @@ vmod::DataAssetIOManager::DataAssetIOManager() :
 }
 
 void vmod::DataAssetIOManager::setGlobalModDirectory(const vio::Path& globalModDir) {
-    m_globalModDir = globalModDir;
+    if (globalModDir.isAbsolute()) {
+        m_globalModDir = globalModDir;
+    } else {
+        m_globalModDir = vio::IOManager::getExecutableDirectory() / globalModDir;
+    }    
 }
 
 void vmod::DataAssetIOManager::setModEnvironment(const ModEnvironmentBase* modEnv) {
@@ -20,7 +24,11 @@ void vmod::DataAssetIOManager::setModEnvironment(const ModEnvironmentBase* modEn
 }
 
 void vmod::DataAssetIOManager::setVanillaDataDir(const vio::Path& vanillaDataDir_) {
-    vanillaDataDir = vanillaDataDir_;
+    if (vanillaDataDir_.isAbsolute()) {
+        vanillaDataDir = vanillaDataDir_;
+    } else {
+        vanillaDataDir = vio::IOManager::getExecutableDirectory() / vanillaDataDir_;
+    }
 }
 
 bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path& resultAbsolutePath) const {

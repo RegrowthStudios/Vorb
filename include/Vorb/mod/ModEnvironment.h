@@ -27,7 +27,6 @@
 #include "Vorb/mod/DataAssetIOManager.h"
 #include "Vorb/mod/LoadOrder.h"
 #include "Vorb/mod/Mod.h"
-#include "Vorb/mod/install/Installer.h"
 
 namespace vorb {
     namespace mod {
@@ -173,7 +172,6 @@ namespace vorb {
             DataAssetIOManager m_dataAssetIOManager; ///< The IO manager used for obtaining assets in a load-order-aware manner.
 
             LoadOrderManager m_loadOrderManager; ///< Manages all load order profiles.
-            install::Installer m_installer; ///< The installer to use for handling the mod installation procedure.
 
             vio::Path m_modDir; ///< The directory in which installed mods are located.
 

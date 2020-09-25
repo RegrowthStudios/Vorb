@@ -20,9 +20,10 @@ void vmod::ModEnvironmentBase::init(const vio::Path& modDir, const vio::Path& lo
     m_dataAssetIOManager.setModEnvironment(this);
 
     m_modDir = modDir_;
-    m_loadOrderManager.init(this, loadOrderDir_);
 
     discoverMods();
+
+    m_loadOrderManager.init(this, loadOrderDir_);
 }
 
 void vmod::ModEnvironmentBase::dispose() {

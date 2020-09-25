@@ -50,7 +50,7 @@ bool vmod::DataAssetIOManager::resolvePath(const vio::Path& path, OUT vio::Path&
 
     // Check for valid path in each mod directory in priority-order.
     if (m_modEnv != nullptr) {
-        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+        const ModBaseConstPtrs loadOrder = m_modEnv->getActiveMods();
 
         // Iterate active mods in priority order and 
         for (const ModBase* mod : loadOrder) {
@@ -192,7 +192,7 @@ bool vmod::DataAssetIOManager::readEachFileToString(const vio::Path& path, OUT s
 
     // Check for valid path in each mod directory in priority-order.
     if (m_modEnv != nullptr) {
-        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+        const ModBaseConstPtrs loadOrder = m_modEnv->getActiveMods();
 
         // Iterate active mods in priority order and 
         for (const ModBase* mod : loadOrder) {
@@ -230,7 +230,7 @@ std::vector<CALLER_DELETE cString> vmod::DataAssetIOManager::readEachFileToStrin
 
     // Check for valid path in each mod directory in priority-order.
     if (m_modEnv != nullptr) {
-        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+        const ModBaseConstPtrs loadOrder = m_modEnv->getActiveMods();
 
         // Iterate active mods in priority order and 
         for (const ModBase* mod : loadOrder) {
@@ -266,7 +266,7 @@ bool vmod::DataAssetIOManager::readEachFileToData(const vio::Path& path, OUT std
 
     // Check for valid path in each mod directory in priority-order.
     if (m_modEnv != nullptr) {
-        const ModBasePtrs loadOrder = m_modEnv->getActiveMods();
+        const ModBaseConstPtrs loadOrder = m_modEnv->getActiveMods();
 
         // Iterate active mods in priority order and 
         for (const ModBase* mod : loadOrder) {

@@ -53,7 +53,7 @@ bool vmod::ModEnvironmentBase::deactivateCurrentLoadOrder() {
 
     // TODO(Matthew): Reset all compiled data assets.
 
-    ModBasePtrs().swap(m_activeMods);
+    ModBaseConstPtrs().swap(m_activeMods);
 
     return true;
 }
@@ -105,8 +105,8 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const nString& name) {
 
 const vmod::ModBase* vmod::ModEnvironmentBase::getMod(const nString& name) const {
     for (auto& mod : m_mods) {
-        if (mod.getModMetadata().name == name) {
-            return &mod;
+        if (mod->getModMetadata().name == name) {
+            return mod;
         }
     }
 

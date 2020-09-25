@@ -109,8 +109,8 @@ namespace vorb {
 
             ModIOManager m_ioManager; ///< IO manager used by the mod itself.
         };
-        using ModBases = std::vector<ModBase>;
-        using ModBasePtrs = std::vector<const ModBase*>;
+        using ModBasePtrs = std::vector<ModBase*>;
+        using ModBaseConstPtrs = std::vector<const ModBase*>;
 
         template <typename ScriptEnvironment = void, typename Enable = void>
         class Mod;

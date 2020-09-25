@@ -139,7 +139,7 @@ namespace vorb {
 
             /*! \return A reference to all mods the environment is aware of.
              */
-            const ModBases& getMods() const { return m_mods; }
+            const ModBasePtrs& getMods() const { return m_mods; }
             /*!
              * \brief Get the named mod.
              *
@@ -150,7 +150,7 @@ namespace vorb {
             const ModBase* getMod(const nString& name) const;
             /*! \return A reference to the active mods.
              */
-            const ModBasePtrs& getActiveMods() const { return m_activeMods; }
+            const ModBaseConstPtrs& getActiveMods() const { return m_activeMods; }
             /*!
              * \brief Get the named active mod.
              *
@@ -175,8 +175,8 @@ namespace vorb {
 
             vio::Path m_modDir; ///< The directory in which installed mods are located.
 
-            ModBases m_mods; ///< List of all mods the environment is aware of.
-            ModBasePtrs m_activeMods; ///< List of all active mods according to the current load order.
+            ModBasePtrs m_mods; ///< List of all mods the environment is aware of.
+            ModBaseConstPtrs m_activeMods; ///< List of all active mods according to the current load order.
         };
 
         template <typename ScriptEnvironment>
@@ -245,14 +245,16 @@ namespace vorb {
 
         template <typename ScriptEnvironment>
         void ModEnvironment<ScriptEnvironment>::registerMod(ModMetadata metadata, const vio::Path& dir) {
-            Mod<ScriptEnvironment> newMod;
+            Mod<ScriptEnvironment>* newMod = new Mod<ScriptEnvironment>();
 
             if (!std::is_void<ScriptEnvironment>::value) {
                 ScriptEnvironment* scriptEnv = buildScriptEnv();
-                newMod.init(metadata, dir, &m_dataAssetIOManager, scriptEnv);
+                newMod->init(metadata, dir, &m_dataAssetIOManager, scriptEnv);
             } else {
-                newMod.ModBase::init(metadata, dir, &m_dataAssetIOManager);
+                newMod->ModBase::init(metadata, dir, &m_dataAssetIOManager);
             }
+
+            m_mods.push_back(newMod);
         }
 
         template <typename ScriptEnvironment>

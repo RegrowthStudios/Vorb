@@ -39,8 +39,8 @@ set(
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/hunter/HunterGate.cmake)
 
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.23.16.tar.gz"
-    SHA1 "dbe5b1c966414c4a055983c11d5251a2d8f2f16d"
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.222.tar.gz"
+    SHA1 "0b88baaa2a9a35b8ce632c57ade66be8dd918afd"
 )
 
 set(name vorb)

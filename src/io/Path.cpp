@@ -1,9 +1,14 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/Path.h"
 
+#include "Vorb/compat.h"
 #include "Vorb/io/filesystem.h"
 #include "Vorb/io/Directory.h"
 #include "Vorb/io/File.h"
+
+#ifdef VORB_OS_WINDOWS
+#include <sys/stat.h>
+#endif
 
 namespace vorb {
     namespace io {
@@ -223,9 +228,17 @@ template<> time_t convertToTimeT<time_t>(time_t time) {
 time_t vio::Path::getLastModTime() const {
     if (isNull()) return 0;
 
-    auto fsTime = fs::last_write_time(fs::path(m_path));
+#ifdef VORB_OS_WINDOWS
+    fs::path filePath(m_path);
 
+    struct _stat64 fileInfo;
+    if(_wstati64(filePath.wstring().c_str(), &fileInfo)!=0)
+        return 0;
+    return fileInfo.st_mtime;
+#else
+    auto fsTime=fs::last_write_time(fs::path(m_path));
     return convertToTimeT(fsTime);
+#endif
 }
 
 vio::Path& vio::Path::makeAbsolute() {

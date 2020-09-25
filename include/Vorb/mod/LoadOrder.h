@@ -63,7 +63,7 @@ namespace vorb {
              *
              * \param loadOrderConfigDir: The directory in which the load order config is stored.
              */
-            void init(const ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir);
+            void init(ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir);
             /*! \brief Disposes the load order manager.
              */
             void dispose();
@@ -83,7 +83,7 @@ namespace vorb {
              */
             void acquireLoadOrders();
 
-            const ModEnvironmentBase* m_modEnvironment; ///< The mod environment this load order sits in.
+            ModEnvironmentBase* m_modEnvironment; ///< The mod environment this load order sits in.
 
             vio::IOManager m_ioManager; ///< The IO manager with which load orders are acquired.
 

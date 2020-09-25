@@ -58,7 +58,7 @@ vmod::LoadOrderManager::LoadOrderManager() :
         // Empty.
 }
 
-void vmod::LoadOrderManager::init(const ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir) {
+void vmod::LoadOrderManager::init(ModEnvironmentBase* modEnv, const vio::Path& loadOrderConfigDir) {
     m_modEnvironment = modEnv;
     m_ioManager = vio::IOManager(loadOrderConfigDir, true);
 
@@ -149,4 +149,6 @@ void vmod::LoadOrderManager::acquireLoadOrders() {
     if (keg::parse(&m_loadOrders, profilesRaw, "LoadOrders") != keg::Error::NONE) {
         printf("Could not parse load order profiles.");
     }
+
+    m_modEnvironment->setActiveLoadOrder(m_loadOrders.currentProfile);
 }

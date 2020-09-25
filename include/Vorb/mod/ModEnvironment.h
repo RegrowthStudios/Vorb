@@ -222,7 +222,7 @@ namespace vorb {
              *
              * \param scriptEnvBuilder The script environment builder to be registered.
              */
-            template <typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::value>
+            template <typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
             void registerScriptEnvBuilder(ScriptEnvBuilder&& scriptEnvBuilder) {
                 m_scriptEnvBuilders.emplace_back(std::forward<ScriptEnvBuilder>(scriptEnvBuilder));
             }

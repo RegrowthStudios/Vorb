@@ -296,12 +296,14 @@ set(vorb_io
 set(vorb_mod
     include/Vorb/mod/DataAssetIOManager.h
     include/Vorb/mod/LoadOrder.h
+    include/Vorb/mod/Merge.h
     include/Vorb/mod/Mod.h
     include/Vorb/mod/ModEnvironment.h
     include/Vorb/mod/ModIOManager.h
 #source
     src/mod/DataAssetIOManager.cpp
     src/mod/LoadOrder.cpp
+    src/mod/Merge.cpp
     src/mod/Mod.cpp
     src/mod/ModEnvironment.cpp
     src/mod/ModIOManager.cpp

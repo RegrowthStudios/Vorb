@@ -124,7 +124,7 @@ const vmod::ModBase* vmod::ModEnvironmentBase::getActiveMod(const nString& name)
 }
 
 void vmod::ModEnvironmentBase::discoverMods() {
-    vio::Directory* dir = nullptr;
+    vio::Directory* dir = new vio::Directory();
     m_modDir.asDirectory(dir);
 
     dir->forEachEntry([this](Sender dir VORB_UNUSED, const vio::Path& entry) {

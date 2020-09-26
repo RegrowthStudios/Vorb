@@ -75,11 +75,12 @@ namespace vorb {
              *
              * \param ownerScreen The screen that owns this scripted UI.
              * \param window The game window this UI will be rendered to.
+             * \param iom The IO manager to use for file handling.
              * \param textureCache The cache to use for textures used by this UI.
              * \param defaultFont The default font for views to use.
              * \param spriteBatch The spritebatch for view renderers to use.
              */
-            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*!
              * \brief Disposes the managed views and resets pointers.
              */
@@ -271,6 +272,7 @@ namespace vorb {
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
             vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
             vg::TextureCache* m_textureCache; ///< Cache for UI-related textures.
+            vio::IOManager*   m_iom;          ///< IO Manager for getting necessary YAML files.
         };
     }
 }
@@ -290,9 +292,10 @@ vui::ScriptedUI<ScriptEnvironmentImpl>::~ScriptedUI() {
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ScriptedUI<ScriptEnvironmentImpl>::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::ScriptedUI<ScriptEnvironmentImpl>::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_ownerScreen  = ownerScreen;
     m_window       = window;
+    m_iom          = iom;
     m_textureCache = textureCache;
     m_defaultFont  = defaultFont;
     m_spriteBatch  = spriteBatch;

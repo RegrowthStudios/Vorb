@@ -101,6 +101,8 @@ namespace vorb {
             const vio::Path& getModDir() const {
                 return m_modDir;
             }
+
+            Event<f32> OnUpdate;
         protected:
             ModMetadata m_metadata; ///< Metadata of mod, such as name, author, etc.
             vio::Path m_modDir;

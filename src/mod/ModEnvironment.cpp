@@ -61,16 +61,9 @@ bool vmod::ModEnvironmentBase::deactivateCurrentLoadOrder() {
     // If we got a nullptr, then nothing to do.
     if (currentLoadOrder == nullptr) return true;
 
-    // Let every mod perform a deactivation procedure as needed.
-    for (auto& modName : currentLoadOrder->mods) {
-        const ModBase* mod = getActiveMod(modName);
-
-        if (mod != nullptr) mod->shutdown();
-    }
+    shutdown();
 
     m_loadOrderManager.setCurrentLoadOrderProfile(nullptr);
-
-    // TODO(Matthew): Reset all compiled data assets.
 
     ModBaseConstPtrs().swap(m_activeMods);
 
@@ -84,8 +77,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
     // Get current load order profile in case we need to roll back.
     const LoadOrderProfile* currentLoadOrder = m_loadOrderManager.getCurrentLoadOrderProfile();
 
-    // Make sure we are working from a clean slate.
-    deactivateCurrentLoadOrder();
+    bool newLoadOrderIsValid = true;
 
     // Do a first pass over mods to activate to ensure all are present.
     for (auto& modName : reverse(newLoadOrder->mods)) {
@@ -94,18 +86,19 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
         // If mod is nullptr, then we are missing a mod needed for the new
         // load order, so revert to previously current load order and return.
         if (mod == nullptr) {
-            setActiveLoadOrder(currentLoadOrder);
-            return false;
+            newLoadOrderIsValid = false;
         }
     }
 
-    // TODO(Matthew): Build compiled data assets for new load order.
+    // If there was a problem with the new load order, fail and leave.
+    if (!newLoadOrderIsValid) return false;
+
+    // Make sure we are working from a clean slate.
+    deactivateCurrentLoadOrder();
 
     // Given all mods in the new load order are present, activate them.
     for (auto& modName : reverse(newLoadOrder->mods)) {
         const ModBase* mod = getMod(modName);
-
-        mod->startup();
 
         m_activeMods.push_back(mod);
     }
@@ -113,7 +106,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
     // Swap order of active mods to be in priority order.
     std::reverse(m_activeMods.begin(), m_activeMods.end());
 
-    return true;
+    return startup();
 }
 
 bool vmod::ModEnvironmentBase::setActiveLoadOrder(const nString& name) {

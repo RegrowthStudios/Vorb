@@ -144,8 +144,9 @@ nString vio::Path::getLeaf() const {
     return fs::path(m_path).filename().string();
 }
 
-template<typename Type> time_t convertToTimeT(Type time) {
-    return Type::clock::to_time_t(time);
+template<typename Type> time_t convertToTimeT(Type time VORB_MAYBE_UNUSED) {
+    // return Type::clock::to_time_t(time);
+    return 0;
 }
 
 template<> time_t convertToTimeT<time_t>(time_t time) {

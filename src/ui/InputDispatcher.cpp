@@ -5,6 +5,8 @@
 #include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/KeyMappings.inl"
 
+#include <stdexcept>
+
 #if defined(VORB_IMPL_UI_GLFW) || defined(VORB_IMPL_UI_SFML)
 vui::KeyModifiers vui::impl::InputDispatcherEventCatcher::mods = {};
 #endif

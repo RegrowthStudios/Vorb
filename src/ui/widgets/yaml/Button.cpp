@@ -32,7 +32,7 @@ bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const
     } else if (name == "bg_texture") {
         if (keg::getType(value) != keg::NodeType::VALUE) return false;
 
-        nString texturePath = value->data[0].as<nString>();
+        nString texturePath = value->data.as<nString>();
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 
@@ -40,7 +40,7 @@ bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const
     } else if (name == "bg_hover_texture") {
         if (keg::getType(value) != keg::NodeType::VALUE) return false;
 
-        nString texturePath = value->data[0].as<nString>();
+        nString texturePath = value->data.as<nString>();
 
         vg::Texture tex = textureCache->addTexture(texturePath);
 

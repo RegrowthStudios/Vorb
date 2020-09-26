@@ -33,7 +33,7 @@ bool vui::parseIWidgetEntry(keg::ReadContext& context, vui::IWidget* widget, con
     } else if (name == "z_index") {
         if (keg::getType(value) != keg::NodeType::VALUE) return false;
 
-        widget->setZIndex(value->data[0].as<vui::ZIndex>());
+        widget->setZIndex(value->data.as<vui::ZIndex>());
     } else if (name == "dock") {
         vui::Dock dock;
         if (!parseDock(*value, dock)) return false;

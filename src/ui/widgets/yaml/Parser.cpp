@@ -85,7 +85,7 @@
         \********************/
 
         bool vui::parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "none") {
                 textAlign = vg::TextAlign::NONE;
@@ -133,7 +133,7 @@
         \************************/
 
         bool vui::parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "visible") {
                 clippingState = vui::ClippingState::VISIBLE;
@@ -178,7 +178,7 @@
         \********************/
 
         bool vui::parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "none") {
                 dockState = vui::DockState::NONE;
@@ -231,7 +231,7 @@
         \***********************/
 
         bool vui::parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "static_to_window") {
                 positionType = vui::PositionType::STATIC_TO_WINDOW;
@@ -267,7 +267,7 @@
         \************************/
 
         bool vui::parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "pixel") {
                 dimensionType = vui::DimensionType::PIXEL;
@@ -437,10 +437,11 @@
         \*******************/
 
         bool vui::parsePartColor(keg::YAMLNode value, OUT color4& color, size_t offset /*= 0*/) {
-            color.r = value.data[offset + 0].as<ui8>();
-            color.g = value.data[offset + 1].as<ui8>();
-            color.b = value.data[offset + 2].as<ui8>();
-            color.a = value.data[offset + 3].as<ui8>();
+            // This conversion mess is a workaround of YAML-CPP treating all chars as characters only.
+            color.r = (ui8)value.data[offset + 0].as<ui16>();
+            color.g = (ui8)value.data[offset + 1].as<ui16>();
+            color.b = (ui8)value.data[offset + 2].as<ui16>();
+            color.a = (ui8)value.data[offset + 3].as<ui16>();
 
             return true;
         }
@@ -457,7 +458,7 @@
         \***********************/
 
         bool vui::parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType, size_t offset /*= 0*/) {
-            nString name = value.data[offset].as<nString>();
+            nString name = value.data.as<nString>();
 
             if (name == "none") {
                 gradType = vg::GradientType::NONE;

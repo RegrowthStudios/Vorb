@@ -73,11 +73,11 @@ namespace vorb {
             /*!
              * \brief Starts up the mod.
              */
-            virtual bool startup() const = 0;
+            virtual bool startup() const;
             /*!
              * \brief Shuts down the mod.
              */
-            virtual bool shutdown() const = 0;
+            virtual bool shutdown() const;
 
             // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
             /*!
@@ -85,7 +85,7 @@ namespace vorb {
              *
              * \param dt The time since the last frame.
              */
-            virtual void update(f32 dt = 0.0f) const = 0;
+            virtual void update(f32 dt = 0.0f) const;
 
             /*!
              * \brief Deactivates the current load order.
@@ -187,30 +187,6 @@ namespace vorb {
             using ScriptEnvBuilders = std::vector<ScriptEnvBuilder>;
 
             ~ModEnvironment() {
-                // Empty.
-            }
-
-
-            /*!
-             * \brief Starts up the mod.
-             */
-            virtual bool startup() const override {
-                // Empty.
-            }
-            /*!
-             * \brief Shuts down the mod.
-             */
-            virtual bool shutdown() const override {
-                // Empty.
-            }
-
-            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
-            /*!
-             * \brief Run update loop of the mod.
-             *
-             * \param dt The time since the last frame.
-             */
-            virtual void update(f32 dt = 0.0f) const override {
                 // Empty.
             }
 

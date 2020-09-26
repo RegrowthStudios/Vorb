@@ -30,6 +30,7 @@
 #include "Vorb/io/File.h"
 // TODO(Matthew): Enable adding more directories to look in for textures (e.g. so each mod can have its own texture dir / to support layering texture packs).
 #include "Vorb/graphics/TextureCache.h"
+#include "Vorb/ui/UILoader.h"
 #include "Vorb/ui/widgets/Viewport.h"
 #include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/script/ViewScriptEnvironment.h"

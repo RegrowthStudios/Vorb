@@ -1,28 +1,12 @@
-#include "Vorb/graphics/SpriteBatch.h"
-#include "Vorb/io/YAMLImpl.h"
-#include "Vorb/ui/widgets/TextWidget.h"
-
-namespace vorb {
-    namespace ui {
-        /***************\
-         *    Basic    *
-        \***************/
-
-        template <typename Type>
-        bool parseValue(keg::YAMLNode value, OUT Type& parsed) {
-            if (keg::getType(&value) != keg::NodeType::VALUE) return false;
-
-            parsed = value.data[0].as<Type>();
-
-            return true;
-        }
+#include "Vorb/stdafx.h"
+#include "Vorb/ui/widgets/yaml/Parser.h"
 
         /*****************\
          *    Vectors    *
         \*****************/
 
 #define PARSE_VEC2(TYPE)                                        \
-        bool parseVec2(keg::YAMLNode value, OUT TYPE##v2& vec) {    \
+        bool vui::parseVec2(keg::YAMLNode value, OUT TYPE##v2& vec) {    \
             if (keg::getType(&value) != keg::NodeType::SEQUENCE  \
                     || value.data.size() != 2) return false;   \
                                                                 \
@@ -43,8 +27,10 @@ namespace vorb {
         PARSE_VEC2(f32)
         PARSE_VEC2(f64)
 
+#undef PARSE_VEC2
+
 #define PARSE_VEC3(TYPE)                                        \
-        bool parseVec3(keg::YAMLNode value, OUT TYPE##v3& vec) {    \
+        bool vui::parseVec3(keg::YAMLNode value, OUT TYPE##v3& vec) {    \
             if (keg::getType(&value) != keg::NodeType::SEQUENCE  \
                     || value.data.size() != 3) return false;   \
                                                                 \
@@ -66,8 +52,10 @@ namespace vorb {
         PARSE_VEC3(f32)
         PARSE_VEC3(f64)
 
+#undef PARSE_VEC3
+
 #define PARSE_VEC4(TYPE)                                        \
-        bool parseVec4(keg::YAMLNode value, OUT TYPE##v4& vec) {    \
+        bool vui::parseVec4(keg::YAMLNode value, OUT TYPE##v4& vec) {    \
             if (keg::getType(&value) != keg::NodeType::SEQUENCE  \
                     || value.data.size() != 4) return false;   \
                                                                 \
@@ -90,11 +78,13 @@ namespace vorb {
         PARSE_VEC4(f32)
         PARSE_VEC4(f64)
 
+#undef PARSE_VEC4
+
         /********************\
          *    Text Align    *
         \********************/
 
-        bool parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, size_t offset = 0) {
+        bool vui::parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "none") {
@@ -132,7 +122,7 @@ namespace vorb {
             return false;
         }
 
-        bool parseTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign) {
+        bool vui::parseTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartTextAlign(value, textAlign);
@@ -142,7 +132,7 @@ namespace vorb {
          *    Clipping State    *
         \************************/
 
-        bool parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState, size_t offset = 0) {
+        bool vui::parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "visible") {
@@ -159,7 +149,7 @@ namespace vorb {
             return false;
         }
 
-        bool parseClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState) {
+        bool vui::parseClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartClippingState(value, clippingState);
@@ -169,7 +159,7 @@ namespace vorb {
          *    Clipping    *
         \******************/
 
-        bool parseClipping(keg::YAMLNode value, OUT vui::ClippingState* clipping) {
+        bool vui::parseClipping(keg::YAMLNode value, OUT vui::ClippingState* clipping) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 4) return false;
 
@@ -187,7 +177,7 @@ namespace vorb {
          *    Dock State    *
         \********************/
 
-        bool parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState, size_t offset = 0) {
+        bool vui::parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "none") {
@@ -213,7 +203,7 @@ namespace vorb {
             return false;
         }
 
-        bool parseDockState(keg::YAMLNode value, OUT vui::DockState& dockState) {
+        bool vui::parseDockState(keg::YAMLNode value, OUT vui::DockState& dockState) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartDockState(value, dockState);
@@ -223,7 +213,7 @@ namespace vorb {
          *       Dock       *
         \********************/
 
-        bool parseDock(keg::YAMLNode value, OUT vui::Dock& dock) {
+        bool vui::parseDock(keg::YAMLNode value, OUT vui::Dock& dock) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 2) return false;
 
@@ -240,7 +230,7 @@ namespace vorb {
          *    Position Type    *
         \***********************/
 
-        bool parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType, size_t offset = 0) {
+        bool vui::parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "static_to_window") {
@@ -266,7 +256,7 @@ namespace vorb {
             return false;
         }
 
-        bool parsePositionType(keg::YAMLNode value, OUT vui::PositionType& positionType) {
+        bool vui::parsePositionType(keg::YAMLNode value, OUT vui::PositionType& positionType) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartPositionType(value, positionType);
@@ -276,7 +266,7 @@ namespace vorb {
          *    Dimension Type    *
         \************************/
 
-        bool parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType, size_t offset = 0) {
+        bool vui::parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "pixel") {
@@ -335,7 +325,7 @@ namespace vorb {
             return false;
         }
 
-        bool parseDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType) {
+        bool vui::parseDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartDimensionType(value, dimensionType);
@@ -345,7 +335,7 @@ namespace vorb {
          *       Length       *
         \**********************/
 
-        bool parseLength(keg::YAMLNode value, OUT vui::Length& length) {
+        bool vui::parseLength(keg::YAMLNode value, OUT vui::Length& length) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 2) return false;
 
@@ -360,7 +350,7 @@ namespace vorb {
             return true;
         }
 
-        bool parseLength2(keg::YAMLNode value, OUT vui::Length2& length) {
+        bool vui::parseLength2(keg::YAMLNode value, OUT vui::Length2& length) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 4) return false;
 
@@ -379,7 +369,7 @@ namespace vorb {
             return true;
         }
 
-        bool parseLength4(keg::YAMLNode value, OUT vui::Length4& length) {
+        bool vui::parseLength4(keg::YAMLNode value, OUT vui::Length4& length) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 8) return false;
 
@@ -410,12 +400,7 @@ namespace vorb {
          *       Length or Raw      *
         \****************************/
 
-        union LengthOrRaw {
-            vui::Length length;
-            f32         raw;
-        };
-
-        i8 parseLengthOrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
+        i8 vui::parseLengthOrRaw(keg::YAMLNode value, OUT LengthOrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::VALUE) {
                 return parseValue(value, lengthOrRaw.raw) ? 1 : -1;
             } else {
@@ -425,12 +410,7 @@ namespace vorb {
             return -1;
         }
 
-        union Length2OrRaw {
-            vui::Length2 length;
-            f32v2        raw;
-        };
-
-        i8 parseLength2OrRaw(keg::YAMLNode value, OUT Length2OrRaw& lengthOrRaw) {
+        i8 vui::parseLength2OrRaw(keg::YAMLNode value, OUT Length2OrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::SEQUENCE
                     && value.data.size() == 2) {
                 return parseVec2(value, lengthOrRaw.raw) ? 1 : -1;
@@ -441,12 +421,7 @@ namespace vorb {
             return -1;
         }
 
-        union Length4OrRaw {
-            vui::Length4 length;
-            f32v4        raw;
-        };
-
-        i8 parseLength4OrRaw(keg::YAMLNode value, OUT Length4OrRaw& lengthOrRaw) {
+        i8 vui::parseLength4OrRaw(keg::YAMLNode value, OUT Length4OrRaw& lengthOrRaw) {
             if (keg::getType(&value) == keg::NodeType::SEQUENCE
                     && value.data.size() == 4) {
                 return parseVec4(value, lengthOrRaw.raw) ? 1 : -1;
@@ -461,7 +436,7 @@ namespace vorb {
          *      Color      *
         \*******************/
 
-        bool parsePartColor(keg::YAMLNode value, OUT color4& color, size_t offset = 0) {
+        bool vui::parsePartColor(keg::YAMLNode value, OUT color4& color, size_t offset /*= 0*/) {
             color.r = value.data[offset + 0].as<ui8>();
             color.g = value.data[offset + 1].as<ui8>();
             color.b = value.data[offset + 2].as<ui8>();
@@ -470,7 +445,7 @@ namespace vorb {
             return true;
         }
 
-        bool parseColor(keg::YAMLNode value, OUT color4& color) {
+        bool vui::parseColor(keg::YAMLNode value, OUT color4& color) {
             if (keg::getType(&value) != keg::NodeType::SEQUENCE
                     || value.data.size() != 4) return false;
 
@@ -481,7 +456,7 @@ namespace vorb {
          *    Gradient Type    *
         \***********************/
 
-        bool parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType, size_t offset = 0) {
+        bool vui::parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType, size_t offset /*= 0*/) {
             nString name = value.data[offset].as<nString>();
 
             if (name == "none") {
@@ -504,7 +479,7 @@ namespace vorb {
             return false;
         }
 
-        bool parseGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType) {
+        bool vui::parseGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType) {
             if (keg::getType(&value) != keg::NodeType::VALUE) return false;
 
             return parsePartGradientType(value, gradType);
@@ -514,7 +489,7 @@ namespace vorb {
          *    Gradient    *
         \******************/
 
-        bool parseGradient(keg::YAMLNode value, OUT color4& color1, OUT color4& color2, OUT vg::GradientType& gradType) {
+        bool vui::parseGradient(keg::YAMLNode value, OUT color4& color1, OUT color4& color2, OUT vg::GradientType& gradType) {
             if (keg::getType(&value) != keg::NodeType::MAP
                     || value.data.size() != 3) return false;
 
@@ -527,5 +502,3 @@ namespace vorb {
 
             return true;
         }
-    }
-}

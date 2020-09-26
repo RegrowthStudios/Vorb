@@ -3,7 +3,7 @@
 
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/Button.h"
-#include "Vorb/ui/widgets/yaml/helper.hpp"
+#include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/TextWidget.h"
 
 bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {

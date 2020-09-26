@@ -2,7 +2,7 @@
 #include "Vorb/ui/widgets/yaml/Widget.h"
 
 #include "Vorb/ui/widgets/Widget.h"
-#include "Vorb/ui/widgets/yaml/helper.hpp"
+#include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/IWidget.h"
 
 bool vui::parseWidgetEntry(keg::ReadContext& context, vui::Widget* widget, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser) {

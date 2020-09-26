@@ -3,7 +3,7 @@
 
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/WidgetList.h"
-#include "Vorb/ui/widgets/yaml/helper.hpp"
+#include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/Widget.h"
 
 bool vui::parseWidgetListEntry(keg::ReadContext& context, vui::WidgetList* widgetList, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {

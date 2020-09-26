@@ -1,9 +1,7 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/FileOps.h"
 
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+#include "Vorb/io/filesystem.h"
 
 bool vio::buildDirectoryTree(const Path& path, bool omitEnd /*= false*/) {
     if (path.isNull()) return false;

@@ -1,14 +1,23 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/io/File.h"
 
-#include <boost/filesystem/operations.hpp>
+#include "Vorb/io/filesystem.h"
+
 //#include <sha256/sha256sum.h>
 //#include <openssl/sha.h>
 
 #include "Vorb/io/FileOps.h"
 #include "Vorb/io/FileStream.h"
 
-namespace fs = boost::filesystem;
+namespace vorb {
+    namespace io {
+        #if VORB_USE_FILESYSTEM == 0
+            namespace system = boost::system;
+        #else
+            namespace system = std;
+        #endif
+    }
+}
 
 // 16 x 4-wide string for fopen arguments accessed by FileOpenFlags enum
 const cString VORB_IO_FILE_OPEN_ARGS = "\0\0\0\0\0\0\0\0r\0\0\0rb\0\0r+\0\0rb+\0\0\0\0\0\0\0\0\0w\0\0\0wb\0\0w+\0\0wb+\0a\0\0\0ab\0\0a+\0\0ab+\0";
@@ -30,7 +39,7 @@ ui64 vorb::io::File::length() const {
 bool vorb::io::File::resize(const ui64& l) const {
     if (!m_path.isFile()) return false;
     fs::path p(m_path.getString());
-    boost::system::error_code ec;
+    system::error_code ec;
     fs::resize_file(p, l, ec);
     return ec.value() == 0;
 }

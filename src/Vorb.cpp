@@ -1,7 +1,8 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/Vorb.h"
 
-#include <boost/filesystem.hpp>
+#include "Vorb/io/filesystem.h"
+
 #include <enet/enet.h>
 //#include <FreeImage.h>
 #if defined(VORB_IMPL_FONT_SDL)
@@ -62,7 +63,8 @@ namespace vorb {
         }
 
         // Correctly retrieve initial path
-        vio::Path path = boost::filesystem::initial_path().string();
+//        vio::Path path = fs::initial_path().string();
+        vio::Path path = fs::current_path().string(); // Only ever called once so it really is just current path.
 
         // Set the executable directory
 #ifdef VORB_OS_WINDOWS
@@ -80,7 +82,7 @@ namespace vorb {
         vio::IOManager::setExecutableDirectory(path.asCanonical());
 
         // Set the current working directory
-        path = boost::filesystem::current_path().string();
+        path = fs::current_path().string();
         if (!path.isValid()) path = "."; // No other option
         if (path.isValid()) vio::IOManager::setCurrentWorkingDirectory(path.asCanonical());
 

@@ -109,6 +109,52 @@ bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node
 }
 
 
+vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
+    // Check if the filepath given can be resolved.
+    vio::Path path;
+    if (!iom->resolvePath(filepath, path)) return nullptr;
+
+    // Read the file, check something was indeed read in.
+    nString data;
+    iom->readFileToString(path, data);
+    if (data.empty()) return nullptr;
+
+    // Set up a YAML read context.
+    keg::ReadContext context;
+    context.env = keg::getGlobalEnvironment();
+    context.reader.init(data.c_str());
+
+    // TODO(Matthew): Do we want to preferentially pass off to custom parser?
+    // Define a functor that provides both default parsing and, on failure of default parsing, pass off 
+    // to custom parser.
+    auto widgetParser = makeFunctor([&](const nString& type, keg::Node node) {
+        vui::IWidget* widget = parseWidget(context, type, node, customWidgetParser, textureCache);
+
+        if (!widget && customWidgetParser) widget = customWidgetParser->invoke(type, node);
+
+        return widget;
+    });
+
+    // Get first node entry and pass on for parsing as viewport.
+    keg::Node node = context.reader.getFirst();
+
+    // TODO(Matthew): Pretty sure this is wrong, the intent is to ensure there is one string at
+    //                top-level of doc, corresponding to type of top-level widget of tree to be
+    //                generated..
+    if (keg::getType(node) != keg::NodeType::MAP
+                || node->data.size() != 1) return nullptr;
+
+    IWidget* res = nullptr;
+
+    auto handleWidgetParse = makeFunctor([&](Sender, const nString& type, keg::Node node) {
+        res = parseWidget(context, type, node, &widgetParser, textureCache);
+    });
+    context.reader.forAllInMap(node, &handleWidgetParse);
+
+    // Dispose reader and return result.
+    context.reader.dispose();
+    return res;
+}
 
 bool vui::UILoader::loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser /*= nullptr*/) {
     // Check if the filepath given can be resolved.

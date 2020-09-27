@@ -352,6 +352,7 @@ set(vorb_ui
     include/Vorb/ui/MouseInputDispatcher.h
     include/Vorb/ui/ScreenList.h
     include/Vorb/ui/TextInputListener.hpp
+    include/Vorb/ui/UILoader.h
     include/Vorb/ui/UIRenderer.h
     include/Vorb/ui/WindowEventDispatcher.h
     include/Vorb/ui/widgets/Button.h
@@ -365,6 +366,17 @@ set(vorb_ui
     include/Vorb/ui/widgets/Viewport.h
     include/Vorb/ui/widgets/Widget.h
     include/Vorb/ui/widgets/WidgetList.h
+    include/Vorb/ui/widgets/yaml/Button.h
+    include/Vorb/ui/widgets/yaml/CheckBox.h
+    include/Vorb/ui/widgets/yaml/ComboBox.h
+    include/Vorb/ui/widgets/yaml/IWidget.h
+    include/Vorb/ui/widgets/yaml/Label.h
+    include/Vorb/ui/widgets/yaml/Panel.h
+    include/Vorb/ui/widgets/yaml/Parser.h
+    include/Vorb/ui/widgets/yaml/Slider.h
+    include/Vorb/ui/widgets/yaml/TextWidget.h
+    include/Vorb/ui/widgets/yaml/Widget.h
+    include/Vorb/ui/widgets/yaml/WidgetList.h
 #source
     src/ui/Drawables.cpp
     src/ui/FocusController.cpp
@@ -374,6 +386,7 @@ set(vorb_ui
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
     src/ui/ScreenList.cpp
+    src/ui/UILoader.cpp
     src/ui/UIRenderer.cpp
     src/ui/widgets/Button.cpp
     src/ui/widgets/CheckBox.cpp
@@ -386,6 +399,17 @@ set(vorb_ui
     src/ui/widgets/Viewport.cpp
     src/ui/widgets/Widget.cpp
     src/ui/widgets/WidgetList.cpp
+    src/ui/widgets/yaml/Button.cpp
+    src/ui/widgets/yaml/CheckBox.cpp
+    src/ui/widgets/yaml/ComboBox.cpp
+    src/ui/widgets/yaml/IWidget.cpp
+    src/ui/widgets/yaml/Label.cpp
+    src/ui/widgets/yaml/Panel.cpp
+    src/ui/widgets/yaml/Parser.cpp
+    src/ui/widgets/yaml/Slider.cpp
+    src/ui/widgets/yaml/TextWidget.cpp
+    src/ui/widgets/yaml/Widget.cpp
+    src/ui/widgets/yaml/WidgetList.cpp
 )
 
 if(VORB_USE_SCRIPTING)

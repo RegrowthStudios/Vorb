@@ -30,6 +30,7 @@
 #include "Vorb/io/File.h"
 // TODO(Matthew): Enable adding more directories to look in for textures (e.g. so each mod can have its own texture dir / to support layering texture packs).
 #include "Vorb/graphics/TextureCache.h"
+#include "Vorb/ui/UILoader.h"
 #include "Vorb/ui/widgets/Viewport.h"
 #include "Vorb/ui/widgets/Widget.h"
 #include "Vorb/ui/script/ViewScriptEnvironment.h"
@@ -53,7 +54,6 @@ namespace vorb {
             ViewScriptEnvironment<ScriptEnvironmentImpl>* viewEnv;
         };
 
-        // TODO(Matthew): Make a non-scripted version.
         template <typename ScriptEnvironmentImpl>
         class ScriptedUI {
         public:
@@ -75,11 +75,12 @@ namespace vorb {
              *
              * \param ownerScreen The screen that owns this scripted UI.
              * \param window The game window this UI will be rendered to.
+             * \param iom The IO manager to use for file handling.
              * \param textureCache The cache to use for textures used by this UI.
              * \param defaultFont The default font for views to use.
              * \param spriteBatch The spritebatch for view renderers to use.
              */
-            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*!
              * \brief Disposes the managed views and resets pointers.
              */
@@ -259,6 +260,10 @@ namespace vorb {
         protected:
             VORB_NON_COPYABLE(ScriptedUI);
 
+            // TODO(Matthew): It seems to me that this is rather stupid, we essentially end up with each UI
+            //                able to create other UI but each ends up with its own script environment, and,
+            //                at least as implemented, we don't give any other script the ability to create
+            //                any UI.
             virtual void prepareScriptEnv(ViewEnv* viewEnv);
 
             vui::IGameScreen* m_ownerScreen;  ///< The screen that owns this UI.
@@ -267,6 +272,7 @@ namespace vorb {
             vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
             vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
             vg::TextureCache* m_textureCache; ///< Cache for UI-related textures.
+            vio::IOManager*   m_iom;          ///< IO Manager for getting necessary YAML files.
         };
     }
 }
@@ -286,9 +292,10 @@ vui::ScriptedUI<ScriptEnvironmentImpl>::~ScriptedUI() {
 }
 
 template <typename ScriptEnvironmentImpl>
-void vui::ScriptedUI<ScriptEnvironmentImpl>::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::ScriptedUI<ScriptEnvironmentImpl>::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
     m_ownerScreen  = ownerScreen;
     m_window       = window;
+    m_iom          = iom;
     m_textureCache = textureCache;
     m_defaultFont  = defaultFont;
     m_spriteBatch  = spriteBatch;
@@ -374,10 +381,15 @@ vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromScript(nStrin
 }
 
 template <typename ScriptEnvironmentImpl>
-vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath VORB_UNUSED) {
+vui::Viewport* vui::ScriptedUI<ScriptEnvironmentImpl>::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath) {
     ScriptedView<ScriptEnvironmentImpl> view = makeView(name, zIndex);
 
-    // TODO(Matthew): Implement building view from YAML.
+    if (!UILoader::loadFromYAML(m_iom, filepath.c_str(), m_textureCache, view.viewport)) {
+        destroyView(view.viewport);
+
+        view.viewport = nullptr;
+        view.viewEnv  = nullptr;
+    }
 
     return view.viewport;
 }
@@ -521,6 +533,9 @@ void vui::ScriptedUI<ScriptEnvironmentImpl>::prepareScriptEnv(ViewEnv* viewEnv) 
     env->setNamespaces("UI");
     env->addCDelegate("makeViewFromScript",  makeDelegate(this, &ScriptedUI::makeViewFromScript));
     env->addCDelegate("makeViewFromYAML",    makeDelegate(this, &ScriptedUI::makeViewFromYAML));
+    env->addCDelegate("makeWidgetFromYAML", makeFunctor([=](nString filepath) {
+        return UILoader::loadWidgetFromYAML(m_iom, filepath.c_str(), m_textureCache);
+    }));
     env->addCDelegate("enableView",          makeDelegate(this, &ScriptedUI::enableView));
     env->addCDelegate("enableViewWithName",  makeDelegate(this, &ScriptedUI::enableViewWithName));
     env->addCDelegate("disableView",         makeDelegate(this, &ScriptedUI::disableView));

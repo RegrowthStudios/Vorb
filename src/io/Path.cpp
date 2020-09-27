@@ -216,7 +216,7 @@ nString vio::Path::getExtension() const {
 //                last write times to time_t... We have to somehow deal with this, the easiest
 //                may be to finally give up on boost filesystem and in extension some older
 //                VS/GCC/Clang versions.
-template<typename Type> time_t convertToTimeT(Type time) {
+template<typename Type> time_t convertToTimeT(Type time VORB_MAYBE_UNUSED) {
     //return Type::clock::to_time_t(time);
     return 0;
 }

@@ -24,6 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/ui/script/ViewScriptContext.hpp"
 
 #include <unordered_map>
 
@@ -72,7 +73,9 @@ namespace vorb {
                 // Empty.
             }
 
-            void prepareScriptEnv(ScriptEnvironment* scriptEnv);
+            static void prepareScriptEnv(ScriptEnvironment* scriptEnv) {
+                ViewScriptContext::injectInto(scriptEnv);
+            }
         };
 
         template <typename ScriptEnvironment>

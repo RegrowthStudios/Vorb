@@ -72,10 +72,15 @@ void vui::IWidget::dispose() {
     }
     IWidgets().swap(m_widgets);
 
-//cant call this as it will invalidate the m_widgets vector of parent and crash
-//    if (m_parent) {
-//        m_parent->removeWidget(this);
-//    }
+    std::vector<bool>().swap(m_widgetInvalidation);
+
+    // Can't just remove as it would invalidate any iterators in use of parent's widget collection.
+    // This is being extra cautious and in principle we could require the head widget of a tree to be disposed
+    // would be first pruned from any full UI tree it is a part of.
+    m_parent->markChildForRemoval(this);
+    m_parent = nullptr;
+
+    m_viewport = nullptr;
 
     disable();
 }
@@ -141,6 +146,7 @@ bool vui::IWidget::addWidget(IWidget* child) {
     if (child->m_parent) return false;
 
     m_widgets.push_back(child);
+    m_widgetInvalidation.push_back(false);
 
     child->m_parent   = this;
     child->m_viewport = m_viewport;
@@ -187,25 +193,32 @@ bool vui::IWidget::addWidget(IWidget* child) {
 bool vui::IWidget::removeWidget(IWidget* child) {
     for (auto it = m_widgets.begin(); it != m_widgets.end(); it++) {
         if (*it == child) {
-            m_widgets.erase(it);
-
-            child->m_parent   = nullptr;
-            child->m_viewport = nullptr;
-
-            child->updateDescendantViewports();
-
-            m_clipRect = DEFAULT_CLIP_RECT;
-
-            child->m_flags.needsDimensionUpdate       = true;
-            child->m_flags.needsDockRecalculation     = true;
-            child->m_flags.needsClipRectRecalculation = true;
-
-            m_flags.needsDockRecalculation = true;
-
-            return true;
+            return removeWidget(it);
         }
     }
     return false;
+}
+
+bool vui::IWidget::removeWidget(IWidgets::iterator it) {
+    IWidget* child = *it;
+
+    m_widgets.erase(it);
+    m_widgetInvalidation.erase(m_widgetInvalidation.begin() + (it - m_widgets.begin()));
+
+    child->m_parent   = nullptr;
+    child->m_viewport = nullptr;
+
+    child->updateDescendantViewports();
+
+    m_clipRect = DEFAULT_CLIP_RECT;
+
+    child->m_flags.needsDimensionUpdate       = true;
+    child->m_flags.needsDockRecalculation     = true;
+    child->m_flags.needsClipRectRecalculation = true;
+
+    m_flags.needsDockRecalculation = true;
+
+    return true;
 }
 
 bool vui::IWidget::isInBounds(f32 x, f32 y) const {
@@ -518,6 +531,29 @@ void vui::IWidget::setIgnoreOffset(bool ignoreOffset) {
     m_flags.ignoreOffset = ignoreOffset;
 
     m_flags.needsDimensionUpdate = true;
+}
+
+void vui::IWidget::markChildForRemoval(IWidget* child) {
+    auto it = std::find(m_widgets.begin(), m_widgets.end(), child);
+
+    if (it == m_widgets.end()) return;
+
+    m_widgetInvalidation[it - m_widgets.begin()] = true;
+}
+
+void vui::IWidget::checkForRemovals() {
+    // Move all widgets to be removed to end.
+    IWidgets::iterator newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidgets::iterator it) {
+        return m_widgetInvalidation[it - m_widgets.begin()];
+    });
+
+    // Iterate backwards over all widgets removing all to be removed.
+    for (auto it = m_widgets.end(); it != newEndIt - 1; --it) {
+        removeWidget(it);
+    }
+
+    // Reset widget invalidation vector.
+    std::vector<bool>(m_widgets.size(), false).swap(m_widgetInvalidation);
 }
 
 void vui::IWidget::updateDescendants(f32 dt) {

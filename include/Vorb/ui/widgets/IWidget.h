@@ -172,6 +172,12 @@ namespace vorb {
             * \return true on success.
             */
             virtual bool removeWidget(IWidget* child);
+            /*! \brief Unchilds a child widget of this widget.
+            *
+            * \param it: Iterator to the widget to remove.
+            * \return True on success.
+            */
+            virtual bool removeWidget(IWidgets::iterator it);
 
             /*! \brief Checks if a point is inside the container
              *
@@ -290,6 +296,18 @@ namespace vorb {
             virtual void initBase() { /* Empty */ }
 
             /*!
+             * \brief Marks the given child as for removal on next update.
+             *
+             * \param child: The child to mark for removal.
+             */
+            virtual void markChildForRemoval(IWidget* child);
+
+            /*!
+             * \brief Checks for any children marked for removal and handles the removal.
+             */
+            virtual void checkForRemovals();
+
+            /*!
              * \brief Updates descendant widgets.
              *
              * \param dt: Change in time since last update.
@@ -354,6 +372,7 @@ namespace vorb {
             Viewport*         m_viewport;    ///< Viewport this widget resides in.
             IWidget*          m_parent;      ///< Parent widget.
             IWidgets          m_widgets;     ///< Collection of child widgets.
+            std::vector<bool> m_widgetInvalidation; ///< Collection of flags for whether a child needs disposing since last update.
             f32v2             m_position;    ///< Position of widget relative to window in pixels.
             f32v2             m_size;        ///< Size of the widget in pixels.
             f32v4             m_padding;     ///< Padding of the widget in pixels.

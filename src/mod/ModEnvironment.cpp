@@ -46,7 +46,7 @@ bool vmod::ModEnvironmentBase::shutdown() {
 }
 
 void vmod::ModEnvironmentBase::update(f32 dt /*= 0.0f*/) {
-    for (auto& mod : m_activeMods) {
+    for (auto& mod : reverse(m_activeMods)) {
         mod->update(dt);
     }
 }

@@ -77,11 +77,11 @@ namespace vorb {
             /*!
              * \brief Starts up the mod.
              */
-            virtual bool startup() const = 0;
+            virtual bool startup();
             /*!
              * \brief Shuts down the mod.
              */
-            virtual bool shutdown() const = 0;
+            virtual bool shutdown();
 
             // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
             /*!
@@ -89,7 +89,7 @@ namespace vorb {
              *
              * \param dt The time since the last frame.
              */
-            virtual void update(f32 dt = 0.0f) const = 0;
+            virtual void update(f32 dt = 0.0f);
 
             /*! \return A reference to the mod metadata.
              */
@@ -102,6 +102,8 @@ namespace vorb {
                 return m_modDir;
             }
 
+            Event<> OnStartup;
+            Event<> OnShutdown;
             Event<f32> OnUpdate;
         protected:
             ModMetadata m_metadata; ///< Metadata of mod, such as name, author, etc.
@@ -148,6 +150,8 @@ namespace vorb {
                 ModBase::init(metadata, modDir, dataAssetIOManager);
 
                 m_scriptEnv = scriptEnv;
+
+                // TODO(Matthew): Load in entry points script & YAML.
             }
             /*!
              * \brief Disposes of the mod.
@@ -160,30 +164,6 @@ namespace vorb {
                 ModBase::dispose();
             }
 
-            // TODO(Matthew): Determine start up and shut down processes for mods.
-            //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
-            /*!
-             * \brief Starts up the mod.
-             */
-            virtual bool startup() const override {
-                return true;
-            }
-            /*!
-             * \brief Shuts down the mod.
-             */
-            virtual bool shutdown() const override {
-                return true;
-            }
-
-            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
-            /*!
-             * \brief Run update loop of the mod.
-             *
-             * \param dt The time since the last frame.
-             */
-            virtual void update(f32 dt = 0.0f) const override {
-                // Empty.
-            }
         protected:
             ScriptEnvironment* m_scriptEnv;
         };
@@ -200,33 +180,19 @@ namespace vorb {
                 // Empty.
             }
 
-            // TODO(Matthew): Determine start up and shut down processes for mods.
-            //                    For scripted this will be a bit more obvious, but YAML this may still be TBD.
             /*!
-             * \brief Starts up the mod.
+             * \brief Initialises the mod, setting up necessary data.
              *
-             * \return True if successfully started, false otherwise.
-             */
-            virtual bool startup() const override {
-                return true;
-            }
-            /*!
-             * \brief Shuts down the mod.
+             * \param metadata: The metadata of the mod.
+             * \param modDir: The directory of the mod.
+             * \param dataAssetIOManager: The data asset IO manager to be used for read operations.
              *
-             * \return True if successfully shutdown, false otherwise.
+             * \return True if the mod was correctly initialised, false otherwise.
              */
-            virtual bool shutdown() const override {
-                return true;
-            }
+            virtual void init(ModMetadata metadata, const vio::Path& modDir, const DataAssetIOManager* dataAssetIOManager) override {
+                ModBase::init(metadata, modDir, dataAssetIOManager);
 
-            // TODO(Matthew): Once we implement mod timing, we may find a mod is forced to skip frames. We will need to accumulate dt in that case, maybe do other things.
-            /*!
-             * \brief Run update loop of the mod.
-             *
-             * \param dt: The time since the last frame.
-             */
-            virtual void update(f32 dt = 0.0f) const override {
-                // Empty.
+                // TODO(Matthew): Load in entry points script & YAML.
             }
         };
 

@@ -28,10 +28,30 @@ void vmod::ModBase::init(ModMetadata metadata, const vio::Path& modDir, const Da
     m_ioManager.setModDirectory(modDir);
     m_ioManager.setDataAssetIOManager(dataAssetIOManager);
     m_metadata = metadata;
+
+    OnStartup.setSender(this);
+    OnShutdown.setSender(this);
+    OnUpdate.setSender(this);
 }
 
 void vmod::ModBase::dispose() {
     m_ioManager = ModIOManager();
     m_isStarted = false;
     m_metadata = NULL_METADATA;
+
+    OnStartup = Event<>();
+    OnShutdown = Event<>();
+    OnUpdate = Event<f32>();
+}
+
+bool vmod::ModBase::startup() {
+    OnStartup();
+}
+
+bool vmod::ModBase::shutdown() {
+    OnShutdown();
+}
+
+void vmod::ModBase::update(f32 dt /*= 0.0f*/) {
+    OnUpdate(dt);
 }

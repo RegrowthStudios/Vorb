@@ -31,7 +31,7 @@ void vmod::ModEnvironmentBase::dispose() {
     m_loadOrderManager.dispose();
 }
 
-bool vmod::ModEnvironmentBase::startup() const {
+bool vmod::ModEnvironmentBase::startup() {
     // Need to iterate backwards over active mods for startup, as we
     // want to start lowest-priority mods first.
     for (auto& mod : reverse(m_activeMods)) {
@@ -39,13 +39,13 @@ bool vmod::ModEnvironmentBase::startup() const {
     }
 }
 
-bool vmod::ModEnvironmentBase::shutdown() const {
+bool vmod::ModEnvironmentBase::shutdown() {
     for (auto& mod : m_activeMods) {
         mod->shutdown();
     }
 }
 
-void vmod::ModEnvironmentBase::update(f32 dt /*= 0.0f*/) const {
+void vmod::ModEnvironmentBase::update(f32 dt /*= 0.0f*/) {
     for (auto& mod : m_activeMods) {
         mod->update(dt);
     }

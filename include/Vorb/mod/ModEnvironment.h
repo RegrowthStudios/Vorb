@@ -147,10 +147,10 @@ namespace vorb {
              *
              * \return Pointer to the named mod if found, nullptr if no matching mod found.
              */
-            const ModBase* getMod(const nString& name) const;
+            ModBase* getMod(const nString& name) const;
             /*! \return A reference to the active mods.
              */
-            const ModBaseConstPtrs& getActiveMods() const { return m_activeMods; }
+            const ModBasePtrs& getActiveMods() const { return m_activeMods; }
             /*!
              * \brief Get the named active mod.
              *
@@ -158,7 +158,7 @@ namespace vorb {
              *
              * \return Pointer to the named active mod if found, nullptr if no matching active mod found.
              */
-            const ModBase* getActiveMod(const nString& name) const;
+            ModBase* getActiveMod(const nString& name) const;
 
             /*! \brief Discovers all mods available to the environment.
              */
@@ -176,7 +176,7 @@ namespace vorb {
             vio::Path m_modDir; ///< The directory in which installed mods are located.
 
             ModBasePtrs m_mods; ///< List of all mods the environment is aware of.
-            ModBaseConstPtrs m_activeMods; ///< List of all active mods according to the current load order.
+            ModBasePtrs m_activeMods; ///< List of all active mods according to the current load order.
         };
 
         template <typename ScriptEnvironment>

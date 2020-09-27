@@ -65,7 +65,7 @@ bool vmod::ModEnvironmentBase::deactivateCurrentLoadOrder() {
 
     m_loadOrderManager.setCurrentLoadOrderProfile(nullptr);
 
-    ModBaseConstPtrs().swap(m_activeMods);
+    ModBasePtrs().swap(m_activeMods);
 
     return true;
 }
@@ -98,7 +98,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
 
     // Given all mods in the new load order are present, activate them.
     for (auto& modName : reverse(newLoadOrder->mods)) {
-        const ModBase* mod = getMod(modName);
+        ModBase* mod = getMod(modName);
 
         m_activeMods.push_back(mod);
     }
@@ -115,7 +115,7 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const nString& name) {
     return setActiveLoadOrder(newLoadOrder);
 }
 
-const vmod::ModBase* vmod::ModEnvironmentBase::getMod(const nString& name) const {
+vmod::ModBase* vmod::ModEnvironmentBase::getMod(const nString& name) const {
     for (auto& mod : m_mods) {
         if (mod->getModMetadata().name == name) {
             return mod;
@@ -125,7 +125,7 @@ const vmod::ModBase* vmod::ModEnvironmentBase::getMod(const nString& name) const
     return nullptr;
 }
 
-const vmod::ModBase* vmod::ModEnvironmentBase::getActiveMod(const nString& name) const {
+vmod::ModBase* vmod::ModEnvironmentBase::getActiveMod(const nString& name) const {
     for (auto& mod : m_activeMods) {
         if (mod->getModMetadata().name == name) {
             return mod;

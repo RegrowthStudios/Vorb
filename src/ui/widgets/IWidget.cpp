@@ -41,7 +41,7 @@ vui::IWidget::IWidget(const IWidget& widget) :
 }
 
 vui::IWidget::~IWidget() {
-    // Empty
+    dispose(true);
 }
 
 void vui::IWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
@@ -66,13 +66,15 @@ void vui::IWidget::init(IWidget* parent, const nString& name, const f32v4& dimen
     parent->addWidget(this);
 }
 
-void vui::IWidget::dispose() {
-    for (auto& w : m_widgets) {
-        w->dispose();
+void vui::IWidget::dispose(bool thisOnly /*= false*/) {
+    if (!thisOnly) {
+        for (auto& w : m_widgets) {
+            w->dispose();
+        }
     }
     IWidgets().swap(m_widgets);
 
-    std::vector<bool>().swap(m_widgetInvalidation);
+    ChildStates().swap(m_widgetStates);
 
     // Can't just remove as it would invalidate any iterators in use of parent's widget collection.
     // This is being extra cautious and in principle we could require the head widget of a tree to be disposed
@@ -82,10 +84,28 @@ void vui::IWidget::dispose() {
 
     m_viewport = nullptr;
 
-    disable();
+    disable(thisOnly);
+}
+
+void vui::IWidget::markChildForRemoval(IWidget* child) {
+    auto it = std::find(m_widgets.begin(), m_widgets.end(), child);
+
+    if (it == m_widgets.end()) return;
+
+    m_widgetStates[it - m_widgets.begin()] = ChildState::REMOVE;
+}
+
+void vui::IWidget::markChildAsDeleted(IWidget* child) {
+    auto it = std::find(m_widgets.begin(), m_widgets.end(), child);
+
+    if (it == m_widgets.end()) return;
+
+    m_widgetStates[it - m_widgets.begin()] = ChildState::REMOVE_DELETED;
 }
 
 void vui::IWidget::update(f32 dt /*= 0.0f*/) {
+    checkForRemovals();
+
     if (m_flags.needsZIndexReorder) {
         m_flags.needsZIndexReorder = false;
         reorderWidgets();
@@ -128,7 +148,7 @@ void vui::IWidget::enable() {
     for (auto& w : m_widgets) w->enable();
 }
 
-void vui::IWidget::disable() {
+void vui::IWidget::disable(bool thisOnly /*= false*/) {
     if (m_flags.isEnabled) {
         m_flags.isEnabled = false;
         vui::InputDispatcher::mouse.onButtonDown -= makeDelegate(this, &IWidget::onMouseDown);
@@ -138,15 +158,17 @@ void vui::IWidget::disable() {
     }
     m_flags.isClicking = false;
 
-    // Disable all children
-    for (auto& w : m_widgets) w->disable();
+    if (!thisOnly) {
+        // Disable all children
+        for (auto& w : m_widgets) w->disable();
+    }
 }
 
 bool vui::IWidget::addWidget(IWidget* child) {
     if (child->m_parent) return false;
 
     m_widgets.push_back(child);
-    m_widgetInvalidation.push_back(false);
+    m_widgetStates.push_back(ChildState::VALID);
 
     child->m_parent   = this;
     child->m_viewport = m_viewport;
@@ -203,7 +225,7 @@ bool vui::IWidget::removeWidget(IWidgets::iterator it) {
     IWidget* child = *it;
 
     m_widgets.erase(it);
-    m_widgetInvalidation.erase(m_widgetInvalidation.begin() + (it - m_widgets.begin()));
+    m_widgetStates.erase(m_widgetStates.begin() + (it - m_widgets.begin()));
 
     child->m_parent   = nullptr;
     child->m_viewport = nullptr;
@@ -533,18 +555,10 @@ void vui::IWidget::setIgnoreOffset(bool ignoreOffset) {
     m_flags.needsDimensionUpdate = true;
 }
 
-void vui::IWidget::markChildForRemoval(IWidget* child) {
-    auto it = std::find(m_widgets.begin(), m_widgets.end(), child);
-
-    if (it == m_widgets.end()) return;
-
-    m_widgetInvalidation[it - m_widgets.begin()] = true;
-}
-
 void vui::IWidget::checkForRemovals() {
     // Move all widgets to be removed to end.
     IWidgets::iterator newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidgets::iterator it) {
-        return m_widgetInvalidation[it - m_widgets.begin()];
+        return m_widgetStates[it - m_widgets.begin()] != ChildState::VALID;
     });
 
     // Iterate backwards over all widgets removing all to be removed.
@@ -553,7 +567,7 @@ void vui::IWidget::checkForRemovals() {
     }
 
     // Reset widget invalidation vector.
-    std::vector<bool>(m_widgets.size(), false).swap(m_widgetInvalidation);
+    ChildStates(m_widgets.size(), ChildState::VALID).swap(m_widgetStates);
 }
 
 void vui::IWidget::updateDescendants(f32 dt) {

@@ -40,6 +40,13 @@ namespace vorb {
         struct WindowResizeEvent;
         class Widget;
 
+        enum class ChildState {
+            VALID = 0,
+            REMOVE,
+            REMOVE_DELETED
+        };
+        using ChildStates = std::vector<ChildState>;
+
         //! Enum of clipping states.
         enum class ClippingState {
             VISIBLE = 0,
@@ -145,9 +152,24 @@ namespace vorb {
 
             /*! \brief Releases all resources used by the Widget.
              *
+             * \param thisOnly: Whether to dispose only this widget and not its children.
+             *
              * Gets called in the destructor.
              */
-            virtual void dispose();
+            virtual void dispose(bool thisOnly = false);
+
+            /*!
+             * \brief Marks the given child as for removal on next update.
+             *
+             * \param child: The child to mark for removal.
+             */
+            virtual void markChildForRemoval(IWidget* child);
+            /*!
+             * \brief Marks the given child as deleted and up for removal on next update.
+             *
+             * \param child: The deleted child to mark for removal.
+             */
+            virtual void markChildAsDeleted(IWidget* child);
 
             /*! \brief Updates the widget. Can be used for animation.
             *
@@ -158,7 +180,7 @@ namespace vorb {
             /*! \brief Enables events that all widgets share in common. */
             virtual void enable();
             /*! \brief Disables events that all widgets share in common. */
-            virtual void disable();
+            virtual void disable(bool thisOnly = false);
 
             /*! \brief Childs another widget to this widget.
              *
@@ -296,13 +318,6 @@ namespace vorb {
             virtual void initBase() { /* Empty */ }
 
             /*!
-             * \brief Marks the given child as for removal on next update.
-             *
-             * \param child: The child to mark for removal.
-             */
-            virtual void markChildForRemoval(IWidget* child);
-
-            /*!
              * \brief Checks for any children marked for removal and handles the removal.
              */
             virtual void checkForRemovals();
@@ -369,19 +384,19 @@ namespace vorb {
             /************************************************************************/
             /* Members                                                              */
             /************************************************************************/
-            Viewport*         m_viewport;    ///< Viewport this widget resides in.
-            IWidget*          m_parent;      ///< Parent widget.
-            IWidgets          m_widgets;     ///< Collection of child widgets.
-            std::vector<bool> m_widgetInvalidation; ///< Collection of flags for whether a child needs disposing since last update.
-            f32v2             m_position;    ///< Position of widget relative to window in pixels.
-            f32v2             m_size;        ///< Size of the widget in pixels.
-            f32v4             m_padding;     ///< Padding of the widget in pixels.
-            Clipping          m_clipping;    ///< Clipping rules to use for generating the clip rectangle.
-            f32v4             m_clipRect;    ///< Clipping rectangle for rendering.
-            ZIndex            m_zIndex;      ///< Z-index of widget.
-            Dock              m_dock;        ///< Information for docking of widget.
-            nString           m_name;        ///< Display name of the container.
-            f32v2             m_childOffset; ///< Apply this offset to all child widgets' positions.
+            Viewport*   m_viewport;    ///< Viewport this widget resides in.
+            IWidget*    m_parent;      ///< Parent widget.
+            IWidgets    m_widgets;     ///< Collection of child widgets.
+            ChildStates m_widgetStates; ///< Collection of flags for whether a child needs disposing since last update.
+            f32v2       m_position;    ///< Position of widget relative to window in pixels.
+            f32v2       m_size;        ///< Size of the widget in pixels.
+            f32v4       m_padding;     ///< Padding of the widget in pixels.
+            Clipping    m_clipping;    ///< Clipping rules to use for generating the clip rectangle.
+            f32v4       m_clipRect;    ///< Clipping rectangle for rendering.
+            ZIndex      m_zIndex;      ///< Z-index of widget.
+            Dock        m_dock;        ///< Information for docking of widget.
+            nString     m_name;        ///< Display name of the container.
+            f32v2       m_childOffset; ///< Apply this offset to all child widgets' positions.
 
             WidgetFlags m_flags;
         public:

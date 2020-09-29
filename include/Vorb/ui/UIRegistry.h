@@ -24,6 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/ui/NewUI.h"
 #include "Vorb/ui/script/ViewScriptContext.hpp"
 
 #include <unordered_map>
@@ -46,7 +47,6 @@ namespace vorb {
             void init();
             void dispose();
 
-            // TODO(Matthew): Implement a UIBase class for UI & ScriptedUI.
             bool registerUI(const nString& name, UIBase* ui);
             bool registerUI(std::pair<nString, UIBase*>&& ui);
 
@@ -73,8 +73,16 @@ namespace vorb {
                 // Empty.
             }
 
-            static void prepareScriptEnv(ScriptEnvironment* scriptEnv) {
+            void prepareScriptEnv(ScriptEnvironment* scriptEnv) {
+                injectUIScriptContext(scriptEnv);
+
                 ViewScriptContext::injectInto(scriptEnv);
+
+                scriptEnv->setNamespace("UI");
+                scriptEnv->addCDelegate("getUI", makeFunctor([&](nString name) {
+                    return getUI(name);
+                }));
+                scriptEnv->setNamespaces();
             }
         };
 

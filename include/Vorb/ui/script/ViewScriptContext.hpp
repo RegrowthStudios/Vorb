@@ -28,7 +28,7 @@
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/io/File.h"
 #include "Vorb/script/IEnvironment.hpp"
-#include "Vorb/ui/IWidget.h"
+#include "Vorb/ui/widgets/IWidget.h"
 #include "Vorb/ui/script/ButtonScriptFuncs.h"
 #include "Vorb/ui/script/CheckBoxScriptFuncs.h"
 #include "Vorb/ui/script/ComboBoxScriptFuncs.h"

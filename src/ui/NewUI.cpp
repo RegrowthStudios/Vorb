@@ -2,7 +2,6 @@
 #include "Vorb/ui/NewUI.h"
 
 #include "Vorb/ui/UILoader.h"
-#include "Vorb/ui/widgets/Viewport.h"
 
 vui::UIBase::UIBase() :
     m_ownerScreen(nullptr),

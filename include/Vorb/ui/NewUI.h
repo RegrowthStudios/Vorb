@@ -27,6 +27,7 @@
 
 #include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
+#include "Vorb/ui/widgets/Viewport.h"
 
 DECL_VG(class FontCache; class TextureCache; class SpriteBatch)
 DECL_VIO(class IOManagerBase)
@@ -112,11 +113,11 @@ namespace vorb {
              *
              * \param name The name of the new view.
              * \param zIndex The z-index of the new view.
-             * \param filepath The path to the script to begin building from.
+             * \param filepath The path to the YAML file to begin building from.
              *
              * \return A pointer to the viewport of the constructed view.
              */
-            Viewport* makeViewFromYAML(nString name, ZIndex zIndex, nString filepath);
+            Viewport* makeViewFromYAML(const nString& name, ZIndex zIndex, const nString& filepath);
 
             /*!
              * \brief Gets the named view.
@@ -125,7 +126,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
              */
-            Viewport* getView(nString name);
+            Viewport* getView(const nString& name);
 
 
             /*!
@@ -143,7 +144,7 @@ namespace vorb {
              *
              * \return True if the view was destroyed, false otherwise.
              */
-            bool destroyViewWithName(nString name);
+            bool destroyViewWithName(const nString& name);
 
             /*!
              * \brief Sets a new z-index value for the pointed-to view.
@@ -158,7 +159,7 @@ namespace vorb {
              *
              * \return True if named view's' z-index updated, false otherwise.
              */
-            bool setViewWithNameZIndex(nString name, ZIndex zIndex);
+            bool setViewWithNameZIndex(const nString& name, ZIndex zIndex);
 
             Event<f32> PreUpdate;
             Event<f32> PostUpdate;
@@ -194,9 +195,60 @@ namespace vorb {
         class UI<ScriptEnvironment,
                     typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
             : public UIBase {
+        public:
+            /*!
+             * \brief Creates a new view in this UI from the named script.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param filepath The path to the script to begin building from.
+             *
+             * \return A pointer to the viewport of the constructed view.
+             */
+            Viewport* makeViewFromScript(const nString& name, ZIndex zIndex, const nString& filepath) {
+                Viewport* view = makeView(name, zIndex);
 
+                ScriptEnvironment scriptEnv;
+                scriptEnv.init();
+
+                ViewScriptContext::injectInto(scriptEnv);
+
+                scriptEnv->setNamespaces("UI", "View");
+                scriptEnv->addValue("port", view);
+                scriptEnv->setNamespaces();
+
+                scriptEnv->run(vio::Path(filepath));
+            }
         };
 
+        namespace UIScriptContext {
+            template <typename ScriptEnvironment>
+            void injectUIScriptContext(ScriptEnvironment* env) {
+                env->setNamespaces("UI");
+                env->addCDelegate("makeView", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
+                    return ui->makeView(name, zIndex);
+                }));
+                env->addCDelegate("makeViewFromYAML", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex, nString filepath) {
+                    return ui->makeViewFromYAML(name, zIndex, filepath);
+                }));
+                env->addCDelegate("getView", makeFunctor([](UIBase* ui, nString name) {
+                    return ui->getView(name);
+                }));
+                env->addCDelegate("destroyView", makeFunctor([](UIBase* ui, Viewport* view) {
+                    return ui->destroyView(view);
+                }));
+                env->addCDelegate("destroyViewWithName", makeFunctor([](UIBase* ui, nString name) {
+                    return ui->destroyViewWithName(name);
+                }));
+                env->addCDelegate("setViewZIndex", makeFunctor([](UIBase* ui, Viewport* view, ZIndex zIndex) {
+                    return ui->setViewZIndex(view, zIndex);
+                }));
+                env->addCDelegate("setViewZIndexWithName", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
+                    return ui->setViewZIndexWithName(name, zIndex);
+                }));
+                env->setNamespaces();
+            }
+        }
     }
 }
 namespace vui = vorb::ui;

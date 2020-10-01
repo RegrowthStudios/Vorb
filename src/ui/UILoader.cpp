@@ -31,8 +31,6 @@
 
 // TODO(Matthew): Can we support YAML specifying Lua scripts to build specific widget (sub-trees) and/or specify
 //                Lua functions to subscribe to events?
-//                    This seems non-trivial as right now YAML and Lua are largely decoupled due to having two
-//                    separate UI classes, of which both must support YAML and only ScriptedUI must support Lua.
 
 // TODO(Matthew): Can we put all the widgets in the same container to reduce fragmentation of their data?
 //                Would involve creating some kind of generic container that is element-wise sized on max-sized widget kind.
@@ -109,14 +107,14 @@ bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node
 }
 
 
-vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
+vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
     // Check if the filepath given can be resolved.
     vio::Path path;
-    if (!iom->resolvePath(filepath, path)) return nullptr;
+    if (!ioManager->resolvePath(filepath, path)) return nullptr;
 
     // Read the file, check something was indeed read in.
     nString data;
-    iom->readFileToString(path, data);
+    ioManager->readFileToString(path, data);
     if (data.empty()) return nullptr;
 
     // Set up a YAML read context.
@@ -156,14 +154,14 @@ vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManager* iom, const cStri
     return res;
 }
 
-bool vui::UILoader::loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser /*= nullptr*/) {
+bool vui::UILoader::loadViewFromYAML(Viewport* viewport, vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
     // Check if the filepath given can be resolved.
     vio::Path path;
-    if (!iom->resolvePath(filepath, path)) return false;
+    if (!ioManager->resolvePath(filepath, path)) return false;
 
     // Read the file, check something was indeed read in.
     nString data;
-    iom->readFileToString(path, data);
+    ioManager->readFileToString(path, data);
     if (data.empty()) return false;
 
     // Set up a YAML read context.

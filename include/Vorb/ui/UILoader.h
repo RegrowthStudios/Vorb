@@ -24,7 +24,7 @@
 #include "Vorb/io/YAMLNode.h"
 
 DECL_VG(class TextureCache)
-DECL_VIO(class IOManager)
+DECL_VIO(class IOManagerBase)
 DECL_VUI(class IWidget; class Viewport)
 
 namespace vorb {
@@ -38,25 +38,27 @@ namespace vorb {
             /*!
              * \brief Loads a widget and its descendents from a YAML file.
              *
-             * \param vio::IOManager*   iom The IOManager instance to use for loading the YAML data.
-             * \param const cString     filepath The filepath of the YAML data (relative to the IOManager instance's base).
-             * \param vg::TextureCache* textureCache The texture cache to use for loading any of the widgets' textures from.
-             * \param vui::UILoader::WidgetParser customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing.
+             * \param ioManager The IOManagerBase instance to use for loading the YAML data.
+             * \param filepath The filepath of the YAML data to use.
+             * \param textureCache The texture cache to use for loading any of the widgets' textures from.
+             * \param customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing.
              *
              * \return A pointer to the created widget (tree), or nullptr if creation failed.
              */
-            IWidget* loadWidgetFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
+            IWidget* loadWidgetFromYAML(vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
 
             /*!
-             * \brief Loads a widget and its descendents from a YAML file.
+             * \brief Loads a view from a YAML file.
              *
-             * \param vio::IOManager*   iom The IOManager instance to use for loading the YAML data.
-             * \param const cString     filepath The filepath of the YAML data (relative to the IOManager instance's base).
-             * \param vg::TextureCache* textureCache The texture cache to use for loading any of the widgets' textures from.
-             * \param vui::Viewport*    viewport A pointer to the viewport to be used as a base for the loaded UI.
-             * \param vui::UILoader::WidgetParser customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing. 
+             * \param viewport The viewport to which the view built is attached.
+             * \param ioManager The IOManagerBase instance to use for loading the YAML data.
+             * \param filepath The filepath of the YAML data to use.
+             * \param textureCache The texture cache to use for loading any of the widgets' textures from.
+             * \param customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing. 
+             *
+             * \return True if the view was loaded and attached to the given viewport.
              */
-            bool loadFromYAML(vio::IOManager* iom, const cString filepath, vg::TextureCache* textureCache, Viewport* viewport, WidgetParser* customWidgetParser = nullptr);
+            bool loadViewFromYAML(Viewport* viewport, vio::IOManagerBase* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
         }
     }
 }

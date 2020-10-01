@@ -174,9 +174,9 @@ namespace vorb {
             vio::IOManagerBase* m_ioManager; ///< The IO manager used to obtain needed assets.
 
             vg::TextureCache* m_textureCache; ///< The cache used to obtain textures used by this UI.
-            // TODO(Matthew): Eventually we want here a font cache and to enable UIs to support choosing font of different text entries.
-            vg::FontCache* m_fontCache; ///< The font used to render text of this UI.
-            vg::SpriteBatch* m_spriteBatch; ///< The batcher used to render elements (other than text) of this UI.
+            // TODO(Matthew): When fetching from cache, render font at next power of 2 font size compared to size chosen. Do we need a limit?
+            vg::FontCache* m_fontCache; ///< The cache used to obtain fonts used by this UI.
+            vg::SpriteBatch* m_spriteBatch; ///< The batcher used to render elements of this UI.
 
             UIViews m_views; ///< The list of views that comprise this UI.
         };

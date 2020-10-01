@@ -18,14 +18,14 @@ void vui::UIBase::init(
       const GameWindow* window,
     vio::IOManagerBase* ioManager,
       vg::TextureCache* textureCache,
-         vg::FontCache* spriteFont,
+         vg::FontCache* fontCache,
        vg::SpriteBatch* spriteBatch
 ) {
     m_ownerScreen  = ownerScreen;
     m_gameWindow   = window;
     m_ioManager    = ioManager;
     m_textureCache = textureCache,
-    m_fontCache   = spriteFont;
+    m_fontCache   = fontCache;
     m_spriteBatch  = spriteBatch;
 }
 

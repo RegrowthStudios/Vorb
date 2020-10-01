@@ -24,7 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/ui/NewUI.h"
+#include "Vorb/ui/UI.h"
 #include "Vorb/ui/script/ViewScriptContext.hpp"
 
 #include <unordered_map>

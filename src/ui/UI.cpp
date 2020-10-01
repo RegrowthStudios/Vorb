@@ -1,87 +1,91 @@
-#include "stdafx.h"
+#include "Vorb/stdafx.h"
 #include "Vorb/ui/UI.h"
 
-#include "Vorb/graphics/TextureCache.h"
-#include "Vorb/graphics/SpriteBatch.h"
-#include "Vorb/graphics/SpriteFont.h"
-#include "Vorb/io/IOManager.h"
-#include "Vorb/ui/GameWindow.h"
-#include "Vorb/ui/IGameScreen.h"
 #include "Vorb/ui/UILoader.h"
-#include "Vorb/ui/widgets/Viewport.h"
 
-vui::UI::UI() :
-    m_window(nullptr),
-    m_defaultFont(nullptr),
+vui::UIBase::UIBase() :
+    m_ownerScreen(nullptr),
+    m_gameWindow(nullptr),
+    m_ioManager(nullptr),
+    m_textureCache(nullptr),
+    m_fontCache(nullptr),
     m_spriteBatch(nullptr) {
-    // Empty
+    // Empty.
 }
 
-vui::UI::~UI() {
-    // Empty
-}
-
-void vui::UI::init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
+void vui::UIBase::init(
+           IGameScreen* ownerScreen,
+      const GameWindow* window,
+    vio::IOManagerBase* ioManager,
+      vg::TextureCache* textureCache,
+         vg::FontCache* spriteFont,
+       vg::SpriteBatch* spriteBatch
+) {
     m_ownerScreen  = ownerScreen;
-    m_window       = window;
-    m_iom          = iom;
-    m_textureCache = textureCache;
-    m_defaultFont  = defaultFont;
+    m_gameWindow   = window;
+    m_ioManager    = ioManager;
+    m_textureCache = textureCache,
+    m_fontCache   = spriteFont;
     m_spriteBatch  = spriteBatch;
 }
 
-void vui::UI::dispose() {
+void vui::UIBase::dispose() {
+    m_ownerScreen  = nullptr;
+    m_gameWindow   = nullptr;
+    m_ioManager    = nullptr;
+    m_textureCache = nullptr;
+    m_fontCache   = nullptr;
+    m_spriteBatch  = nullptr;
+
     for (auto& view : m_views) {
         view.second->dispose();
         delete view.second;
     }
     UIViews().swap(m_views);
-
-    m_window      = nullptr;
-    m_defaultFont = nullptr;
-    m_spriteBatch = nullptr;
 }
 
-void vui::UI::update(f32 dt /*= 1.0f*/) {
+void vui::UIBase::update(f32 dt = 0.0f) {
+    PreUpdate(dt);
+
     for (auto& view : m_views) {
         view.second->update(dt);
     }
+
+    PostUpdate(dt);
 }
 
-void vui::UI::draw() {
+void vui::UIBase::draw() {
+    PreDraw();
+
     for (auto& view : m_views) {
         view.second->draw();
     }
+
+    PostDraw();
 }
 
-void vui::UI::onOptionsChanged() {
-    // TODO(Matthew): Implement.
-}
-
-vui::Viewport* vui::UI::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions /*= f32v4(0.0f)*/, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
-    Viewport* viewport = new Viewport(m_window);
-    viewport->init(name, dimensions, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
+vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions = f32v4(0.0f)) {
+    Viewport* viewport = new Viewport(m_gameWindow);
+    viewport->init(name, dimensions, m_fontCache, m_spriteBatch);
 
     m_views.insert(std::make_pair(zIndex, viewport));
 
     return viewport;
 }
 
-vui::Viewport* vui::UI::makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {
-    Viewport* viewport = new Viewport(m_window);
-    viewport->init(name, position, size, defaultFont ? defaultFont : m_defaultFont, spriteBatch ? spriteBatch : m_spriteBatch);
+vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size) {
+    Viewport* viewport = new Viewport(m_gameWindow);
+    viewport->init(name, position, size, m_fontCache, m_spriteBatch);
 
     m_views.insert(std::make_pair(zIndex, viewport));
 
     return viewport;
 }
 
-// TODO(Matthew): Limit time to make? Need to not get stuck on this, and in principle through
-//                  file references we could easily get an infinite loop.
-vui::Viewport* vui::UI::makeViewFromYAML(nString name, ZIndex zIndex, nString filepath) {
+vui::Viewport* vui::UIBase::makeViewFromYAML(const nString& name, ZIndex zIndex, const nString& filepath) {
     Viewport* viewport = makeView(name, zIndex);
 
-    if (!UILoader::loadFromYAML(m_iom, filepath.c_str(), m_textureCache, viewport)) {
+    if (!UILoader::loadFromYAML(m_ioManager, filepath.c_str(), m_textureCache, viewport)) {
         destroyView(viewport);
 
         viewport = nullptr;
@@ -90,8 +94,8 @@ vui::Viewport* vui::UI::makeViewFromYAML(nString name, ZIndex zIndex, nString fi
     return viewport;
 }
 
-// TODO(Matthew): Do we want to sort by name, either not guaranteeing order of render of each viewport, or storing the information twice?
-vui::Viewport* vui::UI::getView(nString name) {
+// TODO(Matthew): Do we want to also store views by name to make this cheaper?
+vui::Viewport* vui::UIBase::getView(const nString& name) {
     for (auto& view : m_views) {
         if (view.second->getName() == name) {
             return view.second;
@@ -100,50 +104,14 @@ vui::Viewport* vui::UI::getView(nString name) {
     return nullptr;
 }
 
-vui::Viewport* vui::UI::enableView(Viewport* viewport) {
-    viewport->enable();
-
-    return viewport;
-}
-
-vui::Viewport* vui::UI::enableViewWithName(nString name) {
-    for (auto& view : m_views) {
-        if (view.second->getName() == name) {
-            view.second->enable();
-            return view.second;
-        }
-    }
-    return nullptr;
-}
-
-vui::Viewport* vui::UI::disableView(Viewport* viewport) {
-    viewport->disable();
-
-    return viewport;
-}
-
-vui::Viewport* vui::UI::disableViewWithName(nString name) {
-    for (auto& view : m_views) {
-        if (view.second->getName() == name) {
-            view.second->disable();
-            return view.second;
-        }
-    }
-    return nullptr;
-}
-
-
-bool vui::UI::destroyView(Viewport* viewport) {
+bool vui::UIBase::destroyView(Viewport* viewport) {
     for (auto it = m_views.begin(); it != m_views.end(); ++it) {
         auto& view = *it;
         if (view.second == viewport) {
-            // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second->dispose();
 
-            // Free our memory.
             delete view.second;
 
-            // Erase view from the list of views.
             m_views.erase(it);
 
             return true;
@@ -152,17 +120,14 @@ bool vui::UI::destroyView(Viewport* viewport) {
     return false;
 }
 
-bool vui::UI::destroyViewWithName(nString name) {
+bool vui::UIBase::destroyViewWithName(const nString& name) {
     for (auto it = m_views.begin(); it != m_views.end(); ++it) {
         auto& view = *it;
         if (view.second->getName() == name) {
-            // Dispose the viewport and contained widgets and the script environment of the viewport.
             view.second->dispose();
 
-            // Free our memory.
             delete view.second;
 
-            // Erase view from the list of views.
             m_views.erase(it);
 
             return true;
@@ -171,7 +136,21 @@ bool vui::UI::destroyViewWithName(nString name) {
     return false;
 }
 
-vui::Viewport* vui::UI::setViewZIndex(nString name, ZIndex zIndex) {
+bool vui::UIBase::setViewZIndex(Viewport* viewport, ZIndex zIndex) {
+    for (auto it = m_views.begin(); it != m_views.end(); ++it) {
+        auto& view = *it;
+        if (view.second == viewport) {
+            m_views.erase(it);
+
+            m_views.insert(std::make_pair(zIndex, viewport));
+
+            return true;
+        }
+    }
+    return false;
+}
+
+bool vui::UIBase::setViewWithNameZIndex(const nString& name, ZIndex zIndex) {
     for (auto it = m_views.begin(); it != m_views.end(); ++it) {
         auto& view = *it;
         if (view.second->getName() == name) {
@@ -181,8 +160,8 @@ vui::Viewport* vui::UI::setViewZIndex(nString name, ZIndex zIndex) {
 
             m_views.insert(std::make_pair(zIndex, viewport));
 
-            return viewport;
+            return true;
         }
     }
-    return nullptr;
+    return false;
 }

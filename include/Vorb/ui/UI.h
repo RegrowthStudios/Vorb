@@ -1,21 +1,22 @@
 //
-// UI.cpp
+// UI.h
 // Vorb Engine
 //
 // Created by Matthew Marshall 1st Dec 2018
+// Rearchitected 27 Sept 2020
 // Copyright 2018 Regrowth Studios
 // MIT License
 //
 
-/*! \file UI.cpp
+/*! \file UI.h
 * @brief Holds a set of constructed views and provides interfaces to manipulate them.
 */
 
 #pragma once
 
-#ifndef Vorb_UI_cpp__
+#ifndef Vorb_UI_h__
 //! @cond DOXY_SHOW_HEADER_GUARDS
-#define Vorb_UI_cpp__
+#define Vorb_UI_h__
 //! @endcond
 
 #ifndef VORB_USING_PCH
@@ -24,85 +25,64 @@
 
 #include <map>
 
+#include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
-#include "Vorb/io/File.h"
+#include "Vorb/ui/widgets/Viewport.h"
 
-DECL_VG(class TextureCache; class SpriteBatch; class SpriteFont)
-DECL_VIO(class IOManager)
-DECL_VUI(class IGameScreen)
+DECL_VG(class FontCache; class TextureCache; class SpriteBatch)
+DECL_VIO(class IOManagerBase)
+DECL_VUI(class GameWindow; class IGameScreen; class Viewport)
 
 namespace vorb {
     namespace ui {
+        using ZIndex = ui16;
+        using UIViews = std::map<ZIndex, Viewport*>;
 
-        // Forward declarations
-        class GameWindow;
-        class Viewport;
-        struct Length2;
-
-        class UI {
+        class UIBase {
         public:
-            using ZIndex  = ui16;
-            using UIViews = std::map<ZIndex, Viewport*>;
+            UIBase();
+            virtual ~UIBase() {
+                // Empty.
+            }
 
             /*!
-             * \brief Just ensures UI instance is in valid state, use init to prepare instance for use.
-             */
-            UI();
-            /*!
-             * \brief Does nothing, call dispose!
-             */
-            ~UI();
-
-            /*!
-             * \brief Initialises the instance for use.
+             * \brief Initialises the UI with the necessary services to acquire files, textures, render fonts and othe spritesm etc.
              *
-             * \param ownerScreen The screen that owns this scripted UI.
-             * \param window The game window this UI will be rendered to.
-             * \param iom The IO manager to use for file handling.
-             * \param textureCache The cache to use for textures used by this UI.
-             * \param defaultFont The default font for views to use.
-             * \param spriteBatch The spritebatch for view renderers to use.
+             * \param ownerScreen: The screen to which this UI is attached.
+             * \param window: The window in which the game is embedded.
+             * \param ioManager: The IO manager for acquiring files such as YAML files and scripts.
+             * \param textureCache: The cache used for obtaining textures.
+             * \param spriteFont: The font used for rendering text in the UI.
+             * \param spriteBatch: The batcher used for rendering other sprites of the UI.
              */
-            virtual void init(vui::IGameScreen* ownerScreen, const GameWindow* window, vio::IOManager* iom, vg::TextureCache* textureCache, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
-            /*!
-             * \brief Disposes the managed views and resets pointers.
+            virtual void init(
+                       IGameScreen* ownerScreen,
+                  const GameWindow* window,
+                vio::IOManagerBase* ioManager,
+                  vg::TextureCache* textureCache,
+                     vg::FontCache* fontCache,
+                   vg::SpriteBatch* spriteBatch
+            );
+            /*! \brief Disposes of the UI, removing all associated services.
              */
             virtual void dispose();
 
             /*!
-             * \brief Tells each view to update.
+             * \brief Performs an update of the UI, updating each view stored within.
              *
-             * Views called in order of z-index.
-             *
-             * \param dt The time delta between this update and the last.
+             * \param dt: The time elapsed since the last update.
              */
             virtual void update(f32 dt = 0.0f);
-            /*!
-             * \brief Tells each view to draw.
-             *
-             * Views called in order of z-index.
+            /*! \brief Draws the UI to the screen.
              */
             virtual void draw();
 
-            /*!
-             * \brief Gets the texture cache used by the UI.
-             *
-             * \return A pointer to the texture cache used.
-             */
-            vg::TextureCache* getTextureCache() { return m_textureCache; }
-
-            /*!
-             * \brief Sets the texture cache used by the UI.
-             *
-             * \param Pointer to the texture cache to be set.
-             */
-            void setTextureCache(vg::TextureCache* textureCache) { m_textureCache = textureCache; }
-
-            // TODO(Matthew): Hook this into some options state event? This would involve Vorb providing a game options supporting class - and optons might not be a well-generalisable thing. Worst case can put the onus on Vorb users to register it to an event/call it directly.
-            /*!
-             * \brief Handles options changing.
-             */
-            void onOptionsChanged();
+                   IGameScreen* getOwnerScreen()  { return m_ownerScreen;  }
+              const GameWindow* getGameWindow()   { return m_gameWindow;   }
+            vio::IOManagerBase* getIOManager()    { return m_ioManager;    }
+              vg::TextureCache* getTextureCache() { return m_textureCache; }
+                 vg::FontCache* getFontCache()    { return m_fontCache;    }
+               vg::SpriteBatch* getSpriteBatch()  { return m_spriteBatch;  }
 
             /*!
              * \brief Creates a new view in this UI.
@@ -110,12 +90,10 @@ namespace vorb {
              * \param name The name of the new view.
              * \param zIndex The z-index of the new view.
              * \param dimensions The dimensions of the viewport.
-             * \param defaultFont The default font of the view (overrides the default set for the UI instance if not nullptr).
-             * \param spriteBatch The spritebatch to use for rendering.
              *
              * \return Pointers to the viewport of the constructed view.
              */
-            Viewport* makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions = f32v4(0.0f), vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            Viewport* makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions = f32v4(0.0f));
             /*!
              * \brief Creates a new view in this UI.
              *
@@ -128,18 +106,18 @@ namespace vorb {
              *
              * \return Pointers to the viewport of the constructed view.
              */
-            Viewport* makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
+            Viewport* makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size);
 
             /*!
              * \brief Creates a new view in this UI.
              *
              * \param name The name of the new view.
              * \param zIndex The z-index of the new view.
-             * \param filepath The path to the script to begin building from.
+             * \param filepath The path to the YAML file to begin building from.
              *
              * \return A pointer to the viewport of the constructed view.
              */
-            Viewport* makeViewFromYAML(nString name, ZIndex zIndex, nString filepath);
+            Viewport* makeViewFromYAML(const nString& name, ZIndex zIndex, const nString& filepath);
 
             /*!
              * \brief Gets the named view.
@@ -148,40 +126,7 @@ namespace vorb {
              *
              * \return A pointer to the viewport of the view found, or nullptr if no view found as named.
              */
-            Viewport* getView(nString name);
-
-            /*!
-             * \brief Enables the pointed-to view.
-             *
-             * \param viewport Pointer to the viewport to enable.
-             *
-             * \return The pointer provided.
-             */
-            Viewport* enableView(Viewport* viewport);
-            /*!
-             * \brief Enables the named view.
-             *
-             * \param name The name of the view to enable.
-             *
-             * \return A pointer to the viewport of the view enabled, or nullptr if no view found as named.
-             */
-            Viewport* enableViewWithName(nString name);
-            /*!
-             * \brief Disables the pointed-to view.
-             *
-             * \param viewport Pointer to the viewport to disable.
-             *
-             * \return The pointer provided.
-             */
-            Viewport* disableView(Viewport* viewport);
-            /*!
-             * \brief Disables the named view.
-             *
-             * \param name The name of the view to disable.
-             *
-             * \return A pointer to the viewport of the view disabled, or nullptr if no view found as named.
-             */
-            Viewport* disableViewWithName(nString name);
+            Viewport* getView(const nString& name);
 
 
             /*!
@@ -199,29 +144,116 @@ namespace vorb {
              *
              * \return True if the view was destroyed, false otherwise.
              */
-            bool destroyViewWithName(nString name);
+            bool destroyViewWithName(const nString& name);
 
+            /*!
+             * \brief Sets a new z-index value for the pointed-to view.
+             *
+             * \param viewport True if view's z-index was updated, false otherwise.
+             */
+            bool setViewZIndex(Viewport* viewport, ZIndex zIndex);
             /*!
              * \brief Sets a new z-index value for the named view.
              *
              * \param name The name of the view to change the z-index of.
              *
-             * \return A pointer to the viewport of the named view, or nullptr if no view found as named.
+             * \return True if named view's' z-index updated, false otherwise.
              */
-            Viewport* setViewZIndex(nString name, ZIndex zIndex);
-        protected:
-            VORB_NON_COPYABLE(UI);
+            bool setViewWithNameZIndex(const nString& name, ZIndex zIndex);
 
-            vui::IGameScreen* m_ownerScreen;  ///< The screen that owns this UI.
-            UIViews           m_views;        ///< List of UI views in draw order.
-            const GameWindow* m_window;       ///< Pointer to the window the UI views will be drawn to.
-            vg::SpriteFont*   m_defaultFont;  ///< Default font of views.
-            vg::SpriteBatch*  m_spriteBatch;  ///< SpriteBatch instance to use for rendering.
-            vg::TextureCache* m_textureCache; ///< Cache for UI-related textures.
-            vio::IOManager*   m_iom;          ///< IO Manager for getting necessary YAML files.
+            Event<f32> PreUpdate;
+            Event<f32> PostUpdate;
+            Event<>    PreDraw;
+            Event<>    PostDraw;
+        protected:
+            VORB_NON_COPYABLE(UIBase);
+
+            IGameScreen* m_ownerScreen; ///< The owning screen of this UI.
+            const GameWindow* m_gameWindow; ///< The game window to which this UI is drawn.
+
+            vio::IOManagerBase* m_ioManager; ///< The IO manager used to obtain needed assets.
+
+            vg::TextureCache* m_textureCache; ///< The cache used to obtain textures used by this UI.
+            // TODO(Matthew): Eventually we want here a font cache and to enable UIs to support choosing font of different text entries.
+            vg::FontCache* m_fontCache; ///< The font used to render text of this UI.
+            vg::SpriteBatch* m_spriteBatch; ///< The batcher used to render elements (other than text) of this UI.
+
+            UIViews m_views; ///< The list of views that comprise this UI.
         };
+
+        template <typename ScriptEnvironment = void, typename Enable = void>
+        class UI;
+
+        template <typename ScriptEnvironment>
+        class UI<ScriptEnvironment,
+                    typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
+            : public UIBase {
+            // TODO(Matthew): Anything here? Maybe it's all in UIBase...
+        };
+
+        template <typename ScriptEnvironment>
+        class UI<ScriptEnvironment,
+                    typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
+            : public UIBase {
+        public:
+            /*!
+             * \brief Creates a new view in this UI from the named script.
+             *
+             * \param name The name of the new view.
+             * \param zIndex The z-index of the new view.
+             * \param filepath The path to the script to begin building from.
+             *
+             * \return A pointer to the viewport of the constructed view.
+             */
+            Viewport* makeViewFromScript(const nString& name, ZIndex zIndex, const nString& filepath) {
+                Viewport* view = makeView(name, zIndex);
+
+                ScriptEnvironment scriptEnv;
+                scriptEnv.init();
+
+                ViewScriptContext::injectInto(scriptEnv);
+
+                scriptEnv->setNamespaces("UI", "View");
+                scriptEnv->addValue("port", view);
+                scriptEnv->setNamespaces();
+
+                scriptEnv->run(vio::Path(filepath));
+            }
+        };
+
+        // TODO(Matthew): Handle situations where we want to provide further injections for certain UIs.
+        //                    E.g. as in MainMenuScriptedUI.
+
+        namespace UIScriptContext {
+            template <typename ScriptEnvironment>
+            void injectUIScriptContext(ScriptEnvironment* env) {
+                env->setNamespaces("UI");
+                env->addCDelegate("makeView", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
+                    return ui->makeView(name, zIndex);
+                }));
+                env->addCDelegate("makeViewFromYAML", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex, nString filepath) {
+                    return ui->makeViewFromYAML(name, zIndex, filepath);
+                }));
+                env->addCDelegate("getView", makeFunctor([](UIBase* ui, nString name) {
+                    return ui->getView(name);
+                }));
+                env->addCDelegate("destroyView", makeFunctor([](UIBase* ui, Viewport* view) {
+                    return ui->destroyView(view);
+                }));
+                env->addCDelegate("destroyViewWithName", makeFunctor([](UIBase* ui, nString name) {
+                    return ui->destroyViewWithName(name);
+                }));
+                env->addCDelegate("setViewZIndex", makeFunctor([](UIBase* ui, Viewport* view, ZIndex zIndex) {
+                    return ui->setViewZIndex(view, zIndex);
+                }));
+                env->addCDelegate("setViewZIndexWithName", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
+                    return ui->setViewZIndexWithName(name, zIndex);
+                }));
+                env->setNamespaces();
+            }
+        }
     }
 }
 namespace vui = vorb::ui;
 
-#endif // !Vorb_UI_cpp__
+#endif // !Vorb_UI_h__

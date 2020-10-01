@@ -32,6 +32,16 @@ void vscript::lua::Environment::init() {
     addCClosure("RegisterFunction", 1, &registerLFunction);
 }
 
+void vscript::lua::Environment::init(IEnvironment* env) {
+    // Cast to Lua environment.
+    Environment* luaEnv = static_cast<Environment*(env);
+
+    // Initialise the Lua environment.
+    m_state = luaL_newthread(luaEnv->m_state);
+
+    // TODO(Matthew): May need to do some extra work with registered Lua functions, making sure they are properly distributed.
+}
+
 void vscript::lua::Environment::init(const vio::Path& filepath) {
     init();
     load(filepath);

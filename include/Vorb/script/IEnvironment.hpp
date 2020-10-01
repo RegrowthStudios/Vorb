@@ -62,6 +62,12 @@ namespace vorb {
              */
             virtual void init() = 0;
             /*!
+             * \brief Initialises the environment using an existing environment.
+             *
+             * The result should be two separate execution environment that share globals.
+             */
+            virtual void init(IEnvironment* env) = 0;
+            /*!
              * \brief Initialises the environment.
              *
              * \param filepath The filepath from which to load the script.

@@ -13,8 +13,6 @@
  */
 
 // TODO(Matthew): Investigate lua_yield and lua_resume for coroutines.
-// TODO(Matthew): Investigate lua_newthread for having separate locals for each mod while sharing globals.
-//                    This could be good for mods.
 // TODO(Matthew): Handle errors.
 
 #pragma once
@@ -58,6 +56,12 @@ namespace vorb {
                  * \brief Initialises the environment.
                  */
                 virtual void init() override;
+                /*!
+                 * \brief Initialises the environment using an existing environment.
+                 *
+                 * The result should be two separate execution environment that share globals.
+                 */
+                virtual void init(IEnvironment* env) override;
                 /*!
                  * \brief Initialises the environment.
                  *

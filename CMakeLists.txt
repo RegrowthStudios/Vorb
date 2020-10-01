@@ -190,6 +190,7 @@ set(vorb_graphics
     include/Vorb/graphics/ConnectedTextures.h
     include/Vorb/graphics/DeferredShaders.h
     include/Vorb/graphics/DepthState.h
+    include/Vorb/graphics/FontCache.h
     include/Vorb/graphics/Frustum.h
     include/Vorb/graphics/FullQuadVBO.h
     include/Vorb/graphics/GBuffer.h
@@ -220,6 +221,7 @@ set(vorb_graphics
     src/graphics/ConnectedTextures.cpp
     src/graphics/DeferredShaders.cpp
     src/graphics/DepthState.cpp
+    src/graphics/FontCache.cpp
     src/graphics/Frustum.cpp
     src/graphics/FullQuadVBO.cpp
     src/graphics/GBuffer.cpp

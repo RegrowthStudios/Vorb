@@ -85,7 +85,7 @@ vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const L
 vui::Viewport* vui::UIBase::makeViewFromYAML(const nString& name, ZIndex zIndex, const nString& filepath) {
     Viewport* viewport = makeView(name, zIndex);
 
-    if (!UILoader::loadFromYAML(m_ioManager, filepath.c_str(), m_textureCache, viewport)) {
+    if (!UILoader::loadViewFromYAML(viewport, m_ioManager, filepath.c_str(), m_textureCache)) {
         destroyView(viewport);
 
         viewport = nullptr;

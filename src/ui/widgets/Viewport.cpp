@@ -36,8 +36,8 @@ void vui::Viewport::init(const nString& name, const Length2& position, const Len
     m_renderer.init(defaultFont, spriteBatch);
 }
 
-void vui::Viewport::dispose() {
-    IWidget::dispose();
+void vui::Viewport::dispose(bool thisOnly /*= false*/) {
+    IWidget::dispose(thisOnly);
 
     m_renderer.dispose();
 
@@ -52,12 +52,12 @@ void vui::Viewport::enable() {
     Widget::enable();
 }
 
-void vui::Viewport::disable() {
+void vui::Viewport::disable(bool thisOnly /*= false*/) {
     if (m_flags.isEnabled) {
         vui::InputDispatcher::window.onResize -= makeDelegate(this, &Viewport::onResize);
     }
 
-    Widget::disable();
+    Widget::disable(thisOnly);
 }
 
 void vui::Viewport::update(f32 dt /*= 0.0f*/) {

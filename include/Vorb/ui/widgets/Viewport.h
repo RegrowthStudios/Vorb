@@ -56,7 +56,7 @@ namespace vorb {
              * @param name: The name of the viewport.
              * @param dimensions: Position and size of the viewport.
              * @param defaultFont: The optional default font to use.
-             * @param defaultFont: The optional SpriteBatch to use.
+             * @param spriteBatch: The optional SpriteBatch to use.
              */
             virtual void init(const nString& name, const f32v4& dimensions, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
             /*! @brief Initializes the viewport and its renderer.
@@ -65,7 +65,7 @@ namespace vorb {
              * @param position: Position of the viewport.
              * @param size: Size of the viewport.
              * @param defaultFont: The optional default font to use.
-             * @param defaultFont: The optional SpriteBatch to use.
+             * @param spriteBatch: The optional SpriteBatch to use.
              */
             virtual void init(const nString& name, const Length2& position, const Length2& size, vg::SpriteFont* defaultFont = nullptr, vg::SpriteBatch* spriteBatch = nullptr);
 #if defined(VORB_COMPILER_CLANG)
@@ -74,12 +74,12 @@ namespace vorb {
 #pragma GCC diagnostic pop
 #endif
             /*! @brief Frees all resources. */
-            virtual void dispose() override;
+            virtual void dispose(bool thisOnly = false) override;
 
             /*! \brief Set up events. */
             virtual void enable() override;
             /*! \brief Unsubscribe from events. */
-            virtual void disable() override;
+            virtual void disable(bool thisOnly = false) override;
 
             /*! @brief Updates the viewport and all descendant widgets.
              * 

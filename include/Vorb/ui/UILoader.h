@@ -23,7 +23,7 @@
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/YAMLNode.h"
 
-DECL_VG(class TextureCache)
+DECL_VG(class FontCache; class TextureCache)
 DECL_VIO(class IOManagerBase)
 DECL_VUI(class IWidget; class Viewport)
 
@@ -34,7 +34,6 @@ namespace vorb {
         namespace UILoader {
             using WidgetParser = Delegate<IWidget*, const nString&, keg::Node>;
 
-            // TODO(Matthew): Implement this function.
             /*!
              * \brief Loads a widget and its descendents from a YAML file.
              *
@@ -45,7 +44,13 @@ namespace vorb {
              *
              * \return A pointer to the created widget (tree), or nullptr if creation failed.
              */
-            IWidget* loadWidgetFromYAML(vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
+            IWidget* loadWidgetFromYAML(
+                vio::IOManagerBase* ioManager,
+                      const cString filepath,
+                     vg::FontCache* fontCache,
+                  vg::TextureCache* textureCache,
+                      WidgetParser* customWidgetParser = nullptr
+            );
 
             /*!
              * \brief Loads a view from a YAML file.
@@ -53,12 +58,20 @@ namespace vorb {
              * \param viewport The viewport to which the view built is attached.
              * \param ioManager The IOManagerBase instance to use for loading the YAML data.
              * \param filepath The filepath of the YAML data to use.
+             * \param fontCache The font cache to use for loading any of the widgets' fonts from.
              * \param textureCache The texture cache to use for loading any of the widgets' textures from.
              * \param customWidgetParser A custom widget parser that may be optionally passed in to override default widget parsing. 
              *
              * \return True if the view was loaded and attached to the given viewport.
              */
-            bool loadViewFromYAML(Viewport* viewport, vio::IOManagerBase* iom, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser = nullptr);
+            bool loadViewFromYAML(
+                          Viewport* viewport,
+                vio::IOManagerBase* iom,
+                      const cString filepath,
+                     vg::FontCache* fontCache,
+                  vg::TextureCache* textureCache,
+                      WidgetParser* customWidgetParser = nullptr
+            );
         }
     }
 }

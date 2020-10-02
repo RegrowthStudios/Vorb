@@ -35,7 +35,14 @@
 // TODO(Matthew): Can we put all the widgets in the same container to reduce fragmentation of their data?
 //                Would involve creating some kind of generic container that is element-wise sized on max-sized widget kind.
 
-vui::IWidget* parseWidget(keg::ReadContext& context, const nString& type, keg::Node node, vui::UILoader::WidgetParser* parser, vg::TextureCache* textureCache) {
+vui::IWidget* parseWidget(
+               keg::ReadContext& context,
+                  const nString& type,
+                       keg::Node node,
+    vui::UILoader::WidgetParser* parser,
+                  vg::FontCache* fontCache,
+               vg::TextureCache* textureCache
+) {
     // Ensure node is a map.
     if (keg::getType(node) != keg::NodeType::MAP) return nullptr;
 
@@ -46,22 +53,22 @@ vui::IWidget* parseWidget(keg::ReadContext& context, const nString& type, keg::N
     if (type == "button") {
         widget = new vui::Button();
         processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = vui::parseButtonEntry(context, static_cast<vui::Button*>(widget), key, value, parser, textureCache) && success;
+            success = vui::parseButtonEntry(context, static_cast<vui::Button*>(widget), key, value, parser, fontCache, textureCache) && success;
         });
     } else if (type == "checkbox") {
         widget = new vui::CheckBox();
         processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = vui::parseCheckBoxEntry(context, static_cast<vui::CheckBox*>(widget), key, value, parser, textureCache) && success;
+            success = vui::parseCheckBoxEntry(context, static_cast<vui::CheckBox*>(widget), key, value, parser, fontCache, textureCache) && success;
         });
     } else if (type == "combobox") {
         widget = new vui::ComboBox();
         processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = vui::parseComboBoxEntry(context, static_cast<vui::ComboBox*>(widget), key, value, parser, textureCache) && success;
+            success = vui::parseComboBoxEntry(context, static_cast<vui::ComboBox*>(widget), key, value, parser, fontCache, textureCache) && success;
         });
     } else if (type == "label") {
         widget = new vui::Label();
         processEntry = makeFunctor([&](Sender, const nString& key, keg::Node value) {
-            success = vui::parseLabelEntry(context, static_cast<vui::Label*>(widget), key, value, parser, textureCache) && success;
+            success = vui::parseLabelEntry(context, static_cast<vui::Label*>(widget), key, value, parser, fontCache, textureCache) && success;
         });
     } else if (type == "panel") {
         widget = new vui::Panel();
@@ -107,7 +114,13 @@ bool parseViewport(keg::ReadContext& context, vui::Viewport* viewport, keg::Node
 }
 
 
-vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
+vui::IWidget* vui::UILoader::loadWidgetFromYAML(
+    vio::IOManagerBase* ioManager,
+          const cString filepath,
+         vg::FontCache* fontCache,
+      vg::TextureCache* textureCache,
+          WidgetParser* customWidgetParser /*= nullptr*/
+) {
     // Check if the filepath given can be resolved.
     vio::Path path;
     if (!ioManager->resolvePath(filepath, path)) return nullptr;
@@ -145,7 +158,7 @@ vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManagerBase* ioManager, c
     IWidget* res = nullptr;
 
     auto handleWidgetParse = makeFunctor([&](Sender, const nString& type, keg::Node node) {
-        res = parseWidget(context, type, node, &widgetParser, textureCache);
+        res = parseWidget(context, type, node, &widgetParser, fontCache, textureCache);
     });
     context.reader.forAllInMap(node, &handleWidgetParse);
 
@@ -154,7 +167,14 @@ vui::IWidget* vui::UILoader::loadWidgetFromYAML(vio::IOManagerBase* ioManager, c
     return res;
 }
 
-bool vui::UILoader::loadViewFromYAML(Viewport* viewport, vio::IOManagerBase* ioManager, const cString filepath, vg::TextureCache* textureCache, WidgetParser* customWidgetParser /*= nullptr*/) {
+bool vui::UILoader::loadViewFromYAML(
+              Viewport* viewport,
+    vio::IOManagerBase* ioManager,
+          const cString filepath,
+         vg::FontCache* fontCache,
+      vg::TextureCache* textureCache,
+          WidgetParser* customWidgetParser /*= nullptr*/
+) {
     // Check if the filepath given can be resolved.
     vio::Path path;
     if (!ioManager->resolvePath(filepath, path)) return false;

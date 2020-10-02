@@ -135,18 +135,17 @@ vui::IWidget* vui::UILoader::loadWidgetFromYAML(
     context.env = keg::getGlobalEnvironment();
     context.reader.init(data.c_str());
 
-    // TODO(Matthew): Do we want to preferentially pass off to custom parser?
-    // Define a functor that provides both default parsing and, on failure of default parsing, pass off 
-    // to custom parser.
-    auto widgetParser = makeFunctor([&](const nString& type, keg::Node node) {
-        vui::IWidget* widget = parseWidget(context, type, node, customWidgetParser, textureCache);
+    WidgetParser widgetParser = makeFunctor([&](const nString& type, keg::Node node) {
+        vui::IWidget* widget = nullptr;
 
-        if (!widget && customWidgetParser) widget = customWidgetParser->invoke(type, node);
+        if (customWidgetParser) widget = customWidgetParser->invoke(type, node);
+
+        if (!widget) widget = parseWidget(context, type, node, &widgetParser, fontCache, textureCache);
 
         return widget;
     });
 
-    // Get first node entry and pass on for parsing as viewport.
+    // Get first node entry and pass on for parsing as top-level widget.
     keg::Node node = context.reader.getFirst();
 
     // TODO(Matthew): Pretty sure this is wrong, the intent is to ensure there is one string at
@@ -189,13 +188,12 @@ bool vui::UILoader::loadViewFromYAML(
     context.env = keg::getGlobalEnvironment();
     context.reader.init(data.c_str());
 
-    // TODO(Matthew): Do we want to preferentially pass off to custom parser?
-    // Define a functor that provides both default parsing and, on failure of default parsing, pass off 
-    // to custom parser.
-    auto widgetParser = makeFunctor([&](const nString& type, keg::Node node) {
-        vui::IWidget* widget = parseWidget(context, type, node, customWidgetParser, textureCache);
+    WidgetParser widgetParser = makeFunctor([&](const nString& type, keg::Node node) {
+        vui::IWidget* widget = nullptr;
 
-        if (!widget && customWidgetParser) widget = customWidgetParser->invoke(type, node);
+        if (customWidgetParser) widget = customWidgetParser->invoke(type, node);
+
+        if (!widget) widget = parseWidget(context, type, node, &widgetParser, fontCache, textureCache);
 
         return widget;
     });

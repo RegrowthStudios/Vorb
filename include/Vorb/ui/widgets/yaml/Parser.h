@@ -200,6 +200,19 @@ namespace vorb {
         \******************/
 
         bool parseGradient(keg::YAMLNode value, OUT color4& color1, OUT color4& color2, OUT vg::GradientType& gradType);
+
+        /**************\
+         *    Font    *
+        \**************/
+
+        struct FontDescriptor {
+            nString filepath;
+            ui32 size;
+            char startingCharacter;
+            char endingCharacter;
+        };
+
+        bool parseFont(keg::YAMLNode value, OUT FontDescriptor& fontDescriptor);
     }
 }
 namespace vui = vorb::ui;

@@ -1,6 +1,9 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/widgets/yaml/Parser.h"
 
+// TODO(Matthew): yaml-cpp throws on .as calls, we should wrap in try blocks and
+//                return false on any catch.
+
 /*****************\
  *    Vectors    *
 \*****************/
@@ -500,6 +503,30 @@ bool vui::parseGradient(keg::YAMLNode value, OUT color4& color1, OUT color4& col
     if (!parseColor({ value.data["color1"] }, color1)) return false;
     if (!parseColor({ value.data["color2"] }, color2)) return false;
     if (!parseGradientType({ value.data["grad_type"] }, gradType)) return false;
+
+    return true;
+}
+
+/**************\
+ *    Font    *
+\**************/
+
+bool vui::parseFont(keg::YAMLNode value, OUT FontDescriptor& fontDescriptor) {
+    if (keg::getType(&value) != keg::NodeType::MAP
+            || value.data.size() != 4) return false;
+
+    if (!value.data["filepath"] || !value.data["size"]
+            || !value.data["startingCharacter"]
+            || !value.data["endingCharacter"]) return false;
+
+    try {
+        fontDescriptor.filepath          = value.data["filepath"].as<nString>();
+        fontDescriptor.size              = value.data["size"].as<ui32>();
+        fontDescriptor.startingCharacter = value.data["startingCharacter"].as<char>();
+        fontDescriptor.endingCharacter   = value.data["endingCharacter"].as<char>();
+    } catch (std::runtime_error e) {
+        return false;
+    }
 
     return true;
 }

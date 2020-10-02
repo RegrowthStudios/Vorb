@@ -1,6 +1,8 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/widgets/yaml/Parser.h"
 
+#include "Vorb/graphics/SpriteFont.h"
+
 /*****************\
  *    Vectors    *
 \*****************/
@@ -667,17 +669,24 @@ bool vui::parseGradient(keg::YAMLNode value, OUT color4& color1, OUT color4& col
 
 bool vui::parseFont(keg::YAMLNode value, OUT FontDescriptor& fontDescriptor) {
     if (keg::getType(&value) != keg::NodeType::MAP
-            || value.data.size() != 4) return false;
+            || (value.data.size() != 4 || value.data.size() != 2)) return false;
 
-    if (!value.data["filepath"] || !value.data["size"]
-            || !value.data["startingCharacter"]
-            || !value.data["endingCharacter"]) return false;
+    if (!value.data["filepath"] || !value.data["size"]) return false;
+
+    if (value.data.size() == 4 && (!value.data["startingCharacter"]
+            || !value.data["endingCharacter"])) return false;
 
     try {
         fontDescriptor.filepath          = value.data["filepath"].as<nString>();
         fontDescriptor.size              = value.data["size"].as<ui32>();
-        fontDescriptor.startingCharacter = value.data["startingCharacter"].as<char>();
-        fontDescriptor.endingCharacter   = value.data["endingCharacter"].as<char>();
+
+        if (value.data.size() == 4) {
+            fontDescriptor.startingCharacter = value.data["startingCharacter"].as<char>();
+            fontDescriptor.endingCharacter   = value.data["endingCharacter"].as<char>();
+        } else {
+            fontDescriptor.startingCharacter = FIRST_PRINTABLE_CHAR;
+            fontDescriptor.startingCharacter = LAST_PRINTABLE_CHAR;
+        }
     } catch (std::runtime_error e) {
 #ifdef DEBUG
         throw e;

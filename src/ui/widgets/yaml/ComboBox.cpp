@@ -1,19 +1,35 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/widgets/yaml/ComboBox.h"
 
+#include "Vorb/graphics/FontCache.h"
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/ComboBox.h"
 #include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/Widget.h"
 
-bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {
+bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache) {
     // TODO(Matthew): Need to implement index, named item (and comparator?) options for all drop button properties.
     if (name == "font") {
-        // TODO(Matthew): Implement this, probably need to make a font cache.
+        FontDescriptor fontDescriptor;
+        if (!parseFont(*value, fontDescriptor)) return false;
+
+        vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+        comboBox->setFont(font);
     } else if (name == "main_button_font") {
-        // TODO(Matthew): Implement this, probably need to make a font cache.
+        FontDescriptor fontDescriptor;
+        if (!parseFont(*value, fontDescriptor)) return false;
+
+        vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+        comboBox->setMainButtonFont(font);
     } else if (name == "drop_button_font") {
-        // TODO(Matthew): Implement this, probably need to make a font cache.
+        FontDescriptor fontDescriptor;
+        if (!parseFont(*value, fontDescriptor)) return false;
+
+        vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+        comboBox->setDropButtonFont(font);
     } else if (name == "main_button_texture") {
         nString texturePath;
         if (!parseValue(*value, texturePath)) return false;

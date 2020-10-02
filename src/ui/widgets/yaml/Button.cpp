@@ -6,7 +6,7 @@
 #include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/TextWidget.h"
 
-bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {
+bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache) {
     if (name == "bg_color") {
         color4 color;
         if (!parseColor(*value, color)) return false;
@@ -51,7 +51,7 @@ bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const
 
         button->setTextHoverColor(color);
     } else {
-        return vui::parseTextWidgetEntry(context, button, name, value, widgetParser);
+        return vui::parseTextWidgetEntry(context, button, name, value, widgetParser, fontCache);
     }
 
     return true;

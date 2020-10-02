@@ -1,12 +1,13 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/widgets/yaml/Label.h"
 
+#include "Vorb/graphics/FontCache.h"
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/Label.h"
 #include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/TextWidget.h"
 
-bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {
+bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache) {
     if (name == "bg_color") {
         color4 color;
         if (!parseColor(*value, color)) return false;
@@ -37,7 +38,7 @@ bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nS
 
         label->setTextHoverColor(color);
     } else {
-        return vui::parseTextWidgetEntry(context, label, name, value, widgetParser);
+        return vui::parseTextWidgetEntry(context, label, name, value, widgetParser, fontCache);
     }
 
     return true;

@@ -22,7 +22,7 @@
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Keg.h"
 
-DECL_VG(class TextureCache);
+DECL_VG(class FontCache; class TextureCache);
 
 namespace vorb {
     namespace ui {
@@ -38,10 +38,12 @@ namespace vorb {
          * \param name The name of the ComboBox property to be parsed.
          * \param node The node of the ComboBox property to be parsed.
          * \param widgetParser Marshals parsing of the widgets that are children of the ComboBox being parsed.
+         * \param fontCache The font cache to use for loading any of the widget's fonts from.
+         * \param textureCache The texture cache to use for loading any of the widget's textures from.
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parseComboBoxEntry(keg::ReadContext& context, ComboBox* comboBox, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
+        bool parseComboBoxEntry(keg::ReadContext& context, ComboBox* comboBox, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache);
     }
 }
 namespace vui = vorb::ui;

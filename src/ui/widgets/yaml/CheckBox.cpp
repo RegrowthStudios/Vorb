@@ -1,12 +1,13 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/widgets/yaml/CheckBox.h"
 
+#include "Vorb/graphics/FontCache.h"
 #include "Vorb/graphics/TextureCache.h"
 #include "Vorb/ui/widgets/CheckBox.h"
 #include "Vorb/ui/widgets/yaml/Parser.h"
 #include "Vorb/ui/widgets/yaml/TextWidget.h"
 
-bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache) {
+bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache) {
     if (name == "bg_color") {
         color4 color;
         if (!parseColor(*value, color)) return false;
@@ -66,7 +67,7 @@ bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox,
 
         checkBox->setChecked(checked);
     } else {
-        return vui::parseTextWidgetEntry(context, checkBox, name, value, widgetParser);
+        return vui::parseTextWidgetEntry(context, checkBox, name, value, widgetParser, fontCache);
     }
 
     return true;

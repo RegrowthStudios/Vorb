@@ -38,10 +38,11 @@ namespace vorb {
          * \param name The name of the Panel property to be parsed.
          * \param node The node of the Panel property to be parsed.
          * \param widgetParser Marshals parsing of the widgets that are children of the Panel being parsed.
+         * \param textureCache The texture cache to use for loading any of the widget's textures from.
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parsePanelEntry(keg::ReadContext& context, Panel* checkBox, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* cache);
+        bool parsePanelEntry(keg::ReadContext& context, Panel* checkBox, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::TextureCache* textureCache);
     }
 }
 namespace vui = vorb::ui;

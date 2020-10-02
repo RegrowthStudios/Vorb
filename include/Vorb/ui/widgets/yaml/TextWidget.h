@@ -22,7 +22,7 @@
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Keg.h"
 
-DECL_VG(class TextureCache)
+DECL_VG(class FontCache)
 
 namespace vorb {
     namespace ui {
@@ -38,10 +38,11 @@ namespace vorb {
          * \param name The name of the TextWidget property to be parsed.
          * \param node The node of the TextWidget property to be parsed.
          * \param widgetParser Marshals parsing of the widgets that are children of the TextWidget being parsed.
+         * \param fontCache The font cache to use for loading any of the widget's fonts from.
          *
          * \return True if parsing is successful, false otherwise.
          */
-        bool parseTextWidgetEntry(keg::ReadContext& context, TextWidget* label, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser);
+        bool parseTextWidgetEntry(keg::ReadContext& context, TextWidget* label, const nString& name, keg::Node value, Delegate<IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache);
     }
 }
 namespace vui = vorb::ui;

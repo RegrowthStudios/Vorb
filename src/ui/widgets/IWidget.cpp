@@ -45,10 +45,10 @@ vui::IWidget::~IWidget() {
 }
 
 void vui::IWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
-    m_name     = name;
-    m_position = f32v2(dimensions.x, dimensions.y);
-    m_size     = f32v2(dimensions.z, dimensions.w);
-    m_zIndex   = zIndex;
+    setName(name);
+    setPosition(f32v2(dimensions.x, dimensions.y));
+    setSize(f32v2(dimensions.z, dimensions.w));
+    setZIndex(zIndex);
 
     MouseClick.setSender(this);
     MouseDown.setSender(this);

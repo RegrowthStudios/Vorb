@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include <limits>
+#include <unordered_map>
 #include <vector>
 
 #include "Vorb/Event.hpp"
@@ -122,6 +123,16 @@ namespace vorb {
         class IWidget {
             using IWidgets = std::vector<IWidget*>;
             using Font     = vorb::graphics::SpriteFont;
+
+            using InheritableGetter = Delegate<void*>;
+            using InheritableSetter = Delegate<void, void*>;
+            struct InheritableGetterSetter {
+                InheritableGetter getter;
+                InheritableSetter setter;
+            };
+            using InheritableGetterSetterMap = std::unordered_map<nString, InheritableGetterSetter>;
+
+            using IsModifiedMap = std::unordered_map<nString, bool>;
         public:
             /*! \brief Default constructor.  */
             IWidget();
@@ -314,6 +325,13 @@ namespace vorb {
             // TODO(Matthew): Events for property changes (such as resize, file drop etc.?).
 
         protected:
+            /*!
+             * \brief Gets the inherited default value for the named property.
+             *
+             * \param propertyName: The name of the property to get a default value for.
+             */
+            void* getInheritedDefault(const nString& propertyName);
+
             /*! \brief Initialiser for general set-up. */
             virtual void initBase() { /* Empty */ }
 
@@ -399,6 +417,10 @@ namespace vorb {
             f32v2       m_childOffset; ///< Apply this offset to all child widgets' positions.
 
             WidgetFlags m_flags;
+
+            InheritableGetterSetterMap m_inheritableGetterSetterMap; ///< Map for property name to getter of default value.
+
+            IsModifiedMap m_isModifiedMap; ///< Map for property name to whether the named property has been modified.
         public:
             const static ZIndex Z_INDEX_MAX = std::numeric_limits<ZIndex>::max();
             const static ZIndex Z_INDEX_MIN = std::numeric_limits<ZIndex>::lowest();

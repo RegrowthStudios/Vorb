@@ -85,6 +85,9 @@ void vui::IWidget::dispose(bool thisOnly /*= false*/) {
     m_viewport = nullptr;
 
     disable(thisOnly);
+
+    InheritableGetterSetterMap().swap(m_inheritableGetterSetterMap);
+    IsModifiedMap().swap(m_isModifiedMap);
 }
 
 void vui::IWidget::markChildForRemoval(IWidget* child) {
@@ -174,6 +177,21 @@ bool vui::IWidget::addWidget(IWidget* child) {
     child->m_viewport = m_viewport;
 
     child->updateDescendantViewports();
+
+    // For each inheritable property in the child, set the inherited value.
+    for (auto& map : child->m_inheritableGetterSetterMap) {
+        // Don't set that inherited value if the value held by the child is already a modified value.
+        if (child->m_isModifiedMap[map.first]) continue;
+
+        // Get setter for inheritable property of child.
+        InheritableSetter setter = map.second.setter;
+
+        // Get value that should be inherited for the property.
+        void* value = getInheritedDefault(map.first);
+
+        // Set the property to the obtained value.
+        setter(value);
+    }
 
     // Update child appropriately - no more, no less, than we must.
     if (child->isEnabled()) {
@@ -553,6 +571,23 @@ void vui::IWidget::setIgnoreOffset(bool ignoreOffset) {
     m_flags.ignoreOffset = ignoreOffset;
 
     m_flags.needsDimensionUpdate = true;
+}
+
+void* vui::IWidget::getInheritedDefault(const nString& propertyName) {
+    InheritableGetter getter;
+
+    // Try to get default for named property from this widget.
+    try {
+        getter = m_inheritableGetterSetterMap.at(propertyName).getter;
+    } catch (std::out_of_range e) {
+        // If we can't, try to get it from the parent of this
+        // widget, if a parent exists.
+        if (m_parent == nullptr) return nullptr;
+
+        return m_parent->getInheritedDefault(propertyName);
+    }
+
+    return getter();
 }
 
 void vui::IWidget::checkForRemovals() {

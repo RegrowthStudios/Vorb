@@ -13,9 +13,7 @@ vui::Button::Button() :
     m_backHoverColor1(color::AliceBlue),
     m_backHoverColor2(color::AliceBlue),
     m_texture(0),
-    m_hoverTexture(0),
-    m_textColor(color::Black),
-    m_textHoverColor(color::Black) {
+    m_hoverTexture(0) {
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -26,7 +24,7 @@ vui::Button::~Button() {
 void vui::Button::addDrawables(UIRenderer& renderer) {
     // Add the button rect.
     renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));
-    
+
     // Add the text <- after checkbox to be rendererd on top!
     TextWidget::addDrawables(renderer);
 }
@@ -71,18 +69,6 @@ void vui::Button::setBackHoverColorGrad(const color4& color1, const color4& colo
     m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Button::setTextColor(const color4& color) {
-    m_textColor = color;
-    
-    m_flags.needsDrawableRecalculation = true;
-}
-
-void vui::Button::setTextHoverColor(const color4& color) {
-    m_textHoverColor = color;
-    
-    m_flags.needsDrawableRecalculation = true;
-}
-
 void vui::Button::calculateDrawables() {
     m_drawableRect.setPosition(getPaddedPosition());
     m_drawableRect.setSize(getPaddedSize());
@@ -99,12 +85,10 @@ void vui::Button::updateColor() {
         m_drawableRect.setColor1(m_backHoverColor1);
         m_drawableRect.setColor2(m_backHoverColor2);
         m_drawableRect.setGradientType(m_gradHover);
-        m_drawableText.setColor(m_textHoverColor);
     } else {
         m_drawableRect.setColor1(m_backColor1);
         m_drawableRect.setColor2(m_backColor2);
         m_drawableRect.setGradientType(m_gradBack);
-        m_drawableText.setColor(m_textColor);
     }
 }
 

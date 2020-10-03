@@ -24,16 +24,6 @@ vui::Widget::~Widget() {
 void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
     IWidget::init(name, dimensions, zIndex);
 
-    m_rawDimensions.position.x = dimensions.x;
-    m_rawDimensions.position.y = dimensions.y;
-    m_rawDimensions.position.dimension.x = DimensionType::PIXEL;
-    m_rawDimensions.position.dimension.y = DimensionType::PIXEL;
-
-    m_rawDimensions.size.x = dimensions.z;
-    m_rawDimensions.size.y = dimensions.w;
-    m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
-    m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
-
     m_inheritableGetterSetterMap["positionType"] = {
         makeFunctor([&]() {
             return (void*)&m_positionType;
@@ -46,16 +36,7 @@ void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.
 }
 
 void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
-    m_name = name;
-
-    m_rawDimensions.position = position;
-    m_rawDimensions.size     = size;
-
-    m_zIndex = zIndex;
-
-    m_flags.needsDimensionUpdate = true;
-
-    initBase();
+    Widget::init(name, f32v4(position.x, position.y, size.x, size.y), zIndex);
 }
 
 void vui::Widget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {

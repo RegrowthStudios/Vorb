@@ -33,6 +33,16 @@ void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.
     m_rawDimensions.size.y = dimensions.w;
     m_rawDimensions.size.dimension.x = DimensionType::PIXEL;
     m_rawDimensions.size.dimension.y = DimensionType::PIXEL;
+
+    m_inheritableGetterSetterMap["positionType"] = {
+        makeFunctor([&]() {
+            return (void*)&m_positionType;
+        }),
+        makeFunctor([&](void* positionType) {
+            setPositionType(*static_cast<PositionType*>(positionType));
+        })
+    };
+    m_isModifiedMap["positionType"] = false;
 }
 
 void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {

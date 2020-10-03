@@ -50,6 +50,12 @@ void vui::TextWidget::init(const nString& name, const f32v4& dimensions /*= f32v
         })
     };
     m_isModifiedMap["textScale"] = false;
+
+    m_isModifiedMap["hoverFont"] = false;
+    m_isModifiedMap["hoverText"] = false;
+    m_isModifiedMap["hoverTextColor"] = false;
+    m_isModifiedMap["hoverTextAlign"] = false;
+    m_isModifiedMap["hoverTextScale"] = false;
 }
 
 void vui::TextWidget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
@@ -91,45 +97,70 @@ void vui::TextWidget::addDrawables(UIRenderer& renderer) {
 
 void vui::TextWidget::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
+
+    // Hover should match non-hover property unless explicitly modified.
+    if (!m_isModifiedMap["hoverFont"]) m_drawableHoverText.setFont(font);
 }
 
 void vui::TextWidget::setText(const nString& text) {
     m_drawableText.setText(text);
+
+    // Hover should match non-hover property unless explicitly modified.
+    if (!m_isModifiedMap["hoverText"]) m_drawableHoverText.setText(text);
 }
 
 void vui::TextWidget::setTextColor(const color4& color) {
     m_drawableText.setColor(color);
+
+    // Hover should match non-hover property unless explicitly modified.
+    if (!m_isModifiedMap["hoverTextColor"]) m_drawableHoverText.setColor(color);
 }
 
 void vui::TextWidget::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
+
+    // Hover should match non-hover property unless explicitly modified.
+    if (!m_isModifiedMap["hoverTextAlign"]) m_drawableHoverText.setTextAlign(textAlign);
 
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::TextWidget::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
+
+    // Hover should match non-hover property unless explicitly modified.
+    if (!m_isModifiedMap["hoverTextScale"]) m_drawableHoverText.setTextScale(textScale);
 }
 
 void vui::TextWidget::setHoverFont(const vg::SpriteFont* font) {
+    m_isModifiedMap["hoverFont"] = true;
+
     m_drawableHoverText.setFont(font);
 }
 
 void vui::TextWidget::setHoverText(const nString& text) {
+    m_isModifiedMap["hoverText"] = true;
+
     m_drawableHoverText.setText(text);
 }
 
 void vui::TextWidget::setHoverTextColor(const color4& color) {
+    m_isModifiedMap["hoverTextColor"] = true;
+
     m_drawableHoverText.setColor(color);
 }
 
 void vui::TextWidget::setHoverTextAlign(vg::TextAlign textAlign) {
+    m_isModifiedMap["hoverTextAlign"] = true;
+
     m_drawableHoverText.setTextAlign(textAlign);
 
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::TextWidget::setHoverTextScale(const f32v2& textScale) {
+    m_isModifiedMap["hoverTextScale"] = true;
+
     m_drawableHoverText.setTextScale(textScale);
 }
 

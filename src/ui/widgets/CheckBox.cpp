@@ -10,8 +10,6 @@ vui::CheckBox::CheckBox() :
     m_boxHoverColor(color::AliceBlue),
     m_boxCheckedColor(color::LightGray),
     m_boxCheckedHoverColor(color::AliceBlue),
-    m_textColor(color::Black),
-    m_textHoverColor(color::Black),
     m_checkedTexture(0),
     m_uncheckedTexture(0),
     m_checkedHoverTexture(0),
@@ -96,18 +94,6 @@ void vui::CheckBox::setBoxCheckedHoverColor(const color4& color) {
     m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::CheckBox::setTextColor(const color4& color) {
-    m_textColor = color;
-    
-    m_flags.needsDrawableRecalculation = true;
-}
-
-void vui::CheckBox::setTextHoverColor(const color4& color) {
-    m_textHoverColor = color;
-    
-    m_flags.needsDrawableRecalculation = true;
-}
-
 void vui::CheckBox::setChecked(bool checked) {
     if (m_isChecked != checked) {
         m_isChecked = checked;
@@ -141,14 +127,12 @@ void vui::CheckBox::updateColor() {
         } else {
             m_drawableRect.setColor(m_boxHoverColor);
         }
-        m_drawableText.setColor(m_textHoverColor);
     } else {
         if (m_isChecked) {
             m_drawableRect.setColor(m_boxCheckedColor);
         } else {
             m_drawableRect.setColor(m_boxColor);
         }
-        m_drawableText.setColor(m_textColor);
     }
 }
 

@@ -58,8 +58,6 @@ namespace vorb {
             virtual         const color4& getBoxHoverColor()         const { return m_boxHoverColor;         }
             virtual         const color4& getBoxCheckedColor()       const { return m_boxCheckedColor;       }
             virtual         const color4& getBoxCheckedHoverColor()  const { return m_boxCheckedHoverColor;  }
-            virtual         const color4& getTextColor()             const override { return m_textColor;             }
-            virtual         const color4& getTextHoverColor()        const { return m_textHoverColor;        }
             virtual           const bool& isChecked()                const { return m_isChecked;             }
 
             /************************************************************************/
@@ -73,8 +71,6 @@ namespace vorb {
             virtual void setBoxHoverColor(const color4& color);
             virtual void setBoxCheckedColor(const color4& color);
             virtual void setBoxCheckedHoverColor(const color4& color);
-            virtual void setTextColor(const color4& color) override;
-            virtual void setTextHoverColor(const color4& color);
             virtual void setChecked(bool checked);
 
             /************************************************************************/
@@ -110,7 +106,6 @@ namespace vorb {
             DrawableRect          m_drawableRect;
             color4                m_boxColor,            m_boxHoverColor;
             color4                m_boxCheckedColor,     m_boxCheckedHoverColor;
-            color4                m_textColor,           m_textHoverColor;
             VGTexture             m_checkedTexture,      m_uncheckedTexture;
             VGTexture             m_checkedHoverTexture, m_uncheckedHoverTexture;
             bool                  m_isChecked;

@@ -78,11 +78,16 @@ namespace vorb {
             /************************************************************************/
             /* Getters                                                              */
             /************************************************************************/
-            virtual const vg::SpriteFont* getFont()      const { return m_drawableText.getFont();      }
-            virtual         const color4& getTextColor() const { return m_drawableText.getColor();     }
-            virtual        const nString& getText()      const { return m_drawableText.getText();      }
-            virtual  const vg::TextAlign& getTextAlign() const { return m_drawableText.getTextAlign(); }
-            virtual          const f32v2& getTextScale() const { return m_drawableText.getTextScale(); }
+            virtual const vg::SpriteFont* getFont()           const { return m_drawableText.getFont();           }
+            virtual         const color4& getTextColor()      const { return m_drawableText.getColor();          }
+            virtual        const nString& getText()           const { return m_drawableText.getText();           }
+            virtual  const vg::TextAlign& getTextAlign()      const { return m_drawableText.getTextAlign();      }
+            virtual          const f32v2& getTextScale()      const { return m_drawableText.getTextScale();      }
+            virtual const vg::SpriteFont* getHoverFont()      const { return m_drawableHoverText.getFont();      }
+            virtual         const color4& getHoverTextColor() const { return m_drawableHoverText.getColor();     }
+            virtual        const nString& getHoverText()      const { return m_drawableHoverText.getText();      }
+            virtual  const vg::TextAlign& getHoverTextAlign() const { return m_drawableHoverText.getTextAlign(); }
+            virtual          const f32v2& getHoverTextScale() const { return m_drawableHoverText.getTextScale(); }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -92,6 +97,11 @@ namespace vorb {
             virtual void setTextColor(const color4& color);
             virtual void setTextAlign(vg::TextAlign textAlign);
             virtual void setTextScale(const f32v2& textScale);
+            virtual void setHoverFont(const vg::SpriteFont* font);
+            virtual void setHoverText(const nString& text);
+            virtual void setHoverTextColor(const color4& color);
+            virtual void setHoverTextAlign(vg::TextAlign textAlign);
+            virtual void setHoverTextScale(const f32v2& textScale);
 
         protected:
             virtual void calculateDrawables() override;
@@ -102,7 +112,7 @@ namespace vorb {
             /* Members                                                              */
             /************************************************************************/
             DrawableText          m_drawableText;
-            const vg::SpriteFont* m_defaultFont;
+            DrawableText          m_drawableHoverText;
         };
     }
 }

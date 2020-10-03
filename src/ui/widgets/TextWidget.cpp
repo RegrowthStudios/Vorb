@@ -3,9 +3,7 @@
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/widgets/Viewport.h"
 
-vui::TextWidget::TextWidget() :
-    Widget(),
-    m_defaultFont(nullptr) {
+vui::TextWidget::TextWidget() : Widget() {
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -71,16 +69,23 @@ void vui::TextWidget::init(IWidget* parent, const nString& name, const Length2& 
 }
 
 void vui::TextWidget::addDrawables(UIRenderer& renderer) {
-    // Use renderer default font if we dont have a font.
-    m_defaultFont = renderer.getDefaultFont();
-    if (!m_drawableText.getFont()) {
-        m_drawableText.setFont(m_defaultFont);
-        // Add the text.
-        renderer.add(makeDelegate(&m_drawableText, &DrawableText::draw));
-        m_drawableText.setFont(nullptr);
+    auto performAdd = [&renderer](DrawableText& text) {
+        // Use renderer default font if we dont have a font.
+        if (!text.getFont()) {
+            text.setFont(renderer.getDefaultFont());
+            // Add the text.
+            renderer.add(makeDelegate(&text, &DrawableText::draw));
+            text.setFont(nullptr);
+        } else {
+            // Add the text.
+            renderer.add(makeDelegate(&text, &DrawableText::draw));
+        }
+    };
+
+    if (m_flags.isMouseIn) {
+        performAdd(m_drawableText);
     } else {
-        // Add the text.
-        renderer.add(makeDelegate(&m_drawableText, &DrawableText::draw));
+        performAdd(m_drawableHoverText);
     }
 }
 
@@ -106,8 +111,31 @@ void vui::TextWidget::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
 }
 
+void vui::TextWidget::setHoverFont(const vg::SpriteFont* font) {
+    m_drawableHoverText.setFont(font);
+}
+
+void vui::TextWidget::setHoverText(const nString& text) {
+    m_drawableHoverText.setText(text);
+}
+
+void vui::TextWidget::setHoverTextColor(const color4& color) {
+    m_drawableHoverText.setColor(color);
+}
+
+void vui::TextWidget::setHoverTextAlign(vg::TextAlign textAlign) {
+    m_drawableHoverText.setTextAlign(textAlign);
+
+    m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::TextWidget::setHoverTextScale(const f32v2& textScale) {
+    m_drawableHoverText.setTextScale(textScale);
+}
+
 void vui::TextWidget::calculateDrawables() {
     m_drawableText.setClipRect(m_clipRect);
+    m_drawableHoverText.setClipRect(m_clipRect);
 
     updateTextPosition();
 }
@@ -115,38 +143,42 @@ void vui::TextWidget::calculateDrawables() {
 void vui::TextWidget::updateTextPosition() {
     const f32v2& size = getSize();
     const f32v2& pos  = getPosition();
-    const vg::TextAlign& textAlign = getTextAlign();
 
-    switch (textAlign) {
-        case vg::TextAlign::LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, size.y / 2.0f));
-            break;
-        case vg::TextAlign::TOP_LEFT:
-            m_drawableText.setPosition(pos);
-            break;
-        case vg::TextAlign::TOP:
-            m_drawableText.setPosition(pos + f32v2(size.x / 2.0f, 0.0f));
-            break;
-        case vg::TextAlign::TOP_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(size.x, 0.0f));
-            break;
-        case vg::TextAlign::RIGHT:
-            m_drawableText.setPosition(pos + f32v2(size.x, size.y / 2.0f));
-            break;
-        case vg::TextAlign::BOTTOM_RIGHT:
-            m_drawableText.setPosition(pos + f32v2(size.x, size.y));
-            break;
-        case vg::TextAlign::BOTTOM:
-            m_drawableText.setPosition(pos + f32v2(size.x / 2.0f, size.y));
-            break;
-        case vg::TextAlign::BOTTOM_LEFT:
-            m_drawableText.setPosition(pos + f32v2(0.0f, size.y));
-            break;
-        case vg::TextAlign::CENTER:
-            m_drawableText.setPosition(pos + size / 2.0f);
-            break;
-        default:
-            assert(false);
-            break;
-    }
+    auto performUpdate = [pos, size](DrawableText& text, const vg::TextAlign& align) {
+        switch (align) {
+            case vg::TextAlign::LEFT:
+                text.setPosition(pos + f32v2(0.0f, size.y / 2.0f));
+                break;
+            case vg::TextAlign::TOP_LEFT:
+                text.setPosition(pos);
+                break;
+            case vg::TextAlign::TOP:
+                text.setPosition(pos + f32v2(size.x / 2.0f, 0.0f));
+                break;
+            case vg::TextAlign::TOP_RIGHT:
+                text.setPosition(pos + f32v2(size.x, 0.0f));
+                break;
+            case vg::TextAlign::RIGHT:
+                text.setPosition(pos + f32v2(size.x, size.y / 2.0f));
+                break;
+            case vg::TextAlign::BOTTOM_RIGHT:
+                text.setPosition(pos + f32v2(size.x, size.y));
+                break;
+            case vg::TextAlign::BOTTOM:
+                text.setPosition(pos + f32v2(size.x / 2.0f, size.y));
+                break;
+            case vg::TextAlign::BOTTOM_LEFT:
+                text.setPosition(pos + f32v2(0.0f, size.y));
+                break;
+            case vg::TextAlign::CENTER:
+                text.setPosition(pos + size / 2.0f);
+                break;
+            default:
+                assert(false);
+                break;
+        }
+    };
+
+    performUpdate(m_drawableText, getTextAlign());
+    performUpdate(m_drawableHoverText, getHoverTextAlign());
 }

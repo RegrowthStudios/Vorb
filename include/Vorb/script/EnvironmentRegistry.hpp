@@ -106,7 +106,7 @@ bool vscript::EnvironmentRegistry<ScriptEnvironment>::createGroup(const nString&
     ScriptEnvironment* env = new ScriptEnvironment();
     env->init();
 
-    if (builder != nullptr) builder(env);
+    if (builder != nullptr) builder->invoke(env);
 
     return m_scriptEnvGroups.insert(std::make_pair(groupName, std::make_pair(env, std::vector<ScriptEnvironment*>()))).second;
 }

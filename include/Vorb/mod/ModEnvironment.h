@@ -211,9 +211,9 @@ namespace vorb {
             : public ModEnvironmentBase {
         public:
             ModEnvironment() :
+                ModEnvironmentBase(),
                 m_scriptEnvironmentBuilder(nullptr),
-                m_scriptEnvGroup(""),
-                ModEnvironmentBase() {
+                m_scriptEnvGroup("") {
                 // Empty.
             }
             virtual ~ModEnvironment() {

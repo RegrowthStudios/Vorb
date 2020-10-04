@@ -896,6 +896,42 @@ void vui::ComboBox::setDropButtonText(const nString& text, DropButtonComparator 
     }
 }
 
+void vui::ComboBox::setMainButtonHoverText(const nString& text) {
+    m_mainButton.setHoverText(text);
+}
+
+void vui::ComboBox::setDropButtonHoverText(const nString& text) {
+    for (size_t i = 0; i < m_buttons.size(); ++i) {
+        m_buttons[i]->setHoverText(text);
+        m_items[i] = text;
+    }
+}
+
+void vui::ComboBox::setDropButtonHoverText(const nString& text, const nString& item) {
+    for (size_t i = 0; i < m_buttons.size(); ++i) {
+        if (m_buttons[i]->getText() != item) continue;
+
+        m_buttons[i]->setHoverText(text);
+        m_items[i] = text;
+    }
+}
+
+void vui::ComboBox::setDropButtonHoverText(const nString& text, size_t index) {
+    if (index >= m_buttons.size()) return;
+
+    m_buttons[index]->setHoverText(text);
+    m_items[index] = text;
+}
+
+void vui::ComboBox::setDropButtonHoverText(const nString& text, DropButtonComparator comparator) {
+    for (size_t i = 0; i < m_buttons.size(); ++i) {
+        if (comparator(i, m_buttons[i])) {
+            m_buttons[i]->setHoverText(text);
+            m_items[i] = text;
+        }
+    }
+}
+
 void vui::ComboBox::setMaxDropHeight(f32 maxDropHeight) {
     m_maxDropHeight = maxDropHeight;
 

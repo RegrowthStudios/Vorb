@@ -44,7 +44,7 @@ void vui::UIBase::dispose() {
     UIViews().swap(m_views);
 }
 
-void vui::UIBase::update(f32 dt = 0.0f) {
+void vui::UIBase::update(f32 dt /*= 0.0f*/) {
     PreUpdate(dt);
 
     for (auto& view : m_views) {
@@ -64,7 +64,7 @@ void vui::UIBase::draw() {
     PostDraw();
 }
 
-vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions = f32v4(0.0f)) {
+vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions /*= f32v4(0.0f)*/) {
     Viewport* viewport = new Viewport(m_gameWindow);
     // TODO(Matthew): Have a globally accessible default font? Or let it be specified at this function level, in which case we need
     //                to expose a font cache to scripts so that views created by Lua can have a default font set.

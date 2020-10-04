@@ -52,7 +52,6 @@ namespace vorb {
                 color4 getBoxHoverColor(CheckBox* checkBox);
                 color4 getBoxCheckedColor(CheckBox* checkBox);
                 color4 getBoxCheckedHoverColor(CheckBox* checkBox);
-                color4 getTextHoverColor(CheckBox* checkBox);
                 bool isChecked(CheckBox* checkBox);
 
                 /******************************************************************/
@@ -66,7 +65,6 @@ namespace vorb {
                 void setBoxHoverColor(CheckBox* checkBox, color4 color);
                 void setBoxCheckedColor(CheckBox* checkBox, color4 color);
                 void setBoxCheckedHoverColor(CheckBox* checkBox, color4 color);
-                void setTextHoverColor(CheckBox* checkBox, color4 color);
                 void setChecked(CheckBox* checkBox, bool checked);
 
                 // void onValueChange(Sender s, bool b);
@@ -95,8 +93,6 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setBoxCheckedColor",       makeDelegate(&impl::setBoxCheckedColor));
     env->addCDelegate("getBoxCheckedHoverColor",  makeDelegate(&impl::getBoxCheckedHoverColor));
     env->addCDelegate("setBoxCheckedHoverColor",  makeDelegate(&impl::setBoxCheckedHoverColor));
-    env->addCDelegate("getTextHoverColor",        makeDelegate(&impl::getTextHoverColor));
-    env->addCDelegate("setTextHoverColor",        makeDelegate(&impl::setTextHoverColor));
     env->addCDelegate("isChecked",                makeDelegate(&impl::isChecked));
     env->addCDelegate("setChecked",               makeDelegate(&impl::setChecked));
 

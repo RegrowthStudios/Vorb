@@ -19,10 +19,6 @@ VGTexture vui::LabelScriptFuncs::impl::getLabelHoverTexture(Label* label) {
     return label->getLabelHoverTexture();
 }
 
-color4 vui::LabelScriptFuncs::impl::getTextHoverColor(Label* label) {
-    return label->getTextHoverColor();
-}
-
 void vui::LabelScriptFuncs::impl::setLabelColor(Label* label, color4 color) {
     label->setLabelColor(color);
 }
@@ -37,8 +33,4 @@ void vui::LabelScriptFuncs::impl::setLabelTexture(Label* label, VGTexture textur
 
 void vui::LabelScriptFuncs::impl::setLabelHoverTexture(Label* label, VGTexture texture) {
     label->setLabelHoverTexture(texture);
-}
-
-void vui::LabelScriptFuncs::impl::setTextHoverColor(Label* label, color4 color) {
-    label->setTextHoverColor(color);
 }

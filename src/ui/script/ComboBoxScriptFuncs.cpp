@@ -76,6 +76,18 @@ const vorb::graphics::SpriteFont* vui::ComboBoxScriptFuncs::impl::getDropButtonF
     return comboBox->getDropButtonFont(index);
 }
 
+const vorb::graphics::SpriteFont* vui::ComboBoxScriptFuncs::impl::getMainButtonHoverFont(ComboBox* comboBox) {
+    return comboBox->getMainButtonHoverFont();
+}
+
+const vorb::graphics::SpriteFont* vui::ComboBoxScriptFuncs::impl::getDropButtonHoverFontOfItem(ComboBox* comboBox, nString item) {
+    return comboBox->getDropButtonHoverFont(item);
+}
+
+const vorb::graphics::SpriteFont* vui::ComboBoxScriptFuncs::impl::getDropButtonHoverFontAtIndex(ComboBox* comboBox, size_t index) {
+    return comboBox->getDropButtonHoverFont(index);
+}
+
 color4 vui::ComboBoxScriptFuncs::impl::getMainButtonBackColor(ComboBox* comboBox) {
     return comboBox->getMainButtonBackColor();
 }
@@ -120,16 +132,16 @@ color4 vui::ComboBoxScriptFuncs::impl::getDropButtonTextColorAtIndex(ComboBox* c
     return comboBox->getDropButtonTextColor(index);
 }
 
-color4 vui::ComboBoxScriptFuncs::impl::getMainButtonTextHoverColor(ComboBox* comboBox) {
-    return comboBox->getMainButtonTextHoverColor();
+color4 vui::ComboBoxScriptFuncs::impl::getMainButtonHoverTextColor(ComboBox* comboBox) {
+    return comboBox->getMainButtonHoverTextColor();
 }
 
-color4 vui::ComboBoxScriptFuncs::impl::getDropButtonTextHoverColorOfItem(ComboBox* comboBox, nString item) {
-    return comboBox->getDropButtonTextHoverColor(item);
+color4 vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextColorOfItem(ComboBox* comboBox, nString item) {
+    return comboBox->getDropButtonHoverTextColor(item);
 }
 
-color4 vui::ComboBoxScriptFuncs::impl::getDropButtonTextHoverColorAtIndex(ComboBox* comboBox, size_t index) {
-    return comboBox->getDropButtonTextHoverColor(index);
+color4 vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextColorAtIndex(ComboBox* comboBox, size_t index) {
+    return comboBox->getDropButtonHoverTextColor(index);
 }
 
 f32v2 vui::ComboBoxScriptFuncs::impl::getMainButtonTextScale(ComboBox* comboBox) {
@@ -144,6 +156,18 @@ f32v2 vui::ComboBoxScriptFuncs::impl::getDropButtonTextScaleAtIndex(ComboBox* co
     return comboBox->getDropButtonTextScale(index);
 }
 
+f32v2 vui::ComboBoxScriptFuncs::impl::getMainButtonHoverTextScale(ComboBox* comboBox) {
+    return comboBox->getMainButtonHoverTextScale();
+}
+
+f32v2 vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextScaleOfItem(ComboBox* comboBox, nString item) {
+    return comboBox->getDropButtonHoverTextScale(item);
+}
+
+f32v2 vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextScaleAtIndex(ComboBox* comboBox, size_t index) {
+    return comboBox->getDropButtonHoverTextScale(index);
+}
+
 vg::TextAlign vui::ComboBoxScriptFuncs::impl::getMainButtonTextAlign(ComboBox* comboBox) {
     return comboBox->getMainButtonTextAlign();
 }
@@ -156,6 +180,26 @@ vg::TextAlign vui::ComboBoxScriptFuncs::impl::getDropButtonTextAlignAtIndex(Comb
     return comboBox->getDropButtonTextAlign(index);
 }
 
+vg::TextAlign vui::ComboBoxScriptFuncs::impl::getMainButtonHoverTextAlign(ComboBox* comboBox) {
+    return comboBox->getMainButtonHoverTextAlign();
+}
+
+vg::TextAlign vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextAlignOfItem(ComboBox* comboBox, nString item) {
+    return comboBox->getDropButtonHoverTextAlign(item);
+}
+
+vg::TextAlign vui::ComboBoxScriptFuncs::impl::getDropButtonHoverTextAlignAtIndex(ComboBox* comboBox, size_t index) {
+    return comboBox->getDropButtonHoverTextAlign(index);
+}
+
+nString vui::ComboBoxScriptFuncs::impl::getMainButtonText(ComboBox* comboBox) {
+    return comboBox->getMainButtonText();
+}
+
+nString vui::ComboBoxScriptFuncs::impl::getMainButtonHoverText(ComboBox* comboBox) {
+    return comboBox->getMainButtonHoverText();
+}
+
 nString vui::ComboBoxScriptFuncs::impl::getItem(ComboBox* comboBox, size_t index) {
     return comboBox->getItem(index);
 }
@@ -166,10 +210,6 @@ size_t vui::ComboBoxScriptFuncs::impl::getItemIndex(ComboBox* comboBox, nString 
 
 size_t vui::ComboBoxScriptFuncs::impl::getItemCount(ComboBox* comboBox) {
     return comboBox->getItemCount();
-}
-
-nString vui::ComboBoxScriptFuncs::impl::getText(ComboBox* comboBox) {
-    return comboBox->getText();
 }
 
 f32 vui::ComboBoxScriptFuncs::impl::getMaxDropHeight(ComboBox* comboBox) {
@@ -198,6 +238,30 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonFontAtIndex(ComboBox* comboBox
 
 void vui::ComboBoxScriptFuncs::impl::setDropButtonFontByCompare(ComboBox* comboBox, vg::SpriteFont* font, DropButtonComparator comparator) {
     comboBox->setDropButtonFont(font, comparator);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setHoverFont(ComboBox* comboBox, vg::SpriteFont* font) {
+    comboBox->setHoverFont(font);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverFont(ComboBox* comboBox, vg::SpriteFont* font) {
+    comboBox->setMainButtonHoverFont(font);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverFont(ComboBox* comboBox, vg::SpriteFont* font) {
+    comboBox->setDropButtonHoverFont(font);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverFontOfItem(ComboBox* comboBox, vg::SpriteFont* font, nString item) {
+    comboBox->setDropButtonHoverFont(font, item);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverFontAtIndex(ComboBox* comboBox, vg::SpriteFont* font, size_t index) {
+    comboBox->setDropButtonHoverFont(font, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverFontByCompare(ComboBox* comboBox, vg::SpriteFont* font, DropButtonComparator comparator) {
+    comboBox->setDropButtonHoverFont(font, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setMainButtonTexture(ComboBox* comboBox, VGTexture texture) {
@@ -327,28 +391,28 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextColorByCompare(ComboBox* c
     comboBox->setDropButtonTextColor(color, comparator);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setTextHoverColor(ComboBox* comboBox, color4 color) {
-    comboBox->setTextHoverColor(color);
+void vui::ComboBoxScriptFuncs::impl::setHoverTextColor(ComboBox* comboBox, color4 color) {
+    comboBox->setHoverTextColor(color);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setMainButtonTextHoverColor(ComboBox* comboBox, color4 color) {
-    comboBox->setMainButtonTextHoverColor(color);
+void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverTextColor(ComboBox* comboBox, color4 color) {
+    comboBox->setMainButtonHoverTextColor(color);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColor(ComboBox* comboBox, color4 color) {
-    comboBox->setDropButtonTextHoverColor(color);
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextColor(ComboBox* comboBox, color4 color) {
+    comboBox->setDropButtonHoverTextColor(color);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColorOfItem(ComboBox* comboBox, color4 color, nString item) {
-    comboBox->setDropButtonTextHoverColor(color, item);
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextColorOfItem(ComboBox* comboBox, color4 color, nString item) {
+    comboBox->setDropButtonHoverTextColor(color, item);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColorAtIndex(ComboBox* comboBox, color4 color, size_t index) {
-    comboBox->setDropButtonTextHoverColor(color, index);
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextColorAtIndex(ComboBox* comboBox, color4 color, size_t index) {
+    comboBox->setDropButtonHoverTextColor(color, index);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setDropButtonTextHoverColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
-    comboBox->setDropButtonTextHoverColor(color, comparator);
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextColorByCompare(ComboBox* comboBox, color4 color, DropButtonComparator comparator) {
+    comboBox->setDropButtonHoverTextColor(color, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setTextScale(ComboBox* comboBox, f32v2 textScale) {
@@ -375,6 +439,30 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextScaleByCompare(ComboBox* c
     comboBox->setDropButtonTextScale(textScale, comparator);
 }
 
+void vui::ComboBoxScriptFuncs::impl::setHoverTextScale(ComboBox* comboBox, f32v2 textScale) {
+    comboBox->setHoverTextScale(textScale);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverTextScale(ComboBox* comboBox, f32v2 textScale) {
+    comboBox->setMainButtonHoverTextScale(textScale);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextScale(ComboBox* comboBox, f32v2 textScale) {
+    comboBox->setDropButtonHoverTextScale(textScale);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextScaleOfItem(ComboBox* comboBox, f32v2 textScale, nString item) {
+    comboBox->setDropButtonHoverTextScale(textScale, item);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextScaleAtIndex(ComboBox* comboBox, f32v2 textScale, size_t index) {
+    comboBox->setDropButtonHoverTextScale(textScale, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextScaleByCompare(ComboBox* comboBox, f32v2 textScale, DropButtonComparator comparator) {
+    comboBox->setDropButtonHoverTextScale(textScale, comparator);
+}
+
 void vui::ComboBoxScriptFuncs::impl::setTextAlign(ComboBox* comboBox, vg::TextAlign align) {
     comboBox->setTextAlign(align);
 }
@@ -399,8 +487,76 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextAlignByCompare(ComboBox* c
     comboBox->setDropButtonTextAlign(align, comparator);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setText(ComboBox* comboBox, nString text) {
-    comboBox->setText(text);
+void vui::ComboBoxScriptFuncs::impl::setHoverTextAlign(ComboBox* comboBox, vg::TextAlign align) {
+    comboBox->setHoverTextAlign(align);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverTextAlign(ComboBox* comboBox, vg::TextAlign align) {
+    comboBox->setMainButtonHoverTextAlign(align);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextAlign(ComboBox* comboBox, vg::TextAlign align) {
+    comboBox->setDropButtonHoverTextAlign(align);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextAlignOfItem(ComboBox* comboBox, vg::TextAlign align, nString item) {
+    comboBox->setDropButtonHoverTextAlign(align, item);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextAlignAtIndex(ComboBox* comboBox, vg::TextAlign align, size_t index) {
+    comboBox->setDropButtonHoverTextAlign(align, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextAlignByCompare(ComboBox* comboBox, vg::TextAlign align, DropButtonComparator comparator) {
+    comboBox->setDropButtonHoverTextAlign(align, comparator);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setMainButtonText(ComboBox* comboBox, nString text) {
+    comboBox->setMainButtonText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonText(ComboBox* comboBox, nString text) {
+    comboBox->setDropButtonText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonText(ComboBox* comboBox, nString text) {
+    comboBox->setDropButtonText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextOfItem(ComboBox* comboBox, nString text, nString item) {
+    comboBox->setDropButtonText(text, item);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextAtIndex(ComboBox* comboBox, nString text, size_t index) {
+    comboBox->setDropButtonText(text, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonTextByCompare(ComboBox* comboBox, nString text, DropButtonComparator comparator) {
+    comboBox->setDropButtonText(text, comparator);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverText(ComboBox* comboBox, nString text) {
+    comboBox->setMainButtonHoverText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverText(ComboBox* comboBox, nString text) {
+    comboBox->setDropButtonHoverText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverText(ComboBox* comboBox, nString text) {
+    comboBox->setDropButtonHoverText(text);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextOfItem(ComboBox* comboBox, nString text, nString item) {
+    comboBox->setDropButtonHoverText(text, item);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextAtIndex(ComboBox* comboBox, nString text, size_t index) {
+    comboBox->setDropButtonHoverText(text, index);
+}
+
+void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverTextByCompare(ComboBox* comboBox, nString text, DropButtonComparator comparator) {
+    comboBox->setDropButtonHoverText(text, comparator);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setMaxDropHeight(ComboBox* comboBox, f32 maxDropHeight) {

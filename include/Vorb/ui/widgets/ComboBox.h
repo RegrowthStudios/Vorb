@@ -133,8 +133,8 @@ namespace vorb {
             virtual        const nString& getMainButtonHoverText()      const { return m_mainButton.getHoverText();      }
             virtual const vg::SpriteFont* getDropButtonFont(const nString& item)           const;
             virtual const vg::SpriteFont* getDropButtonFont(size_t index)                  const;
-            virtual const vg::SpriteFont* getDropButtonHoverFont(const nString& item)           const;
-            virtual const vg::SpriteFont* getDropButtonHoverFont(size_t index)                  const;
+            virtual const vg::SpriteFont* getDropButtonHoverFont(const nString& item)      const;
+            virtual const vg::SpriteFont* getDropButtonHoverFont(size_t index)             const;
             virtual             VGTexture getDropButtonTexture(const nString& item)        const;
             virtual             VGTexture getDropButtonTexture(size_t index)               const;
             virtual             VGTexture getDropButtonHoverTexture(const nString& item)   const;

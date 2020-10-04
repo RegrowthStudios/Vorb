@@ -47,10 +47,6 @@ color4 vui::CheckBoxScriptFuncs::impl::getBoxCheckedHoverColor(CheckBox* checkBo
     return checkBox->getBoxCheckedHoverColor();
 }
 
-color4 vui::CheckBoxScriptFuncs::impl::getTextHoverColor(CheckBox* checkBox) {
-    return checkBox->getTextHoverColor();
-}
-
 bool vui::CheckBoxScriptFuncs::impl::isChecked(CheckBox* checkBox) {
     return checkBox->isChecked();
 }
@@ -85,10 +81,6 @@ void vui::CheckBoxScriptFuncs::impl::setBoxCheckedColor(CheckBox* checkBox, colo
 
 void vui::CheckBoxScriptFuncs::impl::setBoxCheckedHoverColor(CheckBox* checkBox, color4 color) {
     checkBox->setBoxCheckedHoverColor(color);
-}
-
-void vui::CheckBoxScriptFuncs::impl::setTextHoverColor(CheckBox* checkBox, color4 color) {
-    checkBox->setTextHoverColor(color);
 }
 
 void vui::CheckBoxScriptFuncs::impl::setChecked(CheckBox* checkBox, bool checked) {

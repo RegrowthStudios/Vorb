@@ -49,7 +49,6 @@ namespace vorb {
                 VGTexture getHoverTexture(Button* button);
                 color4 getBackColor(Button* button);
                 color4 getBackHoverColor(Button* button);
-                color4 getTextHoverColor(Button* button);
 
                 /******************************************************************/
                 /* Setters                                                        */
@@ -60,7 +59,6 @@ namespace vorb {
                 void setBackColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad);
                 void setBackHoverColor(Button* button, color4 color);
                 void setBackHoverColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad);
-                void setTextHoverColor(Button* button, color4 color);
             }
         }
     }
@@ -78,8 +76,6 @@ void vui::ButtonScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("setBackColor",          makeDelegate(&impl::setBackColor));
     env->addCDelegate("getBackHoverColor",     makeDelegate(&impl::getBackHoverColor));
     env->addCDelegate("setBackHoverColor",     makeDelegate(&impl::setBackHoverColor));
-    env->addCDelegate("getTextHoverColor",     makeDelegate(&impl::getTextHoverColor));
-    env->addCDelegate("setTextHoverColor",     makeDelegate(&impl::setTextHoverColor));
     env->addCDelegate("setBackColorGrad",      makeDelegate(&impl::setBackColorGrad));
     env->addCDelegate("setBackHoverColorGrad", makeDelegate(&impl::setBackHoverColorGrad));
     env->setNamespaces();

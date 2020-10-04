@@ -21,10 +21,6 @@ color4  vui::ButtonScriptFuncs::impl::getBackHoverColor(Button* button) {
     return button->getBackHoverColor();
 }
 
-color4  vui::ButtonScriptFuncs::impl::getTextHoverColor(Button* button) {
-    return button->getTextHoverColor();
-}
-
 void  vui::ButtonScriptFuncs::impl::setTexture(Button* button, VGTexture texture) {
     button->setTexture(texture);
 }
@@ -47,8 +43,4 @@ void  vui::ButtonScriptFuncs::impl::setBackHoverColor(Button* button, color4 col
 
 void  vui::ButtonScriptFuncs::impl::setBackHoverColorGrad(Button* button, color4 color1, color4 color2, vg::GradientType grad) {
     button->setBackHoverColorGrad(color1, color2, grad);
-}
-
-void  vui::ButtonScriptFuncs::impl::setTextHoverColor(Button* button, color4 color) {
-    button->setTextHoverColor(color);
 }

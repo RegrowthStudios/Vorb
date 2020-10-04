@@ -47,7 +47,6 @@ namespace vorb {
                    color4 getLabelHoverColor   (Label* label);
                 VGTexture getLabelTexture      (Label* label);
                 VGTexture getLabelHoverTexture (Label* label);
-                   color4 getTextHoverColor    (Label* label);
 
                 /******************************************************************/
                 /* Setters                                                        */
@@ -56,7 +55,6 @@ namespace vorb {
                 void setLabelHoverColor   (Label* label, color4 color);
                 void setLabelTexture      (Label* label, VGTexture texture);
                 void setLabelHoverTexture (Label* label, VGTexture texture);
-                void setTextHoverColor    (Label* label, color4 color);
             }
         }
     }
@@ -74,8 +72,6 @@ void vui::LabelScriptFuncs::registerFuncs(const nString& namespace_, vscript::IE
     env->addCDelegate("setLabelTexture",      makeDelegate(&impl::setLabelTexture));
     env->addCDelegate("getLabelHoverTexture", makeDelegate(&impl::getLabelHoverTexture));
     env->addCDelegate("setLabelHoverTexture", makeDelegate(&impl::setLabelHoverTexture));
-    env->addCDelegate("getTextHoverColor",    makeDelegate(&impl::getTextHoverColor));
-    env->addCDelegate("setTextHoverColor",    makeDelegate(&impl::setTextHoverColor));
     env->setNamespaces();
 
     TextWidgetScriptFuncs::registerFuncs(namespace_, env);

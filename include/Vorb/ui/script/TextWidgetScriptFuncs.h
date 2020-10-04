@@ -43,20 +43,30 @@ namespace vorb {
                 /******************************************************************/
                 /* Getters                                                        */
                 /******************************************************************/
-                const vg::SpriteFont* getFont      (TextWidget* textWidget);
-                              nString getText      (TextWidget* textWidget);
-                        vg::TextAlign getTextAlign (TextWidget* textWidget);
-                               color4 getTextColor (TextWidget* textWidget);
-                                f32v2 getTextScale (TextWidget* textWidget);
+                const vg::SpriteFont* getFont           (TextWidget* textWidget);
+                              nString getText           (TextWidget* textWidget);
+                        vg::TextAlign getTextAlign      (TextWidget* textWidget);
+                               color4 getTextColor      (TextWidget* textWidget);
+                                f32v2 getTextScale      (TextWidget* textWidget);
+                const vg::SpriteFont* getHoverFont      (TextWidget* textWidget);
+                              nString getHoverText      (TextWidget* textWidget);
+                        vg::TextAlign getHoverTextAlign (TextWidget* textWidget);
+                               color4 getHoverTextColor (TextWidget* textWidget);
+                                f32v2 getHoverTextScale (TextWidget* textWidget);
 
                 /******************************************************************/
                 /* Setters                                                        */
                 /******************************************************************/
-                void setFont      (TextWidget* textWidget, vg::SpriteFont* font);
-                void setText      (TextWidget* textWidget, nString text);
-                void setTextAlign (TextWidget* textWidget, vg::TextAlign textAlign);
-                void setTextColor (TextWidget* textWidget, color4 color);
-                void setTextScale (TextWidget* textWidget, f32v2 scale);
+                void setFont           (TextWidget* textWidget, vg::SpriteFont* font);
+                void setText           (TextWidget* textWidget, nString text);
+                void setTextAlign      (TextWidget* textWidget, vg::TextAlign textAlign);
+                void setTextColor      (TextWidget* textWidget, color4 color);
+                void setTextScale      (TextWidget* textWidget, f32v2 scale);
+                void setHoverFont      (TextWidget* textWidget, vg::SpriteFont* font);
+                void setHoverText      (TextWidget* textWidget, nString text);
+                void setHoverTextAlign (TextWidget* textWidget, vg::TextAlign textAlign);
+                void setHoverTextColor (TextWidget* textWidget, color4 color);
+                void setHoverTextScale (TextWidget* textWidget, f32v2 scale);
             }
         }
     }
@@ -66,16 +76,26 @@ namespace vui = vorb::ui;
 template <typename ScriptEnvironmentImpl>
 void vui::TextWidgetScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     env->setNamespaces("UI", namespace_);
-    env->addCDelegate("getFont",      makeDelegate(&impl::getFont));
-    env->addCDelegate("setFont",      makeDelegate(&impl::setFont));
-    env->addCDelegate("getText",      makeDelegate(&impl::getText));
-    env->addCDelegate("setText",      makeDelegate(&impl::setText));
-    env->addCDelegate("getTextAlign", makeDelegate(&impl::getTextAlign));
-    env->addCDelegate("setTextAlign", makeDelegate(&impl::setTextAlign));
-    env->addCDelegate("getTextColor", makeDelegate(&impl::getTextColor));
-    env->addCDelegate("setTextColor", makeDelegate(&impl::setTextColor));
-    env->addCDelegate("getTextScale", makeDelegate(&impl::getTextScale));
-    env->addCDelegate("setTextScale", makeDelegate(&impl::setTextScale));
+    env->addCDelegate("getFont",           makeDelegate(&impl::getFont));
+    env->addCDelegate("setFont",           makeDelegate(&impl::setFont));
+    env->addCDelegate("getText",           makeDelegate(&impl::getText));
+    env->addCDelegate("setText",           makeDelegate(&impl::setText));
+    env->addCDelegate("getTextAlign",      makeDelegate(&impl::getTextAlign));
+    env->addCDelegate("setTextAlign",      makeDelegate(&impl::setTextAlign));
+    env->addCDelegate("getTextColor",      makeDelegate(&impl::getTextColor));
+    env->addCDelegate("setTextColor",      makeDelegate(&impl::setTextColor));
+    env->addCDelegate("getTextScale",      makeDelegate(&impl::getTextScale));
+    env->addCDelegate("setTextScale",      makeDelegate(&impl::setTextScale));
+    env->addCDelegate("getHoverFont",      makeDelegate(&impl::getHoverFont));
+    env->addCDelegate("setHoverFont",      makeDelegate(&impl::setHoverFont));
+    env->addCDelegate("getHoverText",      makeDelegate(&impl::getHoverText));
+    env->addCDelegate("setHoverText",      makeDelegate(&impl::setHoverText));
+    env->addCDelegate("getHoverTextAlign", makeDelegate(&impl::getHoverTextAlign));
+    env->addCDelegate("setHoverTextAlign", makeDelegate(&impl::setHoverTextAlign));
+    env->addCDelegate("getHoverTextColor", makeDelegate(&impl::getHoverTextColor));
+    env->addCDelegate("setHoverTextColor", makeDelegate(&impl::setHoverTextColor));
+    env->addCDelegate("getHoverTextScale", makeDelegate(&impl::getHoverTextScale));
+    env->addCDelegate("setHoverTextScale", makeDelegate(&impl::setHoverTextScale));
     env->setNamespaces();
 
     WidgetScriptFuncs::registerFuncs(namespace_, env);

@@ -34,7 +34,7 @@ void vscript::lua::Environment::init() {
 
 void vscript::lua::Environment::init(IEnvironment* env) {
     // Cast to Lua environment.
-    Environment* luaEnv = static_cast<Environment*(env);
+    Environment* luaEnv = static_cast<Environment*>(env);
 
     // Initialise the Lua environment.
     m_state = luaL_newthread(luaEnv->m_state);

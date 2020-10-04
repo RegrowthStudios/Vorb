@@ -8,9 +8,7 @@ vui::Label::Label() :
     m_labelColor(color::Transparent),
     m_labelHoverColor(color::Transparent),
     m_labelTexture(0),
-    m_labelHoverTexture(0),
-    m_textColor(color::DarkGray),
-    m_textHoverColor(color::AliceBlue) {
+    m_labelHoverTexture(0) {
     m_flags.needsDrawableRecalculation = true;
 }
 

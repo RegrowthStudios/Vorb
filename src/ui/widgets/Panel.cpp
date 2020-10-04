@@ -51,13 +51,13 @@ void vui::Panel::enable() {
     m_sliders.vertical.disable();
 }
 
-void vui::Panel::disable() {
+void vui::Panel::disable(bool thisOnly /*= false*/) {
     if (m_flags.isEnabled) {
         m_sliders.horizontal.ValueChange -= makeDelegate(this, &Panel::onSliderValueChange);
         m_sliders.vertical.ValueChange   -= makeDelegate(this, &Panel::onSliderValueChange);
     }
 
-    IWidget::disable();
+    IWidget::disable(thisOnly);
 }
 
 void vui::Panel::addDrawables(UIRenderer& renderer) {

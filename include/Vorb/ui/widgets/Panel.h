@@ -44,7 +44,7 @@ namespace vorb {
             /*! \brief Enables events panel widgets are interested in. */
             virtual void enable() override;
             /*! \brief Disables events panel widgets are interested in. */
-            virtual void disable() override;
+            virtual void disable(bool thisOnly = false) override;
 
             /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables(UIRenderer& renderer) override;

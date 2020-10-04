@@ -220,6 +220,8 @@ namespace vorb {
                 scriptEnv->setNamespaces();
 
                 scriptEnv->run(vio::Path(filepath));
+
+                return view;
             }
         };
 

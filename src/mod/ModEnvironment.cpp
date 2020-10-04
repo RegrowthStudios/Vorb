@@ -32,17 +32,23 @@ void vmod::ModEnvironmentBase::dispose() {
 }
 
 bool vmod::ModEnvironmentBase::startup() {
+    // TODO(Matthew): Better reporting of startup success/failure.
     // Need to iterate backwards over active mods for startup, as we
     // want to start lowest-priority mods first.
+    bool success = true;
     for (auto& mod : reverse(m_activeMods)) {
-        mod->startup();
+        success = mod->startup() && success;
     }
+    return success;
 }
 
 bool vmod::ModEnvironmentBase::shutdown() {
+    // TODO(Matthew): Better reporting of shutdown success/failure.
+    bool success = true;
     for (auto& mod : m_activeMods) {
-        mod->shutdown();
+        success = mod->shutdown() && success;
     }
+    return success;
 }
 
 void vmod::ModEnvironmentBase::update(f32 dt /*= 0.0f*/) {

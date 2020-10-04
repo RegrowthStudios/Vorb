@@ -251,7 +251,7 @@ namespace vorb {
                     return ui->setViewZIndex(view, zIndex);
                 }));
                 env->addCDelegate("setViewZIndexWithName", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
-                    return ui->setViewZIndexWithName(name, zIndex);
+                    return ui->setViewWithNameZIndex(name, zIndex);
                 }));
                 env->setNamespaces();
             }

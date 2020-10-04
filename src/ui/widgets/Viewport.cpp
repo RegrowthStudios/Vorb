@@ -22,6 +22,56 @@ void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::Sprit
 
     m_positionType = PositionType::STATIC_TO_WINDOW;
 
+    // Set defaults for all inheritable properties so that at worst getInheritedDefault hits here.
+    m_inheritableGetterSetterMap["positionType"] = {
+        makeFunctor([&]() {
+            const PositionType DEFAULT_POSITION_TYPE = PositionType::STATIC_TO_PARENT;
+            return (void*)&DEFAULT_POSITION_TYPE;
+        }),
+        makeFunctor([&](void* positionType) {
+            // Empty.
+        })
+    };
+    m_isModifiedMap["positionType"] = false;
+    m_inheritableGetterSetterMap["font"] = {
+        makeFunctor([&]() {
+            return (void*)defaultFont;
+        }),
+        makeFunctor([&](void* font) {
+            // Empty.
+        })
+    };
+    m_isModifiedMap["font"] = false;
+    m_inheritableGetterSetterMap["textColor"] = {
+        makeFunctor([&]() {
+            return (void*)&color::Black;
+        }),
+        makeFunctor([&](void* textColor) {
+            // Empty.
+        })
+    };
+    m_isModifiedMap["textColor"] = false;
+    m_inheritableGetterSetterMap["textAlign"] = {
+        makeFunctor([&]() {
+            const vg::TextAlign DEFAULT_TEXT_ALIGN = vg::TextAlign::NONE;
+            return (void*)&DEFAULT_TEXT_ALIGN;
+        }),
+        makeFunctor([&](void* textAlign) {
+            // Empty.
+        })
+    };
+    m_isModifiedMap["textAlign"] = false;
+    m_inheritableGetterSetterMap["textScale"] = {
+        makeFunctor([&]() {
+            const f32v2 DEFAULT_TEXT_SCALE = f32v2(0.0f);
+            return (void*)&DEFAULT_TEXT_SCALE;
+        }),
+        makeFunctor([&](void* textScale) {
+            // Empty.
+        })
+    };
+    m_isModifiedMap["textScale"] = false;
+
     m_renderer.init(defaultFont, spriteBatch);
 }
 

@@ -519,10 +519,6 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonText(ComboBox* comboBox, nStri
     comboBox->setDropButtonText(text);
 }
 
-void vui::ComboBoxScriptFuncs::impl::setDropButtonText(ComboBox* comboBox, nString text) {
-    comboBox->setDropButtonText(text);
-}
-
 void vui::ComboBoxScriptFuncs::impl::setDropButtonTextOfItem(ComboBox* comboBox, nString text, nString item) {
     comboBox->setDropButtonText(text, item);
 }
@@ -537,10 +533,6 @@ void vui::ComboBoxScriptFuncs::impl::setDropButtonTextByCompare(ComboBox* comboB
 
 void vui::ComboBoxScriptFuncs::impl::setMainButtonHoverText(ComboBox* comboBox, nString text) {
     comboBox->setMainButtonHoverText(text);
-}
-
-void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverText(ComboBox* comboBox, nString text) {
-    comboBox->setDropButtonHoverText(text);
 }
 
 void vui::ComboBoxScriptFuncs::impl::setDropButtonHoverText(ComboBox* comboBox, nString text) {

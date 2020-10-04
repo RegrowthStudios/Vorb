@@ -373,17 +373,17 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
 
         impl::setDropButtonTextScaleByCompare(comboBox, scale, compare);
     }));
-    env->addCDelegate("setTextHoverScale",                         makeDelegate(&impl::setTextHoverScale));
-    env->addCDelegate("setMainButtonTextHoverScale",               makeDelegate(&impl::setMainButtonTextHoverScale));
-    env->addCDelegate("setDropButtonTextHoverScale",               makeDelegate(&impl::setDropButtonTextHoverScale));
-    env->addCDelegate("setDropButtonTextHoverScaleOfItem",         makeDelegate(&impl::setDropButtonTextHoverScaleOfItem));
-    env->addCDelegate("setDropButtonTextHoverScaleAtIndex",        makeDelegate(&impl::setDropButtonTextHoverScaleAtIndex));
-    env->addCDelegate("setDropButtonTextHoverScaleByCompare",      makeFunctor([env] (ComboBox* comboBox, f32v2 scale, nString compareName) {
+    env->addCDelegate("setHoverTextScale",                         makeDelegate(&impl::setHoverTextScale));
+    env->addCDelegate("setMainButtonHoverTextScale",               makeDelegate(&impl::setMainButtonHoverTextScale));
+    env->addCDelegate("setDropButtonHoverTextScale",               makeDelegate(&impl::setDropButtonHoverTextScale));
+    env->addCDelegate("setDropButtonHoverTextScaleOfItem",         makeDelegate(&impl::setDropButtonHoverTextScaleOfItem));
+    env->addCDelegate("setDropButtonHoverTextScaleAtIndex",        makeDelegate(&impl::setDropButtonHoverTextScaleAtIndex));
+    env->addCDelegate("setDropButtonHoverTextScaleByCompare",      makeFunctor([env] (ComboBox* comboBox, f32v2 scale, nString compareName) {
         DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
         if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextHoverScaleByCompare(comboBox, scale, compare);
+        impl::setDropButtonHoverTextScaleByCompare(comboBox, scale, compare);
     }));
     env->addCDelegate("setTextAlign",                         makeDelegate(&impl::setTextAlign));
     env->addCDelegate("setMainButtonTextAlign",               makeDelegate(&impl::setMainButtonTextAlign));
@@ -397,17 +397,17 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
 
         impl::setDropButtonTextAlignByCompare(comboBox, align, compare);
     }));
-    env->addCDelegate("setTextHoverAlign",                         makeDelegate(&impl::setTextHoverAlign));
-    env->addCDelegate("setMainButtonTextHoverAlign",               makeDelegate(&impl::setMainButtonTextHoverAlign));
-    env->addCDelegate("setDropButtonTextHoverAlign",               makeDelegate(&impl::setDropButtonTextHoverAlign));
-    env->addCDelegate("setDropButtonTextHoverAlignOfItem",         makeDelegate(&impl::setDropButtonTextHoverAlignOfItem));
-    env->addCDelegate("setDropButtonTextHoverAlignAtIndex",        makeDelegate(&impl::setDropButtonTextHoverAlignAtIndex));
-    env->addCDelegate("setDropButtonTextHoverAlignByCompare",      makeFunctor([env] (ComboBox* comboBox, vg::TextAlign align, nString compareName) {
+    env->addCDelegate("setHoverTextAlign",                         makeDelegate(&impl::setHoverTextAlign));
+    env->addCDelegate("setMainButtonHoverTextAlign",               makeDelegate(&impl::setMainButtonHoverTextAlign));
+    env->addCDelegate("setDropButtonHoverTextAlign",               makeDelegate(&impl::setDropButtonHoverTextAlign));
+    env->addCDelegate("setDropButtonHoverTextAlignOfItem",         makeDelegate(&impl::setDropButtonHoverTextAlignOfItem));
+    env->addCDelegate("setDropButtonHoverTextAlignAtIndex",        makeDelegate(&impl::setDropButtonHoverTextAlignAtIndex));
+    env->addCDelegate("setDropButtonHoverTextAlignByCompare",      makeFunctor([env] (ComboBox* comboBox, vg::TextAlign align, nString compareName) {
         DropButtonComparator compare = env->template getScriptDelegate<bool, size_t, Button*>(compareName);
 
         if (compare == NilDropButtonComparator) return;
 
-        impl::setDropButtonTextHoverAlignByCompare(comboBox, align, compare);
+        impl::setDropButtonHoverTextAlignByCompare(comboBox, align, compare);
     }));
     env->addCDelegate("setMainButtonText",               makeDelegate(&impl::setMainButtonText));
     env->addCDelegate("setDropButtonText",               makeDelegate(&impl::setDropButtonText));

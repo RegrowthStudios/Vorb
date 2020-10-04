@@ -25,6 +25,10 @@ vui::Slider::~Slider() {
 }
 
 void vui::Slider::initBase() {
+    Widget::initBase();
+
+    m_isModifiedMap["sliderHoverColor"] = false;
+
     ValueChange.setSender(this);
 }
 
@@ -84,11 +88,15 @@ void vui::Slider::setBarColor(const color4& color) {
 void vui::Slider::setSlideColor(const color4& color) {
     m_slideColor = color;
 
+    if (!m_isModifiedMap["sliderHoverColor"]) setSlideHoverColor(color);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Slider::setSlideHoverColor(const color4& color) {
     m_slideHoverColor = color;
+
+    m_isModifiedMap["sliderHoverColor"] = true;
 
     m_flags.needsDrawableRecalculation = true;
 }

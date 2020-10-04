@@ -29,6 +29,11 @@ vui::Panel::~Panel() {
 }
 
 void vui::Panel::initBase() {
+    Widget::initBase();
+
+    m_isModifiedMap["backHoverColor"] = false;
+    m_isModifiedMap["hoverTexture"]   = false;
+
     m_sliders.horizontal.init(this, getName() + "_horizontal_slider");
     m_sliders.vertical.init(this, getName() + "_vertical_slider");
 
@@ -68,11 +73,15 @@ void vui::Panel::addDrawables(UIRenderer& renderer) {
 void vui::Panel::setTexture(VGTexture texture) {
     m_texture = texture;
 
+    if (!m_isModifiedMap["hoverTexture"]) setHoverTexture(texture);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Panel::setHoverTexture(VGTexture texture) {
     m_hoverTexture = texture;
+
+    m_isModifiedMap["hoverTexture"] = true;
 
     m_flags.needsDrawableRecalculation = true;
 }
@@ -96,11 +105,15 @@ void vui::Panel::setSliderWidth(f32 width) {
 void vui::Panel::setColor(const color4& color) {
     m_backColor = color;
 
+    if (!m_isModifiedMap["backHoverColor"]) setHoverColor(color);
+
     updateColor();
 }
 
 void vui::Panel::setHoverColor(const color4& color) {
     m_backHoverColor = color;
+
+    m_isModifiedMap["backHoverColor"] = true;
 
     updateColor();
 }

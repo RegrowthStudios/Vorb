@@ -222,6 +222,9 @@ namespace vorb {
             /*! \brief Reprocesses the pixel size and position of this widget relative to window (and parent for position). */
             virtual void updateDimensions(f32) override;
 
+            /*! \brief Initialiser for general set-up. */
+            virtual void initBase() override;
+
             /*!
              * \brief Processes a given raw length based on this widget's ancestors.
              * 

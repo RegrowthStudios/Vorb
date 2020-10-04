@@ -23,6 +23,13 @@ vui::CheckBox::~CheckBox() {
 }
 
 void vui::CheckBox::initBase() {
+    TextWidget::initBase();
+
+    m_isModifiedMap["boxHoverColor"]         = false;
+    m_isModifiedMap["boxCheckedHoverColor"]  = false;
+    m_isModifiedMap["checkedHoverTexture"]   = false;
+    m_isModifiedMap["uncheckedHoverTexture"] = false;
+
     ValueChange.setSender(this);
 }
 
@@ -48,49 +55,65 @@ void vui::CheckBox::toggleChecked() {
 
 void vui::CheckBox::setCheckedTexture(VGTexture texture) {
     m_checkedTexture = texture;
-    
+
+    if (!m_isModifiedMap["checkedHoverTexture"]) setCheckedHoverTexture(texture);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setUncheckedTexture(VGTexture texture) {
     m_uncheckedTexture = texture;
-    
+
+    if (!m_isModifiedMap["uncheckedHoverTexture"]) setUncheckedHoverTexture(texture);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setCheckedHoverTexture(VGTexture texture) {
     m_checkedHoverTexture = texture;
-    
+
+    m_isModifiedMap["checkedHoverTexture"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setUncheckedHoverTexture(VGTexture texture) {
     m_uncheckedHoverTexture = texture;
-    
+
+    m_isModifiedMap["uncheckedHoverTexture"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setBoxColor(const color4& color) {
     m_boxColor = color;
-    
+
+    if (!m_isModifiedMap["boxHoverColor"]) setBoxHoverColor(color);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setBoxHoverColor(const color4& color) {
     m_boxHoverColor = color;
-    
+
+    m_isModifiedMap["boxHoverColor"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setBoxCheckedColor(const color4& color) {
     m_boxCheckedColor = color;
-    
+
+    if (!m_isModifiedMap["boxCheckedHoverColor"]) setBoxCheckedHoverColor(color);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::CheckBox::setBoxCheckedHoverColor(const color4& color) {
     m_boxCheckedHoverColor = color;
-    
+
+    m_isModifiedMap["boxCheckedHoverColor"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 

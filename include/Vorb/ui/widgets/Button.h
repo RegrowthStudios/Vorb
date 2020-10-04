@@ -63,6 +63,9 @@ namespace vorb {
             virtual void setBackHoverColorGrad(const color4& color1, const color4& color2, vg::GradientType grad);
 
         protected:
+            /*! \brief Initialiser for general set-up. */
+            virtual void initBase() override;
+
             virtual void calculateDrawables() override;
 
             /*! Updates the colours set for the drawables. */

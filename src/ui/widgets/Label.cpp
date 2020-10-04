@@ -27,11 +27,15 @@ void vui::Label::addDrawables(UIRenderer& renderer) {
 void vui::Label::setLabelColor(const color4& color) {
     m_labelColor = color;
 
+    if (!m_isModifiedMap["hoverColor"]) setLabelHoverColor(color);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Label::setLabelHoverColor(const color4& color) {
     m_labelHoverColor = color;
+
+    m_isModifiedMap["hoverColor"] = true;
 
     m_flags.needsDrawableRecalculation = true;
 }
@@ -39,13 +43,24 @@ void vui::Label::setLabelHoverColor(const color4& color) {
 void vui::Label::setLabelTexture(VGTexture texture) {
     m_labelTexture = texture;
 
+    if (!m_isModifiedMap["hoverTexture"]) setLabelHoverTexture(texture);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Label::setLabelHoverTexture(VGTexture texture) {
     m_labelHoverTexture = texture;
 
+    m_isModifiedMap["hoverTexture"] = true;
+
     m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Label::initBase() {
+    TextWidget::initBase();
+
+    m_isModifiedMap["hoverColor"]   = false;
+    m_isModifiedMap["hoverTexture"] = false;
 }
 
 void vui::Label::calculateDrawables() {

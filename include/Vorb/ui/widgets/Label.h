@@ -60,6 +60,9 @@ namespace vorb {
             virtual void setLabelHoverTexture(VGTexture texture);
 
         protected:
+            /*! \brief Initialiser for adding buttons, panel and setting up events. */
+            virtual void initBase() override;
+
             virtual void calculateDrawables() override;
 
             virtual void updateColor();

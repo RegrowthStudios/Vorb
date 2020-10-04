@@ -23,16 +23,6 @@ vui::Widget::~Widget() {
 
 void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
     IWidget::init(name, dimensions, zIndex);
-
-    m_inheritableGetterSetterMap["positionType"] = {
-        makeFunctor([&]() {
-            return (void*)&m_positionType;
-        }),
-        makeFunctor([&](void* positionType) {
-            setPositionType(*static_cast<PositionType*>(positionType));
-        })
-    };
-    m_isModifiedMap["positionType"] = false;
 }
 
 void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
@@ -277,6 +267,18 @@ void vui::Widget::updateDimensions(f32) {
         processLength({ m_rawPadding.z, { m_rawPadding.dimension.z } }),
         processLength({ m_rawPadding.w, { m_rawPadding.dimension.w } })
     };
+}
+
+void vui::Widget::initBase() {
+    m_inheritableGetterSetterMap["positionType"] = {
+        makeFunctor([&]() {
+            return (void*)&m_positionType;
+        }),
+        makeFunctor([&](void* positionType) {
+            setPositionType(*static_cast<PositionType*>(positionType));
+        })
+    };
+    m_isModifiedMap["positionType"] = false;
 }
 
 f32 vui::Widget::processLength(Length length) const {

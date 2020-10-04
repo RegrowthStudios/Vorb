@@ -31,19 +31,25 @@ void vui::Button::addDrawables(UIRenderer& renderer) {
 
 void vui::Button::setTexture(VGTexture texture) {
     m_texture = texture;
-    
+
+    if (!m_isModifiedMap["hoverTexture"]) setHoverTexture(texture);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setHoverTexture(VGTexture texture) {
     m_hoverTexture = texture;
-    
+
+    m_isModifiedMap["hoverTexture"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackColor(const color4& color) {
     m_backColor1 = m_backColor2 = color;
-    
+
+    if (!m_isModifiedMap["backHoverColor1"] && !m_isModifiedMap["backHoverColor2"]) setBackHoverColor(color);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -51,13 +57,20 @@ void vui::Button::setBackColorGrad(const color4& color1, const color4& color2, v
     m_backColor1 = color1;
     m_backColor2 = color2;
     m_gradBack = grad;
-    
+
+    if (!m_isModifiedMap["backHoverColor1"]
+            && !m_isModifiedMap["backHoverColor2"]
+            && !m_isModifiedMap["gradHover"]) setBackHoverColorGrad(color1, color2, grad);
+
     m_flags.needsDrawableRecalculation = true;
 }
 
 void vui::Button::setBackHoverColor(const color4& color) {
     m_backHoverColor1 = m_backHoverColor2 = color;
-    
+
+    m_isModifiedMap["backHoverColor1"] = true;
+    m_isModifiedMap["backHoverColor2"] = true;
+
     m_flags.needsDrawableRecalculation = true;
 }
 
@@ -65,8 +78,21 @@ void vui::Button::setBackHoverColorGrad(const color4& color1, const color4& colo
     m_backHoverColor1 = color1;
     m_backHoverColor2 = color2;
     m_gradHover = grad;
+
+    m_isModifiedMap["backHoverColor1"] = true;
+    m_isModifiedMap["backHoverColor2"] = true;
+    m_isModifiedMap["gradHover"]       = true;
     
     m_flags.needsDrawableRecalculation = true;
+}
+
+void vui::Button::initBase() {
+    TextWidget::initBase();
+
+    m_isModifiedMap["gradHover"]       = false;
+    m_isModifiedMap["backHoverColor1"] = false;
+    m_isModifiedMap["backHoverColor2"] = false;
+    m_isModifiedMap["hoverTexture"]    = false;
 }
 
 void vui::Button::calculateDrawables() {

@@ -25,6 +25,8 @@ vui::ComboBox::~ComboBox() {
 }
 
 void vui::ComboBox::initBase() {
+    Widget::initBase();
+
     ValueChange.setSender(this);
 
     m_dropPanel.init(this, getName() + "_drop_panel");

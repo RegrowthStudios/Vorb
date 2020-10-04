@@ -11,69 +11,6 @@ vui::TextWidget::~TextWidget() {
     // Empty
 }
 
-void vui::TextWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
-    IWidget::init(name, dimensions, zIndex);
-
-    m_inheritableGetterSetterMap["font"] = {
-        makeFunctor([&]() {
-            return (void*)m_drawableText.getFont();
-        }),
-        makeFunctor([&](void* font) {
-            setFont(static_cast<const vg::SpriteFont*>(font));
-        })
-    };
-    m_isModifiedMap["font"] = false;
-    m_inheritableGetterSetterMap["textColor"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getColor();
-        }),
-        makeFunctor([&](void* textColor) {
-            setTextColor(*static_cast<color4*>(textColor));
-        })
-    };
-    m_isModifiedMap["textColor"] = false;
-    m_inheritableGetterSetterMap["textAlign"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getTextAlign();
-        }),
-        makeFunctor([&](void* textAlign) {
-            setTextAlign(*static_cast<vg::TextAlign*>(textAlign));
-        })
-    };
-    m_isModifiedMap["textAlign"] = false;
-    m_inheritableGetterSetterMap["textScale"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getTextScale();
-        }),
-        makeFunctor([&](void* textScale) {
-            setTextScale(*static_cast<f32v2*>(textScale));
-        })
-    };
-    m_isModifiedMap["textScale"] = false;
-
-    m_isModifiedMap["hoverFont"] = false;
-    m_isModifiedMap["hoverText"] = false;
-    m_isModifiedMap["hoverTextColor"] = false;
-    m_isModifiedMap["hoverTextAlign"] = false;
-    m_isModifiedMap["hoverTextScale"] = false;
-}
-
-void vui::TextWidget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
-    TextWidget::init(name, f32v4(position.x, position.y, size.x, size.y), zIndex);
-}
-
-void vui::TextWidget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {
-    TextWidget::init(name, dimensions, zIndex);
-
-    parent->addWidget(this);
-}
-
-void vui::TextWidget::init(IWidget* parent, const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
-    TextWidget::init(name, position, size, zIndex);
-
-    parent->addWidget(this);
-}
-
 void vui::TextWidget::addDrawables(UIRenderer& renderer) {
     auto performAdd = [&renderer](DrawableText& text) {
         // Use renderer default font if we dont have a font.
@@ -162,6 +99,53 @@ void vui::TextWidget::setHoverTextScale(const f32v2& textScale) {
     m_isModifiedMap["hoverTextScale"] = true;
 
     m_drawableHoverText.setTextScale(textScale);
+}
+
+void vui::TextWidget::initBase() {
+    Widget::initBase();
+
+    m_inheritableGetterSetterMap["font"] = {
+        makeFunctor([&]() {
+            return (void*)m_drawableText.getFont();
+        }),
+        makeFunctor([&](void* font) {
+            setFont(static_cast<const vg::SpriteFont*>(font));
+        })
+    };
+    m_isModifiedMap["font"] = false;
+    m_inheritableGetterSetterMap["textColor"] = {
+        makeFunctor([&]() {
+            return (void*)&m_drawableText.getColor();
+        }),
+        makeFunctor([&](void* textColor) {
+            setTextColor(*static_cast<color4*>(textColor));
+        })
+    };
+    m_isModifiedMap["textColor"] = false;
+    m_inheritableGetterSetterMap["textAlign"] = {
+        makeFunctor([&]() {
+            return (void*)&m_drawableText.getTextAlign();
+        }),
+        makeFunctor([&](void* textAlign) {
+            setTextAlign(*static_cast<vg::TextAlign*>(textAlign));
+        })
+    };
+    m_isModifiedMap["textAlign"] = false;
+    m_inheritableGetterSetterMap["textScale"] = {
+        makeFunctor([&]() {
+            return (void*)&m_drawableText.getTextScale();
+        }),
+        makeFunctor([&](void* textScale) {
+            setTextScale(*static_cast<f32v2*>(textScale));
+        })
+    };
+    m_isModifiedMap["textScale"] = false;
+
+    m_isModifiedMap["hoverFont"] = false;
+    m_isModifiedMap["hoverText"] = false;
+    m_isModifiedMap["hoverTextColor"] = false;
+    m_isModifiedMap["hoverTextAlign"] = false;
+    m_isModifiedMap["hoverTextScale"] = false;
 }
 
 void vui::TextWidget::calculateDrawables() {

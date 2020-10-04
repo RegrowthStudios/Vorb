@@ -27,7 +27,7 @@
             try {                                                       \
                 vec[0] = value.data[0].as<TYPE>();                      \
                 vec[1] = value.data[1].as<TYPE>();                      \
-            } catch (std::runtime_error e) {                            \
+            } catch (std::runtime_error& e) {                            \
                 return false;                                           \
             }                                                           \
                                                                         \
@@ -70,7 +70,7 @@ PARSE_VEC2(f64)
                 vec[0] = value.data[0].as<TYPE>();                      \
                 vec[1] = value.data[1].as<TYPE>();                      \
                 vec[2] = value.data[2].as<TYPE>();                      \
-            } catch (std::runtime_error e) {                            \
+            } catch (std::runtime_error& e) {                            \
                 return false;                                           \
             }                                                           \
                                                                         \
@@ -115,7 +115,7 @@ PARSE_VEC3(f64)
                 vec[1] = value.data[1].as<TYPE>();                      \
                 vec[2] = value.data[2].as<TYPE>();                      \
                 vec[3] = value.data[3].as<TYPE>();                      \
-            } catch (std::runtime_error e) {                            \
+            } catch (std::runtime_error& e) {                            \
                 return false;                                           \
             }                                                           \
                                                                         \
@@ -144,7 +144,7 @@ bool vui::parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, 
     nString name;
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -202,7 +202,7 @@ bool vui::parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& cl
     
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e)  {
+    } catch (std::runtime_error& e)  {
 #ifdef DEBUG
         throw e;
 #else
@@ -258,7 +258,7 @@ bool vui::parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState,
 
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -309,7 +309,7 @@ bool vui::parseDock(keg::YAMLNode value, OUT vui::Dock& dock) {
 
     try {
         dock.size = value.data["size"].as<f32>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -329,7 +329,7 @@ bool vui::parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& posi
 
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -375,7 +375,7 @@ bool vui::parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& di
 
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -460,7 +460,7 @@ bool vui::parseLength(keg::YAMLNode value, OUT vui::Length& length) {
 
     try {
         length.x = value.data["x"].as<f32>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -487,7 +487,7 @@ bool vui::parseLength2(keg::YAMLNode value, OUT vui::Length2& length) {
     try {
         length.x = value.data["x"].as<f32>();
         length.y = value.data["y"].as<f32>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -521,7 +521,7 @@ bool vui::parseLength4(keg::YAMLNode value, OUT vui::Length4& length) {
         length.y = value.data["y"].as<f32>();
         length.z = value.data["z"].as<f32>();
         length.w = value.data["w"].as<f32>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -584,7 +584,7 @@ bool vui::parsePartColor(keg::YAMLNode value, OUT color4& color, size_t offset /
         color.g = (ui8)value.data[offset + 1].as<ui16>();
         color.b = (ui8)value.data[offset + 2].as<ui16>();
         color.a = (ui8)value.data[offset + 3].as<ui16>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -611,7 +611,7 @@ bool vui::parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradT
 
     try {
         name = value.data.as<nString>();
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else
@@ -687,7 +687,7 @@ bool vui::parseFont(keg::YAMLNode value, OUT FontDescriptor& fontDescriptor) {
             fontDescriptor.startingCharacter = FIRST_PRINTABLE_CHAR;
             fontDescriptor.startingCharacter = LAST_PRINTABLE_CHAR;
         }
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error& e) {
 #ifdef DEBUG
         throw e;
 #else

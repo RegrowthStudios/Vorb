@@ -46,10 +46,16 @@ void vmod::ModBase::dispose() {
 
 bool vmod::ModBase::startup() {
     OnStartup();
+
+    // TODO(Matthew): Necessary?
+    return true;
 }
 
 bool vmod::ModBase::shutdown() {
     OnShutdown();
+
+    // TODO(Matthew): Necessary?
+    return true;
 }
 
 void vmod::ModBase::update(f32 dt /*= 0.0f*/) {

@@ -80,9 +80,6 @@ bool vmod::ModEnvironmentBase::setActiveLoadOrder(const LoadOrderProfile* newLoa
     // If no load order was found with the given name, return early.
     if (newLoadOrder == nullptr) return false;
 
-    // Get current load order profile in case we need to roll back.
-    const LoadOrderProfile* currentLoadOrder = m_loadOrderManager.getCurrentLoadOrderProfile();
-
     bool newLoadOrderIsValid = true;
 
     // Do a first pass over mods to activate to ensure all are present.

@@ -28,6 +28,7 @@
 #include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Path.h"
+#include "Vorb/script/EnvironmentRegistry.hpp"
 #include "Vorb/ui/script/ViewScriptContext.hpp"
 #include "Vorb/ui/widgets/Viewport.h"
 
@@ -54,7 +55,7 @@ namespace vorb {
              * \param window: The window in which the game is embedded.
              * \param ioManager: The IO manager for acquiring files such as YAML files and scripts.
              * \param textureCache: The cache used for obtaining textures.
-             * \param spriteFont: The font used for rendering text in the UI.
+             * \param fontCache: The font used for rendering text in the UI.
              * \param spriteBatch: The batcher used for rendering other sprites of the UI.
              */
             virtual void init(

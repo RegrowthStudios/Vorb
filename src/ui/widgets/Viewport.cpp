@@ -25,10 +25,9 @@ void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::Sprit
     // Set defaults for all inheritable properties so that at worst getInheritedDefault hits here.
     m_inheritableGetterSetterMap["positionType"] = {
         makeFunctor([&]() {
-            const PositionType DEFAULT_POSITION_TYPE = PositionType::STATIC_TO_PARENT;
             return (void*)&DEFAULT_POSITION_TYPE;
         }),
-        makeFunctor([&](void* positionType) {
+        makeFunctor([&](void* positionType VORB_UNUSED) {
             // Empty.
         })
     };
@@ -37,7 +36,7 @@ void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::Sprit
         makeFunctor([&]() {
             return (void*)defaultFont;
         }),
-        makeFunctor([&](void* font) {
+        makeFunctor([&](void* font VORB_UNUSED) {
             // Empty.
         })
     };
@@ -46,27 +45,25 @@ void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::Sprit
         makeFunctor([&]() {
             return (void*)&color::Black;
         }),
-        makeFunctor([&](void* textColor) {
+        makeFunctor([&](void* textColor VORB_UNUSED) {
             // Empty.
         })
     };
     m_isModifiedMap["textColor"] = false;
     m_inheritableGetterSetterMap["textAlign"] = {
         makeFunctor([&]() {
-            const vg::TextAlign DEFAULT_TEXT_ALIGN = vg::TextAlign::NONE;
             return (void*)&DEFAULT_TEXT_ALIGN;
         }),
-        makeFunctor([&](void* textAlign) {
+        makeFunctor([&](void* textAlign VORB_UNUSED) {
             // Empty.
         })
     };
     m_isModifiedMap["textAlign"] = false;
     m_inheritableGetterSetterMap["textScale"] = {
         makeFunctor([&]() {
-            const f32v2 DEFAULT_TEXT_SCALE = f32v2(0.0f);
             return (void*)&DEFAULT_TEXT_SCALE;
         }),
-        makeFunctor([&](void* textScale) {
+        makeFunctor([&](void* textScale VORB_UNUSED) {
             // Empty.
         })
     };

@@ -38,6 +38,11 @@ namespace vorb {
         // Forward Declarations
         class GameWindow;
 
+        // Some defaults for widgets.
+        const PositionType  DEFAULT_POSITION_TYPE = PositionType::STATIC_TO_PARENT;
+        const vg::TextAlign DEFAULT_TEXT_ALIGN    = vg::TextAlign::NONE;
+        const f32v2         DEFAULT_TEXT_SCALE    = f32v2(1.0f);
+
         // TODO(Matthew): The current rendering model involves traversing the entire UI structure to add drawables on each frame. This isn't obviously too slow so for now it's good enough, and provides a SUPER easy way to get depth support in a way that makes sense (supporting z-index contexts a la CSS). However, we can do better potentially if we can utilise the depth testing of OpenGL. We can probably preserve this and the flat array inside UIRenderer if we can know how deep the UI structure is at its deepest widget, and where we are in that depth for each widget.
         class Viewport : public Widget {
         public:

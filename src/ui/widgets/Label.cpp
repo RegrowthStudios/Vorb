@@ -50,18 +50,6 @@ void vui::Label::setLabelHoverTexture(VGTexture texture) {
     m_flags.needsDrawableRecalculation = true;
 }
 
-void vui::Label::setTextColor(const color4& color) {
-    m_textColor = color;
-
-    m_flags.needsDrawableRecalculation = true;
-}
-
-void vui::Label::setTextHoverColor(const color4& color) {
-    m_textHoverColor = color;
-
-    m_flags.needsDrawableRecalculation = true;
-}
-
 void vui::Label::calculateDrawables() {
     m_drawableRect.setPosition(getPaddedPosition());
     m_drawableRect.setSize(getPaddedSize());
@@ -75,10 +63,8 @@ void vui::Label::calculateDrawables() {
 
 void vui::Label::updateColor() {
     if (m_flags.isMouseIn) {
-        m_drawableText.setColor(m_textHoverColor);
         m_drawableRect.setColor(m_labelHoverColor);
     } else {
-        m_drawableText.setColor(m_textColor);
         m_drawableRect.setColor(m_labelColor);
     }
 }

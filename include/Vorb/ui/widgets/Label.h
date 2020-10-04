@@ -50,8 +50,6 @@ namespace vorb {
             virtual const color4& getLabelHoverColor()   const { return m_labelHoverColor;    }
             virtual     VGTexture getLabelTexture()      const { return m_labelTexture;       }
             virtual     VGTexture getLabelHoverTexture() const { return m_labelHoverTexture;  }
-            virtual const color4& getTextColor()         const override { return m_textColor; }
-            virtual const color4& getTextHoverColor()    const { return m_textHoverColor;     }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -60,8 +58,6 @@ namespace vorb {
             virtual void setLabelHoverColor(const color4& color);
             virtual void setLabelTexture(VGTexture texture);
             virtual void setLabelHoverTexture(VGTexture texture);
-            virtual void setTextColor(const color4& color) override;
-            virtual void setTextHoverColor(const color4& color);
 
         protected:
             virtual void calculateDrawables() override;
@@ -76,7 +72,6 @@ namespace vorb {
             DrawableRect          m_drawableRect;
             color4                m_labelColor,   m_labelHoverColor;
             VGTexture             m_labelTexture, m_labelHoverTexture;
-            color4                m_textColor,    m_textHoverColor;
         };
     }
 }

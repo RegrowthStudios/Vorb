@@ -281,7 +281,7 @@ namespace vorb {
                     scriptEnv = new ScriptEnvironment();
                     scriptEnv->init();
 
-                    if (m_scriptEnvironmentBuilder != nullptr) m_scriptEnvironmentBuilder(scriptEnv);
+                    if (m_scriptEnvironmentBuilder != nullptr) m_scriptEnvironmentBuilder->invoke(scriptEnv);
                 }
 
                 newMod->init(metadata, dir, &m_dataAssetIOManager, scriptEnv);

@@ -44,12 +44,12 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~ComboBox();
 
-            virtual void dispose() override;
+            virtual void dispose(bool thisOnly = false) override;
 
             /*! \brief Set up events. */
             virtual void enable() override;
             /*! \brief Unsubscribe from events. */
-            virtual void disable() override;
+            virtual void disable(bool thisOnly = false) override;
 
             virtual void addDrawables(UIRenderer&) override { /* Empty */ }
 

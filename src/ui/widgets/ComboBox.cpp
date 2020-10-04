@@ -31,8 +31,8 @@ void vui::ComboBox::initBase() {
     m_mainButton.init(this, getName() + "_main_button", f32v4(0.0f, 0.0f, m_size.x, m_size.y));
 }
 
-void vui::ComboBox::dispose() {
-    Widget::dispose();
+void vui::ComboBox::dispose(bool thisOnly /*= false*/) {
+    Widget::dispose(thisOnly);
 
     for (size_t i = 0; i < m_buttons.size(); i++) {
         delete m_buttons[i];
@@ -56,12 +56,12 @@ void vui::ComboBox::enable() {
     }
 }
 
-void vui::ComboBox::disable() {
+void vui::ComboBox::disable(bool thisOnly /*= false*/) {
     if (m_flags.isEnabled) {
         m_mainButton.MouseClick -= makeDelegate(this, &ComboBox::onMainButtonClick);
     }
 
-    Widget::disable();
+    Widget::disable(thisOnly);
 }
 
 vui::Button* vui::ComboBox::addItem(const nString& item) {

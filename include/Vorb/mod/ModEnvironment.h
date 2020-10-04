@@ -23,10 +23,12 @@
 #include "Vorb/types.h"
 #endif // !VORB_USING_PCH
 
+#include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Path.h"
 #include "Vorb/mod/DataAssetIOManager.h"
 #include "Vorb/mod/LoadOrder.h"
 #include "Vorb/mod/Mod.h"
+#include "Vorb/script/EnvironmentRegistry.hpp"
 
 namespace vorb {
     namespace mod {
@@ -179,70 +181,120 @@ namespace vorb {
             ModBasePtrs m_activeMods; ///< List of all active mods according to the current load order.
         };
 
+        template <typename ScriptEnvironment = void, typename Enable = void>
+        class ModEnvironment;
+
         template <typename ScriptEnvironment>
-        class ModEnvironment
+        class ModEnvironment<ScriptEnvironment,
+                    typename std::enable_if<std::is_void<ScriptEnvironment>::value>::type>
             : public ModEnvironmentBase {
         public:
-            using ScriptEnvBuilder = Delegate<void, ScriptEnvironment*>;
-            using ScriptEnvBuilders = std::vector<ScriptEnvBuilder>;
+            virtual ~ModEnvironment() {
+                // Empty.
+            }
 
-            ~ModEnvironment() {
+        protected:
+            /*! \brief Registers a new mod to the mods list.
+             */
+            virtual void registerMod(ModMetadata metadata, const vio::Path& dir) override {
+                Mod<void>* newMod = new Mod<void>();
+
+                newMod->init(metadata, dir, &m_dataAssetIOManager);
+
+                m_mods.push_back(newMod);
+            }
+        };
+
+        template <typename ScriptEnvironment>
+        class ModEnvironment<ScriptEnvironment,
+                    typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
+            : public ModEnvironmentBase {
+        public:
+            ModEnvironment() :
+                m_scriptEnvironmentBuilder(nullptr),
+                m_scriptEnvGroup(""),
+                ModEnvironmentBase() {
+                // Empty.
+            }
+            virtual ~ModEnvironment() {
                 // Empty.
             }
 
             /*!
-             * \brief Registers a script env builder to be used for building a mod's script environment.
+             * \brief Initialises the mod environment, which means setting up
+             * load order manager, preparing environment with currently active
+             * mods.
              *
-             * Note: These builders should be registered by subsystems in order for them to register constants, C callbacks
-             * and so forth to the script environment.
-             *
-             * \param scriptEnvBuilder The script environment builder to be registered.
+             * \param modDir: The directory in which mods are located.
+             * \param loadOrderDir: The directory in which the load order
+             * metadata can be located.
              */
-            template <typename = typename std::enable_if<!std::is_void<ScriptEnvironment>::value>::type>
-            void registerScriptEnvBuilder(ScriptEnvBuilder&& scriptEnvBuilder) {
-                m_scriptEnvBuilders.emplace_back(std::forward<ScriptEnvBuilder>(scriptEnvBuilder));
+            void init(const vio::Path& modDir, const vio::Path& loadOrderDir) {
+                init(modDir, loadOrderDir, nullptr, "");
             }
-            /*! \return The list of script environment builders used for building each mod's script environment.
+            /*!
+             * \brief Initialises the mod environment, which means setting up
+             * load order manager, preparing environment with currently active
+             * mods.
+             *
+             * \param modDir: The directory in which mods are located.
+             * \param loadOrderDir: The directory in which the load order
+             * metadata can be located.
+             * \param scriptEnvBuilder: The callback to use to build the context of an isolated script environment.
              */
-            const ScriptEnvBuilders& getScriptEnvBuilders() {
-                return m_scriptEnvBuilders;
+            void init(const vio::Path& modDir, const vio::Path& loadOrderDir, vscript::ScriptEnvironmentBuilder<ScriptEnvironment>* scriptEnvBuilder) {
+                ModEnvironmentBase::init(modDir, loadOrderDir);
+
+                m_scriptEnvironmentBuilder = scriptEnvBuilder;
+            }
+            /*!
+             * \brief Initialises the mod environment, which means setting up
+             * load order manager, preparing environment with currently active
+             * mods.
+             *
+             * \param modDir: The directory in which mods are located.
+             * \param loadOrderDir: The directory in which the load order
+             * metadata can be located.
+             * \param scriptEnvRegistry: The registry from which to obtain script environments.
+             * \param scriptEnvGroup: The group within the registry from which to obtain script environments.
+             */
+            void init(                          const vio::Path& modDir,
+                                                const vio::Path& loadOrderDir,
+                vscript::EnvironmentRegistry<ScriptEnvironment>* scriptEnvRegistry,
+                                                  const nString& scriptEnvGroup              ) {
+                ModEnvironmentBase::init(modDir, loadOrderDir);
+
+                m_scriptEnvironmentRegistry = scriptEnvRegistry;
+                m_scriptEnvGroup = scriptEnvGroup;
             }
         protected:
             /*! \brief Registers a new mod to the mods list.
              */
-            virtual void registerMod(ModMetadata metadata, const vio::Path& dir) override;
+            virtual void registerMod(ModMetadata metadata, const vio::Path& dir) override {
+                Mod<ScriptEnvironment>* newMod = new Mod<ScriptEnvironment>();
 
-            /*! \brief Builds a script environment for use by a mod.
-             */
-            ScriptEnvironment* buildScriptEnv();
+                // Prepare script environment, using registry if provided, builder if that was provided.
+                ScriptEnvironment* scriptEnv = nullptr;
+                if (m_scriptEnvGroup != "") {
+                    scriptEnv = m_scriptEnvironmentRegistry->getScriptEnv(m_scriptEnvGroup);
+                } else {
+                    scriptEnv = new ScriptEnvironment();
+                    scriptEnv->init();
 
-            ScriptEnvBuilders m_scriptEnvBuilders; ///< The list of builders to use in building a script environment for mods.
-        };
+                    if (m_scriptEnvironmentBuilder != nullptr) m_scriptEnvironmentBuilder(scriptEnv);
+                }
 
-        template <typename ScriptEnvironment>
-        void ModEnvironment<ScriptEnvironment>::registerMod(ModMetadata metadata, const vio::Path& dir) {
-            Mod<ScriptEnvironment>* newMod = new Mod<ScriptEnvironment>();
-
-            if (!std::is_void<ScriptEnvironment>::value) {
-                ScriptEnvironment* scriptEnv = buildScriptEnv();
                 newMod->init(metadata, dir, &m_dataAssetIOManager, scriptEnv);
-            } else {
-                newMod->ModBase::init(metadata, dir, &m_dataAssetIOManager);
+
+                m_mods.push_back(newMod);
             }
 
-            m_mods.push_back(newMod);
-        }
-
-        template <typename ScriptEnvironment>
-        ScriptEnvironment* ModEnvironment<ScriptEnvironment>::buildScriptEnv() {
-            ScriptEnvironment* scriptEnv = new ScriptEnvironment();
-
-            for (auto& builder : m_scriptEnvBuilders) {
-                builder(scriptEnv);
-            }
-
-            return scriptEnv;
-        }
+            union {
+                vscript::ScriptEnvironmentBuilder<ScriptEnvironment>* m_scriptEnvironmentBuilder; ///< A builder callback for creating a script environment context.
+                vscript::EnvironmentRegistry<ScriptEnvironment>* m_scriptEnvironmentRegistry; ///< A registry from which to obtain script environments.
+            };
+            nString m_scriptEnvGroup; ///< The group to which to retrieve script environments from in the registry.
+        };
     }
 }
 namespace vmod = vorb::mod;

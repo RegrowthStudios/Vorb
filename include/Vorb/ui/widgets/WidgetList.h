@@ -39,7 +39,7 @@ namespace vorb {
             /*! \brief Default destructor. */
             virtual ~WidgetList();
 
-            virtual void dispose() override;
+            virtual void dispose(bool thisOnly = false) override;
 
             virtual void addDrawables(UIRenderer&) override { /* Empty */ }
 

@@ -18,8 +18,8 @@ void vui::WidgetList::initBase() {
     m_panel.setClipping(Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN });
 }
 
-void vui::WidgetList::dispose() {
-    Widget::dispose();
+void vui::WidgetList::dispose(bool thisOnly /*= false*/) {
+    Widget::dispose(thisOnly);
 
     IWidgets().swap(m_items);
 }

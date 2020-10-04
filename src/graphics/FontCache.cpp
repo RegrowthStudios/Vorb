@@ -13,7 +13,7 @@ vg::FontCache::~FontCache() {
     dispose();
 }
 
-void vg::FontCache::init(vio::IOManagerBase* ioManager, bool ownsManager = false) {
+void vg::FontCache::init(vio::IOManagerBase* ioManager, bool ownsManager /*= false*/) {
     m_ioManager = ioManager;
     m_ownsIOManager = ownsManager;
 }
@@ -37,7 +37,7 @@ vg::SpriteFont* vg::FontCache::getFont(const vio::Path& filepath, ui32 size, cha
     SpriteFont* res = nullptr;
     try {
         res = m_fontMap.at(key);
-    } catch (std::out_of_range e) {
+    } catch (std::out_of_range& e) {
         res = new SpriteFont();
         res->init(filepath.getCString(), size, cs, ce);
 
@@ -57,7 +57,7 @@ vg::SpriteFont* vg::FontCache::tryGetFont(const vio::Path& filepath, ui32 size, 
     SpriteFont* res = nullptr;
     try {
         res = m_fontMap.at(key);
-    } catch (std::out_of_range e) {
+    } catch (std::out_of_range& e) {
         return nullptr;
     }
 

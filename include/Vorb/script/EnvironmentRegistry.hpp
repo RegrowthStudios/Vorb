@@ -108,7 +108,7 @@ CALLEE_DELETE ScriptEnvironment* vscript::EnvironmentRegistry::getScriptEnv(cons
     ScriptEnvironmentGroup group;
     try {
         group = m_scriptEnvGroups.at(groupName);
-    } catch (std::out_of_range e) {
+    } catch (std::out_of_range& e) {
         return nullptr;
     }
 

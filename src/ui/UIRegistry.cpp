@@ -20,7 +20,7 @@ bool vui::UIRegistryBase::registerUI(std::pair<nString, UIBase*>&& ui) {
 vui::UIBase* vui::UIRegistryBase::getUI(const nString& name) {
     try {
         return m_uis.at(name);
-    } catch(std::out_of_range e) {
+    } catch(std::out_of_range& e) {
         return nullptr;
     }
 }

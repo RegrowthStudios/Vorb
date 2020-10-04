@@ -579,7 +579,7 @@ void* vui::IWidget::getInheritedDefault(const nString& propertyName) {
     // Try to get default for named property from this widget.
     try {
         getter = m_inheritableGetterSetterMap.at(propertyName).getter;
-    } catch (std::out_of_range e) {
+    } catch (std::out_of_range& e) {
         // If we can't, try to get it from the parent of this
         // widget, if a parent exists.
         if (m_parent == nullptr) return nullptr;

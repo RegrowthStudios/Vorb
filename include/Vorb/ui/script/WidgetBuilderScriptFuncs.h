@@ -67,40 +67,40 @@ void vui::WidgetBuilderScriptFuncs::registerFuncs(const nString& namespace_, vsc
         IWidget* res = impl::makeButton(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makeCheckBox", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makeCheckBox(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makeComboBox", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makeComboBox(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makeLabel", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makeLabel(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makePanel", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makePanel(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makeSlider", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makeSlider(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("makeWidgetList", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
         IWidget* res = impl::makeWidgetList(parent, name, dimensions);
         widgets.push_back(res);
         return res;
-    });
+    }));
     env->addCDelegate("destroyWidgetTree", makeFunctor([&](IWidget* topLevelWidget) {
-        impl::destroyWidget(topLevelWidget, widgets);
-    });
+        impl::destroyWidgetTree(topLevelWidget, widgets);
+    }));
     env->setNamespaces();
 }
 

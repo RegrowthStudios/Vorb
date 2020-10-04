@@ -45,11 +45,6 @@ bool vui::parseButtonEntry(keg::ReadContext& context, vui::Button* button, const
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         button->setHoverTexture(tex.id);
-    } else if (name == "text_hover_color") {
-        color4 color;
-        if (!parseColor(*value, color)) return false;
-
-        button->setTextHoverColor(color);
     } else {
         return vui::parseTextWidgetEntry(context, button, name, value, widgetParser, fontCache);
     }

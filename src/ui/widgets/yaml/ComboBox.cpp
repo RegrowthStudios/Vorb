@@ -8,7 +8,6 @@
 #include "Vorb/ui/widgets/yaml/Widget.h"
 
 bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox, const nString& name, keg::Node value, Delegate<vui::IWidget*, const nString&, keg::Node>* widgetParser, vg::FontCache* fontCache, vg::TextureCache* textureCache) {
-    // TODO(Matthew): Need to implement index, named item (and comparator?) options for all drop button properties.
     if (name == "font") {
         FontDescriptor fontDescriptor;
         if (!parseFont(*value, fontDescriptor)) return false;
@@ -25,11 +24,83 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
         comboBox->setMainButtonFont(font);
     } else if (name == "drop_button_font") {
         FontDescriptor fontDescriptor;
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["font"]) {
+            if (!parseFont({ value->data["font"] }, fontDescriptor)) return false;
+
+            vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonFont(font, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonFont(font, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            if (!parseFont(*value, fontDescriptor)) return false;
+
+            vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+            comboBox->setDropButtonFont(font);
+        }
+    }
+    if (name == "hover_font") {
+        FontDescriptor fontDescriptor;
         if (!parseFont(*value, fontDescriptor)) return false;
 
         vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
 
-        comboBox->setDropButtonFont(font);
+        comboBox->setHoverFont(font);
+    } else if (name == "main_button_hover_font") {
+        FontDescriptor fontDescriptor;
+        if (!parseFont(*value, fontDescriptor)) return false;
+
+        vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+        comboBox->setMainButtonHoverFont(font);
+    } else if (name == "drop_button_hover_font") {
+        FontDescriptor fontDescriptor;
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["font"]) {
+            if (!parseFont({ value->data["font"] }, fontDescriptor)) return false;
+
+            vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonHoverFont(font, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonHoverFont(font, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            if (!parseFont(*value, fontDescriptor)) return false;
+
+            vg::SpriteFont* font = fontCache->getFont(fontDescriptor.filepath, fontDescriptor.size, fontDescriptor.startingCharacter, fontDescriptor.endingCharacter);
+
+            comboBox->setDropButtonHoverFont(font);
+        }
     } else if (name == "main_button_texture") {
         nString texturePath;
         if (!parseValue(*value, texturePath)) return false;
@@ -261,17 +332,17 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
         }
 
         return true;
-    } else if (name == "text_hover_color") {
+    } else if (name == "hover_text_color") {
         color4 color;
         if (!parseColor(*value, color)) return false;
 
-        comboBox->setTextHoverColor(color);
-    } else if (name == "main_button_text_hover_color") {
+        comboBox->setHoverTextColor(color);
+    } else if (name == "main_button_hover_text_color") {
         color4 color;
         if (!parseColor(*value, color)) return false;
 
-        comboBox->setMainButtonTextHoverColor(color);
-    } else if (name == "drop_button_text_hover_color") {
+        comboBox->setMainButtonHoverTextColor(color);
+    } else if (name == "drop_button_hover_text_color") {
         if (keg::getType(value) == keg::NodeType::MAP
                 && value->data.size() == 2
                     && value->data["color"]) {
@@ -282,12 +353,12 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
                 nString item;
                 if (!parseValue({ value->data["item"] }, item)) return false;
 
-                comboBox->setDropButtonTextHoverColor(color, item);
+                comboBox->setDropButtonHoverTextColor(color, item);
             } else if (value->data["index"]) {
                 size_t index;
                 if (!parseValue({ value->data["index"] }, index)) return false;
 
-                comboBox->setDropButtonTextHoverColor(color, index);
+                comboBox->setDropButtonHoverTextColor(color, index);
             } else if (value->data["comp"]) {
                 // TODO(Matthew): Implement.
                 return false;
@@ -298,7 +369,7 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
             color4 color;
             if (!parseColor(*value, color)) return false;
 
-            comboBox->setDropButtonTextHoverColor(color);
+            comboBox->setDropButtonHoverTextColor(color);
         }
 
         return true;
@@ -343,6 +414,47 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
         }
 
         return true;
+    } else if (name == "text_hover_scale") {
+        f32v2 scale;
+        if (!parseVec2(*value, scale)) return false;
+
+        comboBox->setHoverTextScale(scale);
+    } else if (name == "main_button_text_hover_scale") {
+        f32v2 scale;
+        if (!parseVec2(*value, scale)) return false;
+
+        comboBox->setMainButtonHoverTextScale(scale);
+    } else if (name == "drop_button_text_hover_scale") {
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["scale"]) {
+            f32v2 scale;
+            if (!parseVec2({ value->data["scale"] }, scale)) return false;
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonHoverTextScale(scale, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonHoverTextScale(scale, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            f32v2 scale;
+            if (!parseVec2(*value, scale)) return false;
+
+            comboBox->setDropButtonHoverTextScale(scale);
+        }
+
+        return true;
     } else if (name == "text_align") {
         vg::TextAlign align;
         if (!parseTextAlign(*value, align)) return false;
@@ -384,11 +496,119 @@ bool vui::parseComboBoxEntry(keg::ReadContext& context, vui::ComboBox* comboBox,
         }
 
         return true;
-    } else if (name == "text") {
+    } else if (name == "hover_text_align") {
+        vg::TextAlign align;
+        if (!parseTextAlign(*value, align)) return false;
+
+        comboBox->setHoverTextAlign(align);
+    } else if (name == "main_button_hover_text_align") {
+        vg::TextAlign align;
+        if (!parseTextAlign(*value, align)) return false;
+
+        comboBox->setMainButtonHoverTextAlign(align);
+    } else if (name == "drop_button_hover_text_align") {
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["text_align"]) {
+            vg::TextAlign textAlign;
+            if (!parseTextAlign({ value->data["text_align"] }, textAlign)) return false;
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonHoverTextAlign(textAlign, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonHoverTextAlign(textAlign, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            vg::TextAlign textAlign;
+            if (!parseTextAlign(*value, textAlign)) return false;
+
+            comboBox->setDropButtonHoverTextAlign(textAlign);
+        }
+
+        return true;
+    } else if (name == "main_button_text") {
         nString text;
         if (!parseValue(*value, text)) return false;
 
-        comboBox->setText(text);
+        comboBox->setMainButtonText(text);
+    } else if (name == "drop_button_text") {
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["text"]) {
+            nString text;
+            if (!parseValue({ value->data["text"] }, text)) return false;
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonText(text, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonText(text, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            nString text;
+            if (!parseValue(*value, text)) return false;
+
+            comboBox->setDropButtonText(text);
+        }
+
+        return true;
+    } else if (name == "main_button_hover_text") {
+        nString text;
+        if (!parseValue(*value, text)) return false;
+
+        comboBox->setMainButtonHoverText(text);
+    } else if (name == "drop_button_hover_text") {
+        if (keg::getType(value) == keg::NodeType::MAP
+                && value->data.size() == 2
+                    && value->data["text_align"]) {
+            nString text;
+            if (!parseValue({ value->data["text_align"] }, text)) return false;
+
+            if (value->data["item"]) {
+                nString item;
+                if (!parseValue({ value->data["item"] }, item)) return false;
+
+                comboBox->setDropButtonHoverText(text, item);
+            } else if (value->data["index"]) {
+                size_t index;
+                if (!parseValue({ value->data["index"] }, index)) return false;
+
+                comboBox->setDropButtonHoverText(text, index);
+            } else if (value->data["comp"]) {
+                // TODO(Matthew): Implement.
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            nString text;
+            if (!parseValue(*value, text)) return false;
+
+            comboBox->setDropButtonHoverText(text);
+        }
+
+        return true;
     } else if (name == "max_drop_height") {
         f32 maxDropHeight;
         if (!parseValue(*value, maxDropHeight)) return false;

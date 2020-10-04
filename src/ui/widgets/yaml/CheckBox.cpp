@@ -56,11 +56,6 @@ bool vui::parseCheckBoxEntry(keg::ReadContext& context, vui::CheckBox* checkBox,
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         checkBox->setCheckedHoverTexture(tex.id);
-    } else if (name == "text_hover_color") {
-        color4 color;
-        if (!parseColor(*value, color)) return false;
-
-        checkBox->setTextHoverColor(color);
     } else if (name == "checked") {
         bool checked;
         if (!parseValue(*value, checked)) return false;

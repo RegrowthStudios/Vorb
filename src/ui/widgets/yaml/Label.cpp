@@ -32,11 +32,6 @@ bool vui::parseLabelEntry(keg::ReadContext& context, vui::Label* label, const nS
         vg::Texture tex = textureCache->addTexture(texturePath);
 
         label->setLabelHoverTexture(tex.id);
-    } else if (name == "text_hover_color") {
-        color4 color;
-        if (!parseColor(*value, color)) return false;
-
-        label->setTextHoverColor(color);
     } else {
         return vui::parseTextWidgetEntry(context, label, name, value, widgetParser, fontCache);
     }

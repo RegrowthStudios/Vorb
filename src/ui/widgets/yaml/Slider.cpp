@@ -59,7 +59,7 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
 
         slider->setMin(maxVal);
     } else if (name == "slide_size") {
-        Length2OrRaw lengthOrRaw;
+        Length2OrRaw lengthOrRaw{};
 
         switch (parseLength2OrRaw(*value, lengthOrRaw)) {
         case 1:

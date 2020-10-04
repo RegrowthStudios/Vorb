@@ -354,7 +354,9 @@ set(vorb_ui
     include/Vorb/ui/MouseInputDispatcher.h
     include/Vorb/ui/ScreenList.h
     include/Vorb/ui/TextInputListener.hpp
+    include/Vorb/ui/UI.h
     include/Vorb/ui/UILoader.h
+    include/Vorb/ui/UIRegistry.h
     include/Vorb/ui/UIRenderer.h
     include/Vorb/ui/WindowEventDispatcher.h
     include/Vorb/ui/widgets/Button.h
@@ -388,7 +390,9 @@ set(vorb_ui
     src/ui/MainGame.cpp
     src/ui/MouseInputDispatcher.cpp
     src/ui/ScreenList.cpp
+    src/ui/UI.cpp
     src/ui/UILoader.cpp
+    src/ui/UIRegistry.cpp
     src/ui/UIRenderer.cpp
     src/ui/widgets/Button.cpp
     src/ui/widgets/CheckBox.cpp
@@ -416,7 +420,6 @@ set(vorb_ui
 
 if(VORB_USE_SCRIPTING)
 set(vorb_ui ${vorb_ui}
-    include/Vorb/ui/ScriptedUI.h
     include/Vorb/ui/script/ButtonScriptFuncs.h
     include/Vorb/ui/script/CheckBoxScriptFuncs.h
     include/Vorb/ui/script/ComboBoxScriptFuncs.h
@@ -427,7 +430,8 @@ set(vorb_ui ${vorb_ui}
     include/Vorb/ui/script/SliderScriptFuncs.h
     include/Vorb/ui/script/TextWidgetScriptFuncs.h
     include/Vorb/ui/script/ViewportScriptFuncs.h
-    include/Vorb/ui/script/ViewScriptEnvironment.h
+    include/Vorb/ui/script/ViewScriptContext.hpp
+    include/Vorb/ui/script/WidgetBuilderScriptFuncs.h
     include/Vorb/ui/script/WidgetListScriptFuncs.h
     include/Vorb/ui/script/WidgetScriptFuncs.h
     include/Vorb/ui/script/lua/ValueMediator.h
@@ -440,6 +444,7 @@ set(vorb_ui ${vorb_ui}
     src/ui/script/PanelScriptFuncs.cpp
     src/ui/script/SliderScriptFuncs.cpp
     src/ui/script/TextWidgetScriptFuncs.cpp
+    src/ui/script/WidgetBuilderScriptFuncs.cpp
     src/ui/script/WidgetListScriptFuncs.cpp
     src/ui/script/WidgetScriptFuncs.cpp
     src/ui/script/lua/ValueMediator.cpp

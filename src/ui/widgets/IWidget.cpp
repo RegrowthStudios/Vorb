@@ -592,8 +592,9 @@ void* vui::IWidget::getInheritedDefault(const nString& propertyName) {
 
 void vui::IWidget::checkForRemovals() {
     // Move all widgets to be removed to end.
-    IWidgets::iterator newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidgets::iterator it) {
-        return m_widgetStates[it - m_widgets.begin()] != ChildState::VALID;
+    size_t i = 0;
+    IWidgets::iterator newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidget* widget VORB_UNUSED) {
+        return m_widgetStates[i++] != ChildState::VALID;
     });
 
     // Iterate backwards over all widgets removing all to be removed.

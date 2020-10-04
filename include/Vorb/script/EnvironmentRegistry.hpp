@@ -30,7 +30,11 @@ namespace vorb {
     namespace script {
         template <typename ScriptEnvironment>
         using ScriptEnvironmentGroup = std::pair<ScriptEnvironment*, std::vector<ScriptEnvironment*>>;
-        using ScriptEnvironmentGroups = std::unordered_map<nString, ScriptEnvironmentGroup>;
+        template <typename ScriptEnvironment>
+        using ScriptEnvironmentGroups = std::unordered_map<nString, ScriptEnvironmentGroup<ScriptEnvironment>>;
+
+        template <typename ScriptEnvironment>
+        using ScriptEnvironmentBuilder = Delegate<void, ScriptEnvironment*>;
 
         template <typename ScriptEnvironment>
         class EnvironmentRegistry {
@@ -70,19 +74,19 @@ namespace vorb {
             virtual CALLEE_DELETE ScriptEnvironment* getScriptEnv(const nString& groupName);
 
         protected:
-            ScriptEnvironmentGroups m_scriptEnvGroups;
+            ScriptEnvironmentGroups<ScriptEnvironment> m_scriptEnvGroups;
         };
     }
 }
 namespace vscript = vorb::script;
 
 template <typename ScriptEnvironment>
-void vscript::EnvironmentRegistry::init() {
+void vscript::EnvironmentRegistry<ScriptEnvironment>::init() {
     // Empty.
 }
 
 template <typename ScriptEnvironment>
-void vscript::EnvironmentRegistry::dispose(const nString& groupName) {
+void vscript::EnvironmentRegistry<ScriptEnvironment>::dispose() {
     for (auto& group : m_scriptEnvGroups) {
         for (auto& spawnedEnv : group.second.second) {
             spawnedEnv->dispose();
@@ -92,11 +96,11 @@ void vscript::EnvironmentRegistry::dispose(const nString& groupName) {
         group.second.first->dispose();
         delete group.second.first;
     }
-    ScriptEnvironmentGroups().swap(m_scriptEnvGroups);
+    ScriptEnvironmentGroups<ScriptEnvironment>().swap(m_scriptEnvGroups);
 }
 
 template <typename ScriptEnvironment>
-bool vscript::EnvironmentRegistry::createGroup(const nString& groupName) {
+bool vscript::EnvironmentRegistry<ScriptEnvironment>::createGroup(const nString& groupName) {
     ScriptEnvironment* env = new ScriptEnvironment();
     env->init();
 
@@ -104,8 +108,8 @@ bool vscript::EnvironmentRegistry::createGroup(const nString& groupName) {
 }
 
 template <typename ScriptEnvironment>
-CALLEE_DELETE ScriptEnvironment* vscript::EnvironmentRegistry::getScriptEnv(const nString& groupName) {
-    ScriptEnvironmentGroup group;
+CALLEE_DELETE ScriptEnvironment* vscript::EnvironmentRegistry<ScriptEnvironment>::getScriptEnv(const nString& groupName) {
+    ScriptEnvironmentGroup<ScriptEnvironment> group;
     try {
         group = m_scriptEnvGroups.at(groupName);
     } catch (std::out_of_range& e) {

@@ -53,11 +53,11 @@ namespace vorb {
             using IWidgets  = std::vector<IWidget*>;
 
             template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* scriptEnv, GameWindow* window, vg::TextureCache* textureCache);
+            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
 
             namespace impl {
                 template <typename ScriptEnvironment>
-                void registerFuncs(ScriptEnvironment* scriptEnv, GameWindow* window, vg::TextureCache* textureCache);
+                void registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
                 template <typename ScriptEnvironment>
                 void registerConsts(ScriptEnvironment* scriptEnv);
             }
@@ -68,14 +68,14 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, GameWindow* window, vg::TextureCache* textureCache) {
+void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
     impl::registerFuncs(scriptEnv, window, textureCache);
 
     impl::registerConsts(scriptEnv);
 }
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, GameWindow* window, vg::TextureCache* textureCache) {
+void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
     ButtonScriptFuncs::registerFuncs<ScriptEnvironment>("Button", scriptEnv);
 
     CheckBoxScriptFuncs::registerFuncs<ScriptEnvironment>("CheckBox", scriptEnv);

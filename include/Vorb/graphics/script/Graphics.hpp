@@ -24,6 +24,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/VorbPreDecl.inl"
+#include "impl/FontCacheScriptFuncs.hpp"
 #include "impl/GLEnumsScriptFuncs.hpp"
 #include "impl/SamplerStateScriptFuncs.hpp"
 #include "impl/SpriteBatchScriptFuncs.hpp"
@@ -35,14 +36,17 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 namespace vorb {
     namespace graphics {
         template <typename ScriptEnvironmentImpl>
-        void registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+        void registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache);
     }
 }
 namespace vg = vorb::graphics;
 
 template <typename ScriptEnvironmentImpl>
-void vg::registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vg::registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache) {
     using namespace vg::impl;
+
+    FontCacheScriptFuncs::registerFuncs(env, fontCache);
+    FontCacheScriptFuncs::registerConsts(env);
 
     GLEnumsScriptFuncs::registerFuncs(env);
     GLEnumsScriptFuncs::registerConsts(env);
@@ -56,7 +60,7 @@ void vg::registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env) 
     SpriteFontScriptFuncs::registerFuncs(env);
     SpriteFontScriptFuncs::registerConsts(env);
 
-    TextureCacheScriptFuncs::registerFuncs(env);
+    TextureCacheScriptFuncs::registerFuncs(env, textureCache);
     TextureCacheScriptFuncs::registerConsts(env);
 }
 

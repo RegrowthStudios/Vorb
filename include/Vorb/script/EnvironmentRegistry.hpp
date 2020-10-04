@@ -120,7 +120,7 @@ CALLEE_DELETE ScriptEnvironment* vscript::EnvironmentRegistry<ScriptEnvironment>
         return nullptr;
     }
 
-    ScriptEnvironment* spawned;
+    ScriptEnvironment* spawned = new ScriptEnvironment();
     spawned->init(group.first);
 
     group.second.push_back(spawned);

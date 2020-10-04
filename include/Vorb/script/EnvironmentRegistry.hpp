@@ -55,10 +55,12 @@ namespace vorb {
              * unique execution space.
              *
              * \param groupName: The name of the group to create.
+             * \param builder: A callback that is used to build the context of
+             * the script environment (i.e. exposed C functions & constants).
              *
              * \return True if the group was created, false otherwise.
              */
-            virtual bool createGroup(const nString& groupName);
+            virtual bool createGroup(const nString& groupName, ScriptEnvironmentBuilder<ScriptEnvironment>* builder = nullptr);
 
             /*!
              * \brief Gets a script environment within the given group. Fails if
@@ -100,11 +102,13 @@ void vscript::EnvironmentRegistry<ScriptEnvironment>::dispose() {
 }
 
 template <typename ScriptEnvironment>
-bool vscript::EnvironmentRegistry<ScriptEnvironment>::createGroup(const nString& groupName) {
+bool vscript::EnvironmentRegistry<ScriptEnvironment>::createGroup(const nString& groupName, ScriptEnvironmentBuilder<ScriptEnvironment>* builder /*= nullptr*/) {
     ScriptEnvironment* env = new ScriptEnvironment();
     env->init();
 
-    m_scriptEnvGroups.insert(std::make_pair(groupName, std::make_pair(env, std::vector<ScriptEnvironment*>())));
+    if (builder != nullptr) builder(env);
+
+    return m_scriptEnvGroups.insert(std::make_pair(groupName, std::make_pair(env, std::vector<ScriptEnvironment*>()))).second;
 }
 
 template <typename ScriptEnvironment>

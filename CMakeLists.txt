@@ -93,8 +93,8 @@ include(utils)
 include(components)
 
 if(VORB_USE_SCRIPTING)
-    hunter_add_package(Lua)
-    find_package(Lua CONFIG REQUIRED)
+#    hunter_add_package(Lua)
+#    find_package(Lua CONFIG REQUIRED)
 endif()
 
 hunter_add_package(glm)
@@ -553,6 +553,23 @@ source_group("voxel" FILES ${vorb_voxel})
 source_group("include" FILES ${vorb_headers})
 source_group("source" FILES ${vorb_source})
 
+if(VORB_USE_SCRIPTING)
+    set(LIBLUA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua/src)
+    set(LIBLUA_FILE ${LIBLUA_DIR}/liblua.a)
+    add_custom_command(OUTPUT ${LIBLUA_FILE}
+                       COMMAND make all
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua)
+    add_custom_target(liblua_target DEPENDS ${LIBLUA_FILE})
+    add_library(liblua STATIC IMPORTED GLOBAL)
+    add_dependencies(liblua liblua_target)
+    set_target_properties(liblua
+        PROPERTIES
+        IMPORTED_LOCATION ${LIBLUA_FILE}
+        INTERFACE_INCLUDE_DIRECTORIES ${LIBLUA_DIR}
+    )
+    target_include_directories(vorb PUBLIC ${LIBLUA_DIR})
+endif()
+
 set(vorb_libraries
     SDL2::SDL2main
     SDL2::SDL2
@@ -561,13 +578,18 @@ set(vorb_libraries
     glm
     enet::enet
     yaml-cpp::yaml-cpp
-    Lua::lua_lib
+    # Lua::lua_lib
     PNG::png
 )
 if(VORB_USE_FILESYSTEM EQUAL ${VORB_BOOST_FILESYSTEM})
     set(vorb_libraries ${vorb_libraries}
         Boost::filesystem
         Boost::system
+    )
+endif()
+if(VORB_USE_SCRIPTING)
+    set(vorb_libraries ${vorb_libraries}
+        liblua
     )
 endif()
 

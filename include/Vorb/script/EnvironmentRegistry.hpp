@@ -24,7 +24,16 @@
 
 #ifdef VORB_USING_SCRIPT
 
+#ifndef VORB_USING_PCH
+#include <vector>
+
+#include "Vorb/types.h"
+#endif // !VORB_USING_PCH
+
+#include <mutex>
 #include <unordered_map>
+
+#include "Vorb/Delegate.hpp"
 
 namespace vorb {
     namespace script {
@@ -32,6 +41,9 @@ namespace vorb {
         using ScriptEnvironmentGroup = std::pair<ScriptEnvironment*, std::vector<ScriptEnvironment*>>;
         template <typename ScriptEnvironment>
         using ScriptEnvironmentGroups = std::unordered_map<nString, ScriptEnvironmentGroup<ScriptEnvironment>>;
+
+        template <typename ScriptEnvironment>
+        using ScriptEnvironmentLockMap = std::unordered_map<ScriptEnvironment*, std::mutex*>;
 
         template <typename ScriptEnvironment>
         using ScriptEnvironmentBuilder = Delegate<void, ScriptEnvironment*>;
@@ -75,8 +87,23 @@ namespace vorb {
              */
             virtual CALLEE_DELETE ScriptEnvironment* getScriptEnv(const nString& groupName);
 
+            /*!
+             * \brief Locks the mutex associated with the given script environment.
+             *
+             * \param env: The script environment whose associated mutex should be locked.
+             */
+            static void lock(ScriptEnvironment* env);
+            /*!
+             * \brief Unlocks the mutex associated with the given script environment.
+             *
+             * \param env: The script environment whose associated mutex should be unlocked.
+             */
+            static void unlock(ScriptEnvironment* env);
+
         protected:
             ScriptEnvironmentGroups<ScriptEnvironment> m_scriptEnvGroups;
+
+            static ScriptEnvironmentLockMap<ScriptEnvironment> locks;
         };
     }
 }
@@ -91,11 +118,24 @@ template <typename ScriptEnvironment>
 void vscript::EnvironmentRegistry<ScriptEnvironment>::dispose() {
     for (auto& group : m_scriptEnvGroups) {
         for (auto& spawnedEnv : group.second.second) {
+            // Dispose of spawned script environment.
             spawnedEnv->dispose();
+
+            // Erase lock entry for spawned script environment.
+            locks.erase(spawnedEnv);
+
+            // Release spawned script environment.
             delete spawnedEnv;
         }
 
+        // Dispose of group script environment.
         group.second.first->dispose();
+
+        // Release lock and erase entry for group script environment.
+        delete locks.at(group.second.first);
+        locks.erase(group.second.first);
+
+        // Release group script environment.
         delete group.second.first;
     }
     ScriptEnvironmentGroups<ScriptEnvironment>().swap(m_scriptEnvGroups);
@@ -106,7 +146,11 @@ bool vscript::EnvironmentRegistry<ScriptEnvironment>::createGroup(const nString&
     ScriptEnvironment* env = new ScriptEnvironment();
     env->init();
 
+    // Build script environment context.
     if (builder != nullptr) builder->invoke(env);
+
+    // Create a lock for group, to be used by lua engine.
+    locks.insert(std::make_pair(env, new std::mutex));
 
     return m_scriptEnvGroups.insert(std::make_pair(groupName, std::make_pair(env, std::vector<ScriptEnvironment*>()))).second;
 }
@@ -125,8 +169,40 @@ CALLEE_DELETE ScriptEnvironment* vscript::EnvironmentRegistry<ScriptEnvironment>
 
     group.second.push_back(spawned);
 
+    // Add a reference to the group lock.
+    locks.insert(std::make_pair(spawned, locks.at(group.first)));
+
     return spawned;
 }
+
+template <typename ScriptEnvironment>
+void vscript::EnvironmentRegistry<ScriptEnvironment>::lock(ScriptEnvironment* env) {
+    std::mutex* mut = nullptr;
+
+    try {
+        mut = locks.at(env);
+    } catch (std::out_of_range& e) {
+        return;
+    }
+
+    mut->lock();
+}
+
+template <typename ScriptEnvironment>
+void vscript::EnvironmentRegistry<ScriptEnvironment>::unlock(ScriptEnvironment* env) {
+    std::mutex* mut = nullptr;
+
+    try {
+        mut = locks.at(env);
+    } catch (std::out_of_range& e) {
+        return;
+    }
+
+    mut->unlock();
+}
+
+template <typename ScriptEnvironment>
+vscript::ScriptEnvironmentLockMap<ScriptEnvironment> vscript::EnvironmentRegistry<ScriptEnvironment>::locks = ScriptEnvironmentLockMap<ScriptEnvironment>();
 
 #endif // VORB_USING_SCRIPT
 

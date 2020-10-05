@@ -18,6 +18,9 @@ void vscript::lua::Environment::init() {
     m_state = luaL_newstate();
     luaL_openlibs(m_state);
 
+    // Add mapping from handle to this env.
+    handleEnvMap.insert(std::make_pair(m_state, this));
+
     // TODO(Matthew): Error handler.
 
     // Create a table for storing registered functions.
@@ -38,6 +41,9 @@ void vscript::lua::Environment::init(IEnvironment* env) {
 
     // Initialise the Lua environment.
     m_state = lua_newthread(luaEnv->m_state);
+
+    // Add mapping from handle to this env.
+    handleEnvMap.insert(std::make_pair(m_state, this));
 
     // TODO(Matthew): May need to do some extra work with registered Lua functions, making sure they are properly distributed.
 }
@@ -141,6 +147,14 @@ bool vscript::lua::Environment::run(const vio::Path& filepath) {
 bool vscript::lua::Environment::run(const nString& script) {
     // Load and run script, and return success state.
     return luaL_dostring(m_state, script.c_str()) == 0;
+}
+
+vscript::lua::Environment* vscript::lua::Environment::environmentFromHandle(Handle handle) {
+    try {
+        return handleEnvMap.at(handle);
+    } catch (std::out_of_range& e) {
+        return nullptr;
+    }
 }
 
 void vscript::lua::Environment::addCFunction(const nString& name, CFunction::Type function) {

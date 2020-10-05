@@ -5,11 +5,13 @@
 
 #include "Vorb/io/File.h"
 #include "Vorb/io/FileStream.h"
+#include "Vorb/script/EnvironmentRegistry.hpp"
 
 vscript::lua::Environment::Environment() :
     IEnvironment(),
     m_state(nullptr),
-    m_namespaceDepth(0) {
+    m_namespaceDepth(0),
+    m_parent(nullptr) {
     // Empty
 }
 
@@ -44,6 +46,9 @@ void vscript::lua::Environment::init(IEnvironment* env) {
 
     // Add mapping from handle to this env.
     handleEnvMap.insert(std::make_pair(m_state, this));
+
+    // Set parent.
+    m_parent = luaEnv;
 
     // TODO(Matthew): May need to do some extra work with registered Lua functions, making sure they are properly distributed.
 }
@@ -157,6 +162,17 @@ vscript::lua::Environment* vscript::lua::Environment::environmentFromHandle(Hand
     }
 }
 
+void vscript::lua::Environment::setLockingMechanism() {
+    lua_setLock([](void* L) {
+        Environment* env = environmentFromHandle(static_cast<Handle>(L));
+        vscript::EnvironmentRegistry<vscript::lua::Environment>::lock(env);
+    });
+    lua_setUnlock([](void* L) {
+        Environment* env = environmentFromHandle(static_cast<Handle>(L));
+        vscript::EnvironmentRegistry<vscript::lua::Environment>::unlock(env);
+    });
+}
+
 void vscript::lua::Environment::addCFunction(const nString& name, CFunction::Type function) {
     // Push function pointer onto Lua stack and set the field of key name to that pointer.
     lua_pushcfunction(m_state, function);
@@ -223,12 +239,12 @@ i32 vscript::lua::Environment::makeLFunction(const nString& name) {
 }
 
 bool vscript::lua::Environment::addLFunction(LFunction* lFunction) {
-    return m_lFunctions.insert({ lFunction->getName(), lFunction }).second;
+    return getRegisteredLFunctions().insert({ lFunction->getName(), lFunction }).second;
 }
 
 vscript::lua::LFunction* vscript::lua::Environment::getLFunction(const nString& name) {
-    const auto& it = m_lFunctions.find(name);
-    if (it == m_lFunctions.end()) {
+    const auto& it = getRegisteredLFunctions().find(name);
+    if (it == getRegisteredLFunctions().end()) {
         return nullptr;
     }
     return it->second;
@@ -281,3 +297,5 @@ int vscript::lua::registerLFunction(Handle state) {
     vscript::lua::ValueMediator<i32>::push(state, env->makeLFunction(name));
     return 1;
 }
+
+vscript::lua::HandleEnvMap vscript::lua::Environment::handleEnvMap = vscript::lua::HandleEnvMap();

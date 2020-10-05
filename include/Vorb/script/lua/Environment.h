@@ -26,19 +26,6 @@
 
 #include "Vorb/VorbPreDecl.inl"
 
-#include "../EnvironmentRegistry.hpp"
-
-DECL_VSCRIPT_LUA(class Environment)
-
-#define lua_lock(L) {                                                                       \
-    vscript::lua::Environment* env = vscript::lua::Environment::environmentFromHandle(L);   \
-    vscript::EnvironmentRegistry<vscript::lua::Environment>::lock(env);                     \
-}
-#define lua_unlock(L) {                                                                     \
-    vscript::lua::Environment* env = vscript::lua::Environment::environmentFromHandle(L);   \
-    vscript::EnvironmentRegistry<vscript::lua::Environment>::unlock(env);                   \
-}
-
 #include <lua.hpp>
 
 namespace vorb {
@@ -58,9 +45,12 @@ namespace vorb {
         namespace lua {
             class LFunction;
 
+            class Environment;
+
+            using HandleEnvMap = std::unordered_map<Handle, Environment*>;
+
             class Environment : public IEnvironment<Environment> {
                 using LFunctionList = std::unordered_map<nString, LFunction*>;
-                using HandleEnvMap = std::unordered_map<Handle, Environment*>;
 
                 friend int registerLFunction(Handle state);
             public:
@@ -171,6 +161,10 @@ namespace vorb {
                 template<typename ...Namespaces>
                 void setNamespaces(Namespaces... namespaces);
 
+                /*! \return Reference to the list of registered LFunctions.
+                 */
+                LFunctionList& getRegisteredLFunctions() { return (m_parent == nullptr) ? m_lFunctions : m_parent->getRegisteredLFunctions(); }
+
                 /*!
                  * \brief Returns the Lua handle.
                  *
@@ -179,6 +173,8 @@ namespace vorb {
                 Handle getHandle() { return m_state; }
 
                 static Environment* environmentFromHandle(Handle handle);
+
+                static void setLockingMechanism();
             protected:
                 VORB_NON_COPYABLE(Environment);
 
@@ -255,6 +251,7 @@ namespace vorb {
                 Handle        m_state;           ///< The Lua state handle.
                 i32           m_namespaceDepth;  ///< The depth of namespace we are currently at.
                 LFunctionList m_lFunctions;      ///< The list of Lua functions registered with this environment.
+                Environment*  m_parent;          ///< The parent environment if created in a registry group.
 
                 static HandleEnvMap handleEnvMap; ///< Maps a lua_State handle to the env it is wrapped by.
             };

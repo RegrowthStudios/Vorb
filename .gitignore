@@ -188,3 +188,7 @@ docs/
 UnitTester/app.config
 
 .vscode/
+
+# Binaries
+*.o
+*.a

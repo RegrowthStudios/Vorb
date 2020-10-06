@@ -192,3 +192,7 @@ UnitTester/app.config
 # Binaries
 *.o
 *.a
+
+# Lua Binaries
+lua
+luac

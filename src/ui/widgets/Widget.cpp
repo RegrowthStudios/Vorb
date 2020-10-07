@@ -26,7 +26,10 @@ void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.
 }
 
 void vui::Widget::init(const nString& name, const Length2& position, const Length2& size, ui16 zIndex /*= 0*/) {
-    Widget::init(name, f32v4(position.x, position.y, size.x, size.y), zIndex);
+    Widget::init(name, f32v4(0.0f), zIndex);
+
+    setRawPosition(position);
+    setRawSize(size);
 }
 
 void vui::Widget::init(IWidget* parent, const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {

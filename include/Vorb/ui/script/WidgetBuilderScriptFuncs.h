@@ -38,7 +38,7 @@ namespace vorb {
 
         namespace WidgetBuilderScriptFuncs {
             template <typename ScriptEnvironment>
-            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironment>* env, IWidgets& widgets);
+            void registerFuncs(vscript::IEnvironment<ScriptEnvironment>* env, IWidgets& widgets);
 
             template <typename ScriptEnvironment>
             void registerConsts(vscript::IEnvironment<ScriptEnvironment>* env);
@@ -60,7 +60,7 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironmentImpl>
-void vui::WidgetBuilderScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env, IWidgets& widgets) {
+void vui::WidgetBuilderScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, IWidgets& widgets) {
     // Set up creation functions for extending the view.
     env->setNamespaces("UI", "View");
     env->addCDelegate("makeButton", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {

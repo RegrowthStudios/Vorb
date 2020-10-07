@@ -79,7 +79,7 @@ void vui::IWidget::dispose(bool thisOnly /*= false*/) {
     // Can't just remove as it would invalidate any iterators in use of parent's widget collection.
     // This is being extra cautious and in principle we could require the head widget of a tree to be disposed
     // would be first pruned from any full UI tree it is a part of.
-    m_parent->markChildForRemoval(this);
+    if (m_parent != nullptr) m_parent->markChildForRemoval(this);
     m_parent = nullptr;
 
     m_viewport = nullptr;

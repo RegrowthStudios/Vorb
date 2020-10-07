@@ -316,7 +316,7 @@ namespace vorb {
 
         namespace UIScriptContext {
             template <typename ScriptEnvironment>
-            void injectUIScriptContext(ScriptEnvironment* env) {
+            void injectInto(ScriptEnvironment* env) {
                 env->setNamespaces("UI");
                 env->addCDelegate("makeView", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
                     return ui->makeView(name, zIndex);

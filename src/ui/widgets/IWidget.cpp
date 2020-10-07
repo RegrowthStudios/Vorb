@@ -585,24 +585,27 @@ bool vui::IWidget::getInheritedDefault(const nString& propertyName, OUT any& res
     } catch (std::out_of_range& e) {
         // If we can't, try to get it from the parent of this
         // widget, if a parent exists.
-        if (m_parent == nullptr) return nullptr;
+        if (m_parent == nullptr) return false;
 
-        return m_parent->getInheritedDefault(propertyName);
+        return m_parent->getInheritedDefault(propertyName, res);
     }
 
-    return getter();
+    res = getter(this);
+    return true;
 }
 
 void vui::IWidget::checkForRemovals() {
     // Move all widgets to be removed to end.
     size_t i = 0;
-    IWidgets::iterator newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidget* widget VORB_UNUSED) {
+    auto newEndIt = std::remove_if(m_widgets.begin(), m_widgets.end(), [&](IWidget* widget VORB_UNUSED) {
         return m_widgetStates[i++] != ChildState::VALID;
     });
 
-    // Iterate backwards over all widgets removing all to be removed.
-    for (auto it = m_widgets.end(); it != newEndIt - 1; --it) {
-        removeWidget(it);
+    if (newEndIt != m_widgets.end()) {
+        // Iterate backwards over all widgets removing all to be removed.
+        for (auto it = m_widgets.end(); it != newEndIt - 1; --it) {
+            removeWidget(it);
+        }
     }
 
     // Reset widget invalidation vector.

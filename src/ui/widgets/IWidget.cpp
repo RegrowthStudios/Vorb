@@ -178,6 +178,7 @@ bool vui::IWidget::addWidget(IWidget* child) {
 
     child->updateDescendantViewports();
 
+    // TODO(Matthew): This procedure should be propogated to children...
     // For each inheritable property in the child, set the inherited value.
     for (auto& map : child->m_inheritableGetterSetterMap) {
         // Don't set that inherited value if the value held by the child is already a modified value.
@@ -186,11 +187,13 @@ bool vui::IWidget::addWidget(IWidget* child) {
         // Get setter for inheritable property of child.
         InheritableSetter setter = map.second.setter;
 
-        // Get value that should be inherited for the property.
-        void* value = getInheritedDefault(map.first);
+        // Get value that should be inherited for the property, if
+        // we can't, then skip this property.
+        any value;
+        if (!getInheritedDefault(map.first, value)) continue;
 
         // Set the property to the obtained value.
-        setter(value);
+        setter(child, value);
     }
 
     // Update child appropriately - no more, no less, than we must.
@@ -573,7 +576,7 @@ void vui::IWidget::setIgnoreOffset(bool ignoreOffset) {
     m_flags.needsDimensionUpdate = true;
 }
 
-void* vui::IWidget::getInheritedDefault(const nString& propertyName) {
+bool vui::IWidget::getInheritedDefault(const nString& propertyName, OUT any& res) {
     InheritableGetter getter;
 
     // Try to get default for named property from this widget.

@@ -105,38 +105,38 @@ void vui::TextWidget::initBase() {
     Widget::initBase();
 
     m_inheritableGetterSetterMap["font"] = {
-        makeFunctor([&]() {
-            return (void*)m_drawableText.getFont();
+        makeFunctor([](IWidget* widget) {
+            return any(((TextWidget*)widget)->getFont());
         }),
-        makeFunctor([&](void* font) {
-            setFont(static_cast<const vg::SpriteFont*>(font));
+        makeFunctor([](IWidget* widget, any font) {
+            ((TextWidget*)widget)->setFont(any_cast<const vg::SpriteFont*>(font));
         })
     };
     m_isModifiedMap["font"] = false;
     m_inheritableGetterSetterMap["textColor"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getColor();
+        makeFunctor([](IWidget* widget) {
+            return any(((TextWidget*)widget)->getTextColor());
         }),
-        makeFunctor([&](void* textColor) {
-            setTextColor(*static_cast<color4*>(textColor));
+        makeFunctor([](IWidget* widget, any textColor) {
+            ((TextWidget*)widget)->setTextColor(any_cast<color4>(textColor));
         })
     };
     m_isModifiedMap["textColor"] = false;
     m_inheritableGetterSetterMap["textAlign"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getTextAlign();
+        makeFunctor([](IWidget* widget) {
+            return any(((TextWidget*)widget)->getTextAlign());
         }),
-        makeFunctor([&](void* textAlign) {
-            setTextAlign(*static_cast<vg::TextAlign*>(textAlign));
+        makeFunctor([](IWidget* widget, any textAlign) {
+            ((TextWidget*)widget)->setTextAlign(any_cast<vg::TextAlign>(textAlign));
         })
     };
     m_isModifiedMap["textAlign"] = false;
     m_inheritableGetterSetterMap["textScale"] = {
-        makeFunctor([&]() {
-            return (void*)&m_drawableText.getTextScale();
+        makeFunctor([](IWidget* widget) {
+            return any(((TextWidget*)widget)->getTextScale());
         }),
-        makeFunctor([&](void* textScale) {
-            setTextScale(*static_cast<f32v2*>(textScale));
+        makeFunctor([](IWidget* widget, any textScale) {
+            ((TextWidget*)widget)->setTextScale(any_cast<f32v2>(textScale));
         })
     };
     m_isModifiedMap["textScale"] = false;

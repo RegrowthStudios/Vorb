@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Vorb/Any.hpp"
 #include "Vorb/Event.hpp"
 #include "Vorb/VorbPreDecl.inl"
 
@@ -124,8 +125,8 @@ namespace vorb {
             using IWidgets = std::vector<IWidget*>;
             using Font     = vorb::graphics::SpriteFont;
 
-            using InheritableGetter = Delegate<void*>;
-            using InheritableSetter = Delegate<void, void*>;
+            using InheritableGetter = Delegate<any, IWidget*>;
+            using InheritableSetter = Delegate<void, IWidget*, any>;
             struct InheritableGetterSetter {
                 InheritableGetter getter;
                 InheritableSetter setter;
@@ -330,7 +331,7 @@ namespace vorb {
              *
              * \param propertyName: The name of the property to get a default value for.
              */
-            void* getInheritedDefault(const nString& propertyName);
+            bool getInheritedDefault(const nString& propertyName, OUT any& res);
 
             /*! \brief Initialiser for general set-up. */
             virtual void initBase() { /* Empty */ }

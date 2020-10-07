@@ -271,11 +271,11 @@ void vui::Widget::updateDimensions(f32) {
 
 void vui::Widget::initBase() {
     m_inheritableGetterSetterMap["positionType"] = {
-        makeFunctor([&]() {
-            return (void*)&m_positionType;
+        makeFunctor([](IWidget* widget) {
+            return any(((Widget*)widget)->getPositionType());
         }),
-        makeFunctor([&](void* positionType) {
-            setPositionType(*static_cast<PositionType*>(positionType));
+        makeFunctor([](IWidget* widget, any positionType) {
+            ((Widget*)widget)->setPositionType(any_cast<PositionType>(positionType));
         })
     };
     m_isModifiedMap["positionType"] = false;

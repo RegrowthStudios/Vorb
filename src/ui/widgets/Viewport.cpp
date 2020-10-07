@@ -24,46 +24,46 @@ void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::Sprit
 
     // Set defaults for all inheritable properties so that at worst getInheritedDefault hits here.
     m_inheritableGetterSetterMap["positionType"] = {
-        makeFunctor([&]() {
-            return (void*)&DEFAULT_POSITION_TYPE;
+        makeFunctor([](IWidget*) {
+            return any(DEFAULT_POSITION_TYPE);
         }),
-        makeFunctor([&](void* positionType VORB_UNUSED) {
+        makeFunctor([](IWidget*, any) {
             // Empty.
         })
     };
     m_isModifiedMap["positionType"] = false;
     m_inheritableGetterSetterMap["font"] = {
-        makeFunctor([&]() {
-            return (void*)defaultFont;
+        makeFunctor([defaultFont](IWidget*) {
+            return any(const_cast<const vg::SpriteFont*>(defaultFont));
         }),
-        makeFunctor([&](void* font VORB_UNUSED) {
+        makeFunctor([](IWidget*, any) {
             // Empty.
         })
     };
     m_isModifiedMap["font"] = false;
     m_inheritableGetterSetterMap["textColor"] = {
-        makeFunctor([&]() {
-            return (void*)&color::Black;
+        makeFunctor([](IWidget*) {
+            return any(color::Black);
         }),
-        makeFunctor([&](void* textColor VORB_UNUSED) {
+        makeFunctor([](IWidget*, any) {
             // Empty.
         })
     };
     m_isModifiedMap["textColor"] = false;
     m_inheritableGetterSetterMap["textAlign"] = {
-        makeFunctor([&]() {
-            return (void*)&DEFAULT_TEXT_ALIGN;
+        makeFunctor([](IWidget*) {
+            return any(DEFAULT_TEXT_ALIGN);
         }),
-        makeFunctor([&](void* textAlign VORB_UNUSED) {
+        makeFunctor([](IWidget*, any) {
             // Empty.
         })
     };
     m_isModifiedMap["textAlign"] = false;
     m_inheritableGetterSetterMap["textScale"] = {
-        makeFunctor([&]() {
-            return (void*)&DEFAULT_TEXT_SCALE;
+        makeFunctor([](IWidget*) {
+            return any(DEFAULT_TEXT_SCALE);
         }),
-        makeFunctor([&](void* textScale VORB_UNUSED) {
+        makeFunctor([](IWidget*, any) {
             // Empty.
         })
     };

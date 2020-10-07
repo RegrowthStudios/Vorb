@@ -41,23 +41,25 @@
 #include "Vorb/ui/script/TextWidgetScriptFuncs.h"
 #include "Vorb/ui/script/ViewportScriptFuncs.h"
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
+#include "Vorb/ui/script/WidgetBuilderScriptFuncs.h"
 #include "Vorb/ui/script/WidgetListScriptFuncs.h"
 
 namespace vorb {
     namespace ui {
+        using IWidgets  = std::vector<IWidget*>;
+
         // TODO(Matthew): Provide function for loading specified fonts via Lua.
         //                  From a brief look inside SpriteFont we want to revisit and refactor that to complete this.
         namespace ViewScriptContext {
             template <typename ScriptEnvironment>
             using ScriptEnv = vscript::IEnvironment<ScriptEnvironment>;
-            using IWidgets  = std::vector<IWidget*>;
 
             template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
+            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets);
 
             namespace impl {
                 template <typename ScriptEnvironment>
-                void registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
+                void registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets);
                 template <typename ScriptEnvironment>
                 void registerConsts(ScriptEnvironment* scriptEnv);
             }
@@ -68,14 +70,14 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
-    impl::registerFuncs(scriptEnv, window, textureCache);
+void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets) {
+    impl::registerFuncs(scriptEnv, window, textureCache, widgets);
 
     impl::registerConsts(scriptEnv);
 }
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
+void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets) {
     ButtonScriptFuncs::registerFuncs<ScriptEnvironment>("Button", scriptEnv);
 
     CheckBoxScriptFuncs::registerFuncs<ScriptEnvironment>("CheckBox", scriptEnv);
@@ -93,6 +95,8 @@ void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, c
     SliderScriptFuncs::registerFuncs<ScriptEnvironment>("Slider", scriptEnv);
 
     ViewportScriptFuncs::registerFuncs<ScriptEnvironment>("Viewport", scriptEnv);
+
+    WidgetBuilderScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv, widgets);
 
     WidgetListScriptFuncs::registerFuncs<ScriptEnvironment>("WidgetList", scriptEnv);
 }
@@ -118,6 +122,8 @@ void vui::ViewScriptContext::impl::registerConsts(ScriptEnvironment* scriptEnv) 
     SliderScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 
     ViewportScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
+
+    WidgetBuilderScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 
     WidgetScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 

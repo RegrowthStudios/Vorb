@@ -50,7 +50,10 @@ void vscript::lua::Environment::init(IEnvironment* env) {
     // Set parent.
     m_parent = luaEnv;
 
-    // TODO(Matthew): May need to do some extra work with registered Lua functions, making sure they are properly distributed.
+    // Set global namespace.
+    setGlobalNamespace();
+
+    // TODO(Matthew): Anything more to make this work?
 }
 
 void vscript::lua::Environment::init(const vio::Path& filepath) {

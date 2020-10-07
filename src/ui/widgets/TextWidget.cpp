@@ -35,6 +35,8 @@ void vui::TextWidget::addDrawables(UIRenderer& renderer) {
 void vui::TextWidget::setFont(const vg::SpriteFont* font) {
     m_drawableText.setFont(font);
 
+    m_isModifiedMap["font"] = true;
+
     // Hover should match non-hover property unless explicitly modified.
     if (!m_isModifiedMap["hoverFont"]) m_drawableHoverText.setFont(font);
 }
@@ -49,12 +51,16 @@ void vui::TextWidget::setText(const nString& text) {
 void vui::TextWidget::setTextColor(const color4& color) {
     m_drawableText.setColor(color);
 
+    m_isModifiedMap["textColor"] = true;
+
     // Hover should match non-hover property unless explicitly modified.
     if (!m_isModifiedMap["hoverTextColor"]) m_drawableHoverText.setColor(color);
 }
 
 void vui::TextWidget::setTextAlign(vg::TextAlign textAlign) {
     m_drawableText.setTextAlign(textAlign);
+
+    m_isModifiedMap["textAlign"] = true;
 
     // Hover should match non-hover property unless explicitly modified.
     if (!m_isModifiedMap["hoverTextAlign"]) m_drawableHoverText.setTextAlign(textAlign);
@@ -64,6 +70,8 @@ void vui::TextWidget::setTextAlign(vg::TextAlign textAlign) {
 
 void vui::TextWidget::setTextScale(const f32v2& textScale) {
     m_drawableText.setTextScale(textScale);
+
+    m_isModifiedMap["textScale"] = true;
 
     // Hover should match non-hover property unless explicitly modified.
     if (!m_isModifiedMap["hoverTextScale"]) m_drawableHoverText.setTextScale(textScale);

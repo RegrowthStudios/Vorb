@@ -136,6 +136,59 @@ bool vscript::lua::ValueMediator<bool, void>::tryRetrieve(Handle state, ui32 ind
 }
 
 /************************************************************************/
+/* Char Cast                                                            */
+/************************************************************************/
+char vscript::lua::ValueMediator<char, void>::defaultValue() {
+    return '\0';
+}
+
+i32 vscript::lua::ValueMediator<char, void>::getValueCount() {
+    return 1;
+}
+
+i32 vscript::lua::ValueMediator<char, void>::push(Handle state, char value) {
+    char* tmp = new char[2];
+    tmp[0] = value;
+    tmp[1] = '\0';
+
+    lua_pushstring(state, tmp);
+
+    delete[] tmp;
+
+    return 1;
+}
+
+char vscript::lua::ValueMediator<char, void>::pop(Handle state) {
+    nString value = lua_tostring(state, -1);
+    lua_pop(state, 1);
+    if (value.length() > 0) return value.c_str()[0];
+    return defaultValue();
+}
+
+bool vscript::lua::ValueMediator<char, void>::tryPop(Handle state, OUT char& value) {
+    if (lua_isstring(state, -1)) {
+        value = pop(state);
+        return true;
+    }
+    return false;
+}
+
+char vscript::lua::ValueMediator<char, void>::retrieve(Handle state, ui32 index) {
+    nString value = lua_tostring(state, index);
+    lua_remove(state, index);
+    if (value.length() > 0) return value.c_str()[0];
+    return defaultValue();
+}
+
+bool vscript::lua::ValueMediator<char, void>::tryRetrieve(Handle state, ui32 index, OUT char& value) {
+    if (lua_isstring(state, index)) {
+        value = retrieve(state, index);
+        return true;
+    }
+    return false;
+}
+
+/************************************************************************/
 /* String Cast                                                          */
 /************************************************************************/
 nString vscript::lua::ValueMediator<nString, void>::defaultValue() {

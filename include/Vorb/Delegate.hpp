@@ -186,6 +186,8 @@ public:
                 printf("There are now %hu delegates with object: %p, and function pointer: %p.\n", m_deletor->refCount, (void*)m_object, (void*)m_function);
 #   endif // PRINT_REFCOUNT_DELEGATES == 1
             }
+#else
+            neuter();
 #endif // REFCOUNT_DELEGATES == 1
         } else {
             m_function       = delegate.m_function;
@@ -258,6 +260,8 @@ public:
                 printf("There are now %hu delegates with object: %p, and function pointer: %p.\n", m_deletor->refCount, (void*)m_object, (void*)m_function);
 #   endif // PRINT_REFCOUNT_DELEGATES == 1
             }
+#else
+            neuter();
 #endif // REFCOUNT_DELEGATES == 1
         } else {
             m_function = delegate.m_function;

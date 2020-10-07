@@ -35,14 +35,16 @@ DECL_VSCRIPT(template <typename EnvironmentImpl> class IEnvironment)
 
 namespace vorb {
     namespace graphics {
-        template <typename ScriptEnvironmentImpl>
-        void registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache);
+        namespace GraphicsScriptContext {
+            template <typename ScriptEnvironmentImpl>
+            void injectInto(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache);
+        }
     }
 }
 namespace vg = vorb::graphics;
 
 template <typename ScriptEnvironmentImpl>
-void vg::registerToScriptEnv(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache) {
+void vg::GraphicsScriptContext::injectInto(vscript::IEnvironment<ScriptEnvironmentImpl>* env, FontCache* fontCache, TextureCache* textureCache) {
     using namespace vg::impl;
 
     FontCacheScriptFuncs::registerFuncs(env, fontCache);

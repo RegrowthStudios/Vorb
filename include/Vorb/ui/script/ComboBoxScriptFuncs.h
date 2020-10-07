@@ -421,6 +421,7 @@ void vui::ComboBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
         impl::setDropButtonTextByCompare(comboBox, text, compare);
     }));
     env->addCDelegate("setMaxDropHeight",                     makeDelegate(&impl::setMaxDropHeight));
+    env->setNamespaces();
 
     env->setNamespaces("UI", namespace_, "onValueChange");
     env->addCDelegate("subscribe", makeFunctor([=](ComboBox* comboBox, nString name) {

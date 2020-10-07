@@ -95,6 +95,7 @@ void vui::CheckBoxScriptFuncs::registerFuncs(const nString& namespace_, vscript:
     env->addCDelegate("setBoxCheckedHoverColor",  makeDelegate(&impl::setBoxCheckedHoverColor));
     env->addCDelegate("isChecked",                makeDelegate(&impl::isChecked));
     env->addCDelegate("setChecked",               makeDelegate(&impl::setChecked));
+    env->setNamespaces();
 
     env->setNamespaces("UI", namespace_, "onValueChange");
     env->addCDelegate("subscribe", makeFunctor([=](CheckBox* checkBox, nString name) {

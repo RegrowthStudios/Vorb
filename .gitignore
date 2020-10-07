@@ -194,5 +194,5 @@ UnitTester/app.config
 *.a
 
 # Lua Binaries
-lua
-luac
+deps/lua/src/lua
+deps/lua/src/luac

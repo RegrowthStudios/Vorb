@@ -32,7 +32,7 @@
 #include "Vorb/ui/script/ViewScriptContext.hpp"
 #include "Vorb/ui/widgets/Viewport.h"
 
-DECL_VG(class FontCache; class TextureCache; class SpriteBatch)
+DECL_VG(class FontCache; class TextureCache; class SpriteBatch; class SpriteFont)
 DECL_VIO(class IOManagerBase)
 DECL_VUI(class GameWindow; class IGameScreen; class Viewport)
 
@@ -57,6 +57,7 @@ namespace vorb {
              * \param textureCache: The cache used for obtaining textures.
              * \param fontCache: The font used for rendering text in the UI.
              * \param spriteBatch: The batcher used for rendering other sprites of the UI.
+             * \param spriteFont: Optional default font to use for views created in this UI.
              */
             virtual void init(
                        IGameScreen* ownerScreen,
@@ -64,7 +65,8 @@ namespace vorb {
                 vio::IOManagerBase* ioManager,
                   vg::TextureCache* textureCache,
                      vg::FontCache* fontCache,
-                   vg::SpriteBatch* spriteBatch
+                   vg::SpriteBatch* spriteBatch,
+                    vg::SpriteFont* defaultFont = nullptr
             );
             /*! \brief Disposes of the UI, removing all associated services.
              */
@@ -177,9 +179,9 @@ namespace vorb {
             vio::IOManagerBase* m_ioManager; ///< The IO manager used to obtain needed assets.
 
             vg::TextureCache* m_textureCache; ///< The cache used to obtain textures used by this UI.
-            // TODO(Matthew): When fetching from cache, render font at next power of 2 font size compared to size chosen. Do we need a limit?
-            vg::FontCache* m_fontCache; ///< The cache used to obtain fonts used by this UI.
-            vg::SpriteBatch* m_spriteBatch; ///< The batcher used to render elements of this UI.
+            vg::FontCache*    m_fontCache;    ///< The cache used to obtain fonts used by this UI.
+            vg::SpriteBatch*  m_spriteBatch;  ///< The batcher used to render elements of this UI.
+            vg::SpriteFont*   m_defaultFont;  ///< Default font to pass to views created in this UI.
 
             UIViews m_views; ///< The list of views that comprise this UI.
         };

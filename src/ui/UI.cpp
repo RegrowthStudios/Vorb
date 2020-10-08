@@ -9,7 +9,8 @@ vui::UIBase::UIBase() :
     m_ioManager(nullptr),
     m_textureCache(nullptr),
     m_fontCache(nullptr),
-    m_spriteBatch(nullptr) {
+    m_spriteBatch(nullptr),
+    m_defaultFont(nullptr) {
     // Empty.
 }
 
@@ -19,14 +20,16 @@ void vui::UIBase::init(
     vio::IOManagerBase* ioManager,
       vg::TextureCache* textureCache,
          vg::FontCache* fontCache,
-       vg::SpriteBatch* spriteBatch
+       vg::SpriteBatch* spriteBatch,
+        vg::SpriteFont* defaultFont /*= nullptr*/
 ) {
     m_ownerScreen  = ownerScreen;
     m_gameWindow   = window;
     m_ioManager    = ioManager;
-    m_textureCache = textureCache,
-    m_fontCache   = fontCache;
+    m_textureCache = textureCache;
+    m_fontCache    = fontCache;
     m_spriteBatch  = spriteBatch;
+    m_defaultFont  = defaultFont;
 }
 
 void vui::UIBase::dispose() {
@@ -34,8 +37,9 @@ void vui::UIBase::dispose() {
     m_gameWindow   = nullptr;
     m_ioManager    = nullptr;
     m_textureCache = nullptr;
-    m_fontCache   = nullptr;
+    m_fontCache    = nullptr;
     m_spriteBatch  = nullptr;
+    m_defaultFont  = nullptr;
 
     for (auto& view : m_views) {
         view.second->dispose();
@@ -66,9 +70,7 @@ void vui::UIBase::draw() {
 
 vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const f32v4& dimensions /*= f32v4(0.0f)*/) {
     Viewport* viewport = new Viewport(m_gameWindow);
-    // TODO(Matthew): Have a globally accessible default font? Or let it be specified at this function level, in which case we need
-    //                to expose a font cache to scripts so that views created by Lua can have a default font set.
-    viewport->init(name, dimensions, nullptr, m_spriteBatch);
+    viewport->init(name, dimensions, m_defaultFont, m_spriteBatch);
 
     m_views.insert(std::make_pair(zIndex, viewport));
 
@@ -77,9 +79,7 @@ vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const f
 
 vui::Viewport* vui::UIBase::makeView(const nString& name, ZIndex zIndex, const Length2& position, const Length2& size) {
     Viewport* viewport = new Viewport(m_gameWindow);
-    // TODO(Matthew): Have a globally accessible default font? Or let it be specified at this function level, in which case we need
-    //                to expose a font cache to scripts so that views created by Lua can have a default font set.
-    viewport->init(name, position, size, nullptr, m_spriteBatch);
+    viewport->init(name, position, size, m_defaultFont, m_spriteBatch);
 
     m_views.insert(std::make_pair(zIndex, viewport));
 

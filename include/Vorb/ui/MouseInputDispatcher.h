@@ -112,6 +112,7 @@ namespace vorb {
             bool hasFocus() const;
             bool isRelative() const;
             bool isHidden() const;
+            i32v2 getScroll() const;
 
             Event<const MouseEvent&> onEvent; ///< Signaled when any mouse event happens
             Event<const MouseEvent&> onFocusLost; ///< Signaled when mouse no longer provides input to application
@@ -121,19 +122,18 @@ namespace vorb {
             Event<const MouseMotionEvent&> onMotion; ///< Signaled when the mouse moves
             Event<const MouseWheelEvent&> onWheel; ///< Signaled when the mouse wheel scrolls
         private:
-            void setPos(i32 x, i32 y);
+            void setPosition(i32 x, i32 y);
             void setFocus(bool v);
             void setRelative(bool v);
             void setHidden(bool v);
+            void setScroll(i32v2 scroll);
 
-            i32v2 m_lastPos; ///< The last tracked position of the mouse
-            i32v2 m_fullScroll; ///< The accumulated values of the scroll wheel
-
-            std::atomic<i32> m_x = ATOMIC_VAR_INIT(0); ///< The last known x-position of the mouse
-            std::atomic<i32> m_y = ATOMIC_VAR_INIT(0); ///< The last known y-position of the mouse
-            std::atomic<i32> m_focus = ATOMIC_VAR_INIT(0); ///< 1 if this mouse if focused over the window
-            std::atomic<i32> m_relative = ATOMIC_VAR_INIT(0); ///< 1 if this mouse is set in a "relative" mode
-            std::atomic<i32> m_hidden = ATOMIC_VAR_INIT(0); ///< 1 if this mouse is hidden over the window
+            std::atomic<i32>   m_x = ATOMIC_VAR_INIT(0); ///< The last known x-position of the mouse
+            std::atomic<i32>   m_y = ATOMIC_VAR_INIT(0); ///< The last known y-position of the mouse
+            std::atomic<i32>   m_focus = ATOMIC_VAR_INIT(0); ///< 1 if this mouse if focused over the window
+            std::atomic<i32>   m_relative = ATOMIC_VAR_INIT(0); ///< 1 if this mouse is set in a "relative" mode
+            std::atomic<i32>   m_hidden = ATOMIC_VAR_INIT(0); ///< 1 if this mouse is hidden over the window
+            std::atomic<i32v2> m_fullScroll = ATOMIC_VAR_INIT(i32v2(0)); ///< The accumulated values of the scroll wheel
         };
     }
 }

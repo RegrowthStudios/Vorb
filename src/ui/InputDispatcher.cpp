@@ -47,8 +47,6 @@ void vui::InputDispatcher::init(GameWindow* w) {
 
     // Clear values
     memset(key.m_state, 0, sizeof(key.m_state));
-    mouse.m_fullScroll = i32v2(0, 0);
-    mouse.m_lastPos = i32v2(0, 0);
 }
 void vui::InputDispatcher::dispose() {
     if (!m_isInit) return;
@@ -130,6 +128,8 @@ void convert(vui::MouseButton& mb, const ui8& sb) {
 
 i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
     InputEvent ie;
+    i32v2 lastScroll, newScroll;
+    i32v2 lastPos, newPos;
 
     switch (e->type) {
     case SDL_KEYDOWN:
@@ -155,8 +155,7 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         ie.mouseMotion.y = e->motion.y;
         ie.mouseMotion.dx = e->motion.xrel;
         ie.mouseMotion.dy = e->motion.yrel;
-        vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
-        vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
+        vui::InputDispatcher::mouse.setPosition(ie.mouseMotion.x, ie.mouseMotion.y);
         vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
         vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
         break;
@@ -177,14 +176,16 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
         vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
         break;
     case SDL_MOUSEWHEEL:
-        ie.mouseWheel.x = vui::InputDispatcher::mouse.m_lastPos.x;
-        ie.mouseWheel.y = vui::InputDispatcher::mouse.m_lastPos.y;
+        lastPos = vui::InputDispatcher::mouse.getPosition();
+        ie.mouseWheel.x = lastPos.x;
+        ie.mouseWheel.y = lastPos.y;
         ie.mouseWheel.dx = e->wheel.x;
         ie.mouseWheel.dy = e->wheel.y;
-        vui::InputDispatcher::mouse.m_fullScroll.x += ie.mouseWheel.dx;
-        vui::InputDispatcher::mouse.m_fullScroll.y += ie.mouseWheel.dy;
-        ie.mouseWheel.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
-        ie.mouseWheel.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+        lastScroll = vui::InputDispatcher::mouse.getScroll();
+        newScroll = i32v2(lastScroll.x + ie.mouseWheel.dx, lastScroll.y + ie.mouseWheel.dy);
+        vui::InputDispatcher::mouse.setScroll(newScroll);
+        ie.mouseWheel.sx = newScroll.x;
+        ie.mouseWheel.sy = newScroll.y;
         vui::InputDispatcher::mouse.onWheel(ie.mouseWheel);
         vui::InputDispatcher::mouse.onEvent(ie.mouseWheel);
         break;
@@ -210,21 +211,23 @@ i32 vui::impl::InputDispatcherEventCatcher::onSDLEvent(void*, SDL_Event* e) {
                 POINT mp;
                 GetCursorPos(&mp);
                 i32v2 wp = vui::InputDispatcher::m_window->getPosition();
-                vui::InputDispatcher::mouse.m_lastPos.x = mp.x - wp.x;
-                vui::InputDispatcher::mouse.m_lastPos.y = mp.y - wp.y;
+                vui::InputDispatcher::mouse.setPosition(mp.x - wp.x, mp.y - wp.y);
             }
 #else
             // TODO: This is currently not working
-            SDL_GetMouseState(&vui::InputDispatcher::mouse.m_lastPos.x, &vui::InputDispatcher::mouse.m_lastPos.y);
+            SDL_GetMouseState(&newPos.x, &newPos.y);
+            vui::InputDispatcher::mouse.setPosition(newPos.x, newPos.y);
 #endif
-            ie.mouse.x = vui::InputDispatcher::mouse.m_lastPos.x;
-            ie.mouse.y = vui::InputDispatcher::mouse.m_lastPos.y;
+            lastPos = vui::InputDispatcher::mouse.getPosition();
+            ie.mouse.x = lastPos.x;
+            ie.mouse.y = lastPos.y;
             vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
             vui::InputDispatcher::mouse.onEvent(ie.mouse);
             break;
         case SDL_WINDOWEVENT_LEAVE:
-            ie.mouse.x = vui::InputDispatcher::mouse.m_lastPos.x;
-            ie.mouse.y = vui::InputDispatcher::mouse.m_lastPos.y;
+            lastPos = vui::InputDispatcher::mouse.getPosition();
+            ie.mouse.x = lastPos.x;
+            ie.mouse.y = lastPos.y;
             vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
             vui::InputDispatcher::mouse.onEvent(ie.mouse);
             break;
@@ -339,21 +342,21 @@ void vui::impl::InputDispatcherEventCatcher::onMouseFocusEvent(GLFWwindow* windo
         GetCursorPos(&mp);
         int wx, wy;
         glfwGetWindowPos(window, &wx, &wy);
-        vui::InputDispatcher::mouse.m_lastPos.x = mp.x - wx;
-        vui::InputDispatcher::mouse.m_lastPos.y = mp.y - wy;
+        i32v2 newPos = i32v2(mp.x - wx, mp.y - wy);
+        vui::InputDispatcher::mouse.setPosition(newPos.x, newPos.y);
     }
 #else
     // TODO: Does this work?
     {
         f64v2 mp;
         glfwGetCursorPos(window, &mp.x, &mp.y);
-        vui::InputDispatcher::mouse.m_lastPos.x = (i32)mp.x;
-        vui::InputDispatcher::mouse.m_lastPos.y = (i32)mp.y;
+        vui::InputDispatcher::mouse.setPosition((i32)mp.x, (i32)mp.y);
     }
 #endif
     MouseEvent e;
-    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
-    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
+    i32v2 lastPos = vui::InputDispatcher::mouse.getPosition();
+    e.x = lastPos.x;
+    e.y = lastPos.y;
     if (value != 0) {
         vui::InputDispatcher::mouse.onFocusGained(e);
     } else {
@@ -365,18 +368,19 @@ void vui::impl::InputDispatcherEventCatcher::onMousePosEvent(GLFWwindow*, f64 x,
     MouseMotionEvent e;
     e.x = (i32)x;
     e.y = (i32)y;
-    e.dx = e.x - vui::InputDispatcher::mouse.m_lastPos.x;
-    e.dy = e.y - vui::InputDispatcher::mouse.m_lastPos.y;
+    i32v2 lastPos = vui::InputDispatcher::mouse.getPosition();
+    e.dx = e.x - lastPos.x;
+    e.dy = e.y - lastPos.y;
     if (e.dx == 0 && e.dy == 0) return;
-    vui::InputDispatcher::mouse.m_lastPos.x = e.x;
-    vui::InputDispatcher::mouse.m_lastPos.y = e.y;
+    vui::InputDispatcher::mouse.setPosition(e.x, e.y);
     vui::InputDispatcher::mouse.onMotion(e);
     vui::InputDispatcher::mouse.onEvent(e);
 }
 void vui::impl::InputDispatcherEventCatcher::onMouseButtonEvent(GLFWwindow*, int button, int action, int) {
     MouseButtonEvent e;
-    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
-    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
+    i32v2 lastPos = vui::InputDispatcher::mouse.getPosition();
+    e.x = lastPos.x;
+    e.y = lastPos.y;
     switch (button) {
     case GLFW_MOUSE_BUTTON_LEFT:
         e.button = MouseButton::LEFT;
@@ -411,13 +415,15 @@ void vui::impl::InputDispatcherEventCatcher::onMouseScrollEvent(GLFWwindow*, f64
     e.dx = (i32)x;
     e.dy = (i32)y;
     if (e.dx == 0 && e.dy == 0) return;
-    vui::InputDispatcher::mouse.m_fullScroll.x += e.dx;
-    vui::InputDispatcher::mouse.m_fullScroll.y += e.dy;
+    i32v2 lastScroll = vui::InputDispatcher::mouse.getScroll();
+    i32v2 newScroll = i32v2(lastScroll.x + e.dx, lastScroll.y + e.dy);
+    vui::InputDispatcher::mouse.setScroll(newScroll);
 
-    e.x = vui::InputDispatcher::mouse.m_lastPos.x;
-    e.y = vui::InputDispatcher::mouse.m_lastPos.y;
-    e.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
-    e.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+    i32 lastPos = vui::InputDispatcher::mouse.getPosition();
+    e.x = lastPos.x;
+    e.y = lastPos.y;
+    e.sx = newScroll.x;
+    e.sy = newScroll.y;
 
     vui::InputDispatcher::mouse.onWheel(e);
     vui::InputDispatcher::mouse.onEvent(e);
@@ -556,7 +562,7 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         sfv = sf::Mouse::getPosition(*userData);
         ie.mouse.x = sfv.x;
         ie.mouse.y = sfv.y;
-        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setPosition(ie.mouse.x, ie.mouse.y);
         vui::InputDispatcher::mouse.setFocus(true);
         vui::InputDispatcher::mouse.onFocusGained(ie.mouse);
         vui::InputDispatcher::mouse.onEvent(ie.mouse);
@@ -565,7 +571,7 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         sfv = sf::Mouse::getPosition(*userData);
         ie.mouse.x = sfv.x;
         ie.mouse.y = sfv.y;
-        vui::InputDispatcher::mouse.setPos(ie.mouse.x, ie.mouse.y);
+        vui::InputDispatcher::mouse.setPosition(ie.mouse.x, ie.mouse.y);
         vui::InputDispatcher::mouse.setFocus(false);
         vui::InputDispatcher::mouse.onFocusLost(ie.mouse);
         vui::InputDispatcher::mouse.onEvent(ie.mouse);
@@ -573,12 +579,11 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
     case sf::Event::MouseMoved:
         ie.mouseMotion.x = e.mouseMove.x;
         ie.mouseMotion.y = e.mouseMove.y;
-        ie.mouseMotion.dx = ie.mouseMotion.x - vui::InputDispatcher::mouse.m_lastPos.x;
-        ie.mouseMotion.dy = ie.mouseMotion.y - vui::InputDispatcher::mouse.m_lastPos.y;
+        i32v2 lastPos = vui::InputDispatcher::mouse.getPosition();
+        ie.mouseMotion.dx = ie.mouseMotion.x - lastPos.x;
+        ie.mouseMotion.dy = ie.mouseMotion.y - lastPos.y;
         if (ie.mouseMotion.dx == 0 && ie.mouseMotion.dy == 0) return;
-        vui::InputDispatcher::mouse.m_lastPos.x = ie.mouseMotion.x;
-        vui::InputDispatcher::mouse.m_lastPos.y = ie.mouseMotion.y;
-        vui::InputDispatcher::mouse.setPos(ie.mouseMotion.x, ie.mouseMotion.y);
+        vui::InputDispatcher::mouse.setPosition(ie.mouseMotion.x, ie.mouseMotion.y);
         vui::InputDispatcher::mouse.onMotion(ie.mouseMotion);
         vui::InputDispatcher::mouse.onEvent(ie.mouseMotion);
         break;
@@ -586,12 +591,13 @@ void vui::impl::InputDispatcherEventCatcher::onSFMLEvent(sf::RenderWindow* userD
         ie.mouseWheel.dx = 0;
         ie.mouseWheel.dy = e.mouseWheel.delta;
         if (ie.mouseWheel.dx == 0 && ie.mouseWheel.dy == 0) return;
-        vui::InputDispatcher::mouse.m_fullScroll.x += ie.mouseWheel.dx;
-        vui::InputDispatcher::mouse.m_fullScroll.y += ie.mouseWheel.dy;
+        i32v2 lastScroll = vui::InputDispatcher::mouse.getScroll();
+        i32v2 newScroll = i32v2(lastScroll.x + ie.mouseWheel.dx, lastScroll.y + ie.mouseWheel.dy);
+        vui::InputDispatcher::mouse.setScroll(newScroll);
         ie.mouseWheel.x = e.mouseWheel.x;
         ie.mouseWheel.y = e.mouseWheel.y;
-        ie.mouseWheel.sx = vui::InputDispatcher::mouse.m_fullScroll.x;
-        ie.mouseWheel.sy = vui::InputDispatcher::mouse.m_fullScroll.y;
+        ie.mouseWheel.sx = newScroll.x;
+        ie.mouseWheel.sy = newScroll.y;
         vui::InputDispatcher::mouse.onWheel(ie.mouseWheel);
         vui::InputDispatcher::mouse.onEvent(ie.mouseWheel);
         break;

@@ -17,6 +17,8 @@ vui::Slider::Slider() :
     m_min(0),
     m_max(10),
     m_isVertical(false),
+    m_naturalScroll(true),
+    m_elasticScroll(true),
     m_slideStaticFriction(0.95f),
     m_slideKineticFriction(2.5f),
     m_slideWeight(1.0f),
@@ -45,56 +47,60 @@ void vui::Slider::initBase() {
 }
 
 void vui::Slider::update(f32 dt /*= 0.0f*/) {
-    f32 initialSlideVelocity = glm::sqrt(2.0f * m_slideEnergy / m_slideWeight);
+    if (m_elasticScroll) {
+        f32 initialSlideVelocity = glm::sqrt(2.0f * m_slideEnergy / m_slideWeight);
 
-    // Subtract the friction-based energy losses.
-    m_slideEnergy = glm::clamp(
-        m_slideEnergy - (m_slideKineticFriction * m_slideWeight * dt * glm::abs(initialSlideVelocity)) - (m_slideStaticFriction * m_slideStaticFriction * m_slideWeight * dt),
-        0.0f,
-        std::numeric_limits<f32>::max()
-    );
+        // Subtract the friction-based energy losses.
+        m_slideEnergy = glm::clamp(
+            m_slideEnergy - (m_slideKineticFriction * m_slideWeight * dt * glm::abs(initialSlideVelocity)) - (m_slideStaticFriction * m_slideStaticFriction * m_slideWeight * dt),
+            0.0f,
+            std::numeric_limits<f32>::max()
+        );
 
-    f32 newSlideSpeed = 0.0f;
-    if (m_slideDirection < 0) {
-        newSlideSpeed = glm::clamp(-1.0f * glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), -m_slideMaxSpeed, 0.0f);
-    } else if (m_slideDirection > 0) {
-        newSlideSpeed = glm::clamp(glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), 0.0f, m_slideMaxSpeed);
-    }
+        f32 newSlideSpeed = 0.0f;
+        if (m_slideDirection < 0) {
+            newSlideSpeed = glm::clamp(-1.0f * glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), -m_slideMaxSpeed, 0.0f);
+        } else if (m_slideDirection > 0) {
+            newSlideSpeed = glm::clamp(glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), 0.0f, m_slideMaxSpeed);
+        }
 
-    static f32 i = 0.0f;
-    i += dt;
-    if (i >= 0.1f) {
-        if (m_scrollStrength > 0) m_scrollStrength -= 1;
+        static f32 i = 0.0f;
+        i += dt;
+        if (i >= 0.1f) {
+            if (m_scrollStrength > 0) m_scrollStrength -= 1;
 
-        i = 0.0f;
-    }
+            i = 0.0f;
+        }
 
-    f32 val = glm::clamp(getValueScaled() + newSlideSpeed * dt , 0.0f, 1.0f);
+        f32 val = glm::clamp(getValueScaled() + newSlideSpeed * dt , 0.0f, 1.0f);
 
-    // TODO(Ben): Faster round
-    i32 newValue = (i32)round(val * (f32)(m_max - m_min)) + m_min;
-    i32 oldValue = m_value;
-    if (newValue != m_value) {
-        setValue(newValue);
-    }
+        // TODO(Ben): Faster round
+        i32 newValue = (i32)round(val * (f32)(m_max - m_min)) + m_min;
+        i32 oldValue = m_value;
+        if (newValue != m_value) {
+            setValue(newValue);
+        }
 
-    IWidget::update(dt);
+        IWidget::update(dt);
 
-    if (newValue != oldValue) {
-        i32v2 mousePos = InputDispatcher::mouse.getPosition();
-        if (isInSlideBounds((f32)mousePos.x, (f32)mousePos.y)) {
-            if (!m_flags.isMouseIn) {
-                m_flags.isMouseIn = true;
+        if (newValue != oldValue) {
+            i32v2 mousePos = InputDispatcher::mouse.getPosition();
+            if (isInSlideBounds((f32)mousePos.x, (f32)mousePos.y)) {
+                if (!m_flags.isMouseIn) {
+                    m_flags.isMouseIn = true;
 
-                updateColor();
-            }
-        } else {
-            if (m_flags.isMouseIn) {
-                m_flags.isMouseIn = false;
+                    updateColor();
+                }
+            } else {
+                if (m_flags.isMouseIn) {
+                    m_flags.isMouseIn = false;
 
-                updateColor();
+                    updateColor();
+                }
             }
         }
+    } else {
+        IWidget::update(dt);
     }
 }
 
@@ -222,6 +228,14 @@ void vui::Slider::setIsVertical(bool isVertical) {
     }
 }
 
+void vui::Slider::setNaturalScroll(bool naturalScroll) {
+    m_naturalScroll = naturalScroll;
+}
+
+void vui::Slider::setElasticScroll(bool elasticScroll) {
+    m_elasticScroll = elasticScroll;
+}
+
 void vui::Slider::setSlideWeight(f32 slideWeight) {
     m_slideWeight = slideWeight;
 }
@@ -345,19 +359,37 @@ void vui::Slider::onMouseScroll(Sender, const MouseWheelEvent& e) {
 
         // TODO(Matthew): Check if input is convential mouse or trackpad or otherwise choose between e.dy and e.dx.
 
-        // If user indicates to go otherway to current motion, kill all motion.
-        if ((e.dy < 0 && m_slideDirection < 0) || (e.dy > 0 && m_slideDirection > 0)) {
-            m_slideEnergy = 0.0f;
-            m_scrollStrength = 0;
-        }
+        i32 dy = m_naturalScroll ? -e.dy : e.dy;
 
-        m_scrollStrength += glm::abs(e.dy);
-        m_slideDirection = -e.dy;
+        if (m_elasticScroll) {
+            // If user indicates to go otherway to current motion, kill all motion.
+            if ((dy < 0 && m_slideDirection < 0) || (dy > 0 && m_slideDirection > 0)) {
+                m_slideEnergy = 0.0f;
+                m_scrollStrength = 0;
+            }
 
-        if (m_isVertical) {
-            m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.y - slideSize.y) / m_slideWeight);
+            m_scrollStrength += glm::abs(dy);
+            m_slideDirection = dy;
+
+            if (m_isVertical) {
+                m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.y - slideSize.y) / m_slideWeight);
+            } else {
+                m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.x - slideSize.x) / m_slideWeight);
+            }
         } else {
-            m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.x - slideSize.x) / m_slideWeight);
+            f32 oldScaledValue = getValueScaled();
+            f32 val;
+            if (m_isVertical) {
+                val = glm::clamp(oldScaledValue + m_scrollSensitivity * dy / (barSize.y - slideSize.y), 0.0f, 1.0f);
+            } else {
+                val = glm::clamp(oldScaledValue + m_scrollSensitivity * dy / (barSize.x - slideSize.x), 0.0f, 1.0f);
+            }
+
+            // TODO(Ben): Faster round
+            i32 newValue = (i32)round(val * (f32)(m_max - m_min)) + m_min;
+            if (newValue != m_value) {
+                setValue(newValue);
+            }
         }
     }
 }

@@ -73,6 +73,8 @@ namespace vorb {
             virtual   const Length2& getRawSlideSize()    const { return m_rawSlideSize; }
             virtual             bool isHorizontal()       const { return !m_isVertical; }
             virtual             bool isVertical()         const { return m_isVertical; }
+            virtual             bool isNaturalScroll()    const { return m_naturalScroll; }
+            virtual             bool isElasticScroll()    const { return m_elasticScroll; }
             virtual              f32 getSlideWeight()     const { return m_slideWeight; }
             virtual              f32 getSlideKineticFriction() const { return m_slideKineticFriction; }
             virtual              f32 getSlideStaticFriction()  const { return m_slideStaticFriction;  }
@@ -95,6 +97,8 @@ namespace vorb {
             virtual void setSlideSize(const Length2& size);
             virtual void setSlideSize(const f32v2& size);
             virtual void setIsVertical(bool isVertical);
+            virtual void setNaturalScroll(bool naturalScroll);
+            virtual void setElasticScroll(bool elasticScroll);
             virtual void setSlideWeight(f32 slideWeight);
             virtual void setSlideKineticFriction(f32 slideKineticFriction);
             virtual void setSlideStaticFriction(f32 slideStaticFriction);
@@ -146,6 +150,8 @@ namespace vorb {
             bool         m_isVertical;
             f32v2        m_clickPoint;
             f32          m_clickValue;
+            bool         m_naturalScroll;
+            bool         m_elasticScroll;
             f32          m_slideStaticFriction;
             f32          m_slideKineticFriction;
             f32          m_slideWeight;

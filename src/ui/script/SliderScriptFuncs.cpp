@@ -53,6 +53,30 @@ bool vui::SliderScriptFuncs::impl::isVertical(Slider* slider) {
     return slider->isVertical();
 }
 
+f32 vui::SliderScriptFuncs::impl::getSlideWeight(Slider* slider) {
+    return slider->getSlideWeight();
+}
+
+f32 vui::SliderScriptFuncs::impl::getSlideKineticFriction(Slider* slider) {
+    return slider->getSlideKineticFriction()
+}
+
+f32 vui::SliderScriptFuncs::impl::getSlideStaticFriction(Slider* slider) {
+    return slider->getSlideStaticFriction();
+}
+
+f32 vui::SliderScriptFuncs::impl::getSlideMaxSpeed(Slider* slider) {
+    return slider->getSlideMaxSpeed();
+}
+
+f32 vui::SliderScriptFuncs::impl::getScrollSensitivity(Slider* slider) {
+    return slider->getScrollSensitivity();
+}
+
+bool vui::SliderScriptFuncs::impl::scrollOnParent(Slider* slider) {
+    return slider->scrollOnParent();
+}
+
 bool vui::SliderScriptFuncs::impl::isInSlideBounds(Slider* slider, f32 x, f32 y) {
     return slider->isInSlideBounds(x, y);
 }
@@ -99,6 +123,30 @@ void vui::SliderScriptFuncs::impl::setMax(Slider* slider, i32 max) {
 
 void vui::SliderScriptFuncs::impl::setIsVertical(Slider* slider, bool isVertical) {
     slider->setIsVertical(isVertical);
+}
+
+void vui::SliderScriptFuncs::impl::setSlideWeight(Slider* slider, f32 slideWeight) {
+    slider->setSlideWeight(slideWeight);
+}
+
+void vui::SliderScriptFuncs::impl::setSlideKineticFriction(Slider* slider, f32 slideKineticFriction) {
+    slider->setSlideKineticFriction(slideKineticFriction);
+}
+
+void vui::SliderScriptFuncs::impl::setSlideStaticFriction(Slider* slider, f32 slideStaticFriction) {
+    slider->setSlideStaticFriction(slideStaticFriction);
+}
+
+void vui::SliderScriptFuncs::impl::setSlideMaxSpeed(Slider* slider, f32 slideMaxSpeed) {
+    slider->setSlideMaxSpeed(slideMaxSpeed);
+}
+
+void vui::SliderScriptFuncs::impl::setScrollSensitivity(Slider* slider, f32 scrollSensitivity) {
+    slider->setScrollSensitivity(scrollSensitivity);
+}
+
+void vui::SliderScriptFuncs::impl::setScrollOnParent(Slider* slider, bool scrollOnParent) {
+    slider->setScrollOnParent(scrollOnParent);
 }
 
 // void vui::SliderScriptFuncs::impl::onValueChange(Sender s, i32 v) {

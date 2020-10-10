@@ -76,6 +76,36 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
         if (!parseValue(*value, isVertical)) return false;
 
         slider->setIsVertical(isVertical);
+    } else if (name == "slide_weight") {
+        f32 slideWeight;
+        if (!parseValue(*value, slideWeight)) return false;
+
+        slider->setSlideWeight(slideWeight);
+    } else if (name == "slide_kinetic_friction") {
+        f32 slideKineticFriction;
+        if (!parseValue(*value, slideKineticFriction)) return false;
+
+        slider->setSlideKineticFriction(slideKineticFriction);
+    } else if (name == "slide_static_friction") {
+        f32 slideStaticFriction;
+        if (!parseValue(*value, slideStaticFriction)) return false;
+
+        slider->setSlideStaticFriction(slideStaticFriction);
+    } else if (name == "slide_max_speed") {
+        f32 slideMaxSpeed;
+        if (!parseValue(*value, slideMaxSpeed)) return false;
+
+        slider->setSlideMaxSpeed(slideMaxSpeed);
+    } else if (name == "scroll_sensitivity") {
+        f32 scrollSensitivity;
+        if (!parseValue(*value, scrollSensitvity)) return false;
+
+        slider->setScrollSensitivity(scrollSensitvity);
+    } else if (name == "scroll_on_parent") {
+        bool scrollOnParent;
+        if (!parseValue(*value, scrollOnParent)) return false;
+
+        slider->setScrollOnParent(scrollOnParent);
     } else {
         return vui::parseWidgetEntry(context, slider, name, value, widgetParser);
     }

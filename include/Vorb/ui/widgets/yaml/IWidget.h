@@ -26,6 +26,8 @@ namespace vorb {
         // Forward Declarations.
         class  IWidget;
 
+        // TODO(Matthew): Optimise all of this? Register properties to a keyed map with functor as val e.g.
+
         /*!
          * \brief Parses the entry of the currently-parsing IWidget corresponding to the given YAML node.
          *

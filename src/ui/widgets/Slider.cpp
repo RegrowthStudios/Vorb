@@ -1,9 +1,12 @@
 #include "Vorb/stdafx.h"
+#include "Vorb/ui/InputDispatcher.h"
 #include "Vorb/ui/widgets/Slider.h"
 #include "Vorb/ui/MouseInputDispatcher.h"
 #include "Vorb/ui/UIRenderer.h"
 #include "Vorb/ui/widgets/Viewport.h"
 #include "Vorb/utils.h"
+
+#include <iostream>
 
 vui::Slider::Slider() :
     Widget(),
@@ -13,7 +16,16 @@ vui::Slider::Slider() :
     m_value(0),
     m_min(0),
     m_max(10),
-    m_isVertical(false) {
+    m_isVertical(false),
+    m_slideStaticFriction(0.95f),
+    m_slideKineticFriction(2.5f),
+    m_slideWeight(1.0f),
+    m_slideEnergy(0.0f),
+    m_slideMaxSpeed(4.0f),
+    m_slideDirection(0),
+    m_scrollSensitivity(8.0f),
+    m_scrollStrength(0),
+    m_scrollOnParent(true) {
     m_drawableSlide.setSize(f32v2(30.0f, 30.0f));
 
 
@@ -30,6 +42,76 @@ void vui::Slider::initBase() {
     m_isModifiedMap["sliderHoverColor"] = false;
 
     ValueChange.setSender(this);
+}
+
+void vui::Slider::update(f32 dt /*= 0.0f*/) {
+    f32 initialSlideVelocity = glm::sqrt(2.0f * m_slideEnergy / m_slideWeight);
+
+    // Subtract the friction-based energy losses.
+    m_slideEnergy = glm::clamp(
+        m_slideEnergy - (m_slideKineticFriction * m_slideWeight * dt * glm::abs(initialSlideVelocity)) - (m_slideStaticFriction * m_slideStaticFriction * m_slideWeight * dt),
+        0.0f,
+        std::numeric_limits<f32>::max()
+    );
+
+    f32 newSlideSpeed = 0.0f;
+    if (m_slideDirection < 0) {
+        newSlideSpeed = glm::clamp(-1.0f * glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), -m_slideMaxSpeed, 0.0f);
+    } else if (m_slideDirection > 0) {
+        newSlideSpeed = glm::clamp(glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), 0.0f, m_slideMaxSpeed);
+    }
+
+    static f32 i = 0.0f;
+    i += dt;
+    if (i >= 0.1f) {
+        if (m_scrollStrength > 0) m_scrollStrength -= 1;
+
+        i = 0.0f;
+    }
+
+    f32 val = glm::clamp(getValueScaled() + newSlideSpeed * dt , 0.0f, 1.0f);
+
+    // TODO(Ben): Faster round
+    i32 newValue = (i32)round(val * (f32)(m_max - m_min)) + m_min;
+    i32 oldValue = m_value;
+    if (newValue != m_value) {
+        setValue(newValue);
+    }
+
+    IWidget::update(dt);
+
+    if (newValue != oldValue) {
+        i32v2 mousePos = InputDispatcher::mouse.getPosition();
+        if (isInSlideBounds((f32)mousePos.x, (f32)mousePos.y)) {
+            if (!m_flags.isMouseIn) {
+                m_flags.isMouseIn = true;
+
+                updateColor();
+            }
+        } else {
+            if (m_flags.isMouseIn) {
+                m_flags.isMouseIn = false;
+
+                updateColor();
+            }
+        }
+    }
+}
+
+void vui::Slider::enable() {
+    if (!m_flags.isEnabled) {
+        vui::InputDispatcher::mouse.onWheel += makeDelegate(this, &Slider::onMouseScroll);
+    }
+
+    IWidget::enable();
+}
+
+void vui::Slider::disable(bool thisOnly /*= false*/) {
+    if (m_flags.isEnabled) {
+        vui::InputDispatcher::mouse.onWheel -= makeDelegate(this, &Slider::onMouseScroll);
+    }
+
+    IWidget::disable(thisOnly);
 }
 
 void vui::Slider::addDrawables(UIRenderer& renderer) {
@@ -140,6 +222,30 @@ void vui::Slider::setIsVertical(bool isVertical) {
     }
 }
 
+void vui::Slider::setSlideWeight(f32 slideWeight) {
+    m_slideWeight = slideWeight;
+}
+
+void vui::Slider::setSlideKineticFriction(f32 slideKineticFriction) {
+    m_slideKineticFriction = slideKineticFriction;
+}
+
+void vui::Slider::setSlideStaticFriction(f32 slideStaticFriction) {
+    m_slideStaticFriction = slideStaticFriction;
+}
+
+void vui::Slider::setSlideMaxSpeed(f32 slideMaxSpeed) {
+    m_slideMaxSpeed = slideMaxSpeed;
+}
+
+void vui::Slider::setScrollSensitivity(f32 scrollSensitivity) {
+    m_scrollSensitivity = scrollSensitivity;
+}
+
+void vui::Slider::setScrollOnParent(bool scrollOnParent) {
+    m_scrollOnParent = scrollOnParent;
+}
+
 bool vui::Slider::isInSlideBounds(f32 x, f32 y) const {
     const f32v2& pos  = m_drawableSlide.getPosition();
     const f32v2& size = m_drawableSlide.getSize();
@@ -183,6 +289,7 @@ void vui::Slider::onMouseDown(Sender, const MouseButtonEvent& e) {
         m_flags.isClicking = true;
         m_clickPoint = f32v2(e.x, e.y);
         m_clickValue = getValueScaled();
+        m_slideEnergy = 0.0f;
     }
 }
 
@@ -225,6 +332,32 @@ void vui::Slider::onMouseMove(Sender, const MouseMotionEvent& e) {
         i32 newValue = (i32)round(v * (f32)(m_max - m_min)) + m_min;
         if (newValue != m_value) {
             setValue(newValue);
+        }
+    }
+}
+
+void vui::Slider::onMouseScroll(Sender, const MouseWheelEvent& e) {
+    // Handle scroll attempt if mouse in somewhere on scrollbar.
+    if (isInBounds((f32)e.x, (f32)e.y)
+        || (m_scrollOnParent && m_parent && m_parent->isMouseIn())) {
+        const f32v2& barSize   = m_drawableBar.getSize();
+        const f32v2& slideSize = m_drawableSlide.getSize();
+
+        // TODO(Matthew): Check if input is convential mouse or trackpad or otherwise choose between e.dy and e.dx.
+
+        // If user indicates to go otherway to current motion, kill all motion.
+        if ((e.dy < 0 && m_slideDirection < 0) || (e.dy > 0 && m_slideDirection > 0)) {
+            m_slideEnergy = 0.0f;
+            m_scrollStrength = 0;
+        }
+
+        m_scrollStrength += glm::abs(e.dy);
+        m_slideDirection = -e.dy;
+
+        if (m_isVertical) {
+            m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.y - slideSize.y) / m_slideWeight);
+        } else {
+            m_slideEnergy += glm::abs(m_scrollSensitivity * (f32)m_scrollStrength / (barSize.x - slideSize.x) / m_slideWeight);
         }
     }
 }

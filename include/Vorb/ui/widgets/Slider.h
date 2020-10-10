@@ -32,6 +32,7 @@ namespace vorb {
 
         /// Forward Declarations
         class UIRenderer;
+        struct MouseWheelEvent;
 
         class Slider : public Widget {
         public:
@@ -39,6 +40,17 @@ namespace vorb {
             Slider();
             /*! @brief Default destructor. */
             virtual ~Slider();
+
+            /*! \brief Updates the widget. Can be used for animation.
+            *
+            * \param dt: Change in time since last update.
+            */
+            virtual void update(f32 dt = 0.0f) override;
+
+            /*! \brief Enables events that all widgets share in common. */
+            virtual void enable() override;
+            /*! \brief Disables events that all widgets share in common. */
+            virtual void disable(bool thisOnly = false) override;
 
             /*! @brief Adds all drawables to the UIRenderer
             */
@@ -61,6 +73,12 @@ namespace vorb {
             virtual   const Length2& getRawSlideSize()    const { return m_rawSlideSize; }
             virtual             bool isHorizontal()       const { return !m_isVertical; }
             virtual             bool isVertical()         const { return m_isVertical; }
+            virtual              f32 getSlideWeight()     const { return m_slideWeight; }
+            virtual              f32 getSlideKineticFriction() const { return m_slideKineticFriction; }
+            virtual              f32 getSlideStaticFriction()  const { return m_slideStaticFriction;  }
+            virtual              f32 getSlideMaxSpeed()     const { return m_slideMaxSpeed;     }
+            virtual              f32 getScrollSensitivity() const { return m_scrollSensitivity; }
+            virtual             bool scrollOnParent()       const { return m_scrollOnParent;    }
 
             /************************************************************************/
             /* Setters                                                              */
@@ -77,6 +95,12 @@ namespace vorb {
             virtual void setSlideSize(const Length2& size);
             virtual void setSlideSize(const f32v2& size);
             virtual void setIsVertical(bool isVertical);
+            virtual void setSlideWeight(f32 slideWeight);
+            virtual void setSlideKineticFriction(f32 slideKineticFriction);
+            virtual void setSlideStaticFriction(f32 slideStaticFriction);
+            virtual void setSlideMaxSpeed(f32 slideMaxSpeed);
+            virtual void setScrollSensitivity(f32 scrollSensitivity);
+            virtual void setScrollOnParent(bool scrollOnParent);
 
             virtual bool isInSlideBounds(const f32v2& point) const { return isInSlideBounds(point.x, point.y); }
             virtual bool isInSlideBounds(f32 x, f32 y) const;
@@ -102,6 +126,7 @@ namespace vorb {
             /************************************************************************/
             virtual void onMouseDown(Sender, const MouseButtonEvent& e) override;
             virtual void onMouseMove(Sender, const MouseMotionEvent& e) override;
+            virtual void onMouseScroll(Sender, const MouseWheelEvent& e);
 
             /************************************************************************/
             /* LUA Callbacks                                                        */
@@ -121,6 +146,15 @@ namespace vorb {
             bool         m_isVertical;
             f32v2        m_clickPoint;
             f32          m_clickValue;
+            f32          m_slideStaticFriction;
+            f32          m_slideKineticFriction;
+            f32          m_slideWeight;
+            f32          m_slideEnergy;
+            f32          m_slideMaxSpeed;
+            i8           m_slideDirection;
+            f32          m_scrollSensitivity;
+            ui32         m_scrollStrength;
+            bool         m_scrollOnParent;
         };
     }
 }

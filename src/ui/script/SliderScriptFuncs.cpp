@@ -53,6 +53,14 @@ bool vui::SliderScriptFuncs::impl::isVertical(Slider* slider) {
     return slider->isVertical();
 }
 
+bool vui::SliderScriptFuncs::impl::isNaturalScroll(Slider* slider) {
+    return slider->isNaturalScroll();
+}
+
+bool vui::SliderScriptFuncs::impl::isElasticScroll(Slider* slider) {
+    return slider->isElasticScroll();
+}
+
 f32 vui::SliderScriptFuncs::impl::getSlideWeight(Slider* slider) {
     return slider->getSlideWeight();
 }
@@ -123,6 +131,14 @@ void vui::SliderScriptFuncs::impl::setMax(Slider* slider, i32 max) {
 
 void vui::SliderScriptFuncs::impl::setIsVertical(Slider* slider, bool isVertical) {
     slider->setIsVertical(isVertical);
+}
+
+void vui::SliderScriptFuncs::impl::setNaturalScroll(Slider* slider, bool naturalScroll) {
+    slider->setNaturalScroll(naturalScroll);
+}
+
+void vui::SliderScriptFuncs::impl::setElasticScroll(Slider* slider, bool elasticScroll) {
+    slider->setElasticScroll(elasticScroll);
 }
 
 void vui::SliderScriptFuncs::impl::setSlideWeight(Slider* slider, f32 slideWeight) {

@@ -56,6 +56,8 @@ namespace vorb {
                   Length2 getRawSlideSize         (Slider* slider);
                      bool isVertical              (Slider* slider);
                      bool isHorizontal            (Slider* slider);
+                     bool isNaturalScroll         (Slider* slider);
+                     bool isElasticScroll         (Slider* slider);
                       f32 getValueScaled          (Slider* slider);
                       f32 getSlideWeight          (Slider* slider);
                       f32 getSlideKineticFriction (Slider* slider);
@@ -81,6 +83,8 @@ namespace vorb {
                 void setRawSlideSize         (Slider* slider, Length2 dimensions);
                 void setIsVertical           (Slider* slider, bool isVertical);
                 void setRange                (Slider* slider, i32 min, i32 max);
+                void setNaturalScroll        (Slider* slider, bool naturalScroll);
+                void setElasticScroll        (Slider* slider, bool elasticScroll);
                 void setSlideWeight          (Slider* slider, f32 slideWeight);
                 void setSlideKineticFriction (Slider* slider, f32 slideKineticFriction);
                 void setSlideStaticFriction  (Slider* slider, f32 slideStaticFriction);
@@ -123,6 +127,10 @@ void vui::SliderScriptFuncs::registerFuncs(const nString& namespace_, vscript::I
     env->addCDelegate("isHorizontal",            makeDelegate(&impl::isHorizontal));
     env->addCDelegate("getValueScaled",          makeDelegate(&impl::getValueScaled));
     env->addCDelegate("setRange",                makeDelegate(&impl::setRange));
+    env->addCDelegate("isNaturalScroll",         makeDelegate(&impl::isNaturalScroll));
+    env->addCDelegate("setNaturalScroll",        makeDelegate(&impl::setNaturalScroll));
+    env->addCDelegate("isElasticScroll",         makeDelegate(&impl::isElasticScroll));
+    env->addCDelegate("setElasticScroll",        makeDelegate(&impl::setElasticScroll));
     env->addCDelegate("getSlideWeight",          makeDelegate(&impl::getSlideWeight));
     env->addCDelegate("setSlideWeight",          makeDelegate(&impl::setSlideWeight));
     env->addCDelegate("getSlideKineticFriction", makeDelegate(&impl::getSlideKineticFriction));

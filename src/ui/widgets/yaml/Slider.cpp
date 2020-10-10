@@ -76,6 +76,16 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
         if (!parseValue(*value, isVertical)) return false;
 
         slider->setIsVertical(isVertical);
+    } else if (name == "natural_scroll") {
+        bool naturalScroll;
+        if (!parseValue(*value, naturalScroll)) return false;
+
+        slider->setNaturalScroll(naturalScroll);
+    } else if (name == "elastic_scroll") {
+        bool elasticScroll;
+        if (!parseValue(*value, elasticScroll)) return false;
+
+        slider->setElasticScroll(elasticScroll);
     } else if (name == "slide_weight") {
         f32 slideWeight;
         if (!parseValue(*value, slideWeight)) return false;

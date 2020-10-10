@@ -58,7 +58,7 @@ f32 vui::SliderScriptFuncs::impl::getSlideWeight(Slider* slider) {
 }
 
 f32 vui::SliderScriptFuncs::impl::getSlideKineticFriction(Slider* slider) {
-    return slider->getSlideKineticFriction()
+    return slider->getSlideKineticFriction();
 }
 
 f32 vui::SliderScriptFuncs::impl::getSlideStaticFriction(Slider* slider) {

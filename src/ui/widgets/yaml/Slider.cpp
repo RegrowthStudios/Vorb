@@ -98,9 +98,9 @@ bool vui::parseSliderEntry(keg::ReadContext& context, vui::Slider* slider, const
         slider->setSlideMaxSpeed(slideMaxSpeed);
     } else if (name == "scroll_sensitivity") {
         f32 scrollSensitivity;
-        if (!parseValue(*value, scrollSensitvity)) return false;
+        if (!parseValue(*value, scrollSensitivity)) return false;
 
-        slider->setScrollSensitivity(scrollSensitvity);
+        slider->setScrollSensitivity(scrollSensitivity);
     } else if (name == "scroll_on_parent") {
         bool scrollOnParent;
         if (!parseValue(*value, scrollOnParent)) return false;

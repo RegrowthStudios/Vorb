@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "Vorb/VorbAssert.hpp"
+
 #include "VorbMath.hpp"
 
 #ifndef Vorb_TweeningMath_hpp__
@@ -34,7 +36,7 @@ namespace vorb {
             return startVal + range * alpha;
         }
         template <typename T>
-        inline T linear(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T linear(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return linear(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -48,7 +50,7 @@ namespace vorb {
             return range * alpha * alpha + startVal;
         }
         template <typename T>
-        inline T easeInQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInQuad(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -62,7 +64,7 @@ namespace vorb {
             return (T)-1.0f * range * alpha * (alpha - (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutQuad(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -81,7 +83,7 @@ namespace vorb {
             return (T)-1.0f * range / (T)2.0f * (alpha2Minus1 * (alpha2Minus1 - (T)2.0f) - (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutQuad(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutQuad(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuad(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -95,7 +97,7 @@ namespace vorb {
             return range * alpha * alpha * alpha + startVal;
         }
         template <typename T>
-        inline T easeInCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInCubic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -110,7 +112,7 @@ namespace vorb {
             return range * (alphaMinus1 * alphaMinus1 * alphaMinus1 + (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutCubic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -121,7 +123,7 @@ namespace vorb {
         inline T easeInOutCubic(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutCubic only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            T alpha2 = alpha * (T)2.0f);
+            T alpha2 = alpha * (T)2.0f;
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * alpha2 * alpha2 * alpha2 + startVal;
             }
@@ -129,7 +131,7 @@ namespace vorb {
             return range / (T)2.0f * (alpha2Minus2 * alpha2Minus2 * alpha2Minus2 + (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutCubic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutCubic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutCubic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -143,7 +145,7 @@ namespace vorb {
             return range * alpha * alpha * alpha * alpha + startVal;
         }
         template <typename T>
-        inline T easeInQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInQuart(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -158,7 +160,7 @@ namespace vorb {
             return (T)-1.0f * range * (alphaMinus1 * alphaMinus1 * alphaMinus1 * alphaMinus1 - (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutQuart(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -169,7 +171,7 @@ namespace vorb {
         inline T easeInOutQuart(T startVal, T finalVal, T alpha) {
             static_assert(std::numeric_limits<T>::is_iec559, "easeInOutQuart only accepts floating-point inputs.");
             T range = finalVal - startVal;
-            T alpha2 = alpha * (T)2.0f);
+            T alpha2 = alpha * (T)2.0f;
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * alpha2 * alpha2 * alpha2 * alpha2 + startVal;
             }
@@ -177,7 +179,7 @@ namespace vorb {
             return (T)-1.0f * range / (T)2.0f * (alpha2Minus2 * alpha2Minus2 * alpha2Minus2 * alpha2Minus2 - (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutQuart(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutQuart(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuart(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -191,7 +193,7 @@ namespace vorb {
             return range * alpha * alpha * alpha * alpha * alpha + startVal;
         }
         template <typename T>
-        inline T easeInQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInQuint(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -206,7 +208,7 @@ namespace vorb {
             return range * (alphaMinus1 * alphaMinus1 * alphaMinus1 * alphaMinus1 * alphaMinus1 + (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutQuint(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -225,7 +227,7 @@ namespace vorb {
             return range / (T)2.0f * (alpha2Minus2 * alpha2Minus2 * alpha2Minus2 * alpha2Minus2 * alpha2Minus2 + (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutQuint(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutQuint(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutQuint(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -239,7 +241,7 @@ namespace vorb {
             return (T)-1.0f * range * vmath::cos(alpha * (T)M_PI_2F) + range + startVal;
         }
         template <typename T>
-        inline T easeInSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInSine(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -253,7 +255,7 @@ namespace vorb {
             return range * vmath::sin(alpha * (T)M_PI_2F) + startVal;
         }
         template <typename T>
-        inline T easeOutSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutSine(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -267,7 +269,7 @@ namespace vorb {
             return (T)-1.0f * range / (T)2.0f * (vmath::cos(alpha * M_PIF) - (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutSine(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutSine(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutSine(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -281,7 +283,7 @@ namespace vorb {
             return (alpha == (T)0.0f) ? startVal : range * vmath::pow((T)2.0f, (T)10.0f * (alpha - (T)1.0f)) + startVal;
         }
         template <typename T>
-        inline T easeInExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInExpo(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -295,7 +297,7 @@ namespace vorb {
             return (alpha == (T)1.0f) ? finalVal : range * ((T)-1.0f * vmath::pow((T)2.0f, (T)-10.0f * alpha) + (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutExpo(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -312,10 +314,10 @@ namespace vorb {
             if (alpha2 < (T)1.0f) {
                 return range / (T)2.0f * vmath::pow((T)2.0f, (T)10.0f * (alpha2 - (T)1.0f)) + startVal;
             }
-            return range / (T)2.0f * ((T)-1.0f * vmath::pow((T)2.0f, (T)-10.0f * (alpha2 - (T)1.0f) + (T)2.0f) + startVal;
+            return range / (T)2.0f * ((T)-1.0f * vmath::pow((T)2.0f, (T)-10.0f * (alpha2 - (T)1.0f)) + (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutExpo(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutExpo(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutExpo(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -329,7 +331,7 @@ namespace vorb {
             return (T)-1.0f * range * (vmath::sqrt((T)1.0f - alpha * alpha) - (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeInCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInCirc(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -341,10 +343,10 @@ namespace vorb {
             static_assert(std::numeric_limits<T>::is_iec559, "easeOutCirc only accepts floating-point inputs.");
             T range = finalVal - startVal;
             T alphaMinus1 = alpha - (T)1.0f;
-            return range * (vmath::sqrt((T)1.0f - alphaMinus1 * alphaMinus1) + startVal;
+            return range * vmath::sqrt((T)1.0f - alphaMinus1 * alphaMinus1) + startVal;
         }
         template <typename T>
-        inline T easeOutCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutCirc(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -363,7 +365,7 @@ namespace vorb {
             return range / (T)2.0f * (vmath::sqrt((T)1.0f - alpha2Minus2 * alpha2Minus2) + (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutCirc(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutCirc(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutCirc(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -376,11 +378,11 @@ namespace vorb {
             T range = finalVal - startVal;
             //if (alpha == (T)0.0f) return startVal;
             //if (alpha == (T)1.0f) return finalVal;
-            alphaMinus1 = alpha - 1;
+            T alphaMinus1 = alpha - 1;
             return (T)-1.0f * range * vmath::pow((T)2.0f, (T)10.0f * alphaMinus1) * vmath::sin(M_PIF * ((T)20.0f / (T)3.0f * alphaMinus1 - (T)0.5f)) + startVal;
         }
         template <typename T>
-        inline T easeInElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInElastic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -396,7 +398,7 @@ namespace vorb {
             return range * vmath::pow((T)2.0f, (T)-10.0f * alpha) * vmath::sin(M_PIF * ((T)20.0f / (T)3.0f * alpha - (T)0.5f)) * (T)0.5f + finalVal;
         }
         template <typename T>
-        inline T easeOutElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutElastic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -409,15 +411,15 @@ namespace vorb {
             T range = finalVal - startVal;
             //if (alpha == (T)0.0f) return startVal;
             //if (alpha == (T)1.0f) return finalVal;
-            alpha2 = (T)2.0f * alpha;
-            alpha2Minus1 = alpha2 - (T)1.0f;
+            T alpha2 = (T)2.0f * alpha;
+            T alpha2Minus1 = alpha2 - (T)1.0f;
             if (alpha2 < (T)1.0f) {
                 return (T)-0.5f * range * vmath::pow((T)2.0f, (T)10.0f * alpha2Minus1) * vmath::sin(M_PIF * ((T)40.0f / (T)9.0f * alpha2Minus1 - (T)0.5f)) + startVal;
             }
             return range * vmath::pow((T)2.0f, (T)-10.0f * alpha2Minus1) * vmath::sin(M_PIF * ((T)40.0f / (T)9.0f * alpha2Minus1 - (T)0.5f)) * (T)0.5f + finalVal;
         }
         template <typename T>
-        inline T easeInOutElastic(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutElastic(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutElastic(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -431,7 +433,7 @@ namespace vorb {
             return range * alpha * alpha * ((s + (T)1.0f) * alpha - s) + startVal;
         }
         template <typename T>
-        inline T easeInBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
+        inline T easeInBack(T startVal, T finalVal, ui32 stageCount, ui32 stage, T s = 1.70158) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
@@ -446,7 +448,7 @@ namespace vorb {
             return range * (alphaMinus1 * alphaMinus1 * ((s + (T)1.0f) * alphaMinus1 + s) + (T)1.0f) + startVal;
         }
         template <typename T>
-        inline T easeOutBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
+        inline T easeOutBack(T startVal, T finalVal, ui32 stageCount, ui32 stage, T s = 1.70158) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
@@ -466,7 +468,7 @@ namespace vorb {
             return range / (T)2.0f * (alpha2Minus2 * alpha2Minus2 * ((sPrime + (T)1.0f) * alpha2Minus2 + sPrime) + (T)2.0f) + startVal;
         }
         template <typename T>
-        inline T easeInOutBack(T startVal, T finalVal, unsigned int stageCount, unsigned int stage, T s = 1.70158) {
+        inline T easeInOutBack(T startVal, T finalVal, ui32 stageCount, ui32 stage, T s = 1.70158) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutBack(startVal, finalVal, (T)stage / (T)stageCount, s);
         }
@@ -480,7 +482,7 @@ namespace vorb {
             return range - easeOutBounce(0, finalVal - startVal, 1 - alpha) + startVal;
         }
         template <typename T>
-        inline T easeInBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInBounce(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -505,7 +507,7 @@ namespace vorb {
             }
         }
         template <typename T>
-        inline T easeOutBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeOutBounce(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeOutBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }
@@ -522,7 +524,7 @@ namespace vorb {
             return easeOutBounce(0, finalVal - startVal, (T)2.0f * alpha - (T)1.0f) * range * (T)0.25f + startVal;
         }
         template <typename T>
-        inline T easeInOutBounce(T startVal, T finalVal, unsigned int stageCount, unsigned int stage) {
+        inline T easeInOutBounce(T startVal, T finalVal, ui32 stageCount, ui32 stage) {
             vorb_assert(stageCount != 0, "Stage count must be greater than 0.");
             return easeInOutBounce(startVal, finalVal, (T)stage / (T)stageCount);
         }

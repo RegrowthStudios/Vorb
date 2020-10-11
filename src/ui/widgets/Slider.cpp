@@ -64,6 +64,8 @@ void vui::Slider::update(f32 dt /*= 0.0f*/) {
             newSlideSpeed = glm::clamp(glm::sqrt(2.0f * m_slideEnergy / m_slideWeight), 0.0f, m_slideMaxSpeed);
         }
 
+        // TODO(Matthew): This is a scroll strength die-off to stop sudden bursts
+        //                of scroll speed. Should it be configurable?
         static f32 i = 0.0f;
         i += dt;
         if (i >= 0.1f) {
@@ -363,7 +365,7 @@ void vui::Slider::onMouseScroll(Sender, const MouseWheelEvent& e) {
 
         if (m_elasticScroll) {
             // If user indicates to go otherway to current motion, kill all motion.
-            if ((dy < 0 && m_slideDirection < 0) || (dy > 0 && m_slideDirection > 0)) {
+            if ((dy > 0 && m_slideDirection < 0) || (dy < 0 && m_slideDirection > 0)) {
                 m_slideEnergy = 0.0f;
                 m_scrollStrength = 0;
             }

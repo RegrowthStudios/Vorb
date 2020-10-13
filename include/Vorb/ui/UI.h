@@ -335,6 +335,22 @@ namespace vorb {
                 env->addCDelegate("getView", makeFunctor([](UIBase* ui, nString name) {
                     return ui->getView(name);
                 }));
+                env->addCDelegate("enableView", makeFunctor([](UIBase* ui, nString name) {
+                    Viewport* view = ui->getView(name);
+                    if (view != nullptr) {
+                        view->enable();
+                        return true;
+                    }
+                    return false;
+                }));
+                env->addCDelegate("disableView", makeFunctor([](UIBase* ui, nString name) {
+                    Viewport* view = ui->getView(name);
+                    if (view != nullptr) {
+                        view->disable()
+                        return true;
+                    }
+                    return false;
+                }));
                 env->addCDelegate("destroyView", makeFunctor([](UIBase* ui, Viewport* view) {
                     return ui->destroyView(view);
                 }));

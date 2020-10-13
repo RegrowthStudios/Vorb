@@ -48,8 +48,6 @@ namespace vorb {
     namespace ui {
         using IWidgets  = std::vector<IWidget*>;
 
-        // TODO(Matthew): Provide function for loading specified fonts via Lua.
-        //                  From a brief look inside SpriteFont we want to revisit and refactor that to complete this.
         namespace ViewScriptContext {
             template <typename ScriptEnvironment>
             using ScriptEnv = vscript::IEnvironment<ScriptEnvironment>;
@@ -94,7 +92,7 @@ void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, c
 
     SliderScriptFuncs::registerFuncs<ScriptEnvironment>("Slider", scriptEnv);
 
-    ViewportScriptFuncs::registerFuncs<ScriptEnvironment>("Viewport", scriptEnv);
+    ViewportScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv);
 
     WidgetBuilderScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv, widgets);
 

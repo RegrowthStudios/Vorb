@@ -424,7 +424,6 @@ set(vorb_ui ${vorb_ui}
     include/Vorb/ui/script/CheckBoxScriptFuncs.h
     include/Vorb/ui/script/ComboBoxScriptFuncs.h
     include/Vorb/ui/script/GameWindowScriptFuncs.h
-    include/Vorb/ui/script/GraphicsScriptFuncs.h
     include/Vorb/ui/script/LabelScriptFuncs.h
     include/Vorb/ui/script/PanelScriptFuncs.h
     include/Vorb/ui/script/SliderScriptFuncs.h

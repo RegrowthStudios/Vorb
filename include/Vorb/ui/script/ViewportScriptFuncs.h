@@ -47,7 +47,16 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironmentImpl>
-void vui::ViewportScriptFuncs::registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+void vui::ViewportScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
+    env->setNamespaces("UI", "Viewport");
+    env->addCDelegate("enableView", makeFunctor([](Viewport* view) {
+        view->enable();
+    }));
+    env->addCDelegate("disableView", makeFunctor([](Viewport* view) {
+        view->disable();
+    }));
+    env->setNamespaces();
+
     WidgetScriptFuncs::registerFuncs(namespace_, env);
 }
 

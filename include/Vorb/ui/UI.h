@@ -318,54 +318,6 @@ namespace vorb {
             };
             nString m_scriptEnvGroup; ///< The group to which to retrieve script environments from in the registry.
         };
-
-        // TODO(Matthew): Handle situations where we want to provide further injections for certain UIs.
-        //                    E.g. as in MainMenuScriptedUI.
-
-        namespace UIScriptContext {
-            template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* env) {
-                env->setNamespaces("UI");
-                env->addCDelegate("makeView", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
-                    return ui->makeView(name, zIndex);
-                }));
-                env->addCDelegate("makeViewFromYAML", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex, nString filepath) {
-                    return ui->makeViewFromYAML(name, zIndex, filepath);
-                }));
-                env->addCDelegate("getView", makeFunctor([](UIBase* ui, nString name) {
-                    return ui->getView(name);
-                }));
-                env->addCDelegate("enableView", makeFunctor([](UIBase* ui, nString name) {
-                    Viewport* view = ui->getView(name);
-                    if (view != nullptr) {
-                        view->enable();
-                        return true;
-                    }
-                    return false;
-                }));
-                env->addCDelegate("disableView", makeFunctor([](UIBase* ui, nString name) {
-                    Viewport* view = ui->getView(name);
-                    if (view != nullptr) {
-                        view->disable()
-                        return true;
-                    }
-                    return false;
-                }));
-                env->addCDelegate("destroyView", makeFunctor([](UIBase* ui, Viewport* view) {
-                    return ui->destroyView(view);
-                }));
-                env->addCDelegate("destroyViewWithName", makeFunctor([](UIBase* ui, nString name) {
-                    return ui->destroyViewWithName(name);
-                }));
-                env->addCDelegate("setViewZIndex", makeFunctor([](UIBase* ui, Viewport* view, ZIndex zIndex) {
-                    return ui->setViewZIndex(view, zIndex);
-                }));
-                env->addCDelegate("setViewZIndexWithName", makeFunctor([](UIBase* ui, nString name, ZIndex zIndex) {
-                    return ui->setViewWithNameZIndex(name, zIndex);
-                }));
-                env->setNamespaces();
-            }
-        }
     }
 }
 namespace vui = vorb::ui;

@@ -36,6 +36,7 @@ DECL_VUI(class GameWindow; class IGameScreen; class UIBase)
 namespace vorb {
     namespace ui {
         using RegisteredUIs = std::unordered_map<nString, UIBase*>;
+        using IWidgets = std::vector<IWidget>;
 
         class UIRegistryBase {
         public:
@@ -46,8 +47,19 @@ namespace vorb {
                 // Empty.
             }
 
-            void init();
-            void dispose();
+            /*!
+             * \brief Initialises the registry.
+             *
+             * \param window: The window in which the game is embedded.
+             * \param textureCache: The cache used for obtaining textures.
+             * \param fontCache: The font used for rendering text in the UI.
+             */
+            virtual void init(const GameWindow* window, vg::TextureCache* textureCache, vg::FontCache* fontCache);
+            /*! \brief Disposes the registry. Note that the UI Registry is not responsible
+             * for disposing of any registered UIs, this is the repsonsibility of whatever code
+             * registered the UI, even if through the use of makeUI.
+             */
+            virtual void dispose();
 
             /*!
              * \brief Register a previously constructed UI with this registry, assigning it the given name.
@@ -72,10 +84,7 @@ namespace vorb {
              *
              * \param name: The name to assign the UI.
              * \param ownerScreen: The screen to which the UI is attached.
-             * \param window: The window in which the game is embedded.
              * \param ioManager: The IO manager for acquiring files such as YAML files and scripts.
-             * \param textureCache: The cache used for obtaining textures.
-             * \param fontCache: The font used for rendering text in the UI.
              * \param spriteBatch: The batcher used for rendering other sprites of the UI.
              * \param spriteFont: Optional default font to use for views created in the UI.
              *
@@ -84,10 +93,7 @@ namespace vorb {
             virtual CALLER_DELETE UIBase* makeUI(
                      const nString& name,
                        IGameScreen* ownerScreen,
-                  const GameWindow* window,
                 vio::IOManagerBase* ioManager,
-                  vg::TextureCache* textureCache,
-                     vg::FontCache* fontCache,
                    vg::SpriteBatch* spriteBatch,
                     vg::SpriteFont* defaultFont = nullptr
             ) = 0;
@@ -107,10 +113,17 @@ namespace vorb {
 
         protected:
             RegisteredUIs m_uis;
+
+            const GameWindow* m_window;
+            vg::TextureCache* m_textureCache;
+            vg::FontCache*    m_fontCache;
         };
 
         template <typename ScriptEnvironment = void, typename Enable = void>
         class UIRegistry;
+
+        // TODO(Matthew): Handle situations where we want to provide further script injections for certain UIs.
+        //                    E.g. as in MainMenuScriptedUI.
 
         template <typename ScriptEnvironment>
         class UIRegistry<ScriptEnvironment,
@@ -127,15 +140,12 @@ namespace vorb {
             virtual CALLER_DELETE UIBase* makeUI(
                      const nString& name,
                        IGameScreen* ownerScreen,
-                  const GameWindow* window,
                 vio::IOManagerBase* ioManager,
-                  vg::TextureCache* textureCache,
-                     vg::FontCache* fontCache,
                    vg::SpriteBatch* spriteBatch,
                     vg::SpriteFont* defaultFont /*= nullptr*/
             ) override {
                 UI<ScriptEnvironment>* ui = new UI<ScriptEnvironment>();
-                ui->init(ownerScreen, window, ioManager, textureCache, fontCache, spriteBatch, defaultFont);
+                ui->init(ownerScreen, m_window, ioManager, m_textureCache, m_fontCache, spriteBatch, defaultFont);
 
                 if (!m_uis.emplace(std::make_pair(name, ui)).second) {
                     delete ui;
@@ -146,9 +156,7 @@ namespace vorb {
             }
 
             void prepareScriptEnv(ScriptEnvironment* scriptEnv) {
-                UIScriptContext::injectInto(scriptEnv);
-
-                ViewScriptContext::injectInto(scriptEnv);
+                UIScriptContext::injectInto(scriptEnv, m_window, m_textureCache);
 
                 scriptEnv->setNamespace("UI");
                 scriptEnv->addCDelegate("getUI", makeFunctor([&](nString name) {
@@ -173,15 +181,12 @@ namespace vorb {
             virtual CALLER_DELETE UIBase* makeUI(
                      const nString& name,
                        IGameScreen* ownerScreen,
-                  const GameWindow* window,
                 vio::IOManagerBase* ioManager,
-                  vg::TextureCache* textureCache,
-                     vg::FontCache* fontCache,
                    vg::SpriteBatch* spriteBatch,
                     vg::SpriteFont* defaultFont /*= nullptr*/
             ) override {
                 UI<>* ui = new UI<>();
-                ui->init(ownerScreen, window, ioManager, textureCache, fontCache, spriteBatch, defaultFont);
+                ui->init(ownerScreen, m_window, ioManager, m_textureCache, m_fontCache, spriteBatch, defaultFont);
 
                 if (!m_uis.emplace(std::make_pair(name, ui)).second) {
                     delete ui;

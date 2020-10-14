@@ -1,11 +1,17 @@
 #include "Vorb/stdafx.h"
 #include "Vorb/ui/UIRegistry.h"
 
-void vui::UIRegistryBase::init() {
-    // TODO(Matthew): Do anything for initialisation?
+void vui::UIRegistryBase::init(const GameWindow* window, vg::TextureCache* textureCache, vg::FontCache* fontCache) {
+    m_window = window;
+    m_textureCache = textureCache;
+    m_fontCache = fontCache;
 }
 
 void vui::UIRegistryBase::dispose() {
+    m_window       = nullptr;
+    m_textureCache = nullptr;
+    m_fontCache    = nullptr;
+
     RegisteredUIs().swap(m_uis);
 }
 

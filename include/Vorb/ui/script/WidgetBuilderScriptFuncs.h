@@ -23,6 +23,7 @@
 #endif // !VORB_USING_PCH
 
 #include "Vorb/script/IEnvironment.hpp"
+#include "Vorb/ui/UI.h"
 #include "Vorb/ui/widgets/Button.h"
 #include "Vorb/ui/widgets/CheckBox.h"
 #include "Vorb/ui/widgets/ComboBox.h"
@@ -34,11 +35,9 @@
 
 namespace vorb {
     namespace ui {
-        using IWidgets = std::vector<IWidget*>;
-
         namespace WidgetBuilderScriptFuncs {
             template <typename ScriptEnvironment>
-            void registerFuncs(vscript::IEnvironment<ScriptEnvironment>* env, IWidgets& widgets);
+            void registerFuncs(vscript::IEnvironment<ScriptEnvironment>* env);
 
             template <typename ScriptEnvironment>
             void registerConsts(vscript::IEnvironment<ScriptEnvironment>* env);
@@ -60,43 +59,29 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironmentImpl>
-void vui::WidgetBuilderScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env, IWidgets& widgets) {
+void vui::WidgetBuilderScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env) {
     // Set up creation functions for extending the view.
     env->setNamespaces("UI", "View");
     env->addCDelegate("makeButton", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeButton(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeButton(parent, name, dimensions);
     }));
     env->addCDelegate("makeCheckBox", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeCheckBox(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeCheckBox(parent, name, dimensions);
     }));
     env->addCDelegate("makeComboBox", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeComboBox(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeComboBox(parent, name, dimensions);
     }));
     env->addCDelegate("makeLabel", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeLabel(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeLabel(parent, name, dimensions);
     }));
     env->addCDelegate("makePanel", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makePanel(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makePanel(parent, name, dimensions);
     }));
     env->addCDelegate("makeSlider", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeSlider(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeSlider(parent, name, dimensions);
     }));
     env->addCDelegate("makeWidgetList", makeFunctor([&](IWidget* parent, nString name, f32v4 dimensions) {
-        IWidget* res = impl::makeWidgetList(parent, name, dimensions);
-        widgets.push_back(res);
-        return res;
+        return impl::makeWidgetList(parent, name, dimensions);
     }));
     env->addCDelegate("destroyWidgetTree", makeFunctor([&](IWidget* topLevelWidget) {
         impl::destroyWidgetTree(topLevelWidget, widgets);

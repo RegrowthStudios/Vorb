@@ -34,7 +34,6 @@
 #include "Vorb/ui/script/ComboBoxScriptFuncs.h"
 #include "Vorb/ui/GameWindow.h"
 #include "Vorb/ui/script/GameWindowScriptFuncs.h"
-#include "Vorb/ui/script/GraphicsScriptFuncs.h"
 #include "Vorb/ui/script/LabelScriptFuncs.h"
 #include "Vorb/ui/script/PanelScriptFuncs.h"
 #include "Vorb/ui/script/SliderScriptFuncs.h"
@@ -53,7 +52,7 @@ namespace vorb {
             using ScriptEnv = vscript::IEnvironment<ScriptEnvironment>;
 
             template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets);
+            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
 
             namespace impl {
                 template <typename ScriptEnvironment>
@@ -68,14 +67,14 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets) {
-    impl::registerFuncs(scriptEnv, window, textureCache, widgets);
+void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
+    impl::registerFuncs(scriptEnv, window, textureCache);
 
     impl::registerConsts(scriptEnv);
 }
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets) {
+void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
     ButtonScriptFuncs::registerFuncs<ScriptEnvironment>("Button", scriptEnv);
 
     CheckBoxScriptFuncs::registerFuncs<ScriptEnvironment>("CheckBox", scriptEnv);
@@ -83,8 +82,6 @@ void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, c
     ComboBoxScriptFuncs::registerFuncs<ScriptEnvironment>("ComboBox", scriptEnv);
 
     GameWindowScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv, window);
-
-    GraphicsScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv, textureCache);
 
     LabelScriptFuncs::registerFuncs<ScriptEnvironment>("Label", scriptEnv);
 
@@ -110,8 +107,6 @@ void vui::ViewScriptContext::impl::registerConsts(ScriptEnvironment* scriptEnv) 
     ComboBoxScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 
     GameWindowScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
-
-    GraphicsScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 
     LabelScriptFuncs::registerConsts<ScriptEnvironment>(scriptEnv);
 

@@ -57,21 +57,23 @@ vui::WidgetList* vui::WidgetBuilderScriptFuncs::impl::makeWidgetList(IWidget* pa
     return widgetList;
 }
 
-void vui::WidgetBuilderScriptFuncs::impl::destroyWidgetTree(IWidget* toplevelWidget, IWidgets& widgets) {
+void vui::WidgetBuilderScriptFuncs::impl::destroyWidgetTree(IWidget* toplevelWidget) {
+    // TODO(matthew): Redo using WidgetStore.
+    
     // Function to recursively delete children we are responsible for, and dispose the rest.
     Delegate<void, IWidget*> deleteChildren = makeFunctor([&](IWidget* toplevelWidget) {
-        const IWidgets& children = toplevelWidget->getWidgets();
+        auto& children = toplevelWidget->getWidgets();
 
         for (IWidget* child : children) {
             deleteChildren(child);
 
-            auto it = std::find(widgets.begin(), widgets.end(), child);
-            if (it != widgets.end()) {
-                widgets.erase(it);
-                delete child;
-            } else {
-                child->dispose(true);
-            }
+            // auto it = std::find(widgets.begin(), widgets.end(), child);
+            // if (it != widgets.end()) {
+            //     widgets.erase(it);
+            //     delete child;
+            // } else {
+            //     child->dispose(true);
+            // }
         }
     });
 
@@ -79,17 +81,17 @@ void vui::WidgetBuilderScriptFuncs::impl::destroyWidgetTree(IWidget* toplevelWid
     deleteChildren(toplevelWidget);
 
     // If we manage this widget, clear up memory.
-    auto it = std::find(widgets.begin(), widgets.end(), toplevelWidget);
-    if (it != widgets.end()) {
-        // We're about to delete the top level widget, so want to make sure the disposal, as far as the parent is concerned, goes well.
-        toplevelWidget->getParent()->markChildAsDeleted(toplevelWidget);
+    // auto it = std::find(widgets.begin(), widgets.end(), toplevelWidget);
+    // if (it != widgets.end()) {
+    //     // We're about to delete the top level widget, so want to make sure the disposal, as far as the parent is concerned, goes well.
+    //     toplevelWidget->getParent()->markChildAsDeleted(toplevelWidget);
 
-        widgets.erase(it);
-        delete toplevelWidget;
-    } else {
+    //     widgets.erase(it);
+    //     delete toplevelWidget;
+    // } else {
         // We haven't deleted the top level widget, but we do want it removed from the parent.
         toplevelWidget->getParent()->markChildForRemoval(toplevelWidget);
 
         toplevelWidget->dispose(true);
-    }
+    // }
 }

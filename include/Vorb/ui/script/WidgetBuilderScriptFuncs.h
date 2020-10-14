@@ -51,7 +51,7 @@ namespace vorb {
                     vui::Slider* makeSlider     (IWidget* parent, nString name, f32v4 dimensions);
                 vui::WidgetList* makeWidgetList (IWidget* parent, nString name, f32v4 dimensions);
 
-                void destroyWidgetTree(IWidget* topLevelWidget, IWidgets& widgets);
+                void destroyWidgetTree(IWidget* topLevelWidget);
             }
         }
     }
@@ -84,7 +84,7 @@ void vui::WidgetBuilderScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEn
         return impl::makeWidgetList(parent, name, dimensions);
     }));
     env->addCDelegate("destroyWidgetTree", makeFunctor([&](IWidget* topLevelWidget) {
-        impl::destroyWidgetTree(topLevelWidget, widgets);
+        impl::destroyWidgetTree(topLevelWidget);
     }));
     env->setNamespaces();
 }

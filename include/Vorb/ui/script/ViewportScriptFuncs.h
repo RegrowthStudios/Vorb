@@ -25,12 +25,10 @@
 #include "Vorb/graphics/gtypes.h"
 #include "Vorb/script/IEnvironment.hpp"
 #include "Vorb/ui/script/WidgetScriptFuncs.h"
+#include "Vorb/ui/widgets/Viewport.h"
 
 namespace vorb {
     namespace ui {
-        // Forward Declarations
-        class Viewport;
-
         namespace ViewportScriptFuncs {
             template <typename ScriptEnvironmentImpl>
             void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
@@ -57,7 +55,7 @@ void vui::ViewportScriptFuncs::registerFuncs(vscript::IEnvironment<ScriptEnviron
     }));
     env->setNamespaces();
 
-    WidgetScriptFuncs::registerFuncs(namespace_, env);
+    WidgetScriptFuncs::registerFuncs("Viewport", env);
 }
 
 template <typename ScriptEnvironmentImpl>

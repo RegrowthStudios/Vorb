@@ -34,17 +34,14 @@ namespace vorb {
 
         namespace UIScriptContext {
             template <typename ScriptEnvironment>
-            using ScriptEnv = vscript::IEnvironment<ScriptEnvironment>;
-
-            template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
+            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window);
 
             namespace impl {
-                template <typename ScriptEnvironmentImpl>
-                void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+                template <typename ScriptEnvironment>
+                void registerFuncs(ScriptEnvironment* env);
 
-                template <typename ScriptEnvironmentImpl>
-                void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+                template <typename ScriptEnvironment>
+                void registerConsts(ScriptEnvironment* env);
             }
         }
     }
@@ -52,8 +49,8 @@ namespace vorb {
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironment>
-void vui::UIScriptContext::injectInto(ScriptEnvironment* env, const GameWindow* window, vg::TextureCache* textureCache) {
-    ViewScriptContext::injectInto(env, window, textureCache);
+void vui::UIScriptContext::injectInto(ScriptEnvironment* env, const GameWindow* window) {
+    ViewScriptContext::injectInto(env, window);
 
     impl::registerFuncs(env);
 
@@ -83,7 +80,7 @@ void vui::UIScriptContext::impl::registerFuncs(ScriptEnvironment* env) {
     env->addCDelegate("disableView", makeFunctor([](UIBase* ui, nString name) {
         Viewport* view = ui->getView(name);
         if (view != nullptr) {
-            view->disable()
+            view->disable();
             return true;
         }
         return false;
@@ -104,7 +101,7 @@ void vui::UIScriptContext::impl::registerFuncs(ScriptEnvironment* env) {
 }
 
 template <typename ScriptEnvironment>
-void vui::UIScriptContext::impl::registerConsts(ScriptEnvironment* env) {
+void vui::UIScriptContext::impl::registerConsts(ScriptEnvironment*) {
     // Empty.
 }
 

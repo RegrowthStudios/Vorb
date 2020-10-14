@@ -29,7 +29,6 @@
 #include "Vorb/VorbPreDecl.inl"
 #include "Vorb/io/Path.h"
 #include "Vorb/script/EnvironmentRegistry.hpp"
-#include "Vorb/ui/script/ViewScriptContext.hpp"
 #include "Vorb/ui/widgets/Viewport.h"
 
 DECL_VG(class FontCache; class TextureCache; class SpriteBatch; class SpriteFont)

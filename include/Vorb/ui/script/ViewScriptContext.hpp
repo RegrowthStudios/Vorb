@@ -49,32 +49,29 @@ namespace vorb {
 
         namespace ViewScriptContext {
             template <typename ScriptEnvironment>
-            using ScriptEnv = vscript::IEnvironment<ScriptEnvironment>;
-
-            template <typename ScriptEnvironment>
-            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache);
+            void injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window);
 
             namespace impl {
                 template <typename ScriptEnvironment>
-                void registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache, IWidgets& widgets);
+                void registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window);
+
                 template <typename ScriptEnvironment>
                 void registerConsts(ScriptEnvironment* scriptEnv);
             }
-
         };
     }
 }
 namespace vui = vorb::ui;
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
-    impl::registerFuncs(scriptEnv, window, textureCache);
+void vui::ViewScriptContext::injectInto(ScriptEnvironment* scriptEnv, const GameWindow* window) {
+    impl::registerFuncs(scriptEnv, window);
 
     impl::registerConsts(scriptEnv);
 }
 
 template <typename ScriptEnvironment>
-void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window, vg::TextureCache* textureCache) {
+void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, const GameWindow* window) {
     ButtonScriptFuncs::registerFuncs<ScriptEnvironment>("Button", scriptEnv);
 
     CheckBoxScriptFuncs::registerFuncs<ScriptEnvironment>("CheckBox", scriptEnv);
@@ -91,7 +88,7 @@ void vui::ViewScriptContext::impl::registerFuncs(ScriptEnvironment* scriptEnv, c
 
     ViewportScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv);
 
-    WidgetBuilderScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv, widgets);
+    WidgetBuilderScriptFuncs::registerFuncs<ScriptEnvironment>(scriptEnv);
 
     WidgetListScriptFuncs::registerFuncs<ScriptEnvironment>("WidgetList", scriptEnv);
 }

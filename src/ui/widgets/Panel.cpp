@@ -65,6 +65,15 @@ void vui::Panel::disable(bool thisOnly /*= false*/) {
     IWidget::disable(thisOnly);
 }
 
+void vui::Panel::updateDescendants(f32 dt) {
+    m_sliders.horizontal.update(dt);
+    m_sliders.horizontal.updateDescendants(dt);
+    m_sliders.vertical.update(dt);
+    m_sliders.vertical.updateDescendants(dt);
+
+    IWidget::updateDescendants(dt);
+}
+
 void vui::Panel::addDrawables(UIRenderer& renderer) {
     // Add the panel rect.
     renderer.add(makeDelegate(&m_drawableRect, &DrawableRect::draw));

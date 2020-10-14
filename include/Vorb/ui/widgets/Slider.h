@@ -34,6 +34,7 @@ namespace vorb {
         class UIRenderer;
         struct MouseWheelEvent;
 
+        // TODO(Matthew): Right now sliders update even if a child is hovered over in the parent, we need to check that we're not in bounds of any child and just the parent.
         class Slider : public Widget {
         public:
             /*! @brief Default constructor. */

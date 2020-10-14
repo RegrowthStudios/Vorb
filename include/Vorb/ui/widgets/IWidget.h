@@ -189,6 +189,13 @@ namespace vorb {
             */
             virtual void update(f32 dt = 0.0f);
 
+            /*!
+             * \brief Updates descendant widgets.
+             *
+             * \param dt: Change in time since last update.
+             */
+            virtual void updateDescendants(f32 dt);
+
             /*! \brief Enables events that all widgets share in common. */
             virtual void enable();
             /*! \brief Disables events that all widgets share in common. */
@@ -340,13 +347,6 @@ namespace vorb {
              * \brief Checks for any children marked for removal and handles the removal.
              */
             virtual void checkForRemovals();
-
-            /*!
-             * \brief Updates descendant widgets.
-             *
-             * \param dt: Change in time since last update.
-             */
-            virtual void updateDescendants(f32 dt);
 
             /*!
              * \brief Adds drawables of all descendant widgets.

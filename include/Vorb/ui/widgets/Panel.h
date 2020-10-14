@@ -46,6 +46,13 @@ namespace vorb {
             /*! \brief Disables events panel widgets are interested in. */
             virtual void disable(bool thisOnly = false) override;
 
+            /*!
+             * \brief Updates descendant widgets.
+             *
+             * \param dt: Change in time since last update.
+             */
+            virtual void updateDescendants(f32 dt) override;
+
             /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables(UIRenderer& renderer) override;
 

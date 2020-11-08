@@ -10,6 +10,7 @@ vui::IWidget::IWidget() :
     m_viewport(nullptr),
     m_parent(nullptr),
     m_widgets(IWidgets()),
+    m_widgetStates(ChildStates()),
     m_position(f32v2(0.0f)),
     m_size(f32v2(0.0f)),
     m_padding(f32v4(0.0f)),
@@ -19,7 +20,9 @@ vui::IWidget::IWidget() :
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_childOffset(f32v2(0.0f)),
-    m_flags({ false, false, false, false, false, false, false, false, false }) {
+    m_flags({ false, false, false, false, false, false, false, false, false }),
+    m_inheritableGetterSetterMap(InheritableGetterSetterMap()),
+    m_isModifiedMap(IsModifiedMap()) {
     // Empty
 }
 
@@ -27,6 +30,7 @@ vui::IWidget::IWidget(const IWidget& widget) :
     m_viewport(nullptr),
     m_parent(nullptr),
     m_widgets(IWidgets()),
+    m_widgetStates(ChildStates()),
     m_position(widget.m_position),
     m_size(widget.m_size),
     m_padding(widget.m_padding),
@@ -36,12 +40,134 @@ vui::IWidget::IWidget(const IWidget& widget) :
     m_dock(widget.m_dock),
     m_name(widget.m_name),
     m_childOffset(widget.m_childOffset),
-    m_flags({ false, false, false, false, false, false, false, false, false }) {
-    // Empty
+    m_flags({ false, false, false, false, false, false, false, false, false }),
+    m_inheritableGetterSetterMap(InheritableGetterSetterMap()),
+    m_isModifiedMap(IsModifiedMap()) {
+    init(
+        widget.m_name,
+        f32v4(
+            widget.m_position.x,
+            widget.m_position.y,
+            widget.m_size.x,
+            widget.m_size.y
+        ),
+        widget.m_zIndex
+    );
+}
+
+vui::IWidget::IWidget(IWidget&& widget) :
+    MouseClick(std::move(widget.MouseClick)),
+    MouseDown(std::move(widget.MouseDown)),
+    MouseUp(std::move(widget.MouseUp)),
+    MouseEnter(std::move(widget.MouseEnter)),
+    MouseLeave(std::move(widget.MouseLeave)),
+    MouseMove(std::move(widget.MouseMove)),
+    m_viewport(widget.m_viewport),
+    m_parent(widget.m_parent),
+    m_widgets(std::move(widget.m_widgets)),
+    m_widgetStates(std::move(widget.m_widgetStates)),
+    m_position(widget.m_position),
+    m_size(widget.m_size),
+    m_padding(widget.m_padding),
+    m_clipping(widget.m_clipping),
+    m_clipRect(widget.m_clipRect),
+    m_zIndex(widget.m_zIndex),
+    m_dock(widget.m_dock),
+    m_name(widget.m_name),
+    m_childOffset(widget.m_childOffset),
+    m_flags(widget.m_flags),
+    m_inheritableGetterSetterMap(std::move(widget.m_inheritableGetterSetterMap)),
+    m_isModifiedMap(std::move(widget.m_isModifiedMap)) {
+    widget.m_viewport                   = nullptr;
+    widget.m_parent                     = nullptr;
+    widget.m_widgets                    = IWidgets();
+    widget.m_widgetStates               = ChildStates();
+    widget.m_inheritableGetterSetterMap = InheritableGetterSetterMap();
+    widget.m_isModifiedMap              = IsModifiedMap();
+
+    MouseClick.setSender(this);
+    MouseDown.setSender(this);
+    MouseUp.setSender(this);
+    MouseEnter.setSender(this);
+    MouseLeave.setSender(this);
+    MouseMove.setSender(this);
 }
 
 vui::IWidget::~IWidget() {
     dispose(true);
+}
+
+vui::IWidget& vui::IWidget::operator=(const IWidget& rhs) {
+    m_viewport     = nullptr;
+    m_parent       = nullptr;
+    m_widgets      = IWidgets();
+    m_widgetStates = ChildStates();
+    m_position     = rhs.m_position;
+    m_size         = rhs.m_size;
+    m_padding      = rhs.m_padding;
+    m_clipping     = rhs.m_clipping;
+    m_clipRect     = rhs.m_clipRect;
+    m_zIndex       = rhs.m_zIndex;
+    m_dock         = rhs.m_dock;
+    m_name         = rhs.m_name;
+    m_childOffset  = rhs.m_childOffset;
+    m_flags        = { false, false, false, false, false, false, false, false, false };
+    m_inheritableGetterSetterMap = InheritableGetterSetterMap();
+    m_isModifiedMap = IsModifiedMap();
+
+    init(
+        rhs.m_name,
+        f32v4(
+            rhs.m_position.x,
+            rhs.m_position.y,
+            rhs.m_size.x,
+            rhs.m_size.y
+        ),
+        rhs.m_zIndex
+    );
+
+    return *this;
+}
+
+vui::IWidget& vui::IWidget::operator=(IWidget&& rhs) {
+    MouseClick     = std::move(rhs.MouseClick);
+    MouseDown      = std::move(rhs.MouseDown);
+    MouseUp        = std::move(rhs.MouseUp);
+    MouseEnter     = std::move(rhs.MouseEnter);
+    MouseLeave     = std::move(rhs.MouseLeave);
+    MouseMove      = std::move(rhs.MouseMove);
+    m_viewport     = rhs.m_viewport;
+    m_parent       = rhs.m_parent;
+    m_widgets      = std::move(rhs.m_widgets);
+    m_widgetStates = std::move(rhs.m_widgetStates);
+    m_position     = rhs.m_position;
+    m_size         = rhs.m_size;
+    m_padding      = rhs.m_padding;
+    m_clipping     = rhs.m_clipping;
+    m_clipRect     = rhs.m_clipRect;
+    m_zIndex       = rhs.m_zIndex;
+    m_dock         = rhs.m_dock;
+    m_name         = rhs.m_name;
+    m_childOffset  = rhs.m_childOffset;
+    m_flags        = { false, false, false, false, false, false, false, false, false };
+    m_inheritableGetterSetterMap = InheritableGetterSetterMap();
+    m_isModifiedMap = IsModifiedMap();
+
+    rhs.m_viewport                   = nullptr;
+    rhs.m_parent                     = nullptr;
+    rhs.m_widgets                    = IWidgets();
+    rhs.m_widgetStates               = ChildStates();
+    rhs.m_inheritableGetterSetterMap = InheritableGetterSetterMap();
+    rhs.m_isModifiedMap              = IsModifiedMap();
+
+    MouseClick.setSender(this);
+    MouseDown.setSender(this);
+    MouseUp.setSender(this);
+    MouseEnter.setSender(this);
+    MouseLeave.setSender(this);
+    MouseMove.setSender(this);
+
+    return *this;
 }
 
 void vui::IWidget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {

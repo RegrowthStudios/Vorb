@@ -36,8 +36,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             WidgetList();
-            /*! \brief Default destructor. */
-            virtual ~WidgetList();
+            /*! \brief Copy constructor. */
+            WidgetList(const WidgetList&);
+            /*! \brief Move constructor. */
+            WidgetList(WidgetList&&);
+
+            /*! \brief Copy assignment operator. */
+            WidgetList& operator=(const WidgetList&);
+            /*! \brief Move assignment operator. */
+            WidgetList& operator=(WidgetList&&);
 
             virtual void dispose(bool thisOnly = false) override;
 

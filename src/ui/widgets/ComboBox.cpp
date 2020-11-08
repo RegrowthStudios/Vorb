@@ -20,8 +20,61 @@ vui::ComboBox::ComboBox() :
     m_mainButton.setTextAlign(vg::TextAlign::LEFT);
 }
 
-vui::ComboBox::~ComboBox() {
-    // Empty
+vui::ComboBox::ComboBox(const ComboBox& widget) :
+    Widget(widget),
+    m_maxDropHeight(widget.m_maxDropHeight),
+    m_dropPanel(widget.m_dropPanel),
+    m_mainButton(widget.m_mainButton),
+    m_buttons(std::vector<Button*>()),
+    m_items(std::vector<nString>()),
+    m_isDropped(widget.m_isDropped) {
+    ValueChange.setSender(this);
+}
+
+vui::ComboBox::ComboBox(ComboBox&& widget) :
+    Widget(std::forward<ComboBox>(widget)),
+    ValueChange(std::move(widget.ValueChange)),
+    m_maxDropHeight(widget.m_maxDropHeight),
+    m_dropPanel(std::move(widget.m_dropPanel)),
+    m_mainButton(std::move(widget.m_mainButton)),
+    m_buttons(std::move(widget.m_buttons)),
+    m_items(std::move(widget.m_items)),
+    m_isDropped(widget.m_isDropped) {
+    std::vector<Button*>().swap(m_buttons);
+    std::vector<nString>().swap(m_items);
+
+    ValueChange.setSender(this);
+}
+
+vui::ComboBox& vui::ComboBox::operator=(const ComboBox& rhs) {
+    Widget::operator=(rhs);
+
+    m_maxDropHeight = rhs.m_maxDropHeight;
+    m_dropPanel     = rhs.m_dropPanel;
+    m_mainButton    = rhs.m_mainButton;
+    m_buttons       = std::vector<Button*>();
+    m_items         = std::vector<nString>();
+    m_isDropped     = rhs.m_isDropped;
+
+    ValueChange.setSender(this);
+
+    return *this;
+}
+
+vui::ComboBox& vui::ComboBox::operator=(ComboBox&& rhs) {
+    Widget::operator=(std::forward<ComboBox>(rhs));
+
+    ValueChange     = std::move(rhs.ValueChange);
+    m_maxDropHeight = rhs.m_maxDropHeight;
+    m_dropPanel     = std::move(rhs.m_dropPanel);
+    m_mainButton    = std::move(rhs.m_mainButton);
+    m_buttons       = std::move(rhs.m_buttons);
+    m_items         = std::move(rhs.m_items);
+    m_isDropped     = rhs.m_isDropped;
+
+    ValueChange.setSender(this);
+
+    return *this;
 }
 
 void vui::ComboBox::initBase() {

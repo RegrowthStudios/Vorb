@@ -126,8 +126,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Widget();
-            /*! \brief Destructor that unhooks events */
-            virtual ~Widget();
+            /*! \brief Copy constructor. */
+            Widget(const Widget&);
+            /*! \brief Move constructor. */
+            Widget(Widget&&);
+
+            /*! \brief Copy assignment operator. */
+            Widget& operator=(const Widget&);
+            /*! \brief Move assignment operator. */
+            Widget& operator=(Widget&&);
 
             /*! \brief Initialiser that sets name, position, size, and Z-index.
             *

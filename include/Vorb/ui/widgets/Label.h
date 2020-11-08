@@ -37,8 +37,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Label();
-            /*! \brief Default destructor. */
-            virtual ~Label();
+            /*! \brief Copy constructor. */
+            Label(const Label&);
+            /*! \brief Move constructor. */
+            Label(Label&&);
+
+            /*! \brief Copy assignment operator. */
+            Label& operator=(const Label&);
+            /*! \brief Move assignment operator. */
+            Label& operator=(Label&&);
 
             /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables(UIRenderer& renderer) override;

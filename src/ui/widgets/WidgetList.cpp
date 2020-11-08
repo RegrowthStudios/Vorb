@@ -8,8 +8,46 @@ vui::WidgetList::WidgetList() :
     // Empty
 }
 
-vui::WidgetList::~WidgetList() {
-    // Empty
+vui::WidgetList::WidgetList(const WidgetList& widget) :
+    Widget(widget),
+    m_spacing(widget.m_spacing),
+    m_maxHeight(widget.m_maxHeight),
+    m_panel(widget.m_panel),
+    m_items(IWidgets()) {
+    // Empty.
+}
+
+vui::WidgetList::WidgetList(WidgetList&& widget) :
+    Widget(std::forward<WidgetList>(widget)),
+    m_spacing(widget.m_spacing),
+    m_maxHeight(widget.m_maxHeight),
+    m_panel(std::move(widget.m_panel)),
+    m_items(std::move(widget.m_items)) {
+    IWidgets().swap(m_items);
+}
+
+vui::WidgetList& vui::WidgetList::operator=(const WidgetList& rhs) {
+    Widget::operator=(rhs);
+
+    m_spacing   = rhs.m_spacing;
+    m_maxHeight = rhs.m_maxHeight;
+    m_panel     = rhs.m_panel;
+    m_items     = IWidgets();
+
+    return *this;
+}
+
+vui::WidgetList& vui::WidgetList::operator=(WidgetList&& rhs) {
+    Widget::operator=(std::forward<WidgetList>(rhs));
+
+    m_spacing   = rhs.m_spacing;
+    m_maxHeight = rhs.m_maxHeight;
+    m_panel     = std::move(rhs.m_panel);
+    m_items     = std::move(rhs.m_items);
+
+    IWidgets().swap(m_items);
+
+    return *this;
 }
 
 void vui::WidgetList::initBase() {

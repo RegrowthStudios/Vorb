@@ -34,8 +34,114 @@ vui::Slider::Slider() :
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::Slider::~Slider() {
-    // Empty
+vui::Slider::Slider(const Slider& widget) :
+    Widget(widget),
+    m_drawableBar(widget.m_drawableBar),
+    m_drawableSlide(widget.m_drawableSlide),
+    m_barColor(widget.m_barColor),
+    m_slideColor(widget.m_slideColor),
+    m_slideHoverColor(widget.m_slideHoverColor),
+    m_value(widget.m_value),
+    m_min(widget.m_min),
+    m_max(widget.m_max),
+    m_isVertical(widget.m_isVertical),
+    m_naturalScroll(widget.m_naturalScroll),
+    m_elasticScroll(widget.m_elasticScroll),
+    m_slideStaticFriction(widget.m_slideStaticFriction),
+    m_slideKineticFriction(widget.m_slideKineticFriction),
+    m_slideWeight(widget.m_slideWeight),
+    m_slideEnergy(widget.m_slideEnergy),
+    m_slideMaxSpeed(widget.m_slideMaxSpeed),
+    m_slideDirection(widget.m_slideDirection),
+    m_scrollSensitivity(widget.m_scrollSensitivity),
+    m_scrollStrength(widget.m_scrollStrength),
+    m_scrollOnParent(widget.m_scrollOnParent) {
+    ValueChange.setSender(this);
+}
+
+vui::Slider::Slider(Slider&& widget) :
+    Widget(std::forward<Slider>(widget)),
+    ValueChange(std::move(widget.ValueChange)),
+    m_drawableBar(widget.m_drawableBar),
+    m_drawableSlide(widget.m_drawableSlide),
+    m_barColor(widget.m_barColor),
+    m_slideColor(widget.m_slideColor),
+    m_slideHoverColor(widget.m_slideHoverColor),
+    m_value(widget.m_value),
+    m_min(widget.m_min),
+    m_max(widget.m_max),
+    m_isVertical(widget.m_isVertical),
+    m_naturalScroll(widget.m_naturalScroll),
+    m_elasticScroll(widget.m_elasticScroll),
+    m_slideStaticFriction(widget.m_slideStaticFriction),
+    m_slideKineticFriction(widget.m_slideKineticFriction),
+    m_slideWeight(widget.m_slideWeight),
+    m_slideEnergy(widget.m_slideEnergy),
+    m_slideMaxSpeed(widget.m_slideMaxSpeed),
+    m_slideDirection(widget.m_slideDirection),
+    m_scrollSensitivity(widget.m_scrollSensitivity),
+    m_scrollStrength(widget.m_scrollStrength),
+    m_scrollOnParent(widget.m_scrollOnParent) {
+    ValueChange.setSender(this);
+}
+
+vui::Slider& vui::Slider::operator=(const Slider& rhs) {
+    Widget::operator=(rhs);
+
+    m_drawableBar          = rhs.m_drawableBar;
+    m_drawableSlide        = rhs.m_drawableSlide;
+    m_barColor             = rhs.m_barColor;
+    m_slideColor           = rhs.m_slideColor;
+    m_slideHoverColor      = rhs.m_slideHoverColor;
+    m_value                = rhs.m_value;
+    m_min                  = rhs.m_min;
+    m_max                  = rhs.m_max;
+    m_isVertical           = rhs.m_isVertical;
+    m_naturalScroll        = rhs.m_naturalScroll;
+    m_elasticScroll        = rhs.m_elasticScroll;
+    m_slideStaticFriction  = rhs.m_slideStaticFriction;
+    m_slideKineticFriction = rhs.m_slideKineticFriction;
+    m_slideWeight          = rhs.m_slideWeight;
+    m_slideEnergy          = rhs.m_slideEnergy;
+    m_slideMaxSpeed        = rhs.m_slideMaxSpeed;
+    m_slideDirection       = rhs.m_slideDirection;
+    m_scrollSensitivity    = rhs.m_scrollSensitivity;
+    m_scrollStrength       = rhs.m_scrollStrength;
+    m_scrollOnParent       = rhs.m_scrollOnParent;
+
+    ValueChange.setSender(this);
+
+    return *this;
+}
+
+vui::Slider& vui::Slider::operator=(Slider&& rhs) {
+    Widget::operator=(std::forward<Slider>(rhs));
+
+    ValueChange            = std::move(rhs.ValueChange);
+    m_drawableBar          = rhs.m_drawableBar;
+    m_drawableSlide        = rhs.m_drawableSlide;
+    m_barColor             = rhs.m_barColor;
+    m_slideColor           = rhs.m_slideColor;
+    m_slideHoverColor      = rhs.m_slideHoverColor;
+    m_value                = rhs.m_value;
+    m_min                  = rhs.m_min;
+    m_max                  = rhs.m_max;
+    m_isVertical           = rhs.m_isVertical;
+    m_naturalScroll        = rhs.m_naturalScroll;
+    m_elasticScroll        = rhs.m_elasticScroll;
+    m_slideStaticFriction  = rhs.m_slideStaticFriction;
+    m_slideKineticFriction = rhs.m_slideKineticFriction;
+    m_slideWeight          = rhs.m_slideWeight;
+    m_slideEnergy          = rhs.m_slideEnergy;
+    m_slideMaxSpeed        = rhs.m_slideMaxSpeed;
+    m_slideDirection       = rhs.m_slideDirection;
+    m_scrollSensitivity    = rhs.m_scrollSensitivity;
+    m_scrollStrength       = rhs.m_scrollStrength;
+    m_scrollOnParent       = rhs.m_scrollOnParent;
+
+    ValueChange.setSender(this);
+
+    return *this;
 }
 
 void vui::Slider::initBase() {

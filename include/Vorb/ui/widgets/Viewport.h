@@ -47,7 +47,15 @@ namespace vorb {
         class Viewport : public Widget {
         public:
             Viewport(const GameWindow* window = nullptr);
-            virtual ~Viewport();
+            /*! \brief Copy constructor. */
+            Viewport(const Viewport&);
+            /*! \brief Move constructor. */
+            Viewport(Viewport&&);
+
+            /*! \brief Copy assignment operator. */
+            Viewport& operator=(const Viewport&);
+            /*! \brief Move assignment operator. */
+            Viewport& operator=(Viewport&&);
 
 #if defined(VORB_COMPILER_CLANG)
 #pragma clang diagnostic push

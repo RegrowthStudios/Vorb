@@ -35,8 +35,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             TextWidget();
-            /*! \brief Default destructor. */
-            virtual ~TextWidget();
+            /*! \brief Copy constructor. */
+            TextWidget(const TextWidget&);
+            /*! \brief Move constructor. */
+            TextWidget(TextWidget&&);
+
+            /*! \brief Copy assignment operator. */
+            TextWidget& operator=(const TextWidget&);
+            /*! \brief Move assignment operator. */
+            TextWidget& operator=(TextWidget&&);
 
             /*! \brief Adds all drawables to the UIRenderer. */
             virtual void addDrawables(UIRenderer& renderer) override;

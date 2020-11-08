@@ -7,8 +7,36 @@ vui::TextWidget::TextWidget() : Widget() {
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::TextWidget::~TextWidget() {
+vui::TextWidget::TextWidget(const TextWidget& widget) :
+    Widget(widget),
+    m_drawableText(widget.m_drawableText),
+    m_drawableHoverText(widget.m_drawableHoverText) {
     // Empty
+}
+
+vui::TextWidget::TextWidget(TextWidget&& widget) :
+    Widget(std::forward<TextWidget>(widget)),
+    m_drawableText(widget.m_drawableText),
+    m_drawableHoverText(widget.m_drawableHoverText) {
+    // Empty.
+}
+
+vui::TextWidget& vui::TextWidget::operator=(const TextWidget& rhs) {
+    Widget::operator=(rhs);
+
+    m_drawableText      = rhs.m_drawableText;
+    m_drawableHoverText = rhs.m_drawableHoverText;
+
+    return *this;
+}
+
+vui::TextWidget& vui::TextWidget::operator=(TextWidget&& rhs) {
+    Widget::operator=(std::forward<TextWidget>(rhs));
+
+    m_drawableText      = rhs.m_drawableText;
+    m_drawableHoverText = rhs.m_drawableHoverText;
+
+    return *this;
 }
 
 void vui::TextWidget::addDrawables(UIRenderer& renderer) {

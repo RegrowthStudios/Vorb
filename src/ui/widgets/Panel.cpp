@@ -24,8 +24,92 @@ vui::Panel::Panel() :
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::Panel::~Panel() {
-    // Empty
+vui::Panel::Panel(const Panel& widget) :
+    Widget(widget),
+    m_minX(widget.m_minX),
+    m_minY(widget.m_minY),
+    m_maxX(widget.m_maxX),
+    m_maxY(widget.m_maxY),
+    m_autoScroll(widget.m_autoScroll),
+    m_sliders({
+        widget.m_sliders.horizontal,
+        widget.m_sliders.vertical
+    }),
+    m_flipHorizontal(widget.m_flipHorizontal),
+    m_flipVertical(widget.m_flipVertical),
+    m_sliderWidth(widget.m_sliderWidth),
+    m_backColor(widget.m_backColor),
+    m_backHoverColor(widget.m_backHoverColor),
+    m_texture(widget.m_texture),
+    m_hoverTexture(widget.m_hoverTexture) {
+    // Empty.
+}
+
+vui::Panel::Panel(Panel&& widget) :
+    Widget(std::forward<Panel>(widget)),
+    m_minX(widget.m_minX),
+    m_minY(widget.m_minY),
+    m_maxX(widget.m_maxX),
+    m_maxY(widget.m_maxY),
+    m_autoScroll(widget.m_autoScroll),
+    m_sliders({
+        std::move(widget.m_sliders.horizontal),
+        std::move(widget.m_sliders.vertical)
+    }),
+    m_flipHorizontal(widget.m_flipHorizontal),
+    m_flipVertical(widget.m_flipVertical),
+    m_sliderWidth(widget.m_sliderWidth),
+    m_backColor(widget.m_backColor),
+    m_backHoverColor(widget.m_backHoverColor),
+    m_texture(widget.m_texture),
+    m_hoverTexture(widget.m_hoverTexture) {
+    // Empty.
+}
+
+vui::Panel& vui::Panel::operator=(const Panel& rhs) {
+    Widget::operator=(rhs);
+
+    m_minX = rhs.m_minX;
+    m_minY = rhs.m_minY;
+    m_maxX = rhs.m_maxX;
+    m_maxY = rhs.m_maxY;
+    m_autoScroll = rhs.m_autoScroll;
+    m_sliders = {
+        rhs.m_sliders.horizontal,
+        rhs.m_sliders.vertical
+    };
+    m_flipHorizontal = rhs.m_flipHorizontal;
+    m_flipVertical = rhs.m_flipVertical;
+    m_sliderWidth = rhs.m_sliderWidth;
+    m_backColor = rhs.m_backColor;
+    m_backHoverColor = rhs.m_backHoverColor;
+    m_texture = rhs.m_texture;
+    m_hoverTexture = rhs.m_hoverTexture;
+
+    return *this;
+}
+
+vui::Panel& vui::Panel::operator=(Panel&& rhs) {
+    Widget::operator=(std::forward<Panel>(rhs));
+
+    m_minX = rhs.m_minX;
+    m_minY = rhs.m_minY;
+    m_maxX = rhs.m_maxX;
+    m_maxY = rhs.m_maxY;
+    m_autoScroll = rhs.m_autoScroll;
+    m_sliders = {
+        std::move(rhs.m_sliders.horizontal),
+        std::move(rhs.m_sliders.vertical)
+    };
+    m_flipHorizontal = rhs.m_flipHorizontal;
+    m_flipVertical = rhs.m_flipVertical;
+    m_sliderWidth = rhs.m_sliderWidth;
+    m_backColor = rhs.m_backColor;
+    m_backHoverColor = rhs.m_backHoverColor;
+    m_texture = rhs.m_texture;
+    m_hoverTexture = rhs.m_hoverTexture;
+
+    return *this;
 }
 
 void vui::Panel::initBase() {

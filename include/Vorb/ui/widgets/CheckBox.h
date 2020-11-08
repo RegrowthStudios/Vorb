@@ -37,8 +37,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             CheckBox();
-            /*! \brief Default destructor. */
-            virtual ~CheckBox();
+            /*! \brief Copy constructor. */
+            CheckBox(const CheckBox&);
+            /*! \brief Move constructor. */
+            CheckBox(CheckBox&&);
+
+            /*! \brief Copy assignment operator. */
+            CheckBox& operator=(const CheckBox&);
+            /*! \brief Move assignment operator. */
+            CheckBox& operator=(CheckBox&&);
 
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables(UIRenderer& renderer) override;

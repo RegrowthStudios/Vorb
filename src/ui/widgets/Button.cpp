@@ -17,8 +17,64 @@ vui::Button::Button() :
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::Button::~Button() {
+vui::Button::Button(const Button& widget) :
+    TextWidget(widget),
+    m_drawableRect(widget.m_drawableRect),
+    m_gradBack(widget.m_gradBack),
+    m_gradHover(widget.m_gradHover),
+    m_backColor1(widget.m_backColor1),
+    m_backColor2(widget.m_backColor2),
+    m_backHoverColor1(widget.m_backHoverColor1),
+    m_backHoverColor2(widget.m_backHoverColor2),
+    m_texture(widget.m_texture),
+    m_hoverTexture(widget.m_hoverTexture) {
     // Empty
+}
+
+vui::Button::Button(Button&& widget) :
+    TextWidget(std::forward<Button>(widget)),
+    m_drawableRect(widget.m_drawableRect),
+    m_gradBack(widget.m_gradBack),
+    m_gradHover(widget.m_gradHover),
+    m_backColor1(widget.m_backColor1),
+    m_backColor2(widget.m_backColor2),
+    m_backHoverColor1(widget.m_backHoverColor1),
+    m_backHoverColor2(widget.m_backHoverColor2),
+    m_texture(widget.m_texture),
+    m_hoverTexture(widget.m_hoverTexture) {
+    // Empty.
+}
+
+vui::Button& vui::Button::operator=(const Button& rhs) {
+    TextWidget::operator=(rhs);
+
+    m_drawableRect = rhs.m_drawableRect;
+    m_gradBack = rhs.m_gradBack;
+    m_gradHover = rhs.m_gradHover;
+    m_backColor1 = rhs.m_backColor1;
+    m_backColor2 = rhs.m_backColor2;
+    m_backHoverColor1 = rhs.m_backHoverColor1;
+    m_backHoverColor2 = rhs.m_backHoverColor2;
+    m_texture = rhs.m_texture;
+    m_hoverTexture = rhs.m_hoverTexture;
+
+    return *this;
+}
+
+vui::Button& vui::Button::operator=(Button&& rhs) {
+    TextWidget::operator=(std::forward<Button>(rhs));
+
+    m_drawableRect = rhs.m_drawableRect;
+    m_gradBack = rhs.m_gradBack;
+    m_gradHover = rhs.m_gradHover;
+    m_backColor1 = rhs.m_backColor1;
+    m_backColor2 = rhs.m_backColor2;
+    m_backHoverColor1 = rhs.m_backHoverColor1;
+    m_backHoverColor2 = rhs.m_backHoverColor2;
+    m_texture = rhs.m_texture;
+    m_hoverTexture = rhs.m_hoverTexture;
+
+    return *this;
 }
 
 void vui::Button::addDrawables(UIRenderer& renderer) {

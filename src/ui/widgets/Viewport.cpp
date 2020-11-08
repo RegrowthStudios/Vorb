@@ -10,8 +10,36 @@ vui::Viewport::Viewport(const GameWindow* window /*= nullptr*/) :
     m_clipping = Clipping{ ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN, ClippingState::HIDDEN };
 }
 
-vui::Viewport::~Viewport() {
-    // Empty
+vui::Viewport::Viewport(const Viewport& widget) :
+    Widget(widget),
+    m_renderer(widget.m_renderer),
+    m_window(widget.m_window) {
+    // Empty.
+}
+
+vui::Viewport::Viewport(Viewport&& widget) :
+    Widget(std::forward<Viewport>(widget)),
+    m_renderer(widget.m_renderer),
+    m_window(widget.m_window) {
+    // Empty.
+}
+
+vui::Viewport& vui::Viewport::operator=(const Viewport& rhs) {
+    Widget::operator=(rhs);
+
+    m_renderer = rhs.m_renderer;
+    m_window   = rhs.m_window;
+
+    return *this;
+}
+
+vui::Viewport& vui::Viewport::operator=(Viewport&& rhs) {
+    Widget::operator=(std::forward<Viewport>(rhs));
+
+    m_renderer = rhs.m_renderer;
+    m_window   = rhs.m_window;
+
+    return *this;
 }
 
 void vui::Viewport::init(const nString& name, const f32v4& dimensions, vg::SpriteFont* defaultFont /*= nullptr*/, vg::SpriteBatch* spriteBatch /*= nullptr*/) {

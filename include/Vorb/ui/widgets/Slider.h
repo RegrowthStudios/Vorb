@@ -39,8 +39,15 @@ namespace vorb {
         public:
             /*! @brief Default constructor. */
             Slider();
-            /*! @brief Default destructor. */
-            virtual ~Slider();
+            /*! \brief Copy constructor. */
+            Slider(const Slider&);
+            /*! \brief Move constructor. */
+            Slider(Slider&&);
+
+            /*! \brief Copy assignment operator. */
+            Slider& operator=(const Slider&);
+            /*! \brief Move assignment operator. */
+            Slider& operator=(Slider&&);
 
             /*! \brief Updates the widget. Can be used for animation.
             *

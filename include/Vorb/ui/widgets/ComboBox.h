@@ -41,8 +41,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             ComboBox();
-            /*! \brief Default destructor. */
-            virtual ~ComboBox();
+            /*! \brief Copy constructor. */
+            ComboBox(const ComboBox&);
+            /*! \brief Move constructor. */
+            ComboBox(ComboBox&&);
+
+            /*! \brief Copy assignment operator. */
+            ComboBox& operator=(const ComboBox&);
+            /*! \brief Move assignment operator. */
+            ComboBox& operator=(ComboBox&&);
 
             virtual void dispose(bool thisOnly = false) override;
 

@@ -12,8 +12,48 @@ vui::Label::Label() :
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::Label::~Label() {
-    // Empty
+vui::Label::Label(const Label& widget) :
+    TextWidget(widget),
+    m_drawableRect(widget.m_drawableRect),
+    m_labelColor(widget.m_labelColor),
+    m_labelHoverColor(widget.m_labelHoverColor),
+    m_labelTexture(widget.m_labelTexture),
+    m_labelHoverTexture(widget.m_labelHoverTexture) {
+    // Empty.
+}
+
+vui::Label::Label(Label&& widget) :
+    TextWidget(std::forward<Label>(widget)),
+    m_drawableRect(widget.m_drawableRect),
+    m_labelColor(widget.m_labelColor),
+    m_labelHoverColor(widget.m_labelHoverColor),
+    m_labelTexture(widget.m_labelTexture),
+    m_labelHoverTexture(widget.m_labelHoverTexture) {
+    // Empty.
+}
+
+vui::Label& vui::Label::operator=(const Label& rhs) {
+    TextWidget::operator=(rhs);
+
+    m_drawableRect = rhs.m_drawableRect;
+    m_labelColor = rhs.m_labelColor;
+    m_labelHoverColor = rhs.m_labelHoverColor;
+    m_labelTexture = rhs.m_labelTexture;
+    m_labelHoverTexture = rhs.m_labelHoverTexture;
+
+    return *this;
+}
+
+vui::Label& vui::Label::operator=(Label&& rhs) {
+    TextWidget::operator=(std::forward<Label>(rhs));
+
+    m_drawableRect = rhs.m_drawableRect;
+    m_labelColor = rhs.m_labelColor;
+    m_labelHoverColor = rhs.m_labelHoverColor;
+    m_labelTexture = rhs.m_labelTexture;
+    m_labelHoverTexture = rhs.m_labelHoverTexture;
+
+    return *this;
 }
 
 void vui::Label::addDrawables(UIRenderer& renderer) {

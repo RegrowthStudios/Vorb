@@ -38,8 +38,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Panel();
-            /*! \brief Default destructor. */
-            virtual ~Panel();
+            /*! \brief Copy constructor. */
+            Panel(const Panel&);
+            /*! \brief Move constructor. */
+            Panel(Panel&&);
+
+            /*! \brief Copy assignment operator. */
+            Panel& operator=(const Panel&);
+            /*! \brief Move assignment operator. */
+            Panel& operator=(Panel&&);
 
             /*! \brief Enables events panel widgets are interested in. */
             virtual void enable() override;

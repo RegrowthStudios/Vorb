@@ -139,12 +139,19 @@ namespace vorb {
             IWidget();
             /*! \brief Copy constructor. */
             IWidget(const IWidget&);
+            /*! \brief Move constructor. */
+            IWidget(IWidget&&);
             /*! \brief Destructor that unhooks events 
              *
              * Note that we remove all ties to any UI structure the copied-from widget may be a part of. That is,
              * we set the viewport and parent to nullptr and create an empty vector of child widgets.
              */
             virtual ~IWidget();
+
+            /*! \brief Copy assignment operator. */
+            IWidget& operator=(const IWidget&);
+            /*! \brief Move assignment operator. */
+            IWidget& operator=(IWidget&&);
 
             /*! \brief Initialiser that sets name, position, size, and Z-index.
             *

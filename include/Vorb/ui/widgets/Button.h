@@ -37,8 +37,15 @@ namespace vorb {
         public:
             /*! \brief Default constructor. */
             Button();
-            /*! \brief Default destructor. */
-            virtual ~Button();
+            /*! \brief Copy constructor. */
+            Button(const Button&);
+            /*! \brief Move constructor. */
+            Button(Button&&);
+
+            /*! \brief Copy assignment operator. */
+            Button& operator=(const Button&);
+            /*! \brief Move assignment operator. */
+            Button& operator=(Button&&);
 
             /*! \brief Adds all drawables to the UIRenderer */
             virtual void addDrawables(UIRenderer& renderer) override;

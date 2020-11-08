@@ -17,8 +17,61 @@ vui::Widget::Widget() :
     // Empty
 }
 
-vui::Widget::~Widget() {
-    // Empty
+vui::Widget::Widget(const Widget& widget) :
+    IWidget(widget),
+    m_positionType(widget.m_positionType),
+    m_rawMinSize(widget.m_rawMinSize),
+    m_rawMaxSize(widget.m_rawMaxSize),
+    m_rawDockSize(widget.m_rawDockSize),
+    m_rawPadding(widget.m_rawPadding),
+    m_rawDimensions(widget.m_rawDimensions) {
+    init(
+        widget.m_name,
+        f32v4(
+            widget.m_position.x,
+            widget.m_position.y,
+            widget.m_size.x,
+            widget.m_size.y
+        ),
+        widget.m_zIndex
+    );
+}
+
+vui::Widget::Widget(Widget&& widget) :
+    IWidget(std::forward<Widget>(widget)),
+    m_positionType(widget.m_positionType),
+    m_rawMinSize(widget.m_rawMinSize),
+    m_rawMaxSize(widget.m_rawMaxSize),
+    m_rawDockSize(widget.m_rawDockSize),
+    m_rawPadding(widget.m_rawPadding),
+    m_rawDimensions(widget.m_rawDimensions) {
+    // Empty.
+}
+
+vui::Widget& vui::Widget::operator=(const Widget& rhs) {
+    IWidget::operator=(rhs);
+
+    m_positionType  = rhs.m_positionType;
+    m_rawMinSize    = rhs.m_rawMinSize;
+    m_rawMaxSize    = rhs.m_rawMaxSize;
+    m_rawDockSize   = rhs.m_rawDockSize;
+    m_rawPadding    = rhs.m_rawPadding;
+    m_rawDimensions = rhs.m_rawDimensions;
+
+    return *this;
+}
+
+vui::Widget& vui::Widget::operator=(Widget&& rhs) {
+    IWidget::operator=(std::forward<Widget>(rhs));
+
+    m_positionType  = rhs.m_positionType;
+    m_rawMinSize    = rhs.m_rawMinSize;
+    m_rawMaxSize    = rhs.m_rawMaxSize;
+    m_rawDockSize   = rhs.m_rawDockSize;
+    m_rawPadding    = rhs.m_rawPadding;
+    m_rawDimensions = rhs.m_rawDimensions;
+
+    return *this;
 }
 
 void vui::Widget::init(const nString& name, const f32v4& dimensions /*= f32v4(0.0f)*/, ui16 zIndex /*= 0*/) {

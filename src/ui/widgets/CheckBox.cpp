@@ -18,8 +18,74 @@ vui::CheckBox::CheckBox() :
     m_flags.needsDrawableRecalculation = true;
 }
 
-vui::CheckBox::~CheckBox() {
-    // Empty
+vui::CheckBox::CheckBox(const CheckBox& widget) :
+    TextWidget(widget),
+    m_drawableRect(widget.m_drawableRect),
+    m_boxColor(widget.m_boxColor),
+    m_boxHoverColor(widget.m_boxHoverColor),
+    m_boxCheckedColor(widget.m_boxCheckedColor),
+    m_boxCheckedHoverColor(widget.m_boxCheckedHoverColor),
+    m_checkedTexture(widget.m_checkedTexture),
+    m_uncheckedTexture(widget.m_uncheckedTexture),
+    m_checkedHoverTexture(widget.m_checkedHoverTexture),
+    m_uncheckedHoverTexture(widget.m_uncheckedHoverTexture),
+    m_isChecked(widget.m_isChecked) {
+    ValueChange.setSender(this);
+}
+
+vui::CheckBox::CheckBox(CheckBox&& widget) :
+    TextWidget(std::forward<CheckBox>(widget)),
+    ValueChange(std::move(widget.ValueChange)),
+    m_drawableRect(widget.m_drawableRect),
+    m_boxColor(widget.m_boxColor),
+    m_boxHoverColor(widget.m_boxHoverColor),
+    m_boxCheckedColor(widget.m_boxCheckedColor),
+    m_boxCheckedHoverColor(widget.m_boxCheckedHoverColor),
+    m_checkedTexture(widget.m_checkedTexture),
+    m_uncheckedTexture(widget.m_uncheckedTexture),
+    m_checkedHoverTexture(widget.m_checkedHoverTexture),
+    m_uncheckedHoverTexture(widget.m_uncheckedHoverTexture),
+    m_isChecked(widget.m_isChecked) {
+    ValueChange.setSender(this);
+}
+
+vui::CheckBox& vui::CheckBox::operator=(const CheckBox& rhs) {
+    TextWidget::operator=(rhs);
+
+    m_drawableRect = rhs.m_drawableRect;
+    m_boxColor = rhs.m_boxColor;
+    m_boxHoverColor = rhs.m_boxHoverColor;
+    m_boxCheckedColor = rhs.m_boxCheckedColor;
+    m_boxCheckedHoverColor = rhs.m_boxCheckedHoverColor;
+    m_checkedTexture = rhs.m_checkedTexture;
+    m_uncheckedTexture = rhs.m_uncheckedTexture;
+    m_checkedHoverTexture = rhs.m_checkedHoverTexture;
+    m_uncheckedHoverTexture = rhs.m_uncheckedHoverTexture;
+    m_isChecked = rhs.m_isChecked;
+
+    ValueChange.setSender(this);
+
+    return *this;
+}
+
+vui::CheckBox& vui::CheckBox::operator=(CheckBox&& rhs) {
+    TextWidget::operator=(std::forward<CheckBox>(rhs));
+
+    ValueChange = std::move(rhs.ValueChange);
+    m_drawableRect = rhs.m_drawableRect;
+    m_boxColor = rhs.m_boxColor;
+    m_boxHoverColor = rhs.m_boxHoverColor;
+    m_boxCheckedColor = rhs.m_boxCheckedColor;
+    m_boxCheckedHoverColor = rhs.m_boxCheckedHoverColor;
+    m_checkedTexture = rhs.m_checkedTexture;
+    m_uncheckedTexture = rhs.m_uncheckedTexture;
+    m_checkedHoverTexture = rhs.m_checkedHoverTexture;
+    m_uncheckedHoverTexture = rhs.m_uncheckedHoverTexture;
+    m_isChecked = rhs.m_isChecked;
+
+    ValueChange.setSender(this);
+
+    return *this;
 }
 
 void vui::CheckBox::initBase() {

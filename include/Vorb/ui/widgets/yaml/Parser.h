@@ -96,7 +96,7 @@ namespace vorb {
          *    Text Align    *
         \********************/
 
-        bool parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, size_t offset = 0);
+        bool parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign);
 
         bool parseTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign);
 
@@ -104,7 +104,7 @@ namespace vorb {
          *    Clipping State    *
         \************************/
 
-        bool parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState, size_t offset = 0);
+        bool parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState);
 
         bool parseClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState);
 
@@ -118,7 +118,7 @@ namespace vorb {
          *    Dock State    *
         \********************/
 
-        bool parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState, size_t offset = 0);
+        bool parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState);
 
         bool parseDockState(keg::YAMLNode value, OUT vui::DockState& dockState);
 
@@ -132,7 +132,7 @@ namespace vorb {
          *    Position Type    *
         \***********************/
 
-        bool parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType, size_t offset = 0);
+        bool parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType);
 
         bool parsePositionType(keg::YAMLNode value, OUT vui::PositionType& positionType);
 
@@ -140,7 +140,7 @@ namespace vorb {
          *    Dimension Type    *
         \************************/
 
-        bool parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType, size_t offset = 0);
+        bool parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType);
 
         bool parseDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType);
 
@@ -191,7 +191,7 @@ namespace vorb {
          *    Gradient Type    *
         \***********************/
 
-        bool parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType, size_t offset = 0);
+        bool parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType);
 
         bool parseGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType);
 

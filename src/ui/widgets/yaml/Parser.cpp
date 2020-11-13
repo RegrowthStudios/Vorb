@@ -140,7 +140,7 @@ PARSE_VEC4(f64)
  *    Text Align    *
 \********************/
 
-bool vui::parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign, size_t offset /*= 0*/) {
+bool vui::parsePartTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign) {
     nString name;
     try {
         name = value.data.as<nString>();
@@ -197,7 +197,7 @@ bool vui::parseTextAlign(keg::YAMLNode value, OUT vg::TextAlign& textAlign) {
  *    Clipping State    *
 \************************/
 
-bool vui::parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState, size_t offset /*= 0*/) {
+bool vui::parsePartClippingState(keg::YAMLNode value, OUT vui::ClippingState& clippingState) {
     nString name ;
     
     try {
@@ -253,7 +253,7 @@ bool vui::parseClipping(keg::YAMLNode value, OUT vui::ClippingState* clipping) {
  *    Dock State    *
 \********************/
 
-bool vui::parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState, size_t offset /*= 0*/) {
+bool vui::parsePartDockState(keg::YAMLNode value, OUT vui::DockState& dockState) {
     nString name;
 
     try {
@@ -324,7 +324,7 @@ bool vui::parseDock(keg::YAMLNode value, OUT vui::Dock& dock) {
  *    Position Type    *
 \***********************/
 
-bool vui::parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType, size_t offset /*= 0*/) {
+bool vui::parsePartPositionType(keg::YAMLNode value, OUT vui::PositionType& positionType) {
     nString name;
 
     try {
@@ -370,7 +370,7 @@ bool vui::parsePositionType(keg::YAMLNode value, OUT vui::PositionType& position
  *    Dimension Type    *
 \************************/
 
-bool vui::parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType, size_t offset /*= 0*/) {
+bool vui::parsePartDimensionType(keg::YAMLNode value, OUT vui::DimensionType& dimensionType) {
     nString name;
 
     try {
@@ -606,7 +606,7 @@ bool vui::parseColor(keg::YAMLNode value, OUT color4& color) {
  *    Gradient Type    *
 \***********************/
 
-bool vui::parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType, size_t offset /*= 0*/) {
+bool vui::parsePartGradientType(keg::YAMLNode value, OUT vg::GradientType& gradType) {
     nString name;
 
     try {

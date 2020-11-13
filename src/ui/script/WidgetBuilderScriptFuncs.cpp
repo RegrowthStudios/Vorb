@@ -5,6 +5,7 @@ vui::Button* vui::WidgetBuilderScriptFuncs::impl::makeButton(IWidget* parent, nS
     Button* button = new Button();
 
     button->init(parent, name, dimensions);
+    button->setSelfOwned(true);
 
     return button;
 }
@@ -13,6 +14,7 @@ vui::CheckBox* vui::WidgetBuilderScriptFuncs::impl::makeCheckBox(IWidget* parent
     CheckBox* checkBox = new CheckBox();
 
     checkBox->init(parent, name, dimensions);
+    checkBox->setSelfOwned(true);
 
     return checkBox;
 }
@@ -21,6 +23,7 @@ vui::ComboBox* vui::WidgetBuilderScriptFuncs::impl::makeComboBox(IWidget* parent
     ComboBox* comboBox = new ComboBox();
 
     comboBox->init(parent, name, dimensions);
+    comboBox->setSelfOwned(true);
 
     return comboBox;
 }
@@ -29,6 +32,7 @@ vui::Label* vui::WidgetBuilderScriptFuncs::impl::makeLabel(IWidget* parent, nStr
     Label* label = new Label();
 
     label->init(parent, name, dimensions);
+    label->setSelfOwned(true);
 
     return label;
 }
@@ -37,6 +41,7 @@ vui::Panel* vui::WidgetBuilderScriptFuncs::impl::makePanel(IWidget* parent, nStr
     Panel* panel = new Panel();
 
     panel->init(parent, name, dimensions);
+    panel->setSelfOwned(true);
 
     return panel;
 }
@@ -45,6 +50,7 @@ vui::Slider* vui::WidgetBuilderScriptFuncs::impl::makeSlider(IWidget* parent, nS
     Slider* slider = new Slider();
 
     slider->init(parent, name, dimensions);
+    slider->setSelfOwned(true);
 
     return slider;
 }
@@ -53,45 +59,13 @@ vui::WidgetList* vui::WidgetBuilderScriptFuncs::impl::makeWidgetList(IWidget* pa
     WidgetList* widgetList = new WidgetList();
 
     widgetList->init(parent, name, dimensions);
+    widgetList->setSelfOwned(true);
 
     return widgetList;
 }
 
 void vui::WidgetBuilderScriptFuncs::impl::destroyWidgetTree(IWidget* toplevelWidget) {
-    // TODO(matthew): Redo using WidgetStore.
-    
-    // Function to recursively delete children we are responsible for, and dispose the rest.
-    Delegate<void, IWidget*> deleteChildren = makeFunctor([&](IWidget* toplevelWidget) {
-        auto& children = toplevelWidget->getWidgets();
+    toplevelWidget->dispose();
 
-        for (IWidget* child : children) {
-            deleteChildren(child);
-
-            // auto it = std::find(widgets.begin(), widgets.end(), child);
-            // if (it != widgets.end()) {
-            //     widgets.erase(it);
-            //     delete child;
-            // } else {
-            //     child->dispose(true);
-            // }
-        }
-    });
-
-    // Kick off recursive deletion/disposal.
-    deleteChildren(toplevelWidget);
-
-    // If we manage this widget, clear up memory.
-    // auto it = std::find(widgets.begin(), widgets.end(), toplevelWidget);
-    // if (it != widgets.end()) {
-    //     // We're about to delete the top level widget, so want to make sure the disposal, as far as the parent is concerned, goes well.
-    //     toplevelWidget->getParent()->markChildAsDeleted(toplevelWidget);
-
-    //     widgets.erase(it);
-    //     delete toplevelWidget;
-    // } else {
-        // We haven't deleted the top level widget, but we do want it removed from the parent.
-        toplevelWidget->getParent()->markChildForRemoval(toplevelWidget);
-
-        toplevelWidget->dispose(true);
-    // }
+    if (toplevelWidget->isSelfOwned()) delete toplevelWidget;
 }

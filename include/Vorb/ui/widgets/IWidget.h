@@ -111,7 +111,9 @@ namespace vorb {
             volatile bool needsZIndexReorder         : 1; ///< Whether we need to reorder this widget and its siblings.
             volatile bool needsDockRecalculation     : 1; ///< Whether we need to recalculate docking of child widgets.
             volatile bool needsClipRectRecalculation : 1; ///< Whether we need to recalculate the clip rectangle.
-            volatile bool needsDrawableRecalculation;     ///< Whether we need to recalculate the drawables.
+            volatile bool needsDrawableRecalculation : 4; ///< Whether we need to recalculate the drawables.
+
+            volatile bool isSelfOwned : 4; ///< Whether this widget should be destroyed and deallocated on removal from its UI tree.
         };
 
         using ZIndex = ui16;
@@ -279,6 +281,7 @@ namespace vorb {
             virtual              bool isEnabled()           const { return m_flags.isEnabled; }
             virtual              bool isMouseIn()           const { return m_flags.isMouseIn; }
             virtual              bool isClicking()          const { return m_flags.isClicking; }
+            virtual              bool isSelfOwned()         const { return m_flags.isSelfOwned; }
             virtual              bool ignoreOffset()        const { return m_flags.ignoreOffset; }
             virtual       WidgetFlags getFlags()            const { return m_flags; }
 
@@ -326,6 +329,8 @@ namespace vorb {
             virtual void setNeedsDockRecalculation(bool flag)     { m_flags.needsDockRecalculation     = flag; }
             virtual void setNeedsClipRectRecalculation(bool flag) { m_flags.needsClipRectRecalculation = flag; }
             virtual void setNeedsDrawableRecalculation(bool flag) { m_flags.needsDrawableRecalculation = flag; }
+
+            virtual void setSelfOwned(bool isSelfOwned) { m_flags.isSelfOwned = isSelfOwned; }
 
             /************************************************************************/
             /* Events                                                               */

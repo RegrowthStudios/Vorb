@@ -33,7 +33,6 @@
 //                Lua functions to subscribe to events?
 
 // TODO(Matthew): Can we put all the widgets in the same container to reduce fragmentation of their data?
-//                Would involve creating some kind of generic container that is element-wise sized on max-sized widget kind.
 
 vui::IWidget* parseWidget(
                keg::ReadContext& context,
@@ -89,6 +88,8 @@ vui::IWidget* parseWidget(
         return nullptr;
     }
     widget->init("");
+    // Ensure widget is deallocated if pruned from UI tree or tree is destroyed.
+    widget->setSelfOwned(true);
     context.reader.forAllInMap(node, &processEntry);
 
     if (success) {

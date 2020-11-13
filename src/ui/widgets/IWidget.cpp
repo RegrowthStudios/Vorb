@@ -193,9 +193,14 @@ void vui::IWidget::init(IWidget* parent, const nString& name, const f32v4& dimen
 }
 
 void vui::IWidget::dispose(bool thisOnly /*= false*/) {
+    disable(thisOnly);
+
     if (!thisOnly) {
         for (auto& w : m_widgets) {
             w->dispose();
+            if (w->isSelfOwned()) {
+                delete w;
+            }
         }
     }
     IWidgets().swap(m_widgets);
@@ -209,8 +214,6 @@ void vui::IWidget::dispose(bool thisOnly /*= false*/) {
     m_parent = nullptr;
 
     m_viewport = nullptr;
-
-    disable(thisOnly);
 
     InheritableGetterSetterMap().swap(m_inheritableGetterSetterMap);
     IsModifiedMap().swap(m_isModifiedMap);

@@ -553,19 +553,27 @@ source_group("include" FILES ${vorb_headers})
 source_group("source" FILES ${vorb_source})
 
 if(VORB_USE_SCRIPTING)
-    set(LIBLUA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua/src)
-    set(LIBLUA_FILE ${LIBLUA_DIR}/liblua.a)
-    add_custom_command(OUTPUT ${LIBLUA_FILE}
-                       COMMAND make all
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua)
-    add_custom_target(liblua_target DEPENDS ${LIBLUA_FILE})
-    add_library(liblua STATIC IMPORTED GLOBAL)
-    add_dependencies(liblua liblua_target)
-    set_target_properties(liblua
-        PROPERTIES
-        IMPORTED_LOCATION ${LIBLUA_FILE}
-        INTERFACE_INCLUDE_DIRECTORIES ${LIBLUA_DIR}
-    )
+	set(LIBLUA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua/src)
+	add_subdirectory(deps/lua)
+#    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#        set(LIBLUA_FILE ${LIBLUA_DIR}/liblua.lib)
+#		 add_custom_command(OUTPUT ${LIBLUA_FILE}
+#                           COMMAND mingw32-make PLAT=mingw all
+#                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua)
+#    else()
+#        set(LIBLUA_FILE ${LIBLUA_DIR}/liblua.a)
+#        add_custom_command(OUTPUT ${LIBLUA_FILE}
+#                           COMMAND make all
+#                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/lua)
+#    endif()
+#    add_custom_target(liblua_target DEPENDS ${LIBLUA_FILE})
+#    add_library(liblua STATIC IMPORTED GLOBAL)
+#    add_dependencies(liblua liblua_target)
+#    set_target_properties(liblua
+#        PROPERTIES
+#        IMPORTED_LOCATION ${LIBLUA_FILE}
+#        INTERFACE_INCLUDE_DIRECTORIES ${LIBLUA_DIR}
+#    )
     target_include_directories(vorb PUBLIC ${LIBLUA_DIR})
 endif()
 

@@ -152,7 +152,7 @@ bool vscript::lua::ValueMediator<vui::Dock, void>::tryRetrieve(Handle state, ui3
 /************************************************************************/
 
 vui::WidgetFlags vscript::lua::ValueMediator<vui::WidgetFlags, void>::defaultValue() {
-    return vui::WidgetFlags{ false, false, false, false, false, false, false, false, false };
+    return vui::WidgetFlags{ false, false, false, false, false, false, false, false, false, false };
 }
 
 i32 vscript::lua::ValueMediator<vui::WidgetFlags, void>::getValueCount() {
@@ -188,9 +188,10 @@ vui::WidgetFlags vscript::lua::ValueMediator<vui::WidgetFlags, void>::pop(Handle
 }
 
 bool vscript::lua::ValueMediator<vui::WidgetFlags, void>::tryPop(Handle state, OUT vui::WidgetFlags& flags) {
-    bool result[9];
+    bool result[10];
     // Try to pop the length.
-    bool success = ValueMediator<bool>::tryPop(state, result[8])
+    bool success = ValueMediator<bool>::tryPop(state, result[9])
+                && ValueMediator<bool>::tryPop(state, result[8])
                 && ValueMediator<bool>::tryPop(state, result[7])
                 && ValueMediator<bool>::tryPop(state, result[6])
                 && ValueMediator<bool>::tryPop(state, result[5])
@@ -203,7 +204,7 @@ bool vscript::lua::ValueMediator<vui::WidgetFlags, void>::tryPop(Handle state, O
     if (success) {
         flags = vui::WidgetFlags{
             result[0], result[1], result[2], result[3], result[4],
-            result[5], result[6], result[7], result[8]
+            result[5], result[6], result[7], result[8], result[9]
         };
     }
     // Return success of pop.
@@ -227,9 +228,10 @@ vui::WidgetFlags vscript::lua::ValueMediator<vui::WidgetFlags, void>::retrieve(H
 }
 
 bool vscript::lua::ValueMediator<vui::WidgetFlags, void>::tryRetrieve(Handle state, ui32 index, OUT vui::WidgetFlags& flags) {
-    bool result[9];
+    bool result[10];
     // Try to pop the underlying enum type.
-    bool success = ValueMediator<bool>::tryRetrieve(state, index, result[8])
+    bool success = ValueMediator<bool>::tryRetrieve(state, index, result[9])
+                && ValueMediator<bool>::tryRetrieve(state, index, result[8])
                 && ValueMediator<bool>::tryRetrieve(state, index, result[7])
                 && ValueMediator<bool>::tryRetrieve(state, index, result[6])
                 && ValueMediator<bool>::tryRetrieve(state, index, result[5])
@@ -242,7 +244,7 @@ bool vscript::lua::ValueMediator<vui::WidgetFlags, void>::tryRetrieve(Handle sta
     if (success) {
         flags = vui::WidgetFlags{
             result[0], result[1], result[2], result[3], result[4],
-            result[5], result[6], result[7], result[8]
+            result[5], result[6], result[7], result[8], result[9]
         };
     }
     // Return success of pop.

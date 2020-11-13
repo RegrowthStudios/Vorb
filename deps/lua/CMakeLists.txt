@@ -65,11 +65,29 @@ set(LIBS
 	src/loadlib.c 
 	src/linit.c
     src/lutf8lib.c)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	remove_definitions("-Wno-class-memaccess")
+endif()
+
+if (UNIX)
+	add_compile_definitions(LUA_USE_LINUX)
+endif()
+
 source_group(core_h FILES ${CORE_H})
 source_group(core_c FILES ${CORE_C})
 source_group(libs FILES ${LIBS})
+
 add_library(liblua STATIC ${CORE_H} ${CORE_C} ${LIBS})
+
 add_executable(lua src/lua.c)
-target_link_libraries(lua liblua m)
+target_link_libraries(lua liblua)
+if (UNIX)
+	target_link_libraries(lua m dl)
+endif()
+
 add_executable(luac src/luac.c)
-target_link_libraries(luac liblua m)
+target_link_libraries(luac liblua)
+if (UNIX)
+	target_link_libraries(luac m dl)
+endif()

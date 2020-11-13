@@ -18,6 +18,9 @@
 #define Vorb_compat_h__
 //! \endcond
 
+// MSVC Error without this due to bug in their handling of atomics pre-2015 Update 2.
+#define _ENABLE_ATOMIC_ALIGNMENT_FIX 1
+
 // Correctly define all debug variables
 #if defined(DEBUG) && !defined(_DEBUG)
 #   define _DEBUG

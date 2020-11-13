@@ -13,6 +13,8 @@ vui::Slider::Slider() :
     m_barColor(color::LightGray),
     m_slideColor(color::DarkGray),
     m_slideHoverColor(color::LightSlateGray),
+    m_rawSlideSize({ 0.0f, 0.0f, { DimensionType::PIXEL, DimensionType::PIXEL } }),
+    m_slideSize(f32v2(0.0f)),
     m_value(0),
     m_min(0),
     m_max(10),
@@ -41,6 +43,8 @@ vui::Slider::Slider(const Slider& widget) :
     m_barColor(widget.m_barColor),
     m_slideColor(widget.m_slideColor),
     m_slideHoverColor(widget.m_slideHoverColor),
+    m_rawSlideSize(widget.m_rawSlideSize),
+    m_slideSize(widget.m_slideSize),
     m_value(widget.m_value),
     m_min(widget.m_min),
     m_max(widget.m_max),
@@ -67,6 +71,8 @@ vui::Slider::Slider(Slider&& widget) :
     m_barColor(widget.m_barColor),
     m_slideColor(widget.m_slideColor),
     m_slideHoverColor(widget.m_slideHoverColor),
+    m_rawSlideSize(widget.m_rawSlideSize),
+    m_slideSize(widget.m_slideSize),
     m_value(widget.m_value),
     m_min(widget.m_min),
     m_max(widget.m_max),
@@ -93,6 +99,8 @@ vui::Slider& vui::Slider::operator=(const Slider& rhs) {
     m_barColor             = rhs.m_barColor;
     m_slideColor           = rhs.m_slideColor;
     m_slideHoverColor      = rhs.m_slideHoverColor;
+    m_rawSlideSize         = rhs.m_rawSlideSize;
+    m_slideSize            = rhs.m_slideSize;
     m_value                = rhs.m_value;
     m_min                  = rhs.m_min;
     m_max                  = rhs.m_max;
@@ -123,6 +131,8 @@ vui::Slider& vui::Slider::operator=(Slider&& rhs) {
     m_barColor             = rhs.m_barColor;
     m_slideColor           = rhs.m_slideColor;
     m_slideHoverColor      = rhs.m_slideHoverColor;
+    m_rawSlideSize         = rhs.m_rawSlideSize;
+    m_slideSize            = rhs.m_slideSize;
     m_value                = rhs.m_value;
     m_min                  = rhs.m_min;
     m_max                  = rhs.m_max;

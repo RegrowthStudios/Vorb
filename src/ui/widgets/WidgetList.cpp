@@ -82,7 +82,8 @@ void vui::WidgetList::updateDimensions(f32 dt) {
                 false, // needsZIndexReorder
                 false, // needsDockRecalculation
                 false, // needsClipRectRecalculation
-                false  // needsDrawableRecalculation
+                false, // needsDrawableRecalculation
+                oldFlags.isSelfOwned
             });
 
             child->update(0.0f);
@@ -97,7 +98,8 @@ void vui::WidgetList::updateDimensions(f32 dt) {
                 oldFlags.needsZIndexReorder         || newFlags.needsZIndexReorder,
                 oldFlags.needsDockRecalculation     || newFlags.needsDockRecalculation,
                 oldFlags.needsClipRectRecalculation || newFlags.needsClipRectRecalculation,
-                oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation
+                oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation,
+                oldFlags.isSelfOwned
             });
         }
 

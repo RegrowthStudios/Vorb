@@ -20,7 +20,7 @@ vui::IWidget::IWidget() :
     m_dock({ DockState::NONE, 0.0f }),
     m_name(""),
     m_childOffset(f32v2(0.0f)),
-    m_flags({ false, false, false, false, false, false, false, false, false }),
+    m_flags({ false, false, false, false, false, false, false, false, false, false }),
     m_inheritableGetterSetterMap(InheritableGetterSetterMap()),
     m_isModifiedMap(IsModifiedMap()) {
     // Empty
@@ -40,7 +40,7 @@ vui::IWidget::IWidget(const IWidget& widget) :
     m_dock(widget.m_dock),
     m_name(widget.m_name),
     m_childOffset(widget.m_childOffset),
-    m_flags({ false, false, false, false, false, false, false, false, false }),
+    m_flags({ false, false, false, false, false, false, false, false, false, false }),
     m_inheritableGetterSetterMap(InheritableGetterSetterMap()),
     m_isModifiedMap(IsModifiedMap()) {
     init(
@@ -111,7 +111,7 @@ vui::IWidget& vui::IWidget::operator=(const IWidget& rhs) {
     m_dock         = rhs.m_dock;
     m_name         = rhs.m_name;
     m_childOffset  = rhs.m_childOffset;
-    m_flags        = { false, false, false, false, false, false, false, false, false };
+    m_flags        = { false, false, false, false, false, false, false, false, false, false };
     m_inheritableGetterSetterMap = InheritableGetterSetterMap();
     m_isModifiedMap = IsModifiedMap();
 
@@ -149,7 +149,7 @@ vui::IWidget& vui::IWidget::operator=(IWidget&& rhs) {
     m_dock         = rhs.m_dock;
     m_name         = rhs.m_name;
     m_childOffset  = rhs.m_childOffset;
-    m_flags        = { false, false, false, false, false, false, false, false, false };
+    m_flags        = { false, false, false, false, false, false, false, false, false, false };
     m_inheritableGetterSetterMap = InheritableGetterSetterMap();
     m_isModifiedMap = IsModifiedMap();
 
@@ -337,7 +337,8 @@ bool vui::IWidget::addWidget(IWidget* child) {
             false, // needsZIndexReorder
             true,  // needsDockRecalculation
             true,  // needsClipRectRecalculation
-            false  // needsDrawableRecalculation
+            false,  // needsDrawableRecalculation
+            oldFlags.isSelfOwned
         });
 
         child->update(0.0f);
@@ -352,7 +353,8 @@ bool vui::IWidget::addWidget(IWidget* child) {
             oldFlags.needsZIndexReorder         || newFlags.needsZIndexReorder,
             oldFlags.needsDockRecalculation     || newFlags.needsDockRecalculation,
             oldFlags.needsClipRectRecalculation || newFlags.needsClipRectRecalculation,
-            oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation
+            oldFlags.needsDrawableRecalculation || newFlags.needsDrawableRecalculation,
+            oldFlags.isSelfOwned
         });
     }
 

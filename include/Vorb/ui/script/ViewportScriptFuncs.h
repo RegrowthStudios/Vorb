@@ -31,7 +31,7 @@ namespace vorb {
     namespace ui {
         namespace ViewportScriptFuncs {
             template <typename ScriptEnvironmentImpl>
-            void registerFuncs(const nString& namespace_, vscript::IEnvironment<ScriptEnvironmentImpl>* env);
+            void registerFuncs(vscript::IEnvironment<ScriptEnvironmentImpl>* env);
 
             template <typename ScriptEnvironmentImpl>
             void registerConsts(vscript::IEnvironment<ScriptEnvironmentImpl>* env);

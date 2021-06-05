@@ -145,7 +145,13 @@ nString vio::Path::getLeaf() const {
 }
 
 template<typename Type> time_t convertToTimeT(Type time) {
+#ifdef _WIN32
     return Type::clock::to_time_t(time);
+#else
+    auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(time - Type::clock::now()
+              + std::chrono::system_clock::now());
+    return std::chrono::system_clock::to_time_t(sctp);
+#endif
 }
 
 template<> time_t convertToTimeT<time_t>(time_t time) {
